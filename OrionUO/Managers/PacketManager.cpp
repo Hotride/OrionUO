@@ -178,7 +178,7 @@ CPacketInfo CPacketManager::m_Packets[0x100] =
 	/*0x94*/ BMSG(ORION_SAVE_PACKET, "Update skills data (God client)", PACKET_VARIABLE_SIZE),
 	/*0x95*/ BMSGH(ORION_IGNORE_PACKET, "Dye Data", 0x09, DyeData),
 	/*0x96*/ BMSG(ORION_SAVE_PACKET, "Game central monitor (God client)", PACKET_VARIABLE_SIZE),
-	/*0x97*/ RMSG(ORION_SAVE_PACKET, "Move Player", 0x02),
+	/*0x97*/ RMSGH(ORION_SAVE_PACKET, "Move Player", 0x02, MovePlayer),
 	/*0x98*/ BMSG(ORION_SAVE_PACKET, "All Names (3D Client Only)", PACKET_VARIABLE_SIZE),
 	/*0x99*/ BMSGH(ORION_SAVE_PACKET, "Multi Placement", 0x1a, MultiPlacement),
 	/*0x9A*/ BMSGH(ORION_SAVE_PACKET, "ASCII Prompt", PACKET_VARIABLE_SIZE, ASCIIPrompt),
@@ -828,35 +828,19 @@ PACKET_HANDLER(EnterWorld)
 {
 	WISPFUN_DEBUG("c150_f19");
 	uint serial = ReadUInt32BE();
+	m_ConfigSerial = serial;
 
 	if (g_World != NULL)
 	{
-		LOG("Error!!! Duplicate enter world message\n");
+		LOG("Warning!!! Duplicate enter world message\n");
 
 		g_Orion.SaveLocalConfig();
-		g_Orion.ClearWorld();
+		m_ConfigSerial = g_PlayerSerial;
 	}
 
-	RELEASE_POINTER(g_World);
+	g_Orion.ClearWorld();
 
-	g_CorpseManager.Clear();
-	g_Walker.Reset();
-	g_ObjectInHand.Clear();
 	g_World = new CGameWorld(serial);
-
-	g_UseItemActions.Clear();
-
-	g_Ping = 0;
-	g_ClickObject.Clear();
-	g_Weather.Reset();
-	g_ConsolePrompt = PT_NONE;
-	g_MacroPointer = NULL;
-	g_Season = ST_SUMMER;
-	g_OldSeason = ST_SUMMER;
-	g_GlobalScale = 1.0;
-	g_PathFinder.BlockMoving = false;
-	g_SkillsManager.SkillsTotal = 0.0f;
-	g_SkillsManager.SkillsRequested = false;
 
 	Move(4);
 
@@ -886,7 +870,7 @@ PACKET_HANDLER(EnterWorld)
 	g_MapManager.Init();
 	g_MapManager.AddRender(g_Player);
 
-	g_Orion.LoadStartupConfig();
+	g_Orion.LoadStartupConfig(m_ConfigSerial);
 
 	g_LastSpellIndex = 1;
 	g_LastSkillIndex = 1;
@@ -3141,10 +3125,7 @@ PACKET_HANDLER(GraphicEffect)
 	effect->DestSerial = destSerial;
 	effect->Graphic = graphic;
 
-	CGameObject *sourceObject = NULL;
-
-	if (!sourceX && !sourceY)
-		sourceObject = g_World->FindWorldObject(sourceSerial);
+	CGameCharacter *sourceObject = g_World->FindWorldCharacter(sourceSerial);
 
 	if (sourceObject != NULL)
 	{
@@ -3158,10 +3139,21 @@ PACKET_HANDLER(GraphicEffect)
 		effect->Y = sourceY;
 		effect->Z = sourceZ;
 	}
+	
+	CGameCharacter *destObject = g_World->FindWorldCharacter(destSerial);
 
-	effect->DestX = destX;
-	effect->DestY = destY;
-	effect->DestZ = destZ;
+	if (destObject != NULL)
+	{
+		effect->DestX = destObject->X;
+		effect->DestY = destObject->Y;
+		effect->DestZ = destObject->Z;
+	}
+	else
+	{
+		effect->DestX = destX;
+		effect->DestY = destY;
+		effect->DestZ = destZ;
+	}
 
 	uint addressAnimData = (uint)g_FileManager.m_AnimdataMul.Start;
 
@@ -5734,6 +5726,9 @@ PACKET_HANDLER(OrionMessages)
 PACKET_HANDLER(PacketsList)
 {
 	WISPFUN_DEBUG("c150_f102");
+	if (g_World == NULL)
+		return;
+
 	int count = ReadUInt16BE();
 
 	IFOR(i, 0, count)
@@ -5748,5 +5743,15 @@ PACKET_HANDLER(PacketsList)
 			break;
 		}
 	}
+}
+//----------------------------------------------------------------------------------
+PACKET_HANDLER(MovePlayer)
+{
+	WISPFUN_DEBUG("c150_f103");
+	if (g_World == NULL)
+		return;
+
+	uchar direction = ReadUInt8();
+	g_PathFinder.Walk(direction & 0x80, direction & 7);
 }
 //----------------------------------------------------------------------------------

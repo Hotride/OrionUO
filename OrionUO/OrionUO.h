@@ -117,13 +117,13 @@ public:
 	void Process(const bool &rendering = false);
 
 	//Загрузка стартового конфига
-	void LoadStartupConfig();
+	void LoadStartupConfig(const uint &serial);
 
 	//Загрузка плагинов
 	void LoadPluginConfig();
 
 	//Загрузка конфига персонажа
-	void LoadLocalConfig();
+	void LoadLocalConfig(const uint &serial);
 
 	//Сохранение конфига персонажа
 	void SaveLocalConfig();

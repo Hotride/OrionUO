@@ -470,7 +470,6 @@ void COrion::Uninstall()
 
 	g_EntryPointer = NULL;
 	g_CurrentScreen = NULL;
-	RELEASE_POINTER(g_World);
 
 	g_AuraTexture.Clear();
 
@@ -1042,14 +1041,10 @@ void COrion::ProcessDelayedClicks()
 			{
 				CGameObject *go = (CGameObject*)g_ClickObject.Object;
 
-				if (!g_TooltipsEnabled || (!go->NPC && go->Locked()))
+				if (g_PopupEnabled && (!g_ConfigManager.HoldShiftForContextMenus || g_ShiftPressed))
+					CPacketRequestPopupMenu(serial).Send();
+				else if (!g_TooltipsEnabled || (!go->NPC && go->Locked()))
 					NameReq(serial);
-
-				//if (serial < 0x40000000)
-				{
-					if (g_PopupEnabled && (!g_ConfigManager.HoldShiftForContextMenus || g_ShiftPressed))
-						CPacketRequestPopupMenu(serial).Send();
-				}
 			}
 		}
 		else
@@ -1218,15 +1213,15 @@ void COrion::Process(const bool &rendering)
 	}
 }
 //----------------------------------------------------------------------------------
-void COrion::LoadStartupConfig()
+void COrion::LoadStartupConfig(const uint &serial)
 {
 	WISPFUN_DEBUG("c194_f15");
 	char buf[MAX_PATH] = { 0 };
 	CServer *server = g_ServerList.GetSelectedServer();
 	if (server != NULL)
-		sprintf_s(buf, "Desktop\\%s\\%s\\0x%08X", g_MainScreen.m_Account->c_str(), FixServerName(server->Name).c_str(), g_PlayerSerial);
+		sprintf_s(buf, "Desktop\\%s\\%s\\0x%08X", g_MainScreen.m_Account->c_str(), FixServerName(server->Name).c_str(), serial);
 	else
-		sprintf_s(buf, "Desktop\\%s\\0x%08X", g_MainScreen.m_Account->c_str(), g_PlayerSerial);
+		sprintf_s(buf, "Desktop\\%s\\0x%08X", g_MainScreen.m_Account->c_str(), serial);
 
 	string path = g_App.FilePath(buf);
 
@@ -1348,7 +1343,7 @@ string COrion::FixServerName(string name)
 	return name;
 }
 //----------------------------------------------------------------------------------
-void COrion::LoadLocalConfig()
+void COrion::LoadLocalConfig(const uint &serial)
 {
 	WISPFUN_DEBUG("c194_f19");
 	if (g_ConfigLoaded)
@@ -1365,9 +1360,9 @@ void COrion::LoadLocalConfig()
 	char buf[MAX_PATH] = { 0 };
 	CServer *server = g_ServerList.GetSelectedServer();
 	if (server != NULL)
-		sprintf_s(buf, "Desktop\\%s\\%s\\0x%08X", g_MainScreen.m_Account->c_str(), FixServerName(server->Name).c_str(), g_PlayerSerial);
+		sprintf_s(buf, "Desktop\\%s\\%s\\0x%08X", g_MainScreen.m_Account->c_str(), FixServerName(server->Name).c_str(), serial);
 	else
-		sprintf_s(buf, "Desktop\\%s\\0x%08X", g_MainScreen.m_Account->c_str(), g_PlayerSerial);
+		sprintf_s(buf, "Desktop\\%s\\0x%08X", g_MainScreen.m_Account->c_str(), serial);
 
 	string path = g_App.FilePath(buf);
 
@@ -1600,18 +1595,9 @@ void COrion::Disconnect()
 	g_AbyssPacket03First = true;
 	g_PluginManager.Disconnect();
 
-	g_SystemChat.Clear();
-	g_Journal.Clear();
-
 	g_ConnectionManager.Disconnect();
 
-	g_Party.Leader = 0;
-	g_Party.Inviter = 0;
-	g_Party.Clear();
-	
-	g_GameConsole.ClearStack();
-
-	g_ResizedGump = NULL;
+	ClearWorld();
 }
 //----------------------------------------------------------------------------------
 int COrion::Send(puchar buf, const int &size)
@@ -1721,13 +1707,11 @@ void COrion::LoginComplete()
 
 		g_OrionWindow.SetTitle(buf);
 
-		//UO->SkillsReq(serial);
 		CPacketClientVersion(m_ClientVersionText).Send();
 
 		SkillsReq(g_PlayerSerial);
 		StatusReq(g_PlayerSerial);
 		g_UseItemActions.Add(g_PlayerSerial);
-		//PaperdollReq(g_PlayerSerial);
 
 		//CPacketOpenChat(L"").Send();
 		//CPacketRazorAnswer().Send();
@@ -1742,7 +1726,7 @@ void COrion::LoginComplete()
 
 		InitScreen(GS_GAME);
 
-		LoadLocalConfig();
+		LoadLocalConfig(g_PacketManager.ConfigSerial);
 	}
 }
 //----------------------------------------------------------------------------------
@@ -5585,8 +5569,22 @@ void COrion::RemoveRangedObjects()
 //----------------------------------------------------------------------------------
 void COrion::ClearWorld()
 {
+	g_CorpseManager.Clear();
 	g_Walker.Reset();
 	g_ObjectInHand.Clear();
+	g_UseItemActions.Clear();
+
+	g_Ping = 0;
+	g_ClickObject.Clear();
+	g_Weather.Reset();
+	g_ConsolePrompt = PT_NONE;
+	g_MacroPointer = NULL;
+	g_Season = ST_SUMMER;
+	g_OldSeason = ST_SUMMER;
+	g_GlobalScale = 1.0;
+	g_PathFinder.BlockMoving = false;
+	g_SkillsManager.SkillsTotal = 0.0f;
+	g_SkillsManager.SkillsRequested = false;
 
 	RELEASE_POINTER(g_World)
 	LOG("\tWorld removed?\n");
