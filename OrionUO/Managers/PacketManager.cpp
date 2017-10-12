@@ -2896,6 +2896,8 @@ PACKET_HANDLER(Talk)
 		str = ReadString(0);
 	}
 
+	LOG("%s: %s\n", name.c_str(),str.c_str());
+
 	CGameObject *obj = g_World->FindWorldObject(serial);
 
 	if (type == ST_BROADCAST || /*type == ST_SYSTEM ||*/ serial == 0xFFFFFFFF || !serial || (ToLowerA(name) == "system" && obj == NULL))
@@ -2984,6 +2986,8 @@ PACKET_HANDLER(UnicodeTalk)
 		m_Ptr = m_Start + 48;
 		str = ReadWString((m_Size - 48) / 2);
 	}
+
+	LOG("%s: %s\n", name.c_str(), ToString(str).c_str());
 
 	CGameObject *obj = g_World->FindWorldObject(serial);
 
