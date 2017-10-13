@@ -74,11 +74,14 @@ CPacketCreateCharacter::CPacketCreateCharacter(const string &name)
 		packetID = 0xF8;
 	}
 
-	WriteUInt8(packetID); //packetID
+	WriteUInt8(packetID);
 	WriteUInt32BE(0xEDEDEDED);
-	WriteUInt32BE(0xFFFFFFFF);
-	WriteUInt8(0x00); //pattern 3
+	WriteUInt16BE(0xFFFF);
+	WriteUInt16BE(0xFFFF);
+	WriteUInt8(0x00);
 	WriteString(name.c_str(), 30, false);
+
+	//Move(30); //На самом деле, клиент пихает сюда пароль на 30 байт, но по какой-то причине (мб мусор в памяти) - идет то что идет
 	WriteUInt16BE(0x0000); //?
 
 	uint clientFlag = 0;
@@ -136,25 +139,32 @@ CPacketCreateCharacter::CPacketCreateCharacter(const string &name)
 	WriteUInt16BE(g_CreateCharacterManager.GetBeard(g_CreateCharacterManager.BeardStyle).GraphicID);
 	WriteUInt16BE(g_CreateCharacterManager.BeardColor);
 
-	ushort location = g_SelectTownScreen.m_City->LocationIndex;
+	CServer *server = g_ServerList.GetSelectedServer();
+	uchar serverIndex = 0;
+
+	if (server != NULL)
+		serverIndex = (uchar)server->Index - 1;
+
+	WriteUInt8(serverIndex); //server index
+
+	uchar location = g_SelectTownScreen.m_City->LocationIndex;
 
 	if (g_PacketManager.ClientVersion < CV_70130)
 		location--;
 
-	WriteUInt16BE(location); //location
-	WriteUInt16BE(0x0000); //?
+	WriteUInt8(location); //location
 
-	ushort slot = 0xFFFF;
+	uint slot = 0xFFFFFFFF;
 	IFOR(i, 0, g_CharacterList.Count)
 	{
 		if (!g_CharacterList.GetName(i).length())
 		{
-			slot = (ushort)i;
+			slot = (uint)i;
 			break;
 		}
 	}
 
-	WriteUInt16BE(slot);
+	WriteUInt32BE(slot);
 
 	WriteDataLE(g_ConnectionManager.GetClientIP(), 4);
 	WriteUInt16BE(g_CreateCharacterManager.ShirtColor);
