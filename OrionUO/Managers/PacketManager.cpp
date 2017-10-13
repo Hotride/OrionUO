@@ -856,7 +856,7 @@ PACKET_HANDLER(EnterWorld)
 
 	g_World = new CGameWorld(serial);
 
-	Move(4);
+	Move(4); //unused
 
 	if (strlen(g_SelectedCharName))
 		g_Player->Name = g_SelectedCharName;
@@ -866,11 +866,14 @@ PACKET_HANDLER(EnterWorld)
 
 	g_Player->X = ReadUInt16BE();
 	g_Player->Y = ReadUInt16BE();
-	Move(1);
-	g_Player->Z = ReadUInt8();
-	uchar dir = ReadUInt8();
-	g_Player->Direction = dir;
-	g_Player->Flags = m_Start[28];
+	g_Player->Z = (char)ReadUInt16BE();
+	g_Player->Direction = ReadUInt8();
+	/*Move(1); //serverID
+	Move(4); //unused
+	Move(2); //serverBoundaryX
+	Move(2); //serverBoundaryY
+	Move(2); //serverBoundaryWidth
+	Move(2); //serverBoundaryHeight*/
 
 	g_Player->OffsetX = 0;
 	g_Player->OffsetY = 0;
@@ -902,6 +905,10 @@ PACKET_HANDLER(EnterWorld)
 
 	if (g_Player->Dead())
 		g_Orion.ChangeSeason(ST_DESOLATION, DEATH_MUSIC_INDEX);
+
+	CServer *server = g_ServerList.GetSelectedServer();
+	if (server != NULL)
+		g_Orion.CreateTextMessageF(3, 0x0037, "Login confirm to %s", server->Name.c_str());
 }
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(UpdateHitpoints)
