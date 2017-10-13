@@ -158,6 +158,8 @@ void COrion::ParseCommandLine()
 		}
 		else if (str == "fastlogin")
 			fastLogin = true;
+		else if (str == "autologinname")
+			g_PacketManager.AutoLoginNames = string("|") + DecodeArgumentString(strings[1].c_str(), strings[1].length());
 	}
 
 	LocalFree(args);
@@ -1012,7 +1014,7 @@ void COrion::LoadAutoLoginNames()
 	WISPFUN_DEBUG("c194_f12");
 	WISP_FILE::CTextFileParser file(g_App.FilePath("AutoLoginNames.cfg"), "", "#;", "");
 
-	string names = "|";
+	string names = g_PacketManager.AutoLoginNames + "|";
 
 	while (!file.IsEOF())
 	{
