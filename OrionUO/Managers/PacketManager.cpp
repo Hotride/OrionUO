@@ -889,8 +889,13 @@ PACKET_HANDLER(EnterWorld)
 	g_LastSpellIndex = 1;
 	g_LastSkillIndex = 1;
 
+	CPacketClientVersion(g_Orion.ClientVersionText).Send();
+
+	if (m_ClientVersion >= CV_200)
+		CPacketLanguage(g_Language.c_str()).Send();
+
 	g_Orion.Click(g_PlayerSerial);
-	g_Orion.StatusReq(g_PlayerSerial);
+	CPacketStatusRequest(g_PlayerSerial).Send();
 
 	if (m_ClientVersion >= CV_200)
 		CPacketGameWindowSize().Send();
@@ -2891,6 +2896,8 @@ PACKET_HANDLER(Talk)
 		str = ReadString(0);
 	}
 
+	LOG("%s: %s\n", name.c_str(),str.c_str());
+
 	CGameObject *obj = g_World->FindWorldObject(serial);
 
 	if (type == ST_BROADCAST || /*type == ST_SYSTEM ||*/ serial == 0xFFFFFFFF || !serial || (ToLowerA(name) == "system" && obj == NULL))
@@ -2979,6 +2986,8 @@ PACKET_HANDLER(UnicodeTalk)
 		m_Ptr = m_Start + 48;
 		str = ReadWString((m_Size - 48) / 2);
 	}
+
+	LOG("%s: %s\n", name.c_str(), ToString(str).c_str());
 
 	CGameObject *obj = g_World->FindWorldObject(serial);
 

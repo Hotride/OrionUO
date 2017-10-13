@@ -340,18 +340,14 @@ void CGameCharacter::OnGraphicChange(int direction)
 	{
 		if (!m_Clicked && !IsPlayer())
 		{
-			//UO->StatusReq(m_Serial);
-
 			if (g_ConfigManager.ShowIncomingNames && !m_Name.length())
-				g_Orion.NameReq(m_Serial);
+				g_Orion.Click(m_Serial);
 		}
 	
 		g_GumpManager.UpdateContent(m_Serial, 0, GT_PAPERDOLL);
 
-		if (g_GumpManager.UpdateContent(m_Serial, 0, GT_STATUSBAR) != NULL)
-			g_Orion.StatusReq(m_Serial);
-		else if (g_GumpManager.UpdateContent(m_Serial, 0, GT_TARGET_SYSTEM) != NULL)
-			g_Orion.StatusReq(m_Serial);
+		if (g_GumpManager.UpdateContent(m_Serial, 0, GT_STATUSBAR) != NULL || g_GumpManager.UpdateContent(m_Serial, 0, GT_TARGET_SYSTEM) != NULL)
+			CPacketStatusRequest(m_Serial).Send();
 	}
 }
 //----------------------------------------------------------------------------------

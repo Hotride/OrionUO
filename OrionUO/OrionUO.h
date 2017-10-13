@@ -196,10 +196,10 @@ public:
 
 
 	//Получить флаги ландшафта
-	__int64 GetLandFlags(const ushort &id);
+	uint64 GetLandFlags(const ushort &id);
 
 	//Получить флаги статики
-	__int64 GetStaticFlags(const ushort &id);
+	uint64 GetStaticFlags(const ushort &id);
 
 	//Получить цвет света
 	ushort GetLightColor(const ushort &id) { return m_StaticDataIndex[id].LightColor; }
@@ -357,23 +357,8 @@ public:
 	//Изменить вармод
 	void ChangeWarmode(uchar status = 0xFF);
 
-	//Запрос хэлп-меню
-	void HelpRequest();
-
-	//Запрос статуса
-	void StatusReq(uint serial);
-
-	//Запрос навыков
-	void SkillsReq(uint serial);
-
-	//Изменения состояния навыка
-	void SkillStatusChange(uchar skill, uchar state);
-
 	//Кликнуть по объекту
 	void Click(uint serial);
-
-	//Запрос имени объекта (клик)
-	void NameReq(uint serial) { Click(serial); };
 
 	//Двойное нажатие на объект
 	void DoubleClick(uint serial);
@@ -455,17 +440,11 @@ public:
 	//---Обработка кнопок папердолла и менюбара---
 	//--------------------------------------------
 
-	//Открыть гамп папердолла
-	void OpenPaperdoll();
-
 	//Открыть гамп статуса
 	void OpenStatus(uint serial);
 
 	//Открыть или переместить гамп статуса
 	void DisplayStatusbarGump(const uint &serial, const int &x, const int &y);
-
-	//Закрыть гамп статуса
-	void CloseStatusbarGump(const uint &serial);
 
 	//Открыть гамп мини-карты
 	void OpenMinimap();
@@ -499,12 +478,6 @@ public:
 
 	//Открыть гамп профиля
 	void OpenProfile(uint serial = 0);
-
-	//Запросить гамп гильдии
-	void RequestGuildGump();
-
-	//Запросить гамп квестов
-	void RequestQuestGump();
 
 	void DisconnectGump();
 

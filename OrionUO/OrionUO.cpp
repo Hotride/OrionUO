@@ -1044,7 +1044,7 @@ void COrion::ProcessDelayedClicks()
 				if (g_PopupEnabled && (!g_ConfigManager.HoldShiftForContextMenus || g_ShiftPressed))
 					CPacketRequestPopupMenu(serial).Send();
 				else if (!g_TooltipsEnabled || (!go->NPC && go->Locked()))
-					NameReq(serial);
+					Click(serial);
 			}
 		}
 		else
@@ -1707,16 +1707,11 @@ void COrion::LoginComplete()
 
 		g_OrionWindow.SetTitle(buf);
 
-		CPacketClientVersion(m_ClientVersionText).Send();
-
-		SkillsReq(g_PlayerSerial);
-		StatusReq(g_PlayerSerial);
+		CPacketSkillsRequest(g_PlayerSerial).Send();
 		g_UseItemActions.Add(g_PlayerSerial);
 
 		//CPacketOpenChat(L"").Send();
 		//CPacketRazorAnswer().Send();
-
-		CPacketLanguage(g_Language.c_str()).Send();
 
 		if (g_PacketManager.ClientVersion >= CV_306E)
 			CPacketClientType().Send();
@@ -3627,7 +3622,7 @@ void COrion::PatchFiles()
 			{
 				int offset = vh->BlockID * 32;
 
-				if (offset + 32 >= (int)m_LandData.size())
+				if (offset + 32 > (int)m_LandData.size())
 					continue;
 
 				file.ReadUInt32LE();
@@ -3649,7 +3644,7 @@ void COrion::PatchFiles()
 			{
 				int offset = (vh->BlockID - 0x0200) * 32;
 
-				if (offset + 32 >= (int)m_StaticData.size())
+				if (offset + 32 > (int)m_StaticData.size())
 					continue;
 
 				file.ReadUInt32LE();
@@ -3694,6 +3689,9 @@ void COrion::PatchFiles()
 void COrion::IndexReplaces()
 {
 	WISPFUN_DEBUG("c194_f55");
+	if (g_PacketManager.ClientVersion < CV_305D) //CV_204C
+		return;
+
 	WISP_FILE::CTextFileParser newDataParser("", " \t,{}", "#;//", "");
 	WISP_FILE::CTextFileParser artParser(g_App.FilePath("Art.def"), " \t", "#;//", "{}");
 	WISP_FILE::CTextFileParser textureParser(g_App.FilePath("TexTerr.def"), " \t", "#;//", "{}");
@@ -3701,9 +3699,6 @@ void COrion::IndexReplaces()
 	WISP_FILE::CTextFileParser multiParser(g_App.FilePath("Multi.def"), " \t", "#;//", "{}");
 	WISP_FILE::CTextFileParser soundParser(g_App.FilePath("Sound.def"), " \t", "#;//", "{}");
 	WISP_FILE::CTextFileParser mp3Parser(g_App.FilePath("Music\\Digital\\Config.txt"), " ,", "#;", "");
-
-	if (g_PacketManager.ClientVersion < CV_305D) //CV_204C
-		return;
 
 	DEBUGLOG("Replace arts\n");
 	while (!artParser.IsEOF())
@@ -5369,30 +5364,6 @@ void COrion::ChangeWarmode(uchar status)
 	CPacketChangeWarmode(newstatus).Send();
 }
 //----------------------------------------------------------------------------------
-void COrion::HelpRequest()
-{
-	WISPFUN_DEBUG("c194_f107");
-	CPacketHelpRequest().Send();
-}
-//----------------------------------------------------------------------------------
-void COrion::StatusReq(uint serial)
-{
-	WISPFUN_DEBUG("c194_f108");
-	CPacketStatusRequest(serial).Send();
-}
-//----------------------------------------------------------------------------------
-void COrion::SkillsReq(uint serial)
-{
-	WISPFUN_DEBUG("c194_f109");
-	CPacketSkillsRequest(serial).Send();
-}
-//----------------------------------------------------------------------------------
-void COrion::SkillStatusChange(uchar skill, uchar state)
-{
-	WISPFUN_DEBUG("c194_f110");
-	CPacketSkillsStatusChangeRequest(skill, state).Send();
-}
-//----------------------------------------------------------------------------------
 void COrion::Click(uint serial)
 {
 	WISPFUN_DEBUG("c194_f111");
@@ -5670,7 +5641,7 @@ void COrion::ConsolePromptCancel()
 	g_ConsolePrompt = PT_NONE;
 }
 //----------------------------------------------------------------------------------
-__int64 COrion::GetLandFlags(const ushort &id)
+uint64 COrion::GetLandFlags(const ushort &id)
 {
 	WISPFUN_DEBUG("c194_f127");
 
@@ -5680,7 +5651,7 @@ __int64 COrion::GetLandFlags(const ushort &id)
 	return 0;
 }
 //----------------------------------------------------------------------------------
-__int64 COrion::GetStaticFlags(const ushort &id)
+uint64 COrion::GetStaticFlags(const ushort &id)
 {
 	WISPFUN_DEBUG("c194_f128");
 
@@ -5727,19 +5698,13 @@ WISP_GEOMETRY::CSize COrion::GetGumpDimension(const ushort &id)
 	return size;
 }
 //----------------------------------------------------------------------------------
-void COrion::OpenPaperdoll()
-{
-	WISPFUN_DEBUG("c194_f132");
-	PaperdollReq(g_PlayerSerial);
-}
-//----------------------------------------------------------------------------------
 void COrion::OpenStatus(uint serial)
 {
 	WISPFUN_DEBUG("c194_f133");
 	int x = g_MouseManager.Position.X - 76;
 	int y = g_MouseManager.Position.Y - 30;
 
-	StatusReq(serial);
+	CPacketStatusRequest(serial).Send();
 
 	g_GumpManager.AddGump(new CGumpStatusbar(serial, x, y, true));
 }
@@ -5767,12 +5732,6 @@ void COrion::DisplayStatusbarGump(const uint &serial, const int &x, const int &y
 	}
 	else
 		g_GumpManager.AddGump(new CGumpStatusbar(serial, x, y, true));
-}
-//----------------------------------------------------------------------------------
-void COrion::CloseStatusbarGump(const uint &serial)
-{
-	WISPFUN_DEBUG("c194_f135");
-	g_GumpManager.CloseGump(serial, 0, GT_STATUSBAR);
 }
 //----------------------------------------------------------------------------------
 void COrion::OpenMinimap()
@@ -5868,18 +5827,6 @@ void COrion::OpenProfile(uint serial)
 		serial = g_PlayerSerial;
 
 	CPacketProfileRequest(serial).Send();
-}
-//----------------------------------------------------------------------------------
-void COrion::RequestGuildGump()
-{
-	WISPFUN_DEBUG("c194_f147");
-	CPacketGuildMenuRequest().Send();
-}
-//----------------------------------------------------------------------------------
-void COrion::RequestQuestGump()
-{
-	WISPFUN_DEBUG("c194_f148");
-	CPacketQuestMenuRequest().Send();
 }
 //----------------------------------------------------------------------------------
 void COrion::DisconnectGump()

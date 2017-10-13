@@ -168,7 +168,7 @@ void CGumpMenubar::GUMP_BUTTON_EVENT_C
 		}
 		case ID_GMB_PAPERDOLL:
 		{
-			g_Orion.OpenPaperdoll();
+			g_Orion.PaperdollReq(g_PlayerSerial);
 
 			break;
 		}
@@ -192,7 +192,7 @@ void CGumpMenubar::GUMP_BUTTON_EVENT_C
 		}
 		case ID_GMB_HELP:
 		{
-			g_Orion.HelpRequest();
+			CPacketHelpRequest().Send();
 
 			break;
 		}

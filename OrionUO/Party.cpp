@@ -124,7 +124,7 @@ void CParty::ParsePacketData(WISP_DATASTREAM::CDataReader &reader)
 				}
 				else
 				{
-					g_Orion.StatusReq(serial);
+					CPacketStatusRequest(serial).Send();
 					gump->WantRedraw = true;
 				}			
 			}
