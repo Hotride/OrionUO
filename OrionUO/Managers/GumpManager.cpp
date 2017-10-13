@@ -1514,14 +1514,13 @@ void CGumpManager::Save(const string &path)
 		{
 			case GT_PAPERDOLL:
 			case GT_STATUSBAR:
+				if (gump->Serial != g_PlayerSerial)
+					break;
 			case GT_MINIMAP:
 			case GT_SKILLS:
 			case GT_JOURNAL:
 			case GT_WORLD_MAP:
 			{
-				if (gump->Serial != g_PlayerSerial)
-					break;
-				
 				uchar size = 12;
 				
 				if (gump->GumpType == GT_JOURNAL)

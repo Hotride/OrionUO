@@ -2194,7 +2194,7 @@ PACKET_HANDLER(UpdateSkills)
 
 		if (gump == NULL)
 		{
-			gump = new CGumpSkills(0, 0, 0, false);
+			gump = new CGumpSkills(0, 0, false, 250);
 			g_GumpManager.AddGump(gump);
 		}
 
