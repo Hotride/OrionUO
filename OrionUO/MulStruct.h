@@ -46,6 +46,18 @@ typedef struct MAP_BLOCK
 	MAP_CELLS Cells[64];
 } *PMAP_BLOCK;
 //----------------------------------------------------------------------------------
+struct RADAR_MAP_CELLS
+{
+	unsigned short Graphic;
+	char Z;
+	char IsLand;
+};
+//----------------------------------------------------------------------------------
+struct RADAR_MAP_BLOCK
+{
+	RADAR_MAP_CELLS Cells[8][8];
+};
+//----------------------------------------------------------------------------------
 typedef struct STAIDX_BLOCK : public BASE_IDX_BLOCK
 {
 	unsigned int Unknown;

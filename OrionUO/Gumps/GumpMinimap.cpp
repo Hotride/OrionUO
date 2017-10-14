@@ -38,6 +38,70 @@ void CGumpMinimap::CalculateGumpState()
 void CGumpMinimap::GenerateMap()
 {
 	WISPFUN_DEBUG("c102_f4");
+
+	/*const WISP_GEOMETRY::CPoint2Di foliageOffsetTable[17 * 3] =
+	{
+		WISP_GEOMETRY::CPoint2Di(0, 0),
+		WISP_GEOMETRY::CPoint2Di(-2, 1),
+		WISP_GEOMETRY::CPoint2Di(-2, -2),
+		WISP_GEOMETRY::CPoint2Di(-1, -1),
+		WISP_GEOMETRY::CPoint2Di(-1, 0),
+		WISP_GEOMETRY::CPoint2Di(-1, 1),
+		WISP_GEOMETRY::CPoint2Di(-1, 2),
+		WISP_GEOMETRY::CPoint2Di(-1, -1),
+		WISP_GEOMETRY::CPoint2Di(0, 1),
+		WISP_GEOMETRY::CPoint2Di(0, 2),
+		WISP_GEOMETRY::CPoint2Di(0, -2),
+		WISP_GEOMETRY::CPoint2Di(1, -1),
+		WISP_GEOMETRY::CPoint2Di(1, 0),
+		WISP_GEOMETRY::CPoint2Di(1, 1),
+		WISP_GEOMETRY::CPoint2Di(1, -1),
+		WISP_GEOMETRY::CPoint2Di(2, 0),
+		WISP_GEOMETRY::CPoint2Di(2, 0),
+
+		WISP_GEOMETRY::CPoint2Di(0, -1),
+		WISP_GEOMETRY::CPoint2Di(-2, 0),
+		WISP_GEOMETRY::CPoint2Di(-2, -1),
+		WISP_GEOMETRY::CPoint2Di(-1, 0),
+		WISP_GEOMETRY::CPoint2Di(-1, 1),
+		WISP_GEOMETRY::CPoint2Di(-1, 2),
+		WISP_GEOMETRY::CPoint2Di(-1, -2),
+		WISP_GEOMETRY::CPoint2Di(0, -1),
+		WISP_GEOMETRY::CPoint2Di(0, 1),
+		WISP_GEOMETRY::CPoint2Di(0, 2),
+		WISP_GEOMETRY::CPoint2Di(0, -2),
+		WISP_GEOMETRY::CPoint2Di(1, -1),
+		WISP_GEOMETRY::CPoint2Di(1, 0),
+		WISP_GEOMETRY::CPoint2Di(1, 1),
+		WISP_GEOMETRY::CPoint2Di(1, 0),
+		WISP_GEOMETRY::CPoint2Di(2, 1),
+		WISP_GEOMETRY::CPoint2Di(2, 0),
+
+		WISP_GEOMETRY::CPoint2Di(0, -1),
+		WISP_GEOMETRY::CPoint2Di(-2, 1),
+		WISP_GEOMETRY::CPoint2Di(-2, -2),
+		WISP_GEOMETRY::CPoint2Di(-1, -1),
+		WISP_GEOMETRY::CPoint2Di(-1, 0),
+		WISP_GEOMETRY::CPoint2Di(-1, 1),
+		WISP_GEOMETRY::CPoint2Di(-1, 2),
+		WISP_GEOMETRY::CPoint2Di(-1, -1),
+		WISP_GEOMETRY::CPoint2Di(0, 1),
+		WISP_GEOMETRY::CPoint2Di(0, -2),
+		WISP_GEOMETRY::CPoint2Di(1, -1),
+		WISP_GEOMETRY::CPoint2Di(1, 0),
+		WISP_GEOMETRY::CPoint2Di(1, 1),
+		WISP_GEOMETRY::CPoint2Di(1, 2),
+		WISP_GEOMETRY::CPoint2Di(1, -1),
+		WISP_GEOMETRY::CPoint2Di(2, 1),
+		WISP_GEOMETRY::CPoint2Di(2, 0)
+	};*/
+
+	const WISP_GEOMETRY::CPoint2Di originalOffsetTable[2] =
+	{
+		WISP_GEOMETRY::CPoint2Di(0, 0),
+		WISP_GEOMETRY::CPoint2Di(0, 1)
+	};
+
 	if (g_Player != NULL)
 	{
 		m_LastX = g_Player->X;
@@ -92,7 +156,7 @@ void CGumpMinimap::GenerateMap()
 			if (blockIndex >= maxBlockIndex)
 				break;
 
-			MAP_BLOCK mb = { 0 };
+			RADAR_MAP_BLOCK mb = { 0 };
 			g_MapManager.GetRadarMapBlock(i, j, mb);
 
 			CMapBlock *mapBlock = g_MapManager.GetBlock(blockIndex);
@@ -109,41 +173,39 @@ void CGumpMinimap::GenerateMap()
 					int py = (realBlockY + y) - m_LastY;
 
 					int gx = px - py;
-
-					if (gx < 0 || gx >= gumpWidth)
-						continue;
-
 					int gy = px + py;
 
-					if (gy < 0)
-						continue;
+					uint color = mb.Cells[x][y].Graphic;
+					char &isLand = mb.Cells[x][y].IsLand;
 
-					uint color = mb.Cells[(y * 8) + x].TileID;
-
-					if (mapBlock == NULL)
+					if (mapBlock != NULL)
 					{
-						if (color >= 0x4000)
-							color = g_Orion.GetSeasonGraphic(color - 0x4000) + 0x4000;
-						else
-							color = g_Orion.GetLandSeasonGraphic(color);
+						ushort multiColor = mapBlock->GetRadarColor(x, y);
+
+						if (multiColor)
+						{
+							color = multiColor;
+							isLand = false;
+						}
 					}
+
+					if (!isLand)
+						color = g_Orion.GetSeasonGraphic(color) + 0x4000;
 					else
-						color = mapBlock->GetRadarColor(x, y, color);
+						color = g_Orion.GetLandSeasonGraphic(color);
+
+					int tableSize = 2;
+					const WISP_GEOMETRY::CPoint2Di *table = &originalOffsetTable[0];
+
+					/*if (color > 0x4000 && ::IsFoliage(g_Orion.GetStaticFlags(color - 0x4000)))
+					{
+						tableSize = 17;
+						table = &foliageOffsetTable[((color - 0x4000) % 3) * tableSize];
+					}*/
 
 					color = 0x8000 | g_ColorManager.GetRadarColorData(color);
 
-					IFOR(i1, 0, 2)
-					{
-						if (gy >= gumpHeight)
-							break;
-
-						int block = (gy * gumpWidth) + gx;
-
-						if (data[block] == 0x8421)
-							data[block] = color;
-
-						gy++;
-					}
+					CreatePixels(data, color, gx, gy, gumpWidth, gumpHeight, table, tableSize);
 				}
 			}
 		}
@@ -152,6 +214,32 @@ void CGumpMinimap::GenerateMap()
 	g_GL_BindTexture16(m_Texture, gumpWidth, gumpHeight, &data[0]);
 
 	m_WantUpdateContent = true;
+}
+//----------------------------------------------------------------------------------
+void CGumpMinimap::CreatePixels(USHORT_LIST &data, const uint &color, const int &x, const int &y, const int &width, const int &height, const WISP_GEOMETRY::CPoint2Di *table, const int &count)
+{
+	int px = x;
+	int py = y;
+
+	IFOR(i, 0, count)
+	{
+		px += table[i].X;
+		py += table[i].Y;
+		int gx = px;
+
+		if (gx < 0 || gx >= width)
+			continue;
+
+		int gy = py;
+
+		if (gy < 0 || gy >= height)
+			break;
+
+		int block = (gy * width) + gx;
+
+		if (data[block] == 0x8421)
+			data[block] = color;
+	}
 }
 //----------------------------------------------------------------------------------
 void CGumpMinimap::PrepareContent()

@@ -87,7 +87,7 @@ public:
 	@param [__out] mb Ссылка на блок
 	@return 
 	*/
-	void GetRadarMapBlock(const int &blockX, const int &blockY, MAP_BLOCK &mb);
+	void GetRadarMapBlock(const int &blockX, const int &blockY, RADAR_MAP_BLOCK &mb);
 
 	/*!
 	Получить значение Z координаты для указанной точки в мире

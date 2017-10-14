@@ -397,7 +397,7 @@ char CMapManager::CalculateNearZ(char defaultZ, const int &x, const int &y, cons
 @param [__out] mb Ссылка на блок
 @return 
 */
-void CMapManager::GetRadarMapBlock(const int &blockX, const int &blockY, MAP_BLOCK &mb)
+void CMapManager::GetRadarMapBlock(const int &blockX, const int &blockY, RADAR_MAP_BLOCK &mb)
 {
 	WISPFUN_DEBUG("c146_f10");
 	CIndexMap *indexMap = GetIndex(GetActualMap(), blockX, blockY);
@@ -411,9 +411,11 @@ void CMapManager::GetRadarMapBlock(const int &blockX, const int &blockY, MAP_BLO
 	{
 		IFOR(y, 0, 8)
 		{
-			int pos = (y * 8) + x;
-			mb.Cells[pos].TileID = pmb->Cells[pos].TileID;
-			mb.Cells[pos].Z = pmb->Cells[pos].Z;
+			MAP_CELLS &inCell = pmb->Cells[(y * 8) + x];
+			RADAR_MAP_CELLS &outCell = mb.Cells[x][y];
+			outCell.Graphic = inCell.TileID;
+			outCell.Z = inCell.Z;
+			outCell.IsLand = true;
 		}
 	}
 
@@ -427,13 +429,16 @@ void CMapManager::GetRadarMapBlock(const int &blockX, const int &blockY, MAP_BLO
 		{
 			if (sb->Color && sb->Color != 0xFFFF && !CRenderStaticObject::IsNoDrawTile(sb->Color))
 			{
-				int pos = (sb->Y * 8) + sb->X;
+				RADAR_MAP_CELLS &outCell = mb.Cells[sb->X][sb->Y];
+
+				//int pos = (sb->Y * 8) + sb->X;
 				//if (pos > 64) continue;
 
-				if (mb.Cells[pos].Z <= sb->Z)
+				if (outCell.Z <= sb->Z)
 				{
-					mb.Cells[pos].TileID = sb->Color + 0x4000;
-					mb.Cells[pos].Z = sb->Z;
+					outCell.Graphic = sb->Color;
+					outCell.Z = sb->Z;
+					outCell.IsLand = false;
 				}
 			}
 

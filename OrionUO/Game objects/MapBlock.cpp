@@ -70,7 +70,7 @@ bool CMapBlock::HasNoExternalData()
 	return true;
 }
 //----------------------------------------------------------------------------------
-ushort CMapBlock::GetRadarColor(const int &x, const int &y, const uint &defaultColor)
+ushort CMapBlock::GetRadarColor(const int &x, const int &y)
 {
 	WISPFUN_DEBUG("c24_f4");
 	CRenderWorldObject *obj = Block[x][y];
@@ -89,16 +89,16 @@ ushort CMapBlock::GetRadarColor(const int &x, const int &y, const uint &defaultC
 		{
 			case ROT_LAND_OBJECT:
 			case ROT_STATIC_OBJECT:
-				return defaultColor;
+				return 0;
 			case ROT_MULTI_OBJECT:
-				return obj->Graphic + 0x4000;
+				return obj->Graphic;
 			default:
 				break;
 		}
 	}
 
 	//Вернем входящий цвет, если не нашлось ничего подходящего
-	return defaultColor;
+	return 0;
 }
 //----------------------------------------------------------------------------------
 void CMapBlock::CreateLandTextureRect()
