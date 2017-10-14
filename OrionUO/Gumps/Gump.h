@@ -59,11 +59,14 @@ class CGump : public CRenderObject
 	SETGET(bool, RemoveMark, false);
 	SETGET(bool, NoProcess, false);
 	SETGET(bool, Visible, true);
+	SETGET(WISP_GEOMETRY::CRect, GumpSize, WISP_GEOMETRY::CRect());
 
 protected:
 	virtual void CalculateGumpState();
 
 	CGUIButton m_Locker{ CGUIButton(0, 0, 0, 0, 0, 0) };
+
+	virtual void RecalculateSize();
 
 public:
 	CGump();
@@ -78,6 +81,7 @@ public:
 
 	static class CRenderObject *SelectItems(CBaseGUI *start, const int &currentPage, const int draw2Page = 0);
 
+	static void GetItemsSize(CBaseGUI *start, WISP_GEOMETRY::CPoint2Di &minPosition, WISP_GEOMETRY::CPoint2Di &maxPosition, WISP_GEOMETRY::CPoint2Di &offset, int count);
 	static void TestItemsLeftMouseDown(CGump *gump, CBaseGUI *start, const int &currentPage, const int draw2Page = 0, int count = -1);
 	static void TestItemsLeftMouseUp(CGump *gump, CBaseGUI *start, const int &currentPage, const int draw2Page = 0);
 	static void TestItemsDragging(CGump *gump, CBaseGUI *start, const int &currentPage, const int draw2Page = 0, int count = -1);

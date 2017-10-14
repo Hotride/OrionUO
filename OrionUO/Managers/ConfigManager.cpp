@@ -339,7 +339,7 @@ void CConfigManager::OnChangeOldStyleStatusbar(const bool &val)
 		CGump *gump = g_GumpManager.UpdateGump(g_PlayerSerial, 0, GT_STATUSBAR);
 
 		if (gump != NULL && !gump->Minimized)
-			gump->UpdateContent();
+			gump->WantUpdateContent = true;
 	}
 }
 //---------------------------------------------------------------------------
@@ -357,7 +357,7 @@ void CConfigManager::OnChangeOriginalPartyStatusbar(const bool &val)
 				if (gump->GumpType == GT_STATUSBAR && (g_Party.Leader == gump->Serial || g_Party.Contains(gump->Serial)))
 				{
 					gump->WantRedraw = true;
-					gump->UpdateContent();
+					gump->WantUpdateContent = true;
 				}
 			}
 		}
@@ -390,8 +390,8 @@ void CConfigManager::OnChangePaperdollSlots(const bool &val)
 		{
 			if (gump->GumpType == GT_PAPERDOLL)
 			{
-				gump->UpdateContent();
 				gump->WantRedraw = true;
+				gump->WantUpdateContent = true;
 			}
 		}
 	}
@@ -408,8 +408,8 @@ void CConfigManager::OnChangeScaleImagesInPaperdollSlots(const bool &val)
 		{
 			if (gump->GumpType == GT_PAPERDOLL)
 			{
-				gump->UpdateContent();
 				gump->WantRedraw = true;
+				gump->WantUpdateContent = true;
 			}
 		}
 	}

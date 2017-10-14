@@ -132,7 +132,10 @@ void CGumpBaseScroll::GUMP_RESIZE_EVENT_C
 {
 	WISPFUN_DEBUG("c86_f4");
 	if (m_StartResizeHeight)
+	{
 		UpdateHeight();
+		RecalculateSize();
+	}
 }
 //----------------------------------------------------------------------------------
 void CGumpBaseScroll::GUMP_RESIZE_END_EVENT_C

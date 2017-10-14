@@ -65,61 +65,61 @@ void CGump::GUMP_DIRECT_HTML_LINK_EVENT_C
 //---------------------------------------------------------------------------
 void CGump::FixCoordinates()
 {
-	int minX = 0;
-	int minY = 0;
-	int maxX = g_OrionWindow.Size.Width - 40;
-	int maxY = g_OrionWindow.Size.Height - 40;
+	const int gumpOffsetX = 40;
+	const int gumpOffsetY = 40;
+	int maxX = g_OrionWindow.Size.Width - gumpOffsetX;
+	int maxY = g_OrionWindow.Size.Height - gumpOffsetY;
 
 	if (m_Minimized && m_GumpType != GT_MINIMAP)
 	{
-		if (m_MinimizedX > maxX)
+		if (m_MinimizedX + m_GumpSize.Position.X > maxX)
 		{
 			m_WantRedraw = true;
 			m_MinimizedX = maxX;
 		}
 
-		if (m_MinimizedX < minX)
+		if (m_MinimizedX + m_GumpSize.Position.X + m_GumpSize.Size.Width - gumpOffsetX < 0)
 		{
 			m_WantRedraw = true;
-			m_MinimizedX = minX;
+			m_MinimizedX = gumpOffsetX - (m_GumpSize.Position.X + m_GumpSize.Size.Width);
 		}
 
-		if (m_MinimizedY > maxY)
+		if (m_MinimizedY + m_GumpSize.Position.Y > maxY)
 		{
 			m_WantRedraw = true;
 			m_MinimizedY = maxY;
 		}
 
-		if (m_MinimizedY < minY)
+		if (m_MinimizedY + m_GumpSize.Position.Y + m_GumpSize.Size.Height - gumpOffsetY < 0)
 		{
 			m_WantRedraw = true;
-			m_MinimizedY = minY;
+			m_MinimizedY = gumpOffsetY - (m_GumpSize.Position.Y + m_GumpSize.Size.Height);
 		}
 	}
 	else
 	{
-		if (m_X > maxX)
+		if (m_X + m_GumpSize.Position.X > maxX)
 		{
 			m_WantRedraw = true;
 			m_X = maxX;
 		}
 
-		if (m_X < minX)
+		if (m_X + m_GumpSize.Position.X + m_GumpSize.Size.Width - gumpOffsetX < 0)
 		{
 			m_WantRedraw = true;
-			m_X = minX;
+			m_X = gumpOffsetX - (m_GumpSize.Position.X + m_GumpSize.Size.Width);
 		}
 
-		if (m_Y > maxY)
+		if (m_Y + m_GumpSize.Position.Y > maxY)
 		{
 			m_WantRedraw = true;
 			m_Y = maxY;
 		}
 
-		if (m_Y < minY)
+		if (m_Y + m_GumpSize.Position.Y + m_GumpSize.Size.Height - gumpOffsetY < 0)
 		{
 			m_WantRedraw = true;
-			m_Y = minY;
+			m_Y = gumpOffsetY - (m_GumpSize.Position.Y + m_GumpSize.Size.Height);
 		}
 	}
 }
@@ -1270,6 +1270,7 @@ void CGump::Draw()
 	if (m_WantUpdateContent)
 	{
 		UpdateContent();
+		RecalculateSize();
 		m_WantUpdateContent = false;
 		m_FrameCreated = false;
 	}
@@ -1290,6 +1291,14 @@ void CGump::Draw()
 
 	DrawLocker();
 
+	if (g_DeveloperMode == DM_DEBUGGING)
+	{
+		g_GL.DrawLine(m_GumpSize.Position.X, m_GumpSize.Position.Y, m_GumpSize.Position.X + m_GumpSize.Size.Width, m_GumpSize.Position.Y);
+		g_GL.DrawLine(m_GumpSize.Position.X + m_GumpSize.Size.Width, m_GumpSize.Position.Y, m_GumpSize.Position.X + m_GumpSize.Size.Width, m_GumpSize.Position.Y + m_GumpSize.Size.Height);
+		g_GL.DrawLine(m_GumpSize.Position.X + m_GumpSize.Size.Width, m_GumpSize.Position.Y + m_GumpSize.Size.Height, m_GumpSize.Position.X, m_GumpSize.Position.Y + m_GumpSize.Size.Height);
+		g_GL.DrawLine(m_GumpSize.Position.X, m_GumpSize.Position.Y + m_GumpSize.Size.Height, m_GumpSize.Position.X, m_GumpSize.Position.Y);
+	}
+
 	glTranslatef(-g_GumpTranslate.X, -g_GumpTranslate.Y, 0.0f);
 }
 //----------------------------------------------------------------------------------
@@ -1302,6 +1311,7 @@ CRenderObject *CGump::Select()
 	if (m_WantUpdateContent)
 	{
 		UpdateContent();
+		RecalculateSize();
 		m_WantUpdateContent = false;
 		m_FrameCreated = false;
 	}
@@ -1326,6 +1336,88 @@ CRenderObject *CGump::Select()
 	g_CurrentCheckGump = NULL;
 
 	return selected;
+}
+//----------------------------------------------------------------------------------
+void CGump::RecalculateSize()
+{
+	WISPFUN_DEBUG("c84_f19_1");
+
+	WISP_GEOMETRY::CPoint2Di minPosition(999, 999);
+	WISP_GEOMETRY::CPoint2Di maxPosition;
+	WISP_GEOMETRY::CPoint2Di offset;
+
+	GetItemsSize((CBaseGUI*)m_Items, minPosition, maxPosition, offset, -1);
+
+	WISP_GEOMETRY::CSize size(maxPosition.X - minPosition.X, maxPosition.Y - minPosition.Y);
+
+	m_GumpSize = WISP_GEOMETRY::CRect(minPosition, size);
+}
+//----------------------------------------------------------------------------------
+void CGump::GetItemsSize(CBaseGUI *start, WISP_GEOMETRY::CPoint2Di &minPosition, WISP_GEOMETRY::CPoint2Di &maxPosition, WISP_GEOMETRY::CPoint2Di &offset, int count)
+{
+	WISPFUN_DEBUG("c84_f19_2");
+
+	QFOR(item, start, CBaseGUI*)
+	{
+		if (!count)
+			break;
+
+		count--;
+
+		if (!item->Visible)
+			continue;
+
+		switch (item->Type)
+		{
+			case GOT_PAGE:
+			case GOT_GROUP:
+			case GOT_NONE:
+			case GOT_MASTERGUMP:
+			case GOT_CHECKTRANS:
+			case GOT_SHADER:
+			case GOT_BLENDING:
+			case GOT_GLOBAL_COLOR:
+			case GOT_TOOLTIP:
+				break;
+			case GOT_DATABOX:
+			{
+				CGump::GetItemsSize((CBaseGUI*)item->m_Items, minPosition, maxPosition, offset, count);
+				break;
+			}
+			case GOT_HTMLGUMP:
+			case GOT_XFMHTMLGUMP:
+			case GOT_XFMHTMLTOKEN:
+			{
+				WISP_GEOMETRY::CPoint2Di htmlOffset(offset.X + item->X, offset.X + item->Y);
+				CGump::GetItemsSize((CBaseGUI*)item->m_Items, minPosition, maxPosition, htmlOffset, 5);
+				break;
+			}
+			default:
+			{
+				int x = item->X + offset.X;
+				int y = item->Y + offset.Y;
+
+				if (x < minPosition.X)
+					minPosition.X = x;
+
+				if (y < minPosition.Y)
+					minPosition.Y = y;
+
+				WISP_GEOMETRY::CSize itemSize = item->GetSize();
+
+				x += itemSize.Width;
+				y += itemSize.Height;
+
+				if (x > maxPosition.X)
+					maxPosition.X = x;
+
+				if (y > maxPosition.Y)
+					maxPosition.Y = y;
+
+				break;
+			}
+		}
+	}
 }
 //----------------------------------------------------------------------------------
 void CGump::OnLeftMouseButtonDown()
