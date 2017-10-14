@@ -3590,16 +3590,14 @@ PACKET_HANDLER(DisplayClilocString)
 	if (*m_Start == 0xCC)
 		flags = ReadUInt8();
 
-	string name = ReadString(30);
+	string name = ReadString(30).c_str();
 
-	string affix = "";
+	wstring affix = L"";
 	if (*m_Start == 0xCC)
-		affix = ReadString(0);
+		affix = DecodeUTF8(ReadString()).c_str();
 
-	wstring args((wchar_t*)Ptr);
-	//wstring args = ReadUnicodeStringLE(0);
-	wstring message = g_ClilocManager.ParseArgumentsToClilocString(cliloc, false, args);
-	//wstring message = ClilocManager->Cliloc(g_Language)->GetW(cliloc);
+	wstring message = g_ClilocManager.ParseArgumentsToClilocString(cliloc, false, (wchar_t*)m_Ptr).c_str();
+	message += affix;
 
 	CGameObject *obj = g_World->FindWorldObject(serial);
 
@@ -3613,20 +3611,17 @@ PACKET_HANDLER(DisplayClilocString)
 			str = L"*" + str + L"*";
 		}*/
 
-		//if (serial >= 0x40000000) //Только для предметов
+		if (obj != NULL)
 		{
-			if (obj != NULL)
+			if (!obj->Name.length())
 			{
-				if (!obj->Name.length())
-				{
-					obj->Name = name;
+				obj->Name = name;
 
-					if (obj->NPC)
-						g_GumpManager.UpdateContent(serial, 0, GT_STATUSBAR);
-				}
-				else //names in journal should always be seen as -> You see: NAME, unless speaking, emoting or else
-					obj->YouSeeJournalPrefix = true;
+				if (obj->NPC)
+					g_GumpManager.UpdateContent(serial, 0, GT_STATUSBAR);
 			}
+			else //names in journal should always be seen as -> You see: NAME, unless speaking, emoting or else
+				obj->YouSeeJournalPrefix = true;
 		}
 
 		g_Orion.CreateUnicodeTextMessage(TT_OBJECT, serial, (uchar)font, color, message);
