@@ -70,44 +70,35 @@ bool CMapBlock::HasNoExternalData()
 	return true;
 }
 //----------------------------------------------------------------------------------
-ushort CMapBlock::GetRadarColor(const int &x, const int &y)
+ushort CMapBlock::GetRadarColor(const int &x, const int &y, const uint &defaultColor)
 {
 	WISPFUN_DEBUG("c24_f4");
-	ushort color = 0;
 	CRenderWorldObject *obj = Block[x][y];
 
-	//Получаем указатель на первый элемент списка
-	while (obj != NULL && obj->m_PrevXY != NULL)
-		obj = obj->m_PrevXY;
-
-	//Пройдемся по всему списку и запомним последний встретившийся ИД предмета
-	while (obj != NULL)
-	{
-		if (!obj->NoDrawTile)
-		{
-			switch (obj->RenderType)
-			{
-				case ROT_LAND_OBJECT:
-				case ROT_STATIC_OBJECT:
-				case ROT_MULTI_OBJECT:
-				{
-					color = obj->Graphic;
-
-					if (obj->RenderType != ROT_LAND_OBJECT)
-						color += 0x4000;
-
-					break;
-				}
-				default:
-					break;
-			}
-		}
-
+	//Получаем указатель на последний элемент списка
+	while (obj != NULL && obj->m_NextXY != NULL)
 		obj = obj->m_NextXY;
+
+	//Пройдемся по списку с конца до начала и вернем первый подходящий ИД
+	for (; obj != NULL; obj = obj->m_PrevXY)
+	{
+		if (obj->NoDrawTile)
+			continue;
+
+		switch (obj->RenderType)
+		{
+			case ROT_LAND_OBJECT:
+			case ROT_STATIC_OBJECT:
+				return defaultColor;
+			case ROT_MULTI_OBJECT:
+				return obj->Graphic + 0x4000;
+			default:
+				break;
+		}
 	}
 
-	//Вернем последнее найденное
-	return color;
+	//Вернем входящий цвет, если не нашлось ничего подходящего
+	return defaultColor;
 }
 //----------------------------------------------------------------------------------
 void CMapBlock::CreateLandTextureRect()

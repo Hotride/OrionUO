@@ -892,7 +892,7 @@ void CGumpPaperdoll::OnLeftMouseButtonUp()
 			}
 			else //Click on object
 			{
-				if (!g_ClickObject.Enabled && !g_TooltipsEnabled)
+				if (!g_ClickObject.Enabled)
 				{
 					g_ClickObject.Init(equipment);
 					g_ClickObject.Timer = g_Ticks + g_MouseManager.DoubleClickDelay;

@@ -386,7 +386,7 @@ void CGumpContainer::OnLeftMouseButtonUp()
 	}
 	else if (!g_ObjectInHand.Enabled)
 	{
-		if (!g_ClickObject.Enabled && !g_TooltipsEnabled)
+		if (!g_ClickObject.Enabled)
 		{
 			CGameObject *clickTarget = g_World->FindWorldObject(selectedSerial);
 

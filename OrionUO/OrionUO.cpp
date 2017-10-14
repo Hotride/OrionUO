@@ -1043,10 +1043,11 @@ void COrion::ProcessDelayedClicks()
 			{
 				CGameObject *go = (CGameObject*)g_ClickObject.Object;
 
+				if (!g_TooltipsEnabled || (!go->NPC && go->Locked()))
+					Click(serial);
+
 				if (g_PopupEnabled && (!g_ConfigManager.HoldShiftForContextMenus || g_ShiftPressed))
 					CPacketRequestPopupMenu(serial).Send();
-				else if (!g_TooltipsEnabled || (!go->NPC && go->Locked()))
-					Click(serial);
 			}
 		}
 		else
@@ -1729,35 +1730,27 @@ void COrion::LoginComplete()
 void COrion::ChangeSeason(const SEASON_TYPE &season, const int &music)
 {
 	WISPFUN_DEBUG("c194_f29");
-	bool updateGraphics = (g_Season != season);
 
 	g_Season = season;
 
-	if (updateGraphics)
+	QFOR(item, g_MapManager.m_Items, CMapBlock*)
 	{
-		QFOR(item, g_MapManager.m_Items, CMapBlock*)
+		IFOR(x, 0, 8)
 		{
-			IFOR(x, 0, 8)
+			IFOR(y, 0, 8)
 			{
-				IFOR(y, 0, 8)
+				QFOR(obj, item->GetRender(x, y), CRenderWorldObject*)
 				{
-					CRenderWorldObject *obj = item->GetRender(x, y);
-
-					while (obj != NULL)
-					{
-						obj->UpdateGraphicBySeason();
-
-						obj = (CRenderWorldObject*)obj->m_Next;
-					}
+					obj->UpdateGraphicBySeason();
 				}
 			}
 		}
-
-		CGumpMinimap *gump = (CGumpMinimap*)g_GumpManager.UpdateGump(0, 0, GT_MINIMAP);
-
-		if (gump != NULL)
-			gump->LastX = 0;
 	}
+
+	CGumpMinimap *gump = (CGumpMinimap*)g_GumpManager.UpdateGump(0, 0, GT_MINIMAP);
+
+	if (gump != NULL)
+		gump->LastX = 0;
 
 	if (music)
 		g_Orion.PlayMusic(music, true);
@@ -1768,7 +1761,7 @@ ushort COrion::GetLandSeasonGraphic(ushort graphic)
 	WISPFUN_DEBUG("c194_f30");
 	if (g_Season == ST_WINTER)
 	{
-		ushort buf = m_WinterTile[graphic];
+		const ushort &buf = m_WinterTile[graphic];
 
 		if (buf != 0)
 			graphic = buf;
@@ -4485,31 +4478,26 @@ void COrion::DrawLandTexture(CLandObject *land, ushort color, const int &x, cons
 	WISPFUN_DEBUG("c194_f76");
 	ushort id = land->Graphic;
 
-	if (id == 2)
+	CGLTexture *th = ExecuteTexture(id);
+
+	if (th == NULL)
 		DrawLandArt(id, color, x, y);
 	else
 	{
-		CGLTexture *th = ExecuteTexture(id);
+		if (g_OutOfRangeColor)
+			color = g_OutOfRangeColor;
 
-		if (th == NULL)
-			DrawLandArt(id, color, x, y);
-		else
+		int drawMode = 6;
+
+		if (!g_GrayedPixels && color)
 		{
-			if (g_OutOfRangeColor)
-				color = g_OutOfRangeColor;
-
-			int drawMode = 6;
-
-			if (!g_GrayedPixels && color)
-			{
-				drawMode = 7;
-				g_ColorManager.SendColorsToShader(color);
-			}
-
-			glUniform1iARB(g_ShaderDrawMode, drawMode);
-
-			g_GL_DrawLandTexture(*th, x, y + (land->Z * 4), land);
+			drawMode = 7;
+			g_ColorManager.SendColorsToShader(color);
 		}
+
+		glUniform1iARB(g_ShaderDrawMode, drawMode);
+
+		g_GL_DrawLandTexture(*th, x, y + (land->Z * 4), land);
 	}
 }
 //----------------------------------------------------------------------------------

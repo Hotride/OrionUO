@@ -895,13 +895,13 @@ PACKET_HANDLER(EnterWorld)
 	CPacketClientVersion(g_Orion.ClientVersionText).Send();
 
 	if (m_ClientVersion >= CV_200)
+		CPacketGameWindowSize().Send();
+
+	if (m_ClientVersion >= CV_200)
 		CPacketLanguage(g_Language.c_str()).Send();
 
 	g_Orion.Click(g_PlayerSerial);
 	CPacketStatusRequest(g_PlayerSerial).Send();
-
-	if (m_ClientVersion >= CV_200)
-		CPacketGameWindowSize().Send();
 
 	if (g_Player->Dead())
 		g_Orion.ChangeSeason(ST_DESOLATION, DEATH_MUSIC_INDEX);

@@ -1974,7 +1974,7 @@ void CGameScreen::OnLeftMouseButtonUp()
 			{
 				if (rwo->IsGameObject())
 				{
-					if (!g_ClickObject.Enabled) // && !g_TooltipsEnabled) // && g_PacketManager.ClientVersion < CV_308Z)
+					if (!g_ClickObject.Enabled)
 					{
 						g_ClickObject.Init(rwo);
 						g_ClickObject.Timer = g_Ticks + g_MouseManager.DoubleClickDelay;
@@ -2003,13 +2003,6 @@ void CGameScreen::OnLeftMouseButtonUp()
 			
 						}
 					}
-					/*else if (g_LastObjectType == SOT_LAND_OBJECT)
-					{
-						WORD ID = g_SelectedObject->Index;
-						string str(UO->m_LandData[ID].Name);
-						if (str.length())
-							UO->CreateTextMessage(TT_CLIENT, 0, 3, 0x03B5, str);
-					}*/
 				}
 			}
 		}

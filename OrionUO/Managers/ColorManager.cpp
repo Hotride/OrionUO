@@ -40,7 +40,7 @@ void CColorManager::Init()
 
 	if (g_FileManager.m_RadarcolMul.Size)
 	{
-		m_Radarcol.resize(g_FileManager.m_RadarcolMul.Size);
+		m_Radarcol.resize(g_FileManager.m_RadarcolMul.Size / 2);
 		memcpy(&m_Radarcol[0], (PVOID)g_FileManager.m_RadarcolMul.Start, g_FileManager.m_RadarcolMul.Size);
 	}
 
@@ -192,23 +192,13 @@ ushort CColorManager::GetColor16(const ushort &c, ushort color)
 @param [__in] c Исходный 16-битный цвет
 @return 16-битный цвет
 */
-ushort CColorManager::GetRadarColorData(const ushort &c)
+ushort CColorManager::GetRadarColorData(const uint &c)
 {
 	WISPFUN_DEBUG("c137_f6");
-	pushort ptr = (pushort)&m_Radarcol[0];
-	return ptr[c];
-}
-//----------------------------------------------------------------------------------
-/*!
-Получить 32-битный цвет для радара
-@param [__in] c Исходный 16-битный цвет
-@return 32-битный цвет
-*/
-uint CColorManager::GetRadarColor(const ushort &c)
-{
-	WISPFUN_DEBUG("c137_f7");
-	pushort ptr = (pushort)&m_Radarcol[0];
-	return Color16To32(ptr[c]);
+	if (c < m_Radarcol.size())
+		return m_Radarcol[c];
+
+	return 0;
 }
 //----------------------------------------------------------------------------------
 /*!

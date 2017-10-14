@@ -45,7 +45,7 @@ public:
 	CRenderWorldObject *GetRender(const int &x, const int &y);
 
 	//Получить цвет точки для радара
-	ushort GetRadarColor(const int &x, const int &y);
+	ushort GetRadarColor(const int &x, const int &y, const uint &defaultColor);
 
 	//Сконструировать вершины текстур ландшафта
 	void CreateLandTextureRect();

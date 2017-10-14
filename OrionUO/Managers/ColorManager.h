@@ -31,7 +31,7 @@ private:
 	int m_HuesCount{ 0 };
 
 	//!Данные для радара
-	UCHAR_LIST m_Radarcol;
+	USHORT_LIST m_Radarcol;
 
 	//!Данные из palette.mul
 	PALETTE_BLOCK m_Palette[256];
@@ -113,14 +113,7 @@ public:
 	@param [__in] c Исходный 16-битный цвет
 	@return 16-битный цвет
 	*/
-	ushort GetRadarColorData(const ushort &c);
-
-	/*!
-	Получить 32-битный цвет для радара
-	@param [__in] c Исходный 16-битный цвет
-	@return 32-битный цвет
-	*/
-	uint GetRadarColor(const ushort &c);
+	ushort GetRadarColorData(const uint &c);
 
 	/*!
 	Получить 32-битный цвет без конвертирования входящего цвета

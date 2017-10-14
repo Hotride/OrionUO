@@ -83,55 +83,66 @@ void CGumpMinimap::GenerateMap()
 
 	for (int i = minBlockX; i <= maxBlockX; i++)
 	{
+		uint blockIndexOffset = i * mapBlockHeight;
+
 		for (int j = minBlockY; j <= maxBlockY; j++)
 		{
-			uint blockIndex = (i * mapBlockHeight) + j;
+			uint blockIndex = blockIndexOffset + j;
 
 			if (blockIndex >= maxBlockIndex)
-				continue;
+				break;
+
+			MAP_BLOCK mb = { 0 };
+			g_MapManager.GetRadarMapBlock(i, j, mb);
 
 			CMapBlock *mapBlock = g_MapManager.GetBlock(blockIndex);
-			MAP_BLOCK mb = { 0 };
 
-			if (mapBlock == NULL)
-				g_MapManager.GetRadarMapBlock(i, j, mb);
+			int realBlockX = (i * 8);
+			int realBlockY = (j * 8);
 
 			IFOR(x, 0, 8)
 			{
+				int px = ((realBlockX + x) - m_LastX) + gumpCenterX;
+
 				IFOR(y, 0, 8)
 				{
-					int px = (((i * 8) + x) - m_LastX) + gumpCenterX;
-					int py = ((j * 8) + y) - m_LastY;
+					int py = (realBlockY + y) - m_LastY;
 
 					int gx = px - py;
+
+					if (gx < 0 || gx >= gumpWidth)
+						continue;
+
 					int gy = px + py;
 
-					if (gy < 0 || gy >= gumpHeight)
+					if (gy < 0)
 						continue;
+
+					uint color = mb.Cells[(y * 8) + x].TileID;
+
+					if (mapBlock == NULL)
+					{
+						if (color >= 0x4000)
+							color = g_Orion.GetSeasonGraphic(color - 0x4000) + 0x4000;
+						else
+							color = g_Orion.GetLandSeasonGraphic(color);
+					}
+					else
+						color = mapBlock->GetRadarColor(x, y, color);
+
+					color = 0x8000 | g_ColorManager.GetRadarColorData(color);
 
 					IFOR(i1, 0, 2)
 					{
-						gx += i1;
+						if (gy >= gumpHeight)
+							break;
 
-						if (gx < 0 || gx >= gumpWidth)
-							continue;
-
-						int block = gy * gumpWidth + gx;
+						int block = (gy * gumpWidth) + gx;
 
 						if (data[block] == 0x8421)
-						{
-							ushort color = (mapBlock != NULL ? mapBlock->GetRadarColor(x, y) : mb.Cells[(y * 8) + x].TileID);
+							data[block] = color;
 
-							if (mapBlock == NULL)
-							{
-								if (color >= 0x4000)
-									color = g_Orion.GetSeasonGraphic(color - 0x4000) + 0x4000;
-								else
-									color = g_Orion.GetLandSeasonGraphic(color);
-							}
-
-							data[block] = 0x8000 | g_ColorManager.GetRadarColorData(color);
-						}
+						gy++;
 					}
 				}
 			}

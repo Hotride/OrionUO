@@ -143,7 +143,7 @@ CPacketCreateCharacter::CPacketCreateCharacter(const string &name)
 	uchar serverIndex = 0;
 
 	if (server != NULL)
-		serverIndex = (uchar)server->Index - 1;
+		serverIndex = (uchar)server->Index;
 
 	WriteUInt8(serverIndex); //server index
 
@@ -166,7 +166,7 @@ CPacketCreateCharacter::CPacketCreateCharacter(const string &name)
 
 	WriteUInt32BE(slot);
 
-	WriteDataLE(g_ConnectionManager.GetClientIP(), 4);
+	WriteDataBE(g_ConnectionManager.GetClientIP(), 4);
 	WriteUInt16BE(g_CreateCharacterManager.ShirtColor);
 	WriteUInt16BE(g_CreateCharacterManager.PantsColor);
 }
@@ -177,7 +177,7 @@ CPacketDeleteCharacter::CPacketDeleteCharacter(const uint &charIndex)
 	WriteUInt8(0x83);
 	Move(30); //character password
 	WriteUInt32BE(charIndex);
-	WriteDataLE(g_ConnectionManager.GetClientIP(), 4);
+	WriteDataBE(g_ConnectionManager.GetClientIP(), 4);
 }
 //----------------------------------------------------------------------------------
 CPacketSelectCharacter::CPacketSelectCharacter(const uint &index, const string &name)
@@ -195,7 +195,7 @@ CPacketSelectCharacter::CPacketSelectCharacter(const uint &index, const string &
 	WriteString(name.c_str(), 30, false);
 	Move(30);
 	WriteUInt32BE(index);
-	WriteDataLE(g_ConnectionManager.GetClientIP(), 4);
+	WriteDataBE(g_ConnectionManager.GetClientIP(), 4);
 }
 //----------------------------------------------------------------------------------
 CPacketPickupRequest::CPacketPickupRequest(uint serial, ushort count)
@@ -826,10 +826,8 @@ CPacketGameWindowSize::CPacketGameWindowSize()
 	WriteUInt8(0xBF);
 	WriteUInt16BE(0x000D);
 	WriteUInt16BE(0x0005);
-	WriteUInt16BE(0);
-	WriteUInt16BE(g_ConfigManager.GameWindowWidth);
-	WriteUInt16BE(g_ConfigManager.GameWindowHeight);
-	WriteUInt16BE(0);
+	WriteUInt32BE(g_ConfigManager.GameWindowWidth);
+	WriteUInt32BE(g_ConfigManager.GameWindowHeight);
 }
 //---------------------------------------------------------------------------
 CPacketOpenGuildGump::CPacketOpenGuildGump()
