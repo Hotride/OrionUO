@@ -294,6 +294,11 @@ void CGameScreen::CheckFoliageUnion(ushort graphic, int x, int y, int z)
 void CGameScreen::CalculateRenderList()
 {
 	WISPFUN_DEBUG("c164_f10");
+	m_RenderListCount = 0;
+
+	if (g_Player == NULL)
+		return;
+
 	if (g_Target.IsTargeting() && g_Target.MultiGraphic && g_SelectedObject.Object != NULL && g_SelectedObject.Object->IsWorldObject())
 	{
 		int grZ = 0;
@@ -337,7 +342,6 @@ void CGameScreen::CalculateRenderList()
 	}
 
 	m_ObjectHandlesCount = 0;
-	m_RenderListCount = 0;
 	bool useObjectHandles = (!g_GrayedPixels && g_ConfigManager.ObjectHandles && g_ShiftPressed && g_CtrlPressed);
 
 	QFOR(go, g_World->m_Items, CGameObject*)
