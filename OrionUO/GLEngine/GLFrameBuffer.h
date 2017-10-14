@@ -38,6 +38,8 @@ public:
 	*/
 	bool Init(int width, int height);
 
+	bool Init(const WISP_GEOMETRY::CSize &size) { return Init(size.Width, size.Height); }
+
 	/*!
 	Очистка фрэймбуфера
 	@return 
@@ -62,7 +64,9 @@ public:
 	@param [__in] height Высота буфера
 	@return true в случае готовности
 	*/
-	bool Ready(int &width, int &height);
+	bool Ready(const int &width, const int &height);
+
+	bool Ready(const WISP_GEOMETRY::CSize &size) { return Ready(size.Width, size.Height); }
 
 	/*!
 	Использование буфера

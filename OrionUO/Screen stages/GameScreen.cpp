@@ -980,7 +980,7 @@ void CGameScreen::CalculateGameWindowBounds()
 
 	m_UseLight = (g_PersonalLightLevel < g_LightLevel);
 
-	if (m_UseLight && g_GL.CanUseFrameBuffer)
+	if (m_UseLight /*&& g_GL.CanUseFrameBuffer*/)
 	{
 		int testWidth = g_RenderBounds.GameWindowWidth;
 		int testHeight = g_RenderBounds.GameWindowHeight;
@@ -1224,9 +1224,9 @@ void CGameScreen::DrawGameWindowLight()
 
 	g_LightColorizerShader.Use();
 
-	if (g_GL.CanUseFrameBuffer)
+	//if (g_GL.CanUseFrameBuffer)
 	{
-		if (g_LightBuffer.Ready() && g_LightBuffer.Use())
+		if (/*g_LightBuffer.Ready() &&*/ g_LightBuffer.Use())
 		{
 			float newLightColor = ((32 - g_LightLevel + g_PersonalLightLevel) / 32.0f);
 
@@ -1277,7 +1277,7 @@ void CGameScreen::DrawGameWindowLight()
 			glDisable(GL_BLEND);
 		}
 	}
-	else
+	/*else
 	{
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_ONE, GL_ONE);
@@ -1286,7 +1286,7 @@ void CGameScreen::DrawGameWindowLight()
 			g_Orion.DrawLight(m_Light[i]);
 
 		glDisable(GL_BLEND);
-	}
+	}*/
 
 	UnuseShader();
 }
@@ -1498,13 +1498,13 @@ void CGameScreen::Render(const bool &mode)
 		
 		g_DrawColor = 1.0f;
 
-		if (!g_GL.CanUseFrameBuffer && g_PersonalLightLevel < g_LightLevel)
+		/*if (!g_GL.CanUseFrameBuffer && g_PersonalLightLevel < g_LightLevel)
 		{
 			g_DrawColor = (32 - g_LightLevel + g_PersonalLightLevel) / 32.0f;
 
 			if (!g_ConfigManager.DarkNights)
 				g_DrawColor += 0.2f;
-		}
+		}*/
 
 		if (g_GrayedPixels)
 			g_DeathShader.Use();

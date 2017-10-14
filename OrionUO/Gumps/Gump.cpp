@@ -1236,7 +1236,7 @@ bool CGump::EntryPointerHere()
 	return false;
 }
 //----------------------------------------------------------------------------------
-void CGump::GenerateFrame(bool stop)
+void CGump::GenerateFrame()
 {
 	WISPFUN_DEBUG("c84_f17");
 	if (!g_GL.Drawing)
@@ -1251,12 +1251,7 @@ void CGump::GenerateFrame(bool stop)
 
 	PrepareTextures();
 
-	glNewList((GLuint)this, GL_COMPILE);
-
-		DrawItems((CBaseGUI*)m_Items, m_Page, m_Draw2Page);
-
-	if (stop)
-		glEndList();
+	DrawItems((CBaseGUI*)m_Items, m_Page, m_Draw2Page);
 
 	m_WantRedraw = true;
 	m_FrameCreated = true;
@@ -1276,28 +1271,55 @@ void CGump::Draw()
 	}
 
 	if (!m_FrameCreated)
-		GenerateFrame(true);
+	{
+		loc_create_frame:
+
+		if (!m_FrameBuffer.Ready(m_GumpSize.Size))
+			m_FrameBuffer.Init(m_GumpSize.Size);
+
+		if (m_FrameBuffer.Use())
+		{
+			glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+			glClear(GL_COLOR_BUFFER_BIT);
+
+			GenerateFrame();
+
+			if (g_DeveloperMode == DM_DEBUGGING)
+			{
+				if (g_SelectedObject.Gump == this)
+					glColor4f(0.0f, 1.0f, 0.0f, 0.5f);
+				else
+					glColor4f(1.0f, 1.0f, 1.0f, 0.5f);
+
+				g_GL.DrawLine(m_GumpSize.Position.X + 1, m_GumpSize.Position.Y + 1, m_GumpSize.Position.X + m_GumpSize.Size.Width, m_GumpSize.Position.Y + 1);
+				g_GL.DrawLine(m_GumpSize.Position.X + m_GumpSize.Size.Width, m_GumpSize.Position.Y + 1, m_GumpSize.Position.X + m_GumpSize.Size.Width, m_GumpSize.Position.Y + m_GumpSize.Size.Height);
+				g_GL.DrawLine(m_GumpSize.Position.X + m_GumpSize.Size.Width, m_GumpSize.Position.Y + m_GumpSize.Size.Height, m_GumpSize.Position.X + 1, m_GumpSize.Position.Y + m_GumpSize.Size.Height);
+				g_GL.DrawLine(m_GumpSize.Position.X + 1, m_GumpSize.Position.Y + m_GumpSize.Size.Height, m_GumpSize.Position.X + 1, m_GumpSize.Position.Y + 1);
+
+				glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+			}
+
+			m_FrameBuffer.Release();
+		}
+	}
 	else if (m_WantRedraw)
 	{
-		GenerateFrame(true);
 		m_WantRedraw = false;
+		goto loc_create_frame;
 	}
 
 	glTranslatef(g_GumpTranslate.X, g_GumpTranslate.Y, 0.0f);
 
-	glCallList((GLuint)this);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_DST_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+	m_FrameBuffer.Draw(0, 0);
+
+	glDisable(GL_BLEND);
 
 	g_GL.OldTexture = 0;
 
 	DrawLocker();
-
-	if (g_DeveloperMode == DM_DEBUGGING)
-	{
-		g_GL.DrawLine(m_GumpSize.Position.X, m_GumpSize.Position.Y, m_GumpSize.Position.X + m_GumpSize.Size.Width, m_GumpSize.Position.Y);
-		g_GL.DrawLine(m_GumpSize.Position.X + m_GumpSize.Size.Width, m_GumpSize.Position.Y, m_GumpSize.Position.X + m_GumpSize.Size.Width, m_GumpSize.Position.Y + m_GumpSize.Size.Height);
-		g_GL.DrawLine(m_GumpSize.Position.X + m_GumpSize.Size.Width, m_GumpSize.Position.Y + m_GumpSize.Size.Height, m_GumpSize.Position.X, m_GumpSize.Position.Y + m_GumpSize.Size.Height);
-		g_GL.DrawLine(m_GumpSize.Position.X, m_GumpSize.Position.Y + m_GumpSize.Size.Height, m_GumpSize.Position.X, m_GumpSize.Position.Y);
-	}
 
 	glTranslatef(-g_GumpTranslate.X, -g_GumpTranslate.Y, 0.0f);
 }
@@ -1323,7 +1345,8 @@ CRenderObject *CGump::Select()
 
 	if (SelectLocker())
 		selected = &m_Locker;
-	else
+	else if (g_MouseManager.Position.X >= m_GumpSize.Position.X && g_MouseManager.Position.X < m_GumpSize.Position.X + m_GumpSize.Size.Width &&
+		g_MouseManager.Position.Y >= m_GumpSize.Position.Y && g_MouseManager.Position.Y < m_GumpSize.Position.Y + m_GumpSize.Size.Height)
 		selected = SelectItems((CBaseGUI*)m_Items, m_Page, m_Draw2Page);
 
 	if (selected != NULL)

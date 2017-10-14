@@ -49,7 +49,7 @@ public:
 
 	virtual void PrepareContent();
 
-	virtual void GenerateFrame(bool stop);
+	virtual void GenerateFrame();
 
 	virtual CRenderObject *Select();
 

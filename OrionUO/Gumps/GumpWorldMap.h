@@ -68,7 +68,7 @@ public:
 
 	virtual bool CanBeDisplayed() { return m_Called; }
 
-	virtual void GenerateFrame(bool stop);
+	virtual void GenerateFrame();
 
 	virtual void PrepareContent();
 

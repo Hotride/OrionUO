@@ -62,9 +62,11 @@ class CGump : public CRenderObject
 	SETGET(WISP_GEOMETRY::CRect, GumpSize, WISP_GEOMETRY::CRect());
 
 protected:
-	virtual void CalculateGumpState();
-
 	CGUIButton m_Locker{ CGUIButton(0, 0, 0, 0, 0, 0) };
+
+	CGLFrameBuffer m_FrameBuffer{ CGLFrameBuffer() };
+
+	virtual void CalculateGumpState();
 
 	virtual void RecalculateSize();
 
@@ -97,7 +99,7 @@ public:
 
 	virtual void PrepareTextures();
 
-	virtual void GenerateFrame(bool stop);
+	virtual void GenerateFrame();
 
 	virtual bool CanBeDisplayed() { return true; }
 

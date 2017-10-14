@@ -166,7 +166,7 @@ void CGumpMap::PrepareContent()
 	}
 }
 //----------------------------------------------------------------------------------
-void CGumpMap::GenerateFrame(bool stop)
+void CGumpMap::GenerateFrame()
 {
 	WISPFUN_DEBUG("c99_f5");
 
@@ -199,7 +199,7 @@ void CGumpMap::GenerateFrame(bool stop)
 		}
 	}
 
-	CGump::GenerateFrame(false);
+	CGump::GenerateFrame();
 
 	if (m_DataBox != NULL)
 	{
@@ -250,8 +250,6 @@ void CGumpMap::GenerateFrame(bool stop)
 			}
 		}
 	}
-
-	glEndList();
 }
 //----------------------------------------------------------------------------------
 CRenderObject *CGumpMap::Select()

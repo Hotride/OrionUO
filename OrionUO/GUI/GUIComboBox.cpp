@@ -196,7 +196,7 @@ void CGUIComboBox::Draw(const bool &checktrans)
 		else
 			g_Orion.DrawResizepicGump(m_OpenGraphic, m_X, m_Y, m_OpenedWidth, m_WorkHeight + 6);
 
-		g_GL.PushScissor(currentX + (int)g_GumpTranslate.X, currentY + (int)g_GumpTranslate.Y, m_WorkWidth, m_WorkHeight);
+		g_GL.PushScissor(currentX, currentY, m_WorkWidth, m_WorkHeight);
 
 		CBaseGUI *start = SkipToStart();
 		int count = 0;
@@ -254,7 +254,7 @@ void CGUIComboBox::Draw(const bool &checktrans)
 
 			if (selected != NULL)
 			{
-				g_GL.PushScissor(m_X + 6 + (int)g_GumpTranslate.X, m_Y + (int)g_GumpTranslate.Y, m_MinimizedArrowX, 20);
+				g_GL.PushScissor(m_X + 6, m_Y, m_MinimizedArrowX, 20);
 				selected->m_Texture.Draw(m_X + 6, m_Y + 6 + m_TextOffsetY);
 				g_GL.PopScissor();
 			}
@@ -267,7 +267,7 @@ void CGUIComboBox::Draw(const bool &checktrans)
 
 			if (selected != NULL)
 			{
-				g_GL.PushScissor(m_X + 3 + (int)g_GumpTranslate.X, m_Y + (int)g_GumpTranslate.Y, m_Width - 6, 20);
+				g_GL.PushScissor(m_X + 3, m_Y, m_Width - 6, 20);
 				selected->m_Texture.Draw(m_X + 3, m_Y + 4 + m_TextOffsetY);
 				g_GL.PopScissor();
 			}

@@ -181,7 +181,7 @@ bool CGLEngine::Install()
 
 	ViewPort(0, 0, g_OrionWindow.Size.Width, g_OrionWindow.Size.Height);
 	
-	return true;
+	return m_CanUseFrameBuffer;
 }
 //----------------------------------------------------------------------------------
 void CGLEngine::Uninstall()
@@ -442,7 +442,7 @@ void CGLEngine::PushScissor(const WISP_GEOMETRY::CRect &rect)
 
 	glEnable(GL_SCISSOR_TEST);
 
-	glScissor(rect.Position.X, g_OrionWindow.Size.Height - rect.Position.Y - rect.Size.Height, rect.Size.Width, rect.Size.Height);
+	glScissor(rect.Position.X, rect.Position.Y, rect.Size.Width, rect.Size.Height);
 }
 //----------------------------------------------------------------------------------
 void CGLEngine::PopScissor()
@@ -455,7 +455,7 @@ void CGLEngine::PopScissor()
 	else
 	{
 		WISP_GEOMETRY::CRect &rect = m_ScissorList.back();
-		glScissor(rect.Position.X, g_OrionWindow.Size.Height - rect.Position.Y - rect.Size.Height, rect.Size.Width, rect.Size.Height);
+		glScissor(rect.Position.X, rect.Position.Y, rect.Size.Width, rect.Size.Height);
 	}
 }
 //----------------------------------------------------------------------------------
