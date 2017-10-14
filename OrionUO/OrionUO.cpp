@@ -1706,7 +1706,6 @@ void COrion::LoginComplete()
 		else
 			sprintf_s(buf, "Ultima Online - %s", g_Player->Name.c_str());
 
-
 		g_OrionWindow.SetTitle(buf);
 
 		CPacketSkillsRequest(g_PlayerSerial).Send();

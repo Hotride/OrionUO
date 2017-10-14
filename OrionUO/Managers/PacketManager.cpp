@@ -1212,8 +1212,12 @@ PACKET_HANDLER(UpdateItem)
 	if (g_World == NULL)
 		return;
 
-	UPDATE_GAME_OBJECT_TYPE updateType = UGOT_ITEM;
 	uint serial = ReadUInt32BE();
+
+	if (serial == g_PlayerSerial)
+		return;
+
+	UPDATE_GAME_OBJECT_TYPE updateType = UGOT_ITEM;
 	ushort count = 0;
 	uchar graphicIncrement = 0;
 	uchar direction = 0;
@@ -1282,8 +1286,7 @@ PACKET_HANDLER(UpdateItem)
 		updateType = UGOT_MULTI;
 	}
 
-	if (serial != g_PlayerSerial)
-		g_World->UpdateGameObject(serial, graphic, graphicIncrement, count, x, y, z, direction, color, flags, count, updateType, 1);
+	g_World->UpdateGameObject(serial, graphic, graphicIncrement, count, x, y, z, direction, color, flags, count, updateType, 1);
 }
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(UpdateItemSA)
@@ -1307,7 +1310,10 @@ PACKET_HANDLER(UpdateItemSA)
 	uchar flags = ReadUInt8();
 	ushort unknown2 = ReadUInt16BE();
 
-	g_World->UpdateGameObject(serial, graphic, graphicIncrement, count, x, y, z, direction, color, flags, unknown, updateType, unknown2);
+	if (serial != g_PlayerSerial)
+		g_World->UpdateGameObject(serial, graphic, graphicIncrement, count, x, y, z, direction, color, flags, unknown, updateType, unknown2);
+	else if (*m_Start == 0xF7) //из пакета 0xF7 для игрока определенная обработка
+		g_World->UpdatePlayer(serial, graphic, graphicIncrement, color, flags, x, y, 0/*serverID*/, direction, z);
 }
 //---------------------------------------------------------------------------
 PACKET_HANDLER(UpdateObject)
@@ -1325,6 +1331,7 @@ PACKET_HANDLER(UpdateObject)
 	ushort color = ReadUInt16BE();
 	uchar flags = ReadUInt8();
 	uchar notoriety = ReadUInt8();
+	bool oldDead = false;
 
 	bool isAlreadyExists = (g_World->FindWorldObject(serial) != NULL);
 
@@ -1334,6 +1341,7 @@ PACKET_HANDLER(UpdateObject)
 		{
 			bool updateStatusbar = (g_Player->Flags != flags);
 
+			oldDead = g_Player->Dead();
 			g_Player->Graphic = graphic;
 			g_Player->OnGraphicChange(1000);
 			g_Player->Color = g_ColorManager.FixColor(color);
@@ -1405,7 +1413,7 @@ PACKET_HANDLER(UpdateObject)
 
 	if (obj->IsPlayer())
 	{
-		/*if (oldDead != g_Player->Dead())
+		if (oldDead != g_Player->Dead())
 		{
 			if (g_Player->Dead())
 				g_Orion.ChangeSeason(ST_DESOLATION, DEATH_MUSIC_INDEX);
@@ -1414,7 +1422,6 @@ PACKET_HANDLER(UpdateObject)
 		}
 
 		g_GumpManager.UpdateContent(serial, 0, GT_PAPERDOLL);
-		*/
 
 		g_Player->UpdateAbilities();
 	}
