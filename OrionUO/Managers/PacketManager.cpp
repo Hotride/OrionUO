@@ -3964,7 +3964,7 @@ PACKET_HANDLER(BuffDebuff)
 
 	if (iconID < tableCount) //buff
 	{
-		CGumpBuff *gump = (CGumpBuff*)g_GumpManager.UpdateGump(serial, 0, GT_BUFF);
+		CGumpBuff *gump = (CGumpBuff*)g_GumpManager.UpdateGump(0, 0, GT_BUFF);
 
 		if (gump != NULL)
 		{
