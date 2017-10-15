@@ -451,7 +451,8 @@ void CGLEngine::PushScissor(const WISP_GEOMETRY::CRect &rect)
 void CGLEngine::PopScissor()
 {
 	WISPFUN_DEBUG("c29_f23");
-	m_ScissorList.pop_back();
+	if (!m_ScissorList.empty())
+		m_ScissorList.pop_back();
 
 	if (m_ScissorList.empty())
 		glDisable(GL_SCISSOR_TEST);
