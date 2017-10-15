@@ -174,7 +174,7 @@ void CGumpContainer::PrepareContent()
 		if (m_Page != 1)
 		{
 			m_Page = 1;
-			m_WantRedraw = true;
+			m_WantUpdateContent = true;
 		}
 	}
 	else
@@ -182,7 +182,7 @@ void CGumpContainer::PrepareContent()
 		if (m_Page != 2)
 		{
 			m_Page = 2;
-			m_WantRedraw = true;
+			m_WantUpdateContent = true;
 		}
 
 		if (m_TextRenderer.CalculatePositions(false))
@@ -410,7 +410,7 @@ bool CGumpContainer::OnLeftMouseButtonDoubleClick()
 	{
 		m_Minimized = false;
 		m_Page = 2;
-		m_WantRedraw = true;
+		m_WantUpdateContent = true;
 
 		result = true;
 	}
