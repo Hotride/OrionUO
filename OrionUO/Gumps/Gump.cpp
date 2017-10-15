@@ -541,7 +541,7 @@ CRenderObject *CGump::SelectItems(CBaseGUI *start, const int &currentPage, const
 	return selected;
 }
 //----------------------------------------------------------------------------------
-void CGump::TestItemsLeftMouseDown(CGump *gump, CBaseGUI *start, const int &currentPage, const int draw2Page, int count)
+void CGump::TestItemsLeftMouseDown(CGump *gump, CBaseGUI *start, const int &currentPage, const int &draw2Page, int count)
 {
 	WISPFUN_DEBUG("c84_f11");
 	int page = 0;
@@ -790,7 +790,7 @@ void CGump::TestItemsLeftMouseDown(CGump *gump, CBaseGUI *start, const int &curr
 	}
 }
 //----------------------------------------------------------------------------------
-void CGump::TestItemsLeftMouseUp(CGump *gump, CBaseGUI *start, const int &currentPage, const int draw2Page)
+void CGump::TestItemsLeftMouseUp(CGump *gump, CBaseGUI *start, const int &currentPage, const int &draw2Page)
 {
 	WISPFUN_DEBUG("c84_f12");
 	int page = 0;
@@ -1018,7 +1018,7 @@ void CGump::TestItemsLeftMouseUp(CGump *gump, CBaseGUI *start, const int &curren
 	}
 }
 //----------------------------------------------------------------------------------
-void CGump::TestItemsScrolling(CGump *gump, CBaseGUI *start, const bool &up, const int &currentPage, const int draw2Page)
+void CGump::TestItemsScrolling(CGump *gump, CBaseGUI *start, const bool &up, const int &currentPage, const int &draw2Page)
 {
 	WISPFUN_DEBUG("c84_f13");
 	const int delay = SCROLL_LISTING_DELAY / 7;
@@ -1123,7 +1123,7 @@ void CGump::TestItemsScrolling(CGump *gump, CBaseGUI *start, const bool &up, con
 	}
 }
 //----------------------------------------------------------------------------------
-void CGump::TestItemsDragging(CGump *gump, CBaseGUI *start, const int &currentPage, const int draw2Page, int count)
+void CGump::TestItemsDragging(CGump *gump, CBaseGUI *start, const int &currentPage, const int &draw2Page, int count)
 {
 	WISPFUN_DEBUG("c84_f14");
 	int page = 0;
@@ -1281,15 +1281,18 @@ void CGump::Draw()
 		{
 			glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 			glClear(GL_COLOR_BUFFER_BIT);
+			glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+
+			glTranslatef(-(GLfloat)m_GumpSize.Position.X, -(GLfloat)m_GumpSize.Position.Y, 0.0f);
 
 			GenerateFrame();
 
 			if (g_DeveloperMode == DM_DEBUGGING)
 			{
 				if (g_SelectedObject.Gump == this)
-					glColor4f(0.0f, 1.0f, 0.0f, 0.5f);
+					glColor4f(0.0f, 1.0f, 0.0f, 0.2f);
 				else
-					glColor4f(1.0f, 1.0f, 1.0f, 0.5f);
+					glColor4f(1.0f, 1.0f, 1.0f, 0.2f);
 
 				g_GL.DrawLine(m_GumpSize.Position.X + 1, m_GumpSize.Position.Y + 1, m_GumpSize.Position.X + m_GumpSize.Size.Width, m_GumpSize.Position.Y + 1);
 				g_GL.DrawLine(m_GumpSize.Position.X + m_GumpSize.Size.Width, m_GumpSize.Position.Y + 1, m_GumpSize.Position.X + m_GumpSize.Size.Width, m_GumpSize.Position.Y + m_GumpSize.Size.Height);
@@ -1298,6 +1301,8 @@ void CGump::Draw()
 
 				glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 			}
+
+			glTranslatef((GLfloat)m_GumpSize.Position.X, (GLfloat)m_GumpSize.Position.Y, 0.0f);
 
 			m_FrameBuffer.Release();
 		}
@@ -1308,10 +1313,13 @@ void CGump::Draw()
 		goto loc_create_frame;
 	}
 
-	glTranslatef(g_GumpTranslate.X, g_GumpTranslate.Y, 0.0f);
+	glTranslatef(m_GumpSize.Position.X + g_GumpTranslate.X, m_GumpSize.Position.Y + g_GumpTranslate.Y, 0.0f);
 
 	glEnable(GL_BLEND);
-	glBlendFunc(GL_DST_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	//glBlendFunc(GL_DST_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 
 	m_FrameBuffer.Draw(0, 0);
 
@@ -1321,7 +1329,7 @@ void CGump::Draw()
 
 	DrawLocker();
 
-	glTranslatef(-g_GumpTranslate.X, -g_GumpTranslate.Y, 0.0f);
+	glTranslatef(-(m_GumpSize.Position.X + g_GumpTranslate.X), -(m_GumpSize.Position.Y + g_GumpTranslate.Y), 0.0f);
 }
 //----------------------------------------------------------------------------------
 CRenderObject *CGump::Select()
@@ -1369,16 +1377,19 @@ void CGump::RecalculateSize()
 	WISP_GEOMETRY::CPoint2Di maxPosition;
 	WISP_GEOMETRY::CPoint2Di offset;
 
-	GetItemsSize((CBaseGUI*)m_Items, minPosition, maxPosition, offset, -1);
+	GetItemsSize((CBaseGUI*)m_Items, minPosition, maxPosition, offset, -1, m_Page, m_Draw2Page);
 
 	WISP_GEOMETRY::CSize size(maxPosition.X - minPosition.X, maxPosition.Y - minPosition.Y);
 
 	m_GumpSize = WISP_GEOMETRY::CRect(minPosition, size);
 }
 //----------------------------------------------------------------------------------
-void CGump::GetItemsSize(CBaseGUI *start, WISP_GEOMETRY::CPoint2Di &minPosition, WISP_GEOMETRY::CPoint2Di &maxPosition, WISP_GEOMETRY::CPoint2Di &offset, int count)
+void CGump::GetItemsSize(CBaseGUI *start, WISP_GEOMETRY::CPoint2Di &minPosition, WISP_GEOMETRY::CPoint2Di &maxPosition, WISP_GEOMETRY::CPoint2Di &offset, int count, const int &currentPage, const int &draw2Page)
 {
 	WISPFUN_DEBUG("c84_f19_2");
+
+	int page = 0;
+	bool canDraw = ((page == -1) || ((page >= currentPage && page <= currentPage + draw2Page || (!page && !draw2Page))));
 
 	QFOR(item, start, CBaseGUI*)
 	{
@@ -1387,7 +1398,19 @@ void CGump::GetItemsSize(CBaseGUI *start, WISP_GEOMETRY::CPoint2Di &minPosition,
 
 		count--;
 
-		if (!item->Visible)
+		if (item->Type == GOT_PAGE)
+		{
+			page = ((CGUIPage*)item)->Index;
+
+			//if (page >= 2 && page > currentPage + draw2Page)
+			//	break;
+
+			canDraw = ((page == -1) || ((page >= currentPage && page <= currentPage + draw2Page || (!page && !draw2Page))));
+
+			continue;
+		}
+
+		if (!canDraw || !item->Visible)
 			continue;
 
 		switch (item->Type)
@@ -1404,7 +1427,7 @@ void CGump::GetItemsSize(CBaseGUI *start, WISP_GEOMETRY::CPoint2Di &minPosition,
 				break;
 			case GOT_DATABOX:
 			{
-				CGump::GetItemsSize((CBaseGUI*)item->m_Items, minPosition, maxPosition, offset, count);
+				CGump::GetItemsSize((CBaseGUI*)item->m_Items, minPosition, maxPosition, offset, count, currentPage, draw2Page);
 				break;
 			}
 			case GOT_HTMLGUMP:
@@ -1412,7 +1435,7 @@ void CGump::GetItemsSize(CBaseGUI *start, WISP_GEOMETRY::CPoint2Di &minPosition,
 			case GOT_XFMHTMLTOKEN:
 			{
 				WISP_GEOMETRY::CPoint2Di htmlOffset(offset.X + item->X, offset.X + item->Y);
-				CGump::GetItemsSize((CBaseGUI*)item->m_Items, minPosition, maxPosition, htmlOffset, 5);
+				CGump::GetItemsSize((CBaseGUI*)item->m_Items, minPosition, maxPosition, htmlOffset, 5, currentPage, draw2Page);
 				break;
 			}
 			default:

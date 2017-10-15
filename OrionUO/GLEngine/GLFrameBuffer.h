@@ -36,7 +36,7 @@ public:
 	@param [__in] height Высота буфера
 	@return true в случае успеха
 	*/
-	bool Init(int width, int height);
+	bool Init(const int &width, const int &height);
 
 	bool Init(const WISP_GEOMETRY::CSize &size) { return Init(size.Width, size.Height); }
 

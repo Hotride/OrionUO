@@ -26,7 +26,7 @@ CGLFrameBuffer::~CGLFrameBuffer()
 @param [__in] height Высота буфера
 @return true в случае успеха
 */
-bool CGLFrameBuffer::Init(int width, int height)
+bool CGLFrameBuffer::Init(const int &width, const int &height)
 {
 	WISPFUN_DEBUG("c30_f3");
 	Free();
