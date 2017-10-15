@@ -2389,7 +2389,5 @@ void CGameScreen::OnKeyUp(const WPARAM &wParam, const LPARAM &lParam)
 		if (g_ConfigManager.HoldTabForCombat)
 			g_Orion.ChangeWarmode(0);
 	}
-	else if (wParam == 0x2C) //Print Screen
-		g_ScreenshotBuilder.SaveScreen();
 }
 //----------------------------------------------------------------------------------

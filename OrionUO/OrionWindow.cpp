@@ -341,6 +341,9 @@ void COrionWindow::OnKeyUp(const WPARAM &wParam, const LPARAM &lParam)
 
 	if (/*!iswprint(wParam) &&*/ g_CurrentScreen != NULL && g_ScreenEffectManager.Mode == SEM_NONE)
 		g_CurrentScreen->OnKeyUp(wParam, lParam);
+
+	if (wParam == 0x2C) //Print Screen
+		g_ScreenshotBuilder.SaveScreen();
 }
 //----------------------------------------------------------------------------------
 HRESULT COrionWindow::OnRepaint(const WPARAM &wParam, const LPARAM &lParam)
