@@ -30,7 +30,12 @@ void CSelectTownScreen::Init()
 	if (g_PacketManager.ClientVersion >= CV_70130)
 		m_City = g_CityList.GetCity(0);
 	else
+	{
 		m_City = g_CityList.GetCity(3);
+
+		if (m_City == NULL)
+			m_City = g_CityList.GetCity(0);
+	}
 
 	g_ScreenEffectManager.UseSunrise();
 	m_SmoothScreenAction = 0;

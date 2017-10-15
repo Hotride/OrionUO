@@ -61,14 +61,12 @@ CCityList::~CCityList()
 @param [__in] index Индекс города
 @return
 */
-CCityItem *CCityList::GetCity(const int &index)
+CCityItem *CCityList::GetCity(const uint &index)
 {
 	WISPFUN_DEBUG("c184_f2");
-	for (deque<CCityItem*>::iterator i = m_CityList.begin(); i != m_CityList.end(); i++)
-	{
-		if ((*i)->LocationIndex == index)
-			return *i;
-	}
+
+	if (index < m_CityList.size())
+		return m_CityList[index];
 
 	return NULL;
 }
@@ -81,7 +79,7 @@ CCityItem *CCityList::GetCity(const int &index)
 void CCityList::Clear()
 {
 	WISPFUN_DEBUG("c184_f3");
-	for (deque<CCityItem*>::iterator i = m_CityList.begin(); i != m_CityList.end(); i++)
+	for (vector<CCityItem*>::iterator i = m_CityList.begin(); i != m_CityList.end(); i++)
 		delete *i;
 
 	m_CityList.clear();

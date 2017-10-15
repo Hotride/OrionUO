@@ -62,7 +62,7 @@ public:
 class CCityList
 {
 private:
-	deque<CCityItem*> m_CityList;
+	vector<CCityItem*> m_CityList;
 
 public:
 	CCityList();
@@ -72,7 +72,7 @@ public:
 
 	void AddCity(CCityItem *city) { m_CityList.push_back(city); }
 
-	CCityItem *GetCity(const int &index);
+	CCityItem *GetCity(const uint &index);
 
 	void Clear();
 };
