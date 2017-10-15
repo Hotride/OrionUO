@@ -4198,7 +4198,7 @@ PACKET_HANDLER(OpenMenuGump)
 			if (addHeight < 21)
 				addHeight = 21;
 
-			offsetY += addHeight;
+			offsetY += addHeight - 1;
 			gumpHeight += addHeight;
 		}
 
