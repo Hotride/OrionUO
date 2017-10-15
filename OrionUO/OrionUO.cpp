@@ -3314,32 +3314,38 @@ void COrion::InitStaticAnimList()
 	WISPFUN_DEBUG("c194_f51");
 	if (m_AnimData.size())
 	{
+		uint lastElement = (uint)(&m_AnimData[0] + m_AnimData.size() - sizeof(ANIM_DATA));
+
 		IFOR(i, 0, (int)m_StaticData.size())
 		{
 			m_StaticDataIndex[i].Index = i;
 
 			m_StaticDataIndex[i].LightColor = CalculateLightColor((ushort)i);
 
+			bool isField = false;
+
+			//fire field
+			if (IN_RANGE(i, 0x398C, 0x399F))
+				isField = true;
+			//paralyze field
+			else if (IN_RANGE(i, 0x3967, 0x397A))
+				isField = true;
+			//energy field
+			else if (IN_RANGE(i, 0x3946, 0x3964))
+				isField = true;
+			//poison field
+			else if (IN_RANGE(i, 0x3914, 0x3929))
+				isField = true;
+
+			m_StaticDataIndex[i].IsFiled = isField;
+
 			if (IsAnimated(m_StaticData[i].Flags))
 			{
-				bool isField = false;
+				uint addr = (i * 68) + 4 * ((i / 8) + 1);
+				uint offset = (uint)(&m_AnimData[0] + addr);
 
-				//fire field
-				if (IN_RANGE(i, 0x398C, 0x399F))
-					isField = true;
-				//paralyze field
-				else if (IN_RANGE(i, 0x3967, 0x397A))
-					isField = true;
-				//energy field
-				else if (IN_RANGE(i, 0x3946, 0x3964))
-					isField = true;
-				//poison field
-				else if (IN_RANGE(i, 0x3914, 0x3929))
-					isField = true;
-
-				m_StaticDataIndex[i].IsFiled = isField;
-
-				m_StaticAnimList.push_back(&m_StaticDataIndex[i]);
+				if (offset <= lastElement)
+					m_StaticAnimList.push_back(&m_StaticDataIndex[i]);
 			}
 		}
 	}
