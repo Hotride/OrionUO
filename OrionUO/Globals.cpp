@@ -186,6 +186,8 @@ uchar g_Ability[2] = { AT_DISARM, AT_PARALYZING_BLOW };
 bool g_DrawStatLockers = false;
 
 uint g_SelectedGameObjectHandle = 0;
+
+bool g_ShowWarnings = true;
 //----------------------------------------------------------------------------------
 bool CanBeDraggedByOffset(const WISP_GEOMETRY::CPoint2Di &point)
 {

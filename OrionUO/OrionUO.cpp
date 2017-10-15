@@ -160,6 +160,8 @@ void COrion::ParseCommandLine()
 			fastLogin = true;
 		else if (str == "autologinname")
 			g_PacketManager.AutoLoginNames = string("|") + DecodeArgumentString(strings[1].c_str(), strings[1].length());
+		else if (str == "nowarnings")
+			g_ShowWarnings = false;
 	}
 
 	LocalFree(args);
@@ -321,7 +323,9 @@ bool COrion::Install()
 	if (!g_SoundManager.Init())
 	{
 		//LOG("Error install BASS audio: %s\n", BASS_error());
-		g_OrionWindow.ShowMessage("Failed to init BASS audio.", "Sound error!");
+
+		if (g_ShowWarnings)
+			g_OrionWindow.ShowMessage("Failed to init BASS audio.", "Sound error!");
 
 		//return false;
 	}
