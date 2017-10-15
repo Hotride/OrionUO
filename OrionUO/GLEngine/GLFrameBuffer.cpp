@@ -111,6 +111,12 @@ bool CGLFrameBuffer::Ready(const int &width, const int &height)
 	return (g_GL.CanUseFrameBuffer && m_Ready && Texture.Width == width && Texture.Height == height);
 }
 //----------------------------------------------------------------------------------
+bool CGLFrameBuffer::ReadyMinSize(const int &width, const int &height)
+{
+	WISPFUN_DEBUG("c30_f6");
+	return (g_GL.CanUseFrameBuffer && m_Ready && Texture.Width >= width && Texture.Height >= height);
+}
+//----------------------------------------------------------------------------------
 /*!
 Использование буфера
 @return true в случае успеха
@@ -149,7 +155,7 @@ bool CGLFrameBuffer::Use()
 @param [__in] y Экранная координата Y
 @return 
 */
-void CGLFrameBuffer::Draw(int x, int y)
+void CGLFrameBuffer::Draw(const int &x, const int &y)
 {
 	WISPFUN_DEBUG("c30_f8");
 	if (g_GL.CanUseFrameBuffer && m_Ready)

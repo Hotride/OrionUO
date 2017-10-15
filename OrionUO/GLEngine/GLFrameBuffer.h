@@ -68,6 +68,10 @@ public:
 
 	bool Ready(const WISP_GEOMETRY::CSize &size) { return Ready(size.Width, size.Height); }
 
+	bool ReadyMinSize(const int &width, const int &height);
+
+	bool ReadyMinSize(const WISP_GEOMETRY::CSize &size) { return Ready(size.Width, size.Height); }
+
 	/*!
 	Использование буфера
 	@return true в случае успеха
@@ -80,7 +84,7 @@ public:
 	@param [__in] y Экранная координата Y
 	@return 
 	*/
-	void Draw(int x, int y);
+	void Draw(const int &x, const int &y);
 };
 //----------------------------------------------------------------------------------
 #endif

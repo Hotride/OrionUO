@@ -1341,15 +1341,15 @@ void CGump::Draw()
 
 		glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 
-		g_GL.OldTexture = 0;
 		m_FrameBuffer.Draw(0, 0);
 
 		glDisable(GL_BLEND);
 	}
 	else
+	{
 		glCallList((GLuint)this);
-
-	g_GL.OldTexture = 0;
+		g_GL.OldTexture = 0;
+	}
 
 	DrawLocker();
 
