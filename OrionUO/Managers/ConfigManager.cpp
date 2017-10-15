@@ -1695,8 +1695,8 @@ void CConfigManager::Save(const string &path)
 		writter.WriteBool("UseCircleTrans", m_UseCircleTrans);
 		writter.WriteBool("StatReport", m_StatReport);
 		writter.WriteBool("ConsoleNeedEnter", m_ConsoleNeedEnter);
-		writter.WriteBool("CircleTransRadius", m_CircleTransRadius);
-		writter.WriteBool("SkillReport", m_SkillReport);
+		writter.WriteInt("CircleTransRadius", m_CircleTransRadius);
+		writter.WriteInt("SkillReport", m_SkillReport);
 		writter.WriteInt("SpeechFont", m_SpeechFont);
 
 		//No page
