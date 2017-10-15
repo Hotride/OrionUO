@@ -59,7 +59,7 @@ class CGump : public CRenderObject
 	SETGET(bool, RemoveMark, false);
 	SETGET(bool, NoProcess, false);
 	SETGET(bool, Visible, true);
-	SETGET(WISP_GEOMETRY::CRect, GumpSize, WISP_GEOMETRY::CRect());
+	SETGET(WISP_GEOMETRY::CRect, GumpRect, WISP_GEOMETRY::CRect());
 
 protected:
 	CGUIButton m_Locker{ CGUIButton(0, 0, 0, 0, 0, 0) };

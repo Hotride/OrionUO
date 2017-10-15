@@ -72,54 +72,54 @@ void CGump::FixCoordinates()
 
 	if (m_Minimized && m_GumpType != GT_MINIMAP)
 	{
-		if (m_MinimizedX + m_GumpSize.Position.X > maxX)
+		if (m_MinimizedX + m_GumpRect.Position.X > maxX)
 		{
 			m_WantRedraw = true;
 			m_MinimizedX = maxX;
 		}
 
-		if (m_MinimizedX + m_GumpSize.Position.X + m_GumpSize.Size.Width - gumpOffsetX < 0)
+		if (m_MinimizedX + m_GumpRect.Position.X + m_GumpRect.Size.Width - gumpOffsetX < 0)
 		{
 			m_WantRedraw = true;
-			m_MinimizedX = gumpOffsetX - (m_GumpSize.Position.X + m_GumpSize.Size.Width);
+			m_MinimizedX = gumpOffsetX - (m_GumpRect.Position.X + m_GumpRect.Size.Width);
 		}
 
-		if (m_MinimizedY + m_GumpSize.Position.Y > maxY)
+		if (m_MinimizedY + m_GumpRect.Position.Y > maxY)
 		{
 			m_WantRedraw = true;
 			m_MinimizedY = maxY;
 		}
 
-		if (m_MinimizedY + m_GumpSize.Position.Y + m_GumpSize.Size.Height - gumpOffsetY < 0)
+		if (m_MinimizedY + m_GumpRect.Position.Y + m_GumpRect.Size.Height - gumpOffsetY < 0)
 		{
 			m_WantRedraw = true;
-			m_MinimizedY = gumpOffsetY - (m_GumpSize.Position.Y + m_GumpSize.Size.Height);
+			m_MinimizedY = gumpOffsetY - (m_GumpRect.Position.Y + m_GumpRect.Size.Height);
 		}
 	}
 	else
 	{
-		if (m_X + m_GumpSize.Position.X > maxX)
+		if (m_X + m_GumpRect.Position.X > maxX)
 		{
 			m_WantRedraw = true;
 			m_X = maxX;
 		}
 
-		if (m_X + m_GumpSize.Position.X + m_GumpSize.Size.Width - gumpOffsetX < 0)
+		if (m_X + m_GumpRect.Position.X + m_GumpRect.Size.Width - gumpOffsetX < 0)
 		{
 			m_WantRedraw = true;
-			m_X = gumpOffsetX - (m_GumpSize.Position.X + m_GumpSize.Size.Width);
+			m_X = gumpOffsetX - (m_GumpRect.Position.X + m_GumpRect.Size.Width);
 		}
 
-		if (m_Y + m_GumpSize.Position.Y > maxY)
+		if (m_Y + m_GumpRect.Position.Y > maxY)
 		{
 			m_WantRedraw = true;
 			m_Y = maxY;
 		}
 
-		if (m_Y + m_GumpSize.Position.Y + m_GumpSize.Size.Height - gumpOffsetY < 0)
+		if (m_Y + m_GumpRect.Position.Y + m_GumpRect.Size.Height - gumpOffsetY < 0)
 		{
 			m_WantRedraw = true;
-			m_Y = gumpOffsetY - (m_GumpSize.Position.Y + m_GumpSize.Size.Height);
+			m_Y = gumpOffsetY - (m_GumpRect.Position.Y + m_GumpRect.Size.Height);
 		}
 	}
 }
@@ -1286,8 +1286,8 @@ void CGump::Draw()
 
 		if (g_GL.CanUseFrameBuffer)
 		{
-			if (!m_FrameBuffer.Ready(m_GumpSize.Size))
-				m_FrameBuffer.Init(m_GumpSize.Size);
+			if (!m_FrameBuffer.Ready(m_GumpRect.Size))
+				m_FrameBuffer.Init(m_GumpRect.Size);
 
 			if (m_FrameBuffer.Use())
 			{
@@ -1295,7 +1295,7 @@ void CGump::Draw()
 				glClear(GL_COLOR_BUFFER_BIT);
 				glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
-				glTranslatef(-(GLfloat)m_GumpSize.Position.X, -(GLfloat)m_GumpSize.Position.Y, 0.0f);
+				glTranslatef(-(GLfloat)m_GumpRect.Position.X, -(GLfloat)m_GumpRect.Position.Y, 0.0f);
 
 				GenerateFrame(true);
 
@@ -1306,15 +1306,15 @@ void CGump::Draw()
 					else
 						glColor4f(1.0f, 1.0f, 1.0f, 0.2f);
 
-					g_GL.DrawLine(m_GumpSize.Position.X + 1, m_GumpSize.Position.Y + 1, m_GumpSize.Position.X + m_GumpSize.Size.Width, m_GumpSize.Position.Y + 1);
-					g_GL.DrawLine(m_GumpSize.Position.X + m_GumpSize.Size.Width, m_GumpSize.Position.Y + 1, m_GumpSize.Position.X + m_GumpSize.Size.Width, m_GumpSize.Position.Y + m_GumpSize.Size.Height);
-					g_GL.DrawLine(m_GumpSize.Position.X + m_GumpSize.Size.Width, m_GumpSize.Position.Y + m_GumpSize.Size.Height, m_GumpSize.Position.X + 1, m_GumpSize.Position.Y + m_GumpSize.Size.Height);
-					g_GL.DrawLine(m_GumpSize.Position.X + 1, m_GumpSize.Position.Y + m_GumpSize.Size.Height, m_GumpSize.Position.X + 1, m_GumpSize.Position.Y + 1);
+					g_GL.DrawLine(m_GumpRect.Position.X + 1, m_GumpRect.Position.Y + 1, m_GumpRect.Position.X + m_GumpRect.Size.Width, m_GumpRect.Position.Y + 1);
+					g_GL.DrawLine(m_GumpRect.Position.X + m_GumpRect.Size.Width, m_GumpRect.Position.Y + 1, m_GumpRect.Position.X + m_GumpRect.Size.Width, m_GumpRect.Position.Y + m_GumpRect.Size.Height);
+					g_GL.DrawLine(m_GumpRect.Position.X + m_GumpRect.Size.Width, m_GumpRect.Position.Y + m_GumpRect.Size.Height, m_GumpRect.Position.X + 1, m_GumpRect.Position.Y + m_GumpRect.Size.Height);
+					g_GL.DrawLine(m_GumpRect.Position.X + 1, m_GumpRect.Position.Y + m_GumpRect.Size.Height, m_GumpRect.Position.X + 1, m_GumpRect.Position.Y + 1);
 
 					glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 				}
 
-				glTranslatef((GLfloat)m_GumpSize.Position.X, (GLfloat)m_GumpSize.Position.Y, 0.0f);
+				glTranslatef((GLfloat)m_GumpRect.Position.X, (GLfloat)m_GumpRect.Position.Y, 0.0f);
 
 				m_FrameBuffer.Release();
 			}
@@ -1328,8 +1328,8 @@ void CGump::Draw()
 		goto loc_create_frame;
 	}
 
-	GLfloat posX = m_GumpSize.Position.X + g_GumpTranslate.X;
-	GLfloat posY = m_GumpSize.Position.Y + g_GumpTranslate.Y;
+	GLfloat posX = m_GumpRect.Position.X + g_GumpTranslate.X;
+	GLfloat posY = m_GumpRect.Position.Y + g_GumpTranslate.Y;
 
 	glTranslatef(posX, posY, 0.0f);
 
@@ -1377,8 +1377,8 @@ CRenderObject *CGump::Select()
 
 	if (SelectLocker())
 		selected = &m_Locker;
-	else if (g_MouseManager.Position.X >= m_GumpSize.Position.X && g_MouseManager.Position.X < m_GumpSize.Position.X + m_GumpSize.Size.Width &&
-		g_MouseManager.Position.Y >= m_GumpSize.Position.Y && g_MouseManager.Position.Y < m_GumpSize.Position.Y + m_GumpSize.Size.Height)
+	else if (g_MouseManager.Position.X >= m_GumpRect.Position.X && g_MouseManager.Position.X < m_GumpRect.Position.X + m_GumpRect.Size.Width &&
+		g_MouseManager.Position.Y >= m_GumpRect.Position.Y && g_MouseManager.Position.Y < m_GumpRect.Position.Y + m_GumpRect.Size.Height)
 		selected = SelectItems((CBaseGUI*)m_Items, m_Page, m_Draw2Page);
 
 	if (selected != NULL)
@@ -1405,7 +1405,7 @@ void CGump::RecalculateSize()
 
 	WISP_GEOMETRY::CSize size(maxPosition.X - minPosition.X, maxPosition.Y - minPosition.Y);
 
-	m_GumpSize = WISP_GEOMETRY::CRect(minPosition, size);
+	m_GumpRect = WISP_GEOMETRY::CRect(minPosition, size);
 }
 //----------------------------------------------------------------------------------
 void CGump::GetItemsSize(CGump *gump, CBaseGUI *start, WISP_GEOMETRY::CPoint2Di &minPosition, WISP_GEOMETRY::CPoint2Di &maxPosition, WISP_GEOMETRY::CPoint2Di &offset, int count, const int &currentPage, const int &draw2Page)
