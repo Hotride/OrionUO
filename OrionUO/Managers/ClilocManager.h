@@ -35,7 +35,7 @@ private:
 	*/
 	string Load(uint &id);
 
-	inline string CamelCaseTest(const bool &toCamelCase, const string &result);
+	inline wstring CamelCaseTest(const bool &toCamelCase, const string &result);
 
 public:
 	CCliloc(const string &lang);
@@ -50,6 +50,8 @@ public:
 	@param [__in] result Стандартное сообщение, если клилок не был найден
 	@return Полученный результат, замена или сообщение с ошибкой
 	*/
+	wstring Get(const uint &id, const bool &toCamelCase = false, string result = "");
+
 	string GetA(const uint &id, const bool &toCamelCase = false, string result = "");
 
 	/*!

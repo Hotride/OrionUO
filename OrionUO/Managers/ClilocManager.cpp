@@ -85,12 +85,12 @@ string CCliloc::Load(uint &id)
 	return result;
 }
 //----------------------------------------------------------------------------------
-string CCliloc::CamelCaseTest(const bool &toCamelCase, const string &result)
+wstring CCliloc::CamelCaseTest(const bool &toCamelCase, const string &result)
 {
 	if (toCamelCase)
-		return ToCamelCaseA(result);
+		return ToCamelCaseW(DecodeUTF8(result));
 
-	return result;
+	return DecodeUTF8(result);
 }
 //----------------------------------------------------------------------------------
 /*!
@@ -99,7 +99,7 @@ string CCliloc::CamelCaseTest(const bool &toCamelCase, const string &result)
 @param [__in] result Стандартное сообщение, если клилок не был найден
 @return Полученный результат, замена или сообщение с ошибкой
 */
-string CCliloc::GetA(const uint &id, const bool &toCamelCase, string result)
+wstring CCliloc::Get(const uint &id, const bool &toCamelCase, string result)
 {
 	WISPFUN_DEBUG("c135_f4");
 	if (id >= 3000000)
@@ -129,7 +129,7 @@ string CCliloc::GetA(const uint &id, const bool &toCamelCase, string result)
 	else
 	{
 		if (m_Language != "ENU" && this->Language != "enu")
-			return g_ClilocManager.Cliloc("enu")->GetA(id, toCamelCase, result);
+			return g_ClilocManager.Cliloc("enu")->Get(id, toCamelCase, result);
 		else if (!result.length())
 		{
 
@@ -143,6 +143,12 @@ string CCliloc::GetA(const uint &id, const bool &toCamelCase, string result)
 	return CamelCaseTest(toCamelCase, result);
 }
 //----------------------------------------------------------------------------------
+string CCliloc::GetA(const uint &id, const bool &toCamelCase, string result)
+{
+	WISPFUN_DEBUG("c135_f4_1");
+	return ToString(Get(id, toCamelCase, result));
+}
+//----------------------------------------------------------------------------------
 /*!
 Получить Unicode строку по id (и загрузить при необходимости)
 @param [__in] id Индекс клилока
@@ -152,7 +158,7 @@ string CCliloc::GetA(const uint &id, const bool &toCamelCase, string result)
 wstring CCliloc::GetW(const uint &id, const bool &toCamelCase, string result)
 {
 	WISPFUN_DEBUG("c135_f5");
-	return DecodeUTF8(GetA(id, toCamelCase, result));
+	return Get(id, toCamelCase, result);
 }
 //----------------------------------------------------------------------------------
 //-----------------------------------CClilocManager---------------------------------
