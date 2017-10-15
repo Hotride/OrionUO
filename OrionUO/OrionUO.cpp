@@ -1356,12 +1356,6 @@ void COrion::LoadLocalConfig(const uint &serial)
 	if (g_ConfigLoaded)
 		return;
 
-	/*char lco[150] = {0};
-	sprintf(lco, "Login confirm to %s", ServerList.GetServerName().c_str());
-
-	CreateTextMessage(TT_SYSTEM, 0xFFFFFFFF, 3, 0x35, lco);
-	CreateTextMessage(TT_SYSTEM, 0xFFFFFFFF, 3, 0, "Welcome to Ultima Online!");*/
-
 	g_CheckContainerStackTimer = g_Ticks + 30000;
 
 	char buf[MAX_PATH] = { 0 };
@@ -1697,15 +1691,26 @@ void COrion::CharacterSelection(int pos)
 	CPacketSelectCharacter(pos, g_CharacterList.GetName(pos)).Send();
 }
 //----------------------------------------------------------------------------------
-void COrion::LoginComplete()
+void COrion::LoginComplete(const bool &reload)
 {
 	WISPFUN_DEBUG("c194_f28");
-	if (!g_ConnectionScreen.Completed)
+	bool load = reload;
+
+	if (!load && !g_ConnectionScreen.Completed)
 	{
+		load = true;
 		g_ConnectionScreen.Completed = true;
+
+		InitScreen(GS_GAME);
+	}
+
+	if (load)
+	{
+		g_Orion.CreateTextMessageF(3, 0x35, "Loading config");
 
 		char buf[256] = { 0 };
 		CServer *server = g_ServerList.GetSelectedServer();
+
 		if (server != NULL)
 			sprintf_s(buf, "Ultima Online - %s (%s)", g_Player->Name.c_str(), server->Name.c_str());
 		else
@@ -1724,8 +1729,6 @@ void COrion::LoginComplete()
 
 		if (g_PacketManager.ClientVersion >= CV_305D)
 			CPacketClientViewRange(g_ConfigManager.UpdateRange).Send();
-
-		InitScreen(GS_GAME);
 
 		LoadLocalConfig(g_PacketManager.ConfigSerial);
 	}

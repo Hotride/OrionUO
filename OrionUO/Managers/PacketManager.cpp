@@ -827,7 +827,7 @@ PACKET_HANDLER(LoginComplete)
 	WISPFUN_DEBUG("c150_f17");
 	g_PacketLoginComplete = true;
 
-	g_Orion.LoginComplete();
+	g_Orion.LoginComplete(false);
 }
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(SetTime)
@@ -843,6 +843,7 @@ PACKET_HANDLER(EnterWorld)
 	WISPFUN_DEBUG("c150_f19");
 	uint serial = ReadUInt32BE();
 	m_ConfigSerial = serial;
+	bool loadConfig = false;
 
 	if (g_World != NULL)
 	{
@@ -850,6 +851,8 @@ PACKET_HANDLER(EnterWorld)
 
 		g_Orion.SaveLocalConfig();
 		m_ConfigSerial = g_PlayerSerial;
+		g_ConfigLoaded = false;
+		loadConfig = true;
 	}
 
 	g_Orion.ClearWorld();
@@ -906,9 +909,15 @@ PACKET_HANDLER(EnterWorld)
 	if (g_Player->Dead())
 		g_Orion.ChangeSeason(ST_DESOLATION, DEATH_MUSIC_INDEX);
 
-	CServer *server = g_ServerList.GetSelectedServer();
-	if (server != NULL)
-		g_Orion.CreateTextMessageF(3, 0x0037, "Login confirm to %s", server->Name.c_str());
+	if (loadConfig)
+		g_Orion.LoginComplete(true);
+	else
+	{
+		CServer *server = g_ServerList.GetSelectedServer();
+
+		if (server != NULL)
+			g_Orion.CreateTextMessageF(3, 0x0037, "Login confirm to %s", server->Name.c_str());
+	}
 }
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(UpdateHitpoints)
@@ -1198,7 +1207,7 @@ PACKET_HANDLER(CharacterStatus)
 			}
 
 			if (!g_ConnectionScreen.Completed && g_PacketLoginComplete)
-				g_Orion.LoginComplete();
+				g_Orion.LoginComplete(false);
 		}
 	}
 

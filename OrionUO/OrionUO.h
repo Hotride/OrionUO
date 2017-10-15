@@ -165,7 +165,7 @@ public:
 	void CharacterSelection(int pos);
 
 	//Подтверждение о завершении логина (приходит от сервера)
-	void LoginComplete();
+	void LoginComplete(const bool &reload);
 
 	//!Изменить сезон
 	void ChangeSeason(const SEASON_TYPE &season, const int &music);
