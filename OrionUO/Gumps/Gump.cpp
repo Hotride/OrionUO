@@ -298,7 +298,7 @@ bool CGump::ApplyTransparent(CBaseGUI *item, int page, const int &currentPage, c
 void CGump::DrawItems(CBaseGUI *start, const int &currentPage, const int draw2Page)
 {
 	WISPFUN_DEBUG("c84_f9");
-	float alpha[2] = { 1.0f, 0.4f };
+	float alpha[2] = { 1.0f, 0.7f };
 	CGUIComboBox *combo = NULL;
 
 	bool transparent = ApplyTransparent(start, 0, currentPage, draw2Page);
@@ -1460,23 +1460,10 @@ void CGump::GetItemsSize(CGump *gump, CBaseGUI *start, WISP_GEOMETRY::CPoint2Di 
 			{
 				WISP_GEOMETRY::CPoint2Di htmlOffset(offset.X + item->X, offset.X + item->Y);
 				CGump::GetItemsSize(gump, (CBaseGUI*)item->m_Items, minPosition, maxPosition, htmlOffset, 5, currentPage, draw2Page);
-
-				int scissorCount = 4;
-				QFOR(tempItem, item->m_Items, CBaseGUI*)
-				{
-					if (!scissorCount)
-					{
-						if (tempItem->Type == GOT_SCISSOR)
-							((CGUIScissor*)tempItem)->GumpParent = gump;
-
-						break;
-					}
-
-					scissorCount--;
-				}
-
 				break;
 			}
+			case GOT_SCISSOR:
+				((CGUIScissor*)item)->GumpParent = gump;
 			default:
 			{
 				int x = item->X + offset.X;
