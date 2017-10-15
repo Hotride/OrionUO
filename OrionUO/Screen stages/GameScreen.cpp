@@ -1388,7 +1388,7 @@ void CGameScreen::PrepareContent()
 		g_StatusbarUnderMouse = 0;
 
 	//if (g_SelectedObject.Object() != NULL && g_SelectedObject.Object()->IsGameObject() && g_PressedObject.LeftObject == g_SelectedObject.Object())
-	if (g_PressedObject.LeftObject != NULL && g_PressedObject.LeftObject->IsGameObject())
+	if (g_PressedObject.LeftObject != NULL && g_PressedObject.LeftObject->IsGameObject() && g_MouseManager.LastLeftButtonClickTimer + DELAY_TO_DRAG < g_Ticks)
 	{
 		WISP_GEOMETRY::CPoint2Di offset = g_MouseManager.LeftDroppedOffset();
 

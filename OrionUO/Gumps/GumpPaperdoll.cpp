@@ -327,7 +327,7 @@ void CGumpPaperdoll::PrepareContent()
 	if (obj == NULL)
 		return;
 
-	if (!g_Player->Dead() && (m_CanLift || m_Serial == g_PlayerSerial) && g_PressedObject.LeftGump == this && !g_ObjectInHand.Enabled && g_PressedObject.LeftSerial != 0xFFFFFFFF)
+	if (!g_Player->Dead() && (m_CanLift || m_Serial == g_PlayerSerial) && g_PressedObject.LeftGump == this && !g_ObjectInHand.Enabled && g_PressedObject.LeftSerial != 0xFFFFFFFF && g_MouseManager.LastLeftButtonClickTimer + DELAY_TO_DRAG < g_Ticks)
 	{
 		WISP_GEOMETRY::CPoint2Di offset = g_MouseManager.LeftDroppedOffset();
 
