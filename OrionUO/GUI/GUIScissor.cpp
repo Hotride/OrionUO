@@ -25,7 +25,18 @@ void CGUIScissor::Draw(const bool &checktrans)
 	if (m_Enabled)
 	{
 		if (g_GL.CanUseFrameBuffer)
-			g_GL.PushScissor(m_BaseX + m_X, m_BaseY + m_Y, m_Width, m_Height);
+		{
+			int x = m_X;
+			int y = m_Y;
+
+			if (m_GumpParent != NULL)
+			{
+				x -= m_GumpParent->GumpSize.Position.X;
+				y -= m_GumpParent->GumpSize.Position.Y;
+			}
+
+			g_GL.PushScissor(m_BaseX + x, m_BaseY + y, m_Width, m_Height);
+		}
 		else
 			g_GL.PushScissor((int)g_GumpTranslate.X + m_BaseX + m_X, g_OrionWindow.Size.Height - ((int)g_GumpTranslate.Y + m_BaseY + m_Y) - m_Height, m_Width, m_Height);
 	}

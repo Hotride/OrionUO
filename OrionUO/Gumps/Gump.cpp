@@ -1291,11 +1291,11 @@ void CGump::Draw()
 
 			if (m_FrameBuffer.Use())
 			{
-				glTranslatef(-(GLfloat)m_GumpSize.Position.X, -(GLfloat)m_GumpSize.Position.Y, 0.0f);
+				glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+				glClear(GL_COLOR_BUFFER_BIT);
+				glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
-				glColor4f(0.0f, 0.0f, 0.0f, 0.0f);
-				g_GL.DrawPolygone(0, 0, m_FrameBuffer.Texture.Width, m_FrameBuffer.Texture.Height);
-				glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+				glTranslatef(-(GLfloat)m_GumpSize.Position.X, -(GLfloat)m_GumpSize.Position.Y, 0.0f);
 
 				GenerateFrame(true);
 
@@ -1401,14 +1401,14 @@ void CGump::RecalculateSize()
 	WISP_GEOMETRY::CPoint2Di maxPosition;
 	WISP_GEOMETRY::CPoint2Di offset;
 
-	GetItemsSize((CBaseGUI*)m_Items, minPosition, maxPosition, offset, -1, m_Page, m_Draw2Page);
+	GetItemsSize(this, (CBaseGUI*)m_Items, minPosition, maxPosition, offset, -1, m_Page, m_Draw2Page);
 
 	WISP_GEOMETRY::CSize size(maxPosition.X - minPosition.X, maxPosition.Y - minPosition.Y);
 
 	m_GumpSize = WISP_GEOMETRY::CRect(minPosition, size);
 }
 //----------------------------------------------------------------------------------
-void CGump::GetItemsSize(CBaseGUI *start, WISP_GEOMETRY::CPoint2Di &minPosition, WISP_GEOMETRY::CPoint2Di &maxPosition, WISP_GEOMETRY::CPoint2Di &offset, int count, const int &currentPage, const int &draw2Page)
+void CGump::GetItemsSize(CGump *gump, CBaseGUI *start, WISP_GEOMETRY::CPoint2Di &minPosition, WISP_GEOMETRY::CPoint2Di &maxPosition, WISP_GEOMETRY::CPoint2Di &offset, int count, const int &currentPage, const int &draw2Page)
 {
 	WISPFUN_DEBUG("c84_f19_2");
 
@@ -1451,7 +1451,7 @@ void CGump::GetItemsSize(CBaseGUI *start, WISP_GEOMETRY::CPoint2Di &minPosition,
 				break;
 			case GOT_DATABOX:
 			{
-				CGump::GetItemsSize((CBaseGUI*)item->m_Items, minPosition, maxPosition, offset, count, currentPage, draw2Page);
+				CGump::GetItemsSize(gump, (CBaseGUI*)item->m_Items, minPosition, maxPosition, offset, count, currentPage, draw2Page);
 				break;
 			}
 			case GOT_HTMLGUMP:
@@ -1459,7 +1459,22 @@ void CGump::GetItemsSize(CBaseGUI *start, WISP_GEOMETRY::CPoint2Di &minPosition,
 			case GOT_XFMHTMLTOKEN:
 			{
 				WISP_GEOMETRY::CPoint2Di htmlOffset(offset.X + item->X, offset.X + item->Y);
-				CGump::GetItemsSize((CBaseGUI*)item->m_Items, minPosition, maxPosition, htmlOffset, 5, currentPage, draw2Page);
+				CGump::GetItemsSize(gump, (CBaseGUI*)item->m_Items, minPosition, maxPosition, htmlOffset, 5, currentPage, draw2Page);
+
+				int scissorCount = 4;
+				QFOR(tempItem, item->m_Items, CBaseGUI*)
+				{
+					if (!scissorCount)
+					{
+						if (tempItem->Type == GOT_SCISSOR)
+							((CGUIScissor*)tempItem)->GumpParent = gump;
+
+						break;
+					}
+
+					scissorCount--;
+				}
+
 				break;
 			}
 			default:
