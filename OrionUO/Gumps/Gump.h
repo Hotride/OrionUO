@@ -99,7 +99,7 @@ public:
 
 	virtual void PrepareTextures();
 
-	virtual void GenerateFrame();
+	virtual void GenerateFrame(const bool &stop);
 
 	virtual bool CanBeDisplayed() { return true; }
 

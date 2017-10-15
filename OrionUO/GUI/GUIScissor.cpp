@@ -23,7 +23,12 @@ void CGUIScissor::Draw(const bool &checktrans)
 {
 	WISPFUN_DEBUG("c70_f1");
 	if (m_Enabled)
-		g_GL.PushScissor(m_BaseX + m_X, m_BaseY + m_Y, m_Width, m_Height);
+	{
+		if (g_GL.CanUseFrameBuffer)
+			g_GL.PushScissor(m_BaseX + m_X, m_BaseY + m_Y, m_Width, m_Height);
+		else
+			g_GL.PushScissor((int)g_GumpTranslate.X + m_BaseX + m_X, g_OrionWindow.Size.Height - (int)g_GumpTranslate.Y + m_BaseY + m_Y - m_Height, m_Width, m_Height);
+	}
 	else
 		g_GL.PopScissor();
 }

@@ -181,7 +181,7 @@ bool CGLEngine::Install()
 
 	ViewPort(0, 0, g_OrionWindow.Size.Width, g_OrionWindow.Size.Height);
 	
-	return m_CanUseFrameBuffer;
+	return true;
 }
 //----------------------------------------------------------------------------------
 void CGLEngine::Uninstall()

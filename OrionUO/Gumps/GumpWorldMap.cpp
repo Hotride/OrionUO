@@ -447,10 +447,10 @@ void CGumpWorldMap::LoadMap(const int &map)
 	}
 }
 //----------------------------------------------------------------------------------
-void CGumpWorldMap::GenerateFrame()
+void CGumpWorldMap::GenerateFrame(const bool &stop)
 {
 	WISPFUN_DEBUG("c132_f12");
-	CGump::GenerateFrame();
+	CGump::GenerateFrame(false);
 
 	//Player drawing
 	if (!m_Minimized && g_CurrentMap == GetCurrentMap())
@@ -472,6 +472,9 @@ void CGumpWorldMap::GenerateFrame()
 
 		g_GL.PopScissor();
 	}
+
+	if (!g_GL.CanUseFrameBuffer)
+		glEndList();
 }
 //g_PluginManager.WorldMapDraw();
 //----------------------------------------------------------------------------------
