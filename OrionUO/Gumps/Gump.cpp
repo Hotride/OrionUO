@@ -1291,11 +1291,11 @@ void CGump::Draw()
 
 			if (m_FrameBuffer.Use())
 			{
-				glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-				glClear(GL_COLOR_BUFFER_BIT);
-				glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-
 				glTranslatef(-(GLfloat)m_GumpSize.Position.X, -(GLfloat)m_GumpSize.Position.Y, 0.0f);
+
+				glColor4f(0.0f, 0.0f, 0.0f, 0.0f);
+				g_GL.DrawPolygone(0, 0, m_FrameBuffer.Texture.Width, m_FrameBuffer.Texture.Height);
+				glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 
 				GenerateFrame(true);
 
