@@ -409,6 +409,14 @@ LRESULT CWindow::OnWindowProc(HWND &hWnd, UINT &message, WPARAM &wParam, LPARAM 
 
 			break;
 		}
+		//Доп. кнопки мыши
+		case WM_XBUTTONDOWN:
+		{
+			WISP_MOUSE::g_WispMouse->Update();
+			OnXMouseButton(!(short(HIWORD(wParam)) > 0));
+
+			break;
+		}
 		case WM_CHAR:
 		{
 			OnCharPress(wParam, lParam);

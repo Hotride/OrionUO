@@ -64,6 +64,7 @@ protected:
 	virtual void OnMidMouseButtonUp() {}
 	virtual bool OnMidMouseButtonDoubleClick() { return false; }
 	virtual void OnMidMouseButtonScroll(const bool &up) {}
+	virtual void OnXMouseButton(const bool &up) {}
 	virtual void OnDragging() {}
 	virtual void OnActivate() {}
 	virtual void OnDeactivate() {}

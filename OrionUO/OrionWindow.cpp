@@ -276,6 +276,13 @@ void COrionWindow::OnMidMouseButtonScroll(const bool &up)
 	}
 }
 //----------------------------------------------------------------------------------
+void COrionWindow::OnXMouseButton(const bool &up)
+{
+	WISPFUN_DEBUG("c195_f15");
+	if (g_PluginManager.WindowProc(m_Handle, WM_XBUTTONDOWN, (up ? 0 : 0x11110000), 0))
+		return;
+}
+//----------------------------------------------------------------------------------
 void COrionWindow::OnDragging()
 {
 	WISPFUN_DEBUG("c195_f16");
