@@ -193,7 +193,16 @@ CPacketSelectCharacter::CPacketSelectCharacter(const uint &index, const string &
 	WriteUInt8(0x5D);
 	WriteUInt32BE(0xEDEDEDED);
 	WriteString(name.c_str(), 30, false);
-	Move(30);
+	Move(2);
+
+	uint clientFlag = 0;
+
+	IFOR(i, 0, g_CharacterList.ClientFlag)
+		clientFlag |= (1 << i);
+
+	WriteUInt32BE(clientFlag);
+
+	Move(24);
 	WriteUInt32BE(index);
 	WriteDataBE(g_ConnectionManager.GetClientIP(), 4);
 }
