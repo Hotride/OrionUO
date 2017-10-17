@@ -107,3 +107,7 @@ Scale images in slots - Масштабировать картинки в слотах папердолла (тестовая ве
 30) Draw world map before all gumps - Рисовать карту мира перед всеми гампами и миром;
 
 31) No draw roofs - Не рисовать крыши.
+
+32) Highlight targt by type - Подсвечивать прицел в зависимости от его типа (корректно работает на RunUO серверах).
+
+33) Display a world map immediately after entering the world - Отображать карту мира после входа в игру (процесс создания текстуры может быть довольно долгим).
