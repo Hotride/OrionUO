@@ -309,7 +309,7 @@ void CGumpSecureTrading::OnLeftMouseButtonUp()
 				g_Orion.PlaySoundEffect(0x0051);
 		}
 	}
-	else if (g_Target.IsTargeting() && g_World->FindWorldObject(g_SelectedObject.Serial) != NULL)
+	else if (g_Target.IsTargeting() && g_SelectedObject.Serial>= 0x40000000 && g_World->FindWorldObject(g_SelectedObject.Serial) != NULL)
 	{
 		g_Target.SendTargetObject(g_SelectedObject.Serial);
 		g_MouseManager.CancelDoubleClick = true;
