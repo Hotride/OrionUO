@@ -878,7 +878,7 @@ PACKET_HANDLER(EnterWorld)
 	g_Player->OffsetY = 0;
 	g_Player->OffsetZ = 0;
 
-	if (g_TooltipsEnabled && !g_Player->ClilocMessage.length())
+	if (g_TooltipsEnabled && !g_Player->ClilocRevision)
 		AddMegaClilocRequest(g_Player->Serial);
 
 	LOG("Player 0x%08lX entered the world.\n", serial);
@@ -1405,7 +1405,7 @@ PACKET_HANDLER(UpdateObject)
 
 		LOG("\t0x%08X:%04X [%d] %04X\n", item->Serial, item->Graphic, layer, item->Color);
 
-		if (g_TooltipsEnabled && !item->ClilocMessage.length())
+		if (g_TooltipsEnabled && !item->ClilocRevision)
 			AddMegaClilocRequest(item->Serial);
 
 		g_World->MoveToTop(item);
@@ -1413,7 +1413,7 @@ PACKET_HANDLER(UpdateObject)
 		itemSerial = ReadUInt32BE();
 	}
 
-	if (g_TooltipsEnabled && !obj->ClilocMessage.length())
+	if (g_TooltipsEnabled && !obj->ClilocRevision)
 		AddMegaClilocRequest(obj->Serial);
 
 	if (obj->IsPlayer())
@@ -1464,7 +1464,7 @@ PACKET_HANDLER(EquipItem)
 	if (g_NewTargetSystem.Serial == serial)
 		g_NewTargetSystem.Serial = 0;
 
-	if (g_TooltipsEnabled && !obj->ClilocMessage.length())
+	if (g_TooltipsEnabled && !obj->ClilocRevision)
 		AddMegaClilocRequest(obj->Serial);
 
 	if (layer >= OL_BUY_RESTOCK && layer <= OL_SELL)
@@ -5405,10 +5405,17 @@ PACKET_HANDLER(OPLInfo)
 	if (g_TooltipsEnabled)
 	{
 		uint serial = ReadUInt32BE();
-		uint revision = ReadUInt32BE();
-		//Если хранить ревизию на обьекте, то сравнивая её и то что здесь пришло
-		// и получая одинаковый результат, - нет смысла запрашивать у сервера эти данные заного.
-		AddMegaClilocRequest(serial);
+
+		CGameObject *obj = g_World->FindWorldObject(serial);
+		{
+			if (obj != NULL)
+			{
+				uint revision = ReadUInt32BE();
+
+				if (obj->ClilocRevision != revision)
+					AddMegaClilocRequest(serial);
+			}
+		}
 	}
 }
 //----------------------------------------------------------------------------------
@@ -5419,7 +5426,7 @@ PACKET_HANDLER(CustomHouse)
 	bool enableResponse = ReadUInt8() == 0x01;
 	uint serial = ReadUInt32BE();
 	uint revision = ReadUInt32BE();
-	CGameItem *foundationItem = g_World->GetWorldItem(serial);
+	CGameItem *foundationItem = g_World->FindWorldItem(serial);
 
 	if (foundationItem == NULL)
 		return;

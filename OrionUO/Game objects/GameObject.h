@@ -44,6 +44,7 @@ class CGameObject : public CRenderStaticObject
 	SETGET(wstring, ClilocMessage, L"");
 	SETGET(bool, SA_Poisoned, false);
 	SETGET(bool, ClosedObjectHandle, false);
+	SETGET(uint, ClilocRevision, 0);
 
 protected:
 	//!Ссылка на список эффектов персонажа
