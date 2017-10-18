@@ -5283,10 +5283,11 @@ void COrion::ChangeMap(uchar newmap)
 void COrion::PickupItem(CGameItem *obj, int count, const bool &isGameFigure)
 {
 	WISPFUN_DEBUG("c194_f103");
-	if (!g_ObjectInHand.Enabled)
+	if (!g_ObjectInHand.Enabled || g_ObjectInHand.Dropped)
 	{
 		g_ObjectInHand.Clear();
 		g_ObjectInHand.Enabled = true;
+		g_ObjectInHand.Dropped = false;
 
 		if (!count)
 			count = obj->Count;
