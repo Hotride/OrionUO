@@ -284,11 +284,14 @@ void CGameConsole::DrawW(BYTE font, WORD color, int x, int y, TEXT_ALIGN_TYPE al
 void CGameConsole::SaveConsoleMessage()
 {
 	WISPFUN_DEBUG("c170_f5");
-	m_ConsoleStack[m_ConsoleStackCount % MAX_CONSOLE_STACK_SIZE] = Data();
-	m_ConsoleStackCount++;
+	if (m_ConsoleStack[m_ConsoleSelectedIndex % MAX_CONSOLE_STACK_SIZE] != m_Text)
+	{
+		m_ConsoleStack[m_ConsoleStackCount % MAX_CONSOLE_STACK_SIZE] = m_Text;
+		m_ConsoleStackCount++;
 
-	if (m_ConsoleStackCount > 1100)
-		m_ConsoleStackCount -= 1000;
+		if (m_ConsoleStackCount > 1100)
+			m_ConsoleStackCount -= 1000;
+	}
 
 	m_ConsoleSelectedIndex = (m_ConsoleStackCount - 1) % MAX_CONSOLE_STACK_SIZE;
 	m_PositionChanged = false;
