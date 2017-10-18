@@ -542,7 +542,13 @@ void CPacketManager::OnReadFailed()
 	WISPFUN_DEBUG("c150_f7");
 	LOG("OnReadFailed...Disconnecting...\n");
 	g_Orion.DisconnectGump();
-	g_Orion.Disconnect();
+
+	//g_Orion.Disconnect();
+
+	g_AbyssPacket03First = true;
+	g_PluginManager.Disconnect();
+
+	g_ConnectionManager.Disconnect();
 }
 //----------------------------------------------------------------------------------
 void CPacketManager::OnPacket()
@@ -1663,6 +1669,7 @@ PACKET_HANDLER(EndDraggingItem)
 	//Move(2);
 
 	g_ObjectInHand.Enabled = false;
+	g_ObjectInHand.Dropped = true;
 }
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(DropItemAccepted)
@@ -1672,6 +1679,7 @@ PACKET_HANDLER(DropItemAccepted)
 		return;
 
 	g_ObjectInHand.Enabled = false;
+	g_ObjectInHand.Dropped = true;
 }
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(DeleteObject)
@@ -3658,7 +3666,7 @@ PACKET_HANDLER(MegaCliloc)
 		return;
 
 	Move(2);
-	uint testedSerial = ReadUInt32BE();
+	obj->ClilocRevision = ReadUInt32BE();
 	wstring message(L"");
 	bool coloredStartFont = false;
 

@@ -168,7 +168,7 @@ bool CGump::TestLockerClick()
 void CGump::CalculateGumpState()
 {
 	WISPFUN_DEBUG("c84_f6");
-	g_GumpPressed = (!g_ObjectInHand.Enabled && g_PressedObject.LeftGump == this /*&& g_SelectedObject.Gump() == this*/);
+	g_GumpPressed = ((!g_ObjectInHand.Enabled || g_ObjectInHand.Dropped) && g_PressedObject.LeftGump == this /*&& g_SelectedObject.Gump() == this*/);
 	g_GumpSelectedElement = ((g_SelectedObject.Gump == this) ? g_SelectedObject.Object : NULL);
 	g_GumpPressedElement = NULL;
 
@@ -182,7 +182,7 @@ void CGump::CalculateGumpState()
 			g_GumpPressedElement = leftObj;
 	}
 
-	if (CanBeMoved() && g_GumpPressed && !g_ObjectInHand.Enabled && (!g_PressedObject.LeftSerial || g_GumpPressedElement == NULL || g_PressedObject.TestMoveOnDrag()))
+	if (CanBeMoved() && g_GumpPressed && (!g_ObjectInHand.Enabled || g_ObjectInHand.Dropped) && (!g_PressedObject.LeftSerial || g_GumpPressedElement == NULL || g_PressedObject.TestMoveOnDrag()))
 		g_GumpMovingOffset = g_MouseManager.LeftDroppedOffset();
 	else
 		g_GumpMovingOffset.Reset();
@@ -1251,7 +1251,7 @@ void CGump::GenerateFrame(const bool &stop)
 
 	PrepareTextures();
 
-	if (!g_GL.CanUseFrameBuffer)
+	if (!g_ConfigManager.UseGLListsForInterface)
 	{
 		glNewList((GLuint)this, GL_COMPILE);
 
@@ -1284,7 +1284,7 @@ void CGump::Draw()
 	{
 		loc_create_frame:
 
-		if (g_GL.CanUseFrameBuffer)
+		if (g_ConfigManager.UseGLListsForInterface)
 		{
 			if (!m_FrameBuffer.Ready(m_GumpRect.Size))
 				m_FrameBuffer.Init(m_GumpRect.Size);
@@ -1333,7 +1333,7 @@ void CGump::Draw()
 
 	glTranslatef(posX, posY, 0.0f);
 
-	if (g_GL.CanUseFrameBuffer)
+	if (g_ConfigManager.UseGLListsForInterface)
 	{
 		glEnable(GL_BLEND);
 		//glBlendFunc(GL_DST_ALPHA, GL_ONE_MINUS_SRC_ALPHA);

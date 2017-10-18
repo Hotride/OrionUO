@@ -327,7 +327,7 @@ void CGumpPaperdoll::PrepareContent()
 	if (obj == NULL)
 		return;
 
-	if (!g_Player->Dead() && (m_CanLift || m_Serial == g_PlayerSerial) && g_PressedObject.LeftGump == this && !g_ObjectInHand.Enabled && g_PressedObject.LeftSerial != 0xFFFFFFFF && g_MouseManager.LastLeftButtonClickTimer + DELAY_TO_DRAG < g_Ticks)
+	if (!g_Player->Dead() && (m_CanLift || m_Serial == g_PlayerSerial) && g_PressedObject.LeftGump == this && (!g_ObjectInHand.Enabled || g_ObjectInHand.Dropped) && g_PressedObject.LeftSerial != 0xFFFFFFFF && g_MouseManager.LastLeftButtonClickTimer + DELAY_TO_DRAG < g_Ticks)
 	{
 		WISP_GEOMETRY::CPoint2Di offset = g_MouseManager.LeftDroppedOffset();
 
@@ -358,7 +358,7 @@ void CGumpPaperdoll::PrepareContent()
 
 	bool wantTransparent = false;
 
-	if (g_SelectedObject.Gump == this && g_ObjectInHand.Enabled && g_ObjectInHand.TiledataPtr->AnimID)
+	if (g_SelectedObject.Gump == this && (g_ObjectInHand.Enabled && !g_ObjectInHand.Dropped) && g_ObjectInHand.TiledataPtr->AnimID)
 	{
 		if (obj->FindLayer(g_ObjectInHand.TiledataPtr->Layer) == NULL)
 		{
@@ -535,7 +535,7 @@ void CGumpPaperdoll::UpdateContent()
 					bodyGumppic->Serial = ID_GP_ITEMS + UsedLayers[i];
 				}
 			}
-			else if (m_WantTransparentContent && g_ObjectInHand.Enabled && UsedLayers[i] == g_ObjectInHand.TiledataPtr->Layer && g_ObjectInHand.TiledataPtr->AnimID)
+			else if (m_WantTransparentContent && (g_ObjectInHand.Enabled && !g_ObjectInHand.Dropped) && UsedLayers[i] == g_ObjectInHand.TiledataPtr->Layer && g_ObjectInHand.TiledataPtr->AnimID)
 			{
 				equipment = obj->FindLayer(g_ObjectInHand.TiledataPtr->Layer);
 
@@ -825,7 +825,7 @@ void CGumpPaperdoll::OnLeftMouseButtonUp()
 		return;
 
 	//Что-то в руке
-	if ((!serial || serial >= ID_GP_ITEMS) && g_ObjectInHand.Enabled)
+	if ((!serial || serial >= ID_GP_ITEMS) && (g_ObjectInHand.Enabled && !g_ObjectInHand.Dropped))
 	{
 		int layer = serial - ID_GP_ITEMS;
 		bool canWear = true;
@@ -878,7 +878,7 @@ void CGumpPaperdoll::OnLeftMouseButtonUp()
 			g_Orion.PlaySoundEffect(0x0051);
 	}
 	
-	if (g_PressedObject.LeftSerial == serial && serial >= ID_GP_ITEMS && !g_ObjectInHand.Enabled)
+	if (g_PressedObject.LeftSerial == serial && serial >= ID_GP_ITEMS && (!g_ObjectInHand.Enabled || g_ObjectInHand.Dropped))
 	{
 		int layer = serial - ID_GP_ITEMS;
 		CGameItem *equipment = container->FindLayer(layer);

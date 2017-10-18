@@ -14,6 +14,7 @@ CObjectOnCursor g_ObjectInHand;
 void CObjectOnCursor::Clear()
 {
 	m_Enabled = false;
+	m_Dropped = false;
 	m_Serial = 0;
 	m_Graphic = 0;
 	m_Color = 0;

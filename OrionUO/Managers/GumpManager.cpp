@@ -650,7 +650,7 @@ bool CGumpManager::OnLeftMouseButtonUp(const bool &blocked)
 			else
 				canMove = true;
 
-			if (canMove && gump->CanBeMoved() && !gump->NoMove && !g_ObjectInHand.Enabled)
+			if (canMove && gump->CanBeMoved() && !gump->NoMove && (!g_ObjectInHand.Enabled || g_ObjectInHand.Dropped))
 			{
 				WISP_GEOMETRY::CPoint2Di offset = g_MouseManager.LeftDroppedOffset();
 
@@ -739,7 +739,7 @@ bool CGumpManager::OnLeftMouseButtonUp(const bool &blocked)
 				//gump->FrameCreated = false;
 			}
 			
-			if (g_ObjectInHand.Enabled)
+			if (g_ObjectInHand.Enabled && !g_ObjectInHand.Dropped)
 			{
 				if (g_SelectedObject.Gump == gump)
 					gump->OnLeftMouseButtonUp();
@@ -754,7 +754,7 @@ bool CGumpManager::OnLeftMouseButtonUp(const bool &blocked)
 			//MoveGumpToTop(gump);
 			return true;
 		}
-		else if (g_SelectedObject.Gump == gump && g_ObjectInHand.Enabled && (gump->GumpType == GT_PAPERDOLL || gump->GumpType == GT_CONTAINER || gump->GumpType == GT_TRADE))
+		else if (g_SelectedObject.Gump == gump && (g_ObjectInHand.Enabled && !g_ObjectInHand.Dropped) && (gump->GumpType == GT_PAPERDOLL || gump->GumpType == GT_CONTAINER || gump->GumpType == GT_TRADE))
 		{
 			gump->OnLeftMouseButtonUp();
 

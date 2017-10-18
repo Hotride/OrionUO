@@ -57,6 +57,7 @@ class CConfigManager
 	SETGETE(bool, NoDrawRoofs, false, OnChangeNoDrawRoofs);
 	SETGET(bool, HighlightTargetByType, true);
 	SETGET(bool, AutoDisplayWorldMap, false);
+	SETGETE(bool, UseGLListsForInterface, true, OnChangeUseGLListsForInterface);
 
 	SETGET(bool, UseToolTips, false);
 	SETGET(ushort, ToolTipsTextColor, 0);
@@ -212,6 +213,7 @@ public:
 		CMKC_NO_DRAW_ROOFS,
 		CMKC_HIGHLIGHT_TARGET_BY_TYPE,
 		CMKC_AUTO_DISPLAY_WORLD_MAP,
+		CMKC_USE_GL_LISTS_FOR_INTERFACE,
 		CMKC_USE_TOOLTIPS,
 		CMKC_TOOLTIPS_TEXT_COLOR,
 		CMKC_TOOLTIPS_TEXT_FONT,

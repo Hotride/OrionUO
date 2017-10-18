@@ -264,7 +264,7 @@ void CGumpShop::OnLeftMouseButtonUp()
 	WISPFUN_DEBUG("c123_f7");
 	CGump::OnLeftMouseButtonUp();
 
-	if (g_Target.IsTargeting() && !g_ObjectInHand.Enabled && g_World->FindWorldObject(g_SelectedObject.Serial) != NULL)
+	if (g_Target.IsTargeting() && (!g_ObjectInHand.Enabled || g_ObjectInHand.Dropped) && g_World->FindWorldObject(g_SelectedObject.Serial) != NULL)
 	{
 		g_Target.SendTargetObject(g_SelectedObject.Serial);
 		g_MouseManager.CancelDoubleClick = true;

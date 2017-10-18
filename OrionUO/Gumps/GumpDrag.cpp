@@ -160,7 +160,7 @@ void CGumpDrag::OnKeyDown(const WPARAM &wParam, const LPARAM &lParam)
 void CGumpDrag::OnOkayPressed()
 {
 	WISPFUN_DEBUG("c94_f7");
-	if (!g_ObjectInHand.Enabled)
+	if (!g_ObjectInHand.Enabled || g_ObjectInHand.Dropped)
 	{
 		m_RemoveMark = true;
 

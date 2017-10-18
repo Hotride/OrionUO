@@ -106,6 +106,7 @@ void CConfigManager::DefaultPage2()
 	m_NoDrawRoofs = false;
 	m_HighlightTargetByType = true;
 	m_AutoDisplayWorldMap = false;
+	m_UseGLListsForInterface = g_GL.CanUseFrameBuffer;
 }
 //---------------------------------------------------------------------------
 void CConfigManager::DefaultPage3()
@@ -435,6 +436,21 @@ void CConfigManager::OnChangeNoDrawRoofs(const bool &val)
 	{
 		g_Player->OldX = 0;
 		g_Player->OldY = 0;
+	}
+}
+//---------------------------------------------------------------------------
+void CConfigManager::OnChangeUseGLListsForInterface(const bool &val)
+{
+	WISPFUN_DEBUG("c138_f26");
+	if (this == &g_ConfigManager && g_World != NULL)
+	{
+		m_UseGLListsForInterface = (val && g_GL.CanUseFrameBuffer);
+
+		QFOR(gump, g_GumpManager.m_Items, CGump*)
+		{
+			gump->WantRedraw = true;
+			gump->WantUpdateContent = true;
+		}
 	}
 }
 //---------------------------------------------------------------------------
@@ -1036,6 +1052,7 @@ int CConfigManager::GetConfigKeyCode(const string &key)
 		"NoDrawRoofs",
 		"HighlightTargetByType",
 		"AutoDisplayWorldMap",
+		"UseGLListsForInterface",
 		"UseToolTips",
 		"ToolTipsTextColor",
 		"ToolTipsTextFont",
@@ -1265,6 +1282,9 @@ bool CConfigManager::Load(const string &path)
 					break;
 				case CMKC_AUTO_DISPLAY_WORLD_MAP:
 					m_AutoDisplayWorldMap = ToBool(strings[1]);
+					break;
+				case CMKC_USE_GL_LISTS_FOR_INTERFACE:
+					UseGLListsForInterface = ToBool(strings[1]);
 					break;
 
 				//Page 3
@@ -1618,6 +1638,7 @@ void CConfigManager::Save(const string &path)
 		writter.WriteBool("NoDrawRoofs", m_NoDrawRoofs);
 		writter.WriteBool("HighlightTargetByType", m_HighlightTargetByType);
 		writter.WriteBool("AutoDisplayWorldMap", m_AutoDisplayWorldMap);
+		writter.WriteBool("UseGLListsForInterface", m_UseGLListsForInterface);
 
 		//Page 3
 		writter.WriteBool("UseToolTips", m_UseToolTips);

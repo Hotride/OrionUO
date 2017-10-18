@@ -978,7 +978,7 @@ MACRO_RETURN_CODE CMacroManager::Process()
 			{
 				int handIndex = 1 - (g_MacroPointer->SubCode - MSC_G4_LEFT_HAND);
 
-				if (handIndex < 0 || handIndex > 1 || g_ObjectInHand.Enabled)
+				if (handIndex < 0 || handIndex > 1 || (g_ObjectInHand.Enabled && !g_ObjectInHand.Dropped))
 					break;
 
 				if (itemInHand[handIndex])

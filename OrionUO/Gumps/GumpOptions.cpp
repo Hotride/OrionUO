@@ -488,6 +488,11 @@ void CGumpOptions::InitToolTip()
 				g_ToolTip.Set(L"Display a world map immediately after entering the world");
 				break;
 			}
+			case ID_GO_P2_USE_GL_LISTS_FOR_INTERFACE:
+			{
+				g_ToolTip.Set(L"Use GL lists for draw interface gumps");
+				break;
+			}
 			case ID_GO_P2_DEV_MODE_1:
 			{
 				g_ToolTip.Set(L"Original client work");
@@ -1071,6 +1076,10 @@ void CGumpOptions::DrawPage2()
 	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P2_AUTO_DISPLAY_WORLD_MAP, 0x00D2, 0x00D3, 0x00D2, 0, 860));
 	checkbox->Checked = g_OptionsConfig.AutoDisplayWorldMap;
 	checkbox->SetTextParameters(0, L"Display a world map immediately after entering the world", g_OptionsTextColor);
+
+	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P2_USE_GL_LISTS_FOR_INTERFACE, 0x00D2, 0x00D3, 0x00D2, 0, 880));
+	checkbox->Checked = g_OptionsConfig.UseGLListsForInterface;
+	checkbox->SetTextParameters(0, L"Use GL lists for draw interface gumps", g_OptionsTextColor);
 
 	html->CalculateDataSize();
 }
@@ -2375,6 +2384,8 @@ void CGumpOptions::GUMP_CHECKBOX_EVENT_C
 				g_OptionsConfig.HighlightTargetByType = state;
 			else if (serial == ID_GO_P2_AUTO_DISPLAY_WORLD_MAP)
 				g_OptionsConfig.AutoDisplayWorldMap = state;
+			else if (serial == ID_GO_P2_USE_GL_LISTS_FOR_INTERFACE)
+				g_OptionsConfig.UseGLListsForInterface = state;
 			else if (serial == ID_GO_P2_DEV_MODE_1)
 				g_OptionsDeveloperMode = DM_NO_DEBUG;
 			else if (serial == ID_GO_P2_DEV_MODE_2)
@@ -2953,6 +2964,7 @@ void CGumpOptions::ApplyPageChanges()
 			g_ConfigManager.NoDrawRoofs = g_OptionsConfig.NoDrawRoofs;
 			g_ConfigManager.HighlightTargetByType = g_OptionsConfig.HighlightTargetByType;
 			g_ConfigManager.AutoDisplayWorldMap = g_OptionsConfig.AutoDisplayWorldMap;
+			g_ConfigManager.UseGLListsForInterface = g_OptionsConfig.UseGLListsForInterface;
 			g_DeveloperMode = g_OptionsDeveloperMode;
 
 			break;

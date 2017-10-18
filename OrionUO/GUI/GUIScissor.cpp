@@ -24,7 +24,7 @@ void CGUIScissor::Draw(const bool &checktrans)
 	WISPFUN_DEBUG("c70_f1");
 	if (m_Enabled)
 	{
-		if (g_GL.CanUseFrameBuffer)
+		if (g_ConfigManager.UseGLListsForInterface)
 		{
 			int x = m_X;
 			int y = m_Y;

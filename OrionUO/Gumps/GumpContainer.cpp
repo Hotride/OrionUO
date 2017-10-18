@@ -127,7 +127,7 @@ void CGumpContainer::InitToolTip()
 void CGumpContainer::PrepareContent()
 {
 	WISPFUN_DEBUG("c93_f7");
-	if (!g_Player->Dead() && GetTopObjDistance(g_Player, g_World->FindWorldObject(m_Serial)) <= DRAG_ITEMS_DISTANCE && g_PressedObject.LeftGump == this && !g_ObjectInHand.Enabled && g_PressedObject.LeftSerial != ID_GC_MINIMIZE && g_MouseManager.LastLeftButtonClickTimer + DELAY_TO_DRAG < g_Ticks)
+	if (!g_Player->Dead() && GetTopObjDistance(g_Player, g_World->FindWorldObject(m_Serial)) <= DRAG_ITEMS_DISTANCE && g_PressedObject.LeftGump == this && (!g_ObjectInHand.Enabled || g_ObjectInHand.Dropped) && g_PressedObject.LeftSerial != ID_GC_MINIMIZE && g_MouseManager.LastLeftButtonClickTimer + DELAY_TO_DRAG < g_Ticks)
 	{
 		WISP_GEOMETRY::CPoint2Di offset = g_MouseManager.LeftDroppedOffset();
 
@@ -283,7 +283,7 @@ void CGumpContainer::OnLeftMouseButtonUp()
 	uint dropContainer = m_Serial;
 	uint selectedSerial = g_SelectedObject.Serial;
 
-	if (g_Target.IsTargeting() && !g_ObjectInHand.Enabled && selectedSerial && selectedSerial != ID_GC_MINIMIZE && selectedSerial != ID_GC_LOCK_MOVING)
+	if (g_Target.IsTargeting() && (!g_ObjectInHand.Enabled || g_ObjectInHand.Dropped) && selectedSerial && selectedSerial != ID_GC_MINIMIZE && selectedSerial != ID_GC_LOCK_MOVING)
 	{
 		g_Target.SendTargetObject(selectedSerial);
 		g_MouseManager.CancelDoubleClick = true;
@@ -297,7 +297,7 @@ void CGumpContainer::OnLeftMouseButtonUp()
 	{
 		canDrop = false;
 
-		if (g_ObjectInHand.Enabled)
+		if (g_ObjectInHand.Enabled && !g_ObjectInHand.Dropped)
 		{
 			canDrop = true;
 
@@ -331,13 +331,13 @@ void CGumpContainer::OnLeftMouseButtonUp()
 		}
 	}
 
-	if (!canDrop && g_ObjectInHand.Enabled)
+	if (!canDrop && g_ObjectInHand.Enabled && !g_ObjectInHand.Dropped)
 		g_Orion.PlaySoundEffect(0x0051);
 
 	int x = g_MouseManager.Position.X - m_X;
 	int y = g_MouseManager.Position.Y - m_Y;
 
-	if (canDrop && g_ObjectInHand.Enabled)
+	if (canDrop && g_ObjectInHand.Enabled && !g_ObjectInHand.Dropped)
 	{
 		const CContainerOffsetRect &r = g_ContainerOffset[Graphic].Rect;
 
@@ -384,7 +384,7 @@ void CGumpContainer::OnLeftMouseButtonUp()
 		g_Orion.DropItem(dropContainer, x, y, 0);
 		g_MouseManager.CancelDoubleClick = true;
 	}
-	else if (!g_ObjectInHand.Enabled)
+	else if (!g_ObjectInHand.Enabled || g_ObjectInHand.Dropped)
 	{
 		if (!g_ClickObject.Enabled)
 		{

@@ -15,6 +15,8 @@ class CObjectOnCursor
 {
 	//!Активен
 	SETGET(bool, Enabled, false);
+	//!Сброшен
+	SETGET(bool, Dropped, false);
 	//!Серийник объекта
 	SETGET(uint, Serial, 0);
 	//!Индекс картинки

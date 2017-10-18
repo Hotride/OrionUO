@@ -196,7 +196,7 @@ void CGUIComboBox::Draw(const bool &checktrans)
 		else
 			g_Orion.DrawResizepicGump(m_OpenGraphic, m_X, m_Y, m_OpenedWidth, m_WorkHeight + 6);
 
-		if (g_GL.CanUseFrameBuffer)
+		if (g_ConfigManager.UseGLListsForInterface)
 			g_GL.PushScissor(currentX, currentY, m_WorkWidth, m_WorkHeight);
 		else
 			g_GL.PushScissor((int)g_GumpTranslate.X + currentX, g_OrionWindow.Size.Height - ((int)g_GumpTranslate.Y + currentY) - m_WorkHeight, m_WorkWidth, m_WorkHeight);
@@ -257,7 +257,7 @@ void CGUIComboBox::Draw(const bool &checktrans)
 
 			if (selected != NULL)
 			{
-				if (g_GL.CanUseFrameBuffer)
+				if (g_ConfigManager.UseGLListsForInterface)
 					g_GL.PushScissor(m_X + 6, m_Y, m_MinimizedArrowX, 20);
 				else
 					g_GL.PushScissor((int)g_GumpTranslate.X + m_X + 6, g_OrionWindow.Size.Height - ((int)g_GumpTranslate.Y + m_Y) - 20, m_MinimizedArrowX, 20);
@@ -274,7 +274,7 @@ void CGUIComboBox::Draw(const bool &checktrans)
 
 			if (selected != NULL)
 			{
-				if (g_GL.CanUseFrameBuffer)
+				if (g_ConfigManager.UseGLListsForInterface)
 					g_GL.PushScissor(m_X + 3, m_Y, m_Width - 6, 20);
 				else
 					g_GL.PushScissor((int)g_GumpTranslate.X + m_X + 3, g_OrionWindow.Size.Height - ((int)g_GumpTranslate.Y + m_Y) - 20, m_Width - 6, 20);

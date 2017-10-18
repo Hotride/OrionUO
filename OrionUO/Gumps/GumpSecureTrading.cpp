@@ -267,7 +267,7 @@ void CGumpSecureTrading::OnLeftMouseButtonUp()
 	WISPFUN_DEBUG("c120_f8");
 	CGump::OnLeftMouseButtonUp();
 
-	if (g_ObjectInHand.Enabled)
+	if (g_ObjectInHand.Enabled && !g_ObjectInHand.Dropped)
 	{
 		int x = m_X;
 		int y = m_Y;
