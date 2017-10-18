@@ -251,7 +251,7 @@ void CGumpMap::GenerateFrame(const bool &stop)
 		}
 	}
 
-	if (!g_ConfigManager.UseGLListsForInterface)
+	if (g_ConfigManager.UseGLListsForInterface)
 		glEndList();
 }
 //----------------------------------------------------------------------------------

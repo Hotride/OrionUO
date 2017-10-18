@@ -1251,7 +1251,7 @@ void CGump::GenerateFrame(const bool &stop)
 
 	PrepareTextures();
 
-	if (!g_ConfigManager.UseGLListsForInterface)
+	if (g_ConfigManager.UseGLListsForInterface)
 	{
 		glNewList((GLuint)this, GL_COMPILE);
 
@@ -1284,7 +1284,7 @@ void CGump::Draw()
 	{
 		loc_create_frame:
 
-		if (g_ConfigManager.UseGLListsForInterface)
+		if (!g_ConfigManager.UseGLListsForInterface)
 		{
 			if (!m_FrameBuffer.Ready(m_GumpRect.Size))
 				m_FrameBuffer.Init(m_GumpRect.Size);
@@ -1333,7 +1333,7 @@ void CGump::Draw()
 
 	glTranslatef(posX, posY, 0.0f);
 
-	if (g_ConfigManager.UseGLListsForInterface)
+	if (!g_ConfigManager.UseGLListsForInterface)
 	{
 		glEnable(GL_BLEND);
 		//glBlendFunc(GL_DST_ALPHA, GL_ONE_MINUS_SRC_ALPHA);

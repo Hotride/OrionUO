@@ -473,7 +473,7 @@ void CGumpWorldMap::GenerateFrame(const bool &stop)
 		g_GL.PopScissor();
 	}
 
-	if (!g_ConfigManager.UseGLListsForInterface)
+	if (g_ConfigManager.UseGLListsForInterface)
 		glEndList();
 }
 //g_PluginManager.WorldMapDraw();

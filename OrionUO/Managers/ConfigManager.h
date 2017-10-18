@@ -57,7 +57,7 @@ class CConfigManager
 	SETGETE(bool, NoDrawRoofs, false, OnChangeNoDrawRoofs);
 	SETGET(bool, HighlightTargetByType, true);
 	SETGET(bool, AutoDisplayWorldMap, false);
-	SETGETE(bool, UseGLListsForInterface, true, OnChangeUseGLListsForInterface);
+	SETGETE(bool, UseGLListsForInterface, false, OnChangeUseGLListsForInterface);
 
 	SETGET(bool, UseToolTips, false);
 	SETGET(ushort, ToolTipsTextColor, 0);

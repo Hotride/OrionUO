@@ -106,7 +106,7 @@ void CConfigManager::DefaultPage2()
 	m_NoDrawRoofs = false;
 	m_HighlightTargetByType = true;
 	m_AutoDisplayWorldMap = false;
-	m_UseGLListsForInterface = g_GL.CanUseFrameBuffer;
+	m_UseGLListsForInterface = !g_GL.CanUseFrameBuffer;
 }
 //---------------------------------------------------------------------------
 void CConfigManager::DefaultPage3()
@@ -444,7 +444,7 @@ void CConfigManager::OnChangeUseGLListsForInterface(const bool &val)
 	WISPFUN_DEBUG("c138_f26");
 	if (this == &g_ConfigManager && g_World != NULL)
 	{
-		m_UseGLListsForInterface = (val && g_GL.CanUseFrameBuffer);
+		m_UseGLListsForInterface = (val || !g_GL.CanUseFrameBuffer);
 
 		QFOR(gump, g_GumpManager.m_Items, CGump*)
 		{
