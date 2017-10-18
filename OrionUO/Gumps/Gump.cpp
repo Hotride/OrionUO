@@ -1328,8 +1328,14 @@ void CGump::Draw()
 		goto loc_create_frame;
 	}
 
-	GLfloat posX = m_GumpRect.Position.X + g_GumpTranslate.X;
-	GLfloat posY = m_GumpRect.Position.Y + g_GumpTranslate.Y;
+	GLfloat posX = g_GumpTranslate.X;
+	GLfloat posY = g_GumpTranslate.Y;
+
+	if (!g_ConfigManager.UseGLListsForInterface)
+	{
+		posX += (GLfloat)m_GumpRect.Position.X;
+		posY += (GLfloat)m_GumpRect.Position.Y;
+	}
 
 	glTranslatef(posX, posY, 0.0f);
 
