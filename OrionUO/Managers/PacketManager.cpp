@@ -1580,7 +1580,7 @@ PACKET_HANDLER(DenyMoveItem)
 	if (g_World == NULL)
 		return;
 
-	if (g_ObjectInHand.Enabled)
+	if (g_ObjectInHand.Enabled || (g_ObjectInHand.Dropped && g_World->FindWorldItem(g_ObjectInHand.Serial) == NULL))
 	{
 		if (g_World->ObjectToRemove == g_ObjectInHand.Serial)
 			g_World->ObjectToRemove = 0;
@@ -1669,7 +1669,7 @@ PACKET_HANDLER(EndDraggingItem)
 	//Move(2);
 
 	g_ObjectInHand.Enabled = false;
-	g_ObjectInHand.Dropped = true;
+	g_ObjectInHand.Dropped = false;
 }
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(DropItemAccepted)
@@ -1679,7 +1679,7 @@ PACKET_HANDLER(DropItemAccepted)
 		return;
 
 	g_ObjectInHand.Enabled = false;
-	g_ObjectInHand.Dropped = true;
+	g_ObjectInHand.Dropped = false;
 }
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(DeleteObject)

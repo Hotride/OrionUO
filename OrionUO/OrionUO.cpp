@@ -5283,11 +5283,10 @@ void COrion::ChangeMap(uchar newmap)
 void COrion::PickupItem(CGameItem *obj, int count, const bool &isGameFigure)
 {
 	WISPFUN_DEBUG("c194_f103");
-	if (!g_ObjectInHand.Enabled || g_ObjectInHand.Dropped)
+	if (!g_ObjectInHand.Enabled)
 	{
 		g_ObjectInHand.Clear();
 		g_ObjectInHand.Enabled = true;
-		g_ObjectInHand.Dropped = false;
 
 		if (!count)
 			count = obj->Count;
@@ -5315,13 +5314,14 @@ void COrion::PickupItem(CGameItem *obj, int count, const bool &isGameFigure)
 void COrion::DropItem(const uint &container, const ushort &x, const ushort &y, const char &z)
 {
 	WISPFUN_DEBUG("c194_f104");
-	if (g_ObjectInHand.Enabled && !g_ObjectInHand.Dropped)
+	if (g_ObjectInHand.Enabled)
 	{
 		if (g_PacketManager.ClientVersion >= CV_6017)
 			CPacketDropRequestNew(g_ObjectInHand.Serial, x, y, z, 0, container).Send();
 		else
 			CPacketDropRequestOld(g_ObjectInHand.Serial, x, y, z, container).Send();
 
+		g_ObjectInHand.Enabled = false;
 		g_ObjectInHand.Dropped = true;
 	}
 }
@@ -5329,7 +5329,7 @@ void COrion::DropItem(const uint &container, const ushort &x, const ushort &y, c
 void COrion::EquipItem(uint container)
 {
 	WISPFUN_DEBUG("c194_f105");
-	if (g_ObjectInHand.Enabled && !g_ObjectInHand.Dropped)
+	if (g_ObjectInHand.Enabled)
 	{
 		if (IsWearable(g_ObjectInHand.TiledataPtr->Flags))
 		{
@@ -5340,6 +5340,7 @@ void COrion::EquipItem(uint container)
 
 			CPacketEquipRequest(g_ObjectInHand.Serial, m_StaticData[graphic].Layer, container).Send();
 
+			g_ObjectInHand.Enabled = false;
 			g_ObjectInHand.Dropped = true;
 		}
 	}

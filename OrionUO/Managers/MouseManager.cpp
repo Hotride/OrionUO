@@ -120,7 +120,7 @@ ushort CMouseManager::GetGameCursor()
 	int war = (int)(g_Player != NULL && g_Player->Warmode);
 	ushort result = g_CursorData[war][9]; //Main Gump mouse cursor
 
-	if (g_Target.IsTargeting() && (!g_ObjectInHand.Enabled || g_ObjectInHand.Dropped))
+	if (g_Target.IsTargeting() && !g_ObjectInHand.Enabled)
 		return g_CursorData[war][12]; //Targetting cursor
 
 	bool mouseInWindow = !(m_Position.X < g_ConfigManager.GameWindowX || m_Position.Y < g_ConfigManager.GameWindowY ||
@@ -335,7 +335,7 @@ void CMouseManager::Draw(ushort id)
 			if (color != 0)
 				UnuseShader();
 		}
-		else if (g_ObjectInHand.Enabled && !g_ObjectInHand.Dropped)
+		else if (g_ObjectInHand.Enabled)
 		{
 			bool doubleDraw = false;
 			ushort ohGraphic = g_ObjectInHand.GetDrawGraphic(doubleDraw);
