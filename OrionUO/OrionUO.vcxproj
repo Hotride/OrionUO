@@ -385,6 +385,7 @@ xcopy /y /d  "$(SolutionDir)bin\Orion.dll" "$(ProjectDir)"
     <ClInclude Include="Managers\FileManager.h" />
     <ClInclude Include="Managers\FontsManager.h" />
     <ClInclude Include="Managers\GumpManager.h" />
+    <ClInclude Include="Managers\IntlocManager.h" />
     <ClInclude Include="Managers\MacroManager.h" />
     <ClInclude Include="Managers\MapManager.h" />
     <ClInclude Include="Managers\MouseManager.h" />
@@ -628,6 +629,7 @@ xcopy /y /d  "$(SolutionDir)bin\Orion.dll" "$(ProjectDir)"
     <ClCompile Include="Managers\FileManager.cpp" />
     <ClCompile Include="Managers\FontsManager.cpp" />
     <ClCompile Include="Managers\GumpManager.cpp" />
+    <ClCompile Include="Managers\IntlocManager.cpp" />
     <ClCompile Include="Managers\MacroManager.cpp" />
     <ClCompile Include="Managers\MapManager.cpp" />
     <ClCompile Include="Managers\MouseManager.cpp" />
