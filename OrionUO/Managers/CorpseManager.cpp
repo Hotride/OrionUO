@@ -30,10 +30,10 @@ void CCorpseManager::Remove(const uint &corpseSerial, const uint &objectSerial)
 		{
 			if (corpseSerial)
 			{
-				CGameCharacter *obj = g_World->FindWorldCharacter(corpseSerial);
+				CGameItem *obj = g_World->FindWorldItem(corpseSerial);
 
 				if (obj != NULL)
-					obj->Direction = (i->Direction & 7) | (i->Running ? 0x80 : 0);
+					obj->Layer = (i->Direction & 7) | (i->Running ? 0x80 : 0);
 			}
 
 			i = m_List.erase(i);
