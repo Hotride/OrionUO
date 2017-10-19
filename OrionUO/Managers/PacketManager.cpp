@@ -2436,8 +2436,8 @@ PACKET_HANDLER(ExtendedCommand)
 		}
 		case 0x14: //Display Popup/context menu (2D and KR)
 		{
-			Move(1);
-			uchar mode = ReadUInt8();
+			ushort mode = ReadUInt16BE();
+			bool isNewClilocs = (mode >= 2);
 			uint serial = ReadUInt32BE();
 			uchar count = ReadUInt8();
 
@@ -2458,7 +2458,7 @@ PACKET_HANDLER(ExtendedCommand)
 				uint index = 0;
 				uint cliloc = 0;
 
-				if (mode == 2 /*|| m_ClientVersion >= CV_6000*/)
+				if (isNewClilocs)
 				{
 					cliloc = ReadUInt32BE();
 					index = ReadUInt16BE() + 1;
@@ -3565,23 +3565,6 @@ PACKET_HANDLER(DisplayDeath)
 	uchar group = g_AnimationManager.GetDieGroupIndex(owner->Graphic, running != 0);
 
 	owner->SetAnimation(group, 0, 5, 1, false, false);
-
-	/*ushort graphic = owner->Graphic;
-
-	if (graphic >= 150)
-	{
-		if (graphic >= 200)
-		{
-			if (graphic >= 400)
-				owner->SetAnimation(22 - (running != 0), 0, 5, 1, false, false);
-			else
-				owner->SetAnimation((running != 0 ? 8 : 12), 0, 5, 1, false, false);
-		}
-		else
-			owner->SetAnimation(8, 0, 5, 1, false, false);
-	}
-	else
-		owner->SetAnimation(3 - (running != 0), 0, 5, 1, false, false);*/
 }
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(OpenChat)
