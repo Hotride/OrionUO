@@ -106,7 +106,7 @@ void CConfigManager::DefaultPage2()
 	m_NoDrawRoofs = false;
 	m_HighlightTargetByType = true;
 	m_AutoDisplayWorldMap = false;
-	m_UseGLListsForInterface = !g_GL.CanUseFrameBuffer;
+	m_UseGLListsForInterface = false;
 }
 //---------------------------------------------------------------------------
 void CConfigManager::DefaultPage3()
@@ -573,6 +573,7 @@ bool CConfigManager::LoadBin(string path)
 		bool noDrawRoofs = false;
 		m_HighlightTargetByType = true;
 		m_AutoDisplayWorldMap = false;
+		UseGLListsForInterface = false;
 
 		if (file.ReadInt8() == 2)
 		{
@@ -1674,7 +1675,7 @@ void CConfigManager::Save(const string &path)
 		writter.WriteBool("DisableMenubar", m_DisableMenubar);
 		writter.WriteBool("GrayOutOfRangeObjects", m_GrayOutOfRangeObjects);
 		writter.WriteBool("DisableNewTargetSystem", m_DisableNewTargetSystem);
-		writter.WriteBool("ItemPropertiesMode", m_ItemPropertiesMode);
+		writter.WriteInt("ItemPropertiesMode", m_ItemPropertiesMode);
 		writter.WriteBool("ItemPropertiesIcon", m_ItemPropertiesIcon);
 		writter.WriteBool("ObjectHandles", m_ObjectHandles);
 		writter.WriteBool("ReduceFPSUnactiveWindow", m_ReduceFPSUnactiveWindow);
@@ -1687,7 +1688,7 @@ void CConfigManager::Save(const string &path)
 		writter.WriteInt("GameWindowWidth", m_GameWindowWidth);
 		writter.WriteInt("GameWindowHeight", m_GameWindowHeight);
 		writter.WriteInt("SpeechDelay", m_SpeechDelay);
-		writter.WriteInt("ScaleSpeechDelay", m_ScaleSpeechDelay);
+		writter.WriteBool("ScaleSpeechDelay", m_ScaleSpeechDelay);
 		writter.WriteInt("SpeechColor", m_SpeechColor);
 		writter.WriteInt("EmoteColor", m_EmoteColor);
 		writter.WriteInt("PartyMessageColor", m_PartyMessageColor);
