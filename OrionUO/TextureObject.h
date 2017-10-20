@@ -32,7 +32,6 @@ public:
 	virtual ~CTextureAnimationFrame();
 
 	CGLTexture m_Texture;
-	vector<bool> m_PixelData;
 };
 //----------------------------------------------------------------------------------
 //Класс для работы с направлением анимации

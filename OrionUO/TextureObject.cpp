@@ -10,13 +10,12 @@
 #include "stdafx.h"
 //----------------------------------------------------------------------------------
 CTextureAnimationFrame::CTextureAnimationFrame()
-: m_CenterX(0), m_CenterY(0), m_Texture(), m_PixelData(NULL)
+: m_CenterX(0), m_CenterY(0), m_Texture()
 {
 }
 //----------------------------------------------------------------------------------
 CTextureAnimationFrame::~CTextureAnimationFrame()
 {
-	m_PixelData.clear();
 }
 //----------------------------------------------------------------------------------
 CTextureAnimationDirection::CTextureAnimationDirection()

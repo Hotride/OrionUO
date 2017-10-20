@@ -1133,7 +1133,10 @@ bool CAnimationManager::LoadDirectionGroup(CTextureAnimationDirection &direction
 	if (direction.IsUOP)
 		return TryReadUOPAnimDimins(direction);
 	else if (direction.Address == 0)
+	{
+		LOG("CAnimationManager::LoadDirectionGroup bad address\n");
 		return false;
+	}
 
 	SetData((puchar)direction.Address, direction.Size);
 
@@ -1170,7 +1173,10 @@ bool CAnimationManager::LoadDirectionGroup(CTextureAnimationDirection &direction
 		uint imageHeight = ReadInt16LE();
 
 		if (!imageWidth || !imageHeight)
+		{
+			LOG("CAnimationManager::LoadDirectionGroup no image size:%i, %i\n", imageWidth, imageHeight);
 			continue;
+		}
 
 		USHORT_LIST data(imageWidth * imageHeight, 0);
 
@@ -1218,70 +1224,6 @@ bool CAnimationManager::LoadDirectionGroup(CTextureAnimationDirection &direction
 	return true;
 }
 //----------------------------------------------------------------------------------
-bool CAnimationManager::TestImagePixels(CTextureAnimationDirection &direction, const uchar &frame, const int &checkX, const int &checkY)
-{
-	WISPFUN_DEBUG("c133_f11");
-	if (direction.IsUOP)
-	{
-		CTextureAnimationFrame &actualFrame = direction.m_Frames[frame];
-		int pixelIndex = checkY * actualFrame.m_Texture.GetWidth() + checkX;
-		return actualFrame.m_PixelData[pixelIndex];
-	}
-	SetData((puchar)direction.Address, direction.Size);
-
-	pushort palette = (pushort)m_Start;
-	Move(sizeof(ushort[256])); //Palette
-	puchar dataStart = m_Ptr;
-
-	int frameCount = ReadUInt32LE();
-	puint frameOffset = (puint)m_Ptr;
-
-	m_Ptr = dataStart + frameOffset[frame];
-
-	uint imageCenterX = ReadInt16LE();
-	uint imageCenterY = ReadInt16LE();
-	uint imageWidth = ReadInt16LE();
-	uint imageHeight = ReadInt16LE();
-
-	uint header = ReadUInt32LE();
-
-	while (header != 0x7FFF7FFF && !IsEOF())
-	{
-		ushort runLength = (header & 0x0FFF);
-
-		int x = (header >> 22) & 0x03FF;
-
-		if (x & 0x0200)
-			x |= 0xFFFFFE00;
-
-		int y = (header >> 12) & 0x03FF;
-
-		if (y & 0x0200)
-			y |= 0xFFFFFE00;
-
-		x += imageCenterX;
-		y += imageCenterY + imageHeight;
-
-		if (y != checkY)
-			Move(runLength);
-		else
-		{
-			if (checkX >= x && checkX <= x + runLength)
-			{
-				Move(checkX);
-
-				return (palette[ReadUInt8()] != 0);
-			}
-
-			Move(runLength);
-		}
-
-		header = ReadUInt32LE();
-	}
-
-	return false;
-}
-//----------------------------------------------------------------------------------
 bool CAnimationManager::TestPixels(CGameObject *obj, int x, int y, const bool &mirror, uchar &frameIndex, ushort id)
 {
 	WISPFUN_DEBUG("c133_f12");
@@ -1315,20 +1257,20 @@ bool CAnimationManager::TestPixels(CGameObject *obj, int x, int y, const bool &m
 
 		CGLTexture &texture = frame.m_Texture;
 		y -= texture.Height + frame.CenterY;
-		
-		if (mirror)
-			x -= texture.Width - frame.CenterX;
-		else
-			x -= frame.CenterX;
 
 		x = g_MouseManager.Position.X - x;
-		y = g_MouseManager.Position.Y - y;
+
+		if (mirror)
+			x += texture.Width - frame.CenterX;
+		else
+			x += frame.CenterX;
 
 		if (mirror)
 			x = texture.Width - x;
 
-		if (x >= 0 && x < texture.Width && y >= 0 && y < texture.Height)
-			return TestImagePixels(direction, frameIndex, x, y);
+		x = g_MouseManager.Position.X - x;
+
+		return frame.m_Texture.Select(x, y);
 	}
 
 	return false;
@@ -2339,7 +2281,6 @@ bool CAnimationManager::TryReadUOPAnimDimins(CTextureAnimationDirection &directi
 			continue;
 		int textureSize = imageWidth * imageHeight;
 		USHORT_LIST data(textureSize, 0);
-		frame.m_PixelData = vector<bool>(textureSize);
 
 		uint header = ReadUInt32LE();
 
@@ -2367,16 +2308,9 @@ bool CAnimationManager::TryReadUOPAnimDimins(CTextureAnimationDirection &directi
 				ushort val = palette[ReadUInt8()];
 
 				if (val)
-				{
-					data[block] = 0x8000 | val;
-					frame.m_PixelData[block] = true;
-				}
-				else
-				{
-					data[block] = 0;
-					frame.m_PixelData[block] = false;
-				}
-				block++;
+					val |= 0x8000;
+				
+				data[block++] = val;
 			}
 
 			header = ReadUInt32LE();
@@ -2384,7 +2318,9 @@ bool CAnimationManager::TryReadUOPAnimDimins(CTextureAnimationDirection &directi
 
 		g_GL_BindTexture16(frame.m_Texture, imageWidth, imageHeight, &data[0]);
 	}
+
 	m_UsedAnimList.push_back(&direction);
+
 	return true;
 }
 //----------------------------------------------------------------------------------

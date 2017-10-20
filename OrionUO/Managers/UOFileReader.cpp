@@ -29,7 +29,10 @@ USHORT_LIST UOFileReader::GetGumpPixels(CIndexObject &io)
 	USHORT_LIST pixels;
 
 	if (!blocksize)
+	{
+		LOG("UOFileReader::GetGumpPixels bad size:%i, %i\n", io.Width, io.Height);
 		return pixels;
+	}
 
 	pixels.resize(blocksize);
 
@@ -220,6 +223,7 @@ CGLTexture *UOFileReader::ReadArt(const ushort &id, CIndexObject &io, const bool
 			w = *ptr;
 			if (!w || w >= 1024)
 			{
+				LOG("UOFileReader::ReadArt bad width:%i\n", w);
 				delete th;
 				return NULL;
 			}
@@ -230,6 +234,7 @@ CGLTexture *UOFileReader::ReadArt(const ushort &id, CIndexObject &io, const bool
 
 			if (!h || (h * 2) > 5120)
 			{
+				LOG("UOFileReader::ReadArt bad height:%i\n", h);
 				delete th;
 				return NULL;
 			}
@@ -258,6 +263,7 @@ CGLTexture *UOFileReader::ReadArt(const ushort &id, CIndexObject &io, const bool
 				ptr++;
 				if (XOffs + Run >= 2048)
 				{
+					LOG("UOFileReader::ReadArt bad offset:%i, %i\n", XOffs, Run);
 					delete th;
 					return NULL;
 				}
@@ -492,6 +498,7 @@ CGLTexture *UOFileReader::ReadTexture(CIndexObject &io)
 	}
 	else
 	{
+		LOG("UOFileReader::ReadTexture bad data size\n", io.DataSize);
 		delete th;
 		return NULL;
 	}

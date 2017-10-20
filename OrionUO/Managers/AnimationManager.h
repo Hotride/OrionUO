@@ -107,8 +107,6 @@ private:
 	deque<CTextureAnimationDirection*> m_UsedAnimList;
 
 	//Проверка пикселей картинки в указанных координатах
-	bool TestImagePixels(CTextureAnimationDirection &direction, const uchar &frame, const int &checkX, const int &checkY);
-
 	bool TestPixels(class CGameObject *obj, int x, int y, const bool &mirror, uchar &frameIndex, ushort id = 0x0000);
 
 	//Корректировка направления сидячего персонажа, согласно тому. на чем он сидит
