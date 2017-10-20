@@ -25,7 +25,36 @@ CIntloc::CIntloc(const int &fileIndex, const string &lang)
 	{
 		if (m_File.Load(g_App.FilePath("intloc%02i.%s", fileIndex, lang.c_str())))
 		{
-			m_Loaded = true;
+			while (!m_File.IsEOF())
+			{
+				uint code = m_File.ReadUInt32BE();
+				
+				if (code == 'TEXT')
+				{
+					int len = m_File.ReadInt32BE();
+
+					puchar end = m_File.Ptr + len;
+
+					while (m_File.Ptr < end && !m_File.IsEOF())
+					{
+						m_Strings.push_back(DecodeUTF8(m_File.ReadString().c_str()));
+					}
+				}
+				else if(code == 'FORM')
+					m_File.Move(4);
+				else if (code == 'INFO')
+				{
+					int len = m_File.ReadInt32BE();
+					m_File.Move(len + 1);
+				}
+				else if (code == 'DATA' || code == 'LANG')
+				{
+				}
+				else
+					break;
+			}
+
+			m_Loaded = (m_Strings.size() != 0);
 		}
 	}
 }
@@ -35,61 +64,7 @@ CIntloc::~CIntloc()
 	WISPFUN_DEBUG("c135_f2");
 	m_File.Unload();
 
-	m_Map.clear();
-}
-//----------------------------------------------------------------------------------
-/*!
-Загрузить клилок
-@param [__in] id Индекс клилока
-@return Результат загрузки или сообщение с ошибкой
-*/
-/*string CCliloc::Load(uint &id)
-{
-	WISPFUN_DEBUG("c135_f3");
-	string result = "";
-
-	if (m_Loaded)
-	{
-		m_File.ResetPtr();
-		m_File.Move(6);
-
-		while (!m_File.IsEOF())
-		{
-			DWORD currentID = m_File.ReadUInt32LE();
-
-			m_File.Move(1);
-
-			short len = m_File.ReadUInt16LE();
-
-			if (currentID == id)
-			{
-				result = m_File.ReadString(len);
-
-				if (id >= 3000000)
-					m_ClilocSupport[currentID] = result;
-				else if (id >= 1000000)
-					m_ClilocRegular[currentID] = result;
-				else
-					m_ClilocSystem[currentID] = result;
-
-				break;
-			}
-			else
-				m_File.Move(len);
-		}
-	}
-
-	id = 0;
-
-	return result;
-}
-//----------------------------------------------------------------------------------
-wstring CCliloc::CamelCaseTest(const bool &toCamelCase, const string &result)
-{
-	if (toCamelCase)
-		return ToCamelCaseW(DecodeUTF8(result));
-
-	return DecodeUTF8(result);
+	m_Strings.clear();
 }
 //----------------------------------------------------------------------------------
 /*!
@@ -98,67 +73,19 @@ wstring CCliloc::CamelCaseTest(const bool &toCamelCase, const string &result)
 @param [__in] result Стандартное сообщение, если клилок не был найден
 @return Полученный результат, замена или сообщение с ошибкой
 */
-/*wstring CCliloc::Get(const uint &id, const bool &toCamelCase, string result)
+wstring CIntloc::Get(const uint &id, const bool &toCamelCase)
 {
 	WISPFUN_DEBUG("c135_f4");
-	if (id >= 3000000)
+	if (id < m_Strings.size())
 	{
-		CLILOC_MAP::iterator i = m_ClilocSupport.find(id);
-		if (i != m_ClilocSupport.end() && (*i).second.length())
-			return CamelCaseTest(toCamelCase, (*i).second);
-	}
-	else if (id >= 1000000)
-	{
-		CLILOC_MAP::iterator i = m_ClilocRegular.find(id);
-		if (i != m_ClilocRegular.end() && (*i).second.length())
-			return CamelCaseTest(toCamelCase, (*i).second);
-	}
-	else
-	{
-		CLILOC_MAP::iterator i = m_ClilocSystem.find(id);
-		if (i != m_ClilocSystem.end() && (*i).second.length())
-			return CamelCaseTest(toCamelCase, (*i).second);
+		if (toCamelCase)
+			return ToCamelCaseW(m_Strings[id]);
+
+		return m_Strings[id];
 	}
 
-	uint tmpID = id;
-	string loadStr = Load(tmpID);
-
-	if (!tmpID && loadStr.length())
-		return CamelCaseTest(toCamelCase, loadStr);
-	else
-	{
-		if (m_Language != "ENU" && this->Language != "enu")
-			return g_ClilocManager.Cliloc("enu")->Get(id, toCamelCase, result);
-		else if (!result.length())
-		{
-
-			char str[50] = { 0 };
-			sprintf_s(str, "Unknown Cliloc #%i", id);
-
-			result = str;
-		}
-	}
-
-	return CamelCaseTest(toCamelCase, result);
+	return L"";
 }
-//----------------------------------------------------------------------------------
-string CCliloc::GetA(const uint &id, const bool &toCamelCase, string result)
-{
-	WISPFUN_DEBUG("c135_f4_1");
-	return ToString(Get(id, toCamelCase, result));
-}
-//----------------------------------------------------------------------------------
-/*!
-Получить Unicode строку по id (и загрузить при необходимости)
-@param [__in] id Индекс клилока
-@param [__in] result Стандартное сообщение, если клилок не был найден
-@return Полученный результат, замена или сообщение с ошибкой
-*/
-/*wstring CCliloc::GetW(const uint &id, const bool &toCamelCase, string result)
-{
-	WISPFUN_DEBUG("c135_f5");
-	return Get(id, toCamelCase, result);
-}*/
 //----------------------------------------------------------------------------------
 //-----------------------------------CIntlocManager---------------------------------
 //----------------------------------------------------------------------------------
@@ -190,6 +117,17 @@ CIntloc *CIntlocManager::Intloc(const int &fileIndex, const string &lang)
 	if (obj->Loaded)
 		return obj;
 
+	QFOR(obj, m_Items, CIntloc*)
+	{
+		if (obj->Language == "enu" && obj->FileIndex == fileIndex)
+		{
+			if (obj->Loaded)
+				return obj;
+
+			break;
+		}
+	}
+
 	return NULL;
 }
 //----------------------------------------------------------------------------------
@@ -205,8 +143,8 @@ wstring CIntlocManager::Intloc(const string &lang, uint clilocID, const bool &is
 	CIntloc *obj = Intloc(fileIndex, language);
 	wstring str = L"";
 
-	//if (obj != NULL)
-	//	str = obj->GetW(clilocID % 1000, true);
+	if (obj != NULL)
+		str = obj->Get(clilocID % 1000, true);
 	
 	if (!str.length())
 	{

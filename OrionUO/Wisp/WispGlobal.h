@@ -44,6 +44,7 @@ typedef vector<uchar> UCHAR_LIST;
 typedef vector<ushort> USHORT_LIST;
 typedef vector<uint> UINT_LIST;
 typedef vector<string> STRING_LIST;
+typedef vector<wstring> WSTRING_LIST;
 //----------------------------------------------------------------------------------
 const int PACKET_VARIABLE_SIZE = 0;
 //----------------------------------------------------------------------------------

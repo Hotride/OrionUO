@@ -10,8 +10,6 @@
 #ifndef INTLOCMANAGER_H
 #define INTLOCMANAGER_H
 //----------------------------------------------------------------------------------
-typedef map<uint, uint> INTLOC_MAP;
-//----------------------------------------------------------------------------------
 //!Класс с данными интлок-файла
 class CIntloc : public CBaseQueueItem
 {
@@ -20,11 +18,7 @@ class CIntloc : public CBaseQueueItem
 	SETGET(bool, Loaded, false);
 
 private:
-	INTLOC_MAP m_Map;
-
-	//string Load(uint &id);
-
-	//inline wstring CamelCaseTest(const bool &toCamelCase, const string &result);
+	WSTRING_LIST m_Strings;
 
 public:
 	CIntloc(const int &fileIndex, const string &lang);
@@ -33,11 +27,7 @@ public:
 	//!Указатель на проекцию файла в памяти (оно же ридер)
 	WISP_FILE::CMappedFile m_File;
 
-	/*wstring Get(const uint &id, const bool &toCamelCase = false, string result = "");
-
-	string GetA(const uint &id, const bool &toCamelCase = false, string result = "");
-
-	wstring GetW(const uint &id, const bool &toCamelCase = false, string result = "");*/
+	wstring Get(const uint &id, const bool &toCamelCase = false);
 };
 //----------------------------------------------------------------------------------
 //!Класс менеджера клилоков

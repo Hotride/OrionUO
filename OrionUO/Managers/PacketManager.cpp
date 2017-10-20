@@ -2466,10 +2466,10 @@ PACKET_HANDLER(ExtendedCommand)
 				else
 				{
 					index = ReadUInt16BE() + 1;
-					cliloc = ReadUInt16BE() + 3000000;
+					cliloc = ReadUInt16BE();
 				}
 
-				wstring str = g_ClilocManager.Cliloc(g_Language)->GetW(cliloc, true);
+				wstring str = g_IntlocManager.Intloc(g_Language, cliloc, isNewClilocs);
 
 				ushort flags = ReadUInt16BE();
 				ushort color = 0xFFFE;

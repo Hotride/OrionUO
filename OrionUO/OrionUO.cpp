@@ -459,6 +459,7 @@ bool COrion::Install()
 	}
 
 	LOG("Installation completed!\n");
+
 	return true;
 }
 //----------------------------------------------------------------------------------

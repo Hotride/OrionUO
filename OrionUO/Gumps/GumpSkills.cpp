@@ -225,6 +225,12 @@ void CGumpSkills::UpdateSkillValue(const int &index)
 				if (item->Type == GOT_SKILLITEM && ((CGUISkillItem*)item)->Index == index)
 				{
 					((CGUISkillItem*)item)->CreateValueText(m_ShowReal, m_ShowCap);
+
+					CSkill *skill = g_SkillsManager.Get(index);
+
+					if (skill != NULL)
+						((CGUISkillItem*)item)->Status = skill->Status;
+
 					return;
 				}
 			}
