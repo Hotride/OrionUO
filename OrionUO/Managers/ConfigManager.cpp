@@ -1130,7 +1130,8 @@ int CConfigManager::GetConfigKeyCode(const string &key)
 		"RealWidth",
 		"RealHeight",
 		"ToggleBufficonWindow",
-		"DeveloperMode"
+		"DeveloperMode",
+		"LastServer"
 	};
 
 	string str = ToLowerA(key);
@@ -1533,6 +1534,9 @@ bool CConfigManager::Load(const string &path)
 				case CMKC_DEVELOPER_MODE:
 					g_DeveloperMode = (DEVELOPER_MODE)atoi(strings[1].c_str());
 					break;
+				case CMKC_LAST_SERVER:
+					g_ServerList.LastServer = (DEVELOPER_MODE)atoi(strings[1].c_str());
+					break;
 				default:
 					break;
 			}
@@ -1738,6 +1742,8 @@ void CConfigManager::Save(const string &path)
 		writter.WriteBool("ToggleBufficonWindow", m_ToggleBufficonWindow);
 		writter.WriteInt("DeveloperMode", g_DeveloperMode);
 
+		writter.WriteInt("LastServer", g_ServerList.LastServer);
+		
 		writter.Close();
 	}
 }

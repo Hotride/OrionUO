@@ -1657,9 +1657,13 @@ void COrion::ServerSelection(int pos)
 
 	CServer *server = g_ServerList.Select(pos);
 
-	g_PluginManager.WindowProc(g_OrionWindow.Handle, UOMSG_SET_SERVER_NAME, (WPARAM)FixServerName(g_ServerList.GetSelectedServer()->Name).c_str(), 0);
+	if (server != NULL)
+	{
+		g_PluginManager.WindowProc(g_OrionWindow.Handle, UOMSG_SET_SERVER_NAME, (WPARAM)FixServerName(g_ServerList.GetSelectedServer()->Name).c_str(), 0);
 
-	CPacketSelectServer((uchar)server->Index).Send();
+		g_ServerList.LastServer = pos;
+		CPacketSelectServer((uchar)server->Index).Send();
+	}
 }
 //----------------------------------------------------------------------------------
 void COrion::RelayServer(const char *ip, int port, puchar gameSeed)

@@ -49,7 +49,7 @@ void CServerScreen::OnKeyDown(const WPARAM &wParam, const LPARAM &lParam)
 
 	if (wParam == VK_RETURN)
 	{
-		m_SelectionServerTempValue = 0;
+		m_SelectionServerTempValue = g_ServerList.LastServer;
 		CreateSmoothAction(ID_SMOOTH_SS_SELECT_SERVER);
 	}
 }

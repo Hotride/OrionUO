@@ -74,7 +74,10 @@ void CGumpScreenServer::UpdateContent()
 	if (g_ServerList.ServersCount() > 0)
 	{
 		CGUIText *text = new CGUIText(0x0481, 243, 420);
-		text->CreateTextureA(9, g_ServerList.GetServer(0)->Name);
+		if (g_ServerList.LastServer < g_ServerList.ServersCount())
+			text->CreateTextureA(9, g_ServerList.GetServer(g_ServerList.LastServer)->Name);
+		else
+			text->CreateTextureA(9, g_ServerList.GetServer(0)->Name);
 		Add(text);
 	}
 }
@@ -130,7 +133,7 @@ void CGumpScreenServer::GUMP_BUTTON_EVENT_C
 		g_ServerScreen.CreateSmoothAction(CServerScreen::ID_SMOOTH_SS_GO_SCREEN_MAIN);
 	else if (serial == ID_SS_ARROW_NEXT || serial == ID_SS_EARTH) //> button
 	{
-		g_ServerScreen.SelectionServerTempValue = 0;
+		g_ServerScreen.SelectionServerTempValue = g_ServerList.LastServer;
 		g_ServerScreen.CreateSmoothAction(CServerScreen::ID_SMOOTH_SS_SELECT_SERVER);
 	}
 }
