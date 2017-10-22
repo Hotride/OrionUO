@@ -205,6 +205,12 @@ void CMapManager::ApplyPatches(WISP_DATASTREAM::CDataReader &stream)
 
 	IFOR(i, 0, m_PatchesCount)
 	{
+		if (g_FileManager.m_MapMul[i].Start == NULL)
+		{
+			stream.Move(8);
+			continue;
+		}
+
 		int mapPatchesCount = stream.ReadUInt32BE();
 		m_MapPatchCount[i] = mapPatchesCount;
 		int staticsPatchesCount = stream.ReadUInt32BE();
