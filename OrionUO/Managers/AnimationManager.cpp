@@ -1134,7 +1134,7 @@ bool CAnimationManager::LoadDirectionGroup(CTextureAnimationDirection &direction
 		return TryReadUOPAnimDimins(direction);
 	else if (direction.Address == 0)
 	{
-		LOG("CAnimationManager::LoadDirectionGroup bad address\n");
+		//LOG("CAnimationManager::LoadDirectionGroup bad address\n");
 		return false;
 	}
 
@@ -2243,7 +2243,11 @@ ANIMATION_DIMENSIONS CAnimationManager::GetAnimationDimensions(CGameObject *obj,
 bool CAnimationManager::TryReadUOPAnimDimins(CTextureAnimationDirection &direction)
 {
 	UOPAnimationData animDataStruct = m_DataIndex[m_AnimID].m_Groups[m_AnimGroup].m_UOPAnimData;
-	if (animDataStruct.path == NULL) return false;
+	if (animDataStruct.path == NULL)
+	{
+		//LOG("CAnimationManager::TryReadUOPAnimDimins bad address\n");
+		return false;
+	}
 
 	//reading compressed data from uop file stream
 	auto decompressedLength = animDataStruct.decompressedLength;
