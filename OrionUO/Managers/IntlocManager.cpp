@@ -139,20 +139,22 @@ wstring CIntlocManager::Intloc(const string &lang, uint clilocID, const bool &is
 	if (!language.length())
 		language = "enu";
 
-	int fileIndex = (clilocID / 1000) % 1000;
-	CIntloc *obj = Intloc(fileIndex, language);
 	wstring str = L"";
 
-	if (obj != NULL)
-		str = obj->Get(clilocID % 1000, true);
+	if (!isNewCliloc)
+	{
+		int fileIndex = (clilocID / 1000) % 1000;
+		CIntloc *obj = Intloc(fileIndex, language);
+
+		if (obj == NULL && language != "enu")
+			obj = Intloc(fileIndex, "enu");
+
+		if (obj != NULL)
+			str = obj->Get(clilocID % 1000, true);
+	}
 	
 	if (!str.length())
-	{
-		if (!isNewCliloc)
-			clilocID += 3000000;
-
 		str = g_ClilocManager.Cliloc(lang)->GetW(clilocID, true);
-	}
 
 	return str;
 }

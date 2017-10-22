@@ -10,6 +10,18 @@
 #ifndef GUMPPOPUPMENU_H
 #define GUMPPOPUPMENU_H
 //----------------------------------------------------------------------------------
+class CPopupMenuItemInfo
+{
+	SETGET(uint, Cliloc, 0);
+	SETGET(ushort, Index, 0);
+	SETGET(ushort, Flags, 0);
+	SETGET(ushort, Color, 0);
+	SETGET(ushort, ReplaceColor, 0);
+
+public:
+	CPopupMenuItemInfo() {}
+};
+//----------------------------------------------------------------------------------
 class CGumpPopupMenu : public CGump
 {
 	SETGET(int, Width, 0);
@@ -25,6 +37,8 @@ public:
 	static const int ID_GPM_MAXIMIZE = 0xDEADBEEF;
 
 	virtual void PrepareContent();
+
+	static void Parse(WISP_NETWORK::CPacketReader &reader);
 
 	GUMP_BUTTON_EVENT_H;
 };
