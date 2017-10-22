@@ -274,7 +274,7 @@ void CGumpSecureTrading::OnLeftMouseButtonUp()
 
 		if (g_Orion.PolygonePixelsInXY(x + 45, y + 70, 110, 80))
 		{
-			if (GetTopObjDistance(g_Player, g_World->FindWorldObject(m_ID2)) <= DRAG_ITEMS_DISTANCE)
+			//if (GetTopObjDistance(g_Player, g_World->FindWorldObject(m_ID2)) <= DRAG_ITEMS_DISTANCE)
 			{
 				x = g_MouseManager.Position.X - x - 45;
 				y = g_MouseManager.Position.Y - y - 70;
@@ -305,8 +305,8 @@ void CGumpSecureTrading::OnLeftMouseButtonUp()
 				g_Orion.DropItem(m_ID, x, y, 0);
 				g_MouseManager.CancelDoubleClick = true;
 			}
-			else
-				g_Orion.PlaySoundEffect(0x0051);
+			//else
+			//	g_Orion.PlaySoundEffect(0x0051);
 		}
 	}
 	else if (g_Target.IsTargeting() && g_SelectedObject.Serial>= 0x40000000 && g_World->FindWorldObject(g_SelectedObject.Serial) != NULL)
