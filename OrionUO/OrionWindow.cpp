@@ -110,7 +110,11 @@ void COrionWindow::EmulateOnLeftMouseButtonDown()
 		g_PressedObject.InitLeft(g_SelectedObject);
 
 		if (g_SelectedObject.Object != NULL || g_GameState == GS_GAME)
+		{
+			WISP_MOUSE::g_WispMouse->LeftDropPosition = WISP_MOUSE::g_WispMouse->Position;
+
 			g_CurrentScreen->OnLeftMouseButtonDown();
+		}
 	}
 }
 //----------------------------------------------------------------------------------
