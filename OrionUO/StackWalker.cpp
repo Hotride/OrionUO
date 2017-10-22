@@ -1137,6 +1137,7 @@ BOOL __stdcall StackWalker::myReadProcMem(
 
 void StackWalker::OnLoadModule(LPCSTR img, LPCSTR mod, DWORD64 baseAddr, DWORD size, DWORD result, LPCSTR symType, LPCSTR pdbName, ULONGLONG fileVersion)
 {
+	return;
 	CHAR buffer[STACKWALK_MAX_NAMELEN];
 	if (fileVersion == 0)
 		_snprintf_s(buffer, STACKWALK_MAX_NAMELEN, "%s:%s (%p), size: %d (result: %d), SymType: '%s', PDB: '%s'\n", img, mod, (LPVOID)baseAddr, size, result, symType, pdbName);
