@@ -55,6 +55,7 @@ void CGumpScreenServer::UpdateContent()
 	Add(new CGUIButton(ID_SS_EARTH, 0x15E8, 0x15E9, 0x15EA, 160, 400));
 
 	int offsetY = 0;
+	g_ServerList.LastServerIndex = 0;
 
 	IFOR(i, 0, g_ServerList.ServersCount())
 	{
@@ -67,18 +68,21 @@ void CGumpScreenServer::UpdateContent()
 		entry->ReadOnly = true;
 		entry->CheckOnSerial = true;
 		htmlGump->Add(entry);
+
+		if (server->Name == g_ServerList.LastServerName)
+			g_ServerList.LastServerIndex = i;
 	}
 
 	htmlGump->CalculateDataSize();
 
 	if (g_ServerList.ServersCount() > 0)
 	{
-		CGUIText *text = new CGUIText(0x0481, 243, 420);
-		if (g_ServerList.LastServer < g_ServerList.ServersCount())
-			text->CreateTextureA(9, g_ServerList.GetServer(g_ServerList.LastServer)->Name);
+		CGUIText *text = (CGUIText*)Add(new CGUIText(0x0481, 243, 420));
+
+		if (g_ServerList.LastServerIndex < (uint)g_ServerList.ServersCount())
+			text->CreateTextureA(9, g_ServerList.GetServer(g_ServerList.LastServerIndex)->Name);
 		else
 			text->CreateTextureA(9, g_ServerList.GetServer(0)->Name);
-		Add(text);
 	}
 }
 //----------------------------------------------------------------------------------
@@ -133,7 +137,7 @@ void CGumpScreenServer::GUMP_BUTTON_EVENT_C
 		g_ServerScreen.CreateSmoothAction(CServerScreen::ID_SMOOTH_SS_GO_SCREEN_MAIN);
 	else if (serial == ID_SS_ARROW_NEXT || serial == ID_SS_EARTH) //> button
 	{
-		g_ServerScreen.SelectionServerTempValue = g_ServerList.LastServer;
+		g_ServerScreen.SelectionServerTempValue = g_ServerList.LastServerIndex;
 		g_ServerScreen.CreateSmoothAction(CServerScreen::ID_SMOOTH_SS_SELECT_SERVER);
 	}
 }

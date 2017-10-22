@@ -28,7 +28,8 @@ public:
 //Класс для хранения списка серверов
 class CServerList
 {
-	SETGET(uint, LastServer, 0);
+	SETGET(string, LastServerName, "");
+	SETGET(uint, LastServerIndex, 0);
 
 private:
 	deque<CServer*> m_Servers;

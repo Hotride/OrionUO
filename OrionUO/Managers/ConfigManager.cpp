@@ -1535,7 +1535,8 @@ bool CConfigManager::Load(const string &path)
 					g_DeveloperMode = (DEVELOPER_MODE)atoi(strings[1].c_str());
 					break;
 				case CMKC_LAST_SERVER:
-					g_ServerList.LastServer = (DEVELOPER_MODE)atoi(strings[1].c_str());
+					if (g_World == NULL)
+						g_ServerList.LastServerName = strings[1];
 					break;
 				default:
 					break;
@@ -1742,7 +1743,7 @@ void CConfigManager::Save(const string &path)
 		writter.WriteBool("ToggleBufficonWindow", m_ToggleBufficonWindow);
 		writter.WriteInt("DeveloperMode", g_DeveloperMode);
 
-		writter.WriteInt("LastServer", g_ServerList.LastServer);
+		writter.WriteString("LastServer", g_ServerList.LastServerName);
 		
 		writter.Close();
 	}

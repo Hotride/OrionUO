@@ -1659,9 +1659,11 @@ void COrion::ServerSelection(int pos)
 
 	if (server != NULL)
 	{
-		g_PluginManager.WindowProc(g_OrionWindow.Handle, UOMSG_SET_SERVER_NAME, (WPARAM)FixServerName(g_ServerList.GetSelectedServer()->Name).c_str(), 0);
+		string name = g_ServerList.GetSelectedServer()->Name;
+		g_ServerList.LastServerName = name.c_str();
 
-		g_ServerList.LastServer = pos;
+		g_PluginManager.WindowProc(g_OrionWindow.Handle, UOMSG_SET_SERVER_NAME, (WPARAM)FixServerName(name).c_str(), 0);
+
 		CPacketSelectServer((uchar)server->Index).Send();
 	}
 }
