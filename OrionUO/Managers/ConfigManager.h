@@ -133,7 +133,7 @@ class CConfigManager
 	SETGET(bool, ToggleBufficonWindow, false);
 	SETGET(int, GameWindowX, 0);
 	SETGET(int, GameWindowY, 0);
-	SETGET(int, UpdateRange, 0);
+	SETGET(int, UpdateRange, MAX_VIEW_RANGE);
 
 public:
 	CConfigManager();

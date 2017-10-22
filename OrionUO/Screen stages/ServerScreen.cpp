@@ -32,8 +32,6 @@ void CServerScreen::Init()
 	g_ScreenEffectManager.UseSunrise();
 	m_SmoothScreenAction = 0;
 
-	g_ConfigManager.UpdateRange = MAX_VIEW_RANGE;
-
 	m_Gump.PrepareTextures();
 	m_Gump.WantUpdateContent = true;
 }

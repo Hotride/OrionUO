@@ -27,17 +27,17 @@ CCharacterListScreen::~CCharacterListScreen()
 void CCharacterListScreen::Init()
 {
 	WISPFUN_DEBUG("c160_f1");
+
 	string title = string("Ultima Online - ") + g_MainScreen.m_Account->c_str();
+
 	CServer *server = g_ServerList.GetSelectedServer();
+
 	if (server != NULL)
-	{
 		title += "(" + server->Name + ")";
-	}
+
 	g_OrionWindow.SetTitle(title);
 
 	g_CharacterList.Selected = 0;
-
-	g_ConfigManager.UpdateRange = MAX_VIEW_RANGE;
 
 	g_ScreenEffectManager.UseSunrise();
 	m_SmoothScreenAction = 0;
