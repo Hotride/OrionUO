@@ -1131,7 +1131,8 @@ int CConfigManager::GetConfigKeyCode(const string &key)
 		"RealHeight",
 		"ToggleBufficonWindow",
 		"DeveloperMode",
-		"LastServer"
+		"LastServer",
+		"LastCharacter"
 	};
 
 	string str = ToLowerA(key);
@@ -1538,6 +1539,10 @@ bool CConfigManager::Load(const string &path)
 					if (g_World == NULL)
 						g_ServerList.LastServerName = strings[1];
 					break;
+				case CMKC_LAST_CHARACTER:
+					if (g_World == NULL)
+						g_CharacterList.LastCharacterName = strings[1];
+					break;
 				default:
 					break;
 			}
@@ -1744,7 +1749,8 @@ void CConfigManager::Save(const string &path)
 		writter.WriteInt("DeveloperMode", g_DeveloperMode);
 
 		writter.WriteString("LastServer", g_ServerList.LastServerName);
-		
+		writter.WriteString("LastCharacter", g_CharacterList.LastCharacterName);
+
 		writter.Close();
 	}
 }

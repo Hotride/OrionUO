@@ -1693,9 +1693,11 @@ void COrion::CharacterSelection(int pos)
 	InitScreen(GS_GAME_CONNECT);
 	g_ConnectionScreen.Type = CST_GAME;
 
-	g_PluginManager.WindowProc(g_OrionWindow.Handle, UOMSG_SET_PLAYER_NAME, (WPARAM)g_CharacterList.GetName(pos).c_str(), 0);
+	g_CharacterList.LastCharacterName = g_CharacterList.GetName(pos);
 
-	CPacketSelectCharacter(pos, g_CharacterList.GetName(pos)).Send();
+	g_PluginManager.WindowProc(g_OrionWindow.Handle, UOMSG_SET_PLAYER_NAME, (WPARAM)g_CharacterList.LastCharacterName.c_str(), 0);
+
+	CPacketSelectCharacter(pos, g_CharacterList.LastCharacterName).Send();
 }
 //----------------------------------------------------------------------------------
 void COrion::LoginComplete(const bool &reload)

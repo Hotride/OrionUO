@@ -20,6 +20,8 @@ class CCharacterList
 	SETGET(bool, Have7Slot, false);
 	SETGET(ushort, ClientFlag, 0);
 
+	SETGET(string, LastCharacterName, "");
+
 private:
 	//!Память под 7 персонажей
 	string m_Name[7];

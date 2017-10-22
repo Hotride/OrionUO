@@ -800,6 +800,9 @@ PACKET_HANDLER(ResendCharacterList)
 
 				if (autoLogin && autoPos == -1 && AutoLoginNameExists(name))
 					autoPos = i;
+
+				if (name == g_CharacterList.LastCharacterName)
+					g_CharacterList.Selected = i;
 			}
 
 			LOG("%d: %s\n", i, name.c_str());
