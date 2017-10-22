@@ -1056,15 +1056,20 @@ void CGameScreen::AddLight(CRenderWorldObject *rwo, CRenderWorldObject *lightObj
 
 		if (canBeAdded)
 		{
-			m_Light[m_LightCount].ID = (uchar)lightObject->GetLightID();
+			LIGHT_DATA &light = m_Light[m_LightCount];
+
+			light.ID = (uchar)lightObject->GetLightID();
+
+			if (light.ID)
+				light.ID--;
 
 			if (g_ConfigManager.ColoredLighting)
-				m_Light[m_LightCount].Color = g_Orion.GetLightColor(lightObject->Graphic);
+				light.Color = g_Orion.GetLightColor(lightObject->Graphic);
 			else
-				m_Light[m_LightCount].Color = 0;
+				light.Color = 0;
 
-			m_Light[m_LightCount].DrawX = x;
-			m_Light[m_LightCount].DrawY = y;
+			light.DrawX = x;
+			light.DrawY = y;
 
 			m_LightCount++;
 		}
