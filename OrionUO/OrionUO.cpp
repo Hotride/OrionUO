@@ -201,7 +201,8 @@ bool COrion::Install()
 	{
 		LOG("Client.cuo is missing!\n");
 		CRASHLOG("Client.cuo is missing!\n");
-		g_OrionWindow.ShowMessage("Configuration file 'Client.cuo' is missing! Client can't be started!", "Error!");
+		string path = g_App.ExeFilePath;
+		g_OrionWindow.ShowMessage("Configuration file 'Client.cuo' not found in " + path + "! Client can't be started!", "Error!");
 		ExitProcess(0);
 		return false;
 	}
@@ -936,11 +937,12 @@ void COrion::LoadContaierOffsets()
 void COrion::LoadClientConfig()
 {
 	WISPFUN_DEBUG("c194_f11");
+	string path = g_App.ExeFilePath;
 	HMODULE orionDll = LoadLibrary(g_App.ExeFilePath(L"Orion.dll").c_str());
 
 	if (orionDll == 0)
 	{
-		g_OrionWindow.ShowMessage("Orion.dll not found!", "Error!");
+		g_OrionWindow.ShowMessage("Orion.dll not found in " + path, "Error!");
 		ExitProcess(0);
 		return;
 	}
