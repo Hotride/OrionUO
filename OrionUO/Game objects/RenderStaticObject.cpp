@@ -59,10 +59,10 @@ void CRenderStaticObject::UpdateTextCoordinates()
 
 	if (IsGameObject() && ((CGameObject*)this)->Container != 0xFFFFFFFF)
 	{
-		uint container = ((CGameObject*)this)->Container;
+		/*uint container = ((CGameObject*)this)->Container;
 		g_GumpManager.UpdateGump(container, 0, GT_CONTAINER);
 		g_GumpManager.UpdateGump(container, 0, GT_PAPERDOLL);
-		g_GumpManager.UpdateGump(container, 0, GT_TRADE);
+		g_GumpManager.UpdateGump(container, 0, GT_TRADE);*/
 
 		for (CTextData *text = (CTextData*)m_TextControl->Last(); text != NULL; text = (CTextData*)text->m_Prev)
 		{
