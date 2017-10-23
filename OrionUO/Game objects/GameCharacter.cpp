@@ -873,6 +873,7 @@ void CGameCharacter::UpdateAnimationInfo(BYTE &dir, const bool &canChange)
 
 					m_OffsetX = (char)x;
 					m_OffsetY = (char)y;
+					m_Changed = true;
 				}
 			}
 			else
@@ -929,7 +930,7 @@ void CGameCharacter::UpdateAnimationInfo(BYTE &dir, const bool &canChange)
 				if (IsPlayer())
 					g_GumpManager.RemoveRangedGumps();
 
-				UpdateDrawCoordinates();
+				UpdateRealDrawCoordinates();
 
 				m_Direction = wd.Direction;
 

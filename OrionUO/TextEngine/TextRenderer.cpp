@@ -119,14 +119,14 @@ bool CTextRenderer::CalculatePositions(const bool &noCalculate)
 					int drawX = text->X - go->GetTextOffsetX(text);
 					int drawY = text->Y - go->GetTextOffsetY(text);
 
-					CTextImageBounds ib(text->DrawX, text->DrawY, tth.Width, tth.Height, text);
+					CTextImageBounds ib(text->RealDrawX, text->RealDrawY, tth.Width, tth.Height, text);
 
-					if (text->DrawX != drawX || text->DrawY != drawY)
+					if (text->RealDrawX != drawX || text->RealDrawY != drawY)
 					{
 						changed = true;
 
-						text->DrawX = drawX;
-						text->DrawY = drawY;
+						text->RealDrawX = drawX;
+						text->RealDrawY = drawY;
 					}
 
 					bool transparent = InRect(ib, go);
@@ -156,12 +156,12 @@ bool CTextRenderer::CalculatePositions(const bool &noCalculate)
 					tdBuf = (CTextData*)tdBuf->m_Next;
 				}
 
-				if (text->DrawX != drawX || text->DrawY != drawY)
+				if (text->RealDrawX != drawX || text->RealDrawY != drawY)
 				{
 					changed = true;
 
-					text->DrawX = drawX;
-					text->DrawY = drawY;
+					text->RealDrawX = drawX;
+					text->RealDrawY = drawY;
 				}
 
 				CTextImageBounds ib(drawX, drawY, tth.Width, tth.Height, text);
@@ -252,13 +252,13 @@ void CTextRenderer::Draw()
 				glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 				glColor4ub(0xFF, 0xFF, 0xFF, alpha);
 
-				text->m_Texture.Draw(text->DrawX, text->DrawY);
+				text->m_Texture.Draw(text->RealDrawX, text->RealDrawY);
 
 				glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 				glDisable(GL_BLEND);
 			}
 			else
-				text->m_Texture.Draw(text->DrawX, text->DrawY);
+				text->m_Texture.Draw(text->RealDrawX, text->RealDrawY);
 		}
 	}
 }
@@ -278,7 +278,7 @@ void CTextRenderer::Select(CGump *gump)
 
 		CTextData *text = (CTextData*)item;
 
-		if (text->Timer >= g_Ticks && text->m_Texture.Select(text->DrawX, text->DrawY))
+		if (text->Timer >= g_Ticks && text->m_Texture.Select(text->RealDrawX, text->RealDrawY))
 			g_SelectedObject.Init(item, gump);
 	}
 }
@@ -321,8 +321,8 @@ bool CTextRenderer::CalculateWorldPositions(const bool &noCalculate)
 					{
 						rwo = go;
 
-						drawX = go->DrawX - g_RenderBounds.WindowDrawOffsetX;
-						drawY = go->DrawY - g_RenderBounds.WindowDrawOffsetY;
+						drawX = go->DrawX;
+						drawY = go->DrawY;
 
 						if (go->NPC)
 						{
@@ -352,8 +352,8 @@ bool CTextRenderer::CalculateWorldPositions(const bool &noCalculate)
 
 					if (rwo != NULL)
 					{
-						drawX = rwo->DrawX - g_RenderBounds.WindowDrawOffsetX - rwo->GetTextOffsetX(text);
-						drawY = rwo->DrawY - g_RenderBounds.WindowDrawOffsetY - ((g_Orion.m_StaticData[rwo->Graphic].Height + 20) + rwo->GetTextOffsetY(text));
+						drawX = rwo->DrawX - rwo->GetTextOffsetX(text);
+						drawY = rwo->DrawY - ((g_Orion.m_StaticData[rwo->Graphic].Height + 20) + rwo->GetTextOffsetY(text));
 					}
 
 					break;
@@ -366,8 +366,8 @@ bool CTextRenderer::CalculateWorldPositions(const bool &noCalculate)
 			{
 				CTextImageBounds ib(drawX, drawY, tth.Width, tth.Height, text);
 
-				text->DrawX = drawX;
-				text->DrawY = drawY;
+				text->RealDrawX = drawX;
+				text->RealDrawY = drawY;
 
 				text->Transparent = InRect(ib, rwo);
 
@@ -456,13 +456,13 @@ void CTextRenderer::WorldDraw()
 				glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 				glColor4ub(0xFF, 0xFF, 0xFF, alpha);
 
-				text->m_Texture.Draw(text->DrawX, text->DrawY);
+				text->m_Texture.Draw(text->RealDrawX, text->RealDrawY);
 
 				glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 				glDisable(GL_BLEND);
 			}
 			else
-				text->m_Texture.Draw(text->DrawX, text->DrawY);
+				text->m_Texture.Draw(text->RealDrawX, text->RealDrawY);
 		}
 	}
 }

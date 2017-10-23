@@ -13,6 +13,7 @@ CGumpProfile::CGumpProfile(uint serial, short x, short y, wstring topText, wstri
 : CGumpBaseScroll(GT_PROFILE, serial, 0x0820, 250, x, y, true)
 {
 	WISPFUN_DEBUG("c108_f1");
+	m_Changed = false;
 	Add(new CGUIPage(1));
 	Add(new CGUIGumppic(0x09D4, 0, 0));
 

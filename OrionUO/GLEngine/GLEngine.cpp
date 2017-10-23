@@ -231,7 +231,7 @@ void CGLEngine::GL1_BindTexture16(CGLTexture &texture, const int &width, const i
 	texture.Height = height;
 	texture.Texture = tex;
 
-	vector<bool> &hitMap = texture.m_HitMap;
+	HIT_MAP_TYPE &hitMap = texture.m_HitMap;
 	hitMap.resize(width * height);
 	int pos = 0;
 
@@ -263,7 +263,7 @@ void CGLEngine::GL1_BindTexture32(CGLTexture &texture, const int &width, const i
 	texture.Height = height;
 	texture.Texture = tex;
 
-	vector<bool> &hitMap = texture.m_HitMap;
+	HIT_MAP_TYPE &hitMap = texture.m_HitMap;
 	hitMap.resize(width * height);
 	int pos = 0;
 

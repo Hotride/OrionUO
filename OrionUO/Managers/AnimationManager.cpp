@@ -1781,7 +1781,7 @@ void CAnimationManager::DrawCharacter(CGameCharacter *obj, int x, int y)
 
 					g_GL.PushScissor(drawX + xOffset, g_OrionWindow.Size.Height - drawY + yOffset - 40, 20, 40);
 					bool selected = g_SelectedObject.Object == ro;
-					g_Orion.DrawStaticArt(sittingData.Graphic, selected ? 0x0035 : ro->Color, ro->DrawX, ro->DrawY, !selected);
+					g_Orion.DrawStaticArt(sittingData.Graphic, selected ? 0x0035 : ro->Color, ro->RealDrawX, ro->RealDrawY, !selected);
 					g_GL.PopScissor();
 
 					break;

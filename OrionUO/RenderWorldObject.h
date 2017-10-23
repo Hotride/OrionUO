@@ -117,6 +117,7 @@ public:
 	virtual class CLandObject *LandObjectPtr() { return NULL; }
 	virtual class CGameCharacter *GameCharacterPtr() { return NULL; }
 
+	virtual void UpdateRealDrawCoordinates();
 	virtual void UpdateDrawCoordinates();
 };
 //----------------------------------------------------------------------------------

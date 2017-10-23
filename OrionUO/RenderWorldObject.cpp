@@ -20,7 +20,7 @@ CRenderWorldObject::CRenderWorldObject(const RENDER_OBJECT_TYPE &renderType, con
 	m_DrawTextureColor[2] = 0xFF;
 	m_DrawTextureColor[3] = 0x00;
 
-	UpdateDrawCoordinates();
+	UpdateRealDrawCoordinates();
 }
 //----------------------------------------------------------------------------------
 CRenderWorldObject::~CRenderWorldObject()
@@ -98,12 +98,20 @@ CLandObject *CRenderWorldObject::GetLand()
 void CRenderWorldObject::OnChangeZ(const char &val)
 {
 	m_Z = val;
-	UpdateDrawCoordinates();
+	UpdateRealDrawCoordinates();
+}
+//----------------------------------------------------------------------------------
+void CRenderWorldObject::UpdateRealDrawCoordinates()
+{
+	m_RealDrawX = (m_X - m_Y) * 22;
+	m_RealDrawY = (m_X + m_Y) * 22 - (m_Z * 4);
+	m_Changed = true;
 }
 //----------------------------------------------------------------------------------
 void CRenderWorldObject::UpdateDrawCoordinates()
 {
-	m_DrawX = (m_X - m_Y) * 22;
-	m_DrawY = (m_X + m_Y) * 22 - (m_Z * 4);
+	m_DrawX = m_RealDrawX - g_RenderBounds.WindowDrawOffsetX;
+	m_DrawY = m_RealDrawY - g_RenderBounds.WindowDrawOffsetY;
+	m_Changed = false;
 }
 //----------------------------------------------------------------------------------

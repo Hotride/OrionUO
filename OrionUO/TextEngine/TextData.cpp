@@ -20,8 +20,8 @@ CTextData::CTextData(CTextData *obj)
 m_Alpha(obj->Alpha)
 {
 	WISPFUN_DEBUG("c174_f2");
-	m_DrawX = obj->DrawX;
-	m_DrawY = obj->DrawY;
+	m_RealDrawX = obj->RealDrawX;
+	m_RealDrawY = obj->RealDrawY;
 	m_Color = obj->Color;
 	m_Text = obj->GetText();
 	m_UnicodeText = obj->GetUnicodeText();

@@ -18,8 +18,11 @@ class CRenderObject : public CBaseQueueItem
 	SETGET(ushort, Color, 0);
 	SETGETE(int, X, 0, OnChangeX);
 	SETGETE(int, Y, 0, OnChangeY);
+	SETGET(int, RealDrawX, 0);
+	SETGET(int, RealDrawY, 0);
 	SETGET(int, DrawX, 0);
 	SETGET(int, DrawY, 0);
+	SETGET(bool, Changed, true);
 
 public:
 	CRenderObject(const uint &serial, const ushort &graphic, const ushort &color, const short &x, const short &y);
@@ -39,6 +42,7 @@ public:
 	virtual bool IsWorldObject() { return false; }
 	virtual bool IsGameObject() { return false; }
 
+	virtual void UpdateRealDrawCoordinates() {}
 	virtual void UpdateDrawCoordinates() {}
 };
 //----------------------------------------------------------------------------------

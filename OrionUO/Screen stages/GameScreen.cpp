@@ -500,6 +500,8 @@ void CGameScreen::CalculateRenderList()
 	if (renderIndex >= 100)
 		renderIndex = 1;
 #endif
+
+	m_UpdateDrawPos = false;
 }
 //----------------------------------------------------------------------------------
 void CGameScreen::AddTileToRenderList(CRenderWorldObject *obj, const int &worldX, const int &worldY, const uchar &renderIndex, const bool &useObjectHandles, const int &maxZ)
@@ -524,8 +526,11 @@ void CGameScreen::AddTileToRenderList(CRenderWorldObject *obj, const int &worldX
 
 	for (; obj != NULL; obj = obj->m_NextXY)
 	{
-		int drawX = obj->DrawX - g_RenderBounds.WindowDrawOffsetX;
-		int drawY = obj->DrawY - g_RenderBounds.WindowDrawOffsetY;
+		if (m_UpdateDrawPos || obj->Changed)
+			obj->UpdateDrawCoordinates();
+
+		int drawX = obj->DrawX;
+		int drawY = obj->DrawY;
 
 		if (drawX < g_RenderBounds.MinPixelsX || drawX > g_RenderBounds.MaxPixelsX)
 			break;
@@ -650,8 +655,8 @@ void CGameScreen::AddTileToRenderList(CRenderWorldObject *obj, const int &worldX
 							}
 						}
 
-						text->DrawX = textDrawX - text->X;
-						text->DrawY = textDrawY + text->Y;
+						text->RealDrawX = textDrawX - text->X;
+						text->RealDrawY = textDrawY + text->Y;
 
 						if (text->Transparent)
 						{
@@ -661,7 +666,11 @@ void CGameScreen::AddTileToRenderList(CRenderWorldObject *obj, const int &worldX
 								text->Color = 0;
 						}
 
-						text->Y -= DAMAGE_TEXT_STEP;
+						if (text->MoveTimer < g_Ticks)
+						{
+							text->Y -= DAMAGE_TEXT_STEP;
+							text->MoveTimer = g_Ticks + DAMAGE_TEXT_MOVE_DELAY;
+						}
 
 						text = next;
 					}
@@ -734,7 +743,7 @@ void CGameScreen::AddTileToRenderList(CRenderWorldObject *obj, const int &worldX
 		if (m_RenderListCount >= (int)m_RenderList.size())
 			m_RenderList.resize(m_RenderList.size() + 1000);
 
-		//LOG("Item[0x%04X]: x=%i y=%i (dx=%i, dy=%i)\n", obj->Graphic, drawX, drawY, obj->DrawX - g_RenderBounds.WindowDrawOffsetX, obj->DrawY - g_RenderBounds.WindowDrawOffsetY);
+		//LOG("Item[0x%04X]: x=%i y=%i (dx=%i, dy=%i)\n", obj->Graphic, drawX, drawY, obj->DrawX, obj->DrawY);
 
 		m_RenderList[m_RenderListCount].Object = obj;
 		m_RenderList[m_RenderListCount].GrayColor = grayColor;
@@ -864,6 +873,11 @@ void CGameScreen::CalculateGameWindowBounds()
 	g_RenderBounds.PlayerY = g_Player->Y;
 	g_RenderBounds.PlayerZ = g_Player->Z;
 
+	int oldPosX = g_RenderBounds.GameWindowPosX;
+	int oldPosY = g_RenderBounds.GameWindowPosY;
+	int oldCenterX = g_RenderBounds.GameWindowCenterX;
+	int oldCenterY = g_RenderBounds.GameWindowCenterY;
+
 	g_RenderBounds.GameWindowPosX = g_ConfigManager.GameWindowX;
 	g_RenderBounds.GameWindowPosY = g_ConfigManager.GameWindowY;
 
@@ -975,6 +989,8 @@ void CGameScreen::CalculateGameWindowBounds()
 
 	g_RenderBounds.MinPixelsY = (int)(((g_RenderBounds.GameWindowPosY - drawOffset) * g_GlobalScale) - (newMaxY - maxY)); // -playerZOffset;
 	g_RenderBounds.MaxPixelsY = (int)newMaxY; // + playerZOffset;
+
+	m_UpdateDrawPos = (oldPosX != g_RenderBounds.GameWindowPosX || oldPosY != g_RenderBounds.GameWindowPosY || oldCenterX != g_RenderBounds.GameWindowCenterX || oldCenterY != g_RenderBounds.GameWindowCenterY);
 
 	UpdateMaxDrawZ();
 
@@ -1114,8 +1130,8 @@ void CGameScreen::DrawGameWindow(const bool &mode)
 
 				g_UseCircleTrans = (g_ConfigManager.UseCircleTrans && obj->TranparentTest(playerZPlus5));
 
-				int x = obj->DrawX - g_RenderBounds.WindowDrawOffsetX;
-				int y = obj->DrawY - g_RenderBounds.WindowDrawOffsetY;
+				int x = obj->DrawX;
+				int y = obj->DrawY;
 
 				obj->Draw(x, y);
 
@@ -1206,7 +1222,7 @@ void CGameScreen::DrawGameWindow(const bool &mode)
 			{
 				g_UseCircleTrans = (useCircleTrans && obj->TranparentTest(playerZPlus5));
 
-				obj->Select(obj->DrawX - g_RenderBounds.WindowDrawOffsetX, obj->DrawY - g_RenderBounds.WindowDrawOffsetY);
+				obj->Select(obj->DrawX, obj->DrawY);
 			}
 		}
 
@@ -1361,12 +1377,12 @@ void CGameScreen::DrawGameWindowText(const bool &mode)
 
 							glColor4ub(0xFF, 0xFF, 0xFF, (uchar)text->Color);
 
-							text->m_Texture.Draw(text->DrawX, text->DrawY);
+							text->m_Texture.Draw(text->RealDrawX, text->RealDrawY);
 
 							glDisable(GL_BLEND);
 						}
 						else
-							text->m_Texture.Draw(text->DrawX, text->DrawY);
+							text->m_Texture.Draw(text->RealDrawX, text->RealDrawY);
 					}
 				}
 			}
@@ -1393,7 +1409,7 @@ void CGameScreen::PrepareContent()
 		g_StatusbarUnderMouse = 0;
 
 	//if (g_SelectedObject.Object() != NULL && g_SelectedObject.Object()->IsGameObject() && g_PressedObject.LeftObject == g_SelectedObject.Object())
-	if (g_PressedObject.LeftObject != NULL && g_PressedObject.LeftObject->IsGameObject() && g_MouseManager.LastLeftButtonClickTimer + DELAY_TO_DRAG + 50 < g_Ticks)
+	if (g_PressedObject.LeftObject != NULL && g_PressedObject.LeftObject->IsGameObject() && g_MouseManager.LastLeftButtonClickTimer < g_Ticks)
 	{
 		WISP_GEOMETRY::CPoint2Di offset = g_MouseManager.LeftDroppedOffset();
 

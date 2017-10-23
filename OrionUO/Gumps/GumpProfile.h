@@ -12,8 +12,6 @@
 //----------------------------------------------------------------------------------
 class CGumpProfile : public CGumpBaseScroll
 {
-	SETGET(bool, Changed, false);
-
 private:
 	static const int ID_GP_APPLY = 1;
 	static const int ID_GP_TEXT_FIELD = 2;

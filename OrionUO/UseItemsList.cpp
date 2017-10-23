@@ -26,8 +26,13 @@ void CUseItemActions::Add(const uint &serial)
 void CUseItemActions::Process()
 {
 	WISPFUN_DEBUG("c186_f2");
-	if (m_List.size() && m_Timer <= g_Ticks)
+	if (m_Timer <= g_Ticks)
 	{
+		m_Timer = g_Ticks + 1000;
+
+		if (m_List.empty())
+			return;
+
 		uint serial = m_List.front();
 		m_List.pop_front();
 
@@ -37,8 +42,6 @@ void CUseItemActions::Process()
 				g_Orion.PaperdollReq(serial);
 			else //item
 				g_Orion.DoubleClick(serial);
-
-			m_Timer = g_Ticks + 1000;
 		}
 	}
 }

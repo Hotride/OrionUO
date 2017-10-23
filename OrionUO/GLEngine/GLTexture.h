@@ -10,6 +10,8 @@
 #ifndef GLTEXTURE_H
 #define GLTEXTURE_H
 //----------------------------------------------------------------------------------
+typedef vector<bool> HIT_MAP_TYPE;
+//----------------------------------------------------------------------------------
 class CGLTexture
 {
 	//!Габариты текстуры
@@ -28,7 +30,7 @@ public:
 
 	GLuint Texture{ 0 };
 
-	vector<bool> m_HitMap;
+	HIT_MAP_TYPE m_HitMap;
 
 	virtual void Draw(const int &x, const int &y, const bool &checktrans = false);
 	virtual void Draw(const int &x, const int &y, int width, int height, const bool &checktrans = false);

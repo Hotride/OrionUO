@@ -108,6 +108,8 @@ class CGameScreen : public CBaseScreen
 	SETGET(bool, UseLight, false);
 	//!Флаг, определяющий инициализацию списка рендера
 	SETGET(bool, RenderListInitalized, false);
+	//!Принудительно обновлять позицию отрисовки
+	SETGET(bool, UpdateDrawPos, false);
 
 private:
 	//!Список объектов для вывода

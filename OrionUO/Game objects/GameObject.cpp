@@ -109,8 +109,8 @@ void CGameObject::DrawObjectHandlesTexture()
 		}
 	}
 
-	int x = m_DrawX - g_RenderBounds.WindowDrawOffsetX - g_ObjectHandlesWidthOffset;
-	int y = m_DrawY - g_RenderBounds.WindowDrawOffsetY;
+	int x = m_DrawX - g_ObjectHandlesWidthOffset;
+	int y = m_DrawY;
 
 	if (m_NPC)
 	{
@@ -138,8 +138,8 @@ void CGameObject::SelectObjectHandlesTexture()
 	WISPFUN_DEBUG("c20_f6");
 	if (m_TextureObjectHalndes.Texture != NULL)
 	{
-		int x = m_DrawX - g_RenderBounds.WindowDrawOffsetX - g_ObjectHandlesWidthOffset;
-		int y = m_DrawY - g_RenderBounds.WindowDrawOffsetY;
+		int x = m_DrawX - g_ObjectHandlesWidthOffset;
+		int y = m_DrawY;
 
 		if (m_NPC)
 		{

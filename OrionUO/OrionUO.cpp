@@ -1157,9 +1157,14 @@ void COrion::Process(const bool &rendering)
 				}
 			}
 
-			g_Player->UpdateRemoveRange();
-			
-			g_Orion.RemoveRangedObjects();
+			if (g_ProcessRemoveRangedTimer < g_Ticks)
+			{
+				g_Player->UpdateRemoveRange();
+
+				g_Orion.RemoveRangedObjects();
+
+				g_ProcessRemoveRangedTimer = g_Ticks + 50;
+			}
 
 			if (g_ConfigManager.ObjectHandles && g_CtrlPressed && g_ShiftPressed && (oldCtrl != g_CtrlPressed || oldShift != g_ShiftPressed))
 				g_World->ResetObjectHandlesState();
@@ -3511,10 +3516,11 @@ ushort COrion::CalculateLightColor(const ushort &id)
 void COrion::ProcessStaticAnimList()
 {
 	WISPFUN_DEBUG("c194_f53");
-	if (m_AnimData.size())
+	if (m_AnimData.size() && g_ProcessStaticAnimationTimer < g_Ticks)
 	{
 		int delay = (g_ConfigManager.StandartItemsAnimationDelay ? ORIGINAL_ITEMS_ANIMATION_DELAY : ORION_ITEMS_ANIMATION_DELAY);
 		bool noAnimateFields = g_ConfigManager.NoAnimateFields;
+		uint nextTime = g_Ticks + 500;
 
 		for (deque<CIndexObjectStatic*>::iterator i = m_StaticAnimList.begin(); i != m_StaticAnimList.end(); i++)
 		{
@@ -3543,7 +3549,11 @@ void COrion::ProcessStaticAnimList()
 
 				obj->AnimIndex = offset;
 			}
+
+			nextTime = min(nextTime, obj->ChangeTime);
 		}
+
+		g_ProcessStaticAnimationTimer = nextTime;
 	}
 }
 //----------------------------------------------------------------------------------

@@ -159,6 +159,7 @@ void CGameEffectMoving::Update(CGameObject *parent)
 		int newDrawX = screenCenterX + (newCoordX - newCoordY) * 22;
 		int newDrawY = screenCenterY + (newCoordX + newCoordY) * 22;
 
+		m_Changed = true;
 		m_OffsetX = realDrawX - newDrawX;
 		m_OffsetY = realDrawY - newDrawY;
 
@@ -228,7 +229,7 @@ void CGameEffectMoving::Update(CGameObject *parent)
 
 		if (wantUpdateInRenderList)
 		{
-			UpdateDrawCoordinates();
+			UpdateRealDrawCoordinates();
 
 			g_MapManager.AddRender(this);
 		}

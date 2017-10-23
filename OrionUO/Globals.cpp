@@ -188,13 +188,16 @@ bool g_DrawStatLockers = false;
 uint g_SelectedGameObjectHandle = 0;
 
 bool g_ShowWarnings = true;
+
+uint g_ProcessStaticAnimationTimer = 0;
+uint g_ProcessRemoveRangedTimer = 0;
 //----------------------------------------------------------------------------------
 bool CanBeDraggedByOffset(const WISP_GEOMETRY::CPoint2Di &point)
 {
 	if (g_Target.IsTargeting())
 		return (abs(point.X) >= DRAG_PIXEL_RANGE_WITH_TARGET || abs(point.Y) >= DRAG_PIXEL_RANGE_WITH_TARGET);
 
-	return (abs(point.X) >= DRAG_PIXEL_RANGE || abs(point.Y) >= DRAG_PIXEL_RANGE);
+	return (abs(point.X) >= DRAG_ITEMS_PIXEL_RANGE || abs(point.Y) >= DRAG_ITEMS_PIXEL_RANGE);
 }
 //----------------------------------------------------------------------------------
 void TileOffsetOnMonitorToXY(int &ofsX, int &ofsY, int &x, int &y)
