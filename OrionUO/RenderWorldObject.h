@@ -35,12 +35,6 @@ public:
 	//Добавить текст в контейнер
 	virtual void AddText(CTextData *td) {}
 
-	//Получить смещение текста по оси X
-	virtual int GetTextOffsetX(const CTextData &text) { return 0; }
-
-	//Получить смещение текста по оси Y
-	virtual int GetTextOffsetY(CTextData *text) { return 0; }
-
 	//Проверить, может ли текст быть прозрачным
 	virtual bool TextCanBeTransparent(CRenderTextObject *text) { return false; }
 

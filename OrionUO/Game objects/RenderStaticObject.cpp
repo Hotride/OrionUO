@@ -172,32 +172,6 @@ void CRenderStaticObject::AddText(CTextData *msg)
 	}
 }
 //---------------------------------------------------------------------------
-int CRenderStaticObject::GetTextOffsetX(const CTextData &text)
-{
-	WISPFUN_DEBUG("c27_f6");
-	return text.m_Texture.Width / 2;
-}
-//---------------------------------------------------------------------------
-int CRenderStaticObject::GetTextOffsetY(CTextData *text)
-{
-	WISPFUN_DEBUG("c27_f7");
-	int offset = 0;
-
-	CTextData *td = (CTextData*)m_TextControl->Last();
-
-	while (td != NULL)
-	{
-		offset += td->m_Texture.Height;
-		
-		if (text == td)
-			break;
-
-		td = (CTextData*)td->m_Prev;
-	}
-
-	return offset;
-}
-//---------------------------------------------------------------------------
 bool CRenderStaticObject::TextCanBeTransparent(CRenderTextObject *text)
 {
 	WISPFUN_DEBUG("c27_f8");

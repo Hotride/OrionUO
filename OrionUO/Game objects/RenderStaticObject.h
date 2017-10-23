@@ -46,12 +46,6 @@ public:
 	//Проверка прозрачности (для круга прозрачности)
 	virtual bool TranparentTest(int &playerZPlus5);
 
-	//Получить смещение текста по оси X
-	int GetTextOffsetX(const CTextData &text);
-
-	//Получить смещение текста по оси Y
-	int GetTextOffsetY(CTextData *text);
-
 	//Проверка, может ли текст быть прозрачным
 	bool TextCanBeTransparent(CRenderTextObject *text);
 
