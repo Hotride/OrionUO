@@ -197,12 +197,14 @@ bool COrion::Install()
 	SetUnhandledExceptionFilter(OrionUnhandledExceptionFilter);
 	LOG("Orion version is: %s (build %s)\n", g_App.GetFileVersion().c_str(), GetBuildDateTimeStamp().c_str());
 	CRASHLOG("Orion version is: %s (build %s)\n", g_App.GetFileVersion().c_str(), GetBuildDateTimeStamp().c_str());
-	if (!PathFileExistsA(g_App.ExeFilePath("Client.cuo").c_str()))
+
+	string clientCuoPath = g_App.ExeFilePath("Client.cuo").c_str();
+
+	if (!PathFileExistsA(clientCuoPath.c_str()))
 	{
 		LOG("Client.cuo is missing!\n");
 		CRASHLOG("Client.cuo is missing!\n");
-		string path = g_App.ExeFilePath;
-		g_OrionWindow.ShowMessage("Configuration file 'Client.cuo' not found in " + path + "! Client can't be started!", "Error!");
+		g_OrionWindow.ShowMessage("Configuration file 'Client.cuo' not found in " + clientCuoPath + "! Client can't be started!", "Error!");
 		ExitProcess(0);
 		return false;
 	}
@@ -937,8 +939,8 @@ void COrion::LoadContaierOffsets()
 void COrion::LoadClientConfig()
 {
 	WISPFUN_DEBUG("c194_f11");
-	string path = g_App.ExeFilePath;
-	HMODULE orionDll = LoadLibrary(g_App.ExeFilePath(L"Orion.dll").c_str());
+	string path = g_App.ExeFilePath("Orion.dll");
+	HMODULE orionDll = LoadLibraryA(path.c_str());
 
 	if (orionDll == 0)
 	{
