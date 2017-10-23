@@ -198,7 +198,7 @@ bool COrion::Install()
 	LOG("Orion version is: %s (build %s)\n", g_App.GetFileVersion().c_str(), GetBuildDateTimeStamp().c_str());
 	CRASHLOG("Orion version is: %s (build %s)\n", g_App.GetFileVersion().c_str(), GetBuildDateTimeStamp().c_str());
 
-	string clientCuoPath = g_App.ExeFilePath("Client.cuo").c_str();
+	string clientCuoPath = g_App.UOFilesPath("Client.cuo").c_str();
 
 	if (!PathFileExistsA(clientCuoPath.c_str()))
 	{
@@ -962,7 +962,7 @@ void COrion::LoadClientConfig()
 
 	WISP_FILE::CMappedFile config;
 
-	if (config.Load(g_App.ExeFilePath("Client.cuo")))
+	if (config.Load(g_App.UOFilesPath("Client.cuo")))
 	{
 		UCHAR_LIST realData;
 		install(config.Start, config.Size, &realData);
