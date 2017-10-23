@@ -22,7 +22,8 @@ private:
 		MSCC_SMOOTHMONITOR,
 		MSCC_THE_ABYSS,
 		MSCC_ASMUT,
-		MSCC_COUNT
+		MSCC_CUSTOM_PATH,
+		MSCC_COUNT,
 	};
 
 	/*!
@@ -80,6 +81,12 @@ public:
 	@return 
 	*/
 	void LoadGlobalConfig();
+
+	/*!
+	Загрузка пути к папке с УО
+	@return
+	*/
+	void LoadCustomPath();
 
 	/*!
 	Сохранение конфига

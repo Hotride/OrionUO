@@ -195,10 +195,8 @@ bool COrion::Install()
 	WISPFUN_DEBUG("c194_f5");
 	LOG("COrion::Install()\n");
 	SetUnhandledExceptionFilter(OrionUnhandledExceptionFilter);
-
 	LOG("Orion version is: %s (build %s)\n", g_App.GetFileVersion().c_str(), GetBuildDateTimeStamp().c_str());
 	CRASHLOG("Orion version is: %s (build %s)\n", g_App.GetFileVersion().c_str(), GetBuildDateTimeStamp().c_str());
-
 	if (!PathFileExistsA(g_App.FilePath("Client.cuo").c_str()))
 	{
 		LOG("Client.cuo is missing!\n");

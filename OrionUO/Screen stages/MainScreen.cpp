@@ -200,7 +200,8 @@ int CMainScreen::GetConfigKeyCode(const string &key)
 		"autologin",
 		"smoothmonitor",
 		"theabyss",
-		"asmut"
+		"asmut",
+		"custompath"
 	};
 
 	string str = ToLowerA(key);
@@ -213,6 +214,40 @@ int CMainScreen::GetConfigKeyCode(const string &key)
 	}
 
 	return result;
+}
+//----------------------------------------------------------------------------------
+/*!
+Загрузка кастомного пути к папке с УО файлами
+@return
+*/
+void CMainScreen::LoadCustomPath()
+{
+	WISPFUN_DEBUG("c165_f14");
+
+	WISP_FILE::CTextFileParser file(g_App.FilePath("uo_debug.cfg"), "=", "#;", "");
+
+	while (!file.IsEOF())
+	{
+		std::vector<std::string> strings = file.ReadTokens(false);
+
+		if (strings.size() >= 2)
+		{
+			int code = GetConfigKeyCode(strings[0]);
+
+			switch (code)
+			{
+				case MSCC_CUSTOM_PATH:
+				{
+					string pathA = strings[1];
+					wstring pathW = ToWString(pathA);
+					g_App.SetFilePathA(pathA);
+					g_App.SetFilePathW(pathW);
+				}
+				default:
+					break;
+			}
+		}
+	}
 }
 //----------------------------------------------------------------------------------
 /*!
@@ -307,6 +342,14 @@ void CMainScreen::LoadGlobalConfig()
 				{
 					g_Asmut = ToBool(strings[1]);
 
+					break;
+				}
+				case MSCC_CUSTOM_PATH:
+				{
+					string pathA = strings[1];
+					wstring pathW = ToWString(pathA);
+					g_App.SetExePathA(pathA);
+					g_App.SetExePathW(pathW);
 					break;
 				}
 				default:

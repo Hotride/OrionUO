@@ -7,10 +7,10 @@ CApplication *g_WispApplication = NULL;
 //----------------------------------------------------------------------------------
 CApplication::CApplication()
 {
+	LOG("INITIATING CAPPLICATION");
 	g_MainThread = GetCurrentThreadId();
 	WISPFUN_DEBUG("c1_f1");
 	g_WispApplication = this;
-
 	m_ExePathA.resize(MAX_PATH, 0);
 	m_ExePathW.resize(MAX_PATH, 0);
 
@@ -19,6 +19,7 @@ CApplication::CApplication()
 
 	GetCurrentDirectoryW(MAX_PATH, &m_ExePathW[0]);
 	m_ExePathW = m_ExePathW.c_str();
+	g_MainScreen.LoadCustomPath();
 }
 //----------------------------------------------------------------------------------
 CApplication::~CApplication()
@@ -111,8 +112,8 @@ string CApplication::FilePath(const char *str, ...)
 	vsprintf_s(out, str, arg);
 
 	va_end(arg);
-
-	return m_ExePathA + "\\" + out;
+	string res = m_ExePathA + "\\" + out;
+	return res;
 }
 //---------------------------------------------------------------------------
 wstring CApplication::FilePath(const wchar_t *str, ...)
@@ -127,6 +128,16 @@ wstring CApplication::FilePath(const wchar_t *str, ...)
 	va_end(arg);
 
 	return m_ExePathW + L"\\" + out;
+}
+//----------------------------------------------------------------------------------
+void CApplication::SetFilePathA(string customPath)
+{
+	m_ExePathA = customPath;
+}
+//----------------------------------------------------------------------------------
+void CApplication::SetFilePathW(wstring customPath)
+{
+	m_ExePathW = customPath;
 }
 //----------------------------------------------------------------------------------
 }; //namespace

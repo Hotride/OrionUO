@@ -24,6 +24,9 @@ public:
 
 	string FilePath(const char *str, ...);
 	wstring FilePath(const wchar_t *str, ...);
+
+	void SetFilePathA(string customPath);
+	void SetFilePathW(wstring customPath);
 };
 //----------------------------------------------------------------------------------
 extern CApplication *g_WispApplication;
