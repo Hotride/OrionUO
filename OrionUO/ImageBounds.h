@@ -30,6 +30,7 @@ class CTextImageBounds : public CImageBounds
 {
 public:
 	CTextImageBounds(const int &x, const int &y, const int &width, const int &height, CRenderTextObject *text);
+	CTextImageBounds(class CTextData *text);
 	virtual ~CTextImageBounds();
 
 	CRenderTextObject *m_Text{ NULL };

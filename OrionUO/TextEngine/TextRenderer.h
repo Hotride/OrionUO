@@ -17,6 +17,8 @@ private:
 	//Список координат, занятых текстом
 	deque<CTextImageBounds> m_TextRect;
 
+	bool ProcessTextRemoveBlending(CTextData &text);
+
 public:
 	CTextRenderer();
 	virtual ~CTextRenderer();
@@ -33,13 +35,13 @@ public:
 	void ToTop(CRenderTextObject *obj);
 
 	//Добавить координаты текста
-	void AddRect(CTextImageBounds &rect) { m_TextRect.push_back(rect); }
+	void AddRect(const CTextImageBounds &rect) { m_TextRect.push_back(rect); }
 
 	//Очистить список координат текста
 	void ClearRect() { m_TextRect.clear(); }
 
 	//Проверка, есть ли текст в координатах
-	bool InRect(CTextImageBounds &rect, CRenderWorldObject *rwo);
+	bool InRect(CTextData *text, CRenderWorldObject *rwo);
 
 	bool CalculatePositions(const bool &noCalculate);
 

@@ -53,6 +53,40 @@ CRenderStaticObject::~CRenderStaticObject()
 	}
 }
 //---------------------------------------------------------------------------
+void CRenderStaticObject::UpdateTextCoordinates()
+{
+	int offset = 0;
+
+	if (IsGameObject() && ((CGameObject*)this)->Container != 0xFFFFFFFF)
+	{
+		uint container = ((CGameObject*)this)->Container;
+		g_GumpManager.UpdateGump(container, 0, GT_CONTAINER);
+		g_GumpManager.UpdateGump(container, 0, GT_PAPERDOLL);
+		g_GumpManager.UpdateGump(container, 0, GT_TRADE);
+
+		for (CTextData *text = (CTextData*)m_TextControl->Last(); text != NULL; text = (CTextData*)text->m_Prev)
+		{
+			CTextData &td = *text;
+			offset += td.m_Texture.Height;
+
+			text->RealDrawX = td.X - (td.m_Texture.Width / 2);
+			text->RealDrawY = td.Y - offset;
+		}
+	}
+	else
+	{
+		int y = m_DrawY - (m_TiledataPtr->Height + 20);
+
+		for (CTextData *text = (CTextData*)m_TextControl->Last(); text != NULL; text = (CTextData*)text->m_Prev)
+		{
+			offset += text->m_Texture.Height;
+
+			text->RealDrawX = m_DrawX - (text->m_Texture.Width / 2);
+			text->RealDrawY = y - offset;
+		}
+	}
+}
+//---------------------------------------------------------------------------
 bool CRenderStaticObject::IsNoDrawTile(const ushort &graphic)
 {
 	switch (graphic)
@@ -132,15 +166,16 @@ void CRenderStaticObject::AddText(CTextData *msg)
 	if (m_TextControl != NULL)
 	{
 		m_TextControl->Add(msg);
+		UpdateTextCoordinates();
 
 		g_Orion.AddJournalMessage(msg, "You see: ");
 	}
 }
 //---------------------------------------------------------------------------
-int CRenderStaticObject::GetTextOffsetX(CTextData *text)
+int CRenderStaticObject::GetTextOffsetX(const CTextData &text)
 {
 	WISPFUN_DEBUG("c27_f6");
-	return text->m_Texture.Width / 2;
+	return text.m_Texture.Width / 2;
 }
 //---------------------------------------------------------------------------
 int CRenderStaticObject::GetTextOffsetY(CTextData *text)

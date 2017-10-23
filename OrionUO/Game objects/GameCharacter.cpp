@@ -66,8 +66,31 @@ CGameCharacter::~CGameCharacter()
 			member.Character = NULL;
 		}
 	}
+}
+//----------------------------------------------------------------------------------
+void CGameCharacter::UpdateTextCoordinates()
+{
+	CTextData *text = (CTextData*)m_TextControl->Last();
 
-	
+	if (text == NULL)
+		return;
+
+	ANIMATION_DIMENSIONS dims = g_AnimationManager.GetAnimationDimensions(this, 0);
+	int offset = 0;
+
+	int x = m_DrawX + m_OffsetX;
+	int y = m_DrawY + (m_OffsetY - m_OffsetZ) - ((dims.Height + dims.CenterY) + 8);
+
+	if (g_ConfigManager.DrawStatusState == DCSS_ABOVE)
+		y -= 14;
+
+	for (; text != NULL; text = (CTextData*)text->m_Prev)
+	{
+		offset += text->m_Texture.Height;
+
+		text->RealDrawX = x - (text->m_Texture.Width / 2);
+		text->RealDrawY = y - offset;
+	}
 }
 //----------------------------------------------------------------------------------
 void CGameCharacter::UpdateHitsTexture(const uchar &hits)

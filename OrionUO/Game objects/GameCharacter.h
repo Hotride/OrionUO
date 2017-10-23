@@ -64,6 +64,8 @@ public:
 
 	CGLTextTexture m_HitsTexture{ CGLTextTexture() };
 
+	virtual void UpdateTextCoordinates();
+
 	void UpdateHitsTexture(const uchar &hits);
 
 	//Обработка особенностей анимаций гаргулей.

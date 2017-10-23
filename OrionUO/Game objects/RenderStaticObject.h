@@ -30,6 +30,8 @@ public:
 
 	CTextContainer *m_TextControl{ NULL }; //Ссылка на контейнер для текста
 
+	virtual void UpdateTextCoordinates();
+
 	static bool IsNoDrawTile(const ushort &graphic);
 
 	//Отрисовать объект
@@ -45,7 +47,7 @@ public:
 	virtual bool TranparentTest(int &playerZPlus5);
 
 	//Получить смещение текста по оси X
-	int GetTextOffsetX(CTextData *text);
+	int GetTextOffsetX(const CTextData &text);
 
 	//Получить смещение текста по оси Y
 	int GetTextOffsetY(CTextData *text);

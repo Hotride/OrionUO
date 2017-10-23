@@ -278,6 +278,7 @@ void CGameObject::AddText(CTextData *msg)
 {
 	WISPFUN_DEBUG("c20_f8");
 	m_TextControl->Add(msg);
+	UpdateTextCoordinates();
 
 	string msgname = "You see: ";
 

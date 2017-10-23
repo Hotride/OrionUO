@@ -62,6 +62,11 @@ CTextImageBounds::CTextImageBounds(const int &x, const int &y, const int &width,
 {
 }
 //----------------------------------------------------------------------------------
+CTextImageBounds::CTextImageBounds(CTextData *text)
+: CImageBounds(text->RealDrawX, text->RealDrawY, text->m_Texture.Width, text->m_Texture.Height), m_Text(text)
+{
+}
+//----------------------------------------------------------------------------------
 CTextImageBounds::~CTextImageBounds()
 {
 	m_Text = NULL;

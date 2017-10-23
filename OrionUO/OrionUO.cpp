@@ -5034,8 +5034,6 @@ void COrion::CreateTextMessage(TEXT_TYPE type, uint serial, uchar font, ushort c
 
 				td->Color = color;
 
-				obj->AddText(td);
-
 				uint container = obj->Container;
 
 				if (container == 0xFFFFFFFF)
@@ -5079,6 +5077,8 @@ void COrion::CreateTextMessage(TEXT_TYPE type, uint serial, uchar font, ushort c
 							tr->AddText(td);
 					}
 				}
+
+				obj->AddText(td);
 			}
 			else
 			{
@@ -5147,8 +5147,6 @@ void COrion::CreateUnicodeTextMessage(TEXT_TYPE type, uint serial, uchar font, u
 				else
 					td->GenerateTexture(0, UOFONT_BLACK_BORDER, TS_CENTER);
 				
-				obj->AddText(td);
-
 				uint container = obj->Container;
 
 				if (container == 0xFFFFFFFF)
@@ -5192,6 +5190,8 @@ void COrion::CreateUnicodeTextMessage(TEXT_TYPE type, uint serial, uchar font, u
 							tr->AddText(td);
 					}
 				}
+
+				obj->AddText(td);
 			}
 			else
 			{

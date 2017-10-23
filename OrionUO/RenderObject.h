@@ -44,6 +44,7 @@ public:
 
 	virtual void UpdateRealDrawCoordinates() {}
 	virtual void UpdateDrawCoordinates() {}
+	virtual void UpdateTextCoordinates() {}
 };
 //----------------------------------------------------------------------------------
 #endif
