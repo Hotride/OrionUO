@@ -19,6 +19,8 @@ CApplication::CApplication()
 
 	GetCurrentDirectoryW(MAX_PATH, &m_ExePathW[0]);
 	m_ExePathW = m_ExePathW.c_str();
+	m_UOFilesPathA = m_ExePathA;
+	m_UOFilesPathW = m_ExePathW;
 	g_MainScreen.LoadCustomPath();
 }
 //----------------------------------------------------------------------------------
@@ -102,7 +104,7 @@ string CApplication::GetFileVersion()
 	return "unknown";
 }
 //---------------------------------------------------------------------------
-string CApplication::FilePath(const char *str, ...)
+string CApplication::ExeFilePath(const char *str, ...)
 {
 	WISPFUN_DEBUG("c1_f4");
 	va_list arg;
@@ -116,7 +118,7 @@ string CApplication::FilePath(const char *str, ...)
 	return res;
 }
 //---------------------------------------------------------------------------
-wstring CApplication::FilePath(const wchar_t *str, ...)
+wstring CApplication::ExeFilePath(const wchar_t *str, ...)
 {
 	WISPFUN_DEBUG("c1_f5");
 	va_list arg;
@@ -129,15 +131,33 @@ wstring CApplication::FilePath(const wchar_t *str, ...)
 
 	return m_ExePathW + L"\\" + out;
 }
-//----------------------------------------------------------------------------------
-void CApplication::SetFilePathA(string customPath)
+//---------------------------------------------------------------------------
+string CApplication::UOFilesPath(const char *str, ...)
 {
-	m_ExePathA = customPath;
+	WISPFUN_DEBUG("c1_f6");
+	va_list arg;
+	va_start(arg, str);
+
+	char out[MAX_PATH] = { 0 };
+	vsprintf_s(out, str, arg);
+
+	va_end(arg);
+	string res = m_UOFilesPathA + "\\" + out;
+	return res;
 }
-//----------------------------------------------------------------------------------
-void CApplication::SetFilePathW(wstring customPath)
+//---------------------------------------------------------------------------
+wstring CApplication::UOFilesPath(const wchar_t *str, ...)
 {
-	m_ExePathW = customPath;
+	WISPFUN_DEBUG("c1_f7");
+	va_list arg;
+	va_start(arg, str);
+
+	wchar_t out[MAX_PATH] = { 0 };
+	vswprintf_s(out, str, arg);
+
+	va_end(arg);
+
+	return m_UOFilesPathW + L"\\" + out;
 }
 //----------------------------------------------------------------------------------
 }; //namespace

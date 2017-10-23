@@ -100,7 +100,7 @@ bool CSoundManager::Init()
 
 		if (!BASS_SetConfig(BASS_CONFIG_3DALGORITHM, BASS_3DALG_FULL))
 			LOG("Error setting 3d sound: %s\n", BASS_ErrorGetDescription());
-		string path = g_App.FilePath("uo_4mb_2.sf2");
+		string path = g_App.ExeFilePath("uo_4mb_2.sf2");
 		if (!BASS_SetConfigPtr(BASS_CONFIG_MIDI_DEFFONT, path.c_str()))
 			LOG("Could not load soundfont file for midi");
 	}

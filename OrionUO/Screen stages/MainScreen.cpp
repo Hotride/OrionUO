@@ -224,7 +224,7 @@ void CMainScreen::LoadCustomPath()
 {
 	WISPFUN_DEBUG("c165_f14");
 
-	WISP_FILE::CTextFileParser file(g_App.FilePath("uo_debug.cfg"), "=", "#;", "");
+	WISP_FILE::CTextFileParser file(g_App.ExeFilePath("uo_debug.cfg"), "=", "#;", "");
 
 	while (!file.IsEOF())
 	{
@@ -240,8 +240,8 @@ void CMainScreen::LoadCustomPath()
 				{
 					string pathA = strings[1];
 					wstring pathW = ToWString(pathA);
-					g_App.SetFilePathA(pathA);
-					g_App.SetFilePathW(pathW);
+					g_App.SetUOFilesPathA(pathA);
+					g_App.SetUOFilesPathW(pathW);
 				}
 				default:
 					break;
@@ -260,7 +260,7 @@ void CMainScreen::LoadGlobalConfig()
 	m_AutoLogin->Checked = false;
 	g_ScreenEffectManager.Enabled = false;
 
-	WISP_FILE::CTextFileParser file(g_App.FilePath("uo_debug.cfg"), "=", "#;", "");
+	WISP_FILE::CTextFileParser file(g_App.ExeFilePath("uo_debug.cfg"), "=", "#;", "");
 
 	while (!file.IsEOF())
 	{
@@ -367,7 +367,7 @@ void CMainScreen::SaveGlobalConfig()
 {
 	WISPFUN_DEBUG("c165_f11");
 	FILE *uo_cfg = NULL;
-	fopen_s(&uo_cfg, g_App.FilePath("uo_debug.cfg").c_str(), "w");
+	fopen_s(&uo_cfg, g_App.ExeFilePath("uo_debug.cfg").c_str(), "w");
 
 	if (uo_cfg == NULL)
 		return;

@@ -115,14 +115,14 @@ CGumpCustomHouse::CGumpCustomHouse(const uint &serial, const int &x, const int &
 
 	g_CustomHouseGump = this;
 
-	ParseCustomHouseObjectFileWithCategory<CCustomHouseObjectWall, CCustomHouseObjectWallCategory>(m_Walls, g_App.FilePath("walls.txt"));
-	ParseCustomHouseObjectFile<CCustomHouseObjectFloor>(m_Floors, g_App.FilePath("floors.txt"));
-	ParseCustomHouseObjectFile<CCustomHouseObjectDoor>(m_Doors, g_App.FilePath("doors.txt"));
-	ParseCustomHouseObjectFileWithCategory<CCustomHouseObjectMisc, CCustomHouseObjectMiscCategory>(m_Miscs, g_App.FilePath("misc.txt"));
-	ParseCustomHouseObjectFile<CCustomHouseObjectStair>(m_Stairs, g_App.FilePath("stairs.txt"));
-	ParseCustomHouseObjectFile<CCustomHouseObjectTeleport>(m_Teleports, g_App.FilePath("teleprts.txt"));
-	ParseCustomHouseObjectFileWithCategory<CCustomHouseObjectRoof, CCustomHouseObjectRoofCategory>(m_Roofs, g_App.FilePath("roof.txt"));
-	ParseCustomHouseObjectFile<CCustomHouseObjectPlaceInfo>(m_ObjectsInfo, g_App.FilePath("suppinfo.txt"));
+	ParseCustomHouseObjectFileWithCategory<CCustomHouseObjectWall, CCustomHouseObjectWallCategory>(m_Walls, g_App.UOFilesPath("walls.txt"));
+	ParseCustomHouseObjectFile<CCustomHouseObjectFloor>(m_Floors, g_App.UOFilesPath("floors.txt"));
+	ParseCustomHouseObjectFile<CCustomHouseObjectDoor>(m_Doors, g_App.UOFilesPath("doors.txt"));
+	ParseCustomHouseObjectFileWithCategory<CCustomHouseObjectMisc, CCustomHouseObjectMiscCategory>(m_Miscs, g_App.UOFilesPath("misc.txt"));
+	ParseCustomHouseObjectFile<CCustomHouseObjectStair>(m_Stairs, g_App.UOFilesPath("stairs.txt"));
+	ParseCustomHouseObjectFile<CCustomHouseObjectTeleport>(m_Teleports, g_App.UOFilesPath("teleprts.txt"));
+	ParseCustomHouseObjectFileWithCategory<CCustomHouseObjectRoof, CCustomHouseObjectRoofCategory>(m_Roofs, g_App.UOFilesPath("roof.txt"));
+	ParseCustomHouseObjectFile<CCustomHouseObjectPlaceInfo>(m_ObjectsInfo, g_App.UOFilesPath("suppinfo.txt"));
 
 	CGameItem *foundationItem = g_World->GetWorldItem(serial);
 

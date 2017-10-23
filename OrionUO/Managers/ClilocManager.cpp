@@ -22,7 +22,7 @@ CCliloc::CCliloc(const string &lang)
 
 	if (m_Language.length())
 	{
-		string path = g_App.FilePath((string("cliloc.") + lang).c_str());
+		string path = g_App.UOFilesPath((string("cliloc.") + lang).c_str());
 
 		if (m_File.Load(path))
 			m_Loaded = true;

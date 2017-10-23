@@ -33,7 +33,7 @@ void CCityManager::Init()
 	WISPFUN_DEBUG("c134_f1");
 	WISP_FILE::CMappedFile file;
 
-	if (file.Load(g_App.FilePath("citytext.enu")))
+	if (file.Load(g_App.UOFilesPath("citytext.enu")))
 	{
 		puchar end = file.Ptr + file.Size;
 

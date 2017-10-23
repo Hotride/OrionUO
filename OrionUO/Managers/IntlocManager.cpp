@@ -23,7 +23,7 @@ CIntloc::CIntloc(const int &fileIndex, const string &lang)
 
 	if (m_Language.length())
 	{
-		if (m_File.Load(g_App.FilePath("intloc%02i.%s", fileIndex, lang.c_str())))
+		if (m_File.Load(g_App.UOFilesPath("intloc%02i.%s", fileIndex, lang.c_str())))
 		{
 			while (!m_File.IsEOF())
 			{

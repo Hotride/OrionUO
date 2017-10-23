@@ -73,76 +73,76 @@ bool CFileManager::Load()
 	if (g_PacketManager.ClientVersion >= CV_7000 && LoadUOPFile(m_MainMisc, "MainMisc.uop"))
 		return LoadWithUOP();
 
-	if (!m_ArtIdx.Load(g_App.FilePath("artidx.mul")))
+	if (!m_ArtIdx.Load(g_App.UOFilesPath("artidx.mul")))
 		return false;
-	else if (!m_ArtMul.Load(g_App.FilePath("art.mul")))
+	else if (!m_ArtMul.Load(g_App.UOFilesPath("art.mul")))
 		return false;
-	else if (!m_GumpIdx.Load(g_App.FilePath("gumpidx.mul")))
+	else if (!m_GumpIdx.Load(g_App.UOFilesPath("gumpidx.mul")))
 		return false;
-	else if (!m_GumpMul.Load(g_App.FilePath("gumpart.mul")))
+	else if (!m_GumpMul.Load(g_App.UOFilesPath("gumpart.mul")))
 		return false;
-	else if (!m_SoundIdx.Load(g_App.FilePath("soundidx.mul")))
+	else if (!m_SoundIdx.Load(g_App.UOFilesPath("soundidx.mul")))
 		return false;
-	else if (!m_SoundMul.Load(g_App.FilePath("sound.mul")))
+	else if (!m_SoundMul.Load(g_App.UOFilesPath("sound.mul")))
 		return false;
-	else if (!m_AnimIdx[0].Load(g_App.FilePath("anim.idx")))
+	else if (!m_AnimIdx[0].Load(g_App.UOFilesPath("anim.idx")))
 		return false;
-	else if (!m_LightIdx.Load(g_App.FilePath("lightidx.mul")))
+	else if (!m_LightIdx.Load(g_App.UOFilesPath("lightidx.mul")))
 		return false;
-	else if (!m_MultiIdx.Load(g_App.FilePath("multi.idx")))
+	else if (!m_MultiIdx.Load(g_App.UOFilesPath("multi.idx")))
 		return false;
-	else if (!m_SkillsIdx.Load(g_App.FilePath("skills.idx")))
+	else if (!m_SkillsIdx.Load(g_App.UOFilesPath("skills.idx")))
 		return false;
-	else if (!m_MultiMap.Load(g_App.FilePath("multimap.rle")))
+	else if (!m_MultiMap.Load(g_App.UOFilesPath("multimap.rle")))
 		return false;
-	else if (!m_TextureIdx.Load(g_App.FilePath("texidx.mul")))
+	else if (!m_TextureIdx.Load(g_App.UOFilesPath("texidx.mul")))
 		return false;
-	else if (!m_AnimMul[0].Load(g_App.FilePath("anim.mul")))
+	else if (!m_AnimMul[0].Load(g_App.UOFilesPath("anim.mul")))
 		return false;
-	else if (!m_AnimdataMul.Load(g_App.FilePath("animdata.mul")))
+	else if (!m_AnimdataMul.Load(g_App.UOFilesPath("animdata.mul")))
 		return false;
-	else if (!m_HuesMul.Load(g_App.FilePath("hues.mul")))
+	else if (!m_HuesMul.Load(g_App.UOFilesPath("hues.mul")))
 		return false;
-	else if (!m_FontsMul.Load(g_App.FilePath("fonts.mul")))
+	else if (!m_FontsMul.Load(g_App.UOFilesPath("fonts.mul")))
 		return false;
-	else if (!m_LightMul.Load(g_App.FilePath("light.mul")))
+	else if (!m_LightMul.Load(g_App.UOFilesPath("light.mul")))
 		return false;
-	else if (!m_MultiMul.Load(g_App.FilePath("multi.mul")))
+	else if (!m_MultiMul.Load(g_App.UOFilesPath("multi.mul")))
 		return false;
-	else if (!m_PaletteMul.Load(g_App.FilePath("palette.mul")))
+	else if (!m_PaletteMul.Load(g_App.UOFilesPath("palette.mul")))
 		return false;
-	else if (!m_RadarcolMul.Load(g_App.FilePath("radarcol.mul")))
+	else if (!m_RadarcolMul.Load(g_App.UOFilesPath("radarcol.mul")))
 		return false;
-	else if (!m_SkillsMul.Load(g_App.FilePath("skills.mul")))
+	else if (!m_SkillsMul.Load(g_App.UOFilesPath("skills.mul")))
 		return false;
-	else if (!m_TextureMul.Load(g_App.FilePath("texmaps.mul")))
+	else if (!m_TextureMul.Load(g_App.UOFilesPath("texmaps.mul")))
 		return false;
-	else if (!m_TiledataMul.Load(g_App.FilePath("tiledata.mul")))
+	else if (!m_TiledataMul.Load(g_App.UOFilesPath("tiledata.mul")))
 		return false;
 
-	m_SpeechMul.Load(g_App.FilePath("speech.mul"));
-	m_LangcodeIff.Load(g_App.FilePath("Langcode.iff"));
+	m_SpeechMul.Load(g_App.UOFilesPath("speech.mul"));
+	m_LangcodeIff.Load(g_App.UOFilesPath("Langcode.iff"));
 
 	IFOR(i, 0, 6)
 	{
 		if (i > 0)
 		{
-			m_AnimIdx[i].Load(g_App.FilePath("anim%i.idx", i));
-			m_AnimMul[i].Load(g_App.FilePath("anim%i.mul", i));
+			m_AnimIdx[i].Load(g_App.UOFilesPath("anim%i.idx", i));
+			m_AnimMul[i].Load(g_App.UOFilesPath("anim%i.mul", i));
 		}
 
-		m_MapMul[i].Load(g_App.FilePath("map%i.mul", i));
+		m_MapMul[i].Load(g_App.UOFilesPath("map%i.mul", i));
 
-		m_StaticIdx[i].Load(g_App.FilePath("staidx%i.mul", i));
-		m_StaticMul[i].Load(g_App.FilePath("statics%i.mul", i));
-		m_FacetMul[i].Load(g_App.FilePath("facet0%i.mul", i));
+		m_StaticIdx[i].Load(g_App.UOFilesPath("staidx%i.mul", i));
+		m_StaticMul[i].Load(g_App.UOFilesPath("statics%i.mul", i));
+		m_FacetMul[i].Load(g_App.UOFilesPath("facet0%i.mul", i));
 
-		m_MapDifl[i].Load(g_App.FilePath("mapdifl%i.mul", i));
-		m_MapDif[i].Load(g_App.FilePath("mapdif%i.mul", i));
+		m_MapDifl[i].Load(g_App.UOFilesPath("mapdifl%i.mul", i));
+		m_MapDif[i].Load(g_App.UOFilesPath("mapdif%i.mul", i));
 
-		m_StaDifl[i].Load(g_App.FilePath("stadifl%i.mul", i));
-		m_StaDifi[i].Load(g_App.FilePath("stadifi%i.mul", i));
-		m_StaDif[i].Load(g_App.FilePath("stadif%i.mul", i));
+		m_StaDifl[i].Load(g_App.UOFilesPath("stadifl%i.mul", i));
+		m_StaDifi[i].Load(g_App.UOFilesPath("stadifi%i.mul", i));
+		m_StaDif[i].Load(g_App.UOFilesPath("stadif%i.mul", i));
 	}
 
 	IFOR(i, 0, 20)
@@ -150,9 +150,9 @@ bool CFileManager::Load()
 		string s;
 		
 		if (i)
-			s = g_App.FilePath("unifont%i.mul", i);
+			s = g_App.UOFilesPath("unifont%i.mul", i);
 		else
-			s = g_App.FilePath("unifont.mul");
+			s = g_App.UOFilesPath("unifont.mul");
 
 		if (!m_UnifontMul[i].Load(s) && i > 1)
 			break;
@@ -160,7 +160,7 @@ bool CFileManager::Load()
 		m_UnicodeFontsCount++;
 	}
 
-	if (m_UseVerdata && !m_VerdataMul.Load(g_App.FilePath("verdata.mul")))
+	if (m_UseVerdata && !m_VerdataMul.Load(g_App.UOFilesPath("verdata.mul")))
 		m_UseVerdata = false;
 
 	return true;
@@ -177,17 +177,17 @@ bool CFileManager::LoadWithUOP()
 
 	if (!LoadUOPFile(m_ArtLegacyMUL, "artLegacyMUL.uop"))
 	{
-		if (!m_ArtIdx.Load(g_App.FilePath("artidx.mul")))
+		if (!m_ArtIdx.Load(g_App.UOFilesPath("artidx.mul")))
 			return false;
-		else if (!m_ArtMul.Load(g_App.FilePath("art.mul")))
+		else if (!m_ArtMul.Load(g_App.UOFilesPath("art.mul")))
 			return false;
 	}
 
 	if (!LoadUOPFile(m_GumpartLegacyMUL, "gumpartLegacyMUL.uop"))
 	{
-		if (!m_GumpIdx.Load(g_App.FilePath("gumpidx.mul")))
+		if (!m_GumpIdx.Load(g_App.UOFilesPath("gumpidx.mul")))
 			return false;
-		else if (!m_GumpMul.Load(g_App.FilePath("gumpart.mul")))
+		else if (!m_GumpMul.Load(g_App.UOFilesPath("gumpart.mul")))
 			return false;
 
 		UseUOPGumps = false;
@@ -197,17 +197,17 @@ bool CFileManager::LoadWithUOP()
 
 	if (!LoadUOPFile(m_SoundLegacyMUL, "soundLegacyMUL.uop"))
 	{
-		if (!m_SoundIdx.Load(g_App.FilePath("soundidx.mul")))
+		if (!m_SoundIdx.Load(g_App.UOFilesPath("soundidx.mul")))
 			return false;
-		else if (!m_SoundMul.Load(g_App.FilePath("sound.mul")))
+		else if (!m_SoundMul.Load(g_App.UOFilesPath("sound.mul")))
 			return false;
 	}
 
 	if (!LoadUOPFile(m_MultiCollection, "MultiCollection.uop"))
 	{
-		if (!m_MultiIdx.Load(g_App.FilePath("multi.idx")))
+		if (!m_MultiIdx.Load(g_App.UOFilesPath("multi.idx")))
 			return false;
-		else if (!m_MultiMul.Load(g_App.FilePath("multi.mul")))
+		else if (!m_MultiMul.Load(g_App.UOFilesPath("multi.mul")))
 			return false;
 	}
 
@@ -215,70 +215,70 @@ bool CFileManager::LoadWithUOP()
 	LoadUOPFile(m_Tileart, "tileart.uop");
 
 	/* Эти файлы не используются самой последней версией клиента 7.0.52.2
-	if (!m_tileart.Load(g_App.FilePath("tileart.uop")))
+	if (!m_tileart.Load(g_App.UOFilesPath("tileart.uop")))
 	return false;
-	if (!m_AnimationSequence.Load(g_App.FilePath("AnimationSequence.uop")))
+	if (!m_AnimationSequence.Load(g_App.UOFilesPath("AnimationSequence.uop")))
 	return false;
 	*/
 
-	if (!m_AnimIdx[0].Load(g_App.FilePath("anim.idx")))
+	if (!m_AnimIdx[0].Load(g_App.UOFilesPath("anim.idx")))
 		return false;
-	if (!m_LightIdx.Load(g_App.FilePath("lightidx.mul")))
+	if (!m_LightIdx.Load(g_App.UOFilesPath("lightidx.mul")))
 		return false;
-	else if (!m_SkillsIdx.Load(g_App.FilePath("skills.idx")))
+	else if (!m_SkillsIdx.Load(g_App.UOFilesPath("skills.idx")))
 		return false;
-	else if (!m_MultiMap.Load(g_App.FilePath("multimap.rle")))
+	else if (!m_MultiMap.Load(g_App.UOFilesPath("multimap.rle")))
 		return false;
-	else if (!m_TextureIdx.Load(g_App.FilePath("texidx.mul")))
+	else if (!m_TextureIdx.Load(g_App.UOFilesPath("texidx.mul")))
 		return false;
-	else if (!m_AnimMul[0].Load(g_App.FilePath("anim.mul")))
+	else if (!m_AnimMul[0].Load(g_App.UOFilesPath("anim.mul")))
 		return false;
-	else if (!m_AnimdataMul.Load(g_App.FilePath("animdata.mul")))
+	else if (!m_AnimdataMul.Load(g_App.UOFilesPath("animdata.mul")))
 		return false;
-	else if (!m_HuesMul.Load(g_App.FilePath("hues.mul")))
+	else if (!m_HuesMul.Load(g_App.UOFilesPath("hues.mul")))
 		return false;
-	else if (!m_FontsMul.Load(g_App.FilePath("fonts.mul")))
+	else if (!m_FontsMul.Load(g_App.UOFilesPath("fonts.mul")))
 		return false;
-	else if (!m_LightMul.Load(g_App.FilePath("light.mul")))
+	else if (!m_LightMul.Load(g_App.UOFilesPath("light.mul")))
 		return false;
-	else if (!m_PaletteMul.Load(g_App.FilePath("palette.mul")))
+	else if (!m_PaletteMul.Load(g_App.UOFilesPath("palette.mul")))
 		return false;
-	else if (!m_RadarcolMul.Load(g_App.FilePath("radarcol.mul")))
+	else if (!m_RadarcolMul.Load(g_App.UOFilesPath("radarcol.mul")))
 		return false;
-	else if (!m_SkillsMul.Load(g_App.FilePath("skills.mul")))
+	else if (!m_SkillsMul.Load(g_App.UOFilesPath("skills.mul")))
 		return false;
-	else if (!m_TextureMul.Load(g_App.FilePath("texmaps.mul")))
+	else if (!m_TextureMul.Load(g_App.UOFilesPath("texmaps.mul")))
 		return false;
-	else if (!m_TiledataMul.Load(g_App.FilePath("tiledata.mul")))
+	else if (!m_TiledataMul.Load(g_App.UOFilesPath("tiledata.mul")))
 		return false;
 
-	m_SpeechMul.Load(g_App.FilePath("speech.mul"));
-	m_LangcodeIff.Load(g_App.FilePath("Langcode.iff"));
+	m_SpeechMul.Load(g_App.UOFilesPath("speech.mul"));
+	m_LangcodeIff.Load(g_App.UOFilesPath("Langcode.iff"));
 
 	IFOR(i, 0, 6)
 	{
 		if (i > 0)
 		{
-			m_AnimIdx[i].Load(g_App.FilePath("anim%i.idx", i));
-			m_AnimMul[i].Load(g_App.FilePath("anim%i.mul", i));
+			m_AnimIdx[i].Load(g_App.UOFilesPath("anim%i.idx", i));
+			m_AnimMul[i].Load(g_App.UOFilesPath("anim%i.mul", i));
 		}
 
 		string mapName = string("map") + std::to_string(i);
 
 		if (!LoadUOPFile(m_MapUOP[i], (mapName + "LegacyMUL.uop").c_str()))
-			m_MapMul[i].Load(g_App.FilePath((mapName + ".mul").c_str()));
+			m_MapMul[i].Load(g_App.UOFilesPath((mapName + ".mul").c_str()));
 
 
-		m_StaticIdx[i].Load(g_App.FilePath("staidx%i.mul", i));
-		m_StaticMul[i].Load(g_App.FilePath("statics%i.mul", i));
-		m_FacetMul[i].Load(g_App.FilePath("facet0%i.mul", i));
+		m_StaticIdx[i].Load(g_App.UOFilesPath("staidx%i.mul", i));
+		m_StaticMul[i].Load(g_App.UOFilesPath("statics%i.mul", i));
+		m_FacetMul[i].Load(g_App.UOFilesPath("facet0%i.mul", i));
 
-		m_MapDifl[i].Load(g_App.FilePath("mapdifl%i.mul", i));
-		m_MapDif[i].Load(g_App.FilePath("mapdif%i.mul", i));
+		m_MapDifl[i].Load(g_App.UOFilesPath("mapdifl%i.mul", i));
+		m_MapDif[i].Load(g_App.UOFilesPath("mapdif%i.mul", i));
 
-		m_StaDifl[i].Load(g_App.FilePath("stadifl%i.mul", i));
-		m_StaDifi[i].Load(g_App.FilePath("stadifi%i.mul", i));
-		m_StaDif[i].Load(g_App.FilePath("stadif%i.mul", i));
+		m_StaDifl[i].Load(g_App.UOFilesPath("stadifl%i.mul", i));
+		m_StaDifi[i].Load(g_App.UOFilesPath("stadifi%i.mul", i));
+		m_StaDif[i].Load(g_App.UOFilesPath("stadif%i.mul", i));
 	}
 
 	IFOR(i, 0, 20)
@@ -286,9 +286,9 @@ bool CFileManager::LoadWithUOP()
 		string s;
 		
 		if (i)
-			s = g_App.FilePath("unifont%i.mul", i);
+			s = g_App.UOFilesPath("unifont%i.mul", i);
 		else
-			s = g_App.FilePath("unifont.mul");
+			s = g_App.UOFilesPath("unifont.mul");
 
 		if (!m_UnifontMul[i].Load(s) && i > 1)
 			break;
@@ -296,7 +296,7 @@ bool CFileManager::LoadWithUOP()
 		m_UnicodeFontsCount++;
 	}
 
-	if (m_UseVerdata && !m_VerdataMul.Load(g_App.FilePath("verdata.mul")))
+	if (m_UseVerdata && !m_VerdataMul.Load(g_App.UOFilesPath("verdata.mul")))
 		m_UseVerdata = false;
 
 	return true;
@@ -384,7 +384,7 @@ void CFileManager::ReadTask()
 		char nextBlock[8];
 
 		std::fstream *animFile = new std::fstream();
-		string *path = new string(g_App.FilePath("AnimationFrame%i.uop", i));
+		string *path = new string(g_App.UOFilesPath("AnimationFrame%i.uop", i));
 		if (!FileExists(*path))
 		{
 			continue;
@@ -525,7 +525,7 @@ bool CFileManager::LoadUOPFile(CUopMappedFile &file, const char *fileName)
 {
 	//LOG("Loading UOP fileName: %s\n", fileName);
 
-	if (!file.Load(g_App.FilePath(fileName)))
+	if (!file.Load(g_App.UOFilesPath(fileName)))
 		return false;
 
 	uint formatID = file.ReadUInt32LE();

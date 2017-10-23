@@ -31,7 +31,7 @@ void CScreenshotBuilder::SaveScreen()
 void CScreenshotBuilder::SaveScreen(const int &x, const int &y, const int &width, const int &height)
 {
 	WISPFUN_DEBUG("c204_f2");
-	string path = g_App.FilePath("snapshots");
+	string path = g_App.ExeFilePath("snapshots");
 	CreateDirectoryA(path.c_str(), NULL);
 
 	SYSTEMTIME st;

@@ -459,8 +459,8 @@ void CAnimationManager::InitIndexReplaces(puint verdata)
 
 	WISP_FILE::CTextFileParser animParser[2]
 	{
-		WISP_FILE::CTextFileParser(g_App.FilePath("Anim1.def").c_str(), " \t", "#;//", "{}"),
-		WISP_FILE::CTextFileParser(g_App.FilePath("Anim2.def").c_str(), " \t", "#;//", "{}")
+		WISP_FILE::CTextFileParser(g_App.UOFilesPath("Anim1.def").c_str(), " \t", "#;//", "{}"),
+			WISP_FILE::CTextFileParser(g_App.UOFilesPath("Anim2.def").c_str(), " \t", "#;//", "{}")
 	};
 
 	IFOR(i, 0, 2)
@@ -486,7 +486,7 @@ void CAnimationManager::InitIndexReplaces(puint verdata)
 	{
 		static const string typeNames[5] = { "animal", "monster", "sea_monster", "human", "equipment" };
 
-		WISP_FILE::CTextFileParser mobtypesParser(g_App.FilePath("mobtypes.txt").c_str(), " \t", "#;//", "");
+		WISP_FILE::CTextFileParser mobtypesParser(g_App.UOFilesPath("mobtypes.txt").c_str(), " \t", "#;//", "");
 
 		while (!mobtypesParser.IsEOF())
 		{
@@ -511,11 +511,11 @@ void CAnimationManager::InitIndexReplaces(puint verdata)
 	}
 
 	WISP_FILE::CTextFileParser newBodyParser("", " \t,{}", "#;//", "");
-	WISP_FILE::CTextFileParser bodyParser(g_App.FilePath("Body.def").c_str(), " \t", "#;//", "{}");
-	WISP_FILE::CTextFileParser bodyconvParser(g_App.FilePath("Bodyconv.def").c_str(), " \t", "#;//", "");
-	WISP_FILE::CTextFileParser corpseParser(g_App.FilePath("Corpse.def").c_str(), " \t", "#;//", "{}");
+	WISP_FILE::CTextFileParser bodyParser(g_App.UOFilesPath("Body.def").c_str(), " \t", "#;//", "{}");
+	WISP_FILE::CTextFileParser bodyconvParser(g_App.UOFilesPath("Bodyconv.def").c_str(), " \t", "#;//", "");
+	WISP_FILE::CTextFileParser corpseParser(g_App.UOFilesPath("Corpse.def").c_str(), " \t", "#;//", "{}");
 
-	WISP_FILE::CTextFileParser equipConvParser(g_App.FilePath("EquipConv.def"), " \t", "#;//", "");
+	WISP_FILE::CTextFileParser equipConvParser(g_App.UOFilesPath("EquipConv.def"), " \t", "#;//", "");
 
 	while (!equipConvParser.IsEOF())
 	{

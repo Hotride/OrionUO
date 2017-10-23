@@ -18,7 +18,7 @@ int APIENTRY _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCm
 	WISPFUN_DEBUG("c_main");
 	INITLOGGER("uolog.txt");
 
-	string path = g_App.FilePath("crashlogs");
+	string path = g_App.ExeFilePath("crashlogs");
 	CreateDirectoryA(path.c_str(), NULL);
 
 	SYSTEMTIME st;

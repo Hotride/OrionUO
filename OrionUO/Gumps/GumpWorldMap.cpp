@@ -310,7 +310,7 @@ void CGumpWorldMap::LoadMap(const int &map)
 			}
 		}
 
-		string path = g_App.FilePath("OrionData/WorldMap%08X.cuo", crc32);
+		string path = g_App.ExeFilePath("OrionData/WorldMap%08X.cuo", crc32);
 		bool fromFile = false;
 
 		USHORT_LIST buf;
@@ -426,7 +426,7 @@ void CGumpWorldMap::LoadMap(const int &map)
 				}
 			}
 
-			CreateDirectoryA(g_App.FilePath("OrionData").c_str(), NULL);
+			CreateDirectoryA(g_App.ExeFilePath("OrionData").c_str(), NULL);
 
 			FILE *mapFile = NULL;
 			fopen_s(&mapFile, path.c_str(), "wb");

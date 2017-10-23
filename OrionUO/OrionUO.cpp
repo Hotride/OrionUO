@@ -197,7 +197,7 @@ bool COrion::Install()
 	SetUnhandledExceptionFilter(OrionUnhandledExceptionFilter);
 	LOG("Orion version is: %s (build %s)\n", g_App.GetFileVersion().c_str(), GetBuildDateTimeStamp().c_str());
 	CRASHLOG("Orion version is: %s (build %s)\n", g_App.GetFileVersion().c_str(), GetBuildDateTimeStamp().c_str());
-	if (!PathFileExistsA(g_App.FilePath("Client.cuo").c_str()))
+	if (!PathFileExistsA(g_App.ExeFilePath("Client.cuo").c_str()))
 	{
 		LOG("Client.cuo is missing!\n");
 		CRASHLOG("Client.cuo is missing!\n");
@@ -218,7 +218,7 @@ bool COrion::Install()
 
 	//GetCurrentLocale();
 
-	CreateDirectoryA(g_App.FilePath("snapshots").c_str(), NULL);
+	CreateDirectoryA(g_App.ExeFilePath("snapshots").c_str(), NULL);
 
 	LOG("Load client config.\n");
 	LoadClientConfig();
@@ -669,7 +669,7 @@ void COrion::CheckStaticTileFilterFiles()
 	WISPFUN_DEBUG("c194_f10");
 	memset(&m_StaticTilesFilterFlags[0], 0, sizeof(m_StaticTilesFilterFlags));
 
-	string path = g_App.FilePath("OrionData");
+	string path = g_App.ExeFilePath("OrionData");
 	CreateDirectoryA(path.c_str(), NULL);
 
 	string filePath = path + "\\cave.txt";
@@ -853,7 +853,7 @@ void COrion::CheckStaticTileFilterFiles()
 //----------------------------------------------------------------------------------
 void COrion::LoadContaierOffsets()
 {
-	string path = g_App.FilePath("OrionData");
+	string path = g_App.ExeFilePath("OrionData");
 	CreateDirectoryA(path.c_str(), NULL);
 
 	string filePath = path + "\\containers.txt";
@@ -936,7 +936,7 @@ void COrion::LoadContaierOffsets()
 void COrion::LoadClientConfig()
 {
 	WISPFUN_DEBUG("c194_f11");
-	HMODULE orionDll = LoadLibrary(g_App.FilePath(L"Orion.dll").c_str());
+	HMODULE orionDll = LoadLibrary(g_App.ExeFilePath(L"Orion.dll").c_str());
 
 	if (orionDll == 0)
 	{
@@ -958,7 +958,7 @@ void COrion::LoadClientConfig()
 
 	WISP_FILE::CMappedFile config;
 
-	if (config.Load(g_App.FilePath("Client.cuo")))
+	if (config.Load(g_App.ExeFilePath("Client.cuo")))
 	{
 		UCHAR_LIST realData;
 		install(config.Start, config.Size, &realData);
@@ -979,7 +979,7 @@ void COrion::LoadClientConfig()
 
 		if (dllVersion != 0xFE)
 		{
-			g_OrionWindow.ShowMessage("Old version of Orion.dll detected!!!\nClient may be crashed in process!!!", "Warning!");
+			g_OrionWindow.ShowMessage("Old version of Orion.dll detected!!!\nClient may be crashed in process--" + dllVersion, "Warning!");
 			file.Move(-1);
 		}
 		else
@@ -1015,7 +1015,7 @@ void COrion::LoadClientConfig()
 void COrion::LoadAutoLoginNames()
 {
 	WISPFUN_DEBUG("c194_f12");
-	WISP_FILE::CTextFileParser file(g_App.FilePath("AutoLoginNames.cfg"), "", "#;", "");
+	WISP_FILE::CTextFileParser file(g_App.UOFilesPath("AutoLoginNames.cfg"), "", "#;", "");
 
 	string names = g_PacketManager.AutoLoginNames + "|";
 
@@ -1229,7 +1229,7 @@ void COrion::LoadStartupConfig(const uint &serial)
 	else
 		sprintf_s(buf, "Desktop\\%s\\0x%08X", g_MainScreen.m_Account->c_str(), serial);
 
-	string path = g_App.FilePath(buf);
+	string path = g_App.UOFilesPath(buf);
 
 	if (!g_ConfigManager.Load(path + "/orion_options.cfg"))
 		g_ConfigManager.LoadBin(path + "/options_debug.cuo");
@@ -1328,10 +1328,10 @@ void COrion::LoadPluginConfig()
 			LoadLibraryA(libPath.c_str());
 	}*/
 
-	LoadPlugin(g_App.FilePath("OA/OrionAssistant.dll"), "Install", 0xFFFFFFFF);
+	LoadPlugin(g_App.ExeFilePath("OA/OrionAssistant.dll"), "Install", 0xFFFFFFFF);
 
 	IFOR(i, 0, (int)libName.size())
-		LoadPlugin(g_App.FilePath(libName[i].c_str()), functions[i], flags[i]);
+		LoadPlugin(g_App.ExeFilePath(libName[i].c_str()), functions[i], flags[i]);
 
 	ParseCommandLine();
 
@@ -1364,15 +1364,15 @@ void COrion::LoadLocalConfig(const uint &serial)
 	else
 		sprintf_s(buf, "Desktop\\%s\\0x%08X", g_MainScreen.m_Account->c_str(), serial);
 
-	string path = g_App.FilePath(buf);
+	string path = g_App.ExeFilePath(buf);
 
 	if (!g_ConfigManager.Load(path + "\\orion_options.cfg"))
 	{
-		if (!g_ConfigManager.Load(g_App.FilePath("orion_options.cfg")))
+		if (!g_ConfigManager.Load(g_App.UOFilesPath("orion_options.cfg")))
 		{
 			if (!g_ConfigManager.LoadBin(path + "\\options_debug.cuo"))
 			{
-				if (!g_ConfigManager.LoadBin(g_App.FilePath("options_debug.cuo")))
+				if (!g_ConfigManager.LoadBin(g_App.UOFilesPath("options_debug.cuo")))
 				{
 					g_ConfigManager.Init();
 
@@ -1387,11 +1387,11 @@ void COrion::LoadLocalConfig(const uint &serial)
 	}
 
 	if (!g_SkillGroupManager.Load(path + "\\skills_debug.cuo"))
-		g_SkillGroupManager.Load(g_App.FilePath("skills_debug.cuo"));
+		g_SkillGroupManager.Load(g_App.UOFilesPath("skills_debug.cuo"));
 
 	if (!g_MacroManager.Load(path + "\\macros_debug.cuo", path + "\\macros.txt"))
 	{
-		if (!g_MacroManager.Load(g_App.FilePath("\\macros_debug.cuo"), g_App.FilePath("\\macros.txt")))
+		if (!g_MacroManager.Load(g_App.UOFilesPath("\\macros_debug.cuo"), g_App.UOFilesPath("\\macros.txt")))
 		{
 			//Создать стандартные макросы
 		}
@@ -1426,7 +1426,7 @@ void COrion::SaveLocalConfig()
 		return;
 
 	LOG("SaveLocalConfig step 1\n");
-	string path = g_App.FilePath("Desktop");
+	string path = g_App.UOFilesPath("Desktop");
 	CreateDirectoryA(path.c_str(), NULL);
 
 	LOG("SaveLocalConfig step 2\n");
@@ -1454,8 +1454,8 @@ void COrion::SaveLocalConfig()
 	g_CustomHousesManager.Save(path + "\\customhouses_debug.cuo");
 
 	LOG("managers:saving in to root\n");
-	g_ConfigManager.Save(g_App.FilePath("orion_options.cfg"));
-	g_MacroManager.Save(g_App.FilePath("macros_debug.cuo"));
+	g_ConfigManager.Save(g_App.UOFilesPath("orion_options.cfg"));
+	g_MacroManager.Save(g_App.UOFilesPath("macros_debug.cuo"));
 
 	if (g_Player != NULL)
 	{
@@ -2955,7 +2955,7 @@ void COrion::LoadLogin(string &login, int &port)
 		return;
 	}
 
-	WISP_FILE::CTextFileParser file(g_App.FilePath("login.cfg"), "=,", "#;", "");
+	WISP_FILE::CTextFileParser file(g_App.UOFilesPath("login.cfg"), "=,", "#;", "");
 
 	while (!file.IsEOF())
 	{
@@ -3707,12 +3707,12 @@ void COrion::IndexReplaces()
 		return;
 
 	WISP_FILE::CTextFileParser newDataParser("", " \t,{}", "#;//", "");
-	WISP_FILE::CTextFileParser artParser(g_App.FilePath("Art.def"), " \t", "#;//", "{}");
-	WISP_FILE::CTextFileParser textureParser(g_App.FilePath("TexTerr.def"), " \t", "#;//", "{}");
-	WISP_FILE::CTextFileParser gumpParser(g_App.FilePath("Gump.def"), " \t", "#;//", "{}");
-	WISP_FILE::CTextFileParser multiParser(g_App.FilePath("Multi.def"), " \t", "#;//", "{}");
-	WISP_FILE::CTextFileParser soundParser(g_App.FilePath("Sound.def"), " \t", "#;//", "{}");
-	WISP_FILE::CTextFileParser mp3Parser(g_App.FilePath("Music\\Digital\\Config.txt"), " ,", "#;", "");
+	WISP_FILE::CTextFileParser artParser(g_App.UOFilesPath("Art.def"), " \t", "#;//", "{}");
+	WISP_FILE::CTextFileParser textureParser(g_App.UOFilesPath("TexTerr.def"), " \t", "#;//", "{}");
+	WISP_FILE::CTextFileParser gumpParser(g_App.UOFilesPath("Gump.def"), " \t", "#;//", "{}");
+	WISP_FILE::CTextFileParser multiParser(g_App.UOFilesPath("Multi.def"), " \t", "#;//", "{}");
+	WISP_FILE::CTextFileParser soundParser(g_App.UOFilesPath("Sound.def"), " \t", "#;//", "{}");
+	WISP_FILE::CTextFileParser mp3Parser(g_App.UOFilesPath("Music\\Digital\\Config.txt"), " ,", "#;", "");
 
 	DEBUGLOG("Replace arts\n");
 	while (!artParser.IsEOF())
@@ -3930,7 +3930,7 @@ void COrion::IndexReplaces()
 			if (name.find(extension) == string::npos)
 				name += extension;
 			if (size > 1)
-				mp3.FilePath = g_App.FilePath((name).c_str());
+				mp3.FilePath = g_App.UOFilesPath((name).c_str());
 
 			if (size > 2)
 				mp3.Loop = true;
@@ -4173,8 +4173,8 @@ void COrion::LoadShaders()
 void COrion::LoadClientStartupConfig()
 {
 	WISPFUN_DEBUG("c194_f60");
-	if (!g_ConfigManager.Load(g_App.FilePath("orion_options.cfg")))
-		g_ConfigManager.LoadBin(g_App.FilePath("options_debug.cuo"));
+	if (!g_ConfigManager.Load(g_App.UOFilesPath("orion_options.cfg")))
+		g_ConfigManager.LoadBin(g_App.UOFilesPath("options_debug.cuo"));
 
 	g_SoundManager.SetMusicVolume(g_ConfigManager.MusicVolume);
 
