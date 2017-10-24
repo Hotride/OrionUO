@@ -114,5 +114,6 @@ void CRenderWorldObject::UpdateDrawCoordinates()
 	m_DrawY = m_RealDrawY - g_RenderBounds.WindowDrawOffsetY;
 	m_Changed = false;
 	UpdateTextCoordinates();
+	//FixTextCoordinates();
 }
 //----------------------------------------------------------------------------------

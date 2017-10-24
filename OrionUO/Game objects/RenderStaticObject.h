@@ -31,6 +31,7 @@ public:
 	CTextContainer *m_TextControl{ NULL }; //Ссылка на контейнер для текста
 
 	virtual void UpdateTextCoordinates();
+	virtual void FixTextCoordinates();
 
 	static bool IsNoDrawTile(const ushort &graphic);
 

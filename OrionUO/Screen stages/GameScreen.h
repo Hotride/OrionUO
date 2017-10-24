@@ -110,6 +110,7 @@ class CGameScreen : public CBaseScreen
 	SETGET(bool, RenderListInitalized, false);
 	//!Принудительно обновлять позицию отрисовки
 	SETGET(bool, UpdateDrawPos, false);
+	SETGET(int, RenderIndex, 1);
 
 private:
 	//!Список объектов для вывода
@@ -177,9 +178,9 @@ private:
 	*/
 	void CheckFoliageUnion(ushort graphic, int x, int y, int z);
 
-	void AddTileToRenderList(class CRenderWorldObject *obj, const int &worldX, const int &worldY, const uchar &renderIndex, const bool &useObjectHandles, const int &maxZ = 150);
+	void AddTileToRenderList(class CRenderWorldObject *obj, const int &worldX, const int &worldY, const bool &useObjectHandles, const int &maxZ = 150);
 
-	void AddOffsetCharacterTileToRenderList(class CGameObject *obj, const uchar &renderIndex, const bool &useObjectHandles);
+	void AddOffsetCharacterTileToRenderList(class CGameObject *obj, const bool &useObjectHandles);
 
 	class CGumpScreenGame m_GameScreenGump;
 

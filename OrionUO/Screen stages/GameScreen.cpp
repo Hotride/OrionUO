@@ -364,8 +364,6 @@ void CGameScreen::CalculateRenderList()
 		}
 	}
 
-	static uchar renderIndex = 1;
-
 #if UO_CHECKERBOARD_SEQUENCE_RENDER_LIST == 1
 	int minX = g_RenderBounds.RealMinRangeX;
 	int minY = g_RenderBounds.RealMinRangeY;
@@ -421,7 +419,7 @@ void CGameScreen::CalculateRenderList()
 							g_MapManager.LoadBlock(block);
 						}
 
-						AddTileToRenderList(block->GetRender(x % 8, y % 8), x, y, renderIndex, useObjectHandles);
+						AddTileToRenderList(block->GetRender(x % 8, y % 8), x, y, useObjectHandles);
 					}
 					//else
 					//	LOG("Expected: %i %i\n", blockIndex, g_MapManager->MaxBlockIndex);
@@ -495,16 +493,16 @@ void CGameScreen::CalculateRenderList()
 		m_ObjectHandlesCount = MAX_OBJECT_HANDLES;
 
 #if UO_RENDER_LIST_SORT == 1
-	renderIndex++;
+	m_RenderIndex++;
 
-	if (renderIndex >= 100)
-		renderIndex = 1;
+	if (m_RenderIndex >= 100)
+		m_RenderIndex = 1;
 #endif
 
 	m_UpdateDrawPos = false;
 }
 //----------------------------------------------------------------------------------
-void CGameScreen::AddTileToRenderList(CRenderWorldObject *obj, const int &worldX, const int &worldY, const uchar &renderIndex, const bool &useObjectHandles, const int &maxZ)
+void CGameScreen::AddTileToRenderList(CRenderWorldObject *obj, const int &worldX, const int &worldY, const bool &useObjectHandles, const int &maxZ)
 {
 	WISPFUN_DEBUG("c164_f11");
 	ushort grayColor = 0;
@@ -526,7 +524,7 @@ void CGameScreen::AddTileToRenderList(CRenderWorldObject *obj, const int &worldX
 
 	for (; obj != NULL; obj = obj->m_NextXY)
 	{
-		if (m_UpdateDrawPos || obj->Changed)
+		if ((m_UpdateDrawPos && obj->CurrentRenderIndex != m_RenderIndex) || obj->Changed)
 			obj->UpdateDrawCoordinates();
 
 		int drawX = obj->DrawX;
@@ -538,7 +536,7 @@ void CGameScreen::AddTileToRenderList(CRenderWorldObject *obj, const int &worldX
 		bool aphaChanged = false;
 
 #if UO_RENDER_LIST_SORT == 1
-		if (obj->CurrentRenderIndex == renderIndex || obj->NoDrawTile)
+		if (obj->CurrentRenderIndex == m_RenderIndex || obj->NoDrawTile)
 			continue;
 
 		int z = obj->Z;
@@ -580,7 +578,7 @@ void CGameScreen::AddTileToRenderList(CRenderWorldObject *obj, const int &worldX
 		if (maxObjectZ > maxZ)
 			break;
 
-		obj->CurrentRenderIndex = renderIndex;
+		obj->CurrentRenderIndex = m_RenderIndex;
 #endif
 
 		if (obj->IsInternal())
@@ -688,7 +686,7 @@ void CGameScreen::AddTileToRenderList(CRenderWorldObject *obj, const int &worldX
 
 #if UO_RENDER_LIST_SORT == 1
 			if (go->NPC || go->IsCorpse())
-				AddOffsetCharacterTileToRenderList(go, renderIndex, useObjectHandles);
+				AddOffsetCharacterTileToRenderList(go, useObjectHandles);
 #endif
 		}
 		else if (obj->IsFoliage() && obj->StaticGroupObjectPtr()->FoliageTransparentIndex != g_FoliageIndex)
@@ -773,7 +771,7 @@ void CGameScreen::AddTileToRenderList(CRenderWorldObject *obj, const int &worldX
 	}
 }
 //----------------------------------------------------------------------------------
-void CGameScreen::AddOffsetCharacterTileToRenderList(CGameObject *obj, const uchar &renderIndex, const bool &useObjectHandles)
+void CGameScreen::AddOffsetCharacterTileToRenderList(CGameObject *obj, const bool &useObjectHandles)
 {
 	WISPFUN_DEBUG("c164_f12");
 	int characterX = obj->X;
@@ -850,7 +848,7 @@ void CGameScreen::AddOffsetCharacterTileToRenderList(CGameObject *obj, const uch
 			if (i == dropMaxZIndex)
 				currentMaxZ += 20;
 
-			AddTileToRenderList(block->GetRender(x % 8, y % 8), x, y, renderIndex, useObjectHandles, currentMaxZ);
+			AddTileToRenderList(block->GetRender(x % 8, y % 8), x, y, useObjectHandles, currentMaxZ);
 		}
 	}
 }
@@ -873,10 +871,8 @@ void CGameScreen::CalculateGameWindowBounds()
 	g_RenderBounds.PlayerY = g_Player->Y;
 	g_RenderBounds.PlayerZ = g_Player->Z;
 
-	int oldPosX = g_RenderBounds.GameWindowPosX;
-	int oldPosY = g_RenderBounds.GameWindowPosY;
-	int oldCenterX = g_RenderBounds.GameWindowCenterX;
-	int oldCenterY = g_RenderBounds.GameWindowCenterY;
+	int oldDrawOffsetX = g_RenderBounds.WindowDrawOffsetX;
+	int oldDrawOffsetY = g_RenderBounds.WindowDrawOffsetY;
 
 	g_RenderBounds.GameWindowPosX = g_ConfigManager.GameWindowX;
 	g_RenderBounds.GameWindowPosY = g_ConfigManager.GameWindowY;
@@ -990,7 +986,11 @@ void CGameScreen::CalculateGameWindowBounds()
 	g_RenderBounds.MinPixelsY = (int)(((g_RenderBounds.GameWindowPosY - drawOffset) * g_GlobalScale) - (newMaxY - maxY)); // -playerZOffset;
 	g_RenderBounds.MaxPixelsY = (int)newMaxY; // + playerZOffset;
 
-	m_UpdateDrawPos = (oldPosX != g_RenderBounds.GameWindowPosX || oldPosY != g_RenderBounds.GameWindowPosY || oldCenterX != g_RenderBounds.GameWindowCenterX || oldCenterY != g_RenderBounds.GameWindowCenterY);
+	if (m_UpdateDrawPos || oldDrawOffsetX != g_RenderBounds.WindowDrawOffsetX || oldDrawOffsetX != g_RenderBounds.WindowDrawOffsetY)
+	{
+		m_UpdateDrawPos = true;
+		m_RenderListInitalized = false;
+	}
 
 	UpdateMaxDrawZ();
 

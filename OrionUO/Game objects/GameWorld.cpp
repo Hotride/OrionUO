@@ -996,6 +996,7 @@ void CGameWorld::UpdatePlayer(const uint &serial, const ushort &graphic, const u
 		g_Player->X = x;
 		g_Player->Y = y;
 		g_Player->Z = z;
+		g_GameScreen.UpdateDrawPos = true;
 
 		bool oldDead = g_Player->Dead();
 		ushort oldGraphic = g_Player->Graphic;

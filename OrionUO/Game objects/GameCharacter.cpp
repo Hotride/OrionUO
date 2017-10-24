@@ -896,7 +896,6 @@ void CGameCharacter::UpdateAnimationInfo(BYTE &dir, const bool &canChange)
 
 					m_OffsetX = (char)x;
 					m_OffsetY = (char)y;
-					m_Changed = true;
 				}
 			}
 			else

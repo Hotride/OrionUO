@@ -69,8 +69,8 @@ void CRenderStaticObject::UpdateTextCoordinates()
 			CTextData &td = *text;
 			offset += td.m_Texture.Height;
 
-			text->RealDrawX = td.X - (td.m_Texture.Width / 2);
-			text->RealDrawY = td.Y - offset;
+			td.RealDrawX = td.X - (td.m_Texture.Width / 2);
+			td.RealDrawY = td.Y - offset;
 		}
 	}
 	else
@@ -79,12 +79,30 @@ void CRenderStaticObject::UpdateTextCoordinates()
 
 		for (CTextData *text = (CTextData*)m_TextControl->Last(); text != NULL; text = (CTextData*)text->m_Prev)
 		{
-			offset += text->m_Texture.Height;
+			CTextData &td = *text;
+			offset += td.m_Texture.Height;
 
-			text->RealDrawX = m_DrawX - (text->m_Texture.Width / 2);
-			text->RealDrawY = y - offset;
+			td.RealDrawX = m_DrawX - (td.m_Texture.Width / 2);
+			td.RealDrawY = y - offset;
 		}
 	}
+}
+//---------------------------------------------------------------------------
+void CRenderStaticObject::FixTextCoordinates()
+{
+	/*int offsetX = 0;
+	int offsetY = 0;
+
+	for (CTextData *item = (CTextData*)m_TextControl->Last(); item != NULL; item = (CTextData*)item->m_Prev)
+	{
+		CTextData &text = *item;
+
+		if (text.Timer < g_Ticks)
+			continue;
+
+		//text.RealDrawX;
+		//text.RealDrawY;
+	}*/
 }
 //---------------------------------------------------------------------------
 bool CRenderStaticObject::IsNoDrawTile(const ushort &graphic)

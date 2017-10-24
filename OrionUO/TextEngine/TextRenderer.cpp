@@ -277,6 +277,11 @@ void CTextRenderer::WorldDraw()
 	WISPFUN_DEBUG("c175_f9");
 	CalculateWorldPositions(true);
 
+	int renderIndex = g_GameScreen.RenderIndex - 1;
+
+	if (renderIndex < 1)
+		renderIndex = 99;
+
 	for (CRenderTextObject *item = m_DrawPointer; item != NULL; item = item->m_PrevDraw)
 	{
 		if (!item->IsText())
@@ -288,13 +293,21 @@ void CTextRenderer::WorldDraw()
 		{
 			ushort textColor = text.Color;
 
-			if (g_SelectedObject.Object == item)
+			if (text.Type == TT_OBJECT)
 			{
 				CGameObject *textOwner = g_World->FindWorldObject(text.Serial);
+				
+				if (textOwner != NULL)
+				{
+					if (textOwner->CurrentRenderIndex != renderIndex)
+						continue;
 
-				if (textOwner != NULL && (textOwner->NPC || textOwner->IsCorpse()))
-					textColor = 0x0035;
+					if (g_SelectedObject.Object == item && (textOwner->NPC || textOwner->IsCorpse()))
+						textColor = 0x0035;
+				}
 			}
+			else if (((CRenderWorldObject*)text.Serial)->CurrentRenderIndex != renderIndex)
+				continue;
 
 			int drawMode = 0;
 
