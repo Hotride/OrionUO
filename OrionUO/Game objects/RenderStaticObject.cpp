@@ -64,26 +64,34 @@ void CRenderStaticObject::UpdateTextCoordinates()
 		g_GumpManager.UpdateGump(container, 0, GT_PAPERDOLL);
 		g_GumpManager.UpdateGump(container, 0, GT_TRADE);*/
 
-		for (CTextData *text = (CTextData*)m_TextControl->Last(); text != NULL; text = (CTextData*)text->m_Prev)
+		for (CTextData *item = (CTextData*)m_TextControl->Last(); item != NULL; item = (CTextData*)item->m_Prev)
 		{
-			CTextData &td = *text;
-			offset += td.m_Texture.Height;
+			CTextData &text = *item;
 
-			td.RealDrawX = td.X - (td.m_Texture.Width / 2);
-			td.RealDrawY = td.Y - offset;
+			if (!offset && text.Timer < g_Ticks)
+				continue;
+
+			offset += text.m_Texture.Height;
+
+			text.RealDrawX = text.X - (text.m_Texture.Width / 2);
+			text.RealDrawY = text.Y - offset;
 		}
 	}
 	else
 	{
 		int y = m_DrawY - (m_TiledataPtr->Height + 20);
 
-		for (CTextData *text = (CTextData*)m_TextControl->Last(); text != NULL; text = (CTextData*)text->m_Prev)
+		for (CTextData *item = (CTextData*)m_TextControl->Last(); item != NULL; item = (CTextData*)item->m_Prev)
 		{
-			CTextData &td = *text;
-			offset += td.m_Texture.Height;
+			CTextData &text = *item;
 
-			td.RealDrawX = m_DrawX - (td.m_Texture.Width / 2);
-			td.RealDrawY = y - offset;
+			if (!offset && text.Timer < g_Ticks)
+				continue;
+
+			offset += text.m_Texture.Height;
+
+			text.RealDrawX = m_DrawX - (text.m_Texture.Width / 2);
+			text.RealDrawY = y - offset;
 		}
 	}
 }
@@ -101,7 +109,7 @@ void CRenderStaticObject::FixTextCoordinates()
 	{
 		CTextData &text = *item;
 
-		if (text.Timer < g_Ticks || text.Owner == NULL || text.Owner->UseInRender == 0xFF)
+		if (text.Timer < g_Ticks)
 			continue;
 
 
