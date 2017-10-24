@@ -157,6 +157,7 @@ void CGumpMenubar::GUMP_BUTTON_EVENT_C
 			m_Opened = !m_Opened;
 
 			m_Page = 1 + (int)m_Opened;
+			m_WantUpdateContent = true;
 
 			break;
 		}
