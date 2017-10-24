@@ -90,19 +90,50 @@ void CRenderStaticObject::UpdateTextCoordinates()
 //---------------------------------------------------------------------------
 void CRenderStaticObject::FixTextCoordinates()
 {
-	/*int offsetX = 0;
 	int offsetY = 0;
 
-	for (CTextData *item = (CTextData*)m_TextControl->Last(); item != NULL; item = (CTextData*)item->m_Prev)
+	int minX = g_RenderBounds.GameWindowPosX;
+	int maxX = minX + g_RenderBounds.GameWindowWidth;
+	int minY = g_RenderBounds.GameWindowPosY;
+	int maxY = minY + g_RenderBounds.GameWindowHeight;
+
+	for (CTextData *item = (CTextData*)m_TextControl->m_Items; item != NULL; item = (CTextData*)item->m_Next)
 	{
 		CTextData &text = *item;
 
-		if (text.Timer < g_Ticks)
+		if (text.Timer < g_Ticks || text.Owner == NULL || text.Owner->UseInRender == 0xFF)
 			continue;
 
-		//text.RealDrawX;
-		//text.RealDrawY;
-	}*/
+
+
+		int startX = text.RealDrawX;
+		int endX = startX + text.m_Texture.Width;
+
+		if (startX < minX)
+			text.RealDrawX += minX - startX;
+
+		if (endX > maxX)
+			text.RealDrawX -= endX - maxX;
+
+
+
+		int startY = text.RealDrawY;
+		int endY = startY + text.m_Texture.Height;
+
+		if (startY < minY && !offsetY)
+			offsetY = minY - startY;
+
+		if (offsetY)
+			item->RealDrawY += offsetY;
+
+		/*if (endY > maxY)
+		{
+			//if (startY >= maxY)
+			//	continue;
+
+			item->RealDrawY -= endY - maxY;
+		}*/
+	}
 }
 //---------------------------------------------------------------------------
 bool CRenderStaticObject::IsNoDrawTile(const ushort &graphic)
@@ -183,6 +214,7 @@ void CRenderStaticObject::AddText(CTextData *msg)
 	WISPFUN_DEBUG("c27_f5");
 	if (m_TextControl != NULL)
 	{
+		msg->Owner = this;
 		m_TextControl->Add(msg);
 		UpdateTextCoordinates();
 

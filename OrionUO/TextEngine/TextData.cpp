@@ -31,6 +31,7 @@ CTextData::~CTextData()
 {
 	WISPFUN_DEBUG("c174_f3");
 	m_Texture.Clear();
+	m_Owner = NULL;
 }
 //---------------------------------------------------------------------------
 bool CTextData::CanBeDrawedInJournalGump()

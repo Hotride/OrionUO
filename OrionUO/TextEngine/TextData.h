@@ -22,6 +22,7 @@ class CTextData : public CRenderTextObject
 	SETGET(string, Text, "");
 	SETGET(wstring, UnicodeText, L"");
 	SETGET(uchar, Alpha, 0xFF);
+	SETGET(CRenderWorldObject*, Owner, NULL);
 
 public:
 	CTextData();

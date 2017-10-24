@@ -277,6 +277,8 @@ void CGameObject::GenerateObjectHandlesTexture(wstring text)
 void CGameObject::AddText(CTextData *msg)
 {
 	WISPFUN_DEBUG("c20_f8");
+
+	msg->Owner = this;
 	m_TextControl->Add(msg);
 	UpdateTextCoordinates();
 

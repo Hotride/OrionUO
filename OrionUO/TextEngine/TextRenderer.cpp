@@ -221,6 +221,11 @@ void CTextRenderer::Select(CGump *gump)
 	else
 		CalculateWorldPositions(true);
 
+	int renderIndex = g_GameScreen.RenderIndex - 1;
+
+	if (renderIndex < 1)
+		renderIndex = 99;
+
 	for (CRenderTextObject *item = m_DrawPointer; item != NULL; item = item->m_PrevDraw)
 	{
 		if (!item->IsText())
@@ -228,8 +233,14 @@ void CTextRenderer::Select(CGump *gump)
 
 		CTextData &text = *(CTextData*)item;
 
-		if (text.Timer >= g_Ticks && text.m_Texture.Select(text.RealDrawX, text.RealDrawY))
-			g_SelectedObject.Init(item, gump);
+		if (text.Timer >= g_Ticks)
+		{
+			if (text.Owner == NULL || text.Owner->UseInRender != renderIndex)
+				continue;
+
+			if (text.m_Texture.Select(text.RealDrawX, text.RealDrawY))
+				g_SelectedObject.Init(item, gump);
+		}
 	}
 }
 //----------------------------------------------------------------------------------
@@ -249,16 +260,9 @@ bool CTextRenderer::CalculateWorldPositions(const bool &noCalculate)
 
 			if (text.Timer >= g_Ticks)
 			{
-				CRenderWorldObject *rwo = NULL;
-
-				if (text.Type == TT_OBJECT)
-					rwo = g_World->FindWorldObject(text.Serial);
-				else if (text.Type == TT_CLIENT)
-					rwo = (CRenderWorldObject*)text.Serial;
-
-				if (rwo != NULL)
+				if (text.Owner != NULL)
 				{
-					text.Transparent = InRect((CTextData*)m_DrawPointer, rwo);
+					text.Transparent = InRect((CTextData*)m_DrawPointer, text.Owner);
 
 					ProcessTextRemoveBlending(text);
 				}
@@ -291,23 +295,15 @@ void CTextRenderer::WorldDraw()
 
 		if (text.Type != TT_SYSTEM && text.Timer >= g_Ticks)
 		{
+			CRenderWorldObject *rwo = text.Owner;
+
+			if (rwo == NULL || rwo->UseInRender != renderIndex)
+				continue;
+
 			ushort textColor = text.Color;
 
-			if (text.Type == TT_OBJECT)
-			{
-				CGameObject *textOwner = g_World->FindWorldObject(text.Serial);
-				
-				if (textOwner != NULL)
-				{
-					if (textOwner->CurrentRenderIndex != renderIndex)
-						continue;
-
-					if (g_SelectedObject.Object == item && (textOwner->NPC || textOwner->IsCorpse()))
-						textColor = 0x0035;
-				}
-			}
-			else if (((CRenderWorldObject*)text.Serial)->CurrentRenderIndex != renderIndex)
-				continue;
+			if (text.Type == TT_OBJECT && g_SelectedObject.Object == item && (((CGameObject*)rwo)->NPC || ((CGameObject*)rwo)->IsCorpse()))
+				textColor = 0x0035;
 
 			int drawMode = 0;
 

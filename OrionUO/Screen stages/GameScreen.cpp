@@ -527,6 +527,7 @@ void CGameScreen::AddTileToRenderList(CRenderWorldObject *obj, const int &worldX
 		if ((m_UpdateDrawPos && obj->CurrentRenderIndex != m_RenderIndex) || obj->Changed)
 			obj->UpdateDrawCoordinates();
 
+		obj->UseInRender = 0xFF;
 		int drawX = obj->DrawX;
 		int drawY = obj->DrawY;
 
@@ -745,6 +746,7 @@ void CGameScreen::AddTileToRenderList(CRenderWorldObject *obj, const int &worldX
 
 		m_RenderList[m_RenderListCount].Object = obj;
 		m_RenderList[m_RenderListCount].GrayColor = grayColor;
+		obj->UseInRender = m_RenderIndex;
 
 		if (!grayColor && g_CustomHouseGump != NULL && g_Target.IsTargeting() && obj == g_SelectedObject.Object)
 		{
