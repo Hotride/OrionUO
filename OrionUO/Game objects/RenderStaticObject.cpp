@@ -217,6 +217,7 @@ void CRenderStaticObject::AddText(CTextData *msg)
 		msg->Owner = this;
 		m_TextControl->Add(msg);
 		UpdateTextCoordinates();
+		FixTextCoordinates();
 
 		g_Orion.AddJournalMessage(msg, "You see: ");
 	}

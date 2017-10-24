@@ -281,6 +281,7 @@ void CGameObject::AddText(CTextData *msg)
 	msg->Owner = this;
 	m_TextControl->Add(msg);
 	UpdateTextCoordinates();
+	FixTextCoordinates();
 
 	string msgname = "You see: ";
 
