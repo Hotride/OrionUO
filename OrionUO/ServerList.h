@@ -32,21 +32,19 @@ class CServerList
 	SETGET(uint, LastServerIndex, 0);
 
 private:
-	deque<CServer*> m_Servers;
+	vector<CServer> m_Servers;
 
 public:
 	CServerList();
 	~CServerList();
 
-	//Очистить списки серверов
-	void Clear();
-
-	void AddServer(CServer *server);
-	CServer *GetServer(int index);
+	CServer *GetServer(const uint &index);
 	CServer *GetSelectedServer();
 	int ServersCount() { return (int)m_Servers.size(); }
 
 	CServer *Select(int index);
+
+	void ParsePacket(WISP_DATASTREAM::CDataReader &reader);
 };
 //----------------------------------------------------------------------------------
 extern CServerList g_ServerList;

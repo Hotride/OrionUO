@@ -488,7 +488,6 @@ void COrion::Uninstall()
 		g_TextureGumpState[i].Clear();
 
 	g_SoundManager.Free();
-	g_ServerList.Clear();
 	g_FileManager.Unload();
 	g_LightBuffer.Free();
 

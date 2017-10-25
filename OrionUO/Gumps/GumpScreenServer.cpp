@@ -38,9 +38,10 @@ void CGumpScreenServer::UpdateContent()
 	obj->CreateTextureA(9, cliloc->GetA(1044579, "Select which shard to play on:"));
 	Add(obj);
 
-	CGUIHTMLGump *htmlGump = new CGUIHTMLGump(ID_SS_HTML_GUMP, 0x0DAC, 150, 90, 393, 271, true, true);
+	CGUIHTMLGump *htmlGump = (CGUIHTMLGump*)Add(new CGUIHTMLGump(ID_SS_HTML_GUMP, 0x0DAC, 150, 90, 393, 271, true, true));
 
-	Add(htmlGump);
+	htmlGump->m_Scissor->Y += 16;
+	htmlGump->m_Scissor->Height -= 32;
 
 	obj = new CGUIText(0x0481, 153, 368);
 	obj->CreateTextureA(9, cliloc->GetA(1044580, "Sort by:"));
@@ -55,7 +56,6 @@ void CGumpScreenServer::UpdateContent()
 	Add(new CGUIButton(ID_SS_EARTH, 0x15E8, 0x15E9, 0x15EA, 160, 400));
 
 	int offsetY = 0;
-	g_ServerList.LastServerIndex = 0;
 
 	IFOR(i, 0, g_ServerList.ServersCount())
 	{
@@ -68,9 +68,6 @@ void CGumpScreenServer::UpdateContent()
 		entry->ReadOnly = true;
 		entry->CheckOnSerial = true;
 		htmlGump->Add(entry);
-
-		if (server->Name == g_ServerList.LastServerName)
-			g_ServerList.LastServerIndex = i;
 	}
 
 	htmlGump->CalculateDataSize();

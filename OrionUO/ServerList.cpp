@@ -8,7 +8,7 @@
 */
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
-
+//----------------------------------------------------------------------------------
 CServerList g_ServerList;
 //----------------------------------------------------------------------------------
 //---------------------------------------CServer------------------------------------
@@ -35,32 +35,49 @@ CServerList::CServerList()
 //----------------------------------------------------------------------------------
 CServerList::~CServerList()
 {
-	Clear();
-}
-//----------------------------------------------------------------------------------
-void CServerList::Clear()
-{
-	WISPFUN_DEBUG("c206_f1");
-	for (deque<CServer*>::iterator i = m_Servers.begin(); i != m_Servers.end(); i++)
-		delete *i;
-
 	m_Servers.clear();
 }
 //----------------------------------------------------------------------------------
-void CServerList::AddServer(CServer *server)
+void CServerList::ParsePacket(WISP_DATASTREAM::CDataReader &reader)
 {
-	WISPFUN_DEBUG("c206_f2");
-	m_Servers.push_back(server);
+	m_Servers.clear();
+	g_ServerList.LastServerIndex = 0;
+
+	reader.Move(1);
+
+	uint numServers = reader.ReadUInt16BE();
+
+	if (numServers == 0)
+		LOG("Warning!!! Empty server list\n");
+
+	IFOR(i, 0, (int)numServers)
+	{
+		ushort id = reader.ReadUInt16BE();
+		string name = reader.ReadString(32);
+		uchar fullPercent = reader.ReadUInt8();
+		uchar timezone = reader.ReadUInt8();
+		uchar ip = reader.ReadUInt32LE(); //little-endian!!!
+		bool selected = (name == g_ServerList.LastServerName);
+
+		if (selected)
+			g_ServerList.LastServerIndex = i;
+
+		m_Servers.push_back(CServer(id, name, fullPercent, timezone, ip, selected));
+	}
+
+	if (g_ServerList.LastServerIndex < numServers && g_MainScreen.m_AutoLogin->Checked)
+		g_Orion.ServerSelection(g_ServerList.LastServerIndex);
+	else
+		g_Orion.InitScreen(GS_SERVER);
+
+	g_ServerScreen.UpdateContent();
 }
 //----------------------------------------------------------------------------------
-CServer *CServerList::GetServer(int index)
+CServer *CServerList::GetServer(const uint &index)
 {
 	WISPFUN_DEBUG("c206_f3");
-	for (deque<CServer*>::iterator i = m_Servers.begin(); i != m_Servers.end(); i++, index--)
-	{
-		if (!index)
-			return *i;
-	}
+	if (index < m_Servers.size())
+		return &m_Servers[index];
 
 	return NULL;
 }
@@ -68,10 +85,11 @@ CServer *CServerList::GetServer(int index)
 CServer *CServerList::GetSelectedServer()
 {
 	WISPFUN_DEBUG("c206_f4");
-	for (deque<CServer*>::iterator i = m_Servers.begin(); i != m_Servers.end(); i++)
+
+	for (CServer &server : m_Servers)
 	{
-		if ((*i)->Selected)
-			return *i;
+		if (server.Selected)
+			return &server;
 	}
 
 	return NULL;
@@ -82,15 +100,15 @@ CServer *CServerList::Select(int index)
 	WISPFUN_DEBUG("c206_f5");
 	CServer *server = NULL;
 
-	for (deque<CServer*>::iterator i = m_Servers.begin(); i != m_Servers.end(); i++, index--)
+	DFOR(i, m_Servers.size() - 1, 0)
 	{
-		(*i)->Selected = false;
-
-		if (!index)
+		if (index == i)
 		{
-			server = *i;
-			server->Selected = true;
+			server = &m_Servers[i];
+			m_Servers[i].Selected = true;
 		}
+		else
+			m_Servers[i].Selected = false;
 	}
 
 	return server;

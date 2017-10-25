@@ -658,36 +658,7 @@ PACKET_HANDLER(LoginError)
 PACKET_HANDLER(ServerList)
 {
 	WISPFUN_DEBUG("c150_f13");
-	g_ServerList.Clear();
-	Move(1);
-
-	int numServers = ReadUInt16BE();
-
-	if (numServers == 0)
-		LOG("Warning!!! Empty server list\n");
-
-	// Calculate expected message size
-	int exSize = 6 + numServers * 40;
-	if (m_Size != exSize)
-		LOG("Warning!!! Server list message size should be %d\n", exSize);
-
-	IFOR(i, 0, numServers)
-	{
-		ushort id = ReadUInt16BE();
-		string name = ReadString(32);
-		uchar fullPercent = ReadUInt8();
-		uchar timezone = ReadUInt8();
-		uchar ip = ReadUInt32LE(); //little-endian!!!
-
-		g_ServerList.AddServer(new CServer(id, name, fullPercent, timezone, ip, i == 0));
-	}
-
-	if (numServers && g_MainScreen.m_AutoLogin->Checked)
-		g_Orion.ServerSelection(0);
-	else
-		g_Orion.InitScreen(GS_SERVER);
-
-	g_ServerScreen.UpdateContent();
+	g_ServerList.ParsePacket(*this);
 }
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(RelayServer)
