@@ -10,7 +10,7 @@
 #include "stdafx.h"
 //----------------------------------------------------------------------------------
 CTextureAnimationFrame::CTextureAnimationFrame()
-: m_CenterX(0), m_CenterY(0), m_Texture()
+: CGLTexture(), m_CenterX(0), m_CenterY(0)
 {
 }
 //----------------------------------------------------------------------------------

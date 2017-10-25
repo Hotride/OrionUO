@@ -254,7 +254,7 @@ void CGUIShopItem::Draw(const bool &checktrans)
 
 		if (direction.FrameCount != 0)
 		{
-			CGLTexture &originalTexture = direction.m_Frames[0].m_Texture;
+			CGLTexture &originalTexture = direction.m_Frames[0];
 
 			if (originalTexture.Texture)
 			{

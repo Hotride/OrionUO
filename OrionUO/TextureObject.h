@@ -21,7 +21,7 @@ struct UOPAnimationData
 };
 //----------------------------------------------------------------------------------
 //Класс для работы с текстурой кадра анимации
-class CTextureAnimationFrame
+class CTextureAnimationFrame : public CGLTexture
 {
 	//Координаты центра текстуры относительно начала текстуры
 	SETGET(short, CenterX, 0);
@@ -30,8 +30,6 @@ class CTextureAnimationFrame
 public:
 	CTextureAnimationFrame();
 	virtual ~CTextureAnimationFrame();
-
-	CGLTexture m_Texture;
 };
 //----------------------------------------------------------------------------------
 //Класс для работы с направлением анимации

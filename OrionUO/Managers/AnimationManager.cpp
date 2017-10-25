@@ -1157,7 +1157,7 @@ bool CAnimationManager::LoadDirectionGroup(CTextureAnimationDirection &direction
 	{
 		CTextureAnimationFrame &frame = direction.m_Frames[i];
 
-		if (frame.m_Texture.Texture != 0)
+		if (frame.Texture != 0)
 			continue;
 
 		m_Ptr = dataStart + frameOffset[i];
@@ -1216,7 +1216,7 @@ bool CAnimationManager::LoadDirectionGroup(CTextureAnimationDirection &direction
 			header = ReadUInt32LE();
 		}
 
-		g_GL_BindTexture16(frame.m_Texture, imageWidth, imageHeight, &data[0]);
+		g_GL_BindTexture16(frame, imageWidth, imageHeight, &data[0]);
 	}
 
 	m_UsedAnimList.push_back(&direction);
@@ -1255,22 +1255,21 @@ bool CAnimationManager::TestPixels(CGameObject *obj, int x, int y, const bool &m
 	{
 		CTextureAnimationFrame &frame = direction.m_Frames[frameIndex];
 
-		CGLTexture &texture = frame.m_Texture;
-		y -= texture.Height + frame.CenterY;
+		y -= frame.Height + frame.CenterY;
 
 		x = g_MouseManager.Position.X - x;
 
 		if (mirror)
-			x += texture.Width - frame.CenterX;
+			x += frame.Width - frame.CenterX;
 		else
 			x += frame.CenterX;
 
 		if (mirror)
-			x = texture.Width - x;
+			x = frame.Width - x;
 
 		x = g_MouseManager.Position.X - x;
 
-		return frame.m_Texture.Select(x, y);
+		return frame.Select(x, y);
 	}
 
 	return false;
@@ -1312,15 +1311,15 @@ void CAnimationManager::Draw(CGameObject *obj, int x, int y, const bool &mirror,
 	{
 		CTextureAnimationFrame &frame = direction.m_Frames[frameIndex];
 
-		if (frame.m_Texture.Texture == 0)
+		if (frame.Texture == 0)
 			return;
 
 		if (mirror)
-			x -= frame.m_Texture.Width - frame.CenterX;
+			x -= frame.Width - frame.CenterX;
 		else
 			x -= frame.CenterX;
 
-		y -= frame.m_Texture.Height + frame.CenterY;
+		y -= frame.Height + frame.CenterY;
 
 		if (isShadow)
 		{
@@ -1329,7 +1328,7 @@ void CAnimationManager::Draw(CGameObject *obj, int x, int y, const bool &mirror,
 			glEnable(GL_BLEND);
 			glBlendFunc(GL_DST_COLOR, GL_ZERO);
 
-			g_GL_DrawShadow(frame.m_Texture, x, y, mirror);
+			g_GL_DrawShadow(frame, x, y, mirror);
 
 			if (m_UseBlending)
 				glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -1402,9 +1401,9 @@ void CAnimationManager::Draw(CGameObject *obj, int x, int y, const bool &mirror,
 			{
 				if (obj->IsHuman())
 				{
-					short frameHeight = frame.m_Texture.Height;
+					short frameHeight = frame.Height;
 					m_CharacterFrameStartY = y;
-					m_CharacterFrameHeight = frame.m_Texture.Height;
+					m_CharacterFrameHeight = frame.Height;
 					m_StartCharacterWaistY = (int)(frameHeight * UPPER_BODY_RATIO) + m_CharacterFrameStartY;
 					m_StartCharacterKneesY = (int)(frameHeight * MID_BODY_RATIO) + m_CharacterFrameStartY;
 					m_StartCharacterFeetY = (int)(frameHeight * LOWER_BODY_RATIO) + m_CharacterFrameStartY;
@@ -1416,7 +1415,7 @@ void CAnimationManager::Draw(CGameObject *obj, int x, int y, const bool &mirror,
 
 				if (!obj->NPC)
 				{
-					float itemsEndY = (float)(y + frame.m_Texture.Height);
+					float itemsEndY = (float)(y + frame.Height);
 
 					//Определяем соотношение верхней части текстуры, до перелома.
 					if (y >= m_StartCharacterWaistY)
@@ -1426,7 +1425,7 @@ void CAnimationManager::Draw(CGameObject *obj, int x, int y, const bool &mirror,
 					else
 					{
 						float upperBodyDiff = (float)(m_StartCharacterWaistY - y);
-						h3mod = upperBodyDiff / frame.m_Texture.Height;
+						h3mod = upperBodyDiff / frame.Height;
 						if (h3mod < 0)
 							h3mod = 0;
 					}
@@ -1446,7 +1445,7 @@ void CAnimationManager::Draw(CGameObject *obj, int x, int y, const bool &mirror,
 						else
 							midBodyDiff = (float)(m_StartCharacterKneesY - m_StartCharacterWaistY);
 
-						h6mod = h3mod + midBodyDiff / frame.m_Texture.Height;
+						h6mod = h3mod + midBodyDiff / frame.Height;
 						if (h6mod < 0)
 							h6mod = 0;
 					}
@@ -1459,16 +1458,16 @@ void CAnimationManager::Draw(CGameObject *obj, int x, int y, const bool &mirror,
 					else
 					{
 						float lowerBodyDiff = itemsEndY - m_StartCharacterKneesY;
-						h9mod = h6mod + lowerBodyDiff / frame.m_Texture.Height;
+						h9mod = h6mod + lowerBodyDiff / frame.Height;
 						if (h9mod < 0)
 							h9mod = 0;
 					}
 				}
 
-				g_GL_DrawSitting(frame.m_Texture, x, y, mirror, h3mod, h6mod, h9mod);
+				g_GL_DrawSitting(frame, x, y, mirror, h3mod, h6mod, h9mod);
 			}			
 			else
-				g_GL_DrawMirrored(frame.m_Texture, x, y, mirror);
+				g_GL_DrawMirrored(frame, x, y, mirror);
 
 			if (spectralColor)
 			{
@@ -1809,8 +1808,8 @@ void CAnimationManager::DrawCharacter(CGameCharacter *obj, int x, int y)
 			{
 				CTextureAnimationFrame &frame = direction.m_Frames[0];
 
-				int frameWidth = frame.m_Texture.Width;
-				int frameHeight = frame.m_Texture.Height;
+				int frameWidth = frame.Width;
+				int frameHeight = frame.Height;
 
 				if (frameWidth >= 80)
 				{
@@ -2103,8 +2102,8 @@ ANIMATION_DIMENSIONS CAnimationManager::GetAnimationDimensions(uchar frameIndex,
 				{
 					CTextureAnimationFrame &frame = direction.m_Frames[frameIndex];
 
-					result.Width = frame.m_Texture.Width;
-					result.Height = frame.m_Texture.Height;
+					result.Width = frame.Width;
+					result.Height = frame.Height;
 					result.CenterX = frame.CenterX;
 					result.CenterY = frame.CenterY;
 
@@ -2270,7 +2269,7 @@ bool CAnimationManager::TryReadUOPAnimDimins(CTextureAnimationDirection &directi
 	{
 		CTextureAnimationFrame &frame = direction.m_Frames[i];
 
-		if (frame.m_Texture.Texture != 0) continue;
+		if (frame.Texture != 0) continue;
 
 		UOPFrameData frameData = pixelDataOffsets[i + dirFrameStartIdx];
 		if (frameData.dataStart == NULL) continue;
@@ -2320,7 +2319,7 @@ bool CAnimationManager::TryReadUOPAnimDimins(CTextureAnimationDirection &directi
 			header = ReadUInt32LE();
 		}
 
-		g_GL_BindTexture16(frame.m_Texture, imageWidth, imageHeight, &data[0]);
+		g_GL_BindTexture16(frame, imageWidth, imageHeight, &data[0]);
 	}
 
 	m_UsedAnimList.push_back(&direction);
