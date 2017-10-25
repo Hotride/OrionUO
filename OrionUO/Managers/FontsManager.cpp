@@ -402,6 +402,51 @@ int CFontsManager::GetWidthA(uchar font, const char *str, int len)
 }
 //----------------------------------------------------------------------------------
 /*!
+Получить ширину текста (с учетом параметров отрисовки)
+@param [__in] font Шрифт
+@param [__in] str Текст
+@param [__in] len Длина текста
+@param [__in] maxWidth Максимальная ширина текстуры
+@param [__in] align Расположение текста
+@param [__in] flags Эффекты текста
+@return Ширина текста в пикселях
+*/
+int CFontsManager::GetWidthExA(uchar font, const char *str, int len, int maxWidth, TEXT_ALIGN_TYPE align, ushort flags)
+{
+	WISPFUN_DEBUG("c143_f10");
+	if (font > m_FontCount)
+		return 0;
+
+	if (!len)
+	{
+		len = strlen(str);
+
+		if (!len)
+			return 0;
+	}
+
+	PMULTILINES_FONT_INFO info = GetInfoA(font, str, len, align, flags, maxWidth);
+
+	int textWidth = 0;
+	PMULTILINES_FONT_INFO ptr = info;
+
+	while (ptr != NULL)
+	{
+		info = ptr;
+
+		if (ptr->Width > textWidth)
+			textWidth = ptr->Width;
+
+		ptr = ptr->m_Next;
+
+		info->Data.clear();
+		delete info;
+	}
+
+	return textWidth;
+}
+//----------------------------------------------------------------------------------
+/*!
 Получить высоту текста
 @param [__in] font Шрифт
 @param [__in] str Текст
@@ -1218,6 +1263,51 @@ int CFontsManager::GetWidthW(uchar font, const wchar_t *str, int len)
 	}
 
 	return textLength;
+}
+//----------------------------------------------------------------------------------
+/*!
+Получить ширину текста (с учетом параметров отрисовки)
+@param [__in] font Шрифт
+@param [__in] str Текст
+@param [__in] len Длина текста
+@param [__in] maxWidth Максимальная ширина текстуры
+@param [__in] align Расположение текста
+@param [__in] flags Эффекты текста
+@return Ширина текста в пикселях
+*/
+int CFontsManager::GetWidthExW(uchar font, const wchar_t *str, int len, int maxWidth, TEXT_ALIGN_TYPE align, ushort flags)
+{
+	WISPFUN_DEBUG("c143_f22");
+	if (font >= 20 || !m_UnicodeFontAddress[font])
+		return 0;
+
+	if (!len)
+	{
+		len = lstrlenW(str);
+
+		if (!len)
+			return 0;
+	}
+
+	PMULTILINES_FONT_INFO info = GetInfoW(font, str, len, align, flags, maxWidth);
+
+	int textWidth = 0;
+	PMULTILINES_FONT_INFO ptr = info;
+
+	while (ptr != NULL)
+	{
+		info = ptr;
+
+		if (ptr->Width > textWidth)
+			textWidth = ptr->Width;
+
+		ptr = ptr->m_Next;
+
+		info->Data.clear();
+		delete info;
+	}
+
+	return textWidth;
 }
 //----------------------------------------------------------------------------------
 /*!
