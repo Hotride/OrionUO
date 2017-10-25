@@ -4186,7 +4186,7 @@ PACKET_HANDLER(OpenGump)
 	ushort commandsLength = ReadUInt16BE();
 	string commands = ReadString(commandsLength);
 
-	WISP_FILE::CTextFileParser parser("", "", "", "{}");
+	WISP_FILE::CTextFileParser parser("", " ", "", "{}");
 	WISP_FILE::CTextFileParser cmdParser("", " ", "", "");
 
 	STRING_LIST commandList = parser.GetTokens(commands.c_str());
