@@ -29,7 +29,7 @@ public:
 	CGUIWorldMapTexture(const int &x, const int &y);
 	virtual ~CGUIWorldMapTexture();
 
-	virtual WISP_GEOMETRY::CSize GetSize() { return WISP_GEOMETRY::CSize(m_Width, m_Height); }
+	//virtual WISP_GEOMETRY::CSize GetSize() { return WISP_GEOMETRY::CSize(m_Width, m_Height); }
 
 	virtual void Draw(const bool &checktrans = false);
 	virtual bool Select();

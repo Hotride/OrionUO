@@ -587,6 +587,7 @@ void CGumpWorldMap::GUMP_BUTTON_EVENT_C
 	{
 		m_Minimized = true;
 		m_Page = 1;
+		m_WantUpdateContent = true;
 	}
 }
 //----------------------------------------------------------------------------------
@@ -734,6 +735,7 @@ void CGumpWorldMap::UpdateSize()
 	m_Scissor->Width = m_Width - 16;
 	m_Scissor->Height = m_Height - 16;
 	m_WantRedraw = true;
+	m_WantUpdateContent = true;
 }
 //----------------------------------------------------------------------------------
 void CGumpWorldMap::GUMP_RESIZE_START_EVENT_C
