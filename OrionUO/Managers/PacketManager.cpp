@@ -3523,6 +3523,49 @@ PACKET_HANDLER(MegaCliloc)
 	Move(2);
 	obj->ClilocRevision = ReadUInt32BE();
 	wstring message(L"");
+
+	puchar end = m_Start + m_Size;
+
+	WSTRING_LIST list;
+
+	while (m_Ptr < end)
+	{
+		uint cliloc = ReadUInt32BE();
+
+		if (!cliloc)
+			break;
+
+		int len = ReadInt16BE();
+
+		wstring argument = L"";
+
+		if (len > 0)
+		{
+			argument = wstring((wchar_t*)Ptr, len / 2);
+			Ptr += len;
+			//wstring argument = ReadUnicodeStringLE(len / 2);
+		}
+
+		wstring str = g_ClilocManager.ParseArgumentsToClilocString(cliloc, true, argument);
+		//LOG("Cliloc: argstr=%s\n", ToString(str).c_str());
+
+		//LOG("Cliloc: 0x%08X len=%i arg=%s\n", cliloc, len, ToString(argument).c_str());
+
+		bool canAdd = true;
+
+		for (const wstring &tempStr : list)
+		{
+			if (tempStr == str)
+			{
+				canAdd = false;
+				break;
+			}
+		}
+
+		if (canAdd)
+			list.push_back(str);
+	}
+
 	bool coloredStartFont = false;
 
 	CGameItem *container = g_World->FindWorldItem(obj->Container);
@@ -3575,30 +3618,10 @@ PACKET_HANDLER(MegaCliloc)
 		}
 	}
 
-	puchar end = m_Start + m_Size;
 	bool first = true;
 
-	while (m_Ptr < end)
+	for (const wstring &str : list)
 	{
-		uint cliloc = ReadUInt32BE();
-
-		if (!cliloc)
-			break;
-
-		short len = ReadInt16BE();
-
-		wstring argument = L"";
-
-		if (len > 0)
-		{
-			argument = wstring((wchar_t*)Ptr, len / 2);
-			Ptr += len;
-			//wstring argument = ReadUnicodeStringLE(len / 2);
-		}
-
-		wstring str = g_ClilocManager.ParseArgumentsToClilocString(cliloc, true, argument);
-		//LOG("Cliloc: argstr=%s\n", ToString(str).c_str());
-
 		if (message.length() && !first)
 			message += L"\n";
 
@@ -3614,8 +3637,6 @@ PACKET_HANDLER(MegaCliloc)
 
 			first = false;
 		}
-
-		//LOG("Cliloc: 0x%08X len=%i arg=%s\n", cliloc, len, ToString(argument).c_str());
 	}
 
 	//LOG_DUMP((PBYTE)message.c_str(), message.length() * 2);
