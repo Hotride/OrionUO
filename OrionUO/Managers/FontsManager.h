@@ -293,18 +293,6 @@ public:
 	int GetWidthA(uchar font, const char *str, int len = 0);
 
 	/*!
-	Получить ширину текста (с учетом параметров отрисовки)
-	@param [__in] font Шрифт
-	@param [__in] str Текст
-	@param [__in] len Длина текста
-	@param [__in] maxWidth Максимальная ширина текстуры
-	@param [__in] align Расположение текста
-	@param [__in] flags Эффекты текста
-	@return Ширина текста в пикселях
-	*/
-	int GetWidthExA(uchar font, const char *str, int len, int maxWidth, TEXT_ALIGN_TYPE align, ushort flags);
-
-	/*!
 	Получить высоту текста
 	@param [__in] font Шрифт
 	@param [__in] str Текст
@@ -424,18 +412,6 @@ public:
 	@return Ширина текста в пикселях
 	*/
 	int GetWidthW(uchar font, const wchar_t *str, int len = 0);
-
-	/*!
-	Получить ширину текста (с учетом параметров отрисовки)
-	@param [__in] font Шрифт
-	@param [__in] str Текст
-	@param [__in] len Длина текста
-	@param [__in] maxWidth Максимальная ширина текстуры
-	@param [__in] align Расположение текста
-	@param [__in] flags Эффекты текста
-	@return Ширина текста в пикселях
-	*/
-	int GetWidthExW(uchar font, const wchar_t *str, int len, int maxWidth, TEXT_ALIGN_TYPE align, ushort flags);
 
 	/*!
 	Получить высоту текста

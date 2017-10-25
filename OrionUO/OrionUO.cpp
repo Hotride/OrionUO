@@ -5024,11 +5024,7 @@ void COrion::CreateTextMessage(TEXT_TYPE type, uint serial, uchar font, ushort c
 				td->Color = 0;
 
 				if (width > TEXT_MESSAGE_MAX_WIDTH)
-				{
-					width = g_FontManager.GetWidthExA((BYTE)font, text.c_str(), text.length(), TEXT_MESSAGE_MAX_WIDTH, TS_LEFT, 0);
-					td->GenerateTexture(width, 0, TS_LEFT);
-					//td->GenerateTexture(TEXT_MESSAGE_MAX_WIDTH, 0, TS_LEFT);
-				}
+					td->GenerateTexture(TEXT_MESSAGE_MAX_WIDTH, 0, TS_LEFT);
 				else
 					td->GenerateTexture(0, 0, TS_CENTER);
 
@@ -5090,14 +5086,10 @@ void COrion::CreateTextMessage(TEXT_TYPE type, uint serial, uchar font, ushort c
 		}
 		case TT_CLIENT:
 		{
-			int width = g_FontManager.GetWidthA((BYTE)font, text.c_str(), text.length());
+			int width = g_FontManager.GetWidthA(font, text.c_str(), text.length());
 			
 			if (width > TEXT_MESSAGE_MAX_WIDTH)
-			{
-				width = g_FontManager.GetWidthExA((BYTE)font, text.c_str(), text.length(), TEXT_MESSAGE_MAX_WIDTH, TS_LEFT, 0);
-				td->GenerateTexture(width, 0, TS_LEFT);
-				//td->GenerateTexture(TEXT_MESSAGE_MAX_WIDTH, 0, TS_CENTER);
-			}
+				td->GenerateTexture(TEXT_MESSAGE_MAX_WIDTH, 0, TS_LEFT);
 			else
 				td->GenerateTexture(0, 0, TS_CENTER);
 
@@ -5136,14 +5128,10 @@ void COrion::CreateUnicodeTextMessage(TEXT_TYPE type, uint serial, uchar font, u
 
 			if (obj != NULL)
 			{
-				int width = g_FontManager.GetWidthW((BYTE)font, text.c_str(), text.length());
+				int width = g_FontManager.GetWidthW(font, text.c_str(), text.length());
 
 				if (width > TEXT_MESSAGE_MAX_WIDTH)
-				{
-					width = g_FontManager.GetWidthExW((BYTE)font, text.c_str(), text.length(), TEXT_MESSAGE_MAX_WIDTH, TS_LEFT, UOFONT_BLACK_BORDER);
-					td->GenerateTexture(width, UOFONT_BLACK_BORDER, TS_LEFT);
-					//td->GenerateTexture(TEXT_MESSAGE_MAX_WIDTH, UOFONT_BLACK_BORDER, TS_LEFT);
-				}
+					td->GenerateTexture(TEXT_MESSAGE_MAX_WIDTH, UOFONT_BLACK_BORDER, TS_LEFT);
 				else
 					td->GenerateTexture(0, UOFONT_BLACK_BORDER, TS_CENTER);
 				
@@ -5204,14 +5192,10 @@ void COrion::CreateUnicodeTextMessage(TEXT_TYPE type, uint serial, uchar font, u
 		}
 		case TT_CLIENT:
 		{
-			int width = g_FontManager.GetWidthW((BYTE)font, text.c_str(), text.length());
+			int width = g_FontManager.GetWidthW(font, text.c_str(), text.length());
 
 			if (width > TEXT_MESSAGE_MAX_WIDTH)
-			{
-				width = g_FontManager.GetWidthExW((BYTE)font, text.c_str(), text.length(), TEXT_MESSAGE_MAX_WIDTH, TS_LEFT, 0);
-				td->GenerateTexture(width, 0, TS_LEFT);
-
-			}
+				td->GenerateTexture(TEXT_MESSAGE_MAX_WIDTH, UOFONT_BLACK_BORDER, TS_LEFT);
 			else
 				td->GenerateTexture(0, UOFONT_BLACK_BORDER, TS_LEFT);
 
