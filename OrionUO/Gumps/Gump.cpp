@@ -78,7 +78,7 @@ void CGump::FixCoordinates()
 			m_MinimizedX = maxX;
 		}
 
-		if (m_MinimizedX + m_GumpRect.Position.X + m_GumpRect.Size.Width - gumpOffsetX < 0)
+		if (m_MinimizedX < m_GumpRect.Position.X && m_MinimizedX + m_GumpRect.Position.X + m_GumpRect.Size.Width - gumpOffsetX < 0)
 		{
 			m_WantRedraw = true;
 			m_MinimizedX = gumpOffsetX - (m_GumpRect.Position.X + m_GumpRect.Size.Width);
@@ -90,7 +90,7 @@ void CGump::FixCoordinates()
 			m_MinimizedY = maxY;
 		}
 
-		if (m_MinimizedY + m_GumpRect.Position.Y + m_GumpRect.Size.Height - gumpOffsetY < 0)
+		if (m_MinimizedY < m_GumpRect.Position.Y && m_MinimizedY + m_GumpRect.Position.Y + m_GumpRect.Size.Height - gumpOffsetY < 0)
 		{
 			m_WantRedraw = true;
 			m_MinimizedY = gumpOffsetY - (m_GumpRect.Position.Y + m_GumpRect.Size.Height);
@@ -104,7 +104,7 @@ void CGump::FixCoordinates()
 			m_X = maxX;
 		}
 
-		if (m_X + m_GumpRect.Position.X + m_GumpRect.Size.Width - gumpOffsetX < 0)
+		if (m_X < m_GumpRect.Position.X && m_X + m_GumpRect.Position.X + m_GumpRect.Size.Width - gumpOffsetX < 0)
 		{
 			m_WantRedraw = true;
 			m_X = gumpOffsetX - (m_GumpRect.Position.X + m_GumpRect.Size.Width);
@@ -116,7 +116,7 @@ void CGump::FixCoordinates()
 			m_Y = maxY;
 		}
 
-		if (m_Y + m_GumpRect.Position.Y + m_GumpRect.Size.Height - gumpOffsetY < 0)
+		if (m_Y < m_GumpRect.Position.Y && m_Y + m_GumpRect.Position.Y + m_GumpRect.Size.Height - gumpOffsetY < 0)
 		{
 			m_WantRedraw = true;
 			m_Y = gumpOffsetY - (m_GumpRect.Position.Y + m_GumpRect.Size.Height);
