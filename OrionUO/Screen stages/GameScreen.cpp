@@ -1575,15 +1575,15 @@ void CGameScreen::Render(const bool &mode)
 
 		UnuseShader();
 
-		//Восстанавливаем размеры рисуемой области
-		g_GL.RestorePort();
-
 		if (!g_DeathScreenTimer)
 		{
 			g_SystemChat.DrawSystemChat(g_RenderBounds.GameWindowPosX, g_RenderBounds.GameWindowPosY, g_RenderBounds.GameWindowHeight);
 
 			g_QuestArrow.Draw();
 		}
+
+		//Восстанавливаем размеры рисуемой области
+		g_GL.RestorePort();
 
 		m_GameScreenGump.Draw();
 
