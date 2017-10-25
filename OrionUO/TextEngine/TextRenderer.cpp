@@ -235,7 +235,7 @@ void CTextRenderer::Select(CGump *gump)
 
 		if (text.Timer >= g_Ticks)
 		{
-			if (text.Owner == NULL || text.Owner->UseInRender != renderIndex)
+			if (gump == NULL && (text.Owner == NULL || text.Owner->UseInRender != renderIndex))
 				continue;
 
 			if (text.m_Texture.Select(text.RealDrawX, text.RealDrawY))
