@@ -524,6 +524,11 @@ void CGameScreen::AddTileToRenderList(CRenderWorldObject *obj, const int &worldX
 
 	for (; obj != NULL; obj = obj->m_NextXY)
 	{
+#if UO_RENDER_LIST_SORT == 1
+		if (obj->CurrentRenderIndex == m_RenderIndex || obj->NoDrawTile)
+			continue;
+#endif
+
 		if ((m_UpdateDrawPos && obj->CurrentRenderIndex != m_RenderIndex) || obj->Changed)
 			obj->UpdateDrawCoordinates();
 
@@ -537,9 +542,6 @@ void CGameScreen::AddTileToRenderList(CRenderWorldObject *obj, const int &worldX
 		bool aphaChanged = false;
 
 #if UO_RENDER_LIST_SORT == 1
-		if (obj->CurrentRenderIndex == m_RenderIndex || obj->NoDrawTile)
-			continue;
-
 		int z = obj->Z;
 
 		int maxObjectZ = obj->PriorityZ;
