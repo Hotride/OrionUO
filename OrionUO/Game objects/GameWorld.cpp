@@ -804,7 +804,7 @@ CGameObject *CGameWorld::SearchWorldObject(const uint &serialStart, const int &s
 	return result;
 }
 //----------------------------------------------------------------------------------
-void CGameWorld::UpdateGameObject(const uint &serial, ushort graphic, const uchar &graphicIncrement, const int &count, const int &x, const int &y, const char &z, const uchar &direction, const ushort &color, const uchar &flags, const int &a11, const UPDATE_GAME_OBJECT_TYPE &updateType, const ushort &a13)
+void CGameWorld::UpdateGameObject(const uint &serial, ushort graphic, const uchar &graphicIncrement, int count, const int &x, const int &y, const char &z, const uchar &direction, const ushort &color, const uchar &flags, const int &a11, const UPDATE_GAME_OBJECT_TYPE &updateType, const ushort &a13)
 {
 	LOG("UpdateGameObject 0x%08lX:0x%04X 0x%04X (%i) %d:%d:%d %i\n", serial, graphic, color, count, x, y, z, direction);
 
@@ -916,6 +916,10 @@ void CGameWorld::UpdateGameObject(const uint &serial, ushort graphic, const ucha
 			item->Layer = direction;
 
 		item->Color = g_ColorManager.FixColor(color, (color & 0x8000));
+
+		if (!count)
+			count = 1;
+
 		item->Count = count;
 		item->Flags = flags;
 
@@ -1091,7 +1095,7 @@ void CGameWorld::UpdateItemInContainer(CGameObject *obj, CGameObject *container,
 	}
 }
 //----------------------------------------------------------------------------------
-void CGameWorld::UpdateContainedItem(const uint &serial, const ushort &graphic, const uchar &graphicIncrement, const ushort &count, const int &x, const int &y, const uint &containerSerial, const ushort &color)
+void CGameWorld::UpdateContainedItem(const uint &serial, const ushort &graphic, const uchar &graphicIncrement, ushort count, const int &x, const int &y, const uint &containerSerial, const ushort &color)
 {
 	CGameObject *container = FindWorldObject(containerSerial);
 
@@ -1125,6 +1129,9 @@ void CGameWorld::UpdateContainedItem(const uint &serial, const ushort &graphic, 
 	obj->Graphic = graphic + graphicIncrement;
 	obj->OnGraphicChange();
 	obj->Color = g_ColorManager.FixColor(color, (color & 0x8000));
+
+	if (!count)
+		count = 1;
 
 	obj->Count = count;
 
