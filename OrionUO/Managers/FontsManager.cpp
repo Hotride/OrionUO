@@ -1039,48 +1039,41 @@ void CFontsManager::DrawA(uchar font, const char *str, ushort color, int x, int 
 @param [__in] flags Эффекты текста
 @return Координаты каретки
 */
-WISP_GEOMETRY::CPoint2Di CFontsManager::GetCaretPosW(uchar font, const wchar_t *str, int pos, int width, TEXT_ALIGN_TYPE align, ushort flags)
+WISP_GEOMETRY::CPoint2Di CFontsManager::GetCaretPosW(const uchar &font, const wstring &str, int pos, int width, const TEXT_ALIGN_TYPE &align, const ushort &flags)
 {
 	WISPFUN_DEBUG("c143_f19");
 	WISP_GEOMETRY::CPoint2Di p;
 
-	if (pos < 1 || font >= 20 || !m_UnicodeFontAddress[font])
-		return p;
-
-	int len = lstrlenW(str);
-
-	if (len < 1)
+	if (pos < 1 || font >= 20 || !m_UnicodeFontAddress[font] || str.empty())
 		return p;
 
 	if (!width)
-		width = GetWidthW(font, str, len);
+		width = GetWidthW(font, str);
 
-	PMULTILINES_FONT_INFO info = GetInfoW(font, str, len, align, flags, width);
+	PMULTILINES_FONT_INFO info = GetInfoW(font, str.c_str(), str.length(), align, flags, width);
 	if (info == NULL)
 		return p;
 	
 	puint table = (puint)m_UnicodeFontAddress[font];
 	int height = 0;
-	PMULTILINES_FONT_INFO ptr = info;
 
-	while (ptr != NULL)
+	while (info != NULL)
 	{
-		info = ptr;
-
 		if (pos > 0)
 		{
-			len = ptr->CharCount;
+			int len = info->CharCount;
 
 			if (len && pos - len < 1)
 			{
 				IFOR(i, 0, len)
 				{
-					wchar_t ch = ptr->Data[i].item;
+					const wchar_t &ch = info->Data[i].item;
 					int cwidth = 0;
+					uint offset = table[ch];
 
-					if (table[ch] && table[ch] != 0xFFFFFFFF)
+					if (offset && offset != 0xFFFFFFFF)
 					{
-						puchar cptr = (puchar)((uint)table + table[ch]);
+						puchar cptr = (puchar)((uint)table + offset);
 						p.X += ((char)cptr[0] + (char)cptr[2] + 1);
 					}
 					else if (ch == L' ')
@@ -1102,20 +1095,22 @@ WISP_GEOMETRY::CPoint2Di CFontsManager::GetCaretPosW(uchar font, const wchar_t *
 				p.Y = height;
 
 				if (pos == 1)
-					p.Y += ptr->MaxHeight;
+					p.Y += info->MaxHeight;
 
 				break;
 			}
 			else
-				height += ptr->MaxHeight;
+				height += info->MaxHeight;
 
 			pos--;
 		}
 
-		ptr = ptr->m_Next;
+		PMULTILINES_FONT_INFO ptr = info;
 
-		info->Data.clear();
-		delete info;
+		info = info->m_Next;
+
+		ptr->Data.clear();
+		delete ptr;
 	}
 
 	return p;
@@ -1132,40 +1127,33 @@ WISP_GEOMETRY::CPoint2Di CFontsManager::GetCaretPosW(uchar font, const wchar_t *
 @param [__in] flags Эффекты текста
 @return Позиция каретки в строке
 */
-int CFontsManager::CalculateCaretPosW(uchar font, const wchar_t *str, int x, int y, int width, TEXT_ALIGN_TYPE align, ushort flags)
+int CFontsManager::CalculateCaretPosW(const uchar &font, const wstring &str, const int &x, const int &y, int width, const TEXT_ALIGN_TYPE &align, const ushort &flags)
 {
 	WISPFUN_DEBUG("c143_f20");
-	if (x < 0 || y < 0 || font >= 20 || !m_UnicodeFontAddress[font])
-		return 0;
-
-	int len = lstrlenW(str);
-
-	if (len < 1)
+	if (x < 0 || y < 0 || font >= 20 || !m_UnicodeFontAddress[font] || str.empty())
 		return 0;
 
 	if (!width)
-		width = GetWidthW(font, str, len);
+		width = GetWidthW(font, str);
 
 	if (x >= width)
-		return len;
+		return str.length();
 
-	PMULTILINES_FONT_INFO info = GetInfoW(font, str, len, align, flags, width);
+	PMULTILINES_FONT_INFO info = GetInfoW(font, str.c_str(), str.length(), align, flags, width);
 	if (info == NULL)
 		return 0;
 
 	int height = GetHeightW(info);
 
-	PMULTILINES_FONT_INFO ptr = info;
-
 	if (y >= height)
 	{
-		while (ptr != NULL)
+		while (info != NULL)
 		{
-			info = ptr;
-			ptr = ptr->m_Next;
+			PMULTILINES_FONT_INFO ptr = info;
+			info = info->m_Next;
 
-			info->Data.clear();
-			delete info;
+			ptr->Data.clear();
+			delete ptr;
 		}
 
 		return 0;
@@ -1177,27 +1165,25 @@ int CFontsManager::CalculateCaretPosW(uchar font, const wchar_t *str, int x, int
 	int pos = 0;
 	bool found = false;
 
-	while (ptr != NULL)
+	while (info != NULL)
 	{
-		info = ptr;
-
-		height += ptr->MaxHeight;
+		height += info->MaxHeight;
 		width = 0;
 
 		if (!found)
 		{
 			if (y < height)
 			{
-				len = ptr->CharCount;
+				int len = info->CharCount;
 
 				IFOR(i, 0, len)
 				{
-					wchar_t ch = ptr->Data[i].item;
-					int cwidth = 0;
+					const wchar_t &ch = info->Data[i].item;
+					int offset = table[ch];
 
-					if (table[ch] && table[ch] != 0xFFFFFFFF)
+					if (offset && offset != 0xFFFFFFFF)
 					{
-						puchar cptr = (puchar)((uint)table + table[ch]);
+						puchar cptr = (puchar)((uint)table + offset);
 						width += ((char)cptr[0] + (char)cptr[2] + 1);
 					}
 					else if (ch == L' ')
@@ -1213,15 +1199,17 @@ int CFontsManager::CalculateCaretPosW(uchar font, const wchar_t *str, int x, int
 			}
 			else
 			{
-				pos += ptr->CharCount;
+				pos += info->CharCount;
 				pos++;
 			}
 		}
 
-		ptr = ptr->m_Next;
+		PMULTILINES_FONT_INFO ptr = info;
 
-		info->Data.clear();
-		delete info;
+		info = info->m_Next;
+
+		ptr->Data.clear();
+		delete ptr;
 	}
 
 	return pos;
@@ -1234,35 +1222,35 @@ int CFontsManager::CalculateCaretPosW(uchar font, const wchar_t *str, int x, int
 @param [__in_opt] len Длина текста
 @return Ширина текста в пикселях
 */
-int CFontsManager::GetWidthW(uchar font, const wchar_t *str, int len)
+int CFontsManager::GetWidthW(const uchar &font, const wstring &str)
 {
 	WISPFUN_DEBUG("c143_f21");
-	if (font >= 20 || !m_UnicodeFontAddress[font])
+	if (font >= 20 || !m_UnicodeFontAddress[font] || str.empty())
 		return 0;
-
-	if (!len)
-	{
-		len = lstrlenW(str);
-
-		if (!len)
-			return 0;
-	}
 
 	puint table = (puint)m_UnicodeFontAddress[font];
 	int textLength = 0;
+	int maxTextLength = 0;
 
-	IFOR(i, 0, len)
+	for (const wchar_t &c : str)
 	{
-		if (table[str[i]] && table[str[i]] != 0xFFFFFFFF)
+		uint &offset = table[c];
+
+		if (offset && offset != 0xFFFFFFFF)
 		{
-			puchar ptr = (puchar)((uint)table + table[str[i]]);
+			puchar ptr = (puchar)((uint)table + offset);
 			textLength += ((char)ptr[0] + (char)ptr[2] + 1);
 		}
-		else if (str[i] == L' ')
+		else if (c == L' ')
 			textLength += UNICODE_SPACE_WIDTH;
+		else if (c == L'\n' || c == L'\r')
+		{
+			maxTextLength = max(maxTextLength, textLength);
+			textLength = 0;
+		}
 	}
 
-	return textLength;
+	return max(maxTextLength, textLength);
 }
 //----------------------------------------------------------------------------------
 /*!
@@ -1275,36 +1263,27 @@ int CFontsManager::GetWidthW(uchar font, const wchar_t *str, int len)
 @param [__in] flags Эффекты текста
 @return Ширина текста в пикселях
 */
-int CFontsManager::GetWidthExW(uchar font, const wchar_t *str, int len, int maxWidth, TEXT_ALIGN_TYPE align, ushort flags)
+int CFontsManager::GetWidthExW(const uchar &font, const wstring &str, const int &maxWidth, const TEXT_ALIGN_TYPE &align, const ushort &flags)
 {
 	WISPFUN_DEBUG("c143_f22");
-	if (font >= 20 || !m_UnicodeFontAddress[font])
+	if (font >= 20 || !m_UnicodeFontAddress[font] || str.empty())
 		return 0;
 
-	if (!len)
-	{
-		len = lstrlenW(str);
-
-		if (!len)
-			return 0;
-	}
-
-	PMULTILINES_FONT_INFO info = GetInfoW(font, str, len, align, flags, maxWidth);
+	PMULTILINES_FONT_INFO info = GetInfoW(font, str.c_str(), str.length(), align, flags, maxWidth);
 
 	int textWidth = 0;
-	PMULTILINES_FONT_INFO ptr = info;
 
-	while (ptr != NULL)
+	while (info != NULL)
 	{
-		info = ptr;
+		if (info->Width > textWidth)
+			textWidth = info->Width;
 
-		if (ptr->Width > textWidth)
-			textWidth = ptr->Width;
+		PMULTILINES_FONT_INFO ptr = info;
 
-		ptr = ptr->m_Next;
+		info = info->m_Next;
 
-		info->Data.clear();
-		delete info;
+		ptr->Data.clear();
+		delete ptr;
 	}
 
 	return textWidth;
@@ -1319,40 +1298,32 @@ int CFontsManager::GetWidthExW(uchar font, const wchar_t *str, int len, int maxW
 @param [__in_opt] flags Эффекты текста
 @return Высота текста в пикселях
 */
-int CFontsManager::GetHeightW(uchar font, const wchar_t *str, int width, TEXT_ALIGN_TYPE align, ushort flags)
+int CFontsManager::GetHeightW(const uchar &font, const wstring &str, int width, const TEXT_ALIGN_TYPE &align, const ushort &flags)
 {
 	WISPFUN_DEBUG("c143_f23");
-	if (font >= 20 || !m_UnicodeFontAddress[font])
-		return 0;
-
-	int len = lstrlenW(str);
-
-	if (len < 1)
+	if (font >= 20 || !m_UnicodeFontAddress[font] || str.empty())
 		return 0;
 
 	if (!width)
-		width = GetWidthW(font, str, len);
+		width = GetWidthW(font, str);
 
-	PMULTILINES_FONT_INFO info = GetInfoW(font, str, len, align, flags, width);
-	if (info == NULL)
-		return 0;
+	PMULTILINES_FONT_INFO info = GetInfoW(font, str.c_str(), str.length(), align, flags, width);
 
 	int textHeight = 0;
-	PMULTILINES_FONT_INFO ptr = info;
 
-	while (ptr != NULL)
+	while (info != NULL)
 	{
-		info = ptr;
-
 		if (m_UseHTML)
 			textHeight += MAX_HTML_TEXT_HEIGHT;
 		else
-			textHeight += ptr->MaxHeight;
+			textHeight += info->MaxHeight;
 
-		ptr = ptr->m_Next;
+		PMULTILINES_FONT_INFO ptr = info;
 
-		info->Data.clear();
-		delete info;
+		info = info->m_Next;
+
+		ptr->Data.clear();
+		delete ptr;
 	}
 
 	return textHeight;
@@ -1366,19 +1337,15 @@ int CFontsManager::GetHeightW(uchar font, const wchar_t *str, int width, TEXT_AL
 int CFontsManager::GetHeightW(PMULTILINES_FONT_INFO info)
 {
 	WISPFUN_DEBUG("c143_f24");
-	if (info == NULL)
-		return 0;
 
 	int textHeight = 0;
 
-	while (info != NULL)
+	for (; info != NULL; info = info->m_Next)
 	{
 		if (m_UseHTML)
 			textHeight += MAX_HTML_TEXT_HEIGHT;
 		else
 			textHeight += info->MaxHeight;
-
-		info = info->m_Next;
 	}
 
 	return textHeight;
@@ -1393,50 +1360,50 @@ int CFontsManager::GetHeightW(PMULTILINES_FONT_INFO info)
 @param [__in] IsCropped Ограниченный текст, вышедшая за доступные пределы часть обрезается и заменяется на многоточие
 @return Результирующий текст
 */
-wstring CFontsManager::GetTextByWidthW(uchar font, const wchar_t *str, int len, int width, bool IsCropped)
+wstring CFontsManager::GetTextByWidthW(const uchar &font, const wstring &str, int width, const bool &isCropped)
 {
 	WISPFUN_DEBUG("c143_f25");
-	if (font >= 20 || !m_UnicodeFontAddress[font] || !len)
+	if (font >= 20 || !m_UnicodeFontAddress[font] || str.empty())
 		return wstring(L"");
 
 	puint table = (puint)m_UnicodeFontAddress[font];
 
-	if (IsCropped)
+	if (isCropped)
 	{
-		uint td = table[L'.'];
+		uint offset = table[L'.'];
 
-		if (td && td != 0xFFFFFFFF)
-			width -= (*((puchar)((uint)table + td + 2)) * 3);
+		if (offset && offset != 0xFFFFFFFF)
+			width -= (*((puchar)((uint)table + offset + 2)) * 3);
 	}
 
 	int textLength = 0;
 	wstring result = L"";
 
-	IFOR(i, 0, len)
+	for (const wchar_t &c : str)
 	{
-		uint ts = table[str[i]];
-		char cw = 0;
+		uint offset = table[c];
+		char charWidth = 0;
 
-		if (ts && ts != 0xFFFFFFFF)
+		if (offset && offset != 0xFFFFFFFF)
 		{
-			puchar ptr = (puchar)((uint)table + ts);
-			cw = ((char)ptr[0] + (char)ptr[2] + 1);
+			puchar ptr = (puchar)((uint)table + offset);
+			charWidth = ((char)ptr[0] + (char)ptr[2] + 1);
 		}
-		else if (str[i] == L' ')
-			cw = UNICODE_SPACE_WIDTH;
+		else if (c == L' ')
+			charWidth = UNICODE_SPACE_WIDTH;
 
-		if (cw)
+		if (charWidth)
 		{
-			textLength += cw;
+			textLength += charWidth;
 
 			if (textLength > width)
 				break;
 
-			result += str[i];
+			result += c;
 		}
 	}
 
-	if (IsCropped)
+	if (isCropped)
 		result += L"...";
 
 	return result;
@@ -2473,26 +2440,22 @@ PMULTILINES_FONT_INFO CFontsManager::GetInfoW(uchar font, const wchar_t *str, in
 @param [__in_opt] flags Эффекты текста
 @return true при успешной генерации
 */
-bool CFontsManager::GenerateW(uchar font, CGLTextTexture &th, const wchar_t *str, ushort color, uchar cell, int width, TEXT_ALIGN_TYPE align, ushort flags)
+bool CFontsManager::GenerateW(const uchar &font, CGLTextTexture &th, const wstring &str, const ushort &color, const uchar &cell, const int &width, const TEXT_ALIGN_TYPE &align, const ushort &flags)
 {
 	WISPFUN_DEBUG("c143_f37");
 	if ((flags & UOFONT_FIXED) || (flags & UOFONT_CROPPED))
 	{
 		th.Clear();
 
-		if (!width)
+		if (!width || str.empty())
 			return false;
 
-		int len = lstrlenW(str);
-		if (!len)
-			return false;
-
-		int realWidth = GetWidthW(font, str, len);
+		int realWidth = GetWidthW(font, str);
 
 		if (realWidth > width)
 		{
-			wstring newstr = GetTextByWidthW(font, str, len, width, (flags & UOFONT_CROPPED));
-			return GenerateWBase(font, th, newstr.c_str(), color, cell, width, align, flags);
+			wstring newstr = GetTextByWidthW(font, str, width, (flags & UOFONT_CROPPED));
+			return GenerateWBase(font, th, newstr, color, cell, width, align, flags);
 		}
 	}
 
@@ -2511,7 +2474,7 @@ bool CFontsManager::GenerateW(uchar font, CGLTextTexture &th, const wchar_t *str
 @param [__in] flags Эффекты текста
 @return Ссылка на массив пикселей
 */
-UINT_LIST CFontsManager::GeneratePixelsW(uchar &font, CGLTextTexture &th, const wchar_t *str, ushort &color, uchar &cell, int &width, TEXT_ALIGN_TYPE &align, ushort &flags)
+UINT_LIST CFontsManager::GeneratePixelsW(const uchar &font, CGLTextTexture &th, const wchar_t *str, const ushort &color, const uchar &cell, int width, const TEXT_ALIGN_TYPE &align, const ushort &flags)
 {
 	WISPFUN_DEBUG("c143_f38");
 	UINT_LIST pData;
@@ -2528,7 +2491,7 @@ UINT_LIST CFontsManager::GeneratePixelsW(uchar &font, CGLTextTexture &th, const 
 
 	if (!width)
 	{
-		width = GetWidthW(font, str, len);
+		width = GetWidthW(font, str);
 
 		if (!width)
 			return pData;
@@ -2582,16 +2545,14 @@ UINT_LIST CFontsManager::GeneratePixelsW(uchar &font, CGLTextTexture &th, const 
 
 	if (!height)
 	{
-		PMULTILINES_FONT_INFO ptr = info;
-
-		while (ptr != NULL)
+		while (info != NULL)
 		{
-			info = ptr;
+			PMULTILINES_FONT_INFO ptr = info;
 
-			ptr = ptr->m_Next;
+			info = info->m_Next;
 
-			info->Data.clear();
-			delete info;
+			ptr->Data.clear();
+			delete ptr;
 		}
 
 		return pData;
@@ -3016,10 +2977,10 @@ UINT_LIST CFontsManager::GeneratePixelsW(uchar &font, CGLTextTexture &th, const 
 @param [__in] flags Эффекты текста
 @return true при успешной генерации
 */
-bool CFontsManager::GenerateWBase(uchar &font, CGLTextTexture &th, const wchar_t *str, ushort &color, uchar &cell, int &width, TEXT_ALIGN_TYPE &align, ushort &flags)
+bool CFontsManager::GenerateWBase(const uchar &font, CGLTextTexture &th, const wstring &str, const ushort &color, const uchar &cell, const int &width, const TEXT_ALIGN_TYPE &align, const ushort &flags)
 {
 	WISPFUN_DEBUG("c143_f39");
-	UINT_LIST pixels = GeneratePixelsW(font, th, str, color, cell, width, align, flags);
+	UINT_LIST pixels = GeneratePixelsW(font, th, str.c_str(), color, cell, width, align, flags);
 	bool result = false;
 
 	if (pixels.size())

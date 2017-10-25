@@ -24,14 +24,13 @@ class CEntryText
 	SETGET(WISP_GEOMETRY::CPoint2Di, CaretPos, WISP_GEOMETRY::CPoint2Di());
 	SETGET(bool, NumberOnly, false);
 
-private:
+protected:
 	//!Позиция каретки в строке
 	int m_Position{ 0 };
 
 	//!ASCII строка
 	string m_CText = string{ "" };
 
-protected:
 	//!Unicode строка
 	wstring m_Text = wstring{ L"" };
 

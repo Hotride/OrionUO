@@ -420,7 +420,7 @@ wstring CEntryText::CheckMaxWidthW(uchar font, wstring str)
 	if (m_MaxWidth > 0)
 	{
 		//Вычислим текущую ширину
-		int width = g_FontManager.GetWidthW(font, str.c_str(), 0);
+		int width = g_FontManager.GetWidthW(font, str);
 		int len = str.length();
 
 		//И пока строка не будет соответствовать указанным параметрам - урезаем ее
@@ -428,7 +428,7 @@ wstring CEntryText::CheckMaxWidthW(uchar font, wstring str)
 		{
 			str.erase(str.begin() + len);
 			len--;
-			width = g_FontManager.GetWidthW(font, str.c_str(), 0);
+			width = g_FontManager.GetWidthW(font, str);
 		}
 	}
 
@@ -464,7 +464,7 @@ void CEntryText::FixMaxWidthW(uchar font)
 	if (m_MaxWidth > 0)
 	{
 		//Вычислим текущую ширину
-		int width = g_FontManager.GetWidthW(font, m_Text.c_str(), 0);
+		int width = g_FontManager.GetWidthW(font, m_Text);
 		int len = m_Text.length();
 
 		//И пока строка не будет соответствовать указанным параметрам - урезаем ее
@@ -472,7 +472,7 @@ void CEntryText::FixMaxWidthW(uchar font)
 		{
 			Remove((m_Position > 0), NULL);
 			len--;
-			width = g_FontManager.GetWidthW(font, m_Text.c_str(), 0);
+			width = g_FontManager.GetWidthW(font, m_Text);
 		}
 	}
 }
@@ -538,7 +538,7 @@ void CEntryText::CreateTextureW(uchar font, wstring str, ushort color, int width
 		//Вычисляем позицию каретки
 		if (m_Position)
 		{
-			m_CaretPos = g_FontManager.GetCaretPosW(font, str.c_str(), m_Position, width, align, flags);
+			m_CaretPos = g_FontManager.GetCaretPosW(font, str, m_Position, width, align, flags);
 
 			if (flags & UOFONT_FIXED)
 			{
@@ -690,7 +690,10 @@ void CEntryText::DrawMaskW(uchar font, ushort color, int x, int y, TEXT_ALIGN_TY
 	{
 		//Отрегулируем смещение
 		if (m_Position)
-			x += g_FontManager.GetWidthW(font, str.c_str(), m_Position);
+		{
+			str.resize(m_Position);
+			x += g_FontManager.GetWidthW(font, str);
+		}
 
 		//Отрисуем каретку
 		g_FontManager.DrawW(font, L"_", color, x + m_DrawOffset, y, 30, 0, TS_LEFT, flags);

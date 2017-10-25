@@ -250,11 +250,11 @@ void CGameConsole::DrawW(BYTE font, WORD color, int x, int y, TEXT_ALIGN_TYPE al
 
 		if (sysStr.length())
 		{
-			posOffset = g_FontManager.GetWidthW(font, sysStr.c_str(), sysStr.length());
+			posOffset = g_FontManager.GetWidthW(font, sysStr);
 
 			wchar_t trimPart[2] = L" ";
 			*trimPart = *text;
-			posOffset -= g_FontManager.GetWidthW(font, trimPart, 1);
+			posOffset -= g_FontManager.GetWidthW(font, trimPart);
 
 			sysStr += (text + 1);
 
@@ -276,7 +276,12 @@ void CGameConsole::DrawW(BYTE font, WORD color, int x, int y, TEXT_ALIGN_TYPE al
 
 	if (this == g_EntryPointer)
 	{
-		x += (g_FontManager.GetWidthW(font, wtext.c_str(), Pos()) + posOffset);
+		if (m_Position)
+		{
+			wtext.resize(m_Position);
+			x += (g_FontManager.GetWidthW(font, wtext) + posOffset);
+		}
+
 		g_FontManager.DrawW(font, L"_", color, x, y, 30, 0, align, UOFONT_BLACK_BORDER);
 	}
 }

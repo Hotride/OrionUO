@@ -44,10 +44,16 @@ void CToolTip::Set(wstring str, int maxWidth)
 	m_Data = str;
 	m_ClilocID = 0;
 	m_MaxWidth = maxWidth;
+
 	m_Position.X = 0;
 	m_Position.Y = 0;
 
 	Texture.Clear();
+
+	int width = g_FontManager.GetWidthW((uchar)g_ConfigManager.ToolTipsTextFont, m_Data);
+
+	if (width > 600)
+		m_MaxWidth = 600;
 
 	g_FontManager.GenerateW((uchar)g_ConfigManager.ToolTipsTextFont, Texture, m_Data.c_str(), g_ConfigManager.ToolTipsTextColor, 5, m_MaxWidth, TS_CENTER, UOFONT_BLACK_BORDER);
 }
@@ -67,7 +73,7 @@ void CToolTip::Draw(const int &cursorWidth, const int &cursorHeight)
 		return;
 
 	if (!m_MaxWidth)
-		m_MaxWidth = g_FontManager.GetWidthW((uchar)g_ConfigManager.ToolTipsTextFont, m_Data.c_str(), m_Data.length());
+		m_MaxWidth = g_FontManager.GetWidthW((uchar)g_ConfigManager.ToolTipsTextFont, m_Data);
 
 	if (Texture.Empty())
 		g_FontManager.GenerateW((uchar)g_ConfigManager.ToolTipsTextFont, Texture, m_Data.c_str(), g_ConfigManager.ToolTipsTextColor, 30, m_MaxWidth, TS_CENTER, UOFONT_BLACK_BORDER);
@@ -86,13 +92,13 @@ void CToolTip::Draw(const int &cursorWidth, const int &cursorHeight)
 		if (y < 0)
 		{
 			y = m_Position.Y;
-			y = g_MouseManager.Position.Y + cursorHeight;
+			//y = g_MouseManager.Position.Y + cursorHeight;
 		}
 		
 		if (x < 0)
 		{
 			x = m_Position.X;
-			x = g_MouseManager.Position.X + cursorWidth;
+			//x = g_MouseManager.Position.X + cursorWidth;
 		}
 		
 		glEnable(GL_BLEND);

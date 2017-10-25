@@ -5127,11 +5127,11 @@ void COrion::CreateUnicodeTextMessage(TEXT_TYPE type, uint serial, uchar font, u
 
 			if (obj != NULL)
 			{
-				int width = g_FontManager.GetWidthW(font, text.c_str(), text.length());
+				int width = g_FontManager.GetWidthW(font, text);
 
 				if (width > TEXT_MESSAGE_MAX_WIDTH)
 				{
-					width = g_FontManager.GetWidthExW(font, text.c_str(), text.length(), TEXT_MESSAGE_MAX_WIDTH, TS_LEFT, UOFONT_BLACK_BORDER);
+					width = g_FontManager.GetWidthExW(font, text, TEXT_MESSAGE_MAX_WIDTH, TS_LEFT, UOFONT_BLACK_BORDER);
 					td->GenerateTexture(width, UOFONT_BLACK_BORDER, TS_LEFT);
 				}
 				else
@@ -5194,11 +5194,11 @@ void COrion::CreateUnicodeTextMessage(TEXT_TYPE type, uint serial, uchar font, u
 		}
 		case TT_CLIENT:
 		{
-			int width = g_FontManager.GetWidthW(font, text.c_str(), text.length());
+			int width = g_FontManager.GetWidthW(font, text);
 
 			if (width > TEXT_MESSAGE_MAX_WIDTH)
 			{
-				width = g_FontManager.GetWidthExW(font, text.c_str(), text.length(), TEXT_MESSAGE_MAX_WIDTH, TS_LEFT, 0);
+				width = g_FontManager.GetWidthExW(font, text, TEXT_MESSAGE_MAX_WIDTH, TS_LEFT, 0);
 				td->GenerateTexture(width, 0, TS_LEFT);
 			}
 			else

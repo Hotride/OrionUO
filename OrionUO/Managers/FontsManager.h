@@ -206,7 +206,7 @@ private:
 	@param [__in] flags Эффекты текста
 	@return true при успешной генерации
 	*/
-	bool GenerateWBase(uchar &font, CGLTextTexture &th, const wchar_t *str, ushort &color, uchar &cell, int &width, TEXT_ALIGN_TYPE &align, ushort &flags);
+	bool GenerateWBase(const uchar &font, CGLTextTexture &th, const wstring &str, const ushort &color, const uchar &cell, const int &width, const TEXT_ALIGN_TYPE &align, const ushort &flags);
 
 public:
 	CFontsManager();
@@ -402,7 +402,7 @@ public:
 	@param [__in] flags Эффекты текста
 	@return Координаты каретки
 	*/
-	WISP_GEOMETRY::CPoint2Di GetCaretPosW(uchar font, const wchar_t *str, int pos, int width, TEXT_ALIGN_TYPE align, ushort flags);
+	WISP_GEOMETRY::CPoint2Di GetCaretPosW(const uchar &font, const wstring &str, int pos, int width, const TEXT_ALIGN_TYPE &align, const ushort &flags);
 
 	/*!
 	Вычислить положение каретки
@@ -415,7 +415,7 @@ public:
 	@param [__in] flags Эффекты текста
 	@return Позиция каретки в строке
 	*/
-	int CalculateCaretPosW(uchar font, const wchar_t *str, int x, int y, int width, TEXT_ALIGN_TYPE align, ushort flags);
+	int CalculateCaretPosW(const uchar &font, const wstring &str, const int &x, const int &y, int width, const TEXT_ALIGN_TYPE &align, const ushort &flags);
 
 	/*!
 	Получить ширину текста
@@ -424,7 +424,7 @@ public:
 	@param [__in_opt] len Длина текста
 	@return Ширина текста в пикселях
 	*/
-	int GetWidthW(uchar font, const wchar_t *str, int len = 0);
+	int GetWidthW(const uchar &font, const wstring &str);
 
 	/*!
 	Получить ширину текста (с учетом параметров отрисовки)
@@ -436,7 +436,7 @@ public:
 	@param [__in] flags Эффекты текста
 	@return Ширина текста в пикселях
 	*/
-	int GetWidthExW(uchar font, const wchar_t *str, int len, int maxWidth, TEXT_ALIGN_TYPE align, ushort flags);
+	int GetWidthExW(const uchar &font, const wstring &str, const int &maxWidth, const TEXT_ALIGN_TYPE &align, const ushort &flags);
 
 	/*!
 	Получить высоту текста
@@ -447,7 +447,7 @@ public:
 	@param [__in_opt] flags Эффекты текста
 	@return Высота текста в пикселях
 	*/
-	int GetHeightW(uchar font, const wchar_t *str, int width = 0, TEXT_ALIGN_TYPE align = TS_LEFT, ushort flags = 0);
+	int GetHeightW(const uchar &font, const wstring &str, int width = 0, const TEXT_ALIGN_TYPE &align = TS_LEFT, const ushort &flags = 0);
 
 	/*!
 	Получить высоту текста по списку строк
@@ -465,7 +465,7 @@ public:
 	@param [__in] IsCropped Ограниченный текст, вышедшая за доступные пределы часть обрезается и заменяется на многоточие
 	@return Результирующий текст
 	*/
-	wstring GetTextByWidthW(uchar font, const wchar_t *str, int len, int width, bool IsCropped);
+	wstring GetTextByWidthW(const uchar &font, const wstring &str, int width, const bool &isCropped);
 
 	/*!
 	Получить информацию о тексте (в мультистрочном виде)
@@ -491,7 +491,7 @@ public:
 	@param [__in] flags Эффекты текста
 	@return Ссылка на массив пикселей
 	*/
-	UINT_LIST GeneratePixelsW(uchar &font, CGLTextTexture &th, const wchar_t *str, ushort &color, uchar &cell, int &width, TEXT_ALIGN_TYPE &align, ushort &flags);
+	UINT_LIST GeneratePixelsW(const uchar &font, CGLTextTexture &th, const wchar_t *str, const ushort &color, const uchar &cell, int width, const TEXT_ALIGN_TYPE &align, const ushort &flags);
 
 	/*!
 	Сгенерировать текстуру текста
@@ -505,7 +505,7 @@ public:
 	@param [__in_opt] flags Эффекты текста
 	@return true при успешной генерации
 	*/
-	bool GenerateW(uchar font, CGLTextTexture &th, const wchar_t *str, ushort color = 0, uchar cell = 30, int width = 0, TEXT_ALIGN_TYPE align = TS_LEFT, ushort flags = 0);
+	bool GenerateW(const uchar &font, CGLTextTexture &th, const wstring &str, const ushort &color = 0, const uchar &cell = 30, const int &width = 0, const TEXT_ALIGN_TYPE &align = TS_LEFT, const ushort &flags = 0);
 
 	/*!
 	Отрисовать текст

@@ -190,8 +190,8 @@ void CGameObject::GenerateObjectHandlesTexture(wstring text)
 	TEXT_ALIGN_TYPE tat = TS_CENTER;
 	ushort flags = 0;
 
-	if (g_FontManager.GetWidthW(font, text.c_str(), text.length()) > width)
-		text = g_FontManager.GetTextByWidthW(font, text.c_str(), text.length(), width - 6, true);
+	if (g_FontManager.GetWidthW(font, text) > width)
+		text = g_FontManager.GetTextByWidthW(font, text, width - 6, true);
 
 	UINT_LIST textData = g_FontManager.GeneratePixelsW(font, textTexture, text.c_str(), color, cell, width, tat, flags);
 
