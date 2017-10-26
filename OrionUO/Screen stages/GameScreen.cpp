@@ -1036,13 +1036,6 @@ void CGameScreen::CalculateGameWindowBounds()
 void CGameScreen::AddLight(CRenderWorldObject *rwo, CRenderWorldObject *lightObject, const int &x, const int &y)
 {
 	WISPFUN_DEBUG("c164_f14");
-	if (lightObject->IsStaticGroupObject())
-	{
-		STATIC_TILES *st = lightObject->StaticGroupObjectPtr()->GetStaticData();
-
-		if (st->LightIndex /*Layer*/ == 0xFF && lightObject->IsPrefixAn())
-			return;
-	}
 
 	if (m_LightCount < MAX_LIGHT_SOURCES)
 	{
@@ -1066,16 +1059,10 @@ void CGameScreen::AddLight(CRenderWorldObject *rwo, CRenderWorldObject *lightObj
 		
 			for (CRenderWorldObject *obj = mb->GetRender(bx, by); obj != NULL; obj = obj->m_NextXY)
 			{
-				if (!obj->IsStaticGroupObject() || (obj->IsGameObject() && ((CGameObject*)obj)->NPC))
+				if (!obj->IsStaticGroupObject() || (obj->IsGameObject() && ((CGameObject*)obj)->NPC) || obj->NoDrawTile || obj->IsTransparent())
 					continue;
 
-				int z = obj->Z;
-	
-				if (z >= m_MaxDrawZ)
-					continue;
-				
-				//if (z >= z5 && (obj->IsRoof() || (obj->IsBackground() && obj->IsSurface())))
-				if (z >= z5)
+				if (obj->Z < m_MaxDrawZ && obj->Z >= z5)
 				{
 					canBeAdded = false;
 					break;
@@ -1087,13 +1074,20 @@ void CGameScreen::AddLight(CRenderWorldObject *rwo, CRenderWorldObject *lightObj
 		{
 			LIGHT_DATA &light = m_Light[m_LightCount];
 
-			light.ID = (uchar)lightObject->GetLightID();
+			ushort graphic = lightObject->Graphic;
 
-			if (light.ID)
-				light.ID--;
+			if ((graphic >= 0x3E02 && graphic <= 0x3E0B) || (graphic >= 0x3914 && graphic <= 0x3929))
+				light.ID = 2;
+			//else if (rwo == lightObject && rwo->IsGameObject())
+			//	light.ID = ((CGameItem*)lightObject)->LightID;
+			else
+				light.ID = (uchar)lightObject->GetLightID();
+
+			if (light.ID >= MAX_LIGHTS_DATA_INDEX_COUNT)
+				return;
 
 			if (g_ConfigManager.ColoredLighting)
-				light.Color = g_Orion.GetLightColor(lightObject->Graphic);
+				light.Color = g_Orion.GetLightColor(graphic);
 			else
 				light.Color = 0;
 
