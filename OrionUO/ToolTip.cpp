@@ -28,7 +28,7 @@ void CToolTip::Reset()
 	m_Object = NULL;
 }
 //----------------------------------------------------------------------------------
-void CToolTip::Set(wstring str, int maxWidth)
+void CToolTip::Set(const wstring &str, const int &maxWidth)
 {
 	WISPFUN_DEBUG("c213_f3");
 	m_Use = !(m_Timer > g_Ticks);
@@ -50,15 +50,27 @@ void CToolTip::Set(wstring str, int maxWidth)
 
 	Texture.Clear();
 
-	int width = g_FontManager.GetWidthW((uchar)g_ConfigManager.ToolTipsTextFont, m_Data);
+	uchar font = (uchar)g_ConfigManager.ToolTipsTextFont;
 
-	if (width > 600)
-		m_MaxWidth = 600;
+	if (!maxWidth)
+	{
+		int width = g_FontManager.GetWidthW(font, m_Data);
 
-	g_FontManager.GenerateW((uchar)g_ConfigManager.ToolTipsTextFont, Texture, m_Data, g_ConfigManager.ToolTipsTextColor, 5, m_MaxWidth, TS_CENTER, UOFONT_BLACK_BORDER);
+		if (width > 600)
+			width = 600;
+
+		width = g_FontManager.GetWidthExW(font, m_Data, width, TS_CENTER, UOFONT_BLACK_BORDER);
+
+		if (width > 600)
+			width = 600;
+
+		m_MaxWidth = width;
+	}
+
+	g_FontManager.GenerateW(font, Texture, m_Data, g_ConfigManager.ToolTipsTextColor, 5, m_MaxWidth, TS_CENTER, UOFONT_BLACK_BORDER);
 }
 //----------------------------------------------------------------------------------
-void CToolTip::Set(uint clilocID, string str, int maxWidth, const bool &toCamelCase)
+void CToolTip::Set(const uint &clilocID, const string &str, const int &maxWidth, const bool &toCamelCase)
 {
 	WISPFUN_DEBUG("c213_f4");
 	Set(g_ClilocManager.Cliloc(g_Language)->GetW(clilocID, toCamelCase, str), maxWidth);

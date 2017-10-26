@@ -32,10 +32,10 @@ public:
 	CGLTextTexture Texture;
 
 	//Установить тултип из строки
-	void Set(wstring str, int maxWidth = 0);
+	void Set(const wstring &str, const int &maxWidth = 0);
 
 	//Установить тултип из клилока
-	void Set(uint clilocID, string str, int maxWidth = 0, const bool &toCamelCase = false);
+	void Set(const uint &clilocID, const string &str, const int &maxWidth = 0, const bool &toCamelCase = false);
 
 	//Отрисовать тултип
 	void Draw(const int &cursorWidth = 0, const int &cursorHeight = 0);

@@ -858,8 +858,8 @@ PACKET_HANDLER(EnterWorld)
 	g_Player->OffsetY = 0;
 	g_Player->OffsetZ = 0;
 
-	if (g_TooltipsEnabled && !g_Player->ClilocRevision)
-		AddMegaClilocRequest(g_Player->Serial);
+	//if (g_TooltipsEnabled && !g_Player->ClilocRevision)
+	//	AddMegaClilocRequest(g_Player->Serial);
 
 	LOG("Player 0x%08lX entered the world.\n", serial);
 
@@ -1385,16 +1385,16 @@ PACKET_HANDLER(UpdateObject)
 
 		LOG("\t0x%08X:%04X [%d] %04X\n", item->Serial, item->Graphic, layer, item->Color);
 
-		if (g_TooltipsEnabled && !item->ClilocRevision)
-			AddMegaClilocRequest(item->Serial);
+		//if (g_TooltipsEnabled && !item->ClilocRevision)
+		//	AddMegaClilocRequest(item->Serial);
 
 		g_World->MoveToTop(item);
 
 		itemSerial = ReadUInt32BE();
 	}
 
-	if (g_TooltipsEnabled && !obj->ClilocRevision)
-		AddMegaClilocRequest(obj->Serial);
+	//if (g_TooltipsEnabled && !obj->ClilocRevision)
+	//	AddMegaClilocRequest(obj->Serial);
 
 	if (obj->IsPlayer())
 	{
@@ -1444,8 +1444,8 @@ PACKET_HANDLER(EquipItem)
 	if (g_NewTargetSystem.Serial == serial)
 		g_NewTargetSystem.Serial = 0;
 
-	if (g_TooltipsEnabled && !obj->ClilocRevision)
-		AddMegaClilocRequest(obj->Serial);
+	//if (g_TooltipsEnabled && !obj->ClilocRevision)
+	//	AddMegaClilocRequest(obj->Serial);
 
 	if (layer >= OL_BUY_RESTOCK && layer <= OL_SELL)
 		obj->Clear();

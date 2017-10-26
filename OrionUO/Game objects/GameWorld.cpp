@@ -503,8 +503,8 @@ void CGameWorld::RemoveFromContainer(CGameObject *obj)
 		else
 			g_GumpManager.UpdateContent(containerSerial, 0, GT_CONTAINER);
 
-		if (g_TooltipsEnabled)
-			g_PacketManager.AddMegaClilocRequest(containerSerial);
+		//if (g_TooltipsEnabled)
+		//	g_PacketManager.AddMegaClilocRequest(containerSerial);
 
 		CGameObject *container = FindWorldObject(containerSerial);
 
@@ -982,8 +982,8 @@ void CGameWorld::UpdateGameObject(const uint &serial, ushort graphic, const ucha
 
 	if (obj != NULL)
 	{
-		if (g_TooltipsEnabled && !obj->ClilocMessage.length())
-			g_PacketManager.AddMegaClilocRequest(obj->Serial);
+		//if (g_TooltipsEnabled && !obj->ClilocMessage.length())
+		//	g_PacketManager.AddMegaClilocRequest(obj->Serial);
 
 		MoveToTop(obj);
 	}
@@ -1056,8 +1056,8 @@ void CGameWorld::UpdateItemInContainer(CGameObject *obj, CGameObject *container,
 
 	uint containerSerial = container->Serial;
 
-	if (g_TooltipsEnabled && !obj->ClilocMessage.length())
-		g_PacketManager.AddMegaClilocRequest(obj->Serial);
+	//if (g_TooltipsEnabled && !obj->ClilocMessage.length())
+	//	g_PacketManager.AddMegaClilocRequest(obj->Serial);
 
 	CGump *gump = g_GumpManager.UpdateContent(containerSerial, 0, GT_BULLETIN_BOARD);
 
@@ -1074,8 +1074,8 @@ void CGameWorld::UpdateItemInContainer(CGameObject *obj, CGameObject *container,
 			if (gump != NULL && gump->GumpType == GT_CONTAINER)
 				((CGumpContainer*)gump)->UpdateItemCoordinates(obj);
 
-			if (g_TooltipsEnabled)
-				g_PacketManager.AddMegaClilocRequest(containerSerial);
+			//if (g_TooltipsEnabled)
+			//	g_PacketManager.AddMegaClilocRequest(containerSerial);
 		}
 
 		if (gump != NULL && !container->NPC)

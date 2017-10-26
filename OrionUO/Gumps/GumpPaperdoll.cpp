@@ -269,8 +269,8 @@ void CGumpPaperdoll::InitToolTip()
 						{
 							if (obj->ClilocMessage.length())
 								g_ToolTip.Set(obj->ClilocMessage);
-							else if (g_TooltipsEnabled)
-								g_PacketManager.AddMegaClilocRequest(obj->Serial);
+							//else if (g_TooltipsEnabled)
+							//	g_PacketManager.AddMegaClilocRequest(obj->Serial);
 						}
 					}
 				}
