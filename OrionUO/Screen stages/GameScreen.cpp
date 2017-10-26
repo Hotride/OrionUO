@@ -492,6 +492,15 @@ void CGameScreen::CalculateRenderList()
 	if (m_ObjectHandlesCount > MAX_OBJECT_HANDLES)
 		m_ObjectHandlesCount = MAX_OBJECT_HANDLES;
 
+	QFOR(go, g_World->m_Items, CGameObject*)
+	{
+		if (go->UseInRender != m_RenderIndex && (go->NPC || go->IsCorpse()) && go->m_TextControl->m_Items != NULL)
+		{
+			go->UpdateDrawCoordinates();
+			go->UseInRender = m_RenderIndex;
+		}
+	}
+
 #if UO_RENDER_LIST_SORT == 1
 	m_RenderIndex++;
 
@@ -1708,7 +1717,7 @@ void CGameScreen::Render(const bool &mode)
 
 				flagsData = string(dbf) + flagsData;
 
-				g_FontManager.DrawA(3, flagsData.c_str(), 0x0035, 20, 102);
+				g_FontManager.DrawA(3, flagsData, 0x0035, 20, 102);
 			}
 		}
 #endif //UO_DEBUG_INFO!=0

@@ -25,7 +25,7 @@ void CGUICheckbox::SetTextParameters(const uchar &font, const wstring &text, con
 {
 	WISPFUN_DEBUG("c46_f2");
 	m_TextPosition = textPosition;
-	g_FontManager.GenerateW(font, m_Text, text.c_str(), color, 30, textWidth, align, textFlags);
+	g_FontManager.GenerateW(font, m_Text, text, color, 30, textWidth, align, textFlags);
 	UpdateTextPosition();
 }
 //----------------------------------------------------------------------------------
@@ -33,7 +33,7 @@ void CGUICheckbox::SetTextParameters(const uchar &font, const string &text, cons
 {
 	WISPFUN_DEBUG("c46_f3");
 	m_TextPosition = textPosition;
-	g_FontManager.GenerateA(font, m_Text, text.c_str(), color, textWidth, align, textFlags);
+	g_FontManager.GenerateA(font, m_Text, text, color, textWidth, align, textFlags);
 	UpdateTextPosition();
 }
 //----------------------------------------------------------------------------------

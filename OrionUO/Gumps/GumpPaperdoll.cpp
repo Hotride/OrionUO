@@ -305,7 +305,7 @@ void CGumpPaperdoll::DelayedClick(CRenderObject *obj)
 
 		td->SetText(text);
 
-		int width = g_FontManager.GetWidthA(3, text.c_str(), text.length());
+		int width = g_FontManager.GetWidthA(3, text);
 
 		if (width > TEXT_MESSAGE_MAX_WIDTH)
 			td->GenerateTexture(TEXT_MESSAGE_MAX_WIDTH, 0, TS_CENTER);

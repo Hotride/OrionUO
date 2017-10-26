@@ -55,7 +55,7 @@ void CToolTip::Set(wstring str, int maxWidth)
 	if (width > 600)
 		m_MaxWidth = 600;
 
-	g_FontManager.GenerateW((uchar)g_ConfigManager.ToolTipsTextFont, Texture, m_Data.c_str(), g_ConfigManager.ToolTipsTextColor, 5, m_MaxWidth, TS_CENTER, UOFONT_BLACK_BORDER);
+	g_FontManager.GenerateW((uchar)g_ConfigManager.ToolTipsTextFont, Texture, m_Data, g_ConfigManager.ToolTipsTextColor, 5, m_MaxWidth, TS_CENTER, UOFONT_BLACK_BORDER);
 }
 //----------------------------------------------------------------------------------
 void CToolTip::Set(uint clilocID, string str, int maxWidth, const bool &toCamelCase)
@@ -76,7 +76,7 @@ void CToolTip::Draw(const int &cursorWidth, const int &cursorHeight)
 		m_MaxWidth = g_FontManager.GetWidthW((uchar)g_ConfigManager.ToolTipsTextFont, m_Data);
 
 	if (Texture.Empty())
-		g_FontManager.GenerateW((uchar)g_ConfigManager.ToolTipsTextFont, Texture, m_Data.c_str(), g_ConfigManager.ToolTipsTextColor, 30, m_MaxWidth, TS_CENTER, UOFONT_BLACK_BORDER);
+		g_FontManager.GenerateW((uchar)g_ConfigManager.ToolTipsTextFont, Texture, m_Data, g_ConfigManager.ToolTipsTextColor, 30, m_MaxWidth, TS_CENTER, UOFONT_BLACK_BORDER);
 
 	if (!Texture.Empty())
 	{

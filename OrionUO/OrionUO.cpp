@@ -5018,7 +5018,7 @@ void COrion::CreateTextMessage(TEXT_TYPE type, uint serial, uchar font, ushort c
 
 			if (obj != NULL)
 			{
-				int width = g_FontManager.GetWidthA(font, text.c_str(), text.length());
+				int width = g_FontManager.GetWidthA(font, text);
 
 				td->Color = 0;
 
@@ -5085,7 +5085,7 @@ void COrion::CreateTextMessage(TEXT_TYPE type, uint serial, uchar font, ushort c
 		}
 		case TT_CLIENT:
 		{
-			int width = g_FontManager.GetWidthA(font, text.c_str(), text.length());
+			int width = g_FontManager.GetWidthA(font, text);
 			
 			if (width > TEXT_MESSAGE_MAX_WIDTH)
 				td->GenerateTexture(TEXT_MESSAGE_MAX_WIDTH, 0, TS_LEFT);

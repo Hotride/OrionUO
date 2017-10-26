@@ -671,7 +671,7 @@ void CGumpSkills::OnCharPress(const WPARAM &wParam, const LPARAM &lParam)
 	WISPFUN_DEBUG("c125_f21");
 	g_EntryPointer->Insert(wParam);
 
-	int val = g_FontManager.GetWidthA(6, g_EntryPointer->c_str(), g_EntryPointer->Length());
+	int val = g_FontManager.GetWidthA(6, g_EntryPointer->c_str());
 
 	if (val > 170)
 		g_EntryPointer->Remove(true);

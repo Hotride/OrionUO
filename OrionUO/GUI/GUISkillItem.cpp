@@ -28,7 +28,7 @@ CGUISkillItem::CGUISkillItem(const uint &serial, const uint &useSerial, const ui
 		m_ButtonStatus = new CGUIButton(statusSerial, graphic, graphic, graphic, 251, 0);
 		m_ButtonStatus->CheckPolygone = true;
 
-		g_FontManager.GenerateA(9, m_NameText, skill->Name.c_str(), 0x0288);
+		g_FontManager.GenerateA(9, m_NameText, skill->Name, 0x0288);
 
 		CreateValueText();
 	}

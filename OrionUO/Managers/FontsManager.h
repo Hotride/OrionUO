@@ -192,7 +192,7 @@ private:
 	@param [__in] flags Эффекты текста
 	@return true при успешной генерации
 	*/
-	bool GenerateABase(uchar &font, CGLTextTexture &th, const char *str, ushort &color, int &width, TEXT_ALIGN_TYPE &align, ushort &flags);
+	bool GenerateABase(const uchar &font, CGLTextTexture &th, const string &str, const ushort &color, const int &width, const TEXT_ALIGN_TYPE &align, const ushort &flags);
 
 	/*!
 	Создание Unicode текстуры
@@ -248,7 +248,7 @@ public:
 	@param [__in] index Индекс символа
 	@return true если это печатаемый символ
 	*/
-	bool IsPrintASCII(uchar index) { return (m_FontIndex[index] != 0xFF); }
+	inline bool IsPrintASCII(const uchar &index) { return (m_FontIndex[index] != 0xFF); }
 
 	/*!
 	Получить смещение символа ширифта
@@ -256,7 +256,7 @@ public:
 	@param [__in] index Индекс символа
 	@return Смещение в пикселях
 	*/
-	int GetFontOffsetY(uchar font, uchar index);
+	int GetFontOffsetY(const uchar &font, const uchar &index);
 
 	/*!
 	Получить позицию каретки в тексте
@@ -268,7 +268,7 @@ public:
 	@param [__in] flags Эффекты текста
 	@return Координаты каретки
 	*/
-	WISP_GEOMETRY::CPoint2Di GetCaretPosA(uchar font, const char *str, int pos, int width, TEXT_ALIGN_TYPE align, ushort flags);
+	WISP_GEOMETRY::CPoint2Di GetCaretPosA(const uchar &font, const string &str, int pos, int width, const TEXT_ALIGN_TYPE &align, const ushort &flags);
 
 	/*!
 	Вычислить положение каретки
@@ -281,16 +281,15 @@ public:
 	@param [__in] flags Эффекты текста
 	@return Позиция каретки в строке
 	*/
-	int CalculateCaretPosA(uchar font, const char *str, int x, int y, int width, TEXT_ALIGN_TYPE align, ushort flags);
+	int CalculateCaretPosA(const uchar &font, const string &str, const int &x, const int &y, int width, const TEXT_ALIGN_TYPE &align, const ushort &flags);
 
 	/*!
 	Получить ширину текста
 	@param [__in] font Шрифт
 	@param [__in] str Текст
-	@param [__in_opt] len Длина текста
 	@return Ширина текста в пикселях
 	*/
-	int GetWidthA(uchar font, const char *str, int len = 0);
+	int GetWidthA(const uchar &font, const string &str);
 
 	/*!
 	Получить ширину текста (с учетом параметров отрисовки)
@@ -302,7 +301,7 @@ public:
 	@param [__in] flags Эффекты текста
 	@return Ширина текста в пикселях
 	*/
-	int GetWidthExA(uchar font, const char *str, int len, int maxWidth, TEXT_ALIGN_TYPE align, ushort flags);
+	int GetWidthExA(const uchar &font, const string &str, const int &maxWidth, const TEXT_ALIGN_TYPE &align, const ushort &flags);
 
 
 	/*!
@@ -314,7 +313,7 @@ public:
 	@param [__in_opt] flags Эффекты текста
 	@return Высота текста в пикселях
 	*/
-	int GetHeightA(uchar font, const char *str, int width = 0, TEXT_ALIGN_TYPE align = TS_LEFT, ushort flags = 0);
+	int GetHeightA(const uchar &font, const string &str, int width = 0, const TEXT_ALIGN_TYPE &align = TS_LEFT, const ushort &flags = 0);
 
 	/*!
 	Получить высоту текста по списку строк
@@ -332,7 +331,7 @@ public:
 	@param [__in] IsCropped Ограниченный текст, вышедшая за доступные пределы часть обрезается и заменяется на многоточие
 	@return Результирующий текст
 	*/
-	string GetTextByWidthA(uchar font, const char *str, int len, int width, bool IsCropped);
+	string GetTextByWidthA(const uchar &font, const string &str, int width, const bool &isCropped);
 
 	/*!
 	Получить информацию о тексте (в мультистрочном виде)
@@ -357,7 +356,7 @@ public:
 	@param [__in] flags Эффекты текста
 	@return Ссылка на массив пикселей
 	*/
-	UINT_LIST GeneratePixelsA(uchar &font, CGLTextTexture &th, const char *str, ushort &color, int &width, TEXT_ALIGN_TYPE &align, ushort &flags);
+	UINT_LIST GeneratePixelsA(const uchar &font, CGLTextTexture &th, const char *str, const ushort &color, int width, const TEXT_ALIGN_TYPE &align, const ushort &flags);
 
 	/*!
 	Сгенерировать текстуру текста
@@ -370,7 +369,7 @@ public:
 	@param [__in_opt] flags Эффекты текста
 	@return true при успешной генерации
 	*/
-	bool GenerateA(uchar font, CGLTextTexture &th, const char *str, ushort color = 0, int width = 0, TEXT_ALIGN_TYPE align = TS_LEFT, ushort flags = 0);
+	bool GenerateA(const uchar &font, CGLTextTexture &th, const string &str, const ushort &color = 0, const int &width = 0, const TEXT_ALIGN_TYPE &align = TS_LEFT, const ushort &flags = 0);
 
 	/*!
 	Отрисовать текст
@@ -384,7 +383,7 @@ public:
 	@param [__in_opt] flags Эффекты текста
 	@return 
 	*/
-	void DrawA(uchar font, const char *str, ushort color, int x, int y, int width = 0, TEXT_ALIGN_TYPE align = TS_LEFT, ushort flags = 0);
+	void DrawA(const uchar &font, const string &str, const ushort &color, const int &x, const int &y, const int &width = 0, const TEXT_ALIGN_TYPE &align = TS_LEFT, const ushort &flags = 0);
 
 
 
@@ -520,7 +519,7 @@ public:
 	@param [__in_opt] flags Эффекты текста
 	@return
 	*/
-	void DrawW(uchar font, const wchar_t *str, ushort color, int x, int y, uchar cell = 30, int width = 0, TEXT_ALIGN_TYPE align = TS_LEFT, ushort flags = 0);
+	void DrawW(const uchar &font, const wstring &str, const ushort &color, const int &x, const int &y, const uchar &cell = 30, const int &width = 0, const TEXT_ALIGN_TYPE &align = TS_LEFT, const ushort &flags = 0);
 };
 //--------------------------------------------------------------------------
 //!Ссылка на менеджер шрифтов

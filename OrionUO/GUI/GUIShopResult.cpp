@@ -17,7 +17,7 @@ m_Price(shopItem->Price), m_Name(shopItem->Name)
 	m_MoveOnDrag = true;
 
 	string name = m_Name + "\n" + "at " + std::to_string(m_Price) + " g.p.";
-	g_FontManager.GenerateA(9, m_NameText, name.c_str(), 0x021F, 100);
+	g_FontManager.GenerateA(9, m_NameText, name, 0x021F, 100);
 	
 	int maxCount = shopItem->Count;
 

@@ -1213,7 +1213,14 @@ void CGumpStatusbar::OnCharPress(const WPARAM &wParam, const LPARAM &lParam)
 	//Изменение имени существа
 	if (Serial != g_PlayerSerial) //Только чужие статусбары
 	{
-		if ((g_EntryPointer->Length() <= 15) && g_FontManager.GetWidthA(1, g_EntryPointer->c_str(), g_EntryPointer->Pos()) <= 100 && ((wParam >= 'a' && wParam <= 'z') || (wParam >= 'A' && wParam <= 'Z')))
+		string str = g_EntryPointer->c_str();
+
+		if (g_EntryPointer->Pos() > 0)
+			str.resize(g_EntryPointer->Pos());
+		else
+			str = "";
+
+		if ((g_EntryPointer->Length() <= 15) && g_FontManager.GetWidthA(1, str) <= 100 && ((wParam >= 'a' && wParam <= 'z') || (wParam >= 'A' && wParam <= 'Z')))
 		{
 			g_EntryPointer->Insert(wParam);
 			m_WantRedraw = true;

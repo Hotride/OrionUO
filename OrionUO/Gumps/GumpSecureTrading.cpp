@@ -127,7 +127,7 @@ void CGumpSecureTrading::UpdateContent()
 		else
 			m_OpponentCheck = (CGUIGumppic*)Add(new CGUIGumppic(0x0867, 266, 160));
 
-		int fontWidth = 260 - g_FontManager.GetWidthA(1, m_Text.c_str(), m_Text.length());
+		int fontWidth = 260 - g_FontManager.GetWidthA(1, m_Text);
 
 		text = (CGUIText*)Add(new CGUIText(0x0386, fontWidth, 170));
 		text->CreateTextureA(1, m_Text);

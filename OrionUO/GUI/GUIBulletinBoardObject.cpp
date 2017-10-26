@@ -16,9 +16,9 @@ CGUIBulletinBoardObject::CGUIBulletinBoardObject(const uint &serial, const int &
 	m_MoveOnDrag = true;
 
 	if (g_PacketManager.ClientVersion >= CV_308Z)
-		g_FontManager.GenerateW(1, m_Texture, text.c_str(), 0);
+		g_FontManager.GenerateW(1, m_Texture, text, 0);
 	else
-		g_FontManager.GenerateA(9, m_Texture, ToString(text).c_str(), 0x0386);
+		g_FontManager.GenerateA(9, m_Texture, ToString(text), 0x0386);
 }
 //----------------------------------------------------------------------------------
 CGUIBulletinBoardObject::~CGUIBulletinBoardObject()

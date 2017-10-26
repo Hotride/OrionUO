@@ -65,10 +65,10 @@ void CTextData::GenerateTexture(const int &maxWidth, const ushort &flags, const 
 		if (font == -1)
 			font = m_Font;
 
-		g_FontManager.GenerateW((uchar)font, m_Texture, m_UnicodeText.c_str(), m_Color, cell, maxWidth, align, flags);
+		g_FontManager.GenerateW((uchar)font, m_Texture, m_UnicodeText, m_Color, cell, maxWidth, align, flags);
 	}
 	else
-		g_FontManager.GenerateA((uchar)m_Font, m_Texture, m_Text.c_str(), m_Color, maxWidth, align, flags);
+		g_FontManager.GenerateA((uchar)m_Font, m_Texture, m_Text, m_Color, maxWidth, align, flags);
 
 	if (!m_Texture.Empty())
 	{

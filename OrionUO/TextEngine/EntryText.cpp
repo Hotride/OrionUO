@@ -398,7 +398,7 @@ string CEntryText::CheckMaxWidthA(uchar font, string str)
 	if (m_MaxWidth > 0)
 	{
 		//Вычислим текущую ширину
-		int width = g_FontManager.GetWidthA(font, str.c_str(), 0);
+		int width = g_FontManager.GetWidthA(font, str);
 		int len = str.length();
 
 		//И пока строка не будет соответствовать указанным параметрам - урезаем ее
@@ -406,7 +406,7 @@ string CEntryText::CheckMaxWidthA(uchar font, string str)
 		{
 			str.erase(str.begin() + len);
 			len--;
-			width = g_FontManager.GetWidthA(font, str.c_str(), 0);
+			width = g_FontManager.GetWidthA(font, str);
 		}
 	}
 
@@ -444,7 +444,7 @@ void CEntryText::FixMaxWidthA(uchar font)
 	if (m_MaxWidth > 0)
 	{
 		//Вычислим текущую ширину
-		int width = g_FontManager.GetWidthA(font, m_CText.c_str(), 0);
+		int width = g_FontManager.GetWidthA(font, m_CText);
 		int len = m_CText.length();
 
 		//И пока строка не будет соответствовать указанным параметрам - урезаем ее
@@ -452,7 +452,7 @@ void CEntryText::FixMaxWidthA(uchar font)
 		{
 			Remove((m_Position > 0), NULL);
 			len--;
-			width = g_FontManager.GetWidthA(font, c_str(), 0);
+			width = g_FontManager.GetWidthA(font, c_str());
 		}
 	}
 }
@@ -520,7 +520,7 @@ void CEntryText::CreateTextureA(uchar font, string str, ushort color, int width,
 		}
 
 		//Генерируем текстуру
-		g_FontManager.GenerateA(font, m_Texture, str.c_str(), color, m_Width + abs(m_DrawOffset), align, flags);
+		g_FontManager.GenerateA(font, m_Texture, str, color, m_Width + abs(m_DrawOffset), align, flags);
 	}
 }
 //----------------------------------------------------------------------------------
@@ -562,7 +562,7 @@ void CEntryText::CreateTextureW(uchar font, wstring str, ushort color, int width
 		}
 
 		//Генерируем текстуру
-		g_FontManager.GenerateW(font, m_Texture, str.c_str(), color, 30, m_Width, align, flags);
+		g_FontManager.GenerateW(font, m_Texture, str, color, 30, m_Width, align, flags);
 	}
 }
 //----------------------------------------------------------------------------------
@@ -654,7 +654,7 @@ void CEntryText::DrawMaskA(uchar font, ushort color, int x, int y, TEXT_ALIGN_TY
 
 	//Если текст есть - отрисуем его
 	if (len)
-		g_FontManager.DrawA(font, str.c_str(), color, x + m_DrawOffset, y);
+		g_FontManager.DrawA(font, str, color, x + m_DrawOffset, y);
 
 	//Если это поле для ввода - отобразим каретку
 	if (this == g_EntryPointer)
@@ -665,7 +665,10 @@ void CEntryText::DrawMaskA(uchar font, ushort color, int x, int y, TEXT_ALIGN_TY
 
 		//Отрегулируем смещение
 		if (m_Position)
-			x += g_FontManager.GetWidthA(font, str.c_str(), m_Position);
+		{
+			str.resize(m_Position);
+			x += g_FontManager.GetWidthA(font, str.c_str());
+		}
 
 		//Отрисуем каретку
 		g_FontManager.DrawA(font, "_", color, x + m_DrawOffset, y + offsY);
@@ -683,7 +686,7 @@ void CEntryText::DrawMaskW(uchar font, ushort color, int x, int y, TEXT_ALIGN_TY
 
 	//Если текст есть - отрисуем его
 	if (len)
-		g_FontManager.DrawW(font, str.c_str(), color, x + m_DrawOffset, y, 30, 0, TS_LEFT, flags);
+		g_FontManager.DrawW(font, str, color, x + m_DrawOffset, y, 30, 0, TS_LEFT, flags);
 
 	//Если это поле для ввода - отобразим каретку
 	if (this == g_EntryPointer)

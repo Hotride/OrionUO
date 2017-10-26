@@ -128,7 +128,7 @@ void CGUIShopItem::CreateNameText()
 		textColor = 0x0021;
 
 	string str = m_Name + " at " + std::to_string(m_Price) + "gp";
-	g_FontManager.GenerateA(9, m_NameText, str.c_str(), textColor, 90);
+	g_FontManager.GenerateA(9, m_NameText, str, textColor, 90);
 }
 //----------------------------------------------------------------------------------
 void CGUIShopItem::CreateCountText(const int &lostCount)
@@ -139,7 +139,7 @@ void CGUIShopItem::CreateCountText(const int &lostCount)
 	if (m_Selected)
 		textColor = 0x0021;
 
-	g_FontManager.GenerateA(9, m_CountText, std::to_string(m_Count - lostCount).c_str(), textColor);
+	g_FontManager.GenerateA(9, m_CountText, std::to_string(m_Count - lostCount), textColor);
 }
 //----------------------------------------------------------------------------------
 void CGUIShopItem::PrepareTextures()

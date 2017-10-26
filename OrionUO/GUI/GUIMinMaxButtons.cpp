@@ -27,9 +27,9 @@ void CGUIMinMaxButtons::UpdateText()
 	if (m_HaveText)
 	{
 		if (m_Unicode)
-			g_FontManager.GenerateW(m_Font, m_Text, std::to_wstring(m_Value).c_str(), m_TextColor, 30, m_TextWidth, m_Align, m_TextFlags);
+			g_FontManager.GenerateW(m_Font, m_Text, std::to_wstring(m_Value), m_TextColor, 30, m_TextWidth, m_Align, m_TextFlags);
 		else
-			g_FontManager.GenerateA(m_Font, m_Text, std::to_string(m_Value).c_str(), m_TextColor, m_TextWidth, m_Align, m_TextFlags);
+			g_FontManager.GenerateA(m_Font, m_Text, std::to_string(m_Value), m_TextColor, m_TextWidth, m_Align, m_TextFlags);
 
 		CGLTexture *th = g_Orion.ExecuteGump(m_Graphic);
 
