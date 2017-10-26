@@ -394,7 +394,7 @@ public:
 	void AllNames();
 
 	//Получить хэш-код файла
-	uint GetFileHashCode(uint address, uint size);
+	uint GetFileHashCode(puchar ptr, uint size);
 
 	//Загрузка логинсервера
 	void LoadLogin(string &login, int &port);

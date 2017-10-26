@@ -288,25 +288,28 @@ void CGumpWorldMap::LoadMap(const int &map)
 		uint crc32 = 0;
 
 		if (g_FileManager.m_MapUOP[map].Start == NULL)
-			crc32 = g_Orion.GetFileHashCode((uint)g_FileManager.m_MapMul[map].Start, g_FileManager.m_MapMul[map].Size);
+			crc32 = g_Orion.GetFileHashCode(g_FileManager.m_MapMul[map].Start, g_FileManager.m_MapMul[map].Size);
 		else
-			crc32 = g_Orion.GetFileHashCode((uint)g_FileManager.m_MapUOP[map].Start, g_FileManager.m_MapUOP[map].Size);
+			crc32 = g_Orion.GetFileHashCode(g_FileManager.m_MapUOP[map].Start, g_FileManager.m_MapUOP[map].Size);
 
-		crc32 ^= g_Orion.GetFileHashCode((uint)g_FileManager.m_StaticIdx[map].Start, g_FileManager.m_StaticIdx[map].Size);
-		crc32 ^= g_Orion.GetFileHashCode((uint)g_FileManager.m_StaticMul[map].Start, g_FileManager.m_StaticMul[map].Size);
+		crc32 ^= g_Orion.GetFileHashCode(g_FileManager.m_StaticIdx[map].Start, g_FileManager.m_StaticIdx[map].Size);
+		crc32 ^= g_Orion.GetFileHashCode(g_FileManager.m_StaticMul[map].Start, g_FileManager.m_StaticMul[map].Size);
 
-		IFOR(i, 0, g_MapManager.PatchesCount)
+		if (g_FileManager.m_MapMul[map].Start != NULL)
 		{
-			if (g_MapManager.m_MapPatchCount[i])
+			IFOR(i, 0, g_MapManager.PatchesCount)
 			{
-				crc32 ^= g_Orion.GetFileHashCode((uint)g_FileManager.m_MapDifl[i].Start, g_FileManager.m_MapDifl[i].Size);
-				crc32 ^= g_Orion.GetFileHashCode((uint)g_FileManager.m_MapDif[i].Start, g_FileManager.m_MapDif[i].Size);
-			}
+				if (g_MapManager.m_MapPatchCount[i])
+				{
+					crc32 ^= g_Orion.GetFileHashCode(g_FileManager.m_MapDifl[i].Start, g_FileManager.m_MapDifl[i].Size);
+					crc32 ^= g_Orion.GetFileHashCode(g_FileManager.m_MapDif[i].Start, g_FileManager.m_MapDif[i].Size);
+				}
 
-			if (g_MapManager.m_StaticPatchCount[i])
-			{
-				crc32 ^= g_Orion.GetFileHashCode((uint)g_FileManager.m_StaDifl[i].Start, g_FileManager.m_StaDifl[i].Size);
-				crc32 ^= g_Orion.GetFileHashCode((uint)g_FileManager.m_StaDifi[i].Start, g_FileManager.m_StaDifi[i].Size);
+				if (g_MapManager.m_StaticPatchCount[i])
+				{
+					crc32 ^= g_Orion.GetFileHashCode(g_FileManager.m_StaDifl[i].Start, g_FileManager.m_StaDifl[i].Size);
+					crc32 ^= g_Orion.GetFileHashCode(g_FileManager.m_StaDifi[i].Start, g_FileManager.m_StaDifi[i].Size);
+				}
 			}
 		}
 

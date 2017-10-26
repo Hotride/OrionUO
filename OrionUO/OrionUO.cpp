@@ -40,12 +40,10 @@ uint Reflect(uint source, int c)
 	return value;
 }
 //----------------------------------------------------------------------------------
-uint COrion::GetFileHashCode(uint address, uint size)
+uint COrion::GetFileHashCode(puchar ptr, uint size)
 {
 	WISPFUN_DEBUG("c194_f1");
 	uint crc = 0xFFFFFFFF;
-
-	puchar ptr = (puchar)address;
 
 	while (size > 0)
 	{
