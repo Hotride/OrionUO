@@ -5290,11 +5290,11 @@ PACKET_HANDLER(OPLInfo)
 	{
 		uint serial = ReadUInt32BE();
 
-		CGameObject *obj = g_World->FindWorldObject(serial);
+		//CGameObject *obj = g_World->FindWorldObject(serial);
 		{
-			if (obj != NULL)
+			//if (obj != NULL)
 			{
-				uint revision = ReadUInt32BE();
+				//uint revision = ReadUInt32BE();
 
 				//if (obj->ClilocRevision != revision)
 					AddMegaClilocRequest(serial);
