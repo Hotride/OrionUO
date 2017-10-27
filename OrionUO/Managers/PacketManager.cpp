@@ -5296,7 +5296,7 @@ PACKET_HANDLER(OPLInfo)
 			{
 				uint revision = ReadUInt32BE();
 
-				if (obj->ClilocRevision != revision)
+				//if (obj->ClilocRevision != revision)
 					AddMegaClilocRequest(serial);
 			}
 		}
