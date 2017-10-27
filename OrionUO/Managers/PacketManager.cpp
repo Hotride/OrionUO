@@ -504,21 +504,21 @@ int CPacketManager::GetPacketSize(const UCHAR_LIST &packet, int &offsetToSize)
 
 	return 0;
 }
-//---------------------------------------------------------------------------
+//----------------------------------------------------------------------------------
 void CPacketManager::SendMegaClilocRequests()
 {
 	WISPFUN_DEBUG("c150_f5");
-	if (g_TooltipsEnabled && m_MegaClilocRequests.size())
+	if (g_TooltipsEnabled && !m_MegaClilocRequests.empty())
 	{
 		if (m_ClientVersion >= CV_500A)
 		{
-			while (m_MegaClilocRequests.size())
+			while (!m_MegaClilocRequests.empty())
 				CPacketMegaClilocRequest(m_MegaClilocRequests).Send();
 		}
 		else
 		{
-			IFOR(i, 0, (int)m_MegaClilocRequests.size())
-				CPacketMegaClilocRequestOld(m_MegaClilocRequests[i]).Send();
+			for (const uint &i : m_MegaClilocRequests)
+				CPacketMegaClilocRequestOld(i).Send();
 
 			m_MegaClilocRequests.clear();
 		}
@@ -528,7 +528,7 @@ void CPacketManager::SendMegaClilocRequests()
 void CPacketManager::AddMegaClilocRequest(const uint &serial)
 {
 	WISPFUN_DEBUG("c150_f6");
-	for (const uint item : m_MegaClilocRequests)
+	for (const uint &item : m_MegaClilocRequests)
 	{
 		if (item == serial)
 			return;
