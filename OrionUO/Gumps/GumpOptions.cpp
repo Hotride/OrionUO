@@ -2254,7 +2254,7 @@ void CGumpOptions::GUMP_BUTTON_EVENT_C
 						m_LastChangeMacroTime = g_Ticks + CHANGE_MACRO_DELAY;
 					}
 				}
-				else if (serial == ID_GO_P5_BUTTON_UP) //Prev button
+				else if (serial == ID_GO_P5_BUTTON_UP) //Up button
 				{
 					if (m_MacroObjectPointer->m_Prev != NULL)
 					{
@@ -2262,7 +2262,7 @@ void CGumpOptions::GUMP_BUTTON_EVENT_C
 						RedrawMacroData();
 					}
 				}
-				else if (serial == ID_GO_P5_BUTTON_DOWN) //Next button
+				else if (serial == ID_GO_P5_BUTTON_DOWN) //Down button
 				{
 					if (m_MacroObjectPointer->m_Next != NULL)
 					{

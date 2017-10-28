@@ -1115,7 +1115,8 @@ enum MACRO_SUB_CODE
 	MSC_G7_PARTY,
 	MSC_G7_FOLLOWER,
 	MSC_G7_OBJECT,
-	MSC_G7_MOBILE
+	MSC_G7_MOBILE,
+	MSC_TOTAL_COUNT
 };
 //----------------------------------------------------------------------------------
 enum MACRO_RETURN_CODE

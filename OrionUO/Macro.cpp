@@ -321,8 +321,8 @@ void CMacro::GetBoundByCode(const MACRO_CODE &code, int &count, int &offset)
 	{
 		case MC_WALK:
 		{
-			offset = 1;
-			count = 8;
+			offset = MSC_G1_NW;
+			count = MSC_G2_CONFIGURATION - MSC_G1_NW;
 			break;
 		}
 		case MC_OPEN:
@@ -330,40 +330,40 @@ void CMacro::GetBoundByCode(const MACRO_CODE &code, int &count, int &offset)
 		case MC_MINIMIZE:
 		case MC_MAXIMIZE:
 		{
-			offset = 9;
-			count = 24;
+			offset = MSC_G2_CONFIGURATION;
+			count = MSC_G3_ANATOMY - MSC_G2_CONFIGURATION;
 			break;
 		}
 		case MC_USE_SKILL:
 		{
-			offset = 33;
-			count = 24;
+			offset = MSC_G3_ANATOMY;
+			count = MSC_G4_LEFT_HAND - MSC_G3_ANATOMY;
 			break;
 		}
 		case MC_ARM_DISARM:
 		{
-			offset = 57;
-			count = 2;
+			offset = MSC_G4_LEFT_HAND;
+			count = MSC_G5_HONOR - MSC_G4_LEFT_HAND;
 			break;
 		}
 		case MC_INVOKE_VIRTURE:
 		{
-			offset = 59;
-			count = 3;
+			offset = MSC_G5_HONOR;
+			count = MSC_G6_CLUMSY - MSC_G5_HONOR;
 			break;
 		}
 		case MC_CAST_SPELL:
 		{
-			offset = 62;
-			count = 143;
+			offset = MSC_G6_CLUMSY;
+			count = MSC_G7_HOSTLE - MSC_G6_CLUMSY;
 			break;
 		}
 		case MC_SELECT_NEXT:
 		case MC_SELECT_PREVEOUS:
 		case MC_SELECT_NEAREST:
 		{
-			offset = 205;
-			count = 5;
+			offset = MSC_G7_HOSTLE;
+			count = MSC_TOTAL_COUNT - MSC_G7_HOSTLE;
 			break;
 		}
 		default:
