@@ -2768,6 +2768,13 @@ int COrion::ValueInt(const VALUE_KEY_INT &key, int value)
 
 			break;
 		}
+		case VKI_GUMP_ART_ADDRESS:
+		{
+			if (value >= 0 && value < MAX_GUMP_DATA_INDEX_COUNT)
+				value = m_GumpDataIndex[value].Address;
+
+			break;
+		}
 		default:
 			break;
 	}
