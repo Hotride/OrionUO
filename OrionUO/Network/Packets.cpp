@@ -868,8 +868,8 @@ CPacketClientViewRange::CPacketClientViewRange(uchar range)
 
 	if (range < MIN_VIEW_RANGE)
 		range = MIN_VIEW_RANGE;
-	else if (range > MAX_VIEW_RANGE)
-		range = MAX_VIEW_RANGE;
+	else if (range > g_MaxViewRange)
+		range = g_MaxViewRange;
 
 	WriteUInt8(range);
 }

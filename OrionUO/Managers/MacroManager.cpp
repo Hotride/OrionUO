@@ -1227,8 +1227,8 @@ MACRO_RETURN_CODE CMacroManager::Process()
 
 					if (g_ConfigManager.UpdateRange < MIN_VIEW_RANGE)
 						g_ConfigManager.UpdateRange = MIN_VIEW_RANGE;
-					else if (g_ConfigManager.UpdateRange > MAX_VIEW_RANGE)
-						g_ConfigManager.UpdateRange = MAX_VIEW_RANGE;
+					else if (g_ConfigManager.UpdateRange > g_MaxViewRange)
+						g_ConfigManager.UpdateRange = g_MaxViewRange;
 				}
 
 				break;
@@ -1237,8 +1237,8 @@ MACRO_RETURN_CODE CMacroManager::Process()
 			{
 				g_ConfigManager.UpdateRange += 1;
 
-				if (g_ConfigManager.UpdateRange > MAX_VIEW_RANGE)
-					g_ConfigManager.UpdateRange = MAX_VIEW_RANGE;
+				if (g_ConfigManager.UpdateRange > g_MaxViewRange)
+					g_ConfigManager.UpdateRange = g_MaxViewRange;
 
 				break;
 			}
@@ -1253,7 +1253,7 @@ MACRO_RETURN_CODE CMacroManager::Process()
 			}
 			case MC_MAX_UPDATE_RANGE:
 			{
-				g_ConfigManager.UpdateRange = MAX_VIEW_RANGE;
+				g_ConfigManager.UpdateRange = g_MaxViewRange;
 
 				break;
 			}
@@ -1265,7 +1265,7 @@ MACRO_RETURN_CODE CMacroManager::Process()
 			}
 			case MC_DEFAULT_UPDATE_RANGE:
 			{
-				g_ConfigManager.UpdateRange = MAX_VIEW_RANGE;
+				g_ConfigManager.UpdateRange = g_MaxViewRange;
 
 				break;
 			}

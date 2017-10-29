@@ -52,7 +52,12 @@ void CConfigManager::Init()
 	GameWindowX = 0;
 	GameWindowY = 0;
 
-	m_UpdateRange = MAX_VIEW_RANGE;
+	if (g_PacketManager.ClientVersion >= CV_70331)
+		g_MaxViewRange = MAX_VIEW_RANGE_NEW;
+	else
+		g_MaxViewRange = MAX_VIEW_RANGE_OLD;
+
+	m_UpdateRange = g_MaxViewRange;
 }
 //---------------------------------------------------------------------------
 void CConfigManager::DefaultPage1()
@@ -522,6 +527,7 @@ bool CConfigManager::LoadBin(string path)
 
 	if (file.Load(path) && file.Size)
 	{
+		m_UpdateRange = g_MaxViewRange;
 		uchar version = file.ReadUInt8();
 		
 		//Page 1
@@ -1155,6 +1161,7 @@ bool CConfigManager::Load(const string &path)
 	int windowY = -1;
 	int windowWidth = -1;
 	int windowHeight = -1;
+	m_UpdateRange = g_MaxViewRange;
 
 	while (!file.IsEOF())
 	{

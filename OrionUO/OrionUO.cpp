@@ -988,6 +988,11 @@ void COrion::LoadClientConfig()
 
 		g_PacketManager.ClientVersion = (CLIENT_VERSION)file.ReadInt8();
 
+		if (g_PacketManager.ClientVersion >= CV_70331)
+			g_MaxViewRange = MAX_VIEW_RANGE_NEW;
+		else
+			g_MaxViewRange = MAX_VIEW_RANGE_OLD;
+
 		int len = file.ReadInt8();
 		m_ClientVersionText = file.ReadString(len);
 

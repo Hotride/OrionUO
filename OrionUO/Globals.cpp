@@ -191,6 +191,7 @@ bool g_ShowWarnings = true;
 
 uint g_ProcessStaticAnimationTimer = 0;
 uint g_ProcessRemoveRangedTimer = 0;
+int g_MaxViewRange = MAX_VIEW_RANGE_OLD;
 //----------------------------------------------------------------------------------
 bool CanBeDraggedByOffset(const WISP_GEOMETRY::CPoint2Di &point)
 {
