@@ -1142,7 +1142,12 @@ PACKET_HANDLER(CharacterStatus)
 				g_Player->Race = (RACE_TYPE)race;
 			}
 			else
-				g_Player->MaxWeight = (g_Player->Str * 4) + 25;
+			{
+				if (m_ClientVersion >= CV_500A)
+					g_Player->MaxWeight = 7 *(g_Player->Str / 2) + 40;
+				else
+					g_Player->MaxWeight = (g_Player->Str * 4) + 25;
+			}
 
 			if (flag >= 3)
 			{
