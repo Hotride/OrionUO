@@ -5033,7 +5033,10 @@ void COrion::CreateTextMessage(TEXT_TYPE type, uint serial, uchar font, ushort c
 				td->Color = 0;
 
 				if (width > TEXT_MESSAGE_MAX_WIDTH)
-					td->GenerateTexture(TEXT_MESSAGE_MAX_WIDTH, 0, TS_LEFT);
+				{
+					width = g_FontManager.GetWidthExA(font, text, TEXT_MESSAGE_MAX_WIDTH, TS_LEFT, 0);
+					td->GenerateTexture(width, 0, TS_LEFT);
+				}
 				else
 					td->GenerateTexture(0, 0, TS_CENTER);
 
@@ -5098,7 +5101,10 @@ void COrion::CreateTextMessage(TEXT_TYPE type, uint serial, uchar font, ushort c
 			int width = g_FontManager.GetWidthA(font, text);
 			
 			if (width > TEXT_MESSAGE_MAX_WIDTH)
-				td->GenerateTexture(TEXT_MESSAGE_MAX_WIDTH, 0, TS_LEFT);
+			{
+				width = g_FontManager.GetWidthExA(font, text, TEXT_MESSAGE_MAX_WIDTH, TS_LEFT, 0);
+				td->GenerateTexture(width, 0, TS_LEFT);
+			}
 			else
 				td->GenerateTexture(0, 0, TS_CENTER);
 
