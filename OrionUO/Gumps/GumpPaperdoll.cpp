@@ -266,12 +266,7 @@ void CGumpPaperdoll::InitToolTip()
 						CGameObject *obj = character->FindLayer(id - ID_GP_ITEMS);
 
 						if (obj != NULL)
-						{
-							if (obj->ClilocMessage.length())
-								g_ToolTip.Set(obj->ClilocMessage);
-							//else if (g_TooltipsEnabled)
-							//	g_PacketManager.AddMegaClilocRequest(obj->Serial);
-						}
+							g_ToolTip.Set(g_ObjectPropertiesManager.GetData(obj->Serial));
 					}
 				}
 

@@ -31,6 +31,9 @@ void CToolTip::Reset()
 void CToolTip::Set(const wstring &str, const int &maxWidth)
 {
 	WISPFUN_DEBUG("c213_f3");
+	if (!str.length())
+		return;
+
 	m_Use = !(m_Timer > g_Ticks);
 
 	CRenderObject *object = g_SelectedObject.Object;

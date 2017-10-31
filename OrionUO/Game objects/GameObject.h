@@ -41,10 +41,8 @@ class CGameObject : public CRenderStaticObject
 	SETGET(bool, YouSeeJournalPrefix, false);
 	//!Время последнего изменения анимации
 	SETGET(uint, LastAnimationChangeTime, 0);
-	SETGET(wstring, ClilocMessage, L"");
 	SETGET(bool, SA_Poisoned, false);
 	SETGET(bool, ClosedObjectHandle, false);
-	SETGET(uint, ClilocRevision, 0);
 
 protected:
 	//!Ссылка на список эффектов персонажа

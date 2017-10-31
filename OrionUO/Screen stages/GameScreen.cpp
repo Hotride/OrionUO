@@ -78,12 +78,7 @@ void CGameScreen::InitToolTip()
 			g_GumpManager.InitToolTip();
 	}
 	else if (g_SelectedObject.Object != NULL && g_SelectedObject.Object->IsGameObject())
-	{
-		CGameObject *obj = g_World->FindWorldObject(g_SelectedObject.Serial);
-
-		if (obj != NULL && obj->ClilocMessage.length())
-			g_ToolTip.Set(obj->ClilocMessage);
-	}
+		g_ToolTip.Set(g_ObjectPropertiesManager.GetData(g_SelectedObject.Serial));
 
 	g_FontManager.RecalculateWidthByInfo = false;
 	g_FontManager.SetUseHTML(false);

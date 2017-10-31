@@ -40,14 +40,7 @@ void CGumpSecureTrading::InitToolTip()
 {
 	WISPFUN_DEBUG("c120_f2");
 	if (g_ConfigManager.UseToolTips || g_TooltipsEnabled)
-	{
-		uint id = g_SelectedObject.Serial;
-
-		CGameObject *obj = g_World->FindWorldObject(id);
-
-		if (obj != NULL && obj->ClilocMessage.length())
-			g_ToolTip.Set(obj->ClilocMessage);
-	}
+		g_ToolTip.Set(g_ObjectPropertiesManager.GetData(g_SelectedObject.Serial));
 }
 //----------------------------------------------------------------------------------
 void CGumpSecureTrading::PrepareContent()

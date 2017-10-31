@@ -3522,11 +3522,8 @@ PACKET_HANDLER(MegaCliloc)
 
 	CGameObject *obj = g_World->FindWorldObject(serial);
 
-	if (obj == NULL)
-		return;
-
 	Move(2);
-	obj->ClilocRevision = ReadUInt32BE();
+	uint clilocRevision = ReadUInt32BE();
 	wstring message(L"");
 
 	puchar end = m_Start + m_Size;
@@ -3573,13 +3570,17 @@ PACKET_HANDLER(MegaCliloc)
 
 	bool coloredStartFont = false;
 
-	CGameItem *container = g_World->FindWorldItem(obj->Container);
+	CGameItem *container = NULL;
+
+	if (obj != NULL)
+		container = g_World->FindWorldItem(obj->Container);
+
 	bool inBuyList = false;
 
 	if (container != NULL)
 		inBuyList = (container->Layer == OL_BUY || container->Layer == OL_BUY_RESTOCK || container->Layer == OL_SELL);
 
-	if (!inBuyList)
+	if (!inBuyList && obj != NULL)
 	{
 		if (!obj->NPC)
 		{
@@ -3637,7 +3638,7 @@ PACKET_HANDLER(MegaCliloc)
 			if (coloredStartFont)
 				message += L"<basefont color=\"#FFFFFFFF\">";
 
-			if (!obj->NPC)
+			if (obj != NULL && !obj->NPC)
 				obj->Name = ToString(str);
 
 			first = false;
@@ -3645,9 +3646,10 @@ PACKET_HANDLER(MegaCliloc)
 	}
 
 	//LOG_DUMP((PBYTE)message.c_str(), message.length() * 2);
-	obj->ClilocMessage = message;
 
-	if (g_ToolTip.m_Object == obj)
+	g_ObjectPropertiesManager.Add(serial, CObjectProperty(clilocRevision, message));
+
+	if (obj != NULL && g_ToolTip.m_Object == obj)
 		g_ToolTip.Reset();
 
 	//LOG("message=%s\n", ToString(message).c_str());

@@ -155,10 +155,7 @@ void CGumpShop::InitToolTip()
 	if (g_SelectedObject.Object == NULL || !g_SelectedObject.Object->IsGUI() || ((CBaseGUI*)g_SelectedObject.Object)->Type != GOT_SHOPITEM)
 		return;
 
-	CGameItem *item = g_World->FindWorldItem(g_SelectedObject.Serial);
-
-	if (item != NULL && item->ClilocMessage.length())
-		g_ToolTip.Set(item->ClilocMessage);
+	g_ToolTip.Set(g_ObjectPropertiesManager.GetData(g_SelectedObject.Serial));
 }
 //----------------------------------------------------------------------------------
 void CGumpShop::PrepareContent()
