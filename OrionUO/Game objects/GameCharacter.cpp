@@ -361,12 +361,6 @@ void CGameCharacter::OnGraphicChange(int direction)
 
 	if (direction == 1000)
 	{
-		if (!m_Clicked && !IsPlayer())
-		{
-			if (g_ConfigManager.ShowIncomingNames && !m_Name.length())
-				g_Orion.Click(m_Serial);
-		}
-	
 		g_GumpManager.UpdateContent(m_Serial, 0, GT_PAPERDOLL);
 
 		if (g_GumpManager.UpdateContent(m_Serial, 0, GT_STATUSBAR) != NULL || g_GumpManager.UpdateContent(m_Serial, 0, GT_TARGET_SYSTEM) != NULL)

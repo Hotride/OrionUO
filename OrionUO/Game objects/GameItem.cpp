@@ -81,9 +81,6 @@ void CGameItem::OnGraphicChange(int direction)
 
 			m_Layer = direction;
 
-			if (!m_Clicked && g_ConfigManager.ShowIncomingNames && !m_Name.length())
-				g_Orion.Click(m_Serial);
-
 			m_NoDrawTile = false;
 		}
 		else

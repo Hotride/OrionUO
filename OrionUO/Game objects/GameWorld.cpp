@@ -826,9 +826,11 @@ void CGameWorld::UpdateGameObject(const uint &serial, ushort graphic, const ucha
 	}
 
 	graphic += graphicIncrement;
+	bool created = false;
 
 	if (obj == NULL)
 	{
+		created = true;
 		LOG("created ");
 
 		if (!(serial & 0x40000000) && updateType != 3)
@@ -982,6 +984,12 @@ void CGameWorld::UpdateGameObject(const uint &serial, ushort graphic, const ucha
 
 	if (obj != NULL)
 	{
+		if (created && g_ConfigManager.ShowIncomingNames && !obj->Clicked && !obj->Name.length())
+		{
+			if (obj->NPC || obj->IsCorpse())
+				g_Orion.Click(obj->Serial);
+		}
+
 		//if (g_TooltipsEnabled && !obj->ClilocMessage.length())
 		//	g_PacketManager.AddMegaClilocRequest(obj->Serial);
 
