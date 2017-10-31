@@ -28,6 +28,7 @@ typedef bool __cdecl WORLD_MAP_DRAW_PROC();
 #define UOMSG_WALK					WM_USER + 668
 #define UOMSG_MENU_RESPONSE			WM_USER + 669
 #define UOMSG_STATUS_REQUEST		WM_USER + 670
+#define UOMSG_SELECTED_TILE			WM_USER + 671
 //----------------------------------------------------------------------------------
 #pragma pack (push,1)
 typedef struct UOI_PLAYER_XYZ_DATA
@@ -36,6 +37,20 @@ typedef struct UOI_PLAYER_XYZ_DATA
 	int Y;
 	int Z;
 } *PUOI_PLAYER_XYZ_DATA;
+
+typedef struct UOI_SELECTED_TILE
+{
+	unsigned int Serial;
+	unsigned short Graphic;
+	unsigned short Color;
+	int X;
+	int Y;
+	int Z;
+	unsigned short LandGraphic;
+	int LandX;
+	int LandY;
+	int LandZ;
+} *PUOI_SELECTED_TILE;
 
 typedef struct UOI_MENU_RESPONSE
 {

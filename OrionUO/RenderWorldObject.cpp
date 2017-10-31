@@ -87,12 +87,20 @@ bool CRenderWorldObject::RemovedFromRender()
 CLandObject *CRenderWorldObject::GetLand()
 {
 	WISPFUN_DEBUG("c202_f5");
-	CRenderWorldObject *land = this;
 
-	while (land != NULL && !land->IsLandObject())
-		land = land->m_NextXY;
+	for (CRenderWorldObject *land = this; land != NULL; land = land->m_NextXY)
+	{
+		if (land->IsLandObject())
+			return (CLandObject*)land;
+	}
 
-	return (CLandObject*)land;
+	for (CRenderWorldObject *land = this->m_PrevXY; land != NULL; land = land->m_PrevXY)
+	{
+		if (land->IsLandObject())
+			return (CLandObject*)land;
+	}
+
+	return NULL;
 }
 //----------------------------------------------------------------------------------
 void CRenderWorldObject::OnChangeZ(const char &val)
