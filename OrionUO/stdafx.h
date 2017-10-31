@@ -219,6 +219,7 @@ class CGump;
 #include "CityList.h"
 #include "Managers/ClilocManager.h"
 #include "Managers/IntlocManager.h"
+#include "Managers/ObjectPropertiesManager.h"
 #include "Managers/ColorManager.h"
 #include "Managers/ConfigManager.h"
 #include "Managers/ConnectionManager.h"
