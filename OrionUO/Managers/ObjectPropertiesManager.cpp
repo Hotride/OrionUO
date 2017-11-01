@@ -106,7 +106,7 @@ bool CObjectPropertiesManager::RevisionCheck(const uint &serial, const uint &rev
 //----------------------------------------------------------------------------------
 void CObjectPropertiesManager::OnItemClicked(const uint &serial)
 {
-	if (!g_TooltipsEnabled || g_ConfigManager.ItemPropertiesMode != OPM_SINGLE_CLICK)
+	if (!g_ConfigManager.ItemPropertiesIcon || !g_TooltipsEnabled || g_ConfigManager.ItemPropertiesMode != OPM_SINGLE_CLICK)
 		return;
 
 	OBJECT_PROPERTIES_MAP::iterator it = m_Map.find(serial);
@@ -120,20 +120,19 @@ void CObjectPropertiesManager::OnItemClicked(const uint &serial)
 //----------------------------------------------------------------------------------
 void CObjectPropertiesManager::Display(const uint &serial)
 {
-	if (g_ConfigManager.ItemPropertiesMode == OPM_SINGLE_CLICK)
-		return;
-
 	OBJECT_PROPERTIES_MAP::iterator it = m_Map.find(serial);
 
 	if (it == m_Map.end() || it->second.Empty())
 		return;
 
-	if (g_ConfigManager.ItemPropertiesMode == OPM_FOLLOW_MOUSE)
+	if (!g_ConfigManager.ItemPropertiesIcon || g_ConfigManager.ItemPropertiesMode == OPM_FOLLOW_MOUSE)
 	{
 		g_ToolTip.Set(it->second.CreateTextData());
 		return;
 	}
-	
+	else if (g_ConfigManager.ItemPropertiesMode == OPM_SINGLE_CLICK)
+		return;
+
 	/*bool condition = (g_ConfigManager.ItemPropertiesMode == OPM_ALWAYS_UP);
 
 	if (!condition)
