@@ -1191,6 +1191,47 @@ void COrion::Process(const bool &rendering)
 					g_GameScreen.PrepareContent();
 
 					g_GameScreen.Render(true);
+
+					UOI_SELECTED_TILE uoiSelectedObject;
+
+					if (g_SelectedObject.Object != NULL && g_SelectedObject.Object->IsWorldObject())
+					{
+						CRenderWorldObject *rwo = (CRenderWorldObject*)g_SelectedObject.Object;
+
+						if (rwo->IsLandObject())
+							uoiSelectedObject.Serial = 0xFFFFFFFF;
+						else if (!rwo->IsGameObject())
+							uoiSelectedObject.Serial = 0;
+						else
+							uoiSelectedObject.Serial = rwo->Serial;
+
+						uoiSelectedObject.Graphic = rwo->Graphic;
+						uoiSelectedObject.Color = rwo->Color;
+						uoiSelectedObject.X = rwo->X;
+						uoiSelectedObject.Y = rwo->Y;
+						uoiSelectedObject.Z = rwo->Z;
+
+						rwo = rwo->GetLand();
+
+						if (rwo != NULL)
+						{
+							uoiSelectedObject.LandGraphic = rwo->Graphic;
+							uoiSelectedObject.LandX = rwo->X;
+							uoiSelectedObject.LandY = rwo->Y;
+							uoiSelectedObject.LandZ = rwo->Z;
+						}
+						else
+						{
+							uoiSelectedObject.LandGraphic = 0;
+							uoiSelectedObject.LandX = 0;
+							uoiSelectedObject.LandY = 0;
+							uoiSelectedObject.LandZ = 0;
+						}
+					}
+					else
+						memset(&uoiSelectedObject, 0, sizeof(uoiSelectedObject));
+
+					g_PluginManager.WindowProc(g_OrionWindow.Handle, UOMSG_SELECTED_TILE, (WPARAM)&uoiSelectedObject, 0);
 				}
 
 				g_Target.UnloadMulti();
@@ -1214,47 +1255,6 @@ void COrion::Process(const bool &rendering)
 			CGump::ProcessListing();
 
 			g_CurrentScreen->Render(true);
-
-			UOI_SELECTED_TILE uoiSelectedObject;
-
-			if (g_SelectedObject.Object != NULL && g_SelectedObject.Object->IsWorldObject())
-			{
-				CRenderWorldObject *rwo = (CRenderWorldObject*)g_SelectedObject.Object;
-
-				if (rwo->IsLandObject())
-					uoiSelectedObject.Serial = 0xFFFFFFFF;
-				else if (!rwo->IsGameObject())
-					uoiSelectedObject.Serial = 0;
-				else
-					uoiSelectedObject.Serial = rwo->Serial;
-
-				uoiSelectedObject.Graphic = rwo->Graphic;
-				uoiSelectedObject.Color = rwo->Color;
-				uoiSelectedObject.X = rwo->X;
-				uoiSelectedObject.Y = rwo->Y;
-				uoiSelectedObject.Z = rwo->Z;
-
-				rwo = rwo->GetLand();
-
-				if (rwo != NULL)
-				{
-					uoiSelectedObject.LandGraphic = rwo->Graphic;
-					uoiSelectedObject.LandX = rwo->X;
-					uoiSelectedObject.LandY = rwo->Y;
-					uoiSelectedObject.LandZ = rwo->Z;
-				}
-				else
-				{
-					uoiSelectedObject.LandGraphic = 0;
-					uoiSelectedObject.LandX = 0;
-					uoiSelectedObject.LandY = 0;
-					uoiSelectedObject.LandZ = 0;
-				}
-			}
-			else
-				memset(&uoiSelectedObject, 0, sizeof(uoiSelectedObject));
-
-			g_PluginManager.WindowProc(g_OrionWindow.Handle, UOMSG_SELECTED_TILE, (WPARAM)&uoiSelectedObject, 0);
 		}
 	}
 
