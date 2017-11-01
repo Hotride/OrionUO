@@ -157,7 +157,7 @@ void CConfigManager::DefaultPage6()
 	m_DisableMenubar = false;
 	m_GrayOutOfRangeObjects = false;
 	m_DisableNewTargetSystem = true;
-	m_ItemPropertiesMode = 0;
+	m_ItemPropertiesMode = OPM_FOLLOW_MOUSE;
 	m_ItemPropertiesIcon = false;
 	m_ObjectHandles = false;
 	m_HoldShiftForContextMenus = false;
@@ -815,7 +815,7 @@ bool CConfigManager::LoadBin(string path)
 			else
 			{
 				m_DisableNewTargetSystem = true;
-				m_ItemPropertiesMode = 0;
+				m_ItemPropertiesMode = OPM_FOLLOW_MOUSE;
 				m_ItemPropertiesIcon = false;
 				m_ObjectHandles = false;
 				ReduceFPSUnactiveWindow = true;

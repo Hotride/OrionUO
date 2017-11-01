@@ -266,7 +266,7 @@ void CGumpPaperdoll::InitToolTip()
 						CGameObject *obj = character->FindLayer(id - ID_GP_ITEMS);
 
 						if (obj != NULL)
-							g_ToolTip.Set(g_ObjectPropertiesManager.GetData(obj->Serial));
+							g_ObjectPropertiesManager.Display(obj->Serial);
 					}
 				}
 

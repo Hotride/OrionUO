@@ -1055,6 +1055,8 @@ void COrion::ProcessDelayedClicks()
 				if (!g_TooltipsEnabled || (!go->NPC && go->Locked()))
 					Click(serial);
 
+				g_ObjectPropertiesManager.OnItemClicked(serial);
+
 				if (g_PopupEnabled && (!g_ConfigManager.HoldShiftForContextMenus || g_ShiftPressed))
 					CPacketRequestPopupMenu(serial).Send();
 			}

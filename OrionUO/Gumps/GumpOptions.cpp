@@ -628,9 +628,29 @@ void CGumpOptions::InitToolTip()
 				g_ToolTip.Set(L"Use objects handles in game window (pressing Ctrl + Shift)");
 				break;
 			}
+			case ID_GO_P6_DISPLAY_ITEM_PROPERTIES_MODE_AT_ICON:
+			{
+				g_ToolTip.Set(L"Display item properties at icon");
+				break;
+			}
+			case ID_GO_P6_DISPLAY_ITEM_PROPERTIES_MODE_ALWAYS_UP:
+			{
+				g_ToolTip.Set(L"Display item properties is always up");
+				break;
+			}
+			case ID_GO_P6_DISPLAY_ITEM_PROPERTIES_MODE_FOLLOW_MOUSE:
+			{
+				g_ToolTip.Set(L"Display item properties following mouse");
+				break;
+			}
+			case ID_GO_P6_DISPLAY_ITEM_PROPERTIES_MODE_SINGLE_CLICK:
+			{
+				g_ToolTip.Set(L"Display item properties by single click");
+				break;
+			}
 			case ID_GO_P6_DISPLAY_ITEM_PROPERTIES_ICON:
 			{
-				g_ToolTip.Set(L"???");
+				g_ToolTip.Set(L"Display item properties icon");
 				break;
 			}
 			case ID_GO_P6_HOLD_SHIFT_FOR_CONTEXT_MENUS:
@@ -1574,15 +1594,36 @@ void CGumpOptions::DrawPage6()
 	checkbox->Checked = g_OptionsConfig.ObjectHandles;
 	checkbox->SetTextParameters(0, L"Object Handles", g_OptionsTextColor);
 
-	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P6_DISPLAY_ITEM_PROPERTIES_ICON, 0x00D2, 0x00D3, 0x00D2, 0, 216));
+	html->Add(new CGUIGroup(6));
+
+	text = (CGUIText*)html->Add(new CGUIText(g_OptionsTextColor, 0, 216));
+	text->CreateTextureW(0, L"Item Properties Display Mode:");
+
+	CGUIRadio *radio = (CGUIRadio*)html->Add(new CGUIRadio(ID_GO_P6_DISPLAY_ITEM_PROPERTIES_MODE_AT_ICON, 0x00D0, 0x00D1, 0x00D2, 10, 236));
+	radio->Checked = (g_OptionsConfig.ItemPropertiesMode == OPM_AT_ICON);
+	radio->SetTextParameters(0, L"At Icon", g_OptionsTextColor);
+
+	radio = (CGUIRadio*)html->Add(new CGUIRadio(ID_GO_P6_DISPLAY_ITEM_PROPERTIES_MODE_ALWAYS_UP, 0x00D0, 0x00D1, 0x00D2, 10, 256));
+	radio->Checked = (g_OptionsConfig.ItemPropertiesMode == OPM_ALWAYS_UP);
+	radio->SetTextParameters(0, L"Always Up", g_OptionsTextColor);
+
+	radio = (CGUIRadio*)html->Add(new CGUIRadio(ID_GO_P6_DISPLAY_ITEM_PROPERTIES_MODE_FOLLOW_MOUSE, 0x00D0, 0x00D1, 0x00D2, 10, 276));
+	radio->Checked = (g_OptionsConfig.ItemPropertiesMode == OPM_FOLLOW_MOUSE);
+	radio->SetTextParameters(0, L"Follow Mouse", g_OptionsTextColor);
+
+	radio = (CGUIRadio*)html->Add(new CGUIRadio(ID_GO_P6_DISPLAY_ITEM_PROPERTIES_MODE_SINGLE_CLICK, 0x00D0, 0x00D1, 0x00D2, 10, 296));
+	radio->Checked = (g_OptionsConfig.ItemPropertiesMode == OPM_SINGLE_CLICK);
+	radio->SetTextParameters(0, L"Single Click", g_OptionsTextColor);
+
+	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P6_DISPLAY_ITEM_PROPERTIES_ICON, 0x00D2, 0x00D3, 0x00D2, 0, 316));
 	checkbox->Checked = g_OptionsConfig.ItemPropertiesIcon;
 	checkbox->SetTextParameters(0, L"Display Item Properties Icon", g_OptionsTextColor);
 
-	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P6_HOLD_SHIFT_FOR_CONTEXT_MENUS, 0x00D2, 0x00D3, 0x00D2, 0, 236));
+	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P6_HOLD_SHIFT_FOR_CONTEXT_MENUS, 0x00D2, 0x00D3, 0x00D2, 0, 336));
 	checkbox->Checked = g_OptionsConfig.HoldShiftForContextMenus;
 	checkbox->SetTextParameters(0, L"Hold Shift For Context Menus", g_OptionsTextColor);
 
-	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P6_HOLD_SHIFT_FOR_ENABLE_PATHFINDING, 0x00D2, 0x00D3, 0x00D2, 0, 256));
+	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P6_HOLD_SHIFT_FOR_ENABLE_PATHFINDING, 0x00D2, 0x00D3, 0x00D2, 0, 356));
 	checkbox->Checked = g_OptionsConfig.HoldShiftForEnablePathfind;
 	checkbox->SetTextParameters(0, L"Hold Shift For Enable Pathfinding", g_OptionsTextColor);
 
@@ -2564,6 +2605,15 @@ void CGumpOptions::GUMP_RADIO_EVENT_C
 		}
 		case 6: //Interface
 		{
+			if (serial == ID_GO_P6_DISPLAY_ITEM_PROPERTIES_MODE_AT_ICON) //At Icon
+				g_OptionsConfig.ItemPropertiesMode = OPM_AT_ICON;
+			else if (serial == ID_GO_P6_DISPLAY_ITEM_PROPERTIES_MODE_ALWAYS_UP) //Always Up
+				g_OptionsConfig.ItemPropertiesMode = OPM_ALWAYS_UP;
+			else if (serial == ID_GO_P6_DISPLAY_ITEM_PROPERTIES_MODE_FOLLOW_MOUSE) //Follow Mouse
+				g_OptionsConfig.ItemPropertiesMode = OPM_FOLLOW_MOUSE;
+			else if (serial == ID_GO_P6_DISPLAY_ITEM_PROPERTIES_MODE_SINGLE_CLICK) //Single Click
+				g_OptionsConfig.ItemPropertiesMode = OPM_SINGLE_CLICK;
+
 			break;
 		}
 		case 7: //Display
@@ -3021,6 +3071,7 @@ void CGumpOptions::ApplyPageChanges()
 			g_ConfigManager.DisableNewTargetSystem = g_OptionsConfig.DisableNewTargetSystem;
 			g_ConfigManager.ObjectHandles = g_OptionsConfig.ObjectHandles;
 			g_ConfigManager.ItemPropertiesIcon = g_OptionsConfig.ItemPropertiesIcon;
+			g_ConfigManager.ItemPropertiesMode = g_OptionsConfig.ItemPropertiesMode;
 			g_ConfigManager.HoldShiftForContextMenus = g_OptionsConfig.HoldShiftForContextMenus;
 			g_ConfigManager.HoldShiftForEnablePathfind = g_OptionsConfig.HoldShiftForEnablePathfind;
 

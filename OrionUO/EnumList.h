@@ -307,7 +307,9 @@ enum GUMP_TYPE
 	GT_ABILITY,					//!Гамп абилки 100%
 	GT_RACIAL_ABILITIES_BOOK,	//!Гамп книги рассовых абилок 100%
 	GT_RACIAL_ABILITY,			//!Гамп рассовой абилки 100%
-	GT_CUSTOM_HOUSE
+	GT_CUSTOM_HOUSE,
+	GT_PROPERTY,
+	GT_PROPERTY_ICON
 };
 //----------------------------------------------------------------------------------
 //!Типы объектов гампов
@@ -681,6 +683,14 @@ enum SCREENSHOT_FORMAT
 	SF_PNG,
 	SF_TIFF,
 	SF_JPEG
+};
+//----------------------------------------------------------------------------------
+enum OBJECT_PROPERTIES_MODE
+{
+	OPM_AT_ICON = 0,
+	OPM_ALWAYS_UP,
+	OPM_FOLLOW_MOUSE,
+	OPM_SINGLE_CLICK
 };
 //----------------------------------------------------------------------------------
 enum STATIC_TILES_FILTER_FLAGS

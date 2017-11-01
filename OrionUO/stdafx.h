@@ -213,6 +213,7 @@ class CGump;
 #include "Gumps/GumpTextEntryDialog.h"
 #include "Gumps/GumpTip.h"
 #include "Gumps/GumpWorldMap.h"
+#include "Gumps/GumpProperty.h"
 
 #include "Managers/AnimationManager.h"
 #include "Managers/CityManager.h"

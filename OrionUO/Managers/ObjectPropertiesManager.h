@@ -12,28 +12,41 @@
 //----------------------------------------------------------------------------------
 class CObjectProperty
 {
+	SETGET(uint, Serial, 0);
 	SETGET(uint, Revision, 0);
+	SETGET(wstring, Name, L"");
 	SETGET(wstring, Data, L"");
 
 public:
 	CObjectProperty() {}
-	CObjectProperty(const uint &revision, const wstring &data);
+	CObjectProperty(const uint &serial, const uint &revision, const wstring &name, const wstring &data);
+
+	bool Empty();
+
+	wstring CreateTextData();
 };
 //----------------------------------------------------------------------------------
 typedef map<uint, CObjectProperty> OBJECT_PROPERTIES_MAP;
 //----------------------------------------------------------------------------------
 class CObjectPropertiesManager
 {
+	SETGET(uint, Timer, 0);
+
 private:
 	OBJECT_PROPERTIES_MAP m_Map;
 
+	class CRenderObject *m_Object{ NULL };
 public:
 	CObjectPropertiesManager() {}
 	virtual ~CObjectPropertiesManager();
 
+	void Reset();
+
 	bool RevisionCheck(const uint &serial, const uint &revision);
 
-	wstring GetData(const uint &serial);
+	void OnItemClicked(const uint &serial);
+
+	void Display(const uint &serial);
 
 	void Add(const uint &serial, const CObjectProperty &objectProperty);
 };

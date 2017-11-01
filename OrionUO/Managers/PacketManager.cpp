@@ -773,7 +773,12 @@ PACKET_HANDLER(ResendCharacterList)
 					autoPos = i;
 
 				if (name == g_CharacterList.LastCharacterName)
+				{
 					g_CharacterList.Selected = i;
+
+					if (autoLogin && autoPos == -1)
+						autoPos = i;
+				}
 			}
 
 			LOG("%d: %s\n", i, name.c_str());
@@ -3520,11 +3525,8 @@ PACKET_HANDLER(MegaCliloc)
 
 	uint serial = ReadUInt32BE();
 
-	CGameObject *obj = g_World->FindWorldObject(serial);
-
 	Move(2);
 	uint clilocRevision = ReadUInt32BE();
-	wstring message(L"");
 
 	puchar end = m_Start + m_Size;
 
@@ -3568,9 +3570,9 @@ PACKET_HANDLER(MegaCliloc)
 			list.push_back(str);
 	}
 
-	bool coloredStartFont = false;
-
 	CGameItem *container = NULL;
+
+	CGameObject *obj = g_World->FindWorldObject(serial);
 
 	if (obj != NULL)
 		container = g_World->FindWorldItem(obj->Container);
@@ -3580,77 +3582,39 @@ PACKET_HANDLER(MegaCliloc)
 	if (container != NULL)
 		inBuyList = (container->Layer == OL_BUY || container->Layer == OL_BUY_RESTOCK || container->Layer == OL_SELL);
 
-	if (!inBuyList && obj != NULL)
-	{
-		if (!obj->NPC)
-		{
-			message = L"<basefont color=\"yellow\">";
-			coloredStartFont = true;
-		}
-		else
-		{
-			CGameCharacter *gc = obj->GameCharacterPtr();
-			coloredStartFont = true;
-
-			switch (gc->Notoriety)
-			{
-				case NT_INNOCENT:
-				{
-					message = L"<basefont color=\"cyan\">";
-					break;
-				}
-				case NT_SOMEONE_GRAY:
-				case NT_CRIMINAL:
-				{
-					message = L"<basefont color=\"gray\">";
-					break;
-				}
-				case NT_MURDERER:
-				{
-					message = L"<basefont color=\"red\">";
-					break;
-				}
-				case NT_INVULNERABLE:
-				{
-					message = L"<basefont color=\"yellow\">";
-					break;
-				}
-				default:
-				{
-					coloredStartFont = false;
-					break;
-				}
-			}
-		}
-	}
-
 	bool first = true;
+	wstring name = L"";
+	wstring data(L"");
 
-	for (const wstring &str : list)
+	if (!list.empty())
 	{
-		if (message.length() && !first)
-			message += L"\n";
-
-		message += str;
-
-		if (first)
+		for (const wstring &str : list)
 		{
-			if (coloredStartFont)
-				message += L"<basefont color=\"#FFFFFFFF\">";
+			if (first)
+			{
+				name = str;
 
-			if (obj != NULL && !obj->NPC)
-				obj->Name = ToString(str);
+				if (obj != NULL && !obj->NPC)
+					obj->Name = ToString(str);
 
-			first = false;
+				first = false;
+			}
+			else
+			{
+				if (data.length())
+					data += L"\n";
+
+				data += str;
+			}
 		}
 	}
 
 	//LOG_DUMP((PBYTE)message.c_str(), message.length() * 2);
 
-	g_ObjectPropertiesManager.Add(serial, CObjectProperty(clilocRevision, message));
+	g_ObjectPropertiesManager.Add(serial, CObjectProperty(serial, clilocRevision, name, data));
 
 	if (obj != NULL && g_ToolTip.m_Object == obj)
-		g_ToolTip.Reset();
+		g_ObjectPropertiesManager.Reset();
 
 	//LOG("message=%s\n", ToString(message).c_str());
 
@@ -3666,16 +3630,16 @@ PACKET_HANDLER(MegaCliloc)
 			{
 				if (shopItem->Type == GOT_SHOPITEM && shopItem->Serial == serial && ((CGUIShopItem*)shopItem)->NameFromCliloc)
 				{
-					size_t pos = message.find_first_of(L'\n');
+					size_t pos = data.find_first_of(L'\n');
 
 					if (pos != wstring::npos)
-						message.resize(pos);
+						data.resize(pos);
 
 					CGUIShopItem *si = (CGUIShopItem*)shopItem;
 
 					int oldHeight = si->GetSize().Height;
 
-					si->Name = Trim(ToString(message));
+					si->Name = Trim(ToString(data));
 					si->CreateNameText();
 					si->UpdateOffsets();
 

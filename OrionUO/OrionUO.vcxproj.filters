@@ -40,9 +40,6 @@
     <Filter Include="Source Files\Gumps">
       <UniqueIdentifier>{0b066d51-391b-4828-938e-41a92294e71e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Gumps">
-      <UniqueIdentifier>{31762e39-25e9-4297-a40d-5b9aee64720e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\GUI">
       <UniqueIdentifier>{f927c69f-a8d1-4833-a710-a8f909314de6}</UniqueIdentifier>
     </Filter>
@@ -78,6 +75,9 @@
     </Filter>
     <Filter Include="Source Files\Utility">
       <UniqueIdentifier>{abdb335b-8a66-473e-9096-39e63390a6de}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Gumps">
+      <UniqueIdentifier>{31762e39-25e9-4297-a40d-5b9aee64720e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -825,6 +825,9 @@
     <ClInclude Include="Managers\ObjectPropertiesManager.h">
       <Filter>Header Files\Managers</Filter>
     </ClInclude>
+    <ClInclude Include="Gumps\GumpProperty.h">
+      <Filter>Header Files\Gumps</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="OrionUO.cpp">
@@ -1531,6 +1534,9 @@
     </ClCompile>
     <ClCompile Include="Managers\ObjectPropertiesManager.cpp">
       <Filter>Source Files\Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="Gumps\GumpProperty.cpp">
+      <Filter>Source Files\Gumps</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

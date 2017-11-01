@@ -113,7 +113,7 @@ void CGumpContainer::InitToolTip()
 		else if (id == ID_GC_LOCK_MOVING && g_ConfigManager.UseToolTips)
 			g_ToolTip.Set(L"Lock moving/closing the container gump");
 		else if (g_ConfigManager.UseToolTips || g_TooltipsEnabled)
-			g_ToolTip.Set(g_ObjectPropertiesManager.GetData(id));
+			g_ObjectPropertiesManager.Display(id);
 	}
 	else if (g_ConfigManager.UseToolTips)
 		g_ToolTip.Set(L"Double click to maximize container gump");
