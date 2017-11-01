@@ -1405,7 +1405,7 @@ void CGameScreen::PrepareContent()
 
 	g_GumpManager.PrepareContent();
 
-	if (g_SelectedObject.Gump != NULL && g_SelectedObject.Gump->GumpType == GT_STATUSBAR && g_SelectedObject.Gump->Serial != g_PlayerSerial)
+	if (g_SelectedObject.Gump != NULL && (g_SelectedObject.Gump->GumpType == GT_STATUSBAR || g_SelectedObject.Gump->GumpType == GT_POPUP_MENU) && g_SelectedObject.Gump->Serial != g_PlayerSerial)
 		g_StatusbarUnderMouse = g_SelectedObject.Gump->Serial;
 	else
 		g_StatusbarUnderMouse = 0;
