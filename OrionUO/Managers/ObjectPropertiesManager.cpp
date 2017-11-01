@@ -23,60 +23,70 @@ bool CObjectProperty::Empty()
 	return (!m_Name.length() && !m_Data.length());
 }
 //----------------------------------------------------------------------------------
-wstring CObjectProperty::CreateTextData()
+wstring CObjectProperty::CreateTextData(const bool &extended)
 {
 	CGameObject *obj = g_World->FindWorldObject(m_Serial);
 	bool coloredStartFont = false;
 	wstring result = L"";
 
-	if (obj != NULL)
+	if (m_Name.length())
 	{
-		if (!obj->NPC)
+		if (obj != NULL)
 		{
-			result = L"<basefont color=\"yellow\">";
-			coloredStartFont = true;
-		}
-		else
-		{
-			CGameCharacter *gc = obj->GameCharacterPtr();
-			coloredStartFont = true;
-
-			switch (gc->Notoriety)
+			if (!obj->NPC)
 			{
-				case NT_INNOCENT:
+				result = L"<basefont color=\"yellow\">";
+				coloredStartFont = true;
+			}
+			else
+			{
+				CGameCharacter *gc = obj->GameCharacterPtr();
+				coloredStartFont = true;
+
+				switch (gc->Notoriety)
 				{
-					result = L"<basefont color=\"cyan\">";
-					break;
+					case NT_INNOCENT:
+					{
+						result = L"<basefont color=\"cyan\">";
+						break;
+					}
+					case NT_SOMEONE_GRAY:
+					case NT_CRIMINAL:
+					{
+						result = L"<basefont color=\"gray\">";
+						break;
+					}
+					case NT_MURDERER:
+					{
+						result = L"<basefont color=\"red\">";
+						break;
+					}
+					case NT_INVULNERABLE:
+					{
+						result = L"<basefont color=\"yellow\">";
+						break;
+					}
+					default:
+						break;
 				}
-				case NT_SOMEONE_GRAY:
-				case NT_CRIMINAL:
-				{
-					result = L"<basefont color=\"gray\">";
-					break;
-				}
-				case NT_MURDERER:
-				{
-					result = L"<basefont color=\"red\">";
-					break;
-				}
-				case NT_INVULNERABLE:
-				{
-					result = L"<basefont color=\"yellow\">";
-					break;
-				}
-				default:
-					break;
 			}
 		}
+
+		result += m_Name;
+
+		if (coloredStartFont)
+			result += L"<basefont color=\"#FFFFFFFF\">";
 	}
-
-	result += m_Name;
-
-	if (coloredStartFont)
-		result += L"<basefont color=\"#FFFFFFFF\">";
 
 	if (m_Data.length())
 		result += L"\n" + m_Data;
+	else if (extended)
+	{
+		if (result.length())
+			result += L"\nNo significant properties...";
+		else
+			result = L"\nNo Data";
+	}
 
 	return result;
 }
@@ -115,7 +125,7 @@ void CObjectPropertiesManager::OnItemClicked(const uint &serial)
 		return;
 
 	g_GumpManager.CloseGump(0, 0, GT_PROPERTY);
-	g_GumpManager.AddGump(new CGumpProperty(it->second.CreateTextData()));
+	g_GumpManager.AddGump(new CGumpProperty(it->second.CreateTextData(true)));
 }
 //----------------------------------------------------------------------------------
 void CObjectPropertiesManager::Display(const uint &serial)
@@ -123,37 +133,54 @@ void CObjectPropertiesManager::Display(const uint &serial)
 	OBJECT_PROPERTIES_MAP::iterator it = m_Map.find(serial);
 
 	if (it == m_Map.end() || it->second.Empty())
+	{
+		if (m_Object != NULL)
+		{
+			if (g_ConfigManager.ItemPropertiesMode == OPM_AT_ICON)
+			{
+				CGumpPropertyIcon *gump = (CGumpPropertyIcon*)g_GumpManager.UpdateContent(0, 0, GT_PROPERTY_ICON);
+
+				if (gump != NULL)
+					gump->Object = NULL;
+			}
+
+			Reset();
+		}
+
 		return;
+	}
 
 	if (!g_ConfigManager.ItemPropertiesIcon || g_ConfigManager.ItemPropertiesMode == OPM_FOLLOW_MOUSE)
 	{
-		g_ToolTip.Set(it->second.CreateTextData());
+		g_ToolTip.Set(it->second.CreateTextData(false));
 		return;
 	}
 	else if (g_ConfigManager.ItemPropertiesMode == OPM_SINGLE_CLICK)
 		return;
 
-	/*bool condition = (g_ConfigManager.ItemPropertiesMode == OPM_ALWAYS_UP);
+	CGumpPropertyIcon *gump = (CGumpPropertyIcon*)g_GumpManager.GetGump(0, 0, GT_PROPERTY_ICON);
+
+	if (gump == NULL)
+		return;
+
+	bool condition = (g_ConfigManager.ItemPropertiesMode == OPM_ALWAYS_UP);
+
+	CRenderObject *object = g_SelectedObject.Object;
+
+	if (object != m_Object)
+	{
+		m_Object = object;
+		m_Timer = g_Ticks + g_ConfigManager.ToolTipsDelay;
+	}
 
 	if (!condition)
-	{
-		CRenderObject *object = g_SelectedObject.Object;
-
-		if (object != NULL && object != m_Object)
-		{
-			m_Timer = g_Ticks + g_ConfigManager.ToolTipsDelay;
-			m_Object = object;
-		}
-
 		condition = !(m_Timer > g_Ticks);
-	}*/
 
-	//Temp!!!
-	g_ToolTip.Set(it->second.CreateTextData());
-
-	/*if (condition)
+	if (condition && gump->Object != m_Object)
 	{
-	}*/
+		gump->Text = it->second.CreateTextData(true);
+		gump->Object = m_Object;
+	}
 }
 //----------------------------------------------------------------------------------
 void CObjectPropertiesManager::Add(const uint &serial, const CObjectProperty &objectProperty)

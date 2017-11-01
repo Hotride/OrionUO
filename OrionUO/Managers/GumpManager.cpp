@@ -895,6 +895,13 @@ void CGumpManager::OnRightMouseButtonUp(const bool &blocked)
 
 					break;
 				}
+				case GT_PROPERTY_ICON:
+				{
+					if (g_ConfigManager.ItemPropertiesMode == OPM_ALWAYS_UP)
+						g_ConfigManager.ItemPropertiesMode = OPM_FOLLOW_MOUSE;
+
+					break;
+				}
 				case GT_TRADE:
 				{
 					((CGumpSecureTrading*)gump)->SendTradingResponse(1);
@@ -1259,6 +1266,12 @@ void CGumpManager::Load(const string &path)
 
 					break;
 				}
+				case GT_PROPERTY_ICON:
+				{
+					gump = new CGumpPropertyIcon(gumpX, gumpY);
+
+					break;
+				}
 				case GT_COMBAT_BOOK:
 				{
 					gump = new CGumpCombatBook(gumpX, gumpY);
@@ -1520,6 +1533,7 @@ void CGumpManager::Save(const string &path)
 			case GT_SKILLS:
 			case GT_JOURNAL:
 			case GT_WORLD_MAP:
+			case GT_PROPERTY_ICON:
 			{
 				uchar size = 12;
 				

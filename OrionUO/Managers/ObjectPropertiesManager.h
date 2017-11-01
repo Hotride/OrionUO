@@ -23,7 +23,7 @@ public:
 
 	bool Empty();
 
-	wstring CreateTextData();
+	wstring CreateTextData(const bool &extended);
 };
 //----------------------------------------------------------------------------------
 typedef map<uint, CObjectProperty> OBJECT_PROPERTIES_MAP;

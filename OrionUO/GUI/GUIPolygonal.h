@@ -28,6 +28,8 @@ public:
 	virtual ~CGUIPolygonal();
 
 	virtual bool Select();
+
+	virtual WISP_GEOMETRY::CSize GetSize() { return WISP_GEOMETRY::CSize(m_Width, m_Height); }
 };
 //----------------------------------------------------------------------------------
 #endif

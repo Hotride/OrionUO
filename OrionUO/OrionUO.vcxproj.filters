@@ -828,6 +828,9 @@
     <ClInclude Include="Gumps\GumpProperty.h">
       <Filter>Header Files\Gumps</Filter>
     </ClInclude>
+    <ClInclude Include="Gumps\GumpPropertyIcon.h">
+      <Filter>Header Files\Gumps</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="OrionUO.cpp">
@@ -1536,6 +1539,9 @@
       <Filter>Source Files\Managers</Filter>
     </ClCompile>
     <ClCompile Include="Gumps\GumpProperty.cpp">
+      <Filter>Source Files\Gumps</Filter>
+    </ClCompile>
+    <ClCompile Include="Gumps\GumpPropertyIcon.cpp">
       <Filter>Source Files\Gumps</Filter>
     </ClCompile>
   </ItemGroup>

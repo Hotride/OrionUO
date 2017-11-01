@@ -67,9 +67,6 @@ void CGameScreen::InitToolTip()
 	if (!(g_ConfigManager.UseToolTips || g_TooltipsEnabled))
 		return;
 
-	g_FontManager.SetUseHTML(true);
-	g_FontManager.RecalculateWidthByInfo = true;
-
 	if (g_SelectedObject.Gump)
 	{
 		if (g_SelectedObject.Gump == &m_GameScreenGump)
@@ -79,9 +76,6 @@ void CGameScreen::InitToolTip()
 	}
 	else if (g_SelectedObject.Object != NULL && g_SelectedObject.Object->IsGameObject())
 		g_ObjectPropertiesManager.Display(g_SelectedObject.Serial);
-
-	g_FontManager.RecalculateWidthByInfo = false;
-	g_FontManager.SetUseHTML(false);
 }
 //----------------------------------------------------------------------------------
 /*!

@@ -31,6 +31,8 @@ public:
 	//Текстура тулпита
 	CGLTextTexture Texture;
 
+	void CreateTextTexture(CGLTextTexture &texture, const wstring &str, int &width, const int &minWidth);
+
 	//Установить тултип из строки
 	void Set(const wstring &str, const int &maxWidth = 0);
 

@@ -329,6 +329,7 @@ xcopy /y /d  "$(SolutionDir)bin\Orion.dll" "$(ProjectDir)"
     <ClInclude Include="Gumps\GumpCombatBook.h" />
     <ClInclude Include="Gumps\GumpCustomHouse.h" />
     <ClInclude Include="Gumps\GumpProperty.h" />
+    <ClInclude Include="Gumps\GumpPropertyIcon.h" />
     <ClInclude Include="Gumps\GumpRacialAbilitiesBook.h" />
     <ClInclude Include="Gumps\GumpRacialAbility.h" />
     <ClInclude Include="Gumps\GumpShop.h" />
@@ -575,6 +576,7 @@ xcopy /y /d  "$(SolutionDir)bin\Orion.dll" "$(ProjectDir)"
     <ClCompile Include="Gumps\GumpCombatBook.cpp" />
     <ClCompile Include="Gumps\GumpCustomHouse.cpp" />
     <ClCompile Include="Gumps\GumpProperty.cpp" />
+    <ClCompile Include="Gumps\GumpPropertyIcon.cpp" />
     <ClCompile Include="Gumps\GumpRacialAbilitiesBook.cpp" />
     <ClCompile Include="Gumps\GumpRacialAbility.cpp" />
     <ClCompile Include="Gumps\GumpShop.cpp" />

@@ -44,14 +44,6 @@ public:
 	CBaseGUI(const GUMP_OBJECT_TYPE &type, const uint &serial, const ushort &graphic, const ushort &color, const int &x, const int &y);
 	virtual ~CBaseGUI();
 
-	/*
-	GOT_SCOPE,				//!Рамка (лепится из 4 кусков)
-	GOT_SLIDER,				//!Ползунок
-	GOT_HTMLGUMP,			//!ХТМЛ гамп
-	GOT_XFMHTMLGUMP,		//!ХТМЛ гамп из клилока (цветной там же)
-	GOT_XFMHTMLTOKEN,		//
-	*/
-
 	//!Выявление поля g_EntryPointer в данной компоненте
 	virtual bool EntryPointerHere() { return false; }
 

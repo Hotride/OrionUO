@@ -13,25 +13,9 @@ CGumpProperty::CGumpProperty(const wstring &text)
 : CGump(GT_PROPERTY, 0, 0, 0)
 {
 	m_Timer = g_Ticks + 5000;
-	uchar font = (uchar)g_ConfigManager.ToolTipsTextFont;
 
-	g_FontManager.SetUseHTML(true);
-	g_FontManager.RecalculateWidthByInfo = true;
-
-	int width = g_FontManager.GetWidthW(font, text);
-
-	if (width > 600)
-		width = 600;
-
-	width = g_FontManager.GetWidthExW(font, text, width, TS_CENTER, UOFONT_BLACK_BORDER);
-
-	if (width > 600)
-		width = 600;
-
-	g_FontManager.GenerateW(font, m_Texture, text, g_ConfigManager.ToolTipsTextColor, 5, width, TS_CENTER, UOFONT_BLACK_BORDER);
-
-	g_FontManager.RecalculateWidthByInfo = false;
-	g_FontManager.SetUseHTML(false);
+	int width = 0;
+	g_ToolTip.CreateTextTexture(m_Texture, text, width, 0);
 
 	m_X = g_MouseManager.Position.X - (m_Texture.Width + 8);
 

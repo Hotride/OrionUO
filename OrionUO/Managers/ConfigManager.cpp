@@ -459,6 +459,53 @@ void CConfigManager::OnChangeUseGLListsForInterface(const bool &val)
 	}
 }
 //---------------------------------------------------------------------------
+void CConfigManager::OnChangeItemPropertiesMode(const uchar &val)
+{
+	if (this == &g_ConfigManager && g_World != NULL)
+	{
+		m_ItemPropertiesMode = val;
+
+		CGumpPropertyIcon *gump = (CGumpPropertyIcon*)g_GumpManager.UpdateContent(0, 0, GT_PROPERTY_ICON);
+
+		if (gump != NULL && (val == OPM_AT_ICON || val == OPM_ALWAYS_UP))
+			gump->OnChangeText(gump->Text);
+
+		g_ObjectPropertiesManager.Reset();
+	}
+}
+//---------------------------------------------------------------------------
+void CConfigManager::OnChangeItemPropertiesIcon(const bool &val)
+{
+	if (this == &g_ConfigManager && g_World != NULL)
+	{
+		if (val)
+		{
+			CGump *gump = g_GumpManager.UpdateContent(0, 0, GT_PROPERTY_ICON);
+
+			if (gump == NULL)
+			{
+				WISP_GEOMETRY::CSize windowSize = g_OrionWindow.Size;
+
+				int x = m_GameWindowX + (int)(m_GameWindowWidth * 0.9f);
+				int y = m_GameWindowY + m_GameWindowHeight;
+
+				if (x + 100 >= windowSize.Width)
+					x = windowSize.Width - 100;
+
+				if (y + 60 >= windowSize.Height)
+					y = windowSize.Height - 60;
+
+				g_GumpManager.AddGump(new CGumpPropertyIcon(x, y));
+			}
+		}
+		else
+		{
+			g_GumpManager.CloseGump(0, 0, GT_PROPERTY_ICON);
+			g_ObjectPropertiesManager.Reset();
+		}
+	}
+}
+//---------------------------------------------------------------------------
 /*!
 Получить цвет исходя из "злобности"
 @param [__in] notoriety Злобность

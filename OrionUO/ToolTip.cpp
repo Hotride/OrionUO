@@ -28,6 +28,37 @@ void CToolTip::Reset()
 	m_Object = NULL;
 }
 //----------------------------------------------------------------------------------
+void CToolTip::CreateTextTexture(CGLTextTexture &texture, const wstring &str, int &width, const int &minWidth)
+{
+	g_FontManager.SetUseHTML(true);
+	g_FontManager.RecalculateWidthByInfo = true;
+
+	texture.Clear();
+
+	uchar font = (uchar)g_ConfigManager.ToolTipsTextFont;
+
+	if (!width)
+	{
+		width = g_FontManager.GetWidthW(font, str);
+
+		if (width > 600)
+			width = 600;
+
+		width = g_FontManager.GetWidthExW(font, str, width, TS_CENTER, UOFONT_BLACK_BORDER);
+
+		if (width > 600)
+			width = 600;
+	}
+
+	if (width < minWidth)
+		width = minWidth;
+
+	g_FontManager.GenerateW(font, texture, str, g_ConfigManager.ToolTipsTextColor, 5, width, TS_CENTER, UOFONT_BLACK_BORDER);
+
+	g_FontManager.RecalculateWidthByInfo = false;
+	g_FontManager.SetUseHTML(false);
+}
+//----------------------------------------------------------------------------------
 void CToolTip::Set(const wstring &str, const int &maxWidth)
 {
 	WISPFUN_DEBUG("c213_f3");
@@ -51,26 +82,7 @@ void CToolTip::Set(const wstring &str, const int &maxWidth)
 	m_Position.X = 0;
 	m_Position.Y = 0;
 
-	Texture.Clear();
-
-	uchar font = (uchar)g_ConfigManager.ToolTipsTextFont;
-
-	if (!maxWidth)
-	{
-		int width = g_FontManager.GetWidthW(font, m_Data);
-
-		if (width > 600)
-			width = 600;
-
-		width = g_FontManager.GetWidthExW(font, m_Data, width, TS_CENTER, UOFONT_BLACK_BORDER);
-
-		if (width > 600)
-			width = 600;
-
-		m_MaxWidth = width;
-	}
-
-	g_FontManager.GenerateW(font, Texture, m_Data, g_ConfigManager.ToolTipsTextColor, 5, m_MaxWidth, TS_CENTER, UOFONT_BLACK_BORDER);
+	CreateTextTexture(Texture, m_Data, m_MaxWidth, 0);
 }
 //----------------------------------------------------------------------------------
 void CToolTip::Set(const uint &clilocID, const string &str, const int &maxWidth, const bool &toCamelCase)
@@ -87,11 +99,8 @@ void CToolTip::Draw(const int &cursorWidth, const int &cursorHeight)
 	if (!m_Use /*|| !g_ConfigManager.UseToolTips*/)
 		return;
 
-	if (!m_MaxWidth)
-		m_MaxWidth = g_FontManager.GetWidthW((uchar)g_ConfigManager.ToolTipsTextFont, m_Data);
-
 	if (Texture.Empty())
-		g_FontManager.GenerateW((uchar)g_ConfigManager.ToolTipsTextFont, Texture, m_Data, g_ConfigManager.ToolTipsTextColor, 30, m_MaxWidth, TS_CENTER, UOFONT_BLACK_BORDER);
+		CreateTextTexture(Texture, m_Data, m_MaxWidth, 0);
 
 	if (!Texture.Empty())
 	{

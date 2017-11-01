@@ -90,8 +90,8 @@ class CConfigManager
 	SETGET(bool, DisableMenubar, false);
 	SETGET(bool, GrayOutOfRangeObjects, false);
 	SETGET(bool, DisableNewTargetSystem, false);
-	SETGET(uchar, ItemPropertiesMode, OPM_FOLLOW_MOUSE);
-	SETGET(bool, ItemPropertiesIcon, false);
+	SETGETE(uchar, ItemPropertiesMode, OPM_FOLLOW_MOUSE, OnChangeItemPropertiesMode);
+	SETGETE(bool, ItemPropertiesIcon, false, OnChangeItemPropertiesIcon);
 	SETGET(bool, ObjectHandles, false);
 	SETGET(bool, HoldShiftForContextMenus, false);
 	SETGET(bool, HoldShiftForEnablePathfind, false);

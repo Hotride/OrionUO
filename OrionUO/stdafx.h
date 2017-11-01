@@ -214,6 +214,7 @@ class CGump;
 #include "Gumps/GumpTip.h"
 #include "Gumps/GumpWorldMap.h"
 #include "Gumps/GumpProperty.h"
+#include "Gumps/GumpPropertyIcon.h"
 
 #include "Managers/AnimationManager.h"
 #include "Managers/CityManager.h"
