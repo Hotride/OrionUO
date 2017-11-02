@@ -1105,6 +1105,9 @@ void CGameWorld::UpdateItemInContainer(CGameObject *obj, CGameObject *container,
 //----------------------------------------------------------------------------------
 void CGameWorld::UpdateContainedItem(const uint &serial, const ushort &graphic, const uchar &graphicIncrement, ushort count, const int &x, const int &y, const uint &containerSerial, const ushort &color)
 {
+	if (g_ObjectInHand.Serial == serial && g_ObjectInHand.Dropped)
+		g_ObjectInHand.Clear();
+
 	CGameObject *container = FindWorldObject(containerSerial);
 
 	if (container == NULL)
