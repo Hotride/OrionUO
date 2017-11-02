@@ -804,6 +804,12 @@ void CGLEngine::GL1_DrawStretched(const CGLTexture &texture, const int &x, const
 void CGLEngine::GL1_DrawResizepic(CGLTexture **th, const int &x, const int &y, const int &width, const int &height)
 {
 	WISPFUN_DEBUG("c29_f36");
+
+	int offsetTop = max(th[0]->Height, th[2]->Height) - th[1]->Height;
+	int offsetBottom = max(th[5]->Height, th[7]->Height) - th[6]->Height;
+	int offsetLeft = max(th[0]->Width, th[5]->Width) - th[3]->Width;
+	int offsetRight = max(th[2]->Width, th[7]->Width) - th[4]->Width;
+
 	IFOR(i, 0, 9)
 	{
 		BindTexture(th[i]->Texture);
@@ -830,12 +836,14 @@ void CGLEngine::GL1_DrawResizepic(CGLTexture **th, const int &x, const int &y, c
 			case 2:
 			{
 				drawX += width - drawWidth;
+				drawY += offsetTop;
 
 				break;
 			}
 			case 3:
 			{
 				drawY += th[0]->Height;
+				drawX += offsetLeft;
 
 				drawHeight = height - th[0]->Height - th[5]->Height;
 
@@ -845,7 +853,7 @@ void CGLEngine::GL1_DrawResizepic(CGLTexture **th, const int &x, const int &y, c
 			}
 			case 4:
 			{
-				drawX += width - drawWidth;
+				drawX += width - drawWidth - offsetRight;
 				drawY += th[2]->Height;
 
 				drawHeight = height - th[2]->Height - th[7]->Height;
@@ -863,7 +871,7 @@ void CGLEngine::GL1_DrawResizepic(CGLTexture **th, const int &x, const int &y, c
 			case 6:
 			{
 				drawX += th[5]->Width;
-				drawY += height - drawHeight;
+				drawY += height - drawHeight - offsetBottom;
 
 				drawWidth = width - th[5]->Width - th[7]->Width;
 

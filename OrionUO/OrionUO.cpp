@@ -4853,6 +4853,11 @@ bool COrion::ResizepicPixelsInXY(const ushort &id, int x, int y, const int &widt
 			th[i] = pth;
 	}
 
+	int offsetTop = max(th[0]->Height, th[2]->Height) - th[1]->Height;
+	int offsetBottom = max(th[5]->Height, th[7]->Height) - th[6]->Height;
+	int offsetLeft = max(th[0]->Width, th[5]->Width) - th[3]->Width;
+	int offsetRight = max(th[2]->Width, th[7]->Width) - th[4]->Width;
+
 	IFOR(i, 0, 9)
 	{
 		switch (i)
@@ -4876,7 +4881,7 @@ bool COrion::ResizepicPixelsInXY(const ushort &id, int x, int y, const int &widt
 			}
 			case 2:
 			{
-				if (GumpPixelsInXY(id + 2, x + width - th[i]->Width, y))
+				if (GumpPixelsInXY(id + 2, x + width - th[i]->Width, y + offsetTop))
 					return true;
 
 				break;
@@ -4887,7 +4892,7 @@ bool COrion::ResizepicPixelsInXY(const ushort &id, int x, int y, const int &widt
 				if (DH < 1)
 					break;
 
-				if (GumpPixelsInXY(id + 3, x, y + th[0]->Height, 0, DH))
+				if (GumpPixelsInXY(id + 3, x + offsetLeft, y + th[0]->Height, 0, DH))
 					return true;
 
 				break;
@@ -4898,7 +4903,7 @@ bool COrion::ResizepicPixelsInXY(const ushort &id, int x, int y, const int &widt
 				if (DH < 1)
 					break;
 
-				if (GumpPixelsInXY(id + 5, x + width - th[i]->Width, y + th[2]->Height, 0, DH))
+				if (GumpPixelsInXY(id + 5, x + width - th[i]->Width - offsetRight, y + th[2]->Height, 0, DH))
 					return true;
 
 				break;
@@ -4916,7 +4921,7 @@ bool COrion::ResizepicPixelsInXY(const ushort &id, int x, int y, const int &widt
 				if (DW < 1)
 					break;
 
-				if (GumpPixelsInXY(id + 7, x + th[5]->Width, y + height - th[i]->Height, DW, 0))
+				if (GumpPixelsInXY(id + 7, x + th[5]->Width, y + height - th[i]->Height - offsetBottom, DW, 0))
 					return true;
 
 				break;
