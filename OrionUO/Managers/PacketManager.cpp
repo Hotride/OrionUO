@@ -5598,6 +5598,11 @@ PACKET_HANDLER(OrionMessages)
 
 			break;
 		}
+		case OCT_RECONNECT:
+		{
+			g_Orion.StartReconnect();
+			break;
+		}
 		default:
 			break;
 	}

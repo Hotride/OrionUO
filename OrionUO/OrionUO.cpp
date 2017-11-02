@@ -5961,3 +5961,14 @@ void COrion::OpenRacialAbilitiesBookGump()
 	g_GumpManager.AddGump(new CGumpRacialAbilitiesBook(x, y));
 }
 //----------------------------------------------------------------------------------
+void COrion::StartReconnect()
+{
+	if (!g_ConnectionManager.Connected() || g_World == NULL)
+	{
+		LogOut();
+		g_MainScreen.m_AutoLogin->Checked = true;
+		InitScreen(GS_MAIN);
+		g_OrionWindow.CreateTimer(COrionWindow::FASTLOGIN_TIMER_ID, 50);
+	}
+}
+//----------------------------------------------------------------------------------
