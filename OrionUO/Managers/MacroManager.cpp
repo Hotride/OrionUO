@@ -1037,6 +1037,9 @@ MACRO_RETURN_CODE CMacroManager::Process()
 
 				if (obj != NULL)
 				{
+					if (obj->NPC && !((CGameCharacter*)obj)->MaxHits)
+						CPacketStatusRequest(obj->Serial).Send();
+
 					g_LastTargetObject = obj->Serial;
 					g_LastAttackObject = obj->Serial;
 					g_PluginManager.WindowProc(g_OrionWindow.Handle, UOMSG_STATUS_REQUEST, (WPARAM)obj->Serial, 0);
