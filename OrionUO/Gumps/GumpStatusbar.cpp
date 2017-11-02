@@ -1303,9 +1303,6 @@ void CGumpStatusbar::SendRenameRequest()
 		{
 			//Отправляем запрос на изменение имени
 			CPacketRenameRequest(m_Serial, entry->c_str()).Send();
-
-			if (g_TooltipsEnabled)
-				g_PacketManager.AddMegaClilocRequest(m_Serial);
 		}
 	}
 }

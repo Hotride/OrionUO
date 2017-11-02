@@ -222,9 +222,6 @@ void __cdecl FUNCBODY_SendRenameMount(uint serial, const char *text)
 {
 	CPacketRenameRequest packet(serial, text);
 	SendMessage(g_OrionWindow.Handle, UOMSG_SEND, (WPARAM)packet.Data().data(), packet.Data().size());
-
-	if (g_TooltipsEnabled)
-		g_PacketManager.AddMegaClilocRequest(serial);
 }
 //----------------------------------------------------------------------------------
 void __cdecl FUNCBODY_SendMenuResponse(unsigned int serial, unsigned int id, int code)

@@ -863,9 +863,6 @@ PACKET_HANDLER(EnterWorld)
 	g_Player->OffsetY = 0;
 	g_Player->OffsetZ = 0;
 
-	//if (g_TooltipsEnabled && !g_Player->ClilocRevision)
-	//	AddMegaClilocRequest(g_Player->Serial);
-
 	LOG("Player 0x%08lX entered the world.\n", serial);
 
 	g_MapManager.Init();
@@ -1395,16 +1392,10 @@ PACKET_HANDLER(UpdateObject)
 
 		LOG("\t0x%08X:%04X [%d] %04X\n", item->Serial, item->Graphic, layer, item->Color);
 
-		//if (g_TooltipsEnabled && !item->ClilocRevision)
-		//	AddMegaClilocRequest(item->Serial);
-
 		g_World->MoveToTop(item);
 
 		itemSerial = ReadUInt32BE();
 	}
-
-	//if (g_TooltipsEnabled && !obj->ClilocRevision)
-	//	AddMegaClilocRequest(obj->Serial);
 
 	if (obj->IsPlayer())
 	{
@@ -1453,9 +1444,6 @@ PACKET_HANDLER(EquipItem)
 
 	if (g_NewTargetSystem.Serial == serial)
 		g_NewTargetSystem.Serial = 0;
-
-	//if (g_TooltipsEnabled && !obj->ClilocRevision)
-	//	AddMegaClilocRequest(obj->Serial);
 
 	if (layer >= OL_BUY_RESTOCK && layer <= OL_SELL)
 		obj->Clear();
@@ -1610,9 +1598,6 @@ PACKET_HANDLER(DenyMoveItem)
 					}
 					else
 						g_World->RemoveFromContainer(obj);
-
-					if (g_TooltipsEnabled)
-						AddMegaClilocRequest(g_ObjectInHand.Serial);
 
 					if (obj != NULL)
 						g_World->MoveToTop(obj);
@@ -5260,17 +5245,10 @@ PACKET_HANDLER(OPLInfo)
 	if (g_TooltipsEnabled)
 	{
 		uint serial = ReadUInt32BE();
+		uint revision = ReadUInt32BE();
 
-		//CGameObject *obj = g_World->FindWorldObject(serial);
-		{
-			//if (obj != NULL)
-			{
-				//uint revision = ReadUInt32BE();
-
-				//if (obj->ClilocRevision != revision)
-					AddMegaClilocRequest(serial);
-			}
-		}
+		if (!g_ObjectPropertiesManager.RevisionCheck(serial, revision))
+			AddMegaClilocRequest(serial);
 	}
 }
 //----------------------------------------------------------------------------------
@@ -5617,9 +5595,6 @@ PACKET_HANDLER(OrionMessages)
 			string text = ReadString(0);
 
 			CPacketRenameRequest(serial, text).Send();
-
-			if (g_TooltipsEnabled)
-				g_PacketManager.AddMegaClilocRequest(serial);
 
 			break;
 		}
