@@ -4011,7 +4011,7 @@ void COrion::CreateAuraTexture()
 	int width = 0;
 	int height = 0;
 
-	CGLTextureCircleOfTransparency::CreatePixels(30, width, height, pixels, g_AuraTexture.m_HitMap);
+	CGLTextureCircleOfTransparency::CreatePixels(30, width, height, pixels);
 
 	IFOR(i, 0, (int)pixels.size())
 	{

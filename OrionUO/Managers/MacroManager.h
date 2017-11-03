@@ -17,6 +17,7 @@ class CMacroManager : public CBaseQueue
 	SETGET(bool, WaitingBandageTarget, false);
 	//!Время ожидания таргета
 	SETGET(uint, WaitForTargetTimer, 0);
+	SETGET(bool, SendNotificationToPlugin, false);
 
 private:
 	//!Время следующего выполнения
@@ -80,6 +81,8 @@ public:
 	*/
 	void LoadFromOptions();
 
+	void ChangePointer(CMacroObject *macro);
+
 	/*!
 	Начать выполнение макроса
 	@return 
@@ -91,6 +94,8 @@ public:
 	@return Код выполнения
 	*/
 	MACRO_RETURN_CODE Process();
+
+	MACRO_RETURN_CODE Process(CMacroObject *macro);
 };
 //----------------------------------------------------------------------------------
 //!Ссылка на менеджер макросов

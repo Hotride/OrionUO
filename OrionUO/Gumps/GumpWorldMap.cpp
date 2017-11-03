@@ -331,6 +331,14 @@ void CGumpWorldMap::LoadMap(const int &map)
 				fseek(mapFile, 0, SEEK_SET);
 
 				buf.resize(size, 0);
+
+				if (buf.size() != size)
+				{
+					LOG("Allocation pixels memory for World Map failed (want size: %i)\n", size);
+					fclose(mapFile);
+					return;
+				}
+
 				int readed = fread(&buf[0], sizeof(short), size, mapFile);
 				fclose(mapFile);
 
@@ -346,10 +354,19 @@ void CGumpWorldMap::LoadMap(const int &map)
 				LOG("Error open world map file: %s\n", path.c_str());
 		}
 		
+		int wantSize = g_MapSize[map].Width * g_MapSize[map].Height;
+
 		if (!fromFile)
 		{
-			buf.resize(g_MapSize[map].Width * g_MapSize[map].Height, 0);
-			int maxBlock = (g_MapSize[map].Width * g_MapSize[map].Height) - 1;
+			buf.resize(wantSize, 0);
+
+			if (buf.size() != wantSize)
+			{
+				LOG("Allocation pixels memory for World Map failed (want size: %i)\n", wantSize);
+				return;
+			}
+
+			int maxBlock = wantSize - 1;
 
 			IFOR(bx, 0, g_MapBlockSize[map].Width)
 			{
@@ -443,7 +460,7 @@ void CGumpWorldMap::LoadMap(const int &map)
 			}
 		}
 
-		if (buf.size() == g_MapSize[map].Width * g_MapSize[map].Height)
+		if (buf.size() == wantSize)
 			g_GL_BindTexture16(g_MapTexture[map], g_MapSize[map].Width, g_MapSize[map].Height, &buf[0]);
 		else
 			LOG("World map build error: buffer=%i, want=%i\n", buf.size(), g_MapSize[map].Width * g_MapSize[map].Height);

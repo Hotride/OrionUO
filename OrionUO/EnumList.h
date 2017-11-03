@@ -446,7 +446,8 @@ enum ORION_COMMAND_TYPE
 	OCT_SECURE_TRADE_CLOSE = 107,
 	OCT_UNICODE_SPEECH_REQUEST = 108,
 	OCT_RENAME_MOUNT_REQUEST = 109,
-	OCT_RECONNECT = 110
+	OCT_RECONNECT = 110,
+	OCT_PLAY_MACRO = 111
 };
 //----------------------------------------------------------------------------------
 enum VALUE_KEY_INT

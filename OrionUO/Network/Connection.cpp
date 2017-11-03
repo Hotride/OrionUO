@@ -68,7 +68,7 @@ bool CSocket::Connect(const string &address, const int &port)
 		sin.sin_family = AF_INET;
 		sin.sin_port = htons(m_ProxyPort);
 
-		LOG("using proxy %s:%d\n", m_ProxyAddress.c_str(), sin.sin_port);
+		LOG("using proxy %s:%d\n", m_ProxyAddress.c_str(), m_ProxyPort);
 
 		int r = inet_addr(m_ProxyAddress.c_str());
 

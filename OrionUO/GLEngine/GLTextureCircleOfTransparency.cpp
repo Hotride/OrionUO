@@ -22,14 +22,13 @@ CGLTextureCircleOfTransparency::~CGLTextureCircleOfTransparency()
 	Clear();
 }
 //---------------------------------------------------------------------------
-void CGLTextureCircleOfTransparency::CreatePixels(const int &radius, int &width, int &height, UINT_LIST &pixels, HIT_MAP_TYPE &hitMap)
+void CGLTextureCircleOfTransparency::CreatePixels(const int &radius, int &width, int &height, UINT_LIST &pixels)
 {
 	WISPFUN_DEBUG("c37_f2");
 	int fixRadius = radius + 1;
 	int mulRadius = fixRadius * 2;
 
 	pixels.resize(mulRadius * mulRadius);
-	hitMap.resize(mulRadius * mulRadius);
 
 	width = mulRadius;
 	height = mulRadius;
@@ -47,7 +46,6 @@ void CGLTextureCircleOfTransparency::CreatePixels(const int &radius, int &width,
 			int pos = posX + y;
 
 			pixels[pos] = pic;
-			hitMap[pos] = (pic != 0);
 		}
 	}
 }
@@ -65,7 +63,7 @@ bool CGLTextureCircleOfTransparency::Create(int radius)
 
 	UINT_LIST pixels;
 
-	CreatePixels(radius, m_Width, m_Height, pixels, m_HitMap);
+	CreatePixels(radius, m_Width, m_Height, pixels);
 
 	m_Radius = radius;
 

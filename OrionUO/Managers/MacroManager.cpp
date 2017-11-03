@@ -349,10 +349,21 @@ void CMacroManager::LoadFromOptions()
 {
 	WISPFUN_DEBUG("c145_f6");
 	Clear();
-	g_MacroPointer = NULL;
+	ChangePointer(NULL);
 
 	QFOR(obj, g_OptionsMacroManager.m_Items, CMacro*)
 		Add(obj->GetCopy());
+}
+//----------------------------------------------------------------------------------
+void CMacroManager::ChangePointer(CMacroObject *macro)
+{
+	g_MacroPointer = macro;
+
+	if (g_MacroPointer == NULL && m_SendNotificationToPlugin)
+	{
+		m_SendNotificationToPlugin = false;
+		g_PluginManager.WindowProc(g_OrionWindow.Handle, UOMSG_END_MACRO_PAYING, 0, 0);
+	}
 }
 //----------------------------------------------------------------------------------
 /*!
@@ -368,14 +379,14 @@ void CMacroManager::Execute()
 		{
 			case MRC_STOP:
 			{
-				g_MacroPointer = NULL;
+				ChangePointer(NULL);
 				return;
 			}
 			case MRC_BREAK_PARSER:
 				return;
 			case MRC_PARSE_NEXT:
 			{
-				g_MacroPointer = (CMacroObject*)g_MacroPointer->m_Next;
+				ChangePointer((CMacroObject*)g_MacroPointer->m_Next);
 				break;
 			}
 			default:
@@ -726,481 +737,478 @@ void CMacroManager::ProcessSubMenu()
 */
 MACRO_RETURN_CODE CMacroManager::Process()
 {
-	WISPFUN_DEBUG("c145_f9");
 	MACRO_RETURN_CODE result = MRC_PARSE_NEXT;
-	static DWORD itemInHand[2] = { 0, 0 };
 
 	if (g_MacroPointer == NULL)
 		result = MRC_STOP;
 	else if (m_NextTimer <= g_Ticks)
+		result = Process(g_MacroPointer);
+	else
+		result = MRC_BREAK_PARSER;
+
+	return result;
+}
+//---------------------------------------------------------------------------
+MACRO_RETURN_CODE CMacroManager::Process(CMacroObject *macro)
+{
+	WISPFUN_DEBUG("c145_f9");
+	MACRO_RETURN_CODE result = MRC_PARSE_NEXT;
+	static DWORD itemInHand[2] = { 0, 0 };
+
+	switch (macro->Code)
 	{
-		switch (g_MacroPointer->Code)
+		case MC_SAY:
+		case MC_EMOTE:
+		case MC_WHISPER:
+		case MC_YELL:
 		{
-			case MC_SAY:
-			case MC_EMOTE:
-			case MC_WHISPER:
-			case MC_YELL:
+			CMacroObjectString *mos = (CMacroObjectString*)macro;
+
+			if (mos->String.length())
 			{
-				CMacroObjectString *mos = (CMacroObjectString*)g_MacroPointer;
+				SPEECH_TYPE st = ST_NORMAL;
 
-				if (mos->String.length())
+				switch (macro->Code)
 				{
-					SPEECH_TYPE st = ST_NORMAL;
-
-					switch (g_MacroPointer->Code)
+					case MC_EMOTE:
 					{
-						case MC_EMOTE:
-						{
-							st = ST_EMOTE;
-							break;
-						}
-						case MC_WHISPER:
-						{
-							st = ST_WHISPER;
-							break;
-						}
-						case MC_YELL:
-						{
-							st = ST_YELL;
-							break;
-						}
-						default:
-							break;
+						st = ST_EMOTE;
+						break;
 					}
-
-					if (g_PacketManager.ClientVersion >= CV_500A)
-						CPacketUnicodeSpeechRequest(ToWString(mos->String).c_str(), st, 3, g_ConfigManager.SpeechColor, (puchar)g_Language.c_str()).Send();
-					else
-						CPacketASCIISpeechRequest(mos->String.c_str(), st, 3, g_ConfigManager.SpeechColor).Send();
+					case MC_WHISPER:
+					{
+						st = ST_WHISPER;
+						break;
+					}
+					case MC_YELL:
+					{
+						st = ST_YELL;
+						break;
+					}
+					default:
+						break;
 				}
 
-				break;
+				if (g_PacketManager.ClientVersion >= CV_500A)
+					CPacketUnicodeSpeechRequest(ToWString(mos->String).c_str(), st, 3, g_ConfigManager.SpeechColor, (puchar)g_Language.c_str()).Send();
+				else
+					CPacketASCIISpeechRequest(mos->String.c_str(), st, 3, g_ConfigManager.SpeechColor).Send();
 			}
-			case MC_WALK:
+
+			break;
+		}
+		case MC_WALK:
+		{
+			uchar dt = (uchar)DT_NW;
+
+			if (macro->SubCode != MSC_G1_NW)
 			{
-				uchar dt = (uchar)DT_NW;
+				dt = (uchar)(macro->Code - 2);
 
-				if (g_MacroPointer->SubCode != MSC_G1_NW)
-				{
-					dt = (uchar)(g_MacroPointer->Code - 2);
-
-					if (dt > 7)
-						dt = 0;
-				}
-
-				if (!g_PathFinder.AutoWalking)
-					g_PathFinder.Walk(false, dt);
-
-				break;
+				if (dt > 7)
+					dt = 0;
 			}
-			case MC_WAR_PEACE:
-			{
-				g_Orion.ChangeWarmode();
+
+			if (!g_PathFinder.AutoWalking)
+				g_PathFinder.Walk(false, dt);
+
+			break;
+		}
+		case MC_WAR_PEACE:
+		{
+			g_Orion.ChangeWarmode();
 				
-				break;
-			}
-			case MC_PASTE:
+			break;
+		}
+		case MC_PASTE:
+		{
+			if (g_EntryPointer != NULL)
 			{
-				if (g_EntryPointer != NULL)
+				if (OpenClipboard(g_OrionWindow.Handle))
 				{
-					if (OpenClipboard(g_OrionWindow.Handle))
-					{
-						HANDLE cb = GetClipboardData(CF_TEXT);
+					HANDLE cb = GetClipboardData(CF_TEXT);
 						
-						if (cb != NULL)
+					if (cb != NULL)
+					{
+						char* chBuffer = (char*)GlobalLock(cb);
+
+						if (chBuffer != NULL && strlen(chBuffer))
 						{
-							char* chBuffer = (char*)GlobalLock(cb);
-
-							if (chBuffer != NULL && strlen(chBuffer))
-							{
-								wstring str = g_EntryPointer->Data() + ToWString(chBuffer);
-								g_EntryPointer->SetText(str);
-							}
-
-							GlobalUnlock(cb);
+							wstring str = g_EntryPointer->Data() + ToWString(chBuffer);
+							g_EntryPointer->SetText(str);
 						}
 
-						CloseClipboard();
+						GlobalUnlock(cb);
 					}
+
+					CloseClipboard();
 				}
-
-				break;
 			}
-			case MC_OPEN:
-			case MC_CLOSE:
-			case MC_MINIMIZE:
-			case MC_MAXIMIZE:
-			{
-				ProcessSubMenu();
 
-				break;
-			}
-			case MC_OPEN_DOOR:
-			{
-				g_Orion.OpenDoor();
+			break;
+		}
+		case MC_OPEN:
+		case MC_CLOSE:
+		case MC_MINIMIZE:
+		case MC_MAXIMIZE:
+		{
+			ProcessSubMenu();
 
-				break;
-			}
-			case MC_USE_SKILL:
-			{
-				int skill = (g_MacroPointer->SubCode - MSC_G3_ANATOMY);
+			break;
+		}
+		case MC_OPEN_DOOR:
+		{
+			g_Orion.OpenDoor();
 
-				if (skill >= 0 && skill < 24)
-				{
-					skill = m_SkillIndexTable[skill];
+			break;
+		}
+		case MC_USE_SKILL:
+		{
+			int skill = (macro->SubCode - MSC_G3_ANATOMY);
+
+			if (skill >= 0 && skill < 24)
+			{
+				skill = m_SkillIndexTable[skill];
 					
-					if (skill != 0xFF)
-						g_Orion.UseSkill(skill);
-				}
-
-				break;
+				if (skill != 0xFF)
+					g_Orion.UseSkill(skill);
 			}
-			case MC_LAST_SKILL:
-			{
-				g_Orion.UseSkill(g_LastSkillIndex);
 
-				break;
-			}
-			case MC_CAST_SPELL:
-			{
-				int spell = (g_MacroPointer->SubCode - MSC_G6_CLUMSY + 1);
+			break;
+		}
+		case MC_LAST_SKILL:
+		{
+			g_Orion.UseSkill(g_LastSkillIndex);
 
-				if (spell > 0 && spell <= 151)
+			break;
+		}
+		case MC_CAST_SPELL:
+		{
+			int spell = (macro->SubCode - MSC_G6_CLUMSY + 1);
+
+			if (spell > 0 && spell <= 151)
+			{
+				const int spellsCountTable[7] =
 				{
-					const int spellsCountTable[7] =
-					{
-						CGumpSpellbook::SPELLBOOK_1_SPELLS_COUNT,
-						CGumpSpellbook::SPELLBOOK_2_SPELLS_COUNT,
-						CGumpSpellbook::SPELLBOOK_3_SPELLS_COUNT,
-						CGumpSpellbook::SPELLBOOK_4_SPELLS_COUNT,
-						CGumpSpellbook::SPELLBOOK_5_SPELLS_COUNT,
-						CGumpSpellbook::SPELLBOOK_6_SPELLS_COUNT,
-						CGumpSpellbook::SPELLBOOK_7_SPELLS_COUNT
-					};
+					CGumpSpellbook::SPELLBOOK_1_SPELLS_COUNT,
+					CGumpSpellbook::SPELLBOOK_2_SPELLS_COUNT,
+					CGumpSpellbook::SPELLBOOK_3_SPELLS_COUNT,
+					CGumpSpellbook::SPELLBOOK_4_SPELLS_COUNT,
+					CGumpSpellbook::SPELLBOOK_5_SPELLS_COUNT,
+					CGumpSpellbook::SPELLBOOK_6_SPELLS_COUNT,
+					CGumpSpellbook::SPELLBOOK_7_SPELLS_COUNT
+				};
 
-					int totalCount = 0;
-					int spellType = 0;
+				int totalCount = 0;
+				int spellType = 0;
 
-					for (spellType = 0; spellType < 7; spellType++)
-					{
-						totalCount += spellsCountTable[spellType];
-
-						if (spell < totalCount)
-							break;
-					}
-
-					if (spellType < 7)
-					{
-						spell += spellType * 100;
-
-						if (spellType > 2)
-							spell += 100;
-
-						g_Orion.CastSpell(spell);
-					}
-				}
-
-				break;
-			}
-			case MC_LAST_SPELL:
-			{
-				g_Orion.CastSpell(g_LastSpellIndex);
-
-				break;
-			}
-			case MC_LAST_OBJECT:
-			{
-				if (g_World->FindWorldObject(g_LastUseObject))
-					g_Orion.DoubleClick(g_LastUseObject);
-
-				break;
-			}
-			case MC_BOW:
-			case MC_SALUTE:
-			{
-				const char *emote[2] = {"bow", "salute"};
-
-				int index = g_MacroPointer->Code - MC_BOW;
-
-				g_Orion.EmoteAction(emote[index]);
-
-				break;
-			}
-			case MC_QUIT_GAME:
-			{
-				g_Orion.OpenLogOut();
-
-				break;
-			}
-			case MC_ALL_NAMES:
-			{
-				g_Orion.AllNames();
-
-				break;
-			}
-			case MC_LAST_TARGET:
-			{
-				if (m_WaitForTargetTimer == 0)
-					m_WaitForTargetTimer = g_Ticks + WAIT_FOR_TARGET_DELAY;
-
-				if (g_Target.IsTargeting())
+				for (spellType = 0; spellType < 7; spellType++)
 				{
-					g_Target.SendLastTarget();
+					totalCount += spellsCountTable[spellType];
 
-					m_WaitForTargetTimer = 0;
+					if (spell < totalCount)
+						break;
 				}
-				else if (m_WaitForTargetTimer < g_Ticks)
-					m_WaitForTargetTimer = 0;
-				else
-					result = MRC_BREAK_PARSER;
 
-				break;
-			}
-			case MC_TARGET_SELF:
-			{
-				if (m_WaitForTargetTimer == 0)
-					m_WaitForTargetTimer = g_Ticks + WAIT_FOR_TARGET_DELAY;
-
-				if (g_Target.IsTargeting())
+				if (spellType < 7)
 				{
-					g_Target.SendTargetObject(g_PlayerSerial);
+					spell += spellType * 100;
 
-					m_WaitForTargetTimer = 0;
+					if (spellType > 2)
+						spell += 100;
+
+					g_Orion.CastSpell(spell);
 				}
-				else if (m_WaitForTargetTimer < g_Ticks)
-					m_WaitForTargetTimer = 0;
-				else
-					result = MRC_BREAK_PARSER;
-
-				break;
 			}
-			case MC_ARM_DISARM:
-			{
-				int handIndex = 1 - (g_MacroPointer->SubCode - MSC_G4_LEFT_HAND);
 
-				if (handIndex < 0 || handIndex > 1 || g_ObjectInHand.Enabled)
+			break;
+		}
+		case MC_LAST_SPELL:
+		{
+			g_Orion.CastSpell(g_LastSpellIndex);
+
+			break;
+		}
+		case MC_LAST_OBJECT:
+		{
+			if (g_World->FindWorldObject(g_LastUseObject))
+				g_Orion.DoubleClick(g_LastUseObject);
+
+			break;
+		}
+		case MC_BOW:
+		case MC_SALUTE:
+		{
+			const char *emote[2] = {"bow", "salute"};
+
+			int index = macro->Code - MC_BOW;
+
+			g_Orion.EmoteAction(emote[index]);
+
+			break;
+		}
+		case MC_QUIT_GAME:
+		{
+			g_Orion.OpenLogOut();
+
+			break;
+		}
+		case MC_ALL_NAMES:
+		{
+			g_Orion.AllNames();
+
+			break;
+		}
+		case MC_LAST_TARGET:
+		{
+			if (m_WaitForTargetTimer == 0)
+				m_WaitForTargetTimer = g_Ticks + WAIT_FOR_TARGET_DELAY;
+
+			if (g_Target.IsTargeting())
+			{
+				g_Target.SendLastTarget();
+
+				m_WaitForTargetTimer = 0;
+			}
+			else if (m_WaitForTargetTimer < g_Ticks)
+				m_WaitForTargetTimer = 0;
+			else
+				result = MRC_BREAK_PARSER;
+
+			break;
+		}
+		case MC_TARGET_SELF:
+		{
+			if (m_WaitForTargetTimer == 0)
+				m_WaitForTargetTimer = g_Ticks + WAIT_FOR_TARGET_DELAY;
+
+			if (g_Target.IsTargeting())
+			{
+				g_Target.SendTargetObject(g_PlayerSerial);
+
+				m_WaitForTargetTimer = 0;
+			}
+			else if (m_WaitForTargetTimer < g_Ticks)
+				m_WaitForTargetTimer = 0;
+			else
+				result = MRC_BREAK_PARSER;
+
+			break;
+		}
+		case MC_ARM_DISARM:
+		{
+			int handIndex = 1 - (macro->SubCode - MSC_G4_LEFT_HAND);
+
+			if (handIndex < 0 || handIndex > 1 || g_ObjectInHand.Enabled)
+				break;
+
+			if (itemInHand[handIndex])
+			{
+				CGameItem *objHand = g_World->FindWorldItem(itemInHand[handIndex]);
+
+				if (objHand != NULL)
+				{
+					g_Orion.PickupItem(objHand, 1, false);
+					g_Orion.EquipItem(g_PlayerSerial);
+				}
+
+				itemInHand[handIndex] = 0;
+			}
+			else
+			{
+				uint backpack = 0;
+				CGameItem *objBackpack = g_Player->FindLayer(OL_BACKPACK);
+
+				if (objBackpack != NULL)
+					backpack = objBackpack->Serial;
+
+				if (!backpack)
 					break;
 
-				if (itemInHand[handIndex])
+				CGameItem *objHand = g_Player->FindLayer(OL_1_HAND + handIndex);
+
+				if (objHand != NULL)
 				{
-					CGameItem *objHand = g_World->FindWorldItem(itemInHand[handIndex]);
+					itemInHand[handIndex] = objHand->Serial;
 
-					if (objHand != NULL)
-					{
-						g_Orion.PickupItem(objHand, 1, false);
-						g_Orion.EquipItem(g_PlayerSerial);
-					}
+					g_Orion.PickupItem(objHand, 1, false);
+					g_Orion.DropItem(backpack, 0xFFFF, 0xFFFF, 0);
 
-					itemInHand[handIndex] = 0;
+					g_GumpManager.UpdateGump(g_PlayerSerial, 0, GT_PAPERDOLL);
 				}
-				else
-				{
-					uint backpack = 0;
-					CGameItem *objBackpack = g_Player->FindLayer(OL_BACKPACK);
-
-					if (objBackpack != NULL)
-						backpack = objBackpack->Serial;
-
-					if (!backpack)
-						break;
-
-					CGameItem *objHand = g_Player->FindLayer(OL_1_HAND + handIndex);
-
-					if (objHand != NULL)
-					{
-						itemInHand[handIndex] = objHand->Serial;
-
-						g_Orion.PickupItem(objHand, 1, false);
-						g_Orion.DropItem(backpack, 0xFFFF, 0xFFFF, 0);
-
-						g_GumpManager.UpdateGump(g_PlayerSerial, 0, GT_PAPERDOLL);
-					}
-				}
-
-				break;
 			}
-			case MC_WAIT_FOR_TARGET:
+
+			break;
+		}
+		case MC_WAIT_FOR_TARGET:
+		{
+			if (m_WaitForTargetTimer == 0)
+				m_WaitForTargetTimer = g_Ticks + WAIT_FOR_TARGET_DELAY;
+
+			if (g_Target.IsTargeting() || m_WaitForTargetTimer < g_Ticks)
+				m_WaitForTargetTimer = 0;
+			else
+				result = MRC_BREAK_PARSER;
+
+			break;
+		}
+		case MC_TARGET_NEXT:
+		{
+			CGameObject *obj = g_World->SearchWorldObject(g_LastTargetObject, 30, STO_MOBILES, SMO_NEXT);
+
+			if (obj != NULL)
+			{
+				if (obj->NPC && !((CGameCharacter*)obj)->MaxHits)
+					CPacketStatusRequest(obj->Serial).Send();
+
+				g_LastTargetObject = obj->Serial;
+				g_LastAttackObject = obj->Serial;
+				g_PluginManager.WindowProc(g_OrionWindow.Handle, UOMSG_STATUS_REQUEST, (WPARAM)obj->Serial, 0);
+			}
+
+			break;
+		}
+		case MC_ATTACK_LAST:
+		{
+			g_Orion.Attack(g_LastAttackObject);
+
+			break;
+		}
+		case MC_DELAY:
+		{
+			CMacroObjectString *mos = (CMacroObjectString*)macro;
+
+			string str = mos->String;
+				
+			if (str.length())
+				m_NextTimer = g_Ticks + std::atoi(str.c_str());
+
+			break;
+		}
+		case MC_CIRCLE_TRANS:
+		{
+			g_ConfigManager.UseCircleTrans = !g_ConfigManager.UseCircleTrans;
+
+			break;
+		}
+		case MC_CLOSE_GUMPS:
+		{
+			CGump *gump = (CGump*)g_GumpManager.m_Items;
+
+			while (gump != NULL)
+			{
+				CGump *next = (CGump*)gump->m_Next;
+
+				if (gump->GumpType == GT_OPTIONS)
+					g_OptionsMacroManager.Clear();
+
+				if (gump->GumpType != GT_MENUBAR && gump->GumpType != GT_BUFF && (gump->GumpType != GT_GENERIC && !gump->NoClose))
+					g_GumpManager.RemoveGump(gump);
+
+				gump = next;
+			}
+
+			break;
+		}
+		case MC_ALWAYS_RUN:
+		{
+			g_ConfigManager.AlwaysRun = !g_ConfigManager.AlwaysRun;
+
+			break;
+		}
+		case MC_SAVE_DESKTOP:
+		{
+			g_Orion.SaveLocalConfig();
+
+			break;
+		}
+		case MC_ENABLE_RANGE_COLOR:
+		{
+			g_ConfigManager.GrayOutOfRangeObjects = true;
+
+			break;
+		}
+		case MC_DISABLE_RANGE_COLOR:
+		{
+			g_ConfigManager.GrayOutOfRangeObjects = false;
+
+			break;
+		}
+		case MC_TOGGLE_RANGE_COLOR:
+		{
+			g_ConfigManager.GrayOutOfRangeObjects = !g_ConfigManager.GrayOutOfRangeObjects;
+
+			break;
+		}
+		case MC_ATTACK_SELECTED_TARGET:
+		{
+			if (!g_ConfigManager.DisableNewTargetSystem && g_NewTargetSystem.Serial && g_NewTargetSystem.Serial < 0x40000000)
+				g_Orion.Attack(g_NewTargetSystem.Serial);
+
+			break;
+		}
+		case MC_USE_SELECTED_TARGET:
+		{
+			if (!g_ConfigManager.DisableNewTargetSystem && g_NewTargetSystem.Serial)
+				g_Orion.DoubleClick(g_NewTargetSystem.Serial);
+
+			break;
+		}
+		case MC_CURRENT_TARGET:
+		{
+			if (!g_ConfigManager.DisableNewTargetSystem && g_NewTargetSystem.Serial)
 			{
 				if (m_WaitForTargetTimer == 0)
 					m_WaitForTargetTimer = g_Ticks + WAIT_FOR_TARGET_DELAY;
 
-				if (g_Target.IsTargeting() || m_WaitForTargetTimer < g_Ticks)
+				if (g_Target.IsTargeting())
+				{
+					g_Target.SendTargetObject(g_NewTargetSystem.Serial);
+
+					m_WaitForTargetTimer = 0;
+				}
+				else if (m_WaitForTargetTimer < g_Ticks)
 					m_WaitForTargetTimer = 0;
 				else
 					result = MRC_BREAK_PARSER;
-
-				break;
 			}
-			case MC_TARGET_NEXT:
-			{
-				CGameObject *obj = g_World->SearchWorldObject(g_LastTargetObject, 30, STO_MOBILES, SMO_NEXT);
 
-				if (obj != NULL)
-				{
-					if (obj->NPC && !((CGameCharacter*)obj)->MaxHits)
-						CPacketStatusRequest(obj->Serial).Send();
-
-					g_LastTargetObject = obj->Serial;
-					g_LastAttackObject = obj->Serial;
-					g_PluginManager.WindowProc(g_OrionWindow.Handle, UOMSG_STATUS_REQUEST, (WPARAM)obj->Serial, 0);
-				}
-
-				break;
-			}
-			case MC_ATTACK_LAST:
-			{
-				g_Orion.Attack(g_LastAttackObject);
-
-				break;
-			}
-			case MC_DELAY:
-			{
-				CMacroObjectString *mos = (CMacroObjectString*)g_MacroPointer;
-
-				string str = mos->String;
+			break;
+		}
+		case MC_TARGET_SYSTEM_ON_OFF:
+		{
+			g_ConfigManager.DisableNewTargetSystem = !g_ConfigManager.DisableNewTargetSystem;
 				
-				if (str.length())
-					m_NextTimer = g_Ticks + std::atoi(str.c_str());
-
-				break;
-			}
-			case MC_CIRCLE_TRANS:
+			break;
+		}
+		case MC_BANDAGE_SELF:
+		case MC_BANDAGE_TARGET:
+		{
+			//На самом деле с 5.0.4a
+			if (g_PacketManager.ClientVersion < CV_5020)
 			{
-				g_ConfigManager.UseCircleTrans = !g_ConfigManager.UseCircleTrans;
-
-				break;
-			}
-			case MC_CLOSE_GUMPS:
-			{
-				CGump *gump = (CGump*)g_GumpManager.m_Items;
-
-				while (gump != NULL)
-				{
-					CGump *next = (CGump*)gump->m_Next;
-
-					if (gump->GumpType == GT_OPTIONS)
-						g_OptionsMacroManager.Clear();
-
-					if (gump->GumpType != GT_MENUBAR && gump->GumpType != GT_BUFF && (gump->GumpType != GT_GENERIC && !gump->NoClose))
-						g_GumpManager.RemoveGump(gump);
-
-					gump = next;
-				}
-
-				break;
-			}
-			case MC_ALWAYS_RUN:
-			{
-				g_ConfigManager.AlwaysRun = !g_ConfigManager.AlwaysRun;
-
-				break;
-			}
-			case MC_SAVE_DESKTOP:
-			{
-				g_Orion.SaveLocalConfig();
-
-				break;
-			}
-			case MC_ENABLE_RANGE_COLOR:
-			{
-				g_ConfigManager.GrayOutOfRangeObjects = true;
-
-				break;
-			}
-			case MC_DISABLE_RANGE_COLOR:
-			{
-				g_ConfigManager.GrayOutOfRangeObjects = false;
-
-				break;
-			}
-			case MC_TOGGLE_RANGE_COLOR:
-			{
-				g_ConfigManager.GrayOutOfRangeObjects = !g_ConfigManager.GrayOutOfRangeObjects;
-
-				break;
-			}
-			case MC_ATTACK_SELECTED_TARGET:
-			{
-				if (!g_ConfigManager.DisableNewTargetSystem && g_NewTargetSystem.Serial && g_NewTargetSystem.Serial < 0x40000000)
-					g_Orion.Attack(g_NewTargetSystem.Serial);
-
-				break;
-			}
-			case MC_USE_SELECTED_TARGET:
-			{
-				if (!g_ConfigManager.DisableNewTargetSystem && g_NewTargetSystem.Serial)
-					g_Orion.DoubleClick(g_NewTargetSystem.Serial);
-
-				break;
-			}
-			case MC_CURRENT_TARGET:
-			{
-				if (!g_ConfigManager.DisableNewTargetSystem && g_NewTargetSystem.Serial)
+				if (m_WaitingBandageTarget)
 				{
 					if (m_WaitForTargetTimer == 0)
-						m_WaitForTargetTimer = g_Ticks + WAIT_FOR_TARGET_DELAY;
+						m_WaitForTargetTimer = g_Ticks + 500;
 
 					if (g_Target.IsTargeting())
 					{
-						g_Target.SendTargetObject(g_NewTargetSystem.Serial);
+						if (macro->Code == MC_BANDAGE_SELF)
+							g_Target.SendTargetObject(g_PlayerSerial);
+						else if (!g_ConfigManager.DisableNewTargetSystem && g_NewTargetSystem.Serial)
+							g_Target.SendTargetObject(g_NewTargetSystem.Serial);
 
+						m_WaitingBandageTarget = false;
 						m_WaitForTargetTimer = 0;
 					}
 					else if (m_WaitForTargetTimer < g_Ticks)
+					{
+						m_WaitingBandageTarget = false;
 						m_WaitForTargetTimer = 0;
+					}
 					else
 						result = MRC_BREAK_PARSER;
-				}
-
-				break;
-			}
-			case MC_TARGET_SYSTEM_ON_OFF:
-			{
-				g_ConfigManager.DisableNewTargetSystem = !g_ConfigManager.DisableNewTargetSystem;
-				
-				break;
-			}
-			case MC_BANDAGE_SELF:
-			case MC_BANDAGE_TARGET:
-			{
-				//На самом деле с 5.0.4a
-				if (g_PacketManager.ClientVersion < CV_5020)
-				{
-					if (m_WaitingBandageTarget)
-					{
-						if (m_WaitForTargetTimer == 0)
-							m_WaitForTargetTimer = g_Ticks + 500;
-
-						if (g_Target.IsTargeting())
-						{
-							if (g_MacroPointer->Code == MC_BANDAGE_SELF)
-								g_Target.SendTargetObject(g_PlayerSerial);
-							else if (!g_ConfigManager.DisableNewTargetSystem && g_NewTargetSystem.Serial)
-								g_Target.SendTargetObject(g_NewTargetSystem.Serial);
-
-							m_WaitingBandageTarget = false;
-							m_WaitForTargetTimer = 0;
-						}
-						else if (m_WaitForTargetTimer < g_Ticks)
-						{
-							m_WaitingBandageTarget = false;
-							m_WaitForTargetTimer = 0;
-						}
-						else
-							result = MRC_BREAK_PARSER;
-					}
-					else
-					{
-						CGameItem *bandage = g_Player->FindBandage();
-
-						if (bandage != NULL)
-						{
-							m_WaitingBandageTarget = true;
-							g_Orion.DoubleClick(bandage->Serial);
-
-							result = MRC_BREAK_PARSER;
-						}
-					}
 				}
 				else
 				{
@@ -1208,156 +1216,166 @@ MACRO_RETURN_CODE CMacroManager::Process()
 
 					if (bandage != NULL)
 					{
-						if (g_MacroPointer->Code == MC_BANDAGE_SELF)
-							CPacketTargetSelectedObject(bandage->Serial, g_PlayerSerial).Send();
-						else if (!g_ConfigManager.DisableNewTargetSystem && g_NewTargetSystem.Serial && g_NewTargetSystem.Serial < 0x40000000)
-							CPacketTargetSelectedObject(bandage->Serial, g_NewTargetSystem.Serial).Send();
+						m_WaitingBandageTarget = true;
+						g_Orion.DoubleClick(bandage->Serial);
+
+						result = MRC_BREAK_PARSER;
 					}
 				}
-
-				break;
 			}
-			case MC_SET_UPDATE_RANGE:
-			case MC_MODIFY_UPDATE_RANGE:
+			else
 			{
-				CMacroObjectString *mos = (CMacroObjectString*)g_MacroPointer;
+				CGameItem *bandage = g_Player->FindBandage();
 
-				string str = mos->String;
-
-				if (str.length())
+				if (bandage != NULL)
 				{
-					g_ConfigManager.UpdateRange = std::atoi(str.c_str());
-
-					if (g_ConfigManager.UpdateRange < MIN_VIEW_RANGE)
-						g_ConfigManager.UpdateRange = MIN_VIEW_RANGE;
-					else if (g_ConfigManager.UpdateRange > g_MaxViewRange)
-						g_ConfigManager.UpdateRange = g_MaxViewRange;
+					if (macro->Code == MC_BANDAGE_SELF)
+						CPacketTargetSelectedObject(bandage->Serial, g_PlayerSerial).Send();
+					else if (!g_ConfigManager.DisableNewTargetSystem && g_NewTargetSystem.Serial && g_NewTargetSystem.Serial < 0x40000000)
+						CPacketTargetSelectedObject(bandage->Serial, g_NewTargetSystem.Serial).Send();
 				}
-
-				break;
 			}
-			case MC_INCREASE_UPDATE_RANGE:
-			{
-				g_ConfigManager.UpdateRange += 1;
 
-				if (g_ConfigManager.UpdateRange > g_MaxViewRange)
-					g_ConfigManager.UpdateRange = g_MaxViewRange;
+			break;
+		}
+		case MC_SET_UPDATE_RANGE:
+		case MC_MODIFY_UPDATE_RANGE:
+		{
+			CMacroObjectString *mos = (CMacroObjectString*)macro;
 
-				break;
-			}
-			case MC_DECREASE_UPDATE_RANGE:
+			string str = mos->String;
+
+			if (str.length())
 			{
-				g_ConfigManager.UpdateRange -= 1;
+				g_ConfigManager.UpdateRange = std::atoi(str.c_str());
 
 				if (g_ConfigManager.UpdateRange < MIN_VIEW_RANGE)
 					g_ConfigManager.UpdateRange = MIN_VIEW_RANGE;
-
-				break;
+				else if (g_ConfigManager.UpdateRange > g_MaxViewRange)
+					g_ConfigManager.UpdateRange = g_MaxViewRange;
 			}
-			case MC_MAX_UPDATE_RANGE:
-			{
+
+			break;
+		}
+		case MC_INCREASE_UPDATE_RANGE:
+		{
+			g_ConfigManager.UpdateRange += 1;
+
+			if (g_ConfigManager.UpdateRange > g_MaxViewRange)
 				g_ConfigManager.UpdateRange = g_MaxViewRange;
 
-				break;
-			}
-			case MC_MIN_UPDATE_RANGE:
-			{
+			break;
+		}
+		case MC_DECREASE_UPDATE_RANGE:
+		{
+			g_ConfigManager.UpdateRange -= 1;
+
+			if (g_ConfigManager.UpdateRange < MIN_VIEW_RANGE)
 				g_ConfigManager.UpdateRange = MIN_VIEW_RANGE;
 
-				break;
-			}
-			case MC_DEFAULT_UPDATE_RANGE:
-			{
-				g_ConfigManager.UpdateRange = g_MaxViewRange;
-
-				break;
-			}
-			case MC_UPDATE_RANGE_INFO:
-			{
-				g_Orion.CreateTextMessageF(3, 0, "Current update range is %i", g_ConfigManager.UpdateRange);
-
-				break;
-			}
-			case MC_SELECT_NEXT:
-			case MC_SELECT_PREVEOUS:
-			case MC_SELECT_NEAREST:
-			{
-				if (g_ConfigManager.DisableNewTargetSystem)
-					break;
-				
-				SCAN_TYPE_OBJECT scanType = (SCAN_TYPE_OBJECT)(g_MacroPointer->SubCode - MSC_G7_HOSTLE);
-
-				CGameObject *obj = g_World->SearchWorldObject(g_NewTargetSystem.Serial, 10, scanType, (SCAN_MODE_OBJECT)(g_MacroPointer->Code - MC_SELECT_NEXT));
-
-				if (obj != NULL)
-				{
-					g_GumpManager.CloseGump(g_NewTargetSystem.Serial, 0, GT_TARGET_SYSTEM);
-
-					g_NewTargetSystem.Serial = obj->Serial;
-
-					if (g_GumpManager.UpdateContent(g_NewTargetSystem.Serial, 0, GT_TARGET_SYSTEM) == NULL)
-					{
-						if (g_NewTargetSystem.Serial < 0x40000000)
-							CPacketStatusRequest(g_NewTargetSystem.Serial).Send();
-
-						g_GumpManager.AddGump(new CGumpTargetSystem(g_NewTargetSystem.Serial, g_NewTargetSystem.GumpX, g_NewTargetSystem.GumpY));
-					}
-				}
-				else
-				{
-					const char *resultNames[5] = {"Hostles", "Party Members", "Followers", "Objects", "Mobiles"};
-
-					g_Orion.CreateUnicodeTextMessageF(0, 0x038A, "There are no %s on the screen to select.", resultNames[scanType]);
-				}
-
-				break;
-			}
-			case MC_TOGGLE_BUICON_WINDOW:
-			{
-				g_ConfigManager.ToggleBufficonWindow = !g_ConfigManager.ToggleBufficonWindow;
-
-				break;
-			}
-			case MC_INVOKE_VIRTURE:
-			{
-				uchar id = g_MacroPointer->SubCode - MSC_G5_HONOR + 31;
-
-				CPacketInvokeVirtureRequest(id).Send();
-
-				break;
-			}
-			case MC_PRIMARY_ABILITY:
-			{
-				CGumpAbility::OnAbilityUse(0);
-
-				break;
-			}
-			case MC_SECONDARY_ABILITY:
-			{
-				CGumpAbility::OnAbilityUse(1);
-
-				break;
-			}
-			case MC_TOGGLE_GARGOYLE_FLYING:
-			{
-				if (g_Player->Race == RT_GARGOYLE)
-					CPacketToggleGargoyleFlying().Send();
-
-				break;
-			}
-			case MC_KILL_GUMP_OPEN:
-			case MC_EQUIP_LAST_WEAPON:
-			{
-				g_Orion.CreateTextMessage(TT_SYSTEM, 0xFFFFFFFF, 3, 0x77, "That macro is not work now");
-
-				break;
-			}
-			default:
-				break;
+			break;
 		}
+		case MC_MAX_UPDATE_RANGE:
+		{
+			g_ConfigManager.UpdateRange = g_MaxViewRange;
+
+			break;
+		}
+		case MC_MIN_UPDATE_RANGE:
+		{
+			g_ConfigManager.UpdateRange = MIN_VIEW_RANGE;
+
+			break;
+		}
+		case MC_DEFAULT_UPDATE_RANGE:
+		{
+			g_ConfigManager.UpdateRange = g_MaxViewRange;
+
+			break;
+		}
+		case MC_UPDATE_RANGE_INFO:
+		{
+			g_Orion.CreateTextMessageF(3, 0, "Current update range is %i", g_ConfigManager.UpdateRange);
+
+			break;
+		}
+		case MC_SELECT_NEXT:
+		case MC_SELECT_PREVEOUS:
+		case MC_SELECT_NEAREST:
+		{
+			if (g_ConfigManager.DisableNewTargetSystem)
+				break;
+				
+			SCAN_TYPE_OBJECT scanType = (SCAN_TYPE_OBJECT)(macro->SubCode - MSC_G7_HOSTLE);
+
+			CGameObject *obj = g_World->SearchWorldObject(g_NewTargetSystem.Serial, 10, scanType, (SCAN_MODE_OBJECT)(macro->Code - MC_SELECT_NEXT));
+
+			if (obj != NULL)
+			{
+				g_GumpManager.CloseGump(g_NewTargetSystem.Serial, 0, GT_TARGET_SYSTEM);
+
+				g_NewTargetSystem.Serial = obj->Serial;
+
+				if (g_GumpManager.UpdateContent(g_NewTargetSystem.Serial, 0, GT_TARGET_SYSTEM) == NULL)
+				{
+					if (g_NewTargetSystem.Serial < 0x40000000)
+						CPacketStatusRequest(g_NewTargetSystem.Serial).Send();
+
+					g_GumpManager.AddGump(new CGumpTargetSystem(g_NewTargetSystem.Serial, g_NewTargetSystem.GumpX, g_NewTargetSystem.GumpY));
+				}
+			}
+			else
+			{
+				const char *resultNames[5] = {"Hostles", "Party Members", "Followers", "Objects", "Mobiles"};
+
+				g_Orion.CreateUnicodeTextMessageF(0, 0x038A, "There are no %s on the screen to select.", resultNames[scanType]);
+			}
+
+			break;
+		}
+		case MC_TOGGLE_BUICON_WINDOW:
+		{
+			g_ConfigManager.ToggleBufficonWindow = !g_ConfigManager.ToggleBufficonWindow;
+
+			break;
+		}
+		case MC_INVOKE_VIRTURE:
+		{
+			uchar id = macro->SubCode - MSC_G5_HONOR + 31;
+
+			CPacketInvokeVirtureRequest(id).Send();
+
+			break;
+		}
+		case MC_PRIMARY_ABILITY:
+		{
+			CGumpAbility::OnAbilityUse(0);
+
+			break;
+		}
+		case MC_SECONDARY_ABILITY:
+		{
+			CGumpAbility::OnAbilityUse(1);
+
+			break;
+		}
+		case MC_TOGGLE_GARGOYLE_FLYING:
+		{
+			if (g_Player->Race == RT_GARGOYLE)
+				CPacketToggleGargoyleFlying().Send();
+
+			break;
+		}
+		case MC_KILL_GUMP_OPEN:
+		case MC_EQUIP_LAST_WEAPON:
+		{
+			g_Orion.CreateTextMessage(TT_SYSTEM, 0xFFFFFFFF, 3, 0x77, "That macro is not work now");
+
+			break;
+		}
+		default:
+			break;
 	}
-	else
-		result = MRC_BREAK_PARSER;
 
 	return result;
 }

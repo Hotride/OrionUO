@@ -36,6 +36,12 @@ USHORT_LIST UOFileReader::GetGumpPixels(CIndexObject &io)
 
 	pixels.resize(blocksize);
 
+	if (pixels.size() != blocksize)
+	{
+		LOG("Allocation pixels memory for GetGumpPixels failed (want size: %i)\n", blocksize);
+		return pixels;
+	}
+
 	ushort color = io.Color;
 
 	IFOR(y, 0, io.Height)
@@ -213,6 +219,13 @@ CGLTexture *UOFileReader::ReadArt(const ushort &id, CIndexObject &io, const bool
 
 			pixels.resize(blocksize);
 
+			if (pixels.size() != blocksize)
+			{
+				LOG("Allocation pixels memory for ReadArt::LandTile failed (want size: %i)\n", blocksize);
+				delete th;
+				return NULL;
+			}
+
 			IFOR(i, 0, blocksize)
 				pixels[i] = ptr[i];
 		}
@@ -252,6 +265,13 @@ CGLTexture *UOFileReader::ReadArt(const ushort &id, CIndexObject &io, const bool
 			int blocksize = w * h;
 
 			pixels.resize(blocksize, 0);
+
+			if (pixels.size() != blocksize)
+			{
+				LOG("Allocation pixels memory for ReadArt::StaticTile failed (want size: %i)\n", blocksize);
+				delete th;
+				return NULL;
+			}
 
 			ptr = (pushort)(dataStart + (lineOffsets[0] * 2));
 

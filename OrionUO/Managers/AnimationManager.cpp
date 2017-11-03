@@ -1178,7 +1178,15 @@ bool CAnimationManager::LoadDirectionGroup(CTextureAnimationDirection &direction
 			continue;
 		}
 
-		USHORT_LIST data(imageWidth * imageHeight, 0);
+		int wantSize = imageWidth * imageHeight;
+
+		USHORT_LIST data(wantSize, 0);
+
+		if (data.size() != wantSize)
+		{
+			LOG("Allocation pixels memory for LoadDirectionGroup failed (want size: %i)\n", wantSize);
+			continue;
+		}
 
 		uint header = ReadUInt32LE();
 
@@ -2284,6 +2292,12 @@ bool CAnimationManager::TryReadUOPAnimDimins(CTextureAnimationDirection &directi
 			continue;
 		int textureSize = imageWidth * imageHeight;
 		USHORT_LIST data(textureSize, 0);
+
+		if (data.size() != textureSize)
+		{
+			LOG("Allocation pixels memory for TryReadUOPAnimDimins failed (want size: %i)\n", textureSize);
+			continue;
+		}
 
 		uint header = ReadUInt32LE();
 

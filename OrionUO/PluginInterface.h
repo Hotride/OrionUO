@@ -29,6 +29,7 @@ typedef bool __cdecl WORLD_MAP_DRAW_PROC();
 #define UOMSG_MENU_RESPONSE			WM_USER + 669
 #define UOMSG_STATUS_REQUEST		WM_USER + 670
 #define UOMSG_SELECTED_TILE			WM_USER + 671
+#define UOMSG_END_MACRO_PAYING		WM_USER + 672
 //----------------------------------------------------------------------------------
 #pragma pack (push,1)
 typedef struct UOI_PLAYER_XYZ_DATA

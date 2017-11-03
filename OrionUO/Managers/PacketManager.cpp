@@ -5603,6 +5603,67 @@ PACKET_HANDLER(OrionMessages)
 			g_Orion.StartReconnect();
 			break;
 		}
+		case OCT_PLAY_MACRO:
+		{
+			int count = ReadUInt16BE();
+
+			static CMacro existsMacros(0, false, false, false);
+			existsMacros.Clear();
+
+			g_MacroPointer = NULL;
+			g_MacroManager.SendNotificationToPlugin = true;
+
+			IFOR(m, 0, count)
+			{
+				string name = ReadString(0);
+				string param = ReadString(0);
+				MACRO_CODE macroCode = MC_NONE;
+
+				IFOR(i, 0, CMacro::MACRO_ACTION_NAME_COUNT)
+				{
+					if (name == CMacro::m_MacroActionName[i])
+					{
+						macroCode = (MACRO_CODE)i;
+						break;
+					}
+				}
+
+				if (macroCode == MC_NONE)
+				{
+					LOG("Invalid macro name: %s\n", name.c_str());
+					continue;
+				}
+
+				CMacroObject *macro = CMacro::CreateMacro(macroCode);
+
+				if (param.length())
+				{
+					if (macro->HaveString())
+						((CMacroObjectString*)macro)->String = param;
+					else
+					{
+						IFOR(i, 0, CMacro::MACRO_ACTION_COUNT)
+						{
+							if (param == CMacro::m_MacroAction[i])
+							{
+								macroCode = (MACRO_CODE)i;
+								break;
+							}
+						}
+					}
+				}
+
+				existsMacros.Add(macro);
+			}
+
+			g_MacroPointer = (CMacroObject*)existsMacros.m_Items;
+
+			g_MacroManager.WaitingBandageTarget = false;
+			g_MacroManager.WaitForTargetTimer = 0;
+			g_MacroManager.Execute();
+
+			break;
+		}
 		default:
 			break;
 	}

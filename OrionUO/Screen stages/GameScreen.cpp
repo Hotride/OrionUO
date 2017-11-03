@@ -740,7 +740,25 @@ void CGameScreen::AddTileToRenderList(CRenderWorldObject *obj, const int &worldX
 		}
 
 		if (m_RenderListCount >= (int)m_RenderList.size())
-			m_RenderList.resize(m_RenderList.size() + 1000);
+		{
+			int newSize = m_RenderList.size() + 1000;
+
+			m_RenderList.resize(newSize);
+
+			if (m_RenderList.size() != newSize)
+			{
+				LOG("Allocation pixels memory for Render List failed (want size: %i)\n", newSize);
+
+				m_RenderList.resize(newSize - 1000);
+
+				if (m_RenderList.size() != newSize - 1000)
+				{
+					LOG("Allocation pixels memory for Render List failed SECOND STEP!!! (want size: %i)\n", newSize - 1000);
+					m_RenderListCount = 0;
+					return;
+				}
+			}
+		}
 
 		//LOG("Item[0x%04X]: x=%i y=%i (dx=%i, dy=%i)\n", obj->Graphic, drawX, drawY, obj->DrawX, obj->DrawY);
 
@@ -2389,7 +2407,7 @@ void CGameScreen::OnKeyDown(const WPARAM &wParam, const LPARAM &lParam)
 
 		if (macro != NULL)
 		{
-			g_MacroPointer = (CMacroObject*)macro->m_Items;
+			g_MacroManager.ChangePointer((CMacroObject*)macro->m_Items);
 
 			g_MacroManager.WaitingBandageTarget = false;
 			g_MacroManager.WaitForTargetTimer = 0;
