@@ -1,4 +1,6 @@
-﻿/***********************************************************************************
+﻿// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
+/***********************************************************************************
 **
 ** FontsManager.cpp
 **
@@ -2726,7 +2728,7 @@ UINT_LIST CFontsManager::GeneratePixelsW(const uchar &font, CGLTextTexture &th, 
 							break;
 
 						int italicOffset = 0;
-						if (isItalic && cy >= 0 && cy < dh)
+						if (isItalic && cy < dh)
 							italicOffset = (int)((dh - cy) / ITALIC_FONT_KOEFFICIENT);
 
 						IFOR(cx, minXOk, maxXOk)

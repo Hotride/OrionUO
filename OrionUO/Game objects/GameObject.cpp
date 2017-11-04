@@ -1,4 +1,6 @@
-﻿/***********************************************************************************
+﻿// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
+/***********************************************************************************
 **
 ** GameObject.cpp
 **
@@ -239,9 +241,6 @@ void CGameObject::GenerateObjectHandlesTexture(wstring text)
 	IFOR(x, 0, width)
 	{
 		int gumpDataX = x + 10;
-
-		if (gumpDataX >= g_ObjectHandlesWidth)
-			break;
 
 		IFOR(y, 0, maxHeight)
 		{

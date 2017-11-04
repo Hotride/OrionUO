@@ -103,7 +103,7 @@ public:
 	@param [__in] playerZ Координата Z игрока
 	@return Может ли быть прозрачным
 	*/
-	virtual bool TranparentTest(int &playerZ) { return false; }
+	virtual bool TranparentTest(const int &playerZ) { return false; }
 
 	/*!
 	Отрисовать эффект

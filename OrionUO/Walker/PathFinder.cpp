@@ -1,4 +1,6 @@
-﻿/***********************************************************************************
+﻿// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
+/***********************************************************************************
 **
 ** PathFinder.cpp
 **
@@ -629,7 +631,6 @@ bool CPathFinder::Walk(bool run, uchar direction)
 
 	lastStepTime = g_Ticks;
 
-	lastDelta = nowDelta;
 	lastRun = run;
 	lastMount = onMount;
 

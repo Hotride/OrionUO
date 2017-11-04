@@ -1,4 +1,6 @@
-﻿/***********************************************************************************
+﻿// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
+/***********************************************************************************
 **
 ** RenderStaticObject.cpp
 **
@@ -247,7 +249,7 @@ bool CRenderStaticObject::TextCanBeTransparent(CRenderTextObject *text)
 	return result;
 }
 //---------------------------------------------------------------------------
-bool CRenderStaticObject::TranparentTest(int &playerZPlus5)
+bool CRenderStaticObject::TranparentTest(const int &playerZPlus5)
 {
 	WISPFUN_DEBUG("c27_f9");
 	bool result = true;

@@ -1,4 +1,6 @@
-﻿/***********************************************************************************
+﻿// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
+/***********************************************************************************
 **
 ** OrionUO.cpp
 **
@@ -980,7 +982,7 @@ void COrion::LoadClientConfig()
 
 		if (dllVersion != 0xFE)
 		{
-			g_OrionWindow.ShowMessage("Old version of Orion.dll detected!!!\nClient may be crashed in process--" + dllVersion, "Warning!");
+			g_OrionWindow.ShowMessage("Old version of Orion.dll detected!!!\nClient may be crashed in process.", "Warning!");
 			file.Move(-1);
 		}
 		else
@@ -3805,7 +3807,7 @@ void COrion::IndexReplaces()
 
 				if (index < MAX_LAND_DATA_INDEX_COUNT && checkIndex < MAX_LAND_DATA_INDEX_COUNT && m_LandDataIndex[checkIndex].Address != NULL && m_LandDataIndex[index].Address == NULL)
 				{
-					memcpy(&m_LandDataIndex[index], &m_LandDataIndex[checkIndex], sizeof(CIndexObject));
+					m_LandDataIndex[index] = m_LandDataIndex[checkIndex];
 					m_LandDataIndex[index].Texture = NULL;
 					m_LandDataIndex[index].Color = atoi(strings[2].c_str());
 
@@ -3819,7 +3821,7 @@ void COrion::IndexReplaces()
 
 					if (m_StaticDataIndex[index].Address == NULL && m_StaticDataIndex[checkIndex].Address != NULL)
 					{
-						memcpy(&m_StaticDataIndex[index], &m_StaticDataIndex[checkIndex], sizeof(CIndexObjectStatic));
+						m_StaticDataIndex[index] = m_StaticDataIndex[checkIndex];
 						m_StaticDataIndex[index].Texture = NULL;
 						m_StaticDataIndex[index].Color = atoi(strings[2].c_str());
 
@@ -3855,7 +3857,7 @@ void COrion::IndexReplaces()
 
 				if (index < m_TexturesDataCount && checkIndex < m_TexturesDataCount && m_TextureDataIndex[checkIndex].Address != NULL)
 				{
-					memcpy(&m_TextureDataIndex[index], &m_TextureDataIndex[checkIndex], sizeof(CIndexObject));
+					m_TextureDataIndex[index] = m_TextureDataIndex[checkIndex];
 					m_TextureDataIndex[index].Texture = NULL;
 					m_TextureDataIndex[index].Color = atoi(strings[2].c_str());
 
@@ -3888,7 +3890,7 @@ void COrion::IndexReplaces()
 				if (checkIndex < 0 || checkIndex >= MAX_GUMP_DATA_INDEX_COUNT || m_GumpDataIndex[checkIndex].Address == NULL)
 					continue;
 
-				memcpy(&m_GumpDataIndex[index], &m_GumpDataIndex[checkIndex], sizeof(CIndexObject));
+				m_GumpDataIndex[index] = m_GumpDataIndex[checkIndex];
 				m_GumpDataIndex[index].Texture = NULL;
 				m_GumpDataIndex[index].Color = atoi(strings[2].c_str());
 
@@ -3917,10 +3919,10 @@ void COrion::IndexReplaces()
 			{
 				int checkIndex = atoi(newMulti[i].c_str());
 
-				if (checkIndex < 0 || checkIndex >= g_MultiIndexCount && m_MultiDataIndex[checkIndex].Address == NULL)
+				if (checkIndex < 0 || checkIndex >= g_MultiIndexCount || m_MultiDataIndex[checkIndex].Address == NULL)
 					continue;
 
-				memcpy(&m_MultiDataIndex[index], &m_MultiDataIndex[checkIndex], sizeof(CIndexMulti));
+				m_MultiDataIndex[index] = m_MultiDataIndex[checkIndex];
 
 				break;
 			}

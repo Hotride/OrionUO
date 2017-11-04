@@ -1,4 +1,6 @@
-﻿/***********************************************************************************
+﻿// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
+/***********************************************************************************
 **
 ** GumpPartyManifest.cpp
 **
@@ -42,10 +44,10 @@ void CGumpPartyManifest::UpdateContent()
 
 	IFOR(i, 0, 10)
 	{
-		Add(new CGUIButton(ID_GPM_BUTTON_TELL_MEMBER == i, 0x0FAB, 0x0FAC, 0x0FAD, 40, yPtr + 2));
+		Add(new CGUIButton(ID_GPM_BUTTON_TELL_MEMBER + i, 0x0FAB, 0x0FAC, 0x0FAD, 40, yPtr + 2));
 
 		if (isLeader)
-			Add(new CGUIButton(ID_GPM_BUTTON_KICK_MEMBER == i, 0x0FB1, 0x0FB2, 0x0FB3, 80, yPtr + 2));
+			Add(new CGUIButton(ID_GPM_BUTTON_KICK_MEMBER + i, 0x0FB1, 0x0FB2, 0x0FB3, 80, yPtr + 2));
 
 		Add(new CGUIGumppic(0x0475, 130, yPtr));
 

@@ -77,6 +77,7 @@ class CGLEngine
 	SETGET(bool, CanUseBuffer, false);
 	SETGET(float, SittingCharacterOffset, 8.0f);
 	SETGET(GLuint, PositionBuffer, 0);
+	SETGET(bool, IgnoreHitMap, false);
 
 private:
 	bool GLSetupPixelFormat();

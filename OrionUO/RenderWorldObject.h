@@ -40,7 +40,7 @@ public:
 	virtual bool TextCanBeTransparent(CRenderTextObject *text) { return false; }
 
 	//Проверка прозрачности (для круга прозрачности)
-	virtual bool TranparentTest(int &playerZ) { return false; }
+	virtual bool TranparentTest(const int &playerZ) { return false; }
 
 	//Ссылки на предыдущий и следующий элементы в очереди рендера
 	CRenderWorldObject *m_NextXY{ NULL };

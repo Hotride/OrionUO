@@ -1,4 +1,6 @@
-﻿/***********************************************************************************
+﻿// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
+/***********************************************************************************
 **
 ** CustomHouseObjects.cpp
 **
@@ -294,7 +296,7 @@ int CCustomHouseObjectRoof::Contains(const ushort &graphic) const
 bool CCustomHouseObjectPlaceInfo::Parse(const char *text)
 {
 	WISPFUN_DEBUG("");
-	char buf[50];
+	char buf[50] = { 0 };
 
 	bool result = sscanf(text,
 		"%s %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d",

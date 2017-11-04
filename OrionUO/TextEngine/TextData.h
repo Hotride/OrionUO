@@ -15,7 +15,6 @@ class CTextData : public CRenderTextObject
 {
 	SETGET(bool, Unicode, false);
 	SETGET(TEXT_TYPE, Type, TT_CLIENT);
-	SETGET(uint, Serial, 0);
 	SETGET(uchar, Font, 0);
 	SETGET(uint, Timer, 0);
 	SETGET(uint, MoveTimer, 0);

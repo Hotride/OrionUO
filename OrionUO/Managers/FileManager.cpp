@@ -1,4 +1,6 @@
-﻿/***********************************************************************************
+﻿// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
+/***********************************************************************************
 **
 ** FileManager.cpp
 **
@@ -514,7 +516,7 @@ bool CFileManager::DecompressUOPFileData(UOPAnimationData &animData, UCHAR_LIST 
 	if (z_err != Z_OK)
 	{
 		LOG("UOP anim decompression failed %d\n", z_err);
-		LOG("Anim file: %s\n", *animData.path);
+		LOG("Anim file: %s\n", animData.path->c_str());
 		LOG("Anim offset: %d\n", animData.offset);
 		return false;
 	}

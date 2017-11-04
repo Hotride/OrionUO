@@ -123,7 +123,7 @@ private:
 	//!Находится-ли данный слой под робой
 	bool IsCovered(const int &layer, class CGameObject *owner);
 
-	bool m_Transform;
+	bool m_Transform = false;
 
 	ushort m_CharacterLayerGraphic[25];
 	ushort m_CharacterLayerAnimID[25];

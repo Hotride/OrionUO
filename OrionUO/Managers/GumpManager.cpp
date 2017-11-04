@@ -1,4 +1,6 @@
-﻿/***********************************************************************************
+﻿// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
+/***********************************************************************************
 **
 ** GumpManager.cpp
 **
@@ -108,7 +110,7 @@ void CGumpManager::AddGump(CGump *obj)
 					delete obj;
 
 					if (gumpType == GT_WORLD_MAP && !((CGumpWorldMap*)gump)->Called)
-						((CGumpWorldMap*)gump)->Called = ((CGumpWorldMap*)obj)->Called;
+						((CGumpWorldMap*)gump)->Called = true;
 					else if (gump->GumpType == GT_POPUP_MENU)
 						g_PopupMenu = (CGumpPopupMenu*)gump;
 					else if (gumpType == GT_CONTAINER || gumpType == GT_JOURNAL || gumpType == GT_SKILLS)

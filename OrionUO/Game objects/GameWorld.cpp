@@ -1,4 +1,6 @@
-﻿/***********************************************************************************
+﻿// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
+/***********************************************************************************
 **
 ** GameWorld.cpp
 **
@@ -758,7 +760,7 @@ CGameObject *CGameWorld::SearchWorldObject(const uint &serialStart, const int &s
 						{
 							CGameCharacter *gc = obj->GameCharacterPtr();
 
-							condition = (gc->Notoriety >= NT_SOMEONE_GRAY || gc->Notoriety <= NT_MURDERER);
+							condition = (gc->Notoriety >= NT_SOMEONE_GRAY && gc->Notoriety <= NT_MURDERER);
 						}
 						else if (scanType == STO_PARTY)
 							condition = g_Party.Contains(obj->Serial);

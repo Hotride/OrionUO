@@ -1,4 +1,6 @@
-﻿/***********************************************************************************
+﻿// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
+/***********************************************************************************
 **
 ** GLEngine.cpp
 **
@@ -231,6 +233,9 @@ void CGLEngine::GL1_BindTexture16(CGLTexture &texture, const int &width, const i
 	texture.Height = height;
 	texture.Texture = tex;
 
+	if (m_IgnoreHitMap)
+		return;
+
 	HIT_MAP_TYPE &hitMap = texture.m_HitMap;
 	hitMap.resize(width * height);
 	int pos = 0;
@@ -262,6 +267,9 @@ void CGLEngine::GL1_BindTexture32(CGLTexture &texture, const int &width, const i
 	texture.Width = width;
 	texture.Height = height;
 	texture.Texture = tex;
+
+	if (m_IgnoreHitMap)
+		return;
 
 	HIT_MAP_TYPE &hitMap = texture.m_HitMap;
 	hitMap.resize(width * height);

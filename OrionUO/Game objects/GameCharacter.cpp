@@ -1,4 +1,6 @@
-﻿/***********************************************************************************
+﻿// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
+/***********************************************************************************
 **
 ** GameCharacter.cpp
 **
@@ -544,6 +546,7 @@ void CGameCharacter::CorrectAnimationGroup(const ushort &graphic, const ANIMATIO
 			case HAG_GET_HIT_3:
 			case HAG_GET_HIT_2:
 				animation = HAG_GET_HIT_1;
+				break;
 			case HAG_MISC_4:
 			case HAG_MISC_3:
 			case HAG_MISC_2:

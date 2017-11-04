@@ -1,4 +1,6 @@
-﻿//----------------------------------------------------------------------------------
+﻿// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
+//----------------------------------------------------------------------------------
 #include "stdafx.h"
 
 namespace WISP_NETWORK
@@ -18,10 +20,9 @@ CPacketMessage::CPacketMessage(puchar data, const int &dataSize, const bool &big
 }
 //----------------------------------------------------------------------------------
 CPacketMessage::CPacketMessage(const UCHAR_LIST &data, const bool &bigEndian)
-: m_BigEndian(bigEndian)
+: m_BigEndian(bigEndian), m_Data(data)
 {
 	WISPFUN_DEBUG("c9_f2");
-	m_Data = data;
 }
 //----------------------------------------------------------------------------------
 CPacketMessage::~CPacketMessage()

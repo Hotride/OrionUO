@@ -82,8 +82,8 @@ if (ptr != NULL) \
 //!Decremented ordinary for
 #define DFOR(var, start, stop) for (int var = start; var >= stop; var --)
 //----------------------------------------------------------------------------------
-#define IN_RANGE(name, id1, id2) (name >= id1 && name <= id2)
-#define OUT_RANGE(name, id1, id2) (name < id1 || name > id2)
+#define IN_RANGE(name, id1, id2) ((name) >= (id1) && (name) <= (id2))
+#define OUT_RANGE(name, id1, id2) ((name) < (id1) || (name) > (id2))
 //----------------------------------------------------------------------------------
 //!Set/Get ordinary class property
 #define SETGET(type, name, defaultValue) \

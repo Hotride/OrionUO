@@ -1,4 +1,6 @@
-﻿/***********************************************************************************
+﻿// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
+/***********************************************************************************
 **
 ** GumpWorldMap.cpp
 **
@@ -461,7 +463,11 @@ void CGumpWorldMap::LoadMap(const int &map)
 		}
 
 		if (buf.size() == wantSize)
+		{
+			g_GL.IgnoreHitMap = true;
 			g_GL_BindTexture16(g_MapTexture[map], g_MapSize[map].Width, g_MapSize[map].Height, &buf[0]);
+			g_GL.IgnoreHitMap = false;
+		}
 		else
 			LOG("World map build error: buffer=%i, want=%i\n", buf.size(), g_MapSize[map].Width * g_MapSize[map].Height);
 	}
@@ -510,8 +516,14 @@ void CGumpWorldMap::PrepareContent()
 
 	int mapWidth = 0;
 	int mapHeight = 0;
-	int playerX = g_Player->X;
-	int playerY = g_Player->Y;
+	int playerX = 0;
+	int playerY = 0;
+
+	if (g_Player != NULL)
+	{
+		playerX = g_Player->X;
+		playerY = g_Player->Y;
+	}
 
 	GetScaledDimensions(mapWidth, mapHeight, playerX, playerY);
 

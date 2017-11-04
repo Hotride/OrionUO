@@ -1,4 +1,6 @@
-﻿/***********************************************************************************
+﻿// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
+/***********************************************************************************
 **
 ** PacketManager.cpp
 **
@@ -2530,7 +2532,7 @@ PACKET_HANDLER(ExtendedCommand)
 
 			if (house == NULL || house->Revision != revision)
 				CPacketCustomHouseDataReq(serial).Send();
-			else if (house != NULL)
+			else
 				house->Paste(g_World->FindWorldItem(serial));
 
 			break;
@@ -2771,7 +2773,7 @@ PACKET_HANDLER(Talk)
 	ushort font = ReadUInt16BE();
 	string name(ReadString(0));
 
-	if (!serial && !graphic && !type && font == 0xFFFF && textColor == 0xFFFF && ToLowerA(name) == "system")
+	if (!serial && !graphic && type == ST_NORMAL && font == 0xFFFF && textColor == 0xFFFF && ToLowerA(name) == "system")
 	{
 		uchar sbuffer[0x28] =
 		{
@@ -2865,7 +2867,7 @@ PACKET_HANDLER(UnicodeTalk)
 	uint language = ReadUInt32BE();
 	string name(ReadString(0));
 
-	if (!serial && !graphic && !type && font == 0xFFFF && textColor == 0xFFFF && ToLowerA(name) == "system")
+	if (!serial && !graphic && type == ST_NORMAL && font == 0xFFFF && textColor == 0xFFFF && ToLowerA(name) == "system")
 	{
 		uchar sbuffer[0x28] =
 		{

@@ -1,4 +1,6 @@
-﻿/***********************************************************************************
+﻿// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
+/***********************************************************************************
 **
 ** GumpStatusbar.cpp
 **
@@ -911,14 +913,17 @@ void CGumpStatusbar::UpdateContent()
 			{
 				if (g_Party.Member[i].Serial == m_Serial)
 				{
-					CGUIGumppic *bodyGump = (CGUIGumppic*)Add(new CGUIGumppic(0x0803, 0, 0));
-					bodyGump->SelectOnly = true;
-
 					CPartyObject &member = g_Party.Member[i];
 					if (member.Character == NULL)
 					{
 						member.Character = g_World->FindWorldCharacter(member.Serial);
+
+						if (member.Character == NULL)
+							break;
 					}
+
+					CGUIGumppic *bodyGump = (CGUIGumppic*)Add(new CGUIGumppic(0x0803, 0, 0));
+					bodyGump->SelectOnly = true;
 
 					string memberName = member.GetName(i);
 					bool outofRange = false;

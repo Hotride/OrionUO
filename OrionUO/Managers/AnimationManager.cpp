@@ -1,4 +1,6 @@
-﻿/***********************************************************************************
+﻿// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
+/***********************************************************************************
 **
 ** AnimationManager.cpp
 **
@@ -2098,7 +2100,7 @@ ANIMATION_DIMENSIONS CAnimationManager::GetAnimationDimensions(uchar frameIndex,
 			int fc = direction.FrameCount;
 			if (fc > 0)
 			{
-				if (fc > 0 && frameIndex >= fc)
+				if (frameIndex >= fc)
 				{
 					if (isCorpse)
 						frameIndex = fc - 1;
@@ -2590,7 +2592,7 @@ bool CAnimationManager::IsCovered(const int &layer, CGameObject *owner)
 
 				if (skirt != 0x01C7 && skirt != 0x01E4)
 					result = true;
-				else if (robe != 0x0229 && (robe <= 0x04E7 || robe <= 0x04EB))
+				else if (robe != 0x0229 && (robe <= 0x04E7 || robe > 0x04EB))
 					result = true;
 			}
 

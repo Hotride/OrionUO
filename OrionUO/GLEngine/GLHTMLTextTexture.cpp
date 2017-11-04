@@ -1,4 +1,6 @@
-﻿/***********************************************************************************
+﻿// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
+/***********************************************************************************
 **
 ** GLHTMLTextTexture.cpp
 **
@@ -26,7 +28,7 @@ ushort CGLHTMLTextTexture::WebLinkUnderMouse(int x, int y)
 	x = g_MouseManager.Position.X - x;
 	y = g_MouseManager.Position.Y - y;
 
-	for (std::deque<WEB_LINK_RECT>::iterator it = m_WebLinkRect.begin(); it != m_WebLinkRect.end(); it++)
+	for (std::deque<WEB_LINK_RECT>::iterator it = m_WebLinkRect.begin(); it != m_WebLinkRect.end(); ++it)
 	{
 		if (y >= (*it).StartY && y < (*it).StartY + (*it).EndY)
 		{

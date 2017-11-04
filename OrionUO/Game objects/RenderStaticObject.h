@@ -45,7 +45,7 @@ public:
 	virtual void AddText(CTextData *td);
 
 	//Проверка прозрачности (для круга прозрачности)
-	virtual bool TranparentTest(int &playerZPlus5);
+	virtual bool TranparentTest(const int &playerZPlus5);
 
 	//Проверка, может ли текст быть прозрачным
 	bool TextCanBeTransparent(CRenderTextObject *text);

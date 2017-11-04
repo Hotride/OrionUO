@@ -1,4 +1,6 @@
-﻿/***********************************************************************************
+﻿// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
+/***********************************************************************************
 **
 ** EntryText.cpp
 **
@@ -265,7 +267,7 @@ void CEntryText::Clear()
 	m_Changed = true;
 	m_DrawOffset = 0;
 	m_Texture.Clear();
-	memset(&m_CaretPos, 0, sizeof(m_CaretPos));
+	m_CaretPos.Reset();
 }
 //----------------------------------------------------------------------------------
 void CEntryText::Paste()
@@ -515,7 +517,7 @@ void CEntryText::CreateTextureA(uchar font, string str, ushort color, int width,
 		}
 		else //Либо обнуляем ее
 		{
-			memset(&m_CaretPos, 0, sizeof(m_CaretPos));
+			m_CaretPos.Reset();
 			m_DrawOffset = 0;
 		}
 
@@ -557,7 +559,7 @@ void CEntryText::CreateTextureW(uchar font, wstring str, ushort color, int width
 		}
 		else //Либо обнуляем ее
 		{
-			memset(&m_CaretPos, 0, sizeof(m_CaretPos));
+			m_CaretPos.Reset();
 			m_DrawOffset = 0;
 		}
 

@@ -96,8 +96,8 @@ class CConfigManager
 	SETGET(bool, HoldShiftForContextMenus, false);
 	SETGET(bool, HoldShiftForEnablePathfind, false);
 
-	SETGET(int, GameWindowWidth, false);
-	SETGET(int, GameWindowHeight, false);
+	SETGET(int, GameWindowWidth, 0);
+	SETGET(int, GameWindowHeight, 0);
 	SETGET(ushort, SpeechDelay, 0);
 	SETGET(bool, ScaleSpeechDelay, false);
 	SETGET(ushort, SpeechColor, 0);
