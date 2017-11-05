@@ -4481,17 +4481,17 @@ void COrion::DrawGump(const ushort &id, const ushort &color, const int &x, const
 
 	if (th != NULL)
 	{
-		int drawMode = (!g_GrayedPixels && color);
-
-		if (drawMode)
+		if (!g_GrayedPixels && color)
 		{
 			if (partialHue)
-				drawMode = 2;
+				glUniform1iARB(g_ShaderDrawMode, SDM_PARTIAL_HUE);
+			else
+				glUniform1iARB(g_ShaderDrawMode, SDM_COLORED);
 
 			g_ColorManager.SendColorsToShader(color);
 		}
-
-		glUniform1iARB(g_ShaderDrawMode, drawMode);
+		else
+			glUniform1iARB(g_ShaderDrawMode, SDM_NO_COLOR);
 
 		th->Draw(x, y);
 	}
@@ -4504,17 +4504,17 @@ void COrion::DrawGump(const ushort &id, const ushort &color, const int &x, const
 
 	if (th != NULL)
 	{
-		int drawMode = (!g_GrayedPixels && color);
-
-		if (drawMode)
+		if (!g_GrayedPixels && color)
 		{
 			if (partialHue)
-				drawMode = 2;
+				glUniform1iARB(g_ShaderDrawMode, SDM_PARTIAL_HUE);
+			else
+				glUniform1iARB(g_ShaderDrawMode, SDM_COLORED);
 
 			g_ColorManager.SendColorsToShader(color);
 		}
-
-		glUniform1iARB(g_ShaderDrawMode, drawMode);
+		else
+			glUniform1iARB(g_ShaderDrawMode, SDM_NO_COLOR);
 
 		th->Draw(x, y, width, height);
 	}
@@ -4557,15 +4557,14 @@ void COrion::DrawLandTexture(CLandObject *land, ushort color, const int &x, cons
 		if (g_OutOfRangeColor)
 			color = g_OutOfRangeColor;
 
-		int drawMode = 6;
-
 		if (!g_GrayedPixels && color)
 		{
-			drawMode = 7;
+			glUniform1iARB(g_ShaderDrawMode, SDM_LAND_COLORED);
 			g_ColorManager.SendColorsToShader(color);
 		}
+		else
+			glUniform1iARB(g_ShaderDrawMode, SDM_LAND);
 
-		glUniform1iARB(g_ShaderDrawMode, drawMode);
 
 		g_GL_DrawLandTexture(*th, x, y + (land->Z * 4), land);
 	}
@@ -4581,12 +4580,13 @@ void COrion::DrawLandArt(const ushort &id, ushort color, const int &x, const int
 		if (g_OutOfRangeColor)
 			color = g_OutOfRangeColor;
 
-		int drawMode = (!g_GrayedPixels && color);
-
-		if (drawMode)
+		if (!g_GrayedPixels && color)
+		{
+			glUniform1iARB(g_ShaderDrawMode, SDM_COLORED);
 			g_ColorManager.SendColorsToShader(color);
-
-		glUniform1iARB(g_ShaderDrawMode, drawMode);
+		}
+		else
+			glUniform1iARB(g_ShaderDrawMode, SDM_NO_COLOR);
 
 		th->Draw(x - 22, y - 22);
 	}
@@ -4602,19 +4602,17 @@ void COrion::DrawStaticArt(const ushort &id, ushort color, const int &x, const i
 		if (g_OutOfRangeColor)
 			color = g_OutOfRangeColor;
 
-		int drawMode = (!g_GrayedPixels && color);
-
-		if (drawMode)
+		if (!g_GrayedPixels && color)
 		{
-			bool partialHue = (!selection && IsPartialHue(GetStaticFlags(id)));
-
-			if (partialHue)
-				drawMode = 2;
+			if (!selection && IsPartialHue(GetStaticFlags(id)))
+				glUniform1iARB(g_ShaderDrawMode, SDM_PARTIAL_HUE);
+			else
+				glUniform1iARB(g_ShaderDrawMode, SDM_COLORED);
 
 			g_ColorManager.SendColorsToShader(color);
 		}
-
-		glUniform1iARB(g_ShaderDrawMode, drawMode);
+		else
+			glUniform1iARB(g_ShaderDrawMode, SDM_NO_COLOR);
 
 		th->Draw(x - m_StaticDataIndex[id].Width, y - m_StaticDataIndex[id].Height);
 	}
@@ -4636,12 +4634,13 @@ void COrion::DrawStaticArtRotated(const ushort &id, ushort color, const int &x, 
 		if (g_OutOfRangeColor)
 			color = g_OutOfRangeColor;
 
-		int drawMode = (!g_GrayedPixels && color);
-
-		if (drawMode)
+		if (!g_GrayedPixels && color)
+		{
+			glUniform1iARB(g_ShaderDrawMode, SDM_COLORED);
 			g_ColorManager.SendColorsToShader(color);
-
-		glUniform1iARB(g_ShaderDrawMode, drawMode);
+		}
+		else
+			glUniform1iARB(g_ShaderDrawMode, SDM_NO_COLOR);
 
 		th->DrawRotated(x, y, angle);
 	}
@@ -4663,19 +4662,17 @@ void COrion::DrawStaticArtTransparent(const ushort &id, ushort color, int x, int
 		if (g_OutOfRangeColor)
 			color = g_OutOfRangeColor;
 
-		int drawMode = (!g_GrayedPixels && color);
-
-		if (drawMode)
+		if (!g_GrayedPixels && color)
 		{
-			bool partialHue = (!selection && IsPartialHue(GetStaticFlags(id)));
-
-			if (partialHue)
-				drawMode = 2;
+			if (!selection && IsPartialHue(GetStaticFlags(id)))
+				glUniform1iARB(g_ShaderDrawMode, SDM_PARTIAL_HUE);
+			else
+				glUniform1iARB(g_ShaderDrawMode, SDM_COLORED);
 
 			g_ColorManager.SendColorsToShader(color);
 		}
-
-		glUniform1iARB(g_ShaderDrawMode, drawMode);
+		else
+			glUniform1iARB(g_ShaderDrawMode, SDM_NO_COLOR);
 
 		th->DrawTransparent(x - m_StaticDataIndex[id].Width, y - m_StaticDataIndex[id].Height);
 	}
@@ -4700,21 +4697,22 @@ void COrion::DrawStaticArtInContainer(const ushort &id, ushort color, int x, int
 			y -= th->Height / 2;
 		}
 
-		int drawMode = (!g_GrayedPixels && color);
-
-		if (drawMode)
+		if (!g_GrayedPixels && color)
 		{
-			bool partialHue = (!selection && IsPartialHue(GetStaticFlags(id)));
-
 			if (color >= 0x4000)
+			{
 				color = 0x1;
-			else if (partialHue)
-				drawMode = 2;
+				glUniform1iARB(g_ShaderDrawMode, SDM_COLORED);
+			}
+			else if (!selection && IsPartialHue(GetStaticFlags(id)))
+				glUniform1iARB(g_ShaderDrawMode, SDM_PARTIAL_HUE);
+			else
+				glUniform1iARB(g_ShaderDrawMode, SDM_COLORED);
 
 			g_ColorManager.SendColorsToShader(color);
 		}
-
-		glUniform1iARB(g_ShaderDrawMode, drawMode);
+		else
+			glUniform1iARB(g_ShaderDrawMode, SDM_NO_COLOR);
 
 		th->Draw(x, y);
 	}
@@ -4727,16 +4725,13 @@ void COrion::DrawLight(LIGHT_DATA &light)
 
 	if (th != NULL)
 	{
-		int drawMode = 0;
-
 		if (light.Color)
 		{
-			drawMode = 1;
-
+			glUniform1iARB(g_ShaderDrawMode, SDM_COLORED);
 			g_ColorManager.SendColorsToShader(light.Color);
 		}
-
-		glUniform1iARB(g_ShaderDrawMode, drawMode);
+		else
+			glUniform1iARB(g_ShaderDrawMode, SDM_NO_COLOR);
 
 		th->Draw(light.DrawX - g_RenderBounds.GameWindowPosX - (th->Width / 2), light.DrawY - g_RenderBounds.GameWindowPosY - (th->Height / 2));
 	}

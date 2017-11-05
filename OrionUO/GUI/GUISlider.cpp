@@ -289,7 +289,7 @@ void CGUISlider::Draw(const bool &checktrans)
 	UpdateText();
 	CalculateOffset();*/
 
-	glUniform1iARB(g_ShaderDrawMode, 0);
+	glUniform1iARB(g_ShaderDrawMode, SDM_NO_COLOR);
 
 	if (m_BackgroundGraphic)
 	{

@@ -48,7 +48,7 @@ void CGUIResizepic::Draw(const bool &checktrans)
 			th[i] = pth;
 	}
 
-	glUniform1iARB(g_ShaderDrawMode, 0);
+	glUniform1iARB(g_ShaderDrawMode, SDM_NO_COLOR);
 
 	if (checktrans)
 	{

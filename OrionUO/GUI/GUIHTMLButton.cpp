@@ -24,7 +24,7 @@ CGUIHTMLButton::~CGUIHTMLButton()
 void CGUIHTMLButton::SetShaderMode()
 {
 	WISPFUN_DEBUG("c59_f1");
-	glUniform1iARB(g_ShaderDrawMode, 0);
+	glUniform1iARB(g_ShaderDrawMode, SDM_NO_COLOR);
 }
 //----------------------------------------------------------------------------------
 void CGUIHTMLButton::Scroll(const bool &up, const uint &delay)

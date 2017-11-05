@@ -61,7 +61,7 @@ void CGUIShopResult::Draw(const bool &checktrans)
 	WISPFUN_DEBUG("c74_f5");
 	glTranslatef((GLfloat)m_X, (GLfloat)m_Y, 0.0f);
 
-	glUniform1iARB(g_ShaderDrawMode, 0);
+	glUniform1iARB(g_ShaderDrawMode, SDM_NO_COLOR);
 
 	m_NameText.Draw(34, 0, checktrans);
 	m_MinMaxButtons->Draw(checktrans);

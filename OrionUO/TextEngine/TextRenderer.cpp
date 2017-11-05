@@ -175,23 +175,21 @@ void CTextRenderer::Draw()
 
 		if (text.Timer >= g_Ticks)
 		{
-			ushort textColor = text.Color;
-
-			int drawMode = 0;
+			const ushort &textColor = text.Color;
 
 			if (textColor)
 			{
 				g_ColorManager.SendColorsToShader(textColor);
 
 				if (text.Unicode)
-					drawMode = 3;
+					glUniform1iARB(g_ShaderDrawMode, SDM_TEXT_COLORED_NO_BLACK);
 				else if (text.Font != 5 && text.Font != 8)
-					drawMode = 2;
+					glUniform1iARB(g_ShaderDrawMode, SDM_PARTIAL_HUE);
 				else
-					drawMode = 1;
+					glUniform1iARB(g_ShaderDrawMode, SDM_COLORED);
 			}
-
-			glUniform1iARB(g_ShaderDrawMode, drawMode);
+			else
+				glUniform1iARB(g_ShaderDrawMode, SDM_NO_COLOR);
 
 			if (text.Transparent)
 			{
@@ -307,21 +305,19 @@ void CTextRenderer::WorldDraw()
 			if (text.Type == TT_OBJECT && g_SelectedObject.Object == item && (((CGameObject*)rwo)->NPC || ((CGameObject*)rwo)->IsCorpse()))
 				textColor = 0x0035;
 
-			int drawMode = 0;
-
 			if (textColor)
 			{
 				g_ColorManager.SendColorsToShader(textColor);
 
 				if (text.Unicode)
-					drawMode = 3;
+					glUniform1iARB(g_ShaderDrawMode, SDM_TEXT_COLORED_NO_BLACK);
 				else if (text.Font != 5 && text.Font != 8)
-					drawMode = 2;
+					glUniform1iARB(g_ShaderDrawMode, SDM_PARTIAL_HUE);
 				else
-					drawMode = 1;
+					glUniform1iARB(g_ShaderDrawMode, SDM_COLORED);
 			}
-
-			glUniform1iARB(g_ShaderDrawMode, drawMode);
+			else
+				glUniform1iARB(g_ShaderDrawMode, SDM_NO_COLOR);
 
 			if (text.Transparent)
 			{

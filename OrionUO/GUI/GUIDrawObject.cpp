@@ -38,17 +38,18 @@ WISP_GEOMETRY::CSize CGUIDrawObject::GetSize()
 void CGUIDrawObject::SetShaderMode()
 {
 	WISPFUN_DEBUG("c52_f2");
-	int drawMode = (m_Color != 0);
 
-	if (drawMode)
+	if (m_Color != 0)
 	{
 		if (m_PartialHue)
-			drawMode = 2;
+			glUniform1iARB(g_ShaderDrawMode, SDM_PARTIAL_HUE);
+		else
+			glUniform1iARB(g_ShaderDrawMode, SDM_COLORED);
 
 		g_ColorManager.SendColorsToShader(m_Color);
 	}
-
-	glUniform1iARB(g_ShaderDrawMode, drawMode);
+	else
+		glUniform1iARB(g_ShaderDrawMode, SDM_NO_COLOR);
 }
 //----------------------------------------------------------------------------------
 void CGUIDrawObject::PrepareTextures()

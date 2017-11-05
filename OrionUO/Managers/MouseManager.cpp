@@ -374,10 +374,17 @@ void CMouseManager::Draw(ushort id)
 
 	if (th != NULL)
 	{
+		ushort color = 0;
+
 		if (id < 0x206A)
 			id -= 0x2053;
 		else
+		{
 			id -= 0x206A;
+
+			if (g_GameState >= GS_GAME && g_MapManager.GetActualMap())
+				color = 0x0033;
+		}
 
 		if (id < 16)
 		{
@@ -386,7 +393,19 @@ void CMouseManager::Draw(ushort id)
 			int x = m_Position.X + m_CursorOffset[0][id];
 			int y = m_Position.Y + m_CursorOffset[1][id];
 
+			if (color)
+			{
+				g_ColorizerShader.Use();
+
+				g_ColorManager.SendColorsToShader(color);
+
+				glUniform1iARB(g_ShaderDrawMode, SDM_COLORED);
+			}
+
 			th->Draw(x, y);
+
+			if (color)
+				UnuseShader();
 
 			if (g_Target.Targeting && g_ConfigManager.HighlightTargetByType)
 			{
@@ -406,7 +425,7 @@ void CMouseManager::Draw(ushort id)
 
 					glColor4ub(GetRValue(auraColor), GetGValue(auraColor), GetBValue(auraColor), 0xFF);
 
-					glUniform1iARB(g_ShaderDrawMode, 0);
+					glUniform1iARB(g_ShaderDrawMode, SDM_NO_COLOR);
 
 					CGLTexture tex;
 					tex.Texture = g_AuraTexture.Texture;

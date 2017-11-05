@@ -155,7 +155,7 @@ bool CColorizerShader::Use()
 	{
 		ShaderColorTable = m_ColorTablePointer;
 		g_ShaderDrawMode = m_DrawModePointer;
-		glUniform1iARB(g_ShaderDrawMode, 0);
+		glUniform1iARB(g_ShaderDrawMode, SDM_NO_COLOR);
 	}
 
 	return result;

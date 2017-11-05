@@ -185,7 +185,7 @@ void CGUIMinMaxButtons::PrepareTextures()
 void CGUIMinMaxButtons::Draw(const bool &checktrans)
 {
 	WISPFUN_DEBUG("c67_f7");
-	glUniform1iARB(g_ShaderDrawMode, 0);
+	glUniform1iARB(g_ShaderDrawMode, SDM_NO_COLOR);
 
 	IFOR(i, 0, 2)
 	{

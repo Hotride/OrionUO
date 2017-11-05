@@ -1336,7 +1336,7 @@ void CAnimationManager::Draw(CGameObject *obj, int x, int y, const bool &mirror,
 
 		if (isShadow)
 		{
-			glUniform1iARB(g_ShaderDrawMode, 12);
+			glUniform1iARB(g_ShaderDrawMode, SDM_SHADOW);
 
 			glEnable(GL_BLEND);
 			glBlendFunc(GL_DST_COLOR, GL_ZERO);
@@ -1350,7 +1350,6 @@ void CAnimationManager::Draw(CGameObject *obj, int x, int y, const bool &mirror,
 		}
 		else
 		{
-			int drawMode = 0;
 			bool spectralColor = false;
 
 			if (!g_GrayedPixels)
@@ -1389,26 +1388,28 @@ void CAnimationManager::Draw(CGameObject *obj, int x, int y, const bool &mirror,
 					if (color == SPECTRAL_COLOR_SPECIAL)
 					{
 						glBlendFunc(GL_ZERO, GL_ONE_MINUS_SRC_COLOR);
-						drawMode = 11;
+						glUniform1iARB(g_ShaderDrawMode, SDM_SPECIAL_SPECTRAL);
 					}
 					else
 					{
 						glBlendFunc(GL_ZERO, GL_SRC_COLOR);
-						drawMode = 10;
+						glUniform1iARB(g_ShaderDrawMode, SDM_SPECTRAL);
 					}
 				}
 				else if (color)
 				{
 					if (partialHue)
-						drawMode = 2;
+						glUniform1iARB(g_ShaderDrawMode, SDM_PARTIAL_HUE);
 					else
-						drawMode = 1;
+						glUniform1iARB(g_ShaderDrawMode, SDM_COLORED);
 
 					g_ColorManager.SendColorsToShader(color);
 				}
+				else
+					glUniform1iARB(g_ShaderDrawMode, SDM_NO_COLOR);
 			}
-
-			glUniform1iARB(g_ShaderDrawMode, drawMode);
+			else
+				glUniform1iARB(g_ShaderDrawMode, SDM_NO_COLOR);
 
 			if (m_Transform)
 			{
@@ -1627,7 +1628,7 @@ void CAnimationManager::DrawCharacter(CGameCharacter *obj, int x, int y)
 		uint auraColor = g_ColorManager.GetPolygoneColor(16, g_ConfigManager.GetColorByNotoriety(obj->Notoriety));
 		glColor4ub(GetRValue(auraColor), GetGValue(auraColor), GetBValue(auraColor), 0xFF);
 
-		glUniform1iARB(g_ShaderDrawMode, 0);
+		glUniform1iARB(g_ShaderDrawMode, SDM_NO_COLOR);
 		g_AuraTexture.Draw(drawX - g_AuraTexture.Width / 2, drawY - g_AuraTexture.Height / 2);
 
 		glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
