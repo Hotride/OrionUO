@@ -485,9 +485,10 @@ void CConfigManager::SetUseGLListsForInterface(const bool &val)
 {
 	WISPFUN_DEBUG("c138_f26");
 
+	bool old = m_UseGLListsForInterface;
 	m_UseGLListsForInterface = (val || !g_GL.CanUseFrameBuffer);
 
-	if (this == &g_ConfigManager && g_World != NULL)
+	if (this == &g_ConfigManager && g_World != NULL && old != m_UseGLListsForInterface)
 	{
 		QFOR(gump, g_GumpManager.m_Items, CGump*)
 		{
