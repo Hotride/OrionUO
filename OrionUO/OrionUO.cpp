@@ -5850,6 +5850,7 @@ void COrion::OpenLogOut()
 void COrion::OpenChat()
 {
 	WISPFUN_DEBUG("c194_f142");
+	CPacketOpenChat(L"").Send();
 }
 //----------------------------------------------------------------------------------
 void COrion::OpenConfiguration()

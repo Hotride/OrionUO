@@ -393,7 +393,7 @@ public:
 class CPacketOpenChat : public CPacket
 {
 public:
-	CPacketOpenChat(const wchar_t *name);
+	CPacketOpenChat(const wstring &name);
 };
 //----------------------------------------------------------------------------------
 class CPacketMapMessage : public CPacket

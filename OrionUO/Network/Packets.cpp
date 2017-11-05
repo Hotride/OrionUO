@@ -1041,12 +1041,12 @@ CPacketPopupMenuSelection::CPacketPopupMenuSelection(uint serial, ushort menuID)
 	WriteUInt16BE(menuID);
 }
 //---------------------------------------------------------------------------
-CPacketOpenChat::CPacketOpenChat(const wchar_t *name)
+CPacketOpenChat::CPacketOpenChat(const wstring &name)
 : CPacket(64)
 {
 	WriteUInt8(0xB5);
 
-	int len = lstrlenW(name);
+	int len = name.length();
 
 	if (len > 0)
 	{
