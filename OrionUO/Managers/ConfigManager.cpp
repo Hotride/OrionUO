@@ -164,6 +164,7 @@ void CConfigManager::DefaultPage6()
 	m_ObjectHandles = false;
 	m_HoldShiftForContextMenus = false;
 	m_HoldShiftForEnablePathfind = false;
+	m_CharacterBackpackStyle = CBS_DEFAULT;
 }
 //---------------------------------------------------------------------------
 void CConfigManager::DefaultPage7()
@@ -546,6 +547,23 @@ void CConfigManager::SetItemPropertiesIcon(const bool &val)
 			g_GumpManager.CloseGump(0, 0, GT_PROPERTY_ICON);
 			g_ObjectPropertiesManager.Reset();
 		}
+	}
+}
+//---------------------------------------------------------------------------
+void CConfigManager::SetCharacterBackpackStyle(const uchar &val)
+{
+	WISPFUN_DEBUG("c138_f26_3");
+
+	m_CharacterBackpackStyle = val;
+
+	if (this == &g_ConfigManager && g_World != NULL)
+	{
+		g_GumpManager.UpdateContent(g_PlayerSerial, 0, GT_PAPERDOLL);
+
+		CGameItem *backpack = g_Player->FindLayer(OL_BACKPACK);
+
+		if (backpack != NULL)
+			g_GumpManager.UpdateContent(backpack->Serial, 0, GT_CONTAINER);
 	}
 }
 //---------------------------------------------------------------------------
@@ -1228,7 +1246,8 @@ int CConfigManager::GetConfigKeyCode(const string &key)
 		"ToggleBufficonWindow",
 		"DeveloperMode",
 		"LastServer",
-		"LastCharacter"
+		"LastCharacter",
+		"CharacterBackpackStyle"
 	};
 
 	string str = ToLowerA(key);
@@ -1640,6 +1659,9 @@ bool CConfigManager::Load(const string &path)
 					if (g_World == NULL)
 						g_CharacterList.LastCharacterName = strings[1];
 					break;
+				case CMKC_CHARACTER_BACKPACK_STYLE:
+					m_CharacterBackpackStyle = atoi(strings[1].c_str());
+					break;
 				default:
 					break;
 			}
@@ -1790,6 +1812,7 @@ void CConfigManager::Save(const string &path)
 		writter.WriteBool("HoldShiftForEnablePathfind", m_HoldShiftForEnablePathfind);
 		writter.WriteInt("ContainerDefaultX", g_ContainerRect.DefaultX);
 		writter.WriteInt("ContainerDefaultY", g_ContainerRect.DefaultY);
+		writter.WriteInt("CharacterBackpackStyle", CharacterBackpackStyle);
 
 		//Page 7
 		writter.WriteInt("GameWindowWidth", m_GameWindowWidth);

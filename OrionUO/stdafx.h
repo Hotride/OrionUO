@@ -122,6 +122,7 @@ class CGump;
 
 #include "Network/UOHuffman.h"
 #include "Network/Packets.h"
+#include "Network/PluginPackets.h"
 #include "Network/Connection.h"
 
 #include "ToolTip.h"

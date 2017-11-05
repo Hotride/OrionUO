@@ -20,6 +20,7 @@ public:
 	virtual ~CDataWritter();
 
 	UCHAR_LIST Data() const { return m_Data; }
+	puchar DataPtr() { return &m_Data[0]; }
 	int Size() { return (int)m_Data.size(); }
 
 	void Resize(const int &newSize, const bool &resetPtr = false);

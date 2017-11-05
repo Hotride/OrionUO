@@ -695,6 +695,14 @@ enum OBJECT_PROPERTIES_MODE
 	OPM_SINGLE_CLICK
 };
 //----------------------------------------------------------------------------------
+enum CHARACTER_BACKPACK_STYLE
+{
+	CBS_DEFAULT = 0,
+	CBS_SUEDE,
+	CBS_POLAR_BEAR,
+	CBS_GHOUL_SKIN
+};
+//----------------------------------------------------------------------------------
 enum STATIC_TILES_FILTER_FLAGS
 {
 	STFF_CAVE			= 0x01,
@@ -702,6 +710,15 @@ enum STATIC_TILES_FILTER_FLAGS
 	STFF_STUMP_HATCHED	= 0x04,
 	STFF_VEGETATION		= 0x08,
 	STFF_WATER			= 0x10
+};
+//----------------------------------------------------------------------------------
+enum ORION_INTERNAL_PACKET_MESSAGE_TYPE
+{
+	OIPMT_STATIC_ART_ADDRESS = 1,
+	OIPMT_GUMP_ART_ADDRESS = 2,
+	OIPMT_SKILL_LIST = 100,
+	OIPMT_SPELL_LIST = 101,
+	OIPMT_MACRO_LIST = 102
 };
 //----------------------------------------------------------------------------------
 //!Направления чара

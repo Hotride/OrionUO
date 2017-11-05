@@ -407,6 +407,7 @@ xcopy /y /d  "$(SolutionDir)bin\Orion.dll" "$(ProjectDir)"
     <ClInclude Include="MultiMap.h" />
     <ClInclude Include="Network\Connection.h" />
     <ClInclude Include="Network\Packets.h" />
+    <ClInclude Include="Network\PluginPackets.h" />
     <ClInclude Include="Network\UOHuffman.h" />
     <ClInclude Include="OrionApplication.h" />
     <ClInclude Include="OrionStackWalker.h" />
@@ -653,6 +654,7 @@ xcopy /y /d  "$(SolutionDir)bin\Orion.dll" "$(ProjectDir)"
     <ClCompile Include="MultiMap.cpp" />
     <ClCompile Include="Network\Connection.cpp" />
     <ClCompile Include="Network\Packets.cpp" />
+    <ClCompile Include="Network\PluginPackets.cpp" />
     <ClCompile Include="Network\UOHuffman.cpp" />
     <ClCompile Include="OrionApplication.cpp" />
     <ClCompile Include="OrionUO.cpp" />

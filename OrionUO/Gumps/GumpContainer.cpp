@@ -23,9 +23,10 @@ CGumpContainer::CGumpContainer(uint serial, uint id, short x, short y)
 	Add(new CGUIGumppic(0x0050, 0, 0));
 
 	Add(new CGUIPage(2));
+
 	m_BodyGump = (CGUIGumppic*)Add(new CGUIGumppic((ushort)m_ID, 0, 0));
 
-	if (m_ID == 0x09)
+	if (m_ID == 0x0009)
 	{
 		if (m_CorpseEyesTicks < g_Ticks)
 		{
@@ -194,6 +195,37 @@ void CGumpContainer::UpdateContent()
 
 	if (container == NULL)
 		return;
+
+	if ((ushort)m_ID == 0x003C)
+	{
+		ushort graphic = (ushort)m_ID;
+
+		CGameItem *backpack = g_Player->FindLayer(OL_BACKPACK);
+
+		if (backpack != NULL && backpack->Serial == m_Serial)
+		{
+			switch (g_ConfigManager.CharacterBackpackStyle)
+			{
+				case CBS_SUEDE:
+					graphic = 0x775E;
+					break;
+				case CBS_POLAR_BEAR:
+					graphic = 0x7760;
+					break;
+				case CBS_GHOUL_SKIN:
+					graphic = 0x7762;
+					break;
+				default:
+					graphic = 0x003C;
+					break;
+			}
+
+			if (g_Orion.ExecuteGump(graphic) == NULL)
+				graphic = 0x003C;
+
+			m_BodyGump->Graphic = graphic;
+		}
+	}
 
 	m_DataBox->Clear();
 

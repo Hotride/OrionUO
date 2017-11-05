@@ -1359,37 +1359,19 @@ void COrion::LoadPluginConfig()
 
 	g_PluginInit(libName, functions, flags);
 
-	/*const string libs[13] =
-	{
-		"/OA/Qt5Core.dll",
-		"/OA/libgcc_s_dw2-1.dll",
-		"/OA/libwinpthread-1.dll",
-		"/OA/libstdc++-6.dll",
-		"/OA/Qt5Gui.dll",
-		"/OA/Qt5Qml.dll",
-		"/OA/Qt5Network.dll",
-		"/OA/Qt5Widgets.dll",
-		"/OA/libEGL.dll",
-		"/OA/libGLESV2.dll",
-		"/OA/opengl32sw.dll",
-		"/OA/Qt5Svg.dll",
-		"/OA/platforms/qwindows.dll"
-	};
-
-	IFOR(i, 0, 13)
-	{
-		string libPath = g_App.FilePath(libs[i].c_str());
-		
-		if (PathFileExistsA(libPath.c_str()))
-			LoadLibraryA(libPath.c_str());
-	}*/
-
 	LoadPlugin(g_App.ExeFilePath("OA/OrionAssistant.dll"), "Install", 0xFFFFFFFF);
 
 	IFOR(i, 0, (int)libName.size())
 		LoadPlugin(g_App.ExeFilePath(libName[i].c_str()), functions[i], flags[i]);
 
 	ParseCommandLine();
+
+	if (g_PluginManager.m_Items != NULL)
+	{
+		CPluginPacketSkillsList().SendToPlugin();
+		CPluginPacketSpellsList().SendToPlugin();
+		CPluginPacketMacrosList().SendToPlugin();
+	}
 
 	BringWindowToTop(g_OrionWindow.Handle);
 }

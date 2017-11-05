@@ -649,12 +649,35 @@ void CGumpPaperdoll::UpdateContent()
 
 	if (equipment != NULL && equipment->AnimID != 0)
 	{
+		ushort backpackGraphic = equipment->AnimID + 50000;
+
+		if (obj->IsPlayer())
+		{
+			switch (g_ConfigManager.CharacterBackpackStyle)
+			{
+				case CBS_SUEDE:
+					backpackGraphic = 0x777B;
+					break;
+				case CBS_POLAR_BEAR:
+					backpackGraphic = 0x777C;
+					break;
+				case CBS_GHOUL_SKIN:
+					backpackGraphic = 0x777D;
+					break;
+				default:
+					break;
+			}
+
+			if (g_Orion.ExecuteGump(backpackGraphic) == NULL)
+				backpackGraphic = equipment->AnimID + 50000;
+		}
+
 		int bpX = 8;
 
 		if (g_PaperdollBooks)
 			bpX = 2;
 
-		bodyGumppic = (CGUIGumppic*)m_DataBox->Add(new CGUIGumppic(equipment->AnimID + 50000, bpX, 19));
+		bodyGumppic = (CGUIGumppic*)m_DataBox->Add(new CGUIGumppic(backpackGraphic, bpX, 19));
 		bodyGumppic->Color = equipment->Color & 0x3FFF;
 		bodyGumppic->PartialHue = equipment->IsPartialHue();
 		bodyGumppic->Serial = ID_GP_ITEMS + OL_BACKPACK;

@@ -1629,6 +1629,27 @@ void CGumpOptions::DrawPage6()
 	checkbox->Checked = g_OptionsConfig.HoldShiftForEnablePathfind;
 	checkbox->SetTextParameters(0, L"Hold Shift For Enable Pathfinding", g_OptionsTextColor);
 
+	html->Add(new CGUIGroup(7));
+
+	text = (CGUIText*)html->Add(new CGUIText(g_OptionsTextColor, 0, 376));
+	text->CreateTextureW(0, L"Select Character Backpack Style");
+
+	radio = (CGUIRadio*)html->Add(new CGUIRadio(ID_GO_P6_CHARACTER_BACKPACK_STYLE_DEFAULT, 0x00D0, 0x00D1, 0x00D2, 10, 396));
+	radio->Checked = (g_OptionsConfig.CharacterBackpackStyle == CBS_DEFAULT);
+	radio->SetTextParameters(0, L"Default", g_OptionsTextColor);
+
+	radio = (CGUIRadio*)html->Add(new CGUIRadio(ID_GO_P6_CHARACTER_BACKPACK_STYLE_SUEDE, 0x00D0, 0x00D1, 0x00D2, 10, 416));
+	radio->Checked = (g_OptionsConfig.CharacterBackpackStyle == CBS_SUEDE);
+	radio->SetTextParameters(0, L"Suede", g_OptionsTextColor);
+
+	radio = (CGUIRadio*)html->Add(new CGUIRadio(ID_GO_P6_CHARACTER_BACKPACK_STYLE_POLAR_BEAR, 0x00D0, 0x00D1, 0x00D2, 10, 436));
+	radio->Checked = (g_OptionsConfig.CharacterBackpackStyle == CBS_POLAR_BEAR);
+	radio->SetTextParameters(0, L"Polar Bear", g_OptionsTextColor);
+
+	radio = (CGUIRadio*)html->Add(new CGUIRadio(ID_GO_P6_CHARACTER_BACKPACK_STYLE_GHOUL_SKIN, 0x00D0, 0x00D1, 0x00D2, 10, 456));
+	radio->Checked = (g_OptionsConfig.CharacterBackpackStyle == CBS_GHOUL_SKIN);
+	radio->SetTextParameters(0, L"Ghoul Skin", g_OptionsTextColor);
+
 	html->CalculateDataSize();
 }
 //----------------------------------------------------------------------------
@@ -2615,6 +2636,14 @@ void CGumpOptions::GUMP_RADIO_EVENT_C
 				g_OptionsConfig.ItemPropertiesMode = OPM_FOLLOW_MOUSE;
 			else if (serial == ID_GO_P6_DISPLAY_ITEM_PROPERTIES_MODE_SINGLE_CLICK) //Single Click
 				g_OptionsConfig.ItemPropertiesMode = OPM_SINGLE_CLICK;
+			else if (serial == ID_GO_P6_CHARACTER_BACKPACK_STYLE_DEFAULT) //Default
+				g_OptionsConfig.CharacterBackpackStyle = CBS_DEFAULT;
+			else if (serial == ID_GO_P6_CHARACTER_BACKPACK_STYLE_SUEDE) //Suede
+				g_OptionsConfig.CharacterBackpackStyle = CBS_SUEDE;
+			else if (serial == ID_GO_P6_CHARACTER_BACKPACK_STYLE_POLAR_BEAR) //Polar Bear
+				g_OptionsConfig.CharacterBackpackStyle = CBS_POLAR_BEAR;
+			else if (serial == ID_GO_P6_CHARACTER_BACKPACK_STYLE_GHOUL_SKIN) //Ghoul Skin
+				g_OptionsConfig.CharacterBackpackStyle = CBS_GHOUL_SKIN;
 
 			break;
 		}
@@ -3076,6 +3105,7 @@ void CGumpOptions::ApplyPageChanges()
 			g_ConfigManager.ItemPropertiesMode = g_OptionsConfig.ItemPropertiesMode;
 			g_ConfigManager.HoldShiftForContextMenus = g_OptionsConfig.HoldShiftForContextMenus;
 			g_ConfigManager.HoldShiftForEnablePathfind = g_OptionsConfig.HoldShiftForEnablePathfind;
+			g_ConfigManager.CharacterBackpackStyle = g_OptionsConfig.CharacterBackpackStyle;
 
 			int curX = g_ContainerRect.DefaultX;
 

@@ -95,6 +95,7 @@ class CConfigManager
 	SETGET(bool, ObjectHandles, false);
 	SETGET(bool, HoldShiftForContextMenus, false);
 	SETGET(bool, HoldShiftForEnablePathfind, false);
+	SETGETE(uchar, CharacterBackpackStyle, CBS_DEFAULT);
 
 	SETGET(int, GameWindowWidth, 0);
 	SETGET(int, GameWindowHeight, 0);
@@ -293,6 +294,7 @@ public:
 		CMKC_DEVELOPER_MODE,
 		CMKC_LAST_SERVER,
 		CMKC_LAST_CHARACTER,
+		CMKC_CHARACTER_BACKPACK_STYLE,
 		CMKC_COUNT
 	};
 
