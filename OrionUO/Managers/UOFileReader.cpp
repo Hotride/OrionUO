@@ -544,7 +544,9 @@ CGLTexture *UOFileReader::ReadTexture(CIndexObject &io)
 		}
 	}
 
+	g_GL.IgnoreHitMap = true;
 	g_GL_BindTexture16(*th, w, h, &pixels[0]);
+	g_GL.IgnoreHitMap = false;
 
 	return th;
 }
@@ -576,7 +578,9 @@ CGLTexture *UOFileReader::ReadLight(CIndexObject &io)
 		}
 	}
 
+	g_GL.IgnoreHitMap = true;
 	g_GL_BindTexture16(*th, io.Width, io.Height, &pixels[0]);
+	g_GL.IgnoreHitMap = false;
 
 	return th;
 }

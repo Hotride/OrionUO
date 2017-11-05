@@ -266,7 +266,7 @@ void CSoundManager::PlayMidi(int index, bool warmode)
 		LOG("Music ID is out of range: %i\n", index);
 }
 //----------------------------------------------------------------------------------
-void CSoundManager::PlayMP3(std::string fileName, int index, bool loop, bool warmode)
+void CSoundManager::PlayMP3(const string &fileName, int index, bool loop, bool warmode)
 {
 	WISPFUN_DEBUG("c156_f12");
 	if (warmode && m_WarMusic != 0)

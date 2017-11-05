@@ -271,7 +271,7 @@ bool CGump::ApplyTransparent(CBaseGUI *item, int page, const int &currentPage, c
 	glClear(GL_STENCIL_BUFFER_BIT);
 	glEnable(GL_STENCIL_TEST);
 
-	bool canDraw = ((page == -1) || ((page >= currentPage && page <= currentPage + draw2Page || (!page && !draw2Page))));
+	bool canDraw = ((page == -1) || ((page >= currentPage && page <= currentPage + draw2Page) || (!page && !draw2Page)));
 
 	for (; item != NULL; item = (CBaseGUI*)item->m_Next)
 	{
@@ -282,7 +282,7 @@ bool CGump::ApplyTransparent(CBaseGUI *item, int page, const int &currentPage, c
 			//if (page >= 2 && page > currentPage + draw2Page)
 			//	break;
 
-			canDraw = ((page == -1) || ((page >= currentPage && page <= currentPage + draw2Page || (!page && !draw2Page))));
+			canDraw = ((page == -1) || ((page >= currentPage && page <= currentPage + draw2Page) || (!page && !draw2Page)));
 		}
 		else if (canDraw && item->Visible && item->Type == GOT_CHECKTRANS)
 		{
@@ -307,7 +307,7 @@ void CGump::DrawItems(CBaseGUI *start, const int &currentPage, const int draw2Pa
 	glColor4f(1.0f, 1.0f, 1.0f, alpha[transparent]);
 
 	int page = 0;
-	bool canDraw = ((page == -1) || ((page >= currentPage && page <= currentPage + draw2Page || (!page && !draw2Page))));
+	bool canDraw = (!draw2Page || (page >= currentPage && page <= currentPage + draw2Page));
 
 	QFOR(item, start, CBaseGUI*)
 	{
@@ -318,7 +318,7 @@ void CGump::DrawItems(CBaseGUI *start, const int &currentPage, const int draw2Pa
 			//if (page >= 2 && page > currentPage + draw2Page)
 			//	break;
 
-			canDraw = ((page == -1) || ((page >= currentPage && page <= currentPage + draw2Page || (!page && !draw2Page))));
+			canDraw = ((page == -1) || ((page >= currentPage && page <= currentPage + draw2Page) || (!page && !draw2Page)));
 		}
 		else if (canDraw && item->Visible && !item->SelectOnly)
 		{
@@ -400,7 +400,7 @@ CRenderObject *CGump::SelectItems(CBaseGUI *start, const int &currentPage, const
 	CRenderObject *selected = NULL;
 
 	int page = 0;
-	bool canDraw = ((page == -1) || ((page >= currentPage && page <= currentPage + draw2Page || (!page && !draw2Page))));
+	bool canDraw = (!draw2Page || (page >= currentPage && page <= currentPage + draw2Page));
 	vector<bool> scissorList;
 	bool currentScissorState = true;
 	CGUIComboBox *combo = NULL;
@@ -416,7 +416,7 @@ CRenderObject *CGump::SelectItems(CBaseGUI *start, const int &currentPage, const
 			//if (page >= 2 && page > currentPage + draw2Page)
 			//	break;
 
-			canDraw = ((page == -1) || ((page >= currentPage && page <= currentPage + draw2Page || (!page && !draw2Page))));
+			canDraw = ((page == -1) || ((page >= currentPage && page <= currentPage + draw2Page) || (!page && !draw2Page)));
 		}
 		else if (canDraw && item->Visible)
 		{
@@ -548,7 +548,7 @@ void CGump::TestItemsLeftMouseDown(CGump *gump, CBaseGUI *start, const int &curr
 	WISPFUN_DEBUG("c84_f11");
 	int page = 0;
 	int group = 0;
-	bool canDraw = ((page == -1) || ((page >= currentPage && page <= currentPage + draw2Page || (!page && !draw2Page))));
+	bool canDraw = (!draw2Page || (page >= currentPage && page <= currentPage + draw2Page));
 
 	static bool htmlTextBackgroundCanBeColored = false;
 
@@ -569,7 +569,7 @@ void CGump::TestItemsLeftMouseDown(CGump *gump, CBaseGUI *start, const int &curr
 			//if (page >= 2 && page > currentPage + draw2Page)
 			//	break;
 
-			canDraw = ((page == -1) || ((page >= currentPage && page <= currentPage + draw2Page || (!page && !draw2Page))));
+			canDraw = ((page == -1) || ((page >= currentPage && page <= currentPage + draw2Page) || (!page && !draw2Page)));
 		}
 		else if (canDraw && item->Enabled && item->Visible)
 		{
@@ -636,7 +636,7 @@ void CGump::TestItemsLeftMouseDown(CGump *gump, CBaseGUI *start, const int &curr
 						{
 							tempPage = ((CGUIPage*)testItem)->Index;
 
-							tempCanDraw = ((tempPage == -1) || ((tempPage >= page && tempPage <= page + draw2Page || (!tempPage && !draw2Page))));
+							tempCanDraw = ((tempPage == -1) || ((tempPage >= page && tempPage <= page + draw2Page) || (!tempPage && !draw2Page)));
 						}
 						else if (tempCanDraw && testItem->Type == GOT_TEXTENTRY && testItem->Serial == serial && testItem->Enabled && testItem->Visible)
 						{
@@ -797,7 +797,7 @@ void CGump::TestItemsLeftMouseUp(CGump *gump, CBaseGUI *start, const int &curren
 	WISPFUN_DEBUG("c84_f12");
 	int page = 0;
 	int group = 0;
-	bool canDraw = ((page == -1) || ((page >= currentPage && page <= currentPage + draw2Page || (!page && !draw2Page))));
+	bool canDraw = (!draw2Page || (page >= currentPage && page <= currentPage + draw2Page));
 
 	QFOR(item, start, CBaseGUI*)
 	{
@@ -808,7 +808,7 @@ void CGump::TestItemsLeftMouseUp(CGump *gump, CBaseGUI *start, const int &curren
 			//if (page >= 2 && page > currentPage + draw2Page)
 			//	break;
 
-			canDraw = ((page == -1) || ((page >= currentPage && page <= currentPage + draw2Page || (!page && !draw2Page))));
+			canDraw = ((page == -1) || ((page >= currentPage && page <= currentPage + draw2Page) || (!page && !draw2Page)));
 		}
 		else if (canDraw && item->Enabled && item->Visible)
 		{
@@ -1027,7 +1027,7 @@ void CGump::TestItemsScrolling(CGump *gump, CBaseGUI *start, const bool &up, con
 
 	int page = 0;
 	int group = 0;
-	bool canDraw = ((page == -1) || ((page >= currentPage && page <= currentPage + draw2Page || (!page && !draw2Page))));
+	bool canDraw = (!draw2Page || (page >= currentPage && page <= currentPage + draw2Page));
 
 	QFOR(item, start, CBaseGUI*)
 	{
@@ -1038,7 +1038,7 @@ void CGump::TestItemsScrolling(CGump *gump, CBaseGUI *start, const bool &up, con
 			//if (page >= 2 && page > currentPage + draw2Page)
 			//	break;
 
-			canDraw = ((page == -1) || ((page >= currentPage && page <= currentPage + draw2Page || (!page && !draw2Page))));
+			canDraw = ((page == -1) || ((page >= currentPage && page <= currentPage + draw2Page) || (!page && !draw2Page)));
 		}
 		else if (canDraw && item->Enabled && item->Visible)
 		{
@@ -1130,7 +1130,7 @@ void CGump::TestItemsDragging(CGump *gump, CBaseGUI *start, const int &currentPa
 	WISPFUN_DEBUG("c84_f14");
 	int page = 0;
 	int group = 0;
-	bool canDraw = ((page == -1) || ((page >= currentPage && page <= currentPage + draw2Page || (!page && !draw2Page))));
+	bool canDraw = (!draw2Page || (page >= currentPage && page <= currentPage + draw2Page));
 
 	QFOR(item, start, CBaseGUI*)
 	{
@@ -1146,7 +1146,7 @@ void CGump::TestItemsDragging(CGump *gump, CBaseGUI *start, const int &currentPa
 			//if (page >= 2 && page > currentPage + draw2Page)
 			//	break;
 
-			canDraw = ((page == -1) || ((page >= currentPage && page <= currentPage + draw2Page || (!page && !draw2Page))));
+			canDraw = ((page == -1) || ((page >= currentPage && page <= currentPage + draw2Page) || (!page && !draw2Page)));
 		}
 		else if (canDraw && item->Enabled && item->Visible)
 		{
@@ -1421,7 +1421,7 @@ void CGump::GetItemsSize(CGump *gump, CBaseGUI *start, WISP_GEOMETRY::CPoint2Di 
 	WISPFUN_DEBUG("c84_f19_2");
 
 	int page = 0;
-	bool canDraw = ((page == -1) || ((page >= currentPage && page <= currentPage + draw2Page || (!page && !draw2Page))));
+	bool canDraw = (!draw2Page || (page >= currentPage && page <= currentPage + draw2Page));
 
 	QFOR(item, start, CBaseGUI*)
 	{
@@ -1437,7 +1437,7 @@ void CGump::GetItemsSize(CGump *gump, CBaseGUI *start, WISP_GEOMETRY::CPoint2Di 
 			//if (page >= 2 && page > currentPage + draw2Page)
 			//	break;
 
-			canDraw = ((page == -1) || ((page >= currentPage && page <= currentPage + draw2Page || (!page && !draw2Page))));
+			canDraw = ((page == -1) || ((page >= currentPage && page <= currentPage + draw2Page) || (!page && !draw2Page)));
 
 			continue;
 		}

@@ -178,35 +178,26 @@ bool CTextFileParser::IsSecondQuote()
 string CTextFileParser::ObtainData()
 {
 	WISPFUN_DEBUG("c11_f11");
-	bool exit = false;
 	string result = "";
 
 	//Пока разделитель валиден - записываем данные и смещаем указатель
-	while (m_Ptr < m_End && *m_Ptr && *m_Ptr != '\n' && !exit)
+	while (m_Ptr < m_End && *m_Ptr && *m_Ptr != '\n')
 	{
 		//Проверка на разделитель
 		if (IsDelimiter())
-		{
-			exit = true;
 			break;
-		}
 		//Проверка на комментарий
 		else if (IsComment())
 		{
-			exit = true;
 			m_Ptr = m_EOL;
 			break;
 		}
 
-		//Если это валидный символ
-		if (!exit)
-		{
-			//Проверяем на перенос строки, при необходимости обрезаем пробелы
-			if (*m_Ptr != '\r' && (!m_Trim || (*m_Ptr != ' ' && *m_Ptr != '\t')))
-				result.push_back(*m_Ptr);
+		//Проверяем на перенос строки, при необходимости обрезаем пробелы
+		if (*m_Ptr != '\r' && (!m_Trim || (*m_Ptr != ' ' && *m_Ptr != '\t')))
+			result.push_back(*m_Ptr);
 
-			m_Ptr++;
-		}
+		m_Ptr++;
 	}
 
 	return result;

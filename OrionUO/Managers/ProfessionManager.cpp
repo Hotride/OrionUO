@@ -232,7 +232,7 @@ bool CProfessionManager::ParseFilePart(WISP_FILE::CTextFileParser &file)
 		obj = temp;
 	}
 
-	bool result = (type != PT_NONE);
+	bool result = (type != PROFESSION_TYPE::PT_NO_PROF);
 
 	if (obj != NULL)
 	{

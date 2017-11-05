@@ -981,16 +981,13 @@ void CGameWorld::UpdateGameObject(const uint &serial, ushort graphic, const ucha
 		LOG("NPC serial:0x%08X graphic:0x%04X color:0x%04X xyz:%d,%d,%d flags:0x%02X direction:%d notoriety:%d\n", obj->Serial, obj->Graphic, obj->Color, obj->X, obj->Y, obj->Z, obj->Flags, character->Direction, character->Notoriety);
 	}
 
-	if (obj != NULL)
+	if (created && g_ConfigManager.ShowIncomingNames && !obj->Clicked && !obj->Name.length())
 	{
-		if (created && g_ConfigManager.ShowIncomingNames && !obj->Clicked && !obj->Name.length())
-		{
-			if (obj->NPC || obj->IsCorpse())
-				g_Orion.Click(obj->Serial);
-		}
-
-		MoveToTop(obj);
+		if (obj->NPC || obj->IsCorpse())
+			g_Orion.Click(obj->Serial);
 	}
+
+	MoveToTop(obj);
 }
 //----------------------------------------------------------------------------------
 void CGameWorld::UpdatePlayer(const uint &serial, const ushort &graphic, const uchar &graphicIncrement, const ushort &color, const uchar &flags, const int &x, const int &y, const ushort &serverID, const uchar &direction, const char &z)

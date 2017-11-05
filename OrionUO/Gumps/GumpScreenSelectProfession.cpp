@@ -82,18 +82,15 @@ void CGumpScreenSelectProfession::UpdateContentOld()
 
 	if (!g_SelectProfessionScreen.SkillSelection)
 	{
-		if (obj != NULL)
-		{
-			//!Используем обработку HTML-тэгов при создании текстуры текста
-			g_FontManager.SetUseHTML(true);
+		//!Используем обработку HTML-тэгов при создании текстуры текста
+		g_FontManager.SetUseHTML(true);
 
-			CGUIText *text = new CGUIText(0, 3, 3);
-			text->CreateTextureW(1, obj->Description, 30, 195);
-			htmlGump->Add(text);
+		CGUIText *text = new CGUIText(0, 3, 3);
+		text->CreateTextureW(1, obj->Description, 30, 195);
+		htmlGump->Add(text);
 
-			//!Выключаем обработку HTML-тэгов
-			g_FontManager.SetUseHTML(false);
-		}
+		//!Выключаем обработку HTML-тэгов
+		g_FontManager.SetUseHTML(false);
 	}
 	else
 	{
@@ -151,7 +148,6 @@ void CGumpScreenSelectProfession::UpdateContentOld()
 		float ValPer = 0.0f;
 
 		CProfession *profession = (CProfession*)obj;
-		char val[15] = { 0 };
 		int statVal[3] = { profession->Str, profession->Dex, profession->Int };
 
 		const string statName[3] = { "Strength", "Dexterity", "Intelligence" };
@@ -245,7 +241,7 @@ void CGumpScreenSelectProfession::UpdateContentNew()
 	Add(new CGUIGumppic(0x058B, 213, 57));
 	Add(new CGUIGumppic(0x0589, 290, 44));
 
-	string str = g_ClilocManager.Cliloc(g_Language)->GetA(3000326, "Choose a Trade for Your Character");
+	string str = g_ClilocManager.Cliloc(g_Language)->GetA(3000326, false, "Choose a Trade for Your Character");
 	CGUIText *text = new CGUIText(0x0386, 120, 126);
 	text->CreateTextureA(2, str, 432, TS_CENTER);
 	Add(text);
@@ -284,7 +280,6 @@ void CGumpScreenSelectProfession::UpdateContentNew()
 	else if (obj->Type == PT_PROFESSION) //profession
 	{
 		CProfession *profession = (CProfession*)obj;
-		char val[15] = { 0 };
 		int statVal[3] = { profession->Str, profession->Dex, profession->Int };
 		const string statName[3] = { "Strength", "Dexterity", "Intelligence" };
 
@@ -594,7 +589,12 @@ void CGumpScreenSelectProfession::ShuffleStats(const int &id, const int &maxSum,
 
 	others_stat[1] = others_stat[0] + 1;
 	if (others_stat[1] == used_stat)
+	{
 		others_stat[1]++;
+
+		if (others_stat[1] == 3)
+			others_stat[1] = 0;
+	}
 
 	stats[used_stat] = m_StatsSliders[id]->Value;
 
@@ -671,7 +671,12 @@ void CGumpScreenSelectProfession::ShuffleSkills(const int &id)
 	others_skills[2] = others_skills[1] + 1;
 
 	if (others_skills[2] == used_skill)
+	{
 		others_skills[2]++;
+
+		if (others_skills[2] == 5)
+			others_skills[2] = 0;
+	}
 
 	int skillsCount = 3;
 	bool use4Skill = false;

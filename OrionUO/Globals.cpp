@@ -277,7 +277,7 @@ int GetDistance(CGameObject *current, CGameObject *target)
 	return 100500;
 }
 //----------------------------------------------------------------------------------
-int GetDistance(CGameObject *current, WISP_GEOMETRY::CPoint2Di target)
+int GetDistance(CGameObject *current, const WISP_GEOMETRY::CPoint2Di &target)
 {
 	if (current != NULL)
 	{
@@ -293,7 +293,7 @@ int GetDistance(CGameObject *current, WISP_GEOMETRY::CPoint2Di target)
 	return 100500;
 }
 //----------------------------------------------------------------------------------
-int GetDistance(WISP_GEOMETRY::CPoint2Di current, CGameObject *target)
+int GetDistance(const WISP_GEOMETRY::CPoint2Di &current, CGameObject *target)
 {
 	if (target != NULL)
 	{
@@ -309,7 +309,7 @@ int GetDistance(WISP_GEOMETRY::CPoint2Di current, CGameObject *target)
 	return 100500;
 }
 //----------------------------------------------------------------------------------
-int GetRemoveDistance(WISP_GEOMETRY::CPoint2Di current, CGameObject *target)
+int GetRemoveDistance(const WISP_GEOMETRY::CPoint2Di &current, CGameObject *target)
 {
 	if (target != NULL)
 	{
@@ -334,7 +334,7 @@ int GetRemoveDistance(WISP_GEOMETRY::CPoint2Di current, CGameObject *target)
 	return 100500;
 }
 //----------------------------------------------------------------------------------
-bool CheckMultiDistance(WISP_GEOMETRY::CPoint2Di current, CGameObject *target, int maxDistance)
+bool CheckMultiDistance(const WISP_GEOMETRY::CPoint2Di &current, CGameObject *target, int maxDistance)
 {
 	bool result = false;
 
@@ -348,7 +348,7 @@ bool CheckMultiDistance(WISP_GEOMETRY::CPoint2Di current, CGameObject *target, i
 	return result;
 }
 //----------------------------------------------------------------------------------
-int GetDistance(WISP_GEOMETRY::CPoint2Di current, WISP_GEOMETRY::CPoint2Di target)
+int GetDistance(const WISP_GEOMETRY::CPoint2Di &current, const WISP_GEOMETRY::CPoint2Di &target)
 {
 	int distx = abs(target.X - current.X);
 	int disty = abs(target.Y - current.Y);

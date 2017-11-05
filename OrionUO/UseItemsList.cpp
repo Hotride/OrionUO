@@ -16,7 +16,7 @@ CUseItemActions g_UseItemActions;
 void CUseItemActions::Add(const uint &serial)
 {
 	WISPFUN_DEBUG("c186_f1");
-	for (deque<uint>::iterator i = m_List.begin(); i != m_List.end(); i++)
+	for (deque<uint>::iterator i = m_List.begin(); i != m_List.end(); ++i)
 	{
 		if (*i == serial)
 			return;

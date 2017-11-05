@@ -20,9 +20,10 @@ CGameScreen::CGameScreen()
 	WISPFUN_DEBUG("c164_f1");
 	m_RenderList.resize(1000);
 
-	memset(&g_RenderBounds, 0, sizeof(RENDER_VARIABLES_FOR_GAME_WINDOW));
+	memset(&g_RenderBounds, 0, sizeof(g_RenderBounds));
 
-	memset(&m_ObjectHandlesList[0], 0, sizeof(CGameObject*) * MAX_OBJECT_HANDLES);
+	memset(&m_ObjectHandlesList[0], 0, sizeof(m_ObjectHandlesList));
+	memset(&m_Light[0], 0, sizeof(m_Light));
 }
 //----------------------------------------------------------------------------------
 CGameScreen::~CGameScreen()
@@ -621,12 +622,12 @@ void CGameScreen::AddTileToRenderList(CRenderWorldObject *obj, const int &worldX
 			{
 				CGameCharacter *character = go->GameCharacterPtr();
 
-				ANIMATION_DIMENSIONS dims = g_AnimationManager.GetAnimationDimensions(go);
-
 				CTextContainer &textContainer = character->m_DamageTextControl;
 
 				if (!textContainer.Empty())
 				{
+					ANIMATION_DIMENSIONS dims = g_AnimationManager.GetAnimationDimensions(go);
+
 					int textDrawX = drawX + character->OffsetX;
 					int textDrawY = drawY + character->OffsetY - (character->OffsetZ + dims.Height + dims.CenterY);
 
@@ -1348,7 +1349,7 @@ void CGameScreen::DrawGameWindowText(const bool &mode)
 		{
 			if (g_ConfigManager.DrawStatusState == DCSS_ABOVE)
 			{
-				for (vector<OBJECT_HITS_INFO>::iterator it = m_HitsStack.begin(); it != m_HitsStack.end(); it++)
+				for (vector<OBJECT_HITS_INFO>::iterator it = m_HitsStack.begin(); it != m_HitsStack.end(); ++it)
 				{
 					CGLTextTexture *texture = (CGLTextTexture*)it->Width;
 					texture->Draw(it->X, it->Y);
@@ -1360,7 +1361,7 @@ void CGameScreen::DrawGameWindowText(const bool &mode)
 
 				IFOR(i, 0, 2)
 				{
-					for (vector<OBJECT_HITS_INFO>::iterator it = m_HitsStack.begin(); it != m_HitsStack.end(); it++)
+					for (vector<OBJECT_HITS_INFO>::iterator it = m_HitsStack.begin(); it != m_HitsStack.end(); ++it)
 					{
 						if (!i)
 							g_Orion.DrawGump(0x1068, it->Color, it->X, it->Y);

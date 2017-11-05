@@ -75,7 +75,7 @@ bool CTextRenderer::InRect(CTextData *text, CRenderWorldObject *rwo)
 	bool result = false;
 	CTextImageBounds rect(text);
 
-	for (std::deque<CTextImageBounds>::iterator it = m_TextRect.begin(); it != m_TextRect.end(); it++)
+	for (std::deque<CTextImageBounds>::iterator it = m_TextRect.begin(); it != m_TextRect.end(); ++it)
 	{
 		if (it->InRect(rect))
 		{

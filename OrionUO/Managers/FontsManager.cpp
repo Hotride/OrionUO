@@ -1393,7 +1393,7 @@ ushort CFontsManager::GetWebLinkID(const string &link, uint &color)
 
 	WEBLINK_MAP::iterator it = m_WebLink.begin();
 
-	for (; it != m_WebLink.end(); it++)
+	for (; it != m_WebLink.end(); ++it)
 	{
 		if ((*it).second.WebLink == link)
 			break;
@@ -2581,13 +2581,14 @@ UINT_LIST CFontsManager::GeneratePixelsW(const uchar &font, CGLTextTexture &th, 
 		int dataSize = (int)ptr->Data.size();
 		IFOR(i, 0, dataSize)
 		{
-			wchar_t si = ptr->Data[i].item;
+			const MULTILINES_FONT_DATA &dataPtr = ptr->Data[i];
+			const wchar_t &si = dataPtr.item;
 
-			table = (puint)m_UnicodeFontAddress[ptr->Data[i].font];
+			table = (puint)m_UnicodeFontAddress[dataPtr.font];
 
 			if (!isLink)
 			{
-				oldLink = ptr->Data[i].linkID;
+				oldLink = dataPtr.linkID;
 
 				if (oldLink)
 				{
@@ -2596,7 +2597,7 @@ UINT_LIST CFontsManager::GeneratePixelsW(const uchar &font, CGLTextTexture &th, 
 					linkStartY = lineOffsY + 3;
 				}
 			}
-			else if (!ptr->Data[i].linkID || i + 1 == dataSize)
+			else if (!dataPtr.linkID || i + 1 == dataSize)
 			{
 				isLink = false;
 				int linkHeight = lineOffsY - linkStartY;
@@ -2659,13 +2660,13 @@ UINT_LIST CFontsManager::GeneratePixelsW(const uchar &font, CGLTextTexture &th, 
 			{
 				if (m_UseHTML && i < (int)ptr->Data.size())
 				{
-					isItalic = (ptr->Data[i].flags & UOFONT_ITALIC);
-					isSolid = (ptr->Data[i].flags & UOFONT_SOLID);
-					isBlackBorder = (ptr->Data[i].flags & UOFONT_BLACK_BORDER);
-					isUnderline = (ptr->Data[i].flags & UOFONT_UNDERLINE);
+					isItalic = (dataPtr.flags & UOFONT_ITALIC);
+					isSolid = (dataPtr.flags & UOFONT_SOLID);
+					isBlackBorder = (dataPtr.flags & UOFONT_BLACK_BORDER);
+					isUnderline = (dataPtr.flags & UOFONT_UNDERLINE);
 
-					if (ptr->Data[i].color != 0xFFFFFFFF)
-						charcolor = ptr->Data[i].color;
+					if (dataPtr.color != 0xFFFFFFFF)
+						charcolor = dataPtr.color;
 				}
 
 				int scanlineCount = (int)((dw - 1) / 8) + 1;
@@ -2865,10 +2866,10 @@ UINT_LIST CFontsManager::GeneratePixelsW(const uchar &font, CGLTextTexture &th, 
 
 				if (m_UseHTML)
 				{
-					isUnderline = (ptr->Data[i].flags & UOFONT_UNDERLINE);
+					isUnderline = (dataPtr.flags & UOFONT_UNDERLINE);
 
-					if (ptr->Data[i].color != 0xFFFFFFFF)
-						charcolor = ptr->Data[i].color;
+					if (dataPtr.color != 0xFFFFFFFF)
+						charcolor = dataPtr.color;
 				}
 			}
 

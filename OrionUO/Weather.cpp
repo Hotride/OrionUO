@@ -270,7 +270,7 @@ void CWeather::Draw(const int &x, const int &y)
 				break;
 		}
 
-		effect++;
+		++effect;
 	}
 
 	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);

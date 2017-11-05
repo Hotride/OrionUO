@@ -33,9 +33,6 @@ private:
 	//!Данные для радара
 	USHORT_LIST m_Radarcol;
 
-	//!Данные из palette.mul
-	PALETTE_BLOCK m_Palette[256];
-
 public:
 	CColorManager();
 	~CColorManager();

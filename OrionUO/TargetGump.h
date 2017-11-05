@@ -17,13 +17,13 @@ class CTargetGump
 	SETGET(int, Hits, 0);
 	SETGET(ushort, Color, 0);
 	SETGET(ushort, HealthColor, 0);
+	SETGETP(CGameCharacter*, TargetedCharacter, NULL);
 
 public:
 	CTargetGump();
 	~CTargetGump();
 
 	void Draw();
-	CGameCharacter *TargetedCharacter;
 };
 //----------------------------------------------------------------------------------
 class CNewTargetSystem
@@ -39,13 +39,12 @@ class CNewTargetSystem
 	SETGET(ushort, GumpBottom, 0);
 	SETGET(ushort, ColorGump, 0);
 	SETGET(ushort, HealthColor, 0);
+	SETGETP(CGameCharacter*, TargetedCharacter, NULL);
 
 	CNewTargetSystem();
 	~CNewTargetSystem();
 
 	void Draw();
-
-	CGameCharacter *TargetedCharacter;
 };
 //----------------------------------------------------------------------------------
 extern CTargetGump g_TargetGump;

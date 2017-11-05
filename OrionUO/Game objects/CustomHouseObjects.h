@@ -42,7 +42,7 @@ class CCustomHouseObjectWall : public CCustomHouseObject
 	SETGET(int, SecondAltWindowE, 0);
 
 public:
-	CCustomHouseObjectWall() : CCustomHouseObject() {}
+	CCustomHouseObjectWall() : CCustomHouseObject() { memset(&m_Graphics[0], 0, sizeof(m_Graphics)); memset(&m_WindowGraphics[0], 0, sizeof(m_WindowGraphics)); }
 	virtual ~CCustomHouseObjectWall() {}
 
 	virtual bool Parse(const char *text);
@@ -86,7 +86,7 @@ class CCustomHouseObjectFloor : public CCustomHouseObject
 	SETGET(int, F16, 0);
 
 public:
-	CCustomHouseObjectFloor() : CCustomHouseObject() {}
+	CCustomHouseObjectFloor() : CCustomHouseObject() { memset(&m_Graphics[0], 0, sizeof(m_Graphics)); }
 	virtual ~CCustomHouseObjectFloor() {}
 
 	virtual bool Parse(const char *text);
@@ -121,7 +121,7 @@ class CCustomHouseObjectDoor : public CCustomHouseObject
 	SETGET(int, Piece8, 0);
 	
 public:
-	CCustomHouseObjectDoor() : CCustomHouseObject() {}
+	CCustomHouseObjectDoor() : CCustomHouseObject() { memset(&m_Graphics[0], 0, sizeof(m_Graphics)); }
 	virtual ~CCustomHouseObjectDoor() {}
 
 	virtual bool Parse(const char *text);
@@ -158,7 +158,7 @@ class CCustomHouseObjectMisc : public CCustomHouseObject
 	SETGET(int, Piece8, 0);
 	
 public:
-	CCustomHouseObjectMisc() : CCustomHouseObject() {}
+	CCustomHouseObjectMisc() : CCustomHouseObject() { memset(&m_Graphics[0], 0, sizeof(m_Graphics)); }
 	virtual ~CCustomHouseObjectMisc() {}
 
 	virtual bool Parse(const char *text);
@@ -198,7 +198,7 @@ class CCustomHouseObjectStair : public CCustomHouseObject
 	SETGET(int, MultiWest, 0);
 
 public:
-	CCustomHouseObjectStair() : CCustomHouseObject() {}
+	CCustomHouseObjectStair() : CCustomHouseObject() { memset(&m_Graphics[0], 0, sizeof(m_Graphics)); }
 	virtual ~CCustomHouseObjectStair() {}
 
 	virtual bool Parse(const char *text);
@@ -241,7 +241,7 @@ class CCustomHouseObjectTeleport : public CCustomHouseObject
 	SETGET(int, F16, 0);
 
 public:
-	CCustomHouseObjectTeleport() : CCustomHouseObject() {}
+	CCustomHouseObjectTeleport() : CCustomHouseObject() { memset(&m_Graphics[0], 0, sizeof(m_Graphics)); }
 	virtual ~CCustomHouseObjectTeleport() {}
 
 	virtual bool Parse(const char *text);
@@ -286,7 +286,7 @@ class CCustomHouseObjectRoof : public CCustomHouseObject
 	SETGET(int, Piece, 0);
 
 public:
-	CCustomHouseObjectRoof() : CCustomHouseObject() {}
+	CCustomHouseObjectRoof() : CCustomHouseObject() { memset(&m_Graphics[0], 0, sizeof(m_Graphics)); }
 	virtual ~CCustomHouseObjectRoof() {}
 
 	virtual bool Parse(const char *text);
@@ -330,7 +330,7 @@ class CCustomHouseObjectPlaceInfo
 	SETGET(int, FeatureMask, 0);
 
 public:
-	CCustomHouseObjectPlaceInfo() {}
+	CCustomHouseObjectPlaceInfo() { memset(&m_Graphics[0], 0, sizeof(m_Graphics)); }
 	virtual ~CCustomHouseObjectPlaceInfo() {}
 
 	bool Parse(const char *text);

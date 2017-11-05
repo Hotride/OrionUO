@@ -41,7 +41,7 @@ void CCorpseManager::Remove(const uint &corpseSerial, const uint &objectSerial)
 			i = m_List.erase(i);
 		}
 		else
-			i++;
+			++i;
 	}
 }
 //----------------------------------------------------------------------------------

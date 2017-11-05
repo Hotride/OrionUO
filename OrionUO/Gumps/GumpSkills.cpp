@@ -580,7 +580,7 @@ void CGumpSkills::GUMP_BUTTON_EVENT_C
 		{
 			int index = serial - ID_GS_SKILL_BUTTON;
 
-			if (index < 0 || index >= g_SkillsManager.Count)
+			if (index >= g_SkillsManager.Count)
 				return;
 
 			g_Orion.UseSkill(index);

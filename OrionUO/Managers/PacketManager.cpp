@@ -1993,7 +1993,6 @@ PACKET_HANDLER(OpenContainer)
 	ushort gumpid = ReadUInt16BE();
 
 	CGump *gump = NULL;
-	bool addGump = true;
 
 	if (gumpid == 0xFFFF) //Spellbook
 	{
@@ -2118,7 +2117,7 @@ PACKET_HANDLER(OpenContainer)
 	{
 		if (g_ContainerStack.size())
 		{
-			for (deque<CContainerStackItem>::iterator cont = g_ContainerStack.begin(); cont != g_ContainerStack.end(); cont++)
+			for (deque<CContainerStackItem>::iterator cont = g_ContainerStack.begin(); cont != g_ContainerStack.end(); ++cont)
 			{
 				if (cont->Serial == serial)
 				{
@@ -2160,8 +2159,7 @@ PACKET_HANDLER(OpenContainer)
 		}
 	}
 
-	if (addGump)
-		g_GumpManager.AddGump(gump);
+	g_GumpManager.AddGump(gump);
 }
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(UpdateSkills)
@@ -5175,9 +5173,9 @@ PACKET_HANDLER(SellList)
 		return;
 	}
 
-	ushort count = ReadUInt16BE();
+	ushort itemsCount = ReadUInt16BE();
 
-	if (!count)
+	if (!itemsCount)
 	{
 		LOG("Error!!! Sell list is empty.\n");
 		return;
@@ -5190,7 +5188,7 @@ PACKET_HANDLER(SellList)
 
 	int currentY = 0;
 
-	IFOR(i, 0, count)
+	IFOR(i, 0, itemsCount)
 	{
 		uint itemSerial = ReadUInt32BE();
 		ushort graphic = ReadUInt16BE();

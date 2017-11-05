@@ -1683,7 +1683,7 @@ void CGumpManager::Save(const string &path)
 				break;
 			}
 			else
-				it++;
+				++it;
 		}
 
 		CGameObject *owner = g_World->FindWorldObject(containerSerial);
@@ -1713,7 +1713,7 @@ void CGumpManager::Save(const string &path)
 
 			for (spell = topSpell; spell != NULL; spell = spell->m_GroupNext)
 			{
-				for (vector<CGump*>::iterator it = spellInGroupList.begin(); it != spellInGroupList.end(); it++)
+				for (vector<CGump*>::iterator it = spellInGroupList.begin(); it != spellInGroupList.end(); ++it)
 				{
 					if (*it == spell)
 					{

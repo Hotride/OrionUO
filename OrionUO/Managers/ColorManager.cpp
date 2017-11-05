@@ -45,13 +45,6 @@ void CColorManager::Init()
 		m_Radarcol.resize(g_FileManager.m_RadarcolMul.Size / 2);
 		memcpy(&m_Radarcol[0], (PVOID)g_FileManager.m_RadarcolMul.Start, g_FileManager.m_RadarcolMul.Size);
 	}
-
-	addr = (uint)g_FileManager.m_PaletteMul.Start;
-
-	if (addr > 0 && addr != 0xFFFFFFFF)
-		memcpy(m_Palette, (PVOID)addr, 256 * sizeof(PALETTE_BLOCK));
-	else
-		memset(m_Palette, 0, 256 * sizeof(PALETTE_BLOCK));
 }
 //----------------------------------------------------------------------------------
 /*!

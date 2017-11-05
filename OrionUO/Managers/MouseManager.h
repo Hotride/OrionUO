@@ -21,7 +21,7 @@ private:
 	int m_CursorOffset[2][16];
 
 public:
-	CMouseManager() : WISP_MOUSE::CMouse() {}
+	CMouseManager() : WISP_MOUSE::CMouse() { memset(&m_CursorOffset[0][0], 0, sizeof(m_CursorOffset)); }
 	~CMouseManager() {}
 
 	/*!

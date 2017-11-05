@@ -43,7 +43,7 @@ CustomHousesManager::~CustomHousesManager()
 void CustomHousesManager::Clear()
 {
 	WISPFUN_DEBUG("");
-	for (unordered_map<uint, CCustomHouse*>::iterator i = m_Items.begin(); i != m_Items.end(); i++)
+	for (unordered_map<uint, CCustomHouse*>::iterator i = m_Items.begin(); i != m_Items.end(); ++i)
 	{
 		CCustomHouse *house = i->second;
 		delete house;
@@ -54,7 +54,7 @@ void CustomHousesManager::Clear()
 CCustomHouse *CustomHousesManager::Get(const uint &serial)
 {
 	WISPFUN_DEBUG("");
-	for (unordered_map<uint, CCustomHouse*>::iterator i = m_Items.begin(); i != m_Items.end(); i++)
+	for (unordered_map<uint, CCustomHouse*>::iterator i = m_Items.begin(); i != m_Items.end(); ++i)
 	{
 		CCustomHouse *house = i->second;
 
@@ -134,7 +134,7 @@ void CustomHousesManager::Save(const string &path)
 
 	int count = 0;
 
-	for (unordered_map<uint, CCustomHouse*>::iterator i = m_Items.begin(); i != m_Items.end(); i++)
+	for (unordered_map<uint, CCustomHouse*>::iterator i = m_Items.begin(); i != m_Items.end(); ++i)
 	{
 		CCustomHouse *house = i->second;
 
@@ -145,7 +145,7 @@ void CustomHousesManager::Save(const string &path)
 	writter.WriteInt32LE(count);
 	writter.WriteBuffer();
 
-	for (unordered_map<uint, CCustomHouse*>::iterator i = m_Items.begin(); i != m_Items.end(); i++)
+	for (unordered_map<uint, CCustomHouse*>::iterator i = m_Items.begin(); i != m_Items.end(); ++i)
 	{
 		CCustomHouse *house = i->second;
 

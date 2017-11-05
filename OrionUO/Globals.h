@@ -59,11 +59,11 @@ string ToCamelCase(string text);
 //Функции для вычисления дистанции
 class CGameObject;
 int GetDistance(CGameObject *current, CGameObject *target);
-int GetDistance(CGameObject *current, WISP_GEOMETRY::CPoint2Di target);
-bool CheckMultiDistance(WISP_GEOMETRY::CPoint2Di current, CGameObject *target, int maxDistance);
-int GetDistance(WISP_GEOMETRY::CPoint2Di current, CGameObject *target);
-int GetDistance(WISP_GEOMETRY::CPoint2Di current, WISP_GEOMETRY::CPoint2Di target);
-int GetRemoveDistance(WISP_GEOMETRY::CPoint2Di current, CGameObject *target);
+int GetDistance(CGameObject *current, const WISP_GEOMETRY::CPoint2Di &target);
+bool CheckMultiDistance(const WISP_GEOMETRY::CPoint2Di &current, CGameObject *target, int maxDistance);
+int GetDistance(const WISP_GEOMETRY::CPoint2Di &current, CGameObject *target);
+int GetDistance(const WISP_GEOMETRY::CPoint2Di &current, const WISP_GEOMETRY::CPoint2Di &target);
+int GetRemoveDistance(const WISP_GEOMETRY::CPoint2Di &current, CGameObject *target);
 int GetTopObjDistance(CGameObject *current, CGameObject *target);
 //----------------------------------------------------------------------------------
 const char *GetReagentName(const ushort &id);

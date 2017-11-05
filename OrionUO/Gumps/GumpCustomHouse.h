@@ -183,7 +183,7 @@ public:
 
 	bool CanBuildHere(vector<CBuildObject> &list, CRenderWorldObject *place, CUSTOM_HOUSE_BUILD_TYPE &type);
 
-	bool ValidateItemPlace(const RECT rect, const ushort &graphic, const int &x, const int &y);
+	bool ValidateItemPlace(const RECT &rect, const ushort &graphic, const int &x, const int &y);
 
 	bool ValidateItemPlace(CGameItem *foundationItem, CMultiObject *item, const int &minZ, const int &maxZ, vector<WISP_GEOMETRY::CPoint2Di> &validatedFloors);
 

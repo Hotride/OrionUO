@@ -250,7 +250,7 @@ CGumpStatusbar *CGumpStatusbar::GetNearStatusbar(int &x, int &y)
 bool CGumpStatusbar::GetStatusbarGroupOffset(int &x, int &y)
 {
 	WISPFUN_DEBUG("c128_f6");
-	if (InGroup() && m_Minimized && g_MouseManager.LeftButtonPressed && g_PressedObject.LeftGump != NULL && (g_PressedObject.LeftObject == NULL || (g_PressedObject.LeftObject != NULL && g_PressedObject.LeftObject->IsGUI() && ((CBaseGUI*)g_PressedObject.LeftObject)->MoveOnDrag)))
+	if (InGroup() && m_Minimized && g_MouseManager.LeftButtonPressed && g_PressedObject.LeftGump != NULL && (g_PressedObject.LeftObject == NULL || (g_PressedObject.LeftObject->IsGUI() && ((CBaseGUI*)g_PressedObject.LeftObject)->MoveOnDrag)))
 	{
 		CGumpStatusbar *gump = GetTopStatusbar();
 

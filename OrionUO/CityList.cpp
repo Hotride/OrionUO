@@ -81,7 +81,7 @@ CCityItem *CCityList::GetCity(const uint &index)
 void CCityList::Clear()
 {
 	WISPFUN_DEBUG("c184_f3");
-	for (vector<CCityItem*>::iterator i = m_CityList.begin(); i != m_CityList.end(); i++)
+	for (vector<CCityItem*>::iterator i = m_CityList.begin(); i != m_CityList.end(); ++i)
 		delete *i;
 
 	m_CityList.clear();

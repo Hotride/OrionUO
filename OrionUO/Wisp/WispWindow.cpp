@@ -504,7 +504,7 @@ LRESULT CWindow::OnWindowProc(HWND &hWnd, UINT &message, WPARAM &wParam, LPARAM 
 void CWindow::CreateThreadedTimer(uint id, const int &delay, const bool &oneShot, const bool &waitForProcessMessage, const bool &synchronizedDelay)
 {
 	WISPFUN_DEBUG("c14_f10");
-	for (deque<WISP_THREADED_TIMER::CThreadedTimer*>::iterator i = m_ThreadedTimersStack.begin(); i != m_ThreadedTimersStack.end(); i++)
+	for (deque<WISP_THREADED_TIMER::CThreadedTimer*>::iterator i = m_ThreadedTimersStack.begin(); i != m_ThreadedTimersStack.end(); ++i)
 	{
 		if ((*i)->TimerID == id)
 			return;
@@ -518,7 +518,7 @@ void CWindow::CreateThreadedTimer(uint id, const int &delay, const bool &oneShot
 void CWindow::RemoveThreadedTimer(uint id)
 {
 	WISPFUN_DEBUG("c14_f11");
-	for (deque<WISP_THREADED_TIMER::CThreadedTimer*>::iterator i = m_ThreadedTimersStack.begin(); i != m_ThreadedTimersStack.end(); i++)
+	for (deque<WISP_THREADED_TIMER::CThreadedTimer*>::iterator i = m_ThreadedTimersStack.begin(); i != m_ThreadedTimersStack.end(); ++i)
 	{
 		if ((*i)->TimerID == id)
 		{
@@ -533,7 +533,7 @@ void CWindow::RemoveThreadedTimer(uint id)
 WISP_THREADED_TIMER::CThreadedTimer *CWindow::GetThreadedTimer(uint id)
 {
 	WISPFUN_DEBUG("c14_f12");
-	for (deque<WISP_THREADED_TIMER::CThreadedTimer*>::iterator i = m_ThreadedTimersStack.begin(); i != m_ThreadedTimersStack.end(); i++)
+	for (deque<WISP_THREADED_TIMER::CThreadedTimer*>::iterator i = m_ThreadedTimersStack.begin(); i != m_ThreadedTimersStack.end(); ++i)
 	{
 		if ((*i)->TimerID == id)
 			return *i;

@@ -37,7 +37,7 @@ void CGumpScreenServer::UpdateContent()
 	CCliloc *cliloc = g_ClilocManager.Cliloc(g_Language);
 
 	CGUIText *obj = new CGUIText(0x0481, 233, 62);
-	obj->CreateTextureA(9, cliloc->GetA(1044579, "Select which shard to play on:"));
+	obj->CreateTextureA(9, cliloc->GetA(1044579, false, "Select which shard to play on:"));
 	Add(obj);
 
 	CGUIHTMLGump *htmlGump = (CGUIHTMLGump*)Add(new CGUIHTMLGump(ID_SS_HTML_GUMP, 0x0DAC, 150, 90, 393, 271, true, true));
@@ -46,7 +46,7 @@ void CGumpScreenServer::UpdateContent()
 	htmlGump->m_Scissor->Height -= 32;
 
 	obj = new CGUIText(0x0481, 153, 368);
-	obj->CreateTextureA(9, cliloc->GetA(1044580, "Sort by:"));
+	obj->CreateTextureA(9, cliloc->GetA(1044580, false, "Sort by:"));
 	Add(obj);
 
 	Add(new CGUIButton(ID_SS_TIME_ZONE, 0x093B, 0x093D, 0x093C, 230, 366));

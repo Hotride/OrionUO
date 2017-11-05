@@ -226,6 +226,9 @@ CAnimationManager::CAnimationManager()
 	memset(m_AddressIdx, 0, sizeof(m_AddressIdx));
 	memset(m_AddressMul, 0, sizeof(m_AddressMul));
 	memset(m_SizeIdx, 0, sizeof(m_SizeIdx));
+
+	memset(m_CharacterLayerGraphic, 0, sizeof(m_CharacterLayerGraphic));
+	memset(m_CharacterLayerAnimID, 0, sizeof(m_CharacterLayerAnimID));
 }
 //----------------------------------------------------------------------------------
 CAnimationManager::~CAnimationManager()
@@ -2518,7 +2521,7 @@ bool CAnimationManager::DrawEquippedLayers(const bool &selection, CGameObject *o
 
 	if (selection)
 	{
-		for (vector<CGameItem*>::iterator i = list.begin(); i != list.end() && !result; i++)
+		for (vector<CGameItem*>::iterator i = list.begin(); i != list.end() && !result; ++i)
 		{
 			ushort id = (*i)->AnimID;
 
@@ -2535,7 +2538,7 @@ bool CAnimationManager::DrawEquippedLayers(const bool &selection, CGameObject *o
 	}
 	else
 	{
-		for (vector<CGameItem*>::iterator i = list.begin(); i != list.end(); i++)
+		for (vector<CGameItem*>::iterator i = list.begin(); i != list.end(); ++i)
 		{
 			CGameItem *item = *i;
 

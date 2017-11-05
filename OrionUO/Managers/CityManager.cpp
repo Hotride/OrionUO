@@ -125,7 +125,7 @@ CCityManager::~CCityManager()
 CCity CCityManager::GetCity(const string &name)
 {
 	WISPFUN_DEBUG("c134_f2");
-	for (deque<CCity>::iterator i = m_CityList.begin(); i != m_CityList.end(); i++)
+	for (deque<CCity>::iterator i = m_CityList.begin(); i != m_CityList.end(); ++i)
 	{
 		if (i->Name == name)
 			return *i;

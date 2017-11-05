@@ -73,7 +73,7 @@ public:
 
 	void PlayMidi(int index, bool warmode);
 
-	void PlayMP3(std::string fileName, int index, bool loop, bool warmode = false);
+	void PlayMP3(const string &fileName, int index, bool loop, bool warmode = false);
 
 	void StopMusic();
 

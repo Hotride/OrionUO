@@ -1485,7 +1485,7 @@ bool CGumpCustomHouse::CanBuildHere(vector<CBuildObject> &list, CRenderWorldObje
 	return true;
 }
 //----------------------------------------------------------------------------------
-bool CGumpCustomHouse::ValidateItemPlace(const RECT rect, const ushort &graphic, const int &x, const int &y)
+bool CGumpCustomHouse::ValidateItemPlace(const RECT &rect, const ushort &graphic, const int &x, const int &y)
 {
 	POINT pos = { x, y };
 
@@ -2342,7 +2342,7 @@ void CGumpCustomHouse::GUMP_BUTTON_EVENT_C
 						index -= 10;
 					}
 					
-					if (index >= 0 && index < CCustomHouseObjectStair::GRAPHICS_COUNT)
+					if (index < CCustomHouseObjectStair::GRAPHICS_COUNT)
 						graphic = m_Stairs[m_Page].m_Graphics[index];
 				}
 			}

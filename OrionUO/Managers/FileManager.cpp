@@ -111,8 +111,6 @@ bool CFileManager::Load()
 		return false;
 	else if (!m_MultiMul.Load(g_App.UOFilesPath("multi.mul")))
 		return false;
-	else if (!m_PaletteMul.Load(g_App.UOFilesPath("palette.mul")))
-		return false;
 	else if (!m_RadarcolMul.Load(g_App.UOFilesPath("radarcol.mul")))
 		return false;
 	else if (!m_SkillsMul.Load(g_App.UOFilesPath("skills.mul")))
@@ -243,8 +241,6 @@ bool CFileManager::LoadWithUOP()
 		return false;
 	else if (!m_LightMul.Load(g_App.UOFilesPath("light.mul")))
 		return false;
-	else if (!m_PaletteMul.Load(g_App.UOFilesPath("palette.mul")))
-		return false;
 	else if (!m_RadarcolMul.Load(g_App.UOFilesPath("radarcol.mul")))
 		return false;
 	else if (!m_SkillsMul.Load(g_App.UOFilesPath("skills.mul")))
@@ -335,7 +331,6 @@ void CFileManager::Unload()
 
 	m_LightMul.Unload();
 	m_MultiMul.Unload();
-	m_PaletteMul.Unload();
 	m_RadarcolMul.Unload();
 	m_SkillsMul.Unload();
 
@@ -599,7 +594,7 @@ bool CFileManager::LoadUOPFile(CUopMappedFile &file, const char *fileName)
 	//if (string("tileart.uop") != fileName)
 		return true;
 
-	for (std::unordered_map<uint64, CUopBlockHeader>::iterator i = file.m_Map.begin(); i != file.m_Map.end(); i++)
+	for (std::unordered_map<uint64, CUopBlockHeader>::iterator i = file.m_Map.begin(); i != file.m_Map.end(); ++i)
 	{
 		LOG("item dump start: %016llX, %i\n", i->first, i->second.CompressedSize);
 

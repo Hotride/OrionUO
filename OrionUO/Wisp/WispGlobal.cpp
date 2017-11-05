@@ -143,12 +143,10 @@ wstring ToWString(const string &str)
 string Trim(const string &str)
 {
 	string::const_iterator it = str.begin();
-	while (it != str.end() && isspace(*it))
-		it++;
+	for (; it != str.end() && isspace(*it); ++it);
 
 	string::const_reverse_iterator rit = str.rbegin();
-	while (rit.base() != it && isspace(*rit))
-		rit++;
+	for (; rit.base() != it && isspace(*rit); ++rit);
 
 	return string(it, rit.base());
 }

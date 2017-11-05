@@ -1587,7 +1587,7 @@ void COrion::ClearUnusedTextures()
 					break;
 			}
 			else
-				it++;
+				++it;
 		}
 	}
 
@@ -1611,7 +1611,7 @@ void COrion::ClearUnusedTextures()
 				break;
 		}
 		else
-			it++;
+			++it;
 	}
 
 	AdjustSoundEffects(g_Ticks);
@@ -2952,7 +2952,7 @@ void COrion::ClearRemovedStaticsTextures()
 			it = m_UsedStaticList.erase(it);
 		}
 		else
-			it++;
+			++it;
 	}
 }
 //----------------------------------------------------------------------------------
@@ -3310,7 +3310,7 @@ void COrion::LoadIndexFiles()
 	{
 		CUopMappedFile &file = g_FileManager.m_MultiCollection;
 
-		for (std::unordered_map<uint64, CUopBlockHeader>::iterator i = file.m_Map.begin(); i != file.m_Map.end(); i++)
+		for (std::unordered_map<uint64, CUopBlockHeader>::iterator i = file.m_Map.begin(); i != file.m_Map.end(); ++i)
 		{
 			CUopBlockHeader &block = i->second;
 			UCHAR_LIST data = file.GetData(block);
@@ -3354,7 +3354,7 @@ void COrion::UnloadIndexFiles()
 	{
 		deque<CIndexObject*> &list = *lists[i];
 
-		for (deque<CIndexObject*>::iterator it = list.begin(); it != list.end(); it++)
+		for (deque<CIndexObject*>::iterator it = list.begin(); it != list.end(); ++it)
 		{
 			CIndexObject *obj = *it;
 
@@ -3368,7 +3368,7 @@ void COrion::UnloadIndexFiles()
 		list.clear();
 	}
 
-	for (deque<CIndexSound*>::iterator it = m_UsedSoundList.begin(); it != m_UsedSoundList.end(); it++)
+	for (deque<CIndexSound*>::iterator it = m_UsedSoundList.begin(); it != m_UsedSoundList.end(); ++it)
 	{
 		CIndexSound *obj = *it;
 
@@ -3576,7 +3576,7 @@ void COrion::ProcessStaticAnimList()
 		bool noAnimateFields = g_ConfigManager.NoAnimateFields;
 		uint nextTime = g_Ticks + 500;
 
-		for (deque<CIndexObjectStatic*>::iterator i = m_StaticAnimList.begin(); i != m_StaticAnimList.end(); i++)
+		for (deque<CIndexObjectStatic*>::iterator i = m_StaticAnimList.begin(); i != m_StaticAnimList.end(); ++i)
 		{
 			CIndexObjectStatic *obj = *i;
 
@@ -4347,7 +4347,7 @@ void COrion::AdjustSoundEffects(const uint &ticks, const float &volume)
 			i = m_UsedSoundList.erase(i);
 		}
 		else
-			i++;
+			++i;
 	}
 }
 //----------------------------------------------------------------------------------

@@ -76,7 +76,6 @@ public:
 	WISP_FILE::CMappedFile m_LightMul;
 	WISP_FILE::CMappedFile m_MapMul[6];
 	WISP_FILE::CMappedFile m_MultiMul;
-	WISP_FILE::CMappedFile m_PaletteMul;
 	WISP_FILE::CMappedFile m_RadarcolMul;
 	WISP_FILE::CMappedFile m_SkillsMul;
 	WISP_FILE::CMappedFile m_SoundMul;
