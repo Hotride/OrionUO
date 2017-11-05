@@ -13,16 +13,16 @@
 class CPressedObject
 {
 	SETGET(uint, LeftSerial, 0);
-	SETGET(CRenderObject*, LeftObject, NULL);
-	SETGET(CGump*, LeftGump, NULL);
+	SETGETP(CRenderObject*, LeftObject, NULL);
+	SETGETP(CGump*, LeftGump, NULL);
 
 	SETGET(uint, RightSerial, 0);
-	SETGET(CRenderObject*, RightObject, NULL);
-	SETGET(CGump*, RightGump, NULL);
+	SETGETP(CRenderObject*, RightObject, NULL);
+	SETGETP(CGump*, RightGump, NULL);
 
 	SETGET(uint, MidSerial, 0);
-	SETGET(CRenderObject*, MidObject, NULL);
-	SETGET(CGump*, MidGump, NULL);
+	SETGETP(CRenderObject*, MidObject, NULL);
+	SETGETP(CGump*, MidGump, NULL);
 
 public:
 	CPressedObject();

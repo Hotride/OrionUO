@@ -87,10 +87,11 @@ void CGUIComboBox::RecalculateWidth()
 	}
 }
 //----------------------------------------------------------------------------------
-void CGUIComboBox::OnChangeShowItemsCount(const int &val)
+void CGUIComboBox::SetShowItemsCount(const int &val)
 {
 	WISPFUN_DEBUG("c49_f4");
 	m_WorkHeight = val * 15;
+	m_ShowItemsCount = val;
 }
 //----------------------------------------------------------------------------------
 WISP_GEOMETRY::CSize CGUIComboBox::GetSize()

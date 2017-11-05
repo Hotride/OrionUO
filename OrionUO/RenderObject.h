@@ -16,8 +16,8 @@ class CRenderObject : public CBaseQueueItem
 	SETGET(uint, Serial, 0);
 	SETGET(ushort, Graphic, 0);
 	SETGET(ushort, Color, 0);
-	SETGETE(int, X, 0, OnChangeX);
-	SETGETE(int, Y, 0, OnChangeY);
+	SETGETE(int, X, 0);
+	SETGETE(int, Y, 0);
 	SETGET(int, RealDrawX, 0);
 	SETGET(int, RealDrawY, 0);
 	SETGET(int, DrawX, 0);

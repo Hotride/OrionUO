@@ -21,12 +21,12 @@ extern NETWORK_POST_ACTION_TYPE *g_NetworkPostAction;
 //!Класс менеджера подключения к серверу
 class CConnectionManager
 {
-	SETGETE(bool, UseProxy, false, OnChangeUseProxy);
-	SETGETE(string, ProxyAddress, "", OnChangeProxyAddress);
-	SETGETE(int, ProxyPort, 0, OnChangeProxyPort);
-	SETGETE(bool, ProxySocks5, false, OnChangeProxySocks5);
-	SETGETE(string, ProxyAccount, "", OnChangeProxyAccount);
-	SETGETE(string, ProxyPassword, "", OnChangeProxyPassword);
+	SETGETE(bool, UseProxy, false);
+	SETGETE(string, ProxyAddress, "");
+	SETGETE(int, ProxyPort, 0);
+	SETGETE(bool, ProxySocks5, false);
+	SETGETE(string, ProxyAccount, "");
+	SETGETE(string, ProxyPassword, "");
 
 private:
 	//!Подключение к сокету авторизации

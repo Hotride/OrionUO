@@ -208,51 +208,63 @@ void CConfigManager::DefaultPage9()
 	m_SpeechFont = 0;
 }
 //---------------------------------------------------------------------------
-void CConfigManager::OnChangedSound(const bool &val)
+void CConfigManager::SetSound(const bool &val)
 {
 	WISPFUN_DEBUG("c138_f11");
+
+	m_Sound = val;
+
 	if (this == &g_ConfigManager && !val)
 		g_Orion.AdjustSoundEffects(g_Ticks + 100000);
 }
 //---------------------------------------------------------------------------
-void CConfigManager::OnChangedMusic(const bool &val)
+void CConfigManager::SetMusic(const bool &val)
 {
 	WISPFUN_DEBUG("c138_f12");
+
+	m_Music = val;
+
 	if (this == &g_ConfigManager && !val)
 	{
 		g_SoundManager.StopMusic();
 	}
 }
 //---------------------------------------------------------------------------
-void CConfigManager::OnChangedSoundVolume(const uchar &val)
+void CConfigManager::SetSoundVolume(const uchar &val)
 {
 	WISPFUN_DEBUG("c138_f13");
 	if (this == &g_ConfigManager && m_SoundVolume != val)
 		g_Orion.AdjustSoundEffects(g_Ticks + 100000, val);
+
+	m_SoundVolume = val;
 }
 //---------------------------------------------------------------------------
-void CConfigManager::OnChangedMusicVolume(const uchar &val)
+void CConfigManager::SetMusicVolume(const uchar &val)
 {
 	WISPFUN_DEBUG("c138_f14");
+
 	if (this == &g_ConfigManager && m_MusicVolume != val)
 	{
 		m_MusicVolume = val;
 		g_SoundManager.SetMusicVolume(g_SoundManager.GetVolumeValue(-1, true));
 	}
+	else
+		m_MusicVolume = val;
 }
 //---------------------------------------------------------------------------
-void CConfigManager::OnChangeClientFPS(const uchar &val)
+void CConfigManager::SetClientFPS(const uchar &val)
 {
 	WISPFUN_DEBUG("c138_f15");
+	m_ClientFPS = val;
+
 	if (this == &g_ConfigManager)
 	{
-		uchar newVal = val;
-		if (newVal < 16)
-			newVal = 16;
-		else if (newVal > 64)
-			newVal = 64;
+		if (m_ClientFPS < 16)
+			m_ClientFPS = 16;
+		else if (m_ClientFPS > 64)
+			m_ClientFPS = 64;
 
-		g_FrameDelay[1] = 1000 / newVal;
+		g_FrameDelay[1] = 1000 / m_ClientFPS;
 
 		if (!m_ReduceFPSUnactiveWindow)
 			g_FrameDelay[0] = g_FrameDelay[1];
@@ -261,14 +273,16 @@ void CConfigManager::OnChangeClientFPS(const uchar &val)
 	}
 }
 //---------------------------------------------------------------------------
-void CConfigManager::OnChangeUseScaling(const bool &val)
+void CConfigManager::SetUseScaling(const bool &val)
 {
 	WISPFUN_DEBUG("c138_f16");
+	m_UseScaling = val;
+
 	if (!val && this == &g_ConfigManager)
 		g_GlobalScale = 1.0;
 }
 //---------------------------------------------------------------------------
-void CConfigManager::OnChangeDrawStatusState(const uchar &val)
+void CConfigManager::SetDrawStatusState(const uchar &val)
 {
 	WISPFUN_DEBUG("c138_f17");
 	if (val && !m_DrawStatusState && this == &g_ConfigManager)
@@ -279,23 +293,29 @@ void CConfigManager::OnChangeDrawStatusState(const uchar &val)
 				CPacketStatusRequest(item->Serial).Send();
 		}
 	}
+
+	m_DrawStatusState = val;
 }
 //---------------------------------------------------------------------------
-void CConfigManager::OnChangeDrawStumps(const bool &val)
+void CConfigManager::SetDrawStumps(const bool &val)
 {
 	WISPFUN_DEBUG("c138_f18");
 	if (m_DrawStumps != val && this == &g_ConfigManager)
 		g_Orion.ClearTreesTextures();
+
+	m_DrawStumps = val;
 }
 //---------------------------------------------------------------------------
-void CConfigManager::OnChangeMarkingCaves(const bool &val)
+void CConfigManager::SetMarkingCaves(const bool &val)
 {
 	WISPFUN_DEBUG("c138_f19");
 	if (m_MarkingCaves != val && this == &g_ConfigManager)
 		g_Orion.ClearCaveTextures();
+
+	m_MarkingCaves = val;
 }
 //---------------------------------------------------------------------------
-void CConfigManager::OnChangeReduceFPSUnactiveWindow(const bool &val)
+void CConfigManager::SetReduceFPSUnactiveWindow(const bool &val)
 {
 	WISPFUN_DEBUG("c138_f20");
 	if (this == &g_ConfigManager)
@@ -307,16 +327,20 @@ void CConfigManager::OnChangeReduceFPSUnactiveWindow(const bool &val)
 
 		g_OrionWindow.SetRenderTimerDelay(g_FrameDelay[g_OrionWindow.IsActive()]);
 	}
+
+	m_ReduceFPSUnactiveWindow = val;
 }
 //---------------------------------------------------------------------------
-void CConfigManager::OnChangeConsoleNeedEnter(const bool &val)
+void CConfigManager::SetConsoleNeedEnter(const bool &val)
 {
 	WISPFUN_DEBUG("c138_f21");
 	if (this == &g_ConfigManager && val && g_EntryPointer == &g_GameConsole)
 		g_EntryPointer = NULL;
+
+	m_ConsoleNeedEnter = val;
 }
 //---------------------------------------------------------------------------
-void CConfigManager::OnChangedSpellIconAlpha(const uchar &val)
+void CConfigManager::SetSpellIconAlpha(const uchar &val)
 {
 	WISPFUN_DEBUG("c138_f22");
 	if (this == &g_ConfigManager && val != m_SpellIconAlpha)
@@ -335,15 +359,18 @@ void CConfigManager::OnChangedSpellIconAlpha(const uchar &val)
 			}
 		}
 	}
+
+	m_SpellIconAlpha = val;
 }
 //---------------------------------------------------------------------------
-void CConfigManager::OnChangeOldStyleStatusbar(const bool &val)
+void CConfigManager::SetOldStyleStatusbar(const bool &val)
 {
 	WISPFUN_DEBUG("c138_f23");
+
+	m_OldStyleStatusbar = val;
+
 	if (this == &g_ConfigManager)
 	{
-		m_OldStyleStatusbar = val;
-
 		CGump *gump = g_GumpManager.UpdateGump(g_PlayerSerial, 0, GT_STATUSBAR);
 
 		if (gump != NULL && !gump->Minimized)
@@ -351,13 +378,13 @@ void CConfigManager::OnChangeOldStyleStatusbar(const bool &val)
 	}
 }
 //---------------------------------------------------------------------------
-void CConfigManager::OnChangeOriginalPartyStatusbar(const bool &val)
+void CConfigManager::SetOriginalPartyStatusbar(const bool &val)
 {
 	WISPFUN_DEBUG("c138_f24");
+	m_OriginalPartyStatusbar = val;
+
 	if (this == &g_ConfigManager)
 	{
-		m_OriginalPartyStatusbar = val;
-
 		if (g_Party.Leader != 0)
 		{
 			QFOR(gump, g_GumpManager.m_Items, CGump*)
@@ -372,13 +399,14 @@ void CConfigManager::OnChangeOriginalPartyStatusbar(const bool &val)
 	}
 }
 //---------------------------------------------------------------------------
-void CConfigManager::OnChangeChangeFieldsGraphic(const bool &val)
+void CConfigManager::SetChangeFieldsGraphic(const bool &val)
 {
 	WISPFUN_DEBUG("c138_f25");
+
+	m_ChangeFieldsGraphic = val;
+
 	if (this == &g_ConfigManager && g_World != NULL)
 	{
-		m_ChangeFieldsGraphic = val;
-
 		QFOR(item, g_World->m_Items, CGameObject*)
 		{
 			if (!item->NPC)
@@ -387,13 +415,12 @@ void CConfigManager::OnChangeChangeFieldsGraphic(const bool &val)
 	}
 }
 //---------------------------------------------------------------------------
-void CConfigManager::OnChangePaperdollSlots(const bool &val)
+void CConfigManager::SetPaperdollSlots(const bool &val)
 {
 	WISPFUN_DEBUG("c138_f26");
+
 	if (this == &g_ConfigManager && g_World != NULL)
 	{
-		m_PaperdollSlots = val;
-
 		QFOR(gump, g_GumpManager.m_Items, CGump*)
 		{
 			if (gump->GumpType == GT_PAPERDOLL)
@@ -405,13 +432,14 @@ void CConfigManager::OnChangePaperdollSlots(const bool &val)
 	}
 }
 //---------------------------------------------------------------------------
-void CConfigManager::OnChangeScaleImagesInPaperdollSlots(const bool &val)
+void CConfigManager::SetScaleImagesInPaperdollSlots(const bool &val)
 {
 	WISPFUN_DEBUG("c138_f27");
+
+	m_ScaleImagesInPaperdollSlots = val;
+
 	if (this == &g_ConfigManager && g_World != NULL)
 	{
-		m_ScaleImagesInPaperdollSlots = val;
-
 		QFOR(gump, g_GumpManager.m_Items, CGump*)
 		{
 			if (gump->GumpType == GT_PAPERDOLL)
@@ -423,9 +451,12 @@ void CConfigManager::OnChangeScaleImagesInPaperdollSlots(const bool &val)
 	}
 }
 //---------------------------------------------------------------------------
-void CConfigManager::OnChangeUseGlobalMapLayer(const bool &val)
+void CConfigManager::SetUseGlobalMapLayer(const bool &val)
 {
 	WISPFUN_DEBUG("c138_f28");
+
+	m_UseGlobalMapLayer = val;
+
 	if (this == &g_ConfigManager && val)
 	{
 		QFOR(gump, g_GumpManager.m_Items, CGump*)
@@ -436,9 +467,12 @@ void CConfigManager::OnChangeUseGlobalMapLayer(const bool &val)
 	}
 }
 //---------------------------------------------------------------------------
-void CConfigManager::OnChangeNoDrawRoofs(const bool &val)
+void CConfigManager::SetNoDrawRoofs(const bool &val)
 {
 	WISPFUN_DEBUG("c138_f28");
+
+	m_NoDrawRoofs = val;
+
 	if (this == &g_ConfigManager && g_Player != NULL)
 	{
 		g_Player->OldX = 0;
@@ -446,13 +480,14 @@ void CConfigManager::OnChangeNoDrawRoofs(const bool &val)
 	}
 }
 //---------------------------------------------------------------------------
-void CConfigManager::OnChangeUseGLListsForInterface(const bool &val)
+void CConfigManager::SetUseGLListsForInterface(const bool &val)
 {
 	WISPFUN_DEBUG("c138_f26");
+
+	m_UseGLListsForInterface = (val || !g_GL.CanUseFrameBuffer);
+
 	if (this == &g_ConfigManager && g_World != NULL)
 	{
-		m_UseGLListsForInterface = (val || !g_GL.CanUseFrameBuffer);
-
 		QFOR(gump, g_GumpManager.m_Items, CGump*)
 		{
 			gump->WantRedraw = true;
@@ -461,23 +496,29 @@ void CConfigManager::OnChangeUseGLListsForInterface(const bool &val)
 	}
 }
 //---------------------------------------------------------------------------
-void CConfigManager::OnChangeItemPropertiesMode(const uchar &val)
+void CConfigManager::SetItemPropertiesMode(const uchar &val)
 {
+	WISPFUN_DEBUG("c138_f26_1");
+
+	m_ItemPropertiesMode = val;
+
 	if (this == &g_ConfigManager && g_World != NULL)
 	{
-		m_ItemPropertiesMode = val;
-
 		CGumpPropertyIcon *gump = (CGumpPropertyIcon*)g_GumpManager.UpdateContent(0, 0, GT_PROPERTY_ICON);
 
 		if (gump != NULL && (val == OPM_AT_ICON || val == OPM_ALWAYS_UP))
-			gump->OnChangeText(gump->Text);
+			gump->Text = gump->Text;
 
 		g_ObjectPropertiesManager.Reset();
 	}
 }
 //---------------------------------------------------------------------------
-void CConfigManager::OnChangeItemPropertiesIcon(const bool &val)
+void CConfigManager::SetItemPropertiesIcon(const bool &val)
 {
+	WISPFUN_DEBUG("c138_f26_2");
+
+	m_ItemPropertiesIcon = val;
+
 	if (this == &g_ConfigManager && g_World != NULL)
 	{
 		if (val)

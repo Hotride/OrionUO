@@ -13,7 +13,7 @@
 //Класс для работы с объектами рендера
 class CRenderWorldObject : public CRenderObject
 {
-	SETGETE(char, Z, 0, OnChangeZ);
+	SETGETE(char, Z, 0);
 	SETGET(short, PriorityZ, 0);
 	SETGET(RENDER_OBJECT_TYPE, RenderType, ROT_GAME_OBJECT);
 #if UO_RENDER_LIST_SORT == 1

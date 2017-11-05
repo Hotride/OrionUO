@@ -13,10 +13,10 @@
 class CCreateCharacterScreen : public CBaseScreen
 {
 	//!Выбранный стиль прически/бороды
-	SETGETE(int, StyleSelection, 0, OnChangeStyleSelection);
+	SETGETE(int, StyleSelection, 0);
 
 	//!Выбранный цвет тела/одежды/волосеного покрова
-	SETGETE(int, ColorSelection, 0, OnChangeColorSelection);
+	SETGETE(int, ColorSelection, 0);
 	SETGET(string, Name, "");
 
 private:

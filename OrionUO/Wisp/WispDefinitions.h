@@ -88,19 +88,27 @@ if (ptr != NULL) \
 //!Set/Get ordinary class property
 #define SETGET(type, name, defaultValue) \
 	protected: \
-	type m_##name = defaultValue ; \
+	type m_##name = defaultValue; \
 	public: \
-	inline void __fastcall Set##name(type val) { m_##name = val; } \
+	inline void __fastcall Set##name(const type &val) { m_##name = val; } \
 	inline type Get##name() const { return m_##name; } \
 	__declspec(property(get = Get##name, put = Set##name)) type name
 //----------------------------------------------------------------------------------
 //!Set/Get ordinary class property with event
-#define SETGETE(type, name, defaultValue, event) \
+#define SETGETE(type, name, defaultValue) \
 	protected: \
 	type m_##name = defaultValue; \
 	public: \
-	void event(const type &val); \
-	inline void __fastcall Set##name(const type &val) { event(val); m_##name = val; } \
+	void Set##name(const type &val); \
+	inline type Get##name() const { return m_##name; } \
+	__declspec(property(get = Get##name, put = Set##name)) type name
+//----------------------------------------------------------------------------------
+//!Set/Get ordinary class property for pointers
+#define SETGETP(type, name, defaultValue) \
+	protected: \
+	type m_##name = defaultValue; \
+	public: \
+	inline void __fastcall Set##name(type val) { m_##name = val; } \
 	inline type Get##name() const { return m_##name; } \
 	__declspec(property(get = Get##name, put = Set##name)) type name
 //----------------------------------------------------------------------------------

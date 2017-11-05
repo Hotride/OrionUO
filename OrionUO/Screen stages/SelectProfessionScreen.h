@@ -13,7 +13,7 @@
 class CSelectProfessionScreen : public CBaseScreen
 {
 	//!Выбранный навык
-	SETGETE(int, SkillSelection, 0, OnChangeSkillSelection);
+	SETGETE(int, SkillSelection, 0);
 
 private:
 	CGumpScreenSelectProfession m_SelectProfessionGump;

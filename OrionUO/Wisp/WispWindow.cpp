@@ -26,7 +26,7 @@ CWindow::~CWindow()
 {
 }
 //----------------------------------------------------------------------------------
-void CWindow::OnChangeSize(const WISP_GEOMETRY::CSize &size)
+void CWindow::SetSize(const WISP_GEOMETRY::CSize &size)
 {
 	WISPFUN_DEBUG("c14_f2");
 	RECT pos = { 0, 0, 0, 0 };
@@ -44,9 +44,11 @@ void CWindow::OnChangeSize(const WISP_GEOMETRY::CSize &size)
 		r.bottom += -r.top;
 
 	SetWindowPos(m_Handle, HWND_TOP, pos.left, pos.top, r.right, r.bottom, 0);
+
+	m_Size = size;
 }
 //----------------------------------------------------------------------------------
-void CWindow::OnChangeMinSize(const WISP_GEOMETRY::CSize &newMinSize)
+void CWindow::SetMinSize(const WISP_GEOMETRY::CSize &newMinSize)
 {
 	WISPFUN_DEBUG("c14_f3");
 	if (m_Size.Width < newMinSize.Width || m_Size.Height < newMinSize.Height)
@@ -76,9 +78,11 @@ void CWindow::OnChangeMinSize(const WISP_GEOMETRY::CSize &newMinSize)
 
 		SetWindowPos(m_Handle, HWND_TOP, pos.left, pos.top, r.right, r.bottom, 0);
 	}
+
+	m_MinSize = newMinSize;
 }
 //----------------------------------------------------------------------------------
-void CWindow::OnChangeMaxSize(const WISP_GEOMETRY::CSize &newMaxSize)
+void CWindow::SetMaxSize(const WISP_GEOMETRY::CSize &newMaxSize)
 {
 	WISPFUN_DEBUG("c14_f4");
 	if (m_Size.Width > newMaxSize.Width || m_Size.Height > newMaxSize.Height)
@@ -108,6 +112,8 @@ void CWindow::OnChangeMaxSize(const WISP_GEOMETRY::CSize &newMaxSize)
 
 		SetWindowPos(m_Handle, HWND_TOP, pos.left, pos.top, r.right, r.bottom, 0);
 	}
+
+	m_MaxSize = newMaxSize;
 }
 //----------------------------------------------------------------------------------
 bool CWindow::Create(HINSTANCE hInstance, const wchar_t *className, const wchar_t *title, bool showCursor, int width, int height, HICON icon, HCURSOR cursor)

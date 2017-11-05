@@ -105,7 +105,7 @@ CLandObject *CRenderWorldObject::GetLand()
 	return NULL;
 }
 //----------------------------------------------------------------------------------
-void CRenderWorldObject::OnChangeZ(const char &val)
+void CRenderWorldObject::SetZ(const char &val)
 {
 	m_Z = val;
 	UpdateRealDrawCoordinates();

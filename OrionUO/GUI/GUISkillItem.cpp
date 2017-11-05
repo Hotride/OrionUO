@@ -46,7 +46,7 @@ CGUISkillItem::~CGUISkillItem()
 	RELEASE_POINTER(m_ButtonStatus);
 }
 //----------------------------------------------------------------------------------
-void CGUISkillItem::OnChangeStatus(const uchar &val)
+void CGUISkillItem::SetStatus(const uchar &val)
 {
 	WISPFUN_DEBUG("c76_f3");
 	m_Status = val;

@@ -115,24 +115,27 @@ int CGumpWorldMap::GetCurrentMap()
 	return map;
 }
 //----------------------------------------------------------------------------------
-void CGumpWorldMap::OnChangeLinkWithPlayer(const bool &val)
+void CGumpWorldMap::SetLinkWithPlayer(const bool &val)
 {
 	WISPFUN_DEBUG("c132_f3");
+	m_LinkWithPlayer = val;
 	m_Checkbox->Checked = val;
 	m_MapData->MoveOnDrag = (m_LinkWithPlayer || g_CurrentMap == GetCurrentMap());
 	m_WantRedraw = true;
 }
 //----------------------------------------------------------------------------------
-void CGumpWorldMap::OnChangeScale(const int &val)
+void CGumpWorldMap::SetScale(const int &val)
 {
 	WISPFUN_DEBUG("c132_f4");
+	m_Scale = val;
 	m_ComboboxScale->SelectedIndex = val;
 	m_WantRedraw = true;
 }
 //----------------------------------------------------------------------------------
-void CGumpWorldMap::OnChangeMap(const int &val)
+void CGumpWorldMap::SetMap(const int &val)
 {
 	WISPFUN_DEBUG("c132_f5");
+	m_Map = val;
 	m_ComboboxMap->SelectedIndex = val;
 	m_WantRedraw = true;
 }

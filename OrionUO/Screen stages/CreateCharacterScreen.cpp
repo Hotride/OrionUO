@@ -22,13 +22,15 @@ CCreateCharacterScreen::~CCreateCharacterScreen()
 {
 }
 //----------------------------------------------------------------------------------
-void CCreateCharacterScreen::OnChangeStyleSelection(const int &val)
+void CCreateCharacterScreen::SetStyleSelection(const int &val)
 {
+	m_StyleSelection = val;
 	m_Gump.WantUpdateContent = true;
 }
 //----------------------------------------------------------------------------------
-void CCreateCharacterScreen::OnChangeColorSelection(const int &val)
+void CCreateCharacterScreen::SetColorSelection(const int &val)
 {
+	m_ColorSelection = val;
 	m_Gump.WantUpdateContent = true;
 }
 //----------------------------------------------------------------------------------

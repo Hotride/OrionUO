@@ -21,7 +21,7 @@ class CGUIComboBox : public CBaseGUI
 	SETGET(bool, CompositeBackground, false);
 
 	//!Количество отображаемых строк в открытом списке
-	SETGETE(int, ShowItemsCount, 0, OnChangeShowItemsCount);
+	SETGETE(int, ShowItemsCount, 0);
 
 	//!Ширина в свернутом состоянии (только для отрисовки Resizepic)
 	SETGET(int, Width, 0);

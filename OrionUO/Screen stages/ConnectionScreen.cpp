@@ -43,33 +43,39 @@ void CConnectionScreen::Init()
 	m_Gump.WantUpdateContent = true;
 }
 //----------------------------------------------------------------------------------
-void CConnectionScreen::OnChangeConnectionFailed(const bool &val)
+void CConnectionScreen::SetConnectionFailed(const bool &val)
 {
+	m_ConnectionFailed = val;
 	m_Gump.WantUpdateContent = true;
 }
 //----------------------------------------------------------------------------------
-void CConnectionScreen::OnChangeConnected(const bool &val)
+void CConnectionScreen::SetConnected(const bool &val)
 {
+	m_Connected = val;
 	m_Gump.WantUpdateContent = true;
 }
 //----------------------------------------------------------------------------------
-void CConnectionScreen::OnChangeCompleted(const bool &val)
+void CConnectionScreen::SetCompleted(const bool &val)
 {
+	m_Completed = val;
 	m_Gump.WantUpdateContent = true;
 }
 //----------------------------------------------------------------------------------
-void CConnectionScreen::OnChangeErrorCode(const int &val)
+void CConnectionScreen::SetErrorCode(const int &val)
 {
+	m_ErrorCode = val;
 	m_Gump.WantUpdateContent = true;
 }
 //----------------------------------------------------------------------------------
-void CConnectionScreen::OnChangeType(const CONNECTION_SCREEN_TYPE &val)
+void CConnectionScreen::SetType(const CONNECTION_SCREEN_TYPE &val)
 {
+	m_Type = val;
 	m_Gump.WantUpdateContent = true;
 }
 //----------------------------------------------------------------------------------
-void CConnectionScreen::OnChangeMessage(const string &val)
+void CConnectionScreen::SetMessage(const string &val)
 {
+	m_Message = val;
 	m_Gump.WantUpdateContent = true;
 }
 //----------------------------------------------------------------------------------

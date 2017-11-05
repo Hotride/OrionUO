@@ -32,44 +32,50 @@ CConnectionManager::~CConnectionManager()
 		m_GameSocket.Disconnect();
 }
 //----------------------------------------------------------------------------------
-void CConnectionManager::OnChangeUseProxy(const bool &val)
+void CConnectionManager::SetUseProxy(const bool &val)
 {
 	WISPFUN_DEBUG("c139_f2");
+	m_UseProxy = val;
 	m_LoginSocket.UseProxy = val;
 	m_GameSocket.UseProxy = val;
 }
 //----------------------------------------------------------------------------------
-void CConnectionManager::OnChangeProxyAddress(const string &val)
+void CConnectionManager::SetProxyAddress(const string &val)
 {
 	WISPFUN_DEBUG("c139_f3");
+	m_ProxyAddress = val;
 	m_LoginSocket.ProxyAddress = val;
 	m_GameSocket.ProxyAddress = val;
 }
 //----------------------------------------------------------------------------------
-void CConnectionManager::OnChangeProxyPort(const int &val)
+void CConnectionManager::SetProxyPort(const int &val)
 {
 	WISPFUN_DEBUG("c139_f4");
+	m_ProxyPort = val;
 	m_LoginSocket.ProxyPort = val;
 	m_GameSocket.ProxyPort = val;
 }
 //----------------------------------------------------------------------------------
-void CConnectionManager::OnChangeProxySocks5(const bool &val)
+void CConnectionManager::SetProxySocks5(const bool &val)
 {
 	WISPFUN_DEBUG("c139_f5");
+	m_ProxySocks5 = val;
 	m_LoginSocket.ProxySocks5 = val;
 	m_GameSocket.ProxySocks5 = val;
 }
 //----------------------------------------------------------------------------------
-void CConnectionManager::OnChangeProxyAccount(const string &val)
+void CConnectionManager::SetProxyAccount(const string &val)
 {
 	WISPFUN_DEBUG("c139_f6");
+	m_ProxyAccount = val;
 	m_LoginSocket.ProxyAccount = val;
 	m_GameSocket.ProxyAccount = val;
 }
 //----------------------------------------------------------------------------------
-void CConnectionManager::OnChangeProxyPassword(const string &val)
+void CConnectionManager::SetProxyPassword(const string &val)
 {
 	WISPFUN_DEBUG("c139_f7");
+	m_ProxyPassword = val;
 	m_LoginSocket.ProxyPassword = val;
 	m_GameSocket.ProxyPassword = val;
 }

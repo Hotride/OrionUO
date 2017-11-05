@@ -24,8 +24,9 @@ CGumpPropertyIcon::~CGumpPropertyIcon()
 {
 }
 //----------------------------------------------------------------------------------
-void CGumpPropertyIcon::OnChangeText(const wstring &val)
+void CGumpPropertyIcon::SetText(const wstring &val)
 {
+	m_Text = val;
 	int width = 0;
 	g_ToolTip.CreateTextTexture(m_Texture, val, width, (g_ConfigManager.ItemPropertiesMode == OPM_ALWAYS_UP ? 300 : 0));
 	m_Object = NULL;

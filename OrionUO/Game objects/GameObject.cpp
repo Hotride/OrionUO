@@ -48,7 +48,7 @@ CGameObject::~CGameObject()
 #endif //UO_DEBUG_INFO!=0
 }
 //----------------------------------------------------------------------------------
-void CGameObject::OnChangedFlags(const uchar &val)
+void CGameObject::SetFlags(const uchar &val)
 {
 	WISPFUN_DEBUG("c20_f3");
 	bool poisoned = Poisoned();
@@ -63,7 +63,7 @@ void CGameObject::OnChangedFlags(const uchar &val)
 	}
 }
 //----------------------------------------------------------------------------------
-void CGameObject::OnChangeName(const string &newName)
+void CGameObject::SetName(const string &newName)
 {
 	WISPFUN_DEBUG("c20_f4");
 	if (IsPlayer() && m_Name != newName)
@@ -73,20 +73,17 @@ void CGameObject::OnChangeName(const string &newName)
 			char buf[256] = { 0 };
 			CServer *server = g_ServerList.GetSelectedServer();
 			if (server != NULL)
-			{
 				sprintf_s(buf, "Ultima Online - %s (%s)", newName.c_str(), server->Name.c_str());
-			}
 			else
-			{
 				sprintf_s(buf, "Ultima Online - %s", newName.c_str());
-			}
-				
 
 			g_OrionWindow.SetTitle(buf);
 		}
 
 		g_PluginManager.WindowProc(g_OrionWindow.Handle, UOMSG_SET_PLAYER_NAME, (WPARAM)newName.c_str(), 0);
 	}
+
+	m_Name = newName;
 }
 //----------------------------------------------------------------------------------
 /*!

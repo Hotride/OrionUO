@@ -18,7 +18,7 @@ class CGUISkillItem : public CBaseGUI
 	SETGET(int, Index, 0);
 
 	//!Статус навыка
-	SETGETE(uchar, Status, 0, OnChangeStatus);
+	SETGETE(uchar, Status, 0);
 
 private:
 	//!Текустуры текста

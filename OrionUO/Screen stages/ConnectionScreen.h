@@ -12,12 +12,12 @@
 //----------------------------------------------------------------------------------
 class CConnectionScreen : public CBaseScreen
 {
-	SETGETE(bool, ConnectionFailed, false, OnChangeConnectionFailed);
-	SETGETE(bool, Connected, false, OnChangeConnected);
-	SETGETE(bool, Completed, false, OnChangeCompleted);
-	SETGETE(int, ErrorCode, 0, OnChangeErrorCode);
-	SETGETE(CONNECTION_SCREEN_TYPE, Type, CST_LOGIN, OnChangeType);
-	SETGETE(string, Message, "", OnChangeMessage);
+	SETGETE(bool, ConnectionFailed, false);
+	SETGETE(bool, Connected, false);
+	SETGETE(bool, Completed, false);
+	SETGETE(int, ErrorCode, 0);
+	SETGETE(CONNECTION_SCREEN_TYPE, Type, CST_LOGIN);
+	SETGETE(string, Message, "");
 
 private:
 	CGumpScreenConnection m_ConnectionGump;

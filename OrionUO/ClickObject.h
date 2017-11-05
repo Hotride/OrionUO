@@ -18,8 +18,8 @@ class CClickObject
 	SETGET(ushort, Y, 0);
 	SETGET(bool, Enabled, false);
 	SETGET(uint, Page, 0);
-	SETGET(CRenderObject*, Object, 0);
-	SETGET(CGump*, Gump, 0);
+	SETGETP(CRenderObject*, Object, NULL);
+	SETGETP(CGump*, Gump, NULL);
 
 public:
 	CClickObject() {}

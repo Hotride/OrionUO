@@ -14,9 +14,9 @@ class CGumpWorldMap : public CGump
 {
 	SETGET(int, Width, MIN_WORLD_MAP_WIDTH);
 	SETGET(int, Height, MIN_WORLD_MAP_HEIGHT);
-	SETGETE(int, Scale, 2, OnChangeScale);
-	SETGETE(int, Map, 0, OnChangeMap);
-	SETGETE(bool, LinkWithPlayer, true, OnChangeLinkWithPlayer);
+	SETGETE(int, Scale, 2);
+	SETGETE(int, Map, 0);
+	SETGETE(bool, LinkWithPlayer, true);
 	SETGET(int, OffsetX, 0);
 	SETGET(int, OffsetY, 0);
 	SETGET(bool, Called, false);

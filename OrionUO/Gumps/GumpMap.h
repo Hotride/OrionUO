@@ -12,7 +12,7 @@
 //----------------------------------------------------------------------------------
 class CGumpMap : public CGump
 {
-	SETGETE(int, PlotState, 0, OnChangePlotState);
+	SETGETE(int, PlotState, 0);
 	SETGET(int, StartX, 0);
 	SETGET(int, StartY, 0);
 	SETGET(int, EndX, 0);

@@ -15,7 +15,7 @@
 class CGUISkillGroup : public CBaseGUI
 {
 	//!Свернута или развернута группа
-	SETGETE(bool, Minimized, false, OnChangeMinimized);
+	SETGETE(bool, Minimized, false);
 
 public:
 	CGUISkillGroup(const uint &serial, const uint &minimizeSerial, class CSkillGroupObject *group, const int &x, const int &y);

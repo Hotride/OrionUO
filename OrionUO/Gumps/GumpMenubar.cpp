@@ -76,9 +76,11 @@ CGumpMenubar::~CGumpMenubar()
 {
 }
 //---------------------------------------------------------------------------
-void CGumpMenubar::OnChangeOpened(const bool &val)
+void CGumpMenubar::SetOpened(const bool &val)
 {
 	WISPFUN_DEBUG("c101_f2");
+	m_Opened = val;
+
 	if (val)
 		m_Page = 2;
 	else

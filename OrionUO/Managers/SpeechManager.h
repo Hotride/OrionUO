@@ -53,7 +53,7 @@ public:
 //!Класс менеджера cпича
 class CSpeechManager
 {
-	SETGET(CLangCode*, CurrentLanguage, NULL);
+	SETGETP(CLangCode*, CurrentLanguage, NULL);
 
 private:
 	vector<CSpeechItem> m_SpeechEntries;

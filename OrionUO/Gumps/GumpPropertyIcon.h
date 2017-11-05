@@ -12,8 +12,8 @@
 //----------------------------------------------------------------------------------
 class CGumpPropertyIcon : public CGump
 {
-	SETGETE(wstring, Text, L"No Data", OnChangeText);
-	SETGET(CRenderObject*, Object, NULL);
+	SETGETE(wstring, Text, L"No Data");
+	SETGETP(CRenderObject*, Object, NULL);
 
 private:
 	static const int ID_GPI_LOCK_MOVING = 1;

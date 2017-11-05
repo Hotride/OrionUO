@@ -174,7 +174,7 @@ CCreateCharacterManager::~CCreateCharacterManager()
 {
 }
 //----------------------------------------------------------------------------------
-void CCreateCharacterManager::OnSexChanged(const bool &female)
+void CCreateCharacterManager::SetFemale(const bool &female)
 {
 	WISPFUN_DEBUG("c140_f1");
 	m_Female = female;
@@ -186,11 +186,11 @@ void CCreateCharacterManager::OnSexChanged(const bool &female)
 		m_BeardStyle = 0;
 }
 //----------------------------------------------------------------------------------
-void CCreateCharacterManager::OnChangeRace(const RACE_TYPE &newRace)
+void CCreateCharacterManager::SetRace(const RACE_TYPE &newRace)
 {
 	WISPFUN_DEBUG("c140_f2");
 	m_Race = newRace;
-	OnSexChanged(m_Female);
+	Female = m_Female;
 
 	m_SkinTone = (*GetSkinTonePtr()) + 1;
 	pushort ptr = GetHairColorPtr();

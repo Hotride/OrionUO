@@ -315,9 +315,11 @@ bool CPacketManager::AutoLoginNameExists(const string &name)
 	#define CVPRINT(s)
 #endif //CV_PRINT!=0
 //----------------------------------------------------------------------------------
-void CPacketManager::OnClientVersionChange(const CLIENT_VERSION &newClientVersion)
+void CPacketManager::SetClientVersion(const CLIENT_VERSION &newClientVersion)
 {
 	WISPFUN_DEBUG("c150_f2");
+	m_ClientVersion = newClientVersion;
+
 	if (newClientVersion >= CV_500A)
 	{
 		CVPRINT("Set new length for packet 0x0B (>= 5.0.0a)\n");

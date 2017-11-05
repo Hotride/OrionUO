@@ -46,9 +46,10 @@ CGumpMap::~CGumpMap()
 	m_Labels.clear();
 }
 //----------------------------------------------------------------------------------
-void CGumpMap::OnChangePlotState(const int &val)
+void CGumpMap::SetPlotState(const int &val)
 {
 	WISPFUN_DEBUG("c99_f2");
+	m_PlotState = val;
 	m_PlotCourse->Visible = (val == 0);
 	m_StopPlotting->Visible = (val == 1);
 	m_ClearCourse->Visible = (val == 1);

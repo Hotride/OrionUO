@@ -26,13 +26,13 @@ CRenderObject::~CRenderObject()
 	g_PressedObject.Clear(this);
 }
 //----------------------------------------------------------------------------------
-void CRenderObject::OnChangeX(const int &val)
+void CRenderObject::SetX(const int &val)
 {
 	m_X = val;
 	UpdateRealDrawCoordinates();
 }
 //----------------------------------------------------------------------------------
-void CRenderObject::OnChangeY(const int &val)
+void CRenderObject::SetY(const int &val)
 {
 	m_Y = val;
 	UpdateRealDrawCoordinates();

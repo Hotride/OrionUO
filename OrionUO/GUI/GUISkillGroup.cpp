@@ -30,9 +30,10 @@ CGUISkillGroup::~CGUISkillGroup()
 	RELEASE_POINTER(m_Name);
 }
 //----------------------------------------------------------------------------------
-void CGUISkillGroup::OnChangeMinimized(const bool &val)
+void CGUISkillGroup::SetMinimized(const bool &val)
 {
 	WISPFUN_DEBUG("c75_f3");
+	m_Minimized = val;
 	ushort graphic = (val ? 0x0827 : 0x0826);
 	m_Minimizer->Graphic = graphic;
 	m_Minimizer->GraphicSelected = graphic;
