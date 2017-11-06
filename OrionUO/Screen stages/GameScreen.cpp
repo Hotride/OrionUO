@@ -1487,6 +1487,8 @@ void CGameScreen::Render(const bool &mode)
 
 		g_DeathScreenTimer = 0;
 	}
+	else if (!g_Player->Dead())
+		g_DeathScreenTimer = 0;
 
 	if (mode)
 	{
@@ -1508,6 +1510,11 @@ void CGameScreen::Render(const bool &mode)
 
 		if (DrawSmoothMonitor())
 			return;
+
+		uint deathScreenTimer = g_DeathScreenTimer;
+
+		if (deathScreenTimer && g_ScreenEffectManager.Mode != SEM_NONE)
+			deathScreenTimer = 0;
 
 		CSelectedObject tempSelected;
 		CPressedObject tempPressed;
@@ -1553,7 +1560,7 @@ void CGameScreen::Render(const bool &mode)
 
 		UnuseShader();
 
-		if (!g_DeathScreenTimer)
+		if (!deathScreenTimer)
 		{
 			if (!g_GrayedPixels)
 			{
@@ -1590,7 +1597,7 @@ void CGameScreen::Render(const bool &mode)
 
 		UnuseShader();
 
-		if (!g_DeathScreenTimer)
+		if (!deathScreenTimer)
 		{
 			g_SystemChat.DrawSystemChat(g_RenderBounds.GameWindowPosX, g_RenderBounds.GameWindowPosY, g_RenderBounds.GameWindowHeight);
 

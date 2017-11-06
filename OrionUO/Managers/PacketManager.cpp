@@ -3105,9 +3105,25 @@ PACKET_HANDLER(GraphicEffect)
 PACKET_HANDLER(DeathScreen)
 {
 	WISPFUN_DEBUG("c150_f57");
-	g_Weather.Reset();
-	g_Target.Reset();
-	g_DeathScreenTimer = g_Ticks + DEATH_SCREEN_DELAY;
+	uchar action = ReadUInt8();
+
+	if (action != 1)
+	{
+		g_GameScreen.SmoothScreenAction = 0;
+		g_ScreenEffectManager.Use(SEM_SUNSET, SET_TO_BLACK, true);
+
+		g_Weather.Reset();
+		g_Target.Reset();
+
+		g_GumpManager.CloseGump(0, 0, GT_DRAG);
+
+		if (g_ConfigManager.Music)
+			g_Orion.PlayMusic(42, true);
+
+		g_Orion.ChangeWarmode(0);
+
+		g_DeathScreenTimer = g_Ticks + DEATH_SCREEN_DELAY;
+	}
 }
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(PlaySoundEffect)

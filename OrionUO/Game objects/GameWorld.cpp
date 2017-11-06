@@ -1022,14 +1022,7 @@ void CGameWorld::UpdatePlayer(const uint &serial, const ushort &graphic, const u
 		if (oldGraphic && oldGraphic != g_Player->Graphic)
 		{
 			if (g_Player->Dead())
-			{
 				g_Target.Reset();
-
-				if (g_ConfigManager.Music)
-					g_Orion.PlayMusic(42, true);
-
-				g_DeathScreenTimer = g_Ticks + DEATH_SCREEN_DELAY;
-			}
 		}
 
 		if (oldDead != g_Player->Dead())

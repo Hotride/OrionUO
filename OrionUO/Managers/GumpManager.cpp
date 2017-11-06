@@ -345,7 +345,7 @@ void CGumpManager::CloseGump(uint serial, uint id, GUMP_TYPE type)
 				if (serial == 0xFFFFFFFF || gump->Serial == serial)
 					RemoveGump(gump);
 			}
-			else if (type == GT_SHOP || type == GT_SPELLBOOK)
+			else if (type == GT_SHOP || type == GT_SPELLBOOK || type == GT_DRAG)
 			{
 				if (serial)
 				{
