@@ -5520,7 +5520,7 @@ PACKET_HANDLER(OrionMessages)
 			if (serial != g_PlayerSerial)
 				minimized = true;
 
-			CGump *gump = g_GumpManager.GetGump(serial, 0, GT_STATUSBAR);
+			CGump *gump = g_GumpManager.UpdateContent(serial, 0, GT_STATUSBAR);
 
 			if (gump != NULL)
 			{
