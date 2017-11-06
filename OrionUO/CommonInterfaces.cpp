@@ -341,6 +341,9 @@ bool __cdecl FUNCBODY_GetWalk(bool run, unsigned char direction)
 //----------------------------------------------------------------------------------
 bool __cdecl FUNCBODY_GetWalkTo(int x, int y, int z, int distance)
 {
+	if (g_Player == NULL)
+		return false;
+
 	WISP_GEOMETRY::CPoint2Di startPoint(g_Player->X, g_Player->Y);
 
 	if (!g_Player->m_Steps.empty())
@@ -360,6 +363,9 @@ bool __cdecl FUNCBODY_GetWalkTo(int x, int y, int z, int distance)
 	{
 		while (g_PathFinder.AutoWalking)
 			Sleep(100);
+
+		if (g_Player == NULL)
+			return false;
 
 		WISP_GEOMETRY::CPoint2Di p(g_Player->X, g_Player->Y);
 
