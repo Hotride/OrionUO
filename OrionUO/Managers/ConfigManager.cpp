@@ -420,6 +420,8 @@ void CConfigManager::SetPaperdollSlots(const bool &val)
 {
 	WISPFUN_DEBUG("c138_f26");
 
+	m_PaperdollSlots = val;
+
 	if (this == &g_ConfigManager && g_World != NULL)
 	{
 		QFOR(gump, g_GumpManager.m_Items, CGump*)
