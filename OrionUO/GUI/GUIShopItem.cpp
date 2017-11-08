@@ -37,17 +37,7 @@ void CGUIShopItem::UpdateOffsets()
 		CGLTexture *th = g_Orion.ExecuteStaticArt(m_Graphic);
 
 		if (th != NULL)
-		{
 			m_MaxOffset = th->Height;
-
-			if (m_MaxOffset < m_NameText.Height)
-			{
-				m_ImageOffset = ((m_NameText.Height - m_MaxOffset) / 2);
-				m_MaxOffset = m_NameText.Height;
-			}
-			else
-				m_TextOffset = ((m_MaxOffset - m_NameText.Height) / 2);
-		}
 	}
 	else
 	{
@@ -82,16 +72,16 @@ void CGUIShopItem::UpdateOffsets()
 
 			if (m_MaxOffset > 35)
 				m_MaxOffset = 35;
-
-			if (m_MaxOffset < m_NameText.Height)
-			{
-				m_ImageOffset = ((m_NameText.Height - m_MaxOffset) / 2);
-				m_MaxOffset = m_NameText.Height;
-			}
-			else
-				m_TextOffset = ((m_MaxOffset - m_NameText.Height) / 2);
 		}
 	}
+
+	if (m_MaxOffset < m_NameText.Height)
+	{
+		m_ImageOffset = ((m_NameText.Height - m_MaxOffset) / 2);
+		m_MaxOffset = m_NameText.Height;
+	}
+	else
+		m_TextOffset = ((m_MaxOffset - m_NameText.Height) / 2);
 }
 //----------------------------------------------------------------------------------
 void CGUIShopItem::OnClick()
