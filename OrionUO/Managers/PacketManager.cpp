@@ -2457,24 +2457,35 @@ PACKET_HANDLER(ExtendedCommand)
 		}
 		case 0x19: //Extended stats
 		{
-			Move(1);
+			uchar version = ReadUInt8();
+			uint serial = ReadUInt32BE();
+			uchar updateGump = ReadUInt8();
 
-			if (ReadUInt32BE() == g_PlayerSerial)
+			if (version > 1)
 			{
-				Move(1);
-				uchar state = ReadUInt8();
+				if (serial == g_PlayerSerial)
+				{
+					uchar state = ReadUInt8();
 
-				g_DrawStatLockers = true;
+					g_DrawStatLockers = true;
 
-				g_Player->LockStr = (state >> 4) & 3;
-				g_Player->LockDex = (state >> 2) & 3;
-				g_Player->LockInt = state & 3;
+					g_Player->LockStr = (state >> 4) & 3;
+					g_Player->LockDex = (state >> 2) & 3;
+					g_Player->LockInt = state & 3;
 
-				CGump *statusbar = g_GumpManager.GetGump(g_PlayerSerial, 0, GT_STATUSBAR);
+					CGump *statusbar = g_GumpManager.GetGump(g_PlayerSerial, 0, GT_STATUSBAR);
 
-				if (statusbar != NULL && !statusbar->Minimized)
-					statusbar->WantUpdateContent = true;
+					if (statusbar != NULL && !statusbar->Minimized)
+						statusbar->WantUpdateContent = true;
+				}
 			}
+
+			/*if (version > 4)
+			{
+				uchar wtf1 = ReadUInt8();
+				ushort wtf2 = ReadUInt16BE();
+				ushort wtf3 = ReadUInt16BE();
+			}*/
 
 			break;
 		}
