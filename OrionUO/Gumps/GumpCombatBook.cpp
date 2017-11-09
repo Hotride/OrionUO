@@ -367,9 +367,9 @@ void CGumpCombatBook::InitToolTip()
 	else
 	{
 		if (serial == ID_GCB_ICON_FIRST)
-			g_ToolTip.Set(g_ClilocManager.Cliloc(g_Language)->GetW(1028838 + (g_Ability[0] & 0x7F), true), 80);
+			g_ToolTip.Set(g_ClilocManager.Cliloc(g_Language)->GetW(1028838 + (g_Ability[0] & 0x7F) - 1, true), 80);
 		else if (serial == ID_GCB_ICON_SECOND)
-			g_ToolTip.Set(g_ClilocManager.Cliloc(g_Language)->GetW(1028838 + (g_Ability[1] & 0x7F), true), 80);
+			g_ToolTip.Set(g_ClilocManager.Cliloc(g_Language)->GetW(1028838 + (g_Ability[1] & 0x7F) - 1, true), 80);
 	}
 }
 //----------------------------------------------------------------------------
