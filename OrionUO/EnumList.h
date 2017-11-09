@@ -447,7 +447,8 @@ enum ORION_COMMAND_TYPE
 	OCT_UNICODE_SPEECH_REQUEST = 108,
 	OCT_RENAME_MOUNT_REQUEST = 109,
 	OCT_RECONNECT = 110,
-	OCT_PLAY_MACRO = 111
+	OCT_PLAY_MACRO = 111,
+	OCT_MOVE_PAPERDOLL = 112
 };
 //----------------------------------------------------------------------------------
 enum VALUE_KEY_INT

@@ -2418,29 +2418,29 @@ PACKET_HANDLER(ExtendedCommand)
 			//0x02: Status
 			//0x08: Character Profile
 			//0x0C: Container
-			uint ID = ReadUInt32BE();
-			uint Serial = ReadUInt32BE();
+			uint id = ReadUInt32BE();
+			uint serial = ReadUInt32BE();
 
-			switch (ID)
+			switch (id)
 			{
 				case 1: //Paperdoll
 				{
-					g_GumpManager.CloseGump(Serial, 0, GT_PAPERDOLL);
+					g_GumpManager.CloseGump(serial, 0, GT_PAPERDOLL);
 					break;
 				}
 				case 2: //Statusbar
 				{
-					g_GumpManager.CloseGump(Serial, 0, GT_STATUSBAR);
+					g_GumpManager.CloseGump(serial, 0, GT_STATUSBAR);
 					break;
 				}
 				case 8: //Character Profile
 				{
-					//UO->CloseGump(Serial, 0, GT_PROFILE);
+					g_GumpManager.CloseGump(serial, 0, GT_PROFILE);
 					break;
 				}
 				case 0xC: //Container
 				{
-					g_GumpManager.CloseGump(Serial, 0, GT_CONTAINER);
+					g_GumpManager.CloseGump(serial, 0, GT_CONTAINER);
 					break;
 				}
 				default:
@@ -5681,6 +5681,28 @@ PACKET_HANDLER(OrionMessages)
 			g_MacroManager.Execute();
 
 			break;
+		}
+		case OCT_MOVE_PAPERDOLL:
+		{
+			uint serial = ReadUInt32BE();
+			int x = ReadInt32BE();
+			int y = ReadInt32BE();
+
+			CGump *gump = g_GumpManager.UpdateContent(serial, 0, GT_PAPERDOLL);
+
+			if (gump != NULL)
+			{
+				if (gump->Minimized)
+				{
+					gump->MinimizedX = x;
+					gump->MinimizedY = y;
+				}
+				else
+				{
+					gump->X = x;
+					gump->Y = y;
+				}
+			}
 		}
 		default:
 			break;
