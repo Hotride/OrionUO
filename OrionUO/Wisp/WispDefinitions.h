@@ -5,7 +5,7 @@
 //0 - disable debugging
 //1 - debugging with queue (very slow run mode)
 //2 - debugging with function name (normal run mode)
-#define USE_WISP_DEBUG_FUNCTION_NAMES 2
+#define USE_WISP_DEBUG_FUNCTION_NAMES 0
 
 #if USE_WISP_DEBUG_FUNCTION_NAMES == 1
 #define WISPFUN_DEBUG(name) \
