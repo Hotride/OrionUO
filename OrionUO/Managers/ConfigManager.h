@@ -28,8 +28,8 @@ class CConfigManager
 	SETGET(uchar, DrawStatusConditionValue, 0);
 	SETGETE(bool, DrawStumps, false);
 	SETGETE(bool, MarkingCaves, false);
-	SETGET(bool, NoVegetation, false);
-	SETGET(bool, NoAnimateFields, false);
+	SETGETE(bool, NoVegetation, false);
+	SETGETE(bool, NoAnimateFields, false);
 	SETGETE(bool, ReduceFPSUnactiveWindow, false);
 	SETGET(bool, StandartCharactersAnimationDelay, false);
 	SETGET(bool, StandartItemsAnimationDelay, false);
@@ -42,12 +42,12 @@ class CConfigManager
 	SETGETE(uchar, SpellIconAlpha, 0);
 	SETGETE(bool, OldStyleStatusbar, false);
 	SETGETE(bool, OriginalPartyStatusbar, false);
-	SETGET(bool, ApplyStateColorOnCharacters, false);
+	SETGETE(bool, ApplyStateColorOnCharacters, false);
 	SETGETE(bool, ChangeFieldsGraphic, false);
 	SETGETE(bool, PaperdollSlots, false);
 	SETGET(bool, RemoveStatusbarsWithoutObjects, false);
 	SETGET(bool, ShowDefaultConsoleEntryMode, false);
-	SETGET(uchar, DrawAuraState, 0);
+	SETGETE(uchar, DrawAuraState, 0);
 	SETGET(bool, DrawAuraWithCtrlPressed, false);
 	SETGET(uchar, ScreenshotFormat, 0);
 	SETGETE(bool, ScaleImagesInPaperdollSlots, false);
@@ -157,6 +157,8 @@ public:
 	void DefaultPage8();
 	void DefaultPage9();
 	//10 нету
+
+	void UpdateFeatures();
 
 	/*!
 	Получить цвет исходя из "злобности"

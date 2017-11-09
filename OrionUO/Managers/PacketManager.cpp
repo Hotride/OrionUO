@@ -5443,11 +5443,22 @@ PACKET_HANDLER(OrionMessages)
 {
 	WISPFUN_DEBUG("c150_f101");
 	ushort command = ReadUInt16BE();
-	ushort type = command >> 12;
-	command &= 0x5FFF;
+	uchar type = command >> 12;
+	command &= 0x0FFF;
+	
+	if (type)
+		return;
 
 	switch (command)
 	{
+		case OCT_ORION_FEATURES:
+		{
+			g_OrionFeaturesFlags = ReadUInt32BE();
+
+			g_ConfigManager.UpdateFeatures();
+
+			break;
+		}
 		case OCT_CLOSE_GENERIC_GUMP_WITHOUT_RESPONSE:
 		{
 			uint serial = ReadUInt32BE();

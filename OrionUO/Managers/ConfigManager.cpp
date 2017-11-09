@@ -103,7 +103,7 @@ void CConfigManager::DefaultPage2()
 	m_PaperdollSlots = true;
 	m_RemoveStatusbarsWithoutObjects = false;
 	m_ShowDefaultConsoleEntryMode = true;
-	m_DrawAuraState = DAS_ALWAYS;
+	m_DrawAuraState = DAS_NEVER;
 	m_DrawAuraWithCtrlPressed = true;
 	m_ScreenshotFormat = SF_PNG;
 	m_ScaleImagesInPaperdollSlots = true;
@@ -209,6 +209,19 @@ void CConfigManager::DefaultPage9()
 	m_SpeechFont = 0;
 }
 //---------------------------------------------------------------------------
+void CConfigManager::UpdateFeatures()
+{
+	DrawStatusState = DrawStatusState;
+	DrawStumps = DrawStumps;
+	MarkingCaves = MarkingCaves;
+	NoVegetation = NoVegetation;
+	NoAnimateFields = NoAnimateFields;
+	ApplyStateColorOnCharacters = ApplyStateColorOnCharacters;
+	ChangeFieldsGraphic = ChangeFieldsGraphic;
+	DrawAuraState = DrawAuraState;
+	NoDrawRoofs = NoDrawRoofs;
+}
+//---------------------------------------------------------------------------
 void CConfigManager::SetSound(const bool &val)
 {
 	WISPFUN_DEBUG("c138_f11");
@@ -286,34 +299,96 @@ void CConfigManager::SetUseScaling(const bool &val)
 void CConfigManager::SetDrawStatusState(const uchar &val)
 {
 	WISPFUN_DEBUG("c138_f17");
-	if (val && !m_DrawStatusState && this == &g_ConfigManager)
+	uchar state = val;
+
+	if (!(g_OrionFeaturesFlags & OFF_DRAW_CHARACTERS_STATUS_IN_WORLD))
+		state = DCSS_NO_DRAW;
+
+	if (this == &g_ConfigManager)
 	{
-		QFOR(item, g_World->m_Items, CGameObject*)
+		if (state && !m_DrawStatusState)
 		{
-			if (item->NPC)
-				CPacketStatusRequest(item->Serial).Send();
+			QFOR(item, g_World->m_Items, CGameObject*)
+			{
+				if (item->NPC)
+					CPacketStatusRequest(item->Serial).Send();
+			}
 		}
 	}
 
-	m_DrawStatusState = val;
+	m_DrawStatusState = state;
 }
 //---------------------------------------------------------------------------
 void CConfigManager::SetDrawStumps(const bool &val)
 {
 	WISPFUN_DEBUG("c138_f18");
-	if (m_DrawStumps != val && this == &g_ConfigManager)
+	bool state = val;
+
+	if (!(g_OrionFeaturesFlags & OFF_CHANGE_TREES_TO_STUMPS))
+		state = false;
+
+	if (m_DrawStumps != state && this == &g_ConfigManager)
 		g_Orion.ClearTreesTextures();
 
-	m_DrawStumps = val;
+	m_DrawStumps = state;
 }
 //---------------------------------------------------------------------------
 void CConfigManager::SetMarkingCaves(const bool &val)
 {
 	WISPFUN_DEBUG("c138_f19");
-	if (m_MarkingCaves != val && this == &g_ConfigManager)
+	bool state = val;
+
+	if (!(g_OrionFeaturesFlags & OFF_MARKING_CAVES))
+		state = false;
+
+	if (m_MarkingCaves != state && this == &g_ConfigManager)
 		g_Orion.ClearCaveTextures();
 
-	m_MarkingCaves = val;
+	m_MarkingCaves = state;
+}
+//---------------------------------------------------------------------------
+void CConfigManager::SetNoVegetation(const bool &val)
+{
+	WISPFUN_DEBUG("c138_f19");
+	bool state = val;
+
+	if (!(g_OrionFeaturesFlags & OFF_NO_VEGETATION))
+		state = false;
+
+	m_NoVegetation = state;
+}
+//---------------------------------------------------------------------------
+void CConfigManager::SetNoAnimateFields(const bool &val)
+{
+	WISPFUN_DEBUG("c138_f19");
+	bool state = val;
+
+	if (!(g_OrionFeaturesFlags & OFF_NO_FIELDS_ANIMATION))
+		state = false;
+
+	m_NoAnimateFields = state;
+}
+//---------------------------------------------------------------------------
+void CConfigManager::SetApplyStateColorOnCharacters(const bool &val)
+{
+	WISPFUN_DEBUG("c138_f19");
+	bool state = val;
+
+	if (!(g_OrionFeaturesFlags & OFF_COLORED_CHARACTERS_STATE))
+		state = false;
+
+	m_ApplyStateColorOnCharacters = state;
+}
+//---------------------------------------------------------------------------
+void CConfigManager::SetDrawAuraState(const uchar &val)
+{
+	WISPFUN_DEBUG("c138_f19");
+	uchar state = val;
+
+	if (!(g_OrionFeaturesFlags & OFF_DRAW_AURA))
+		state = DAS_NEVER;
+
+	m_DrawAuraState = state;
 }
 //---------------------------------------------------------------------------
 void CConfigManager::SetReduceFPSUnactiveWindow(const bool &val)
@@ -403,8 +478,10 @@ void CConfigManager::SetOriginalPartyStatusbar(const bool &val)
 void CConfigManager::SetChangeFieldsGraphic(const bool &val)
 {
 	WISPFUN_DEBUG("c138_f25");
-
 	m_ChangeFieldsGraphic = val;
+
+	if (!(g_OrionFeaturesFlags & OFF_TILED_FIELDS))
+		m_ChangeFieldsGraphic = false;
 
 	if (this == &g_ConfigManager && g_World != NULL)
 	{
@@ -473,8 +550,10 @@ void CConfigManager::SetUseGlobalMapLayer(const bool &val)
 void CConfigManager::SetNoDrawRoofs(const bool &val)
 {
 	WISPFUN_DEBUG("c138_f28");
-
 	m_NoDrawRoofs = val;
+
+	if (!(g_OrionFeaturesFlags & OFF_TILED_FIELDS))
+		m_NoDrawRoofs = false;
 
 	if (this == &g_ConfigManager && g_Player != NULL)
 	{
@@ -670,18 +749,18 @@ bool CConfigManager::LoadBin(string path)
 		m_DrawStatusConditionValue = 70;
 		bool drawStumps = false;
 		bool markingCaves = false;
-		m_NoAnimateFields = false;
-		m_NoVegetation = false;
+		bool noAnimateFields = false;
+		bool noVegetation = false;
 		m_TransparentSpellIcons = true;
 		m_SpellIconAlpha = 0x7F;
 		m_OldStyleStatusbar = false;
 		m_OriginalPartyStatusbar = false;
-		m_ApplyStateColorOnCharacters = false;
+		bool applyStateColorOnCharacters = false;
 		bool changeFieldsGraphic = false;
 		bool paperdollSlots = true;
 		m_RemoveStatusbarsWithoutObjects = false;
 		m_ShowDefaultConsoleEntryMode = true;
-		m_DrawAuraState = DAS_ALWAYS;
+		uchar drawAuraState = DAS_NEVER;
 		m_DrawAuraWithCtrlPressed = true;
 		m_ScreenshotFormat = SF_PNG;
 		bool scaleImagesInPaperdollSlots = true;
@@ -702,8 +781,8 @@ bool CConfigManager::LoadBin(string path)
 				m_DrawStatusState = file.ReadUInt8();
 				drawStumps = file.ReadUInt8();
 				markingCaves = file.ReadUInt8();
-				m_NoAnimateFields = file.ReadUInt8();
-				m_NoVegetation = file.ReadUInt8();
+				noAnimateFields = file.ReadUInt8();
+				noVegetation = file.ReadUInt8();
 				m_HiddenCharactersRenderMode = file.ReadUInt8();
 				m_HiddenAlpha = file.ReadUInt8();
 				m_UseHiddenModeOnlyForSelf = file.ReadUInt8();
@@ -711,7 +790,7 @@ bool CConfigManager::LoadBin(string path)
 				m_SpellIconAlpha = file.ReadUInt8();
 				m_OldStyleStatusbar = file.ReadUInt8();
 				m_OriginalPartyStatusbar = file.ReadUInt8();
-				m_ApplyStateColorOnCharacters = file.ReadUInt8();
+				applyStateColorOnCharacters = file.ReadUInt8();
 				changeFieldsGraphic = file.ReadUInt8();
 				paperdollSlots = file.ReadUInt8();
 				m_DrawStatusConditionState = file.ReadUInt8();
@@ -724,7 +803,7 @@ bool CConfigManager::LoadBin(string path)
 				{
 					uchar auraState = file.ReadUInt8();
 
-					m_DrawAuraState = auraState & 0x7F;
+					drawAuraState = auraState & 0x7F;
 					m_DrawAuraWithCtrlPressed = (auraState & 0x80);
 
 					if (blockSize > 25)
@@ -778,11 +857,11 @@ bool CConfigManager::LoadBin(string path)
 						{
 							drawStumps = file.ReadUInt8();
 							markingCaves = file.ReadUInt8();
-							m_NoAnimateFields = file.ReadUInt8();
+							noAnimateFields = file.ReadUInt8();
 
 							if (blockSize > 9)
 							{
-								m_NoVegetation = file.ReadUInt8();
+								noVegetation = file.ReadUInt8();
 								m_HiddenCharactersRenderMode = file.ReadUInt8();
 								m_HiddenAlpha = file.ReadUInt8();
 								m_UseHiddenModeOnlyForSelf = file.ReadUInt8();
@@ -796,7 +875,7 @@ bool CConfigManager::LoadBin(string path)
 									{
 										m_OldStyleStatusbar = file.ReadUInt8();
 										m_OriginalPartyStatusbar = file.ReadUInt8();
-										m_ApplyStateColorOnCharacters = file.ReadUInt8();
+										applyStateColorOnCharacters = file.ReadUInt8();
 
 										if (blockSize > 18)
 										{
@@ -836,6 +915,10 @@ bool CConfigManager::LoadBin(string path)
 		ScaleImagesInPaperdollSlots = scaleImagesInPaperdollSlots;
 		UseGlobalMapLayer = useGlobalMapLayer;
 		NoDrawRoofs = noDrawRoofs;
+		ApplyStateColorOnCharacters = applyStateColorOnCharacters;
+		DrawAuraState = drawAuraState;
+		NoVegetation = noVegetation;
+		NoAnimateFields = noAnimateFields;
 		
 		file.Ptr = next;
 		
@@ -1328,10 +1411,10 @@ bool CConfigManager::Load(const string &path)
 					MarkingCaves = ToBool(strings[1]);
 					break;
 				case CMKC_NO_ANIMATE_FIELDS:
-					m_NoAnimateFields = ToBool(strings[1]);
+					NoAnimateFields = ToBool(strings[1]);
 					break;
 				case CMKC_NO_VEGETATION:
-					m_NoVegetation = ToBool(strings[1]);
+					NoVegetation = ToBool(strings[1]);
 					break;
 				case CMKC_HIDDEN_CHARACTERS_RENDER_MODE:
 					m_HiddenCharactersRenderMode = atoi(strings[1].c_str());
@@ -1355,7 +1438,7 @@ bool CConfigManager::Load(const string &path)
 					m_OriginalPartyStatusbar = ToBool(strings[1]);
 					break;
 				case CMKC_APPLY_STATE_COLOR_ON_CHARACTERS:
-					m_ApplyStateColorOnCharacters = ToBool(strings[1]);
+					ApplyStateColorOnCharacters = ToBool(strings[1]);
 					break;
 				case CMKC_CHANGE_FIELDS_GRAPHIC:
 					ChangeFieldsGraphic = ToBool(strings[1]);
@@ -1376,7 +1459,7 @@ bool CConfigManager::Load(const string &path)
 					m_ShowDefaultConsoleEntryMode = ToBool(strings[1]);
 					break;
 				case CMKC_DRAW_AURA_STATE:
-					m_DrawAuraState = atoi(strings[1].c_str());
+					DrawAuraState = atoi(strings[1].c_str());
 					break;
 				case CMKC_DRAW_AURA_WITH_CTRL_PRESSED:
 					m_DrawAuraWithCtrlPressed = ToBool(strings[1]);
