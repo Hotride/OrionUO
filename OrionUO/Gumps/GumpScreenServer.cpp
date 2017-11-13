@@ -36,18 +36,32 @@ void CGumpScreenServer::UpdateContent()
 
 	CCliloc *cliloc = g_ClilocManager.Cliloc(g_Language);
 
-	CGUIText *obj = new CGUIText(0x0481, 233, 62);
-	obj->CreateTextureA(9, cliloc->GetA(1044579, false, "Select which shard to play on:"));
-	Add(obj);
+	ushort textColor = 0x0481;
+	if (g_PacketManager.ClientVersion >= CV_500A)
+		textColor = 0xFFFF;
+
+	CGUIText *text = new CGUIText(textColor, 233, 62);
+
+	if (g_PacketManager.ClientVersion >= CV_500A)
+		text->CreateTextureW(0, cliloc->GetW(1044579, false, "Select which shard to play on:"));
+	else
+		text->CreateTextureA(9, "Select which shard to play on:");
+
+	Add(text);
 
 	CGUIHTMLGump *htmlGump = (CGUIHTMLGump*)Add(new CGUIHTMLGump(ID_SS_HTML_GUMP, 0x0DAC, 150, 90, 393, 271, true, true));
 
 	htmlGump->m_Scissor->Y += 16;
 	htmlGump->m_Scissor->Height -= 32;
 
-	obj = new CGUIText(0x0481, 153, 368);
-	obj->CreateTextureA(9, cliloc->GetA(1044580, false, "Sort by:"));
-	Add(obj);
+	text = new CGUIText(textColor, 153, 368);
+
+	if (g_PacketManager.ClientVersion >= CV_500A)
+		text->CreateTextureW(0, cliloc->GetW(1044580, false, "Sort by:"));
+	else
+		text->CreateTextureA(9, "Sort by:");
+
+	Add(text);
 
 	Add(new CGUIButton(ID_SS_TIME_ZONE, 0x093B, 0x093D, 0x093C, 230, 366));
 	Add(new CGUIButton(ID_SS_FULL, 0x093E, 0x0940, 0x093F, 338, 366));
