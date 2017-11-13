@@ -968,7 +968,10 @@ MACRO_RETURN_CODE CMacroManager::Process(CMacroObject *macro)
 
 			if (g_Target.IsTargeting())
 			{
-				g_Target.SendLastTarget();
+				if (g_Target.Type)
+					g_Target.SendLastTarget();
+				else
+					g_Target.SendTargetObject(g_LastTargetObject);
 
 				m_WaitForTargetTimer = 0;
 			}
