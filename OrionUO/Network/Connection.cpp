@@ -43,15 +43,13 @@ bool CSocket::Connect(const string &address, const int &port)
 		memset(&caddr, 0, sizeof(sockaddr_in));
 		caddr.sin_family = AF_INET;
 
-		struct hostent *uohe;
-
 		int rt = inet_addr(address.c_str());
 
 		if (rt != -1)
 			caddr.sin_addr.s_addr = rt;
 		else
 		{
-			uohe = gethostbyname(address.c_str());
+			struct hostent *uohe = gethostbyname(address.c_str());
 
 			if (uohe == NULL)
 				return false;
@@ -64,7 +62,6 @@ bool CSocket::Connect(const string &address, const int &port)
 
 
 		struct sockaddr_in sin;
-		struct hostent *he;
 
 		memset(&sin, 0, sizeof(sin));
 		sin.sin_family = AF_INET;
@@ -78,7 +75,7 @@ bool CSocket::Connect(const string &address, const int &port)
 			sin.sin_addr.s_addr = r;
 		else
 		{
-			he = gethostbyname(m_ProxyAddress.c_str());
+			struct hostent *he = gethostbyname(m_ProxyAddress.c_str());
 
 			if (he == NULL)
 				return false;
@@ -87,7 +84,10 @@ bool CSocket::Connect(const string &address, const int &port)
 		}
 
 		if (connect(m_Socket, (struct sockaddr*)&sin, sizeof(sin)) == -1)
+		{
+			LOG("Can't connect to proxy\n");
 			return WISP_NETWORK::CConnection::Connect(address, port);
+		}
 
 		if (!m_ProxySocks5)
 		{
