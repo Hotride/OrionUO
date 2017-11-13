@@ -37,6 +37,8 @@ CGumpSpellbook::~CGumpSpellbook()
 //----------------------------------------------------------------------------------
 void CGumpSpellbook::InitStaticData()
 {
+	return;
+
 	m_SpellCircleName[0] = g_ClilocManager.Cliloc(g_Language)->GetA(1028384, false, "First Circle");
 	m_SpellCircleName[1] = g_ClilocManager.Cliloc(g_Language)->GetA(1028385, false, "Second Circle");
 	m_SpellCircleName[2] = g_ClilocManager.Cliloc(g_Language)->GetA(1028386, false, "Third Circle");
