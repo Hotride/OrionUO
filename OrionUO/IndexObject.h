@@ -10,12 +10,6 @@
 #ifndef INDEXOBJECT_H
 #define INDEXOBJECT_H
 //----------------------------------------------------------------------------------
-#include "bass.h"
-#include "bassmidi.h"
-
-#pragma comment(lib, "bass.lib")
-#pragma comment(lib, "bassmidi.lib")
-//----------------------------------------------------------------------------------
 class CIndexObject
 {
 	SETGET(uint, Address, 0);

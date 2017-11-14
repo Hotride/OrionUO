@@ -10,9 +10,6 @@
 */
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
-#include "FreeImage.h"
-
-#pragma comment(lib, "FreeImage.lib")
 
 CScreenshotBuilder g_ScreenshotBuilder;
 //---------------------------------------------------------------------------

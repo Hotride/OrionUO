@@ -183,7 +183,7 @@ bool CGumpGeneric::OnLeftMouseButtonDoubleClick()
 void CGumpGeneric::OnCharPress(const WPARAM &wParam, const LPARAM &lParam)
 {
 	WISPFUN_DEBUG("c96_f6");
-	g_EntryPointer->Insert(wParam);
+	g_EntryPointer->Insert((wchar_t)wParam);
 	m_WantRedraw = true;
 }
 //----------------------------------------------------------------------------------

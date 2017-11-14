@@ -2726,7 +2726,7 @@ vector<UOPFrameData> CAnimationManager::ReadUOPFrameDataOffsets()
 		ReadUInt32LE();
 		//offset
 		data.pixelDataOffset = ReadUInt32LE();
-		int vsize = pixelDataOffsets.size();
+		size_t vsize = pixelDataOffsets.size();
 		if (vsize + 1 != data.frameId)
 		{
 			while (vsize + 1 != data.frameId)
@@ -2737,7 +2737,7 @@ vector<UOPFrameData> CAnimationManager::ReadUOPFrameDataOffsets()
 		}
 		pixelDataOffsets.push_back(data);
 	}
-	int vectorSize = pixelDataOffsets.size();
+	size_t vectorSize = pixelDataOffsets.size();
 	if (vectorSize < 50)
 	{
 		while (vectorSize != 50)

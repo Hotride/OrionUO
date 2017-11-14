@@ -481,7 +481,7 @@ void CGumpCombatBook::UpdateContent()
 		USHORT_LIST list = GetItemsList(i);
 
 		int size = (int)list.size();
-		int maxStaticCount = g_Orion.m_StaticData.size();
+		size_t maxStaticCount = g_Orion.m_StaticData.size();
 
 		int textX = 62;
 		int textY = 98;

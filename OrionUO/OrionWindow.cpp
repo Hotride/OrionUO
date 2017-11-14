@@ -418,13 +418,13 @@ LRESULT COrionWindow::OnUserMessages(const UINT &message, const WPARAM &wParam, 
 	switch (message)
 	{
 		case UOMSG_RECV:
-			g_PacketManager.SavePluginReceivePacket((PBYTE)wParam, lParam);
+			g_PacketManager.SavePluginReceivePacket((PBYTE)wParam, (int)lParam);
 			return S_OK;
 		case UOMSG_SEND:
 		{
 			uint ticks = g_Ticks;
 			puchar buf = (puchar)wParam;
-			int size = lParam;
+			int size = (int)lParam;
 			g_TotalSendSize += size;
 
 			CPacketInfo &type = g_PacketManager.GetInfo(*buf);
@@ -442,7 +442,7 @@ LRESULT COrionWindow::OnUserMessages(const UINT &message, const WPARAM &wParam, 
 			else
 				LOG_DUMP(buf, size);
 
-			g_ConnectionManager.Send((PBYTE)wParam, lParam);
+			g_ConnectionManager.Send((PBYTE)wParam, (int)lParam);
 
 			return S_OK;
 		}

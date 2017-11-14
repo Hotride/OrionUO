@@ -29,8 +29,6 @@ extern bool g_Asmut;
 #include "Wisp/WispGeometry.h"
 #include "Wisp/WispLogger.h"
 #include "OrionApplication.h"
-#include "GLEngine/glew.h"
-#include "GLEngine/wglew.h"
 #include "GLEngine/GLFrameBuffer.h"
 #include "GLEngine/GLTexture.h"
 #include <gl/gl.h>

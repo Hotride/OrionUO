@@ -85,7 +85,7 @@ CSkill *CSkillsManager::Get(const uint &index)
 bool CSkillsManager::CompareName(const string &str1, const string &str2)
 {
 	//Вычисляем минимальную длину строки для сравнения
-	int len = min(str1.length(), str2.length());
+	size_t len = min(str1.length(), str2.length());
 
 	bool result = false;
 

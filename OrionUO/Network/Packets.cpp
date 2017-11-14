@@ -185,7 +185,7 @@ CPacketDeleteCharacter::CPacketDeleteCharacter(const uint &charIndex)
 CPacketSelectCharacter::CPacketSelectCharacter(const uint &index, const string &name)
 : CPacket(73)
 {
-	int copyLen = name.length();
+	int copyLen = (int)name.length();
 
 	if (copyLen > 30)
 		copyLen = 30;
@@ -312,17 +312,17 @@ CPacketAttackRequest::CPacketAttackRequest(uint serial)
 }
 //----------------------------------------------------------------------------------
 CPacketClientVersion::CPacketClientVersion(string version)
-: CPacket(4 + version.length())
+: CPacket(4 + (int)version.length())
 {
 	WriteUInt8(0xBD);
-	WriteUInt16BE(4 + version.length());
-	WriteString(version.c_str(), version.length(), false);
+	WriteUInt16BE(4 + (int)version.length());
+	WriteString(version.c_str(), (int)version.length(), false);
 }
 //----------------------------------------------------------------------------------
 CPacketASCIISpeechRequest::CPacketASCIISpeechRequest(const char *text, SPEECH_TYPE type, ushort font, ushort color)
 : CPacket(1)
 {
-	int len = strlen(text);
+	int len = (int)strlen(text);
 	int size = 8 + len + 1;
 	Resize(size, true);
 
@@ -353,13 +353,12 @@ CPacketUnicodeSpeechRequest::CPacketUnicodeSpeechRequest(const wchar_t *text, SP
 	if (encoded)
 	{
 		typeValue |= ST_ENCODED_COMMAND;
-		wstring ws(text);
-		utf8string = EncodeUTF8(ws).data();
-		len = utf8string.length();
+		utf8string = EncodeUTF8(wstring(text)).c_str();
+		len = (int)utf8string.length();
 		size += len;
 		size += 1; //null terminator
 
-		int length = codes.size();
+		int length = (int)codes.size();
 		codeBytes.push_back(length >> 4);
 		int num3 = length & 15;
 		bool flag = false;
@@ -386,7 +385,7 @@ CPacketUnicodeSpeechRequest::CPacketUnicodeSpeechRequest(const wchar_t *text, SP
 
 		if (!flag)
 			codeBytes.push_back(num3 << 4);
-		size += codeBytes.size();
+		size += (int)codeBytes.size();
 	}
 	else
 	{
@@ -438,7 +437,7 @@ CPacketCastSpell::CPacketCastSpell(int index)
 		char spell[10] = { 0 };
 		sprintf_s(spell, "%i", index);
 
-		int len = strlen(spell);
+		int len = (int)strlen(spell);
 		int size = 5 + len;
 		Resize(size, true);
 
@@ -455,7 +454,7 @@ CPacketCastSpellFromBook::CPacketCastSpellFromBook(int index, uint serial)
 	char spell[25] = { 0 };
 	sprintf_s(spell, "%i %d", index, (int)serial);
 
-	int len = strlen(spell);
+	int len = (int)strlen(spell);
 	int size = 5 + len;
 	Resize(size, true);
 
@@ -471,7 +470,7 @@ CPacketUseSkill::CPacketUseSkill(int index)
 	char skill[10] = { 0 };
 	sprintf_s(skill, "%d 0", index);
 
-	int len = strlen(skill);
+	int len = (int)strlen(skill);
 	int size = 5 + len;
 	Resize(size, true);
 
@@ -501,7 +500,7 @@ CPacketOpenSpellbook::CPacketOpenSpellbook(SPELLBOOK_TYPE type)
 CPacketEmoteAction::CPacketEmoteAction(const char *action)
 : CPacket(1)
 {
-	int len = strlen(action);
+	int len = (int)strlen(action);
 	int size = 5 + len;
 	Resize(size, true);
 
@@ -680,7 +679,7 @@ CPacketRenameRequest::CPacketRenameRequest(uint serial, string newName)
 {
 	WriteUInt8(0x75);
 	WriteUInt32BE(serial);
-	WriteString(newName.c_str(), newName.length(), false);
+	WriteString(newName.c_str(), (int)newName.length(), false);
 }
 //---------------------------------------------------------------------------
 CPacketTipRequest::CPacketTipRequest(ushort id, uchar flag)
@@ -899,12 +898,12 @@ CPacketBulletinBoardRequestMessageSummary::CPacketBulletinBoardRequestMessageSum
 CPacketBulletinBoardPostMessage::CPacketBulletinBoardPostMessage(uint serial, uint replySerial, const char *subject, const char *message)
 : CPacket(1)
 {
-	int subjectLen = strlen(subject);
+	int subjectLen = (int)strlen(subject);
 	int size = 14 + subjectLen + 1;
 
 	int lines = 1;
 
-	int msgLen = strlen(message);
+	int msgLen = (int)strlen(message);
 	int len = 0;
 
 	IFOR(i, 0, msgLen)
@@ -977,13 +976,13 @@ CPacketBulletinBoardRemoveMessage::CPacketBulletinBoardRemoveMessage(uint serial
 CPacketAssistVersion::CPacketAssistVersion(uint version, string clientVersion)
 : CPacket(1)
 {
-	int size = 7 + clientVersion.length();
+	int size = 7 + (int)clientVersion.length();
 	Resize(size, true);
 
 	WriteUInt8(0xBE);
 	WriteUInt16BE(size);
 	WriteUInt32BE(version);
-	WriteString(clientVersion.c_str(), clientVersion.length(), false);
+	WriteString(clientVersion.c_str(), (int)clientVersion.length(), false);
 }
 //---------------------------------------------------------------------------
 CPacketRazorAnswer::CPacketRazorAnswer()
@@ -997,13 +996,13 @@ CPacketRazorAnswer::CPacketRazorAnswer()
 CPacketLanguage::CPacketLanguage(const string &lang)
 : CPacket(1)
 {
-	int size = 5 + lang.length() + 1;
+	int size = 5 + (int)lang.length() + 1;
 	Resize(size, true);
 
 	WriteUInt8(0xBF);
 	WriteUInt16BE(0x0009);
 	WriteUInt16BE(0x000B);
-	WriteString(lang, lang.length(), false);
+	WriteString(lang, (int)lang.length(), false);
 }
 //---------------------------------------------------------------------------
 CPacketClientType::CPacketClientType()
@@ -1046,7 +1045,7 @@ CPacketOpenChat::CPacketOpenChat(const wstring &name)
 {
 	WriteUInt8(0xB5);
 
-	int len = name.length();
+	int len = (int)name.length();
 
 	if (len > 0)
 	{
@@ -1163,7 +1162,7 @@ CPacketBookPageData::CPacketBookPageData(CGumpBook *gump, int page)
 	{
 		CEntryText &textEntry = entry->m_Entry;
 		string data = EncodeUTF8(textEntry.Data());
-		int len = data.length();
+		int len = (int)data.length();
 		int size = 9 + 4 + 1;
 
 		if (len)

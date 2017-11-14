@@ -5,8 +5,6 @@
 
 #include <psapi.h>
 #include <tlhelp32.h>
-
-#pragma comment(lib, "Psapi.lib")
 //----------------------------------------------------------------------------------
 string GetMemStorageText(const uint &storage)
 {

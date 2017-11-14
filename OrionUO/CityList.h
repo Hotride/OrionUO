@@ -68,7 +68,7 @@ public:
 	CCityList();
 	virtual ~CCityList();
 
-	int CityCount() { return m_CityList.size(); }
+	size_t CityCount() { return m_CityList.size(); }
 
 	void AddCity(CCityItem *city) { m_CityList.push_back(city); }
 

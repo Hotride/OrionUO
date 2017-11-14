@@ -263,12 +263,12 @@ int CDecompressingCopier::tree[] =
 	/* 255*/  -245, -247,
 };
 //---------------------------------------------------------------------------
-void CDecompressingCopier::operator () (char * dest, const char * src, int & dest_size, int & src_size)
+void CDecompressingCopier::operator () (char * dest, const char * src, int & dest_size, intptr_t & src_size)
 {
 	unsigned char * pdest = reinterpret_cast<unsigned char *>(dest);
 	const unsigned char * src2 = reinterpret_cast<const unsigned char *>(src);
 	const unsigned char * psrc = src2;
-	int len = src_size; // len will decrease
+	intptr_t len = src_size; // len will decrease
 	int dest_index = 0;
 
 	while (true)

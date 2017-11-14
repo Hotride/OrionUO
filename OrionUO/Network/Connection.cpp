@@ -129,12 +129,12 @@ bool CSocket::Connect(const string &address, const int &port)
 				{
 					if (str[1] == 2)
 					{
-						int totalSize = 3 + m_ProxyAccount.length() + m_ProxyPassword.length();
+						int totalSize = 3 + (int)m_ProxyAccount.length() + (int)m_ProxyPassword.length();
 						vector<char> buffer(totalSize, 0);
 						sprintf(&buffer[0], "  %s %s", m_ProxyAccount.c_str(), m_ProxyPassword.c_str());
 						buffer[0] = 1;
-						buffer[1] = m_ProxyAccount.length();
-						buffer[2 + m_ProxyAccount.length()] = m_ProxyPassword.length();
+						buffer[1] = (char)m_ProxyAccount.length();
+						buffer[2 + (int)m_ProxyAccount.length()] = (char)m_ProxyPassword.length();
 						::send(m_Socket, &buffer[0], totalSize, 0);
 
 						if (::recv(m_Socket, str, 2, 0) != 2)
@@ -179,10 +179,10 @@ UCHAR_LIST CSocket::Decompression(UCHAR_LIST data)
 	WISPFUN_DEBUG("c158_f2");
 	if (m_GameSocket)
 	{
-		int inSize = data.size();
+		intptr_t inSize = (intptr_t)data.size();
 
 		if (g_NetworkPostAction != NULL)
-			g_NetworkPostAction(&data[0], &data[0], inSize);
+			g_NetworkPostAction(&data[0], &data[0], (int)inSize);
 
 		UCHAR_LIST decBuf(inSize * 4 + 2);
 

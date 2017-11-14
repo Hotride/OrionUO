@@ -344,7 +344,7 @@ void CGumpWorldMap::LoadMap(const int &map)
 					return;
 				}
 
-				int readed = fread(&buf[0], sizeof(short), size, mapFile);
+				size_t readed = fread(&buf[0], sizeof(short), size, mapFile);
 				fclose(mapFile);
 
 				if (readed != size)
@@ -458,7 +458,7 @@ void CGumpWorldMap::LoadMap(const int &map)
 
 			if (mapFile != NULL)
 			{
-				int written = fwrite(&buf[0], sizeof(short), buf.size(), mapFile);
+				size_t written = fwrite(&buf[0], sizeof(short), buf.size(), mapFile);
 				fclose(mapFile);
 				
 				LOG("Write world map file, want=%i, written=%i\n", buf.size(), written);

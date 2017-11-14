@@ -16,7 +16,7 @@ public:
 
 	void initialise() {bit_num = 8; treepos = 0;}
 
-	virtual void operator () (char * dest, const char * src, int & dest_size, int & src_size);
+	virtual void operator () (char * dest, const char * src, int & dest_size, intptr_t & src_size);
 };
 //---------------------------------------------------------------------------
 #endif

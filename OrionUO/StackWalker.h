@@ -184,8 +184,7 @@ do { \
 
 // The following is defined for x86 (XP and higher), x64 and IA64:
 #define GET_CURRENT_CONTEXT(c, contextFlags) \
-do {
-\
+do { \
 	memset(&c, 0, sizeof(CONTEXT)); \
 	c.ContextFlags = contextFlags; \
 	RtlCaptureContext(&c); \

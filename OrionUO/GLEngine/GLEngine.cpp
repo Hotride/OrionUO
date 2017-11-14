@@ -10,10 +10,6 @@
 */
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
-
-#pragma comment(lib, "glew32.lib")
-#pragma comment(lib, "opengl32.lib")
-#pragma comment(lib, "Glu32.lib")
 //----------------------------------------------------------------------------------
 CGLEngine g_GL;
 

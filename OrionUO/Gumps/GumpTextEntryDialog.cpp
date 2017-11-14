@@ -113,7 +113,7 @@ void CGumpTextEntryDialog::OnCharPress(const WPARAM &wParam, const LPARAM &lPara
 	}
 	else if (m_Variant == 1) //Что угодно, но с ограничением по длине
 	{
-		if (g_EntryPointer->Length() < m_MaxLength)
+		if ((int)g_EntryPointer->Length() < m_MaxLength)
 		{
 			g_EntryPointer->Insert(wParam);
 			m_WantRedraw = true;

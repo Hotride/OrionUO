@@ -165,7 +165,7 @@ private:
 
 	uint GetHTMLColorFromText(string &str);
 
-	HTML_TAG_TYPE ParseHTMLTag(const wchar_t *str, const int &len, int &i, bool &endTag, HTML_DATA_INFO &info);
+	HTML_TAG_TYPE ParseHTMLTag(const wchar_t *str, const int &len, intptr_t &i, bool &endTag, HTML_DATA_INFO &info);
 
 	HTMLCHAR_LIST GetHTMLDataOld(uchar font, const wchar_t *str, int &len, TEXT_ALIGN_TYPE align, ushort flags);
 

@@ -91,7 +91,7 @@ public:
 
 	int Pos() const {return m_Position;}
 
-	int Length() const {return m_Text.length();}
+	size_t Length() const { return m_Text.length(); }
 
 	//Вычислить ASCII строку по ширине
 	string CheckMaxWidthA(uchar font, string str);

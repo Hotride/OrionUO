@@ -53,7 +53,7 @@ void CGumpScreenCharacterList::UpdateContent()
 
 	IFOR(i, 0, count)
 	{
-		int len = g_CharacterList.GetName(i).length();
+		size_t len = g_CharacterList.GetName(i).length();
 
 		if (!testField || len != 0 || !i)
 		{

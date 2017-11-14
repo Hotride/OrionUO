@@ -283,7 +283,7 @@ int CFontsManager::CalculateCaretPosA(const uchar &font, const string &str, cons
 		width = GetWidthA(font, str);
 
 	if (x >= width)
-		return str.length();
+		return (int)str.length();
 
 	PMULTILINES_FONT_INFO info = GetInfoA(font, str.c_str(), str.length(), align, flags, width);
 	if (info == NULL)
@@ -1102,7 +1102,7 @@ int CFontsManager::CalculateCaretPosW(const uchar &font, const wstring &str, con
 		width = GetWidthW(font, str);
 
 	if (x >= width)
-		return str.length();
+		return (int)str.length();
 
 	PMULTILINES_FONT_INFO info = GetInfoW(font, str.c_str(), str.length(), align, flags, width);
 	if (info == NULL)
@@ -1816,7 +1816,7 @@ void CFontsManager::GetHTMLInfoFromContent(HTML_DATA_INFO &info, const string &c
 	}
 }
 //----------------------------------------------------------------------------------
-HTML_TAG_TYPE CFontsManager::ParseHTMLTag(const wchar_t *str, const int &len, int &i, bool &endTag, HTML_DATA_INFO &info)
+HTML_TAG_TYPE CFontsManager::ParseHTMLTag(const wchar_t *str, const int &len, intptr_t &i, bool &endTag, HTML_DATA_INFO &info)
 {
 	WISPFUN_DEBUG("c143_f34");
 	HTML_TAG_TYPE tag = HTT_NONE;

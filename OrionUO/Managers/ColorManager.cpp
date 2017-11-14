@@ -25,12 +25,12 @@ CColorManager::~CColorManager()
 void CColorManager::Init()
 {
 	WISPFUN_DEBUG("c137_f1");
-	uint addr = (uint)g_FileManager.m_HuesMul.Start;
-	uint size = g_FileManager.m_HuesMul.Size;
+	intptr_t addr = (intptr_t)g_FileManager.m_HuesMul.Start;
+	size_t size = g_FileManager.m_HuesMul.Size;
 
-	if (addr > 0 && size > 0 && addr != 0xFFFFFFFF && size != 0xFFFFFFFF)
+	if (addr > 0 && size > 0 && addr != -1 && size != -1)
 	{
-		int entryCount = size / sizeof(HUES_GROUP);
+		size_t entryCount = size / sizeof(HUES_GROUP);
 
 		m_HuesCount = entryCount * 8;
 		m_HuesRange.resize(entryCount);

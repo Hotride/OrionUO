@@ -213,9 +213,9 @@ void CMapManager::ApplyPatches(WISP_DATASTREAM::CDataReader &stream)
 			continue;
 		}
 
-		int mapPatchesCount = stream.ReadUInt32BE();
+		intptr_t mapPatchesCount = stream.ReadUInt32BE();
 		m_MapPatchCount[i] = mapPatchesCount;
-		int staticsPatchesCount = stream.ReadUInt32BE();
+		intptr_t staticsPatchesCount = stream.ReadUInt32BE();
 		m_StaticPatchCount[i] = staticsPatchesCount;
 
 		MAP_INDEX_LIST &list = m_BlockData[i];
@@ -228,7 +228,7 @@ void CMapManager::ApplyPatches(WISP_DATASTREAM::CDataReader &stream)
 			WISP_FILE::CMappedFile &difl = g_FileManager.m_MapDifl[i];
 			WISP_FILE::CMappedFile &dif = g_FileManager.m_MapDif[i];
 
-			mapPatchesCount = min(mapPatchesCount, difl.Size / 4);
+			mapPatchesCount = min(mapPatchesCount, (intptr_t)difl.Size / 4);
 
 			difl.ResetPtr();
 			dif.ResetPtr();
@@ -250,7 +250,7 @@ void CMapManager::ApplyPatches(WISP_DATASTREAM::CDataReader &stream)
 			WISP_FILE::CMappedFile &difi = g_FileManager.m_StaDifi[i];
 			uint startAddress = (uint)g_FileManager.m_StaDif[i].Start;
 
-			staticsPatchesCount = min(staticsPatchesCount, difl.Size / 4);
+			staticsPatchesCount = min(staticsPatchesCount, (intptr_t)difl.Size / 4);
 
 			difl.ResetPtr();
 			difi.ResetPtr();

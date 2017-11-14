@@ -148,7 +148,7 @@ bool CMacroManager::Convert(const string &path)
 	while (!file.IsEOF())
 	{
 		vector<string> strings = file.ReadTokens();
-		int size = strings.size();
+		size_t size = strings.size();
 
 		if (!size)
 			continue;

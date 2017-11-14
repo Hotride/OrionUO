@@ -356,9 +356,9 @@ void CSkillGroupManager::Save(string path)
 	IFOR(i, 0, m_Count)
 	{
 		string str = group->GetName();
-		int len = str.length() + 1;
+		size_t len = str.length() + 1;
 
-		short size = len + 2 + 2 + 2 + group->GetCount();
+		short size = (short)len + 2 + 2 + 2 + group->GetCount();
 		writter.WriteUInt16LE(size); //Block size
 		
 		writter.WriteUInt16LE(len); //Name length
