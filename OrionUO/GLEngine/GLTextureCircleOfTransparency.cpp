@@ -37,15 +37,15 @@ void CGLTextureCircleOfTransparency::CreatePixels(const int &radius, int &width,
 
 	IFOR(x, -fixRadius, fixRadius)
 	{
-		int mulX = x * x;
-		int posX = ((x + fixRadius) * mulRadius) + fixRadius;
+		intptr_t mulX = x * x;
+		int posX = (((int)x + fixRadius) * mulRadius) + fixRadius;
 
 		IFOR(y, -fixRadius, fixRadius)
 		{
 			int r = (int)sqrt(mulX + (y * y));
 			uchar pic = ((r <= radius) ? ((radius - r) & 0xFF) : 0);
 
-			int pos = posX + y;
+			int pos = posX + (int)y;
 
 			pixels[pos] = pic;
 		}

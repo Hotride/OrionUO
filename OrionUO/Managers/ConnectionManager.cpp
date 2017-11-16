@@ -351,6 +351,9 @@ int CConnectionManager::Send(puchar buf, int size)
 
 		g_NetworkAction(true, &buf[0], &cbuf[0], size);
 
+		LOG("Crypted login dump:\n");
+		LOG_DUMP(&cbuf[0], size);
+
 		return m_LoginSocket.Send(cbuf); //Отправляем зашифрованный пакет
 	}
 	else
@@ -362,6 +365,9 @@ int CConnectionManager::Send(puchar buf, int size)
 
 		g_NetworkAction(false, &buf[0], &cbuf[0], size);
 
+		LOG("Crypted game dump:\n");
+		LOG_DUMP(&cbuf[0], size);
+
 		return m_GameSocket.Send(cbuf); //Отправляем зашифрованный пакет
 	}
 
@@ -371,6 +377,6 @@ int CConnectionManager::Send(puchar buf, int size)
 int CConnectionManager::Send(const UCHAR_LIST &data)
 {
 	WISPFUN_DEBUG("c139_f15");
-	return Send((puchar)&data[0], data.size());
+	return Send((puchar)&data[0], (int)data.size());
 }
 //----------------------------------------------------------------------------------

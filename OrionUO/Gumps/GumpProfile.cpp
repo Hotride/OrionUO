@@ -129,7 +129,7 @@ bool CGumpProfile::OnLeftMouseButtonDoubleClick()
 void CGumpProfile::OnCharPress(const WPARAM &wParam, const LPARAM &lParam)
 {
 	WISPFUN_DEBUG("c108_f6");
-	g_EntryPointer->Insert(wParam);
+	g_EntryPointer->Insert((wchar_t)wParam);
 
 	RecalculateHeight();
 

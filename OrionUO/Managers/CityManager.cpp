@@ -53,7 +53,7 @@ void CCityManager::Init()
 				{
 					if (*ptrBlock == '<')
 					{
-						int len = ptrBlock - startBlock;
+						size_t len = ptrBlock - startBlock;
 						name.resize(len);
 						memcpy(&name[0], &startBlock[0], len);
 
@@ -107,7 +107,7 @@ void CCityManager::Init()
 		if (cliloc != NULL)
 		{
 			IFOR(i, 0, 9)
-				m_CityList.push_back(CCity(cityNames[i], cliloc->GetW(1075072 + i)));
+				m_CityList.push_back(CCity(cityNames[i], cliloc->GetW(1075072 + (int)i)));
 		}
 	}
 }

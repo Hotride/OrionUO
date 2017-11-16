@@ -253,7 +253,7 @@ int CGameCharacter::IsSitting()
 						{
 							if (SITTING_INFO[i].Graphic == graphic)
 							{
-								result = i + 1;
+								result = (int)i + 1;
 								break;
 							}
 						}

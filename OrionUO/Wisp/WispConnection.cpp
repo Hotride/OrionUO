@@ -104,7 +104,7 @@ bool CConnection::ReadyRead()
 	FD_ZERO(&rfds);
 	FD_SET(m_Socket, &rfds);
 
-	m_DataReady = select(m_Socket, &rfds, NULL, NULL, &tv);
+	m_DataReady = select((int)m_Socket, &rfds, NULL, NULL, &tv);
 
 	if (m_DataReady == SOCKET_ERROR)
 	{
@@ -166,7 +166,7 @@ int CConnection::Send(const UCHAR_LIST &data)
 	WISPFUN_DEBUG("c3_f8");
 	if (data.size())
 	{
-		int sent = Send((puchar)&data[0], data.size());
+		int sent = Send((puchar)&data[0], (int)data.size());
 
 		//LOG("CConnection::Send=>%i\n", sent);
 

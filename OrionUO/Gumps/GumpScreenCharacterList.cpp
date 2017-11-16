@@ -57,11 +57,11 @@ void CGumpScreenCharacterList::UpdateContent()
 
 		if (!testField || len != 0 || !i)
 		{
-			Add(new CGUIResizepic(ID_CS_CHARACTERS + i, 0x0BB8, 224, yOffset + (posInList * 40), 280, 30));
+			Add(new CGUIResizepic(ID_CS_CHARACTERS + (int)i, 0x0BB8, 224, yOffset + (posInList * 40), 280, 30));
 
 			if (len)
 			{
-				CGUITextEntry *entry = (CGUITextEntry*)Add(new CGUITextEntry(ID_CS_CHARACTERS + i, 0x034F, 0x03E3, 0x0021, 229, yOffset + (posInList * 40), 270, false, 5, TS_CENTER, 0, 32));
+				CGUITextEntry *entry = (CGUITextEntry*)Add(new CGUITextEntry(ID_CS_CHARACTERS + (int)i, 0x034F, 0x03E3, 0x0021, 229, yOffset + (posInList * 40), 270, false, 5, TS_CENTER, 0, 32));
 				entry->m_Entry.Width = 270;
 				entry->m_Entry.SetText(g_CharacterList.GetName(i));
 				entry->CheckOnSerial = true;
@@ -159,9 +159,9 @@ void CGumpScreenCharacterList::GUMP_TEXT_ENTRY_EVENT_C
 	WISPFUN_DEBUG("c112_f4");
 	IFOR(i, 0, g_CharacterList.Count)
 	{
-		if (serial == (ID_CS_CHARACTERS + i))
+		if (serial == (ID_CS_CHARACTERS + (int)i))
 		{
-			g_CharacterList.Selected = i;
+			g_CharacterList.Selected = (int)i;
 
 			QFOR(item, m_Items, CBaseGUI*)
 			{

@@ -299,7 +299,7 @@ void CGUISlider::Draw(const bool &checktrans)
 
 			IFOR(i, 0, 3)
 			{
-				th[i] = g_Orion.ExecuteGump(m_BackgroundGraphic + i);
+				th[i] = g_Orion.ExecuteGump(m_BackgroundGraphic + (int)i);
 
 				if (th[i] == NULL)
 					return;

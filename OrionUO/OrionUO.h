@@ -74,8 +74,8 @@ private:
 	//Очистка неиспользуемых текстур
 	void ClearUnusedTextures();
 
-	void ReadMulIndexFile(int indexMaxCount, std::function<CIndexObject*(int index)> getIdxObj, const uint &address, PBASE_IDX_BLOCK ptr, std::function<PBASE_IDX_BLOCK()> getNewPtrValue);
-	void ReadUOPIndexFile(int indexMaxCount, std::function<CIndexObject*(int index)> getIdxObj, const char *uopFileName, const int &padding, const char *extesion, CUopMappedFile &uopFile, int startIndex = 0);
+	void ReadMulIndexFile(size_t indexMaxCount, std::function<CIndexObject*(int index)> getIdxObj, const size_t &address, PBASE_IDX_BLOCK ptr, std::function<PBASE_IDX_BLOCK()> getNewPtrValue);
+	void ReadUOPIndexFile(size_t indexMaxCount, std::function<CIndexObject*(int index)> getIdxObj, const char *uopFileName, const int &padding, const char *extesion, CUopMappedFile &uopFile, int startIndex = 0);
 
 	void GetCurrentLocale();
 
@@ -394,7 +394,7 @@ public:
 	void AllNames();
 
 	//Получить хэш-код файла
-	uint GetFileHashCode(puchar ptr, uint size);
+	uint GetFileHashCode(puchar ptr, size_t size);
 
 	//Загрузка логинсервера
 	void LoadLogin(string &login, int &port);

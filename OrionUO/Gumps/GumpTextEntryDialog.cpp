@@ -101,7 +101,7 @@ void CGumpTextEntryDialog::OnCharPress(const WPARAM &wParam, const LPARAM &lPara
 	{
 		if (wParam >= '0' && wParam <= '9')
 		{
-			g_EntryPointer->Insert(wParam);
+			g_EntryPointer->Insert((wchar_t)wParam);
 
 			int val = atoi(g_EntryPointer->c_str());
 
@@ -115,7 +115,7 @@ void CGumpTextEntryDialog::OnCharPress(const WPARAM &wParam, const LPARAM &lPara
 	{
 		if ((int)g_EntryPointer->Length() < m_MaxLength)
 		{
-			g_EntryPointer->Insert(wParam);
+			g_EntryPointer->Insert((wchar_t)wParam);
 			m_WantRedraw = true;
 		}
 	}

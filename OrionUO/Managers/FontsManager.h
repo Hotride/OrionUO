@@ -111,7 +111,7 @@ private:
 	static const uchar m_FontIndex[256];
 
 	//!Данные о юникод шрифтах: адрес, размер
-	uint m_UnicodeFontAddress[20];
+	size_t m_UnicodeFontAddress[20];
 	uint m_UnicodeFontSize[20];
 
 	//!Использование HTML расширений

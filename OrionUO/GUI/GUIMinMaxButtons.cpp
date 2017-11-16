@@ -189,10 +189,10 @@ void CGUIMinMaxButtons::Draw(const bool &checktrans)
 
 	IFOR(i, 0, 2)
 	{
-		CGLTexture *th = g_Orion.ExecuteGump(m_Graphic + i);
+		CGLTexture *th = g_Orion.ExecuteGump(m_Graphic + (int)i);
 
 		if (th != NULL)
-			th->Draw(m_X + (i * 18), m_Y, checktrans);
+			th->Draw(m_X + ((int)i * 18), m_Y, checktrans);
 	}
 
 	if (m_HaveText)

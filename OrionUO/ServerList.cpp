@@ -62,7 +62,7 @@ void CServerList::ParsePacket(WISP_DATASTREAM::CDataReader &reader)
 		bool selected = (name == g_ServerList.LastServerName);
 
 		if (selected)
-			g_ServerList.LastServerIndex = i;
+			g_ServerList.LastServerIndex = (int)i;
 
 		m_Servers.push_back(CServer(id, name, fullPercent, timezone, ip, selected));
 	}

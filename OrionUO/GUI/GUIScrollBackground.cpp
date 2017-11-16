@@ -25,7 +25,7 @@ CGUIScrollBackground::CGUIScrollBackground(const uint &serial, const ushort &gra
 
 	IFOR(i, 0, 4)
 	{
-		th[i] = g_Orion.ExecuteGump(m_Graphic + i);
+		th[i] = g_Orion.ExecuteGump(m_Graphic + (int)i);
 
 		if (th[i] != NULL)
 		{
@@ -60,7 +60,7 @@ void CGUIScrollBackground::UpdateHeight(const int &height)
 
 	IFOR(i, 0, 4)
 	{
-		th[i] = g_Orion.ExecuteGump(m_Graphic + i);
+		th[i] = g_Orion.ExecuteGump(m_Graphic + (int)i);
 
 		if (th[i] == NULL)
 			return;
@@ -82,7 +82,7 @@ void CGUIScrollBackground::Draw(const bool &checktrans)
 
 	IFOR(i, 0, 4)
 	{
-		th[i] = g_Orion.ExecuteGump(m_Graphic + i);
+		th[i] = g_Orion.ExecuteGump(m_Graphic + (int)i);
 
 		if (th[i] == NULL)
 			return;
@@ -139,7 +139,7 @@ bool CGUIScrollBackground::Select()
 
 	IFOR(i, 0, 4)
 	{
-		th[i] = g_Orion.ExecuteGump(m_Graphic + i);
+		th[i] = g_Orion.ExecuteGump(m_Graphic + (int)i);
 
 		if (th[i] == NULL)
 			return false;
@@ -163,12 +163,12 @@ bool CGUIScrollBackground::Select()
 			if (deltaHeight < th[i]->Height)
 			{
 				if (deltaHeight > 0)
-					select = g_Orion.GumpPixelsInXY(m_Graphic + i, x, y + currentY, 0, deltaHeight);
+					select = g_Orion.GumpPixelsInXY(m_Graphic + (int)i, x, y + currentY, 0, deltaHeight);
 
 				return select;
 			}
 			else
-				select = g_Orion.GumpPixelsInXY(m_Graphic + i, x, y + currentY);
+				select = g_Orion.GumpPixelsInXY(m_Graphic + (int)i, x, y + currentY);
 
 			currentY += th[i]->Height;
 		}

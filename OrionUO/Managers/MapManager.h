@@ -12,12 +12,12 @@
 //----------------------------------------------------------------------------------
 class CIndexMap
 {
-	SETGET(uint, OriginalMapAddress, 0);
-	SETGET(uint, OriginalStaticAddress, 0);
+	SETGET(size_t, OriginalMapAddress, 0);
+	SETGET(size_t, OriginalStaticAddress, 0);
 	SETGET(uint, OriginalStaticCount, 0);
 
-	SETGET(uint, MapAddress, 0);
-	SETGET(uint, StaticAddress, 0);
+	SETGET(size_t, MapAddress, 0);
+	SETGET(size_t, StaticAddress, 0);
 	SETGET(uint, StaticCount, 0);
 
 public:
@@ -71,7 +71,7 @@ public:
 	*/
 	int GetActualMap();
 
-	void SetPatchedMapBlock(const uint &block, const uint &address);
+	void SetPatchedMapBlock(const size_t &block, const size_t &address);
 
 	/*!
 	Загрузить блок

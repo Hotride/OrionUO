@@ -95,7 +95,7 @@ CIndexMusic::~CIndexMusic()
 {
 }
 //----------------------------------------------------------------------------------
-void CIndexObject::ReadIndexFile(const uint &address, PBASE_IDX_BLOCK ptr, const ushort id)
+void CIndexObject::ReadIndexFile(const size_t &address, PBASE_IDX_BLOCK ptr, const ushort id)
 {
 	m_Address = ptr->Position;
 	m_DataSize = ptr->Size;
@@ -107,10 +107,11 @@ void CIndexObject::ReadIndexFile(const uint &address, PBASE_IDX_BLOCK ptr, const
 	}
 	else
 		m_Address = m_Address + address;
+
 	m_ID = id;
 };
 //----------------------------------------------------------------------------------
-void CIndexMulti::ReadIndexFile(const uint &address, PBASE_IDX_BLOCK ptr, const ushort id)
+void CIndexMulti::ReadIndexFile(const size_t &address, PBASE_IDX_BLOCK ptr, const ushort id)
 {
 	CIndexObject::ReadIndexFile(address, ptr, id);
 	if (g_PacketManager.ClientVersion >= CV_7090)
@@ -119,7 +120,7 @@ void CIndexMulti::ReadIndexFile(const uint &address, PBASE_IDX_BLOCK ptr, const 
 		m_Count = (ushort)(DataSize / sizeof(MULTI_BLOCK));
 };
 //----------------------------------------------------------------------------------
-void CIndexLight::ReadIndexFile(const uint &address, PBASE_IDX_BLOCK ptr, const ushort id)
+void CIndexLight::ReadIndexFile(const size_t &address, PBASE_IDX_BLOCK ptr, const ushort id)
 {
 	CIndexObject::ReadIndexFile(address, ptr, id);
 	PLIGHT_IDX_BLOCK realPtr = (PLIGHT_IDX_BLOCK)ptr;
@@ -127,7 +128,7 @@ void CIndexLight::ReadIndexFile(const uint &address, PBASE_IDX_BLOCK ptr, const 
 	m_Height = realPtr->Height;
 };
 //----------------------------------------------------------------------------------
-void CIndexGump::ReadIndexFile(const uint &address, PBASE_IDX_BLOCK ptr, const ushort id)
+void CIndexGump::ReadIndexFile(const size_t &address, PBASE_IDX_BLOCK ptr, const ushort id)
 {
 	CIndexObject::ReadIndexFile(address, ptr, id);
 	PGUMP_IDX_BLOCK realPtr = (PGUMP_IDX_BLOCK)ptr;

@@ -67,7 +67,7 @@ CGumpSkills::CGumpSkills(short x, short y, bool minimized, int height)
 				uchar index = group->GetItem(i); //Получаем индекс скилла по порядковому номеру
 
 				if (index < g_SkillsManager.Count) //Он валиден
-					skillGroup->Add(new CGUISkillItem(ID_GS_SKILL + index, ID_GS_SKILL_BUTTON + index, ID_GS_SKILL_STATE + index, index, 0, i * 17));
+					skillGroup->Add(new CGUISkillItem(ID_GS_SKILL + index, ID_GS_SKILL_BUTTON + index, ID_GS_SKILL_STATE + index, index, 0, (int)i * 17));
 			}
 
 			currentY += 19;
@@ -671,7 +671,7 @@ bool CGumpSkills::OnLeftMouseButtonDoubleClick()
 void CGumpSkills::OnCharPress(const WPARAM &wParam, const LPARAM &lParam)
 {
 	WISPFUN_DEBUG("c125_f21");
-	g_EntryPointer->Insert(wParam);
+	g_EntryPointer->Insert((wchar_t)wParam);
 
 	int val = g_FontManager.GetWidthA(6, g_EntryPointer->c_str());
 
@@ -719,7 +719,7 @@ void CGumpSkills::OnKeyDown(const WPARAM &wParam, const LPARAM &lParam)
 									uchar index = groupItem->GetItem(i); //Получаем индекс скилла по порядковому номеру
 
 									if (index < g_SkillsManager.Count) //Он валиден
-										first->Add(new CGUISkillItem(ID_GS_SKILL + index, ID_GS_SKILL_BUTTON + index, ID_GS_SKILL_STATE + index, index, 0, i * 17));
+										first->Add(new CGUISkillItem(ID_GS_SKILL + index, ID_GS_SKILL_BUTTON + index, ID_GS_SKILL_STATE + index, index, 0, (int)i * 17));
 								}
 							}
 

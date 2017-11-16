@@ -64,7 +64,7 @@ int CCustomHouseObjectWall::Contains(const ushort &graphic) const
 	IFOR(i, 0, GRAPHICS_COUNT)
 	{
 		if (m_Graphics[i] == graphic || m_WindowGraphics[i] == graphic)
-			return i;
+			return (int)i;
 	}
 
 	return -1;
@@ -105,7 +105,7 @@ int CCustomHouseObjectFloor::Contains(const ushort &graphic) const
 	IFOR(i, 0, GRAPHICS_COUNT)
 	{
 		if (m_Graphics[i] == graphic)
-			return i;
+			return (int)i;
 	}
 
 	return -1;
@@ -138,7 +138,7 @@ int CCustomHouseObjectDoor::Contains(const ushort &graphic) const
 	IFOR(i, 0, GRAPHICS_COUNT)
 	{
 		if (m_Graphics[i] == graphic)
-			return i;
+			return (int)i;
 	}
 
 	return -1;
@@ -171,7 +171,7 @@ int CCustomHouseObjectMisc::Contains(const ushort &graphic) const
 	IFOR(i, 0, GRAPHICS_COUNT)
 	{
 		if (m_Graphics[i] == graphic)
-			return i;
+			return (int)i;
 	}
 
 	return -1;
@@ -205,7 +205,7 @@ int CCustomHouseObjectStair::Contains(const ushort &graphic) const
 	IFOR(i, 0, GRAPHICS_COUNT)
 	{
 		if (m_Graphics[i] == graphic)
-			return i;
+			return (int)i;
 	}
 
 	return -1;
@@ -246,7 +246,7 @@ int CCustomHouseObjectTeleport::Contains(const ushort &graphic) const
 	IFOR(i, 0, GRAPHICS_COUNT)
 	{
 		if (m_Graphics[i] == graphic)
-			return i;
+			return (int)i;
 	}
 
 	return -1;
@@ -287,7 +287,7 @@ int CCustomHouseObjectRoof::Contains(const ushort &graphic) const
 	IFOR(i, 0, GRAPHICS_COUNT)
 	{
 		if (m_Graphics[i] == graphic)
-			return i;
+			return (int)i;
 	}
 
 	return -1;
@@ -313,7 +313,7 @@ int CCustomHouseObjectPlaceInfo::Contains(const ushort &graphic) const
 	IFOR(i, 0, GRAPHICS_COUNT)
 	{
 		if (m_Graphics[i] == graphic)
-			return i;
+			return (int)i;
 	}
 
 	return -1;

@@ -98,18 +98,18 @@ void CGumpScreenSelectProfession::UpdateContentOld()
 
 		IFOR(i, 0, g_SkillsManager.Count)
 		{
-			CSkill *skill = g_SkillsManager.Get(g_SkillsManager.GetSortedIndex(i));
+			CSkill *skill = g_SkillsManager.Get(g_SkillsManager.GetSortedIndex((uint)i));
 
 			if (skill == NULL)
 				continue;
 
-			CGUITextEntry *entry = new CGUITextEntry(ID_SPS_SKILLS_LIST + i, 1, 0x0035, 0x0035, 3, yPtr, 0, false, 9);
+			CGUITextEntry *entry = new CGUITextEntry(ID_SPS_SKILLS_LIST + (int)i, 1, 0x0035, 0x0035, 3, yPtr, 0, false, 9);
 			entry->m_Entry.SetText(skill->Name);
 			entry->m_Entry.CreateTextureA(9, skill->Name, 1, 0, TS_LEFT, 0);
 			entry->CheckOnSerial = true;
 			entry->ReadOnly = true;
 
-			htmlGump->Add(new CGUIHitBox(ID_SPS_SKILLS_LIST + i, 3, yPtr, 195, entry->m_Entry.m_Texture.Height));
+			htmlGump->Add(new CGUIHitBox(ID_SPS_SKILLS_LIST + (int)i, 3, yPtr, 195, entry->m_Entry.m_Texture.Height));
 			htmlGump->Add(entry);
 
 			yPtr += entry->m_Entry.m_Texture.Height;
@@ -160,7 +160,7 @@ void CGumpScreenSelectProfession::UpdateContentOld()
 			text->CreateTextureA(1, statName[i]);
 			Add(text);
 
-			m_StatsSliders[i] = (CGUISlider*)Add(new CGUISlider(ID_SPS_STATS_SPHERE + i, 0x00D8, 0x00D8, 0x00D8, 0x00D5, true, false, 496, yPtr, 95, 10, 45, statVal[i]));
+			m_StatsSliders[i] = (CGUISlider*)Add(new CGUISlider(ID_SPS_STATS_SPHERE + (int)i, 0x00D8, 0x00D8, 0x00D8, 0x00D5, true, false, 496, yPtr, 95, 10, 45, statVal[i]));
 			m_StatsSliders[i]->DefaultTextOffset = -10;
 			m_StatsSliders[i]->SetTextParameters(true, STP_LEFT, 1, 1, false);
 
@@ -173,7 +173,7 @@ void CGumpScreenSelectProfession::UpdateContentOld()
 
 			IFOR(i, 0, 3)
 			{
-				int skillID = profession->GetSkillIndex(i);
+				int skillID = profession->GetSkillIndex((int)i);
 
 				if (skillID >= g_SkillsManager.Count)
 					skillID = 0;
@@ -196,11 +196,11 @@ void CGumpScreenSelectProfession::UpdateContentOld()
 
 			IFOR(i, 0, 3)
 			{
-				Add(new CGUIResizepic(ID_SPS_SKILLS_FILED + i, 0x0BB8, 350, yPtr, 105, 25));
+				Add(new CGUIResizepic(ID_SPS_SKILLS_FILED + (int)i, 0x0BB8, 350, yPtr, 105, 25));
 
-				int skillID = profession->GetSkillIndex(i);
+				int skillID = profession->GetSkillIndex((uint)i);
 
-				CGUITextEntry *entry = (CGUITextEntry*)Add(new CGUITextEntry(ID_SPS_SKILLS_FILED + i, 0x0386, 0, 0x0021, 354, yPtr + 5, 90, false, 9, TS_LEFT, UOFONT_FIXED));
+				CGUITextEntry *entry = (CGUITextEntry*)Add(new CGUITextEntry(ID_SPS_SKILLS_FILED + (int)i, 0x0386, 0, 0x0021, 354, yPtr + 5, 90, false, 9, TS_LEFT, UOFONT_FIXED));
 
 				CSkill *skill = g_SkillsManager.Get(skillID);
 
@@ -218,7 +218,7 @@ void CGumpScreenSelectProfession::UpdateContentOld()
 
 		IFOR(i, 0, 3)
 		{
-			m_SkillsSliders[i] = (CGUISlider*)Add(new CGUISlider(ID_SPS_SKILLS_SPHERE + i, 0x00D8, 0x00D8, 0x00D8, 0x00D5, true, false, 496, 258 + (i * 32), 95, 0, 50, profession->GetSkillValue(i)));
+			m_SkillsSliders[i] = (CGUISlider*)Add(new CGUISlider(ID_SPS_SKILLS_SPHERE + (int)i, 0x00D8, 0x00D8, 0x00D8, 0x00D5, true, false, 496, 258 + ((int)i * 32), 95, 0, 50, profession->GetSkillValue((int)i)));
 			m_SkillsSliders[i]->DefaultTextOffset = -10;
 			m_SkillsSliders[i]->SetTextParameters(true, STP_LEFT, 1, 1, false);
 		}
@@ -291,7 +291,7 @@ void CGumpScreenSelectProfession::UpdateContentNew()
 			text = (CGUIText*)Add(new CGUIText(1, 160, yPtr));
 			text->CreateTextureA(1, statName[i]);
 
-			m_StatsSliders[i] = (CGUISlider*)Add(new CGUISlider(ID_SPS_STATS_SPHERE + i, 0x00D8, 0x00D8, 0x00D8, 0x00D5, true, false, 160, yPtr + 20, 95, 10, 50, statVal[i]));
+			m_StatsSliders[i] = (CGUISlider*)Add(new CGUISlider(ID_SPS_STATS_SPHERE + (int)i, 0x00D8, 0x00D8, 0x00D8, 0x00D5, true, false, 160, yPtr + 20, 95, 10, 50, statVal[i]));
 			m_StatsSliders[i]->SetTextParameters(true, STP_RIGHT, 1, 1, false);
 
 			yPtr += 80;
@@ -309,18 +309,18 @@ void CGumpScreenSelectProfession::UpdateContentNew()
 
 			IFOR(i, 0, g_SkillsManager.Count)
 			{
-				CSkill *skill = g_SkillsManager.Get(g_SkillsManager.GetSortedIndex(i));
+				CSkill *skill = g_SkillsManager.Get(g_SkillsManager.GetSortedIndex((uint)i));
 
 				if (skill == NULL)
 					continue;
 
-				CGUITextEntry *entry = new CGUITextEntry(ID_SPS_SKILLS_LIST + i, 1, 0x0035, 0x0035, 2, yPtr, 0, false, 9);
+				CGUITextEntry *entry = new CGUITextEntry(ID_SPS_SKILLS_LIST + (int)i, 1, 0x0035, 0x0035, 2, yPtr, 0, false, 9);
 				entry->m_Entry.SetText(skill->Name);
 				entry->m_Entry.PrepareToDrawA(9, 1);
 				entry->CheckOnSerial = true;
 				entry->ReadOnly = true;
 
-				htmlGump->Add(new CGUIHitBox(ID_SPS_SKILLS_LIST + i, 2, yPtr, 190, entry->m_Entry.m_Texture.Height));
+				htmlGump->Add(new CGUIHitBox(ID_SPS_SKILLS_LIST + (int)i, 2, yPtr, 190, entry->m_Entry.m_Texture.Height));
 				htmlGump->Add(entry);
 
 				yPtr += entry->m_Entry.m_Texture.Height;
@@ -342,11 +342,11 @@ void CGumpScreenSelectProfession::UpdateContentNew()
 
 			IFOR(i, 0, skillsCount)
 			{
-				Add(new CGUIResizepic(ID_SPS_SKILLS_FILED + i, 0x0BB8, 340, yPtr, 175, 25));
+				Add(new CGUIResizepic(ID_SPS_SKILLS_FILED + (int)i, 0x0BB8, 340, yPtr, 175, 25));
 
-				int skillID = profession->GetSkillIndex(i);
+				int skillID = profession->GetSkillIndex((int)i);
 
-				CGUITextEntry *entry = (CGUITextEntry*)Add(new CGUITextEntry(ID_SPS_SKILLS_FILED + i, 0x0386, 0, 0x0021, 346, yPtr + 5, 90, false, 9, TS_LEFT, UOFONT_FIXED));
+				CGUITextEntry *entry = (CGUITextEntry*)Add(new CGUITextEntry(ID_SPS_SKILLS_FILED + (int)i, 0x0386, 0, 0x0021, 346, yPtr + 5, 90, false, 9, TS_LEFT, UOFONT_FIXED));
 
 				CSkill *skill = g_SkillsManager.Get(skillID);
 
@@ -358,7 +358,7 @@ void CGumpScreenSelectProfession::UpdateContentNew()
 				entry->CheckOnSerial = true;
 				entry->ReadOnly = true;
 
-				m_SkillsSliders[i] = (CGUISlider*)Add(new CGUISlider(ID_SPS_SKILLS_SPHERE + i, 0x00D8, 0x00D8, 0x00D8, 0x00D5, true, false, 340, yPtr + 30, 95, 0, 50, profession->GetSkillValue(i)));
+				m_SkillsSliders[i] = (CGUISlider*)Add(new CGUISlider(ID_SPS_SKILLS_SPHERE + (int)i, 0x00D8, 0x00D8, 0x00D8, 0x00D5, true, false, 340, yPtr + 30, 95, 0, 50, profession->GetSkillValue((int)i)));
 				m_SkillsSliders[i]->DefaultTextOffset = 60;
 				m_SkillsSliders[i]->SetTextParameters(true, STP_RIGHT, 1, 1, false);
 
@@ -465,7 +465,7 @@ void CGumpScreenSelectProfession::GUMP_BUTTON_EVENT_C
 					{
 						if (i != j)
 						{
-							if (profession->GetSkillIndex(i) == 0xFF || profession->GetSkillIndex(i) == profession->GetSkillIndex(j))
+							if (profession->GetSkillIndex((int)i) == 0xFF || profession->GetSkillIndex((int)i) == profession->GetSkillIndex((int)j))
 							{
 								passed = false;
 
@@ -530,9 +530,9 @@ void CGumpScreenSelectProfession::GUMP_BUTTON_EVENT_C
 
 			IFOR(i, 0, skillsCount)
 			{
-				if (serial == ID_SPS_SKILLS_FILED + i)
+				if (serial == ID_SPS_SKILLS_FILED + (int)i)
 				{
-					g_SelectProfessionScreen.SkillSelection = i + 1;
+					g_SelectProfessionScreen.SkillSelection = (int)i + 1;
 
 					break;
 				}

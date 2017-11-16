@@ -11,7 +11,7 @@
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
 //----------------------------------------------------------------------------------
-CPacket::CPacket(const int &size, const bool &autoResize)
+CPacket::CPacket(const size_t &size, const bool &autoResize)
 : WISP_DATASTREAM::CDataWritter(size, autoResize)
 {
 }
@@ -122,7 +122,7 @@ CPacketCreateCharacter::CPacketCreateCharacter(const string &name)
 
 	IFOR(i, 0, skillsCount)
 	{
-		val = profession->GetSkillIndex(i);
+		val = profession->GetSkillIndex((int)i);
 		if (val == 0xFF)
 		{
 			//error, skill is not selected
@@ -131,7 +131,7 @@ CPacketCreateCharacter::CPacketCreateCharacter(const string &name)
 		else
 		{
 			WriteUInt8(val);
-			WriteUInt8(profession->GetSkillValue(i));
+			WriteUInt8(profession->GetSkillValue((int)i));
 		}
 	}
 
@@ -312,7 +312,7 @@ CPacketAttackRequest::CPacketAttackRequest(uint serial)
 }
 //----------------------------------------------------------------------------------
 CPacketClientVersion::CPacketClientVersion(string version)
-: CPacket(4 + (int)version.length())
+: CPacket(4 + version.length())
 {
 	WriteUInt8(0xBD);
 	WriteUInt16BE(4 + (int)version.length());
@@ -322,12 +322,12 @@ CPacketClientVersion::CPacketClientVersion(string version)
 CPacketASCIISpeechRequest::CPacketASCIISpeechRequest(const char *text, SPEECH_TYPE type, ushort font, ushort color)
 : CPacket(1)
 {
-	int len = (int)strlen(text);
-	int size = 8 + len + 1;
+	size_t len = strlen(text);
+	size_t size = 8 + len + 1;
 	Resize(size, true);
 
 	WriteUInt8(0x03);
-	WriteUInt16BE(size);
+	WriteUInt16BE((ushort)size);
 	WriteUInt8(type);
 	WriteUInt16BE(color);
 	WriteUInt16BE(font);
@@ -337,8 +337,8 @@ CPacketASCIISpeechRequest::CPacketASCIISpeechRequest(const char *text, SPEECH_TY
 CPacketUnicodeSpeechRequest::CPacketUnicodeSpeechRequest(const wchar_t *text, SPEECH_TYPE type, ushort font, ushort color, puchar language)
 : CPacket(1)
 {
-	int len = lstrlenW(text);
-	int size = 12;
+	size_t len = lstrlenW(text);
+	size_t size = 12;
 
 	uchar typeValue = (uchar)type;
 
@@ -385,7 +385,7 @@ CPacketUnicodeSpeechRequest::CPacketUnicodeSpeechRequest(const wchar_t *text, SP
 
 		if (!flag)
 			codeBytes.push_back(num3 << 4);
-		size += (int)codeBytes.size();
+		size += codeBytes.size();
 	}
 	else
 	{
@@ -397,7 +397,7 @@ CPacketUnicodeSpeechRequest::CPacketUnicodeSpeechRequest(const wchar_t *text, SP
 	Resize(size, true);
 
 	WriteUInt8(0xAD);
-	WriteUInt16BE(size);
+	WriteUInt16BE((ushort)size);
 	WriteUInt8(typeValue);
 	WriteUInt16BE(color);
 	WriteUInt16BE(font);
@@ -437,12 +437,12 @@ CPacketCastSpell::CPacketCastSpell(int index)
 		char spell[10] = { 0 };
 		sprintf_s(spell, "%i", index);
 
-		int len = (int)strlen(spell);
-		int size = 5 + len;
+		size_t len = strlen(spell);
+		size_t size = 5 + len;
 		Resize(size, true);
 
 		WriteUInt8(0x12);
-		WriteUInt16BE(size);
+		WriteUInt16BE((ushort)size);
 		WriteUInt8(0x56);
 		WriteString(spell, len, false);
 	}
@@ -454,12 +454,12 @@ CPacketCastSpellFromBook::CPacketCastSpellFromBook(int index, uint serial)
 	char spell[25] = { 0 };
 	sprintf_s(spell, "%i %d", index, (int)serial);
 
-	int len = (int)strlen(spell);
-	int size = 5 + len;
+	size_t len = strlen(spell);
+	size_t size = 5 + len;
 	Resize(size, true);
 
 	WriteUInt8(0x12);
-	WriteUInt16BE(size);
+	WriteUInt16BE((ushort)size);
 	WriteUInt8(0x27);
 	WriteString(spell, len, false);
 }
@@ -470,12 +470,12 @@ CPacketUseSkill::CPacketUseSkill(int index)
 	char skill[10] = { 0 };
 	sprintf_s(skill, "%d 0", index);
 
-	int len = (int)strlen(skill);
-	int size = 5 + len;
+	size_t len = strlen(skill);
+	size_t size = 5 + len;
 	Resize(size, true);
 
 	WriteUInt8(0x12);
-	WriteUInt16BE(size);
+	WriteUInt16BE((ushort)size);
 	WriteUInt8(0x24);
 	WriteString(skill, len, false);
 }
@@ -500,12 +500,12 @@ CPacketOpenSpellbook::CPacketOpenSpellbook(SPELLBOOK_TYPE type)
 CPacketEmoteAction::CPacketEmoteAction(const char *action)
 : CPacket(1)
 {
-	int len = (int)strlen(action);
-	int size = 5 + len;
+	size_t len = strlen(action);
+	size_t size = 5 + len;
 	Resize(size, true);
 
 	WriteUInt8(0x12);
-	WriteUInt16BE(size);
+	WriteUInt16BE((ushort)size);
 	WriteUInt8(0xC7);
 	WriteString(action, len, false);
 }
@@ -534,7 +534,7 @@ CPacketGumpResponse::CPacketGumpResponse(CGump *gump, int code)
 				CGUITextEntry *gte = (CGUITextEntry*)item;
 
 				textLinesCount++;
-				textLinesLength += (gte->m_Entry.Length() * 2);
+				textLinesLength += ((int)gte->m_Entry.Length() * 2);
 
 				break;
 			}
@@ -543,7 +543,7 @@ CPacketGumpResponse::CPacketGumpResponse(CGump *gump, int code)
 		}
 	}
 
-	int size = 19 + (switchesCount * 4) + 4 + ((textLinesCount * 4) + textLinesLength);
+	size_t size = 19 + (switchesCount * 4) + 4 + ((textLinesCount * 4) + textLinesLength);
 	Resize(size, true);
 
 	g_PacketManager.LastGumpID = gump->ID;
@@ -551,7 +551,7 @@ CPacketGumpResponse::CPacketGumpResponse(CGump *gump, int code)
 	g_PacketManager.LastGumpY = gump->Y;
 
 	WriteUInt8(0xB1);
-	WriteUInt16BE(size);
+	WriteUInt16BE((ushort)size);
 	WriteUInt32BE(gump->Serial);
 	WriteUInt32BE(gump->ID);
 	WriteUInt32BE(code);
@@ -575,8 +575,8 @@ CPacketGumpResponse::CPacketGumpResponse(CGump *gump, int code)
 			CGUITextEntry *entry = (CGUITextEntry*)item;
 
 			WriteUInt16BE(entry->Serial - 1);
-			int len = entry->m_Entry.Length();
-			WriteUInt16BE(len);
+			size_t len = entry->m_Entry.Length();
+			WriteUInt16BE((ushort)len);
 			WriteWString(entry->m_Entry.Data(), len, true, false);
 		}
 	}
@@ -658,18 +658,18 @@ CPacketLogoutNotification::CPacketLogoutNotification()
 CPacketTextEntryDialogResponse::CPacketTextEntryDialogResponse(CGumpTextEntryDialog *gump, CEntryText *entry, bool code)
 : CPacket(1)
 {
-	int len = entry->Length();
-	int size = 12 + len + 1;
+	size_t len = entry->Length();
+	size_t size = 12 + len + 1;
 	Resize(size, true);
 
 	WriteUInt8(0xAC);
-	WriteUInt16BE(size);
+	WriteUInt16BE((ushort)size);
 	WriteUInt32BE(gump->Serial);
 	WriteUInt8(gump->ButtonID);
 	WriteUInt8(0);
 	WriteUInt8(code ? 0x01 : 0x00);
 
-	WriteUInt16BE(len + 1);
+	WriteUInt16BE((ushort)len + 1);
 
 	WriteString(entry->c_str(), len);
 }
@@ -679,7 +679,7 @@ CPacketRenameRequest::CPacketRenameRequest(uint serial, string newName)
 {
 	WriteUInt8(0x75);
 	WriteUInt32BE(serial);
-	WriteString(newName.c_str(), (int)newName.length(), false);
+	WriteString(newName.c_str(), newName.length(), false);
 }
 //---------------------------------------------------------------------------
 CPacketTipRequest::CPacketTipRequest(ushort id, uchar flag)
@@ -690,28 +690,28 @@ CPacketTipRequest::CPacketTipRequest(ushort id, uchar flag)
 	WriteUInt8(flag);
 }
 //---------------------------------------------------------------------------
-CPacketASCIIPromptResponse::CPacketASCIIPromptResponse(const char *text, int len, bool cancel)
+CPacketASCIIPromptResponse::CPacketASCIIPromptResponse(const char *text, size_t len, bool cancel)
 : CPacket(1)
 {
-	int size = 15 + len + 1;
+	size_t size = 15 + len + 1;
 	Resize(size, true);
 
 	WriteDataLE(g_LastASCIIPrompt, 11);
-	pack16(&m_Data[0] + 1, size);
-	WriteUInt32BE((int)((bool)!cancel));
+	pack16(&m_Data[0] + 1, (ushort)size);
+	WriteUInt32BE((uint)((bool)!cancel));
 
 	WriteString(text, len);
 }
 //---------------------------------------------------------------------------
-CPacketUnicodePromptResponse::CPacketUnicodePromptResponse(const wchar_t *text, int len, const string &lang, bool cancel)
+CPacketUnicodePromptResponse::CPacketUnicodePromptResponse(const wchar_t *text, size_t len, const string &lang, bool cancel)
 : CPacket(1)
 {
-	int size = 19 + (len * 2);
+	size_t size = 19 + (len * 2);
 	Resize(size, true);
 
 	WriteDataLE(g_LastUnicodePrompt, 11);
-	pack16(&m_Data[0] + 1, size);
-	WriteUInt32BE((int)((bool)!cancel));
+	pack16(&m_Data[0] + 1, (ushort)size);
+	WriteUInt32BE((uint)((bool)!cancel));
 	WriteString(lang, 4, false);
 
 	WriteWString(text, len, false, false);
@@ -735,18 +735,18 @@ CPacketProfileRequest::CPacketProfileRequest(uint serial)
 	WriteUInt32BE(serial);
 }
 //---------------------------------------------------------------------------
-CPacketProfileUpdate::CPacketProfileUpdate(uint serial, const wchar_t *text, int len)
+CPacketProfileUpdate::CPacketProfileUpdate(uint serial, const wchar_t *text, size_t len)
 : CPacket(1)
 {
-	int size = 12 + (len * 2);
+	size_t size = 12 + (len * 2);
 	Resize(size, true);
 
 	WriteUInt8(0xB8);
-	WriteUInt16BE(size);
+	WriteUInt16BE((ushort)size);
 	WriteUInt8(1);
 	WriteUInt32BE(serial);
 	WriteUInt16BE(0x0001);
-	WriteUInt16BE(len);
+	WriteUInt16BE((ushort)len);
 	WriteWString(text, len, true, false);
 }
 //---------------------------------------------------------------------------
@@ -809,14 +809,14 @@ CPacketPartyDecline::CPacketPartyDecline(uint serial)
 	WriteUInt32BE(serial);
 }
 //---------------------------------------------------------------------------
-CPacketPartyMessage::CPacketPartyMessage(const wchar_t *text, int len, uint serial)
+CPacketPartyMessage::CPacketPartyMessage(const wchar_t *text, size_t len, uint serial)
 : CPacket(1)
 {
-	int size = 10 + (len * 2) + 2;
+	size_t size = 10 + (len * 2) + 2;
 	Resize(size, true);
 
 	WriteUInt8(0xBF);
-	WriteUInt16BE(size);
+	WriteUInt16BE((ushort)size);
 	WriteUInt16BE(0x0006);
 
 	if (serial) //Private message to member
@@ -898,12 +898,12 @@ CPacketBulletinBoardRequestMessageSummary::CPacketBulletinBoardRequestMessageSum
 CPacketBulletinBoardPostMessage::CPacketBulletinBoardPostMessage(uint serial, uint replySerial, const char *subject, const char *message)
 : CPacket(1)
 {
-	int subjectLen = (int)strlen(subject);
-	int size = 14 + subjectLen + 1;
+	size_t subjectLen = strlen(subject);
+	size_t size = 14 + subjectLen + 1;
 
 	int lines = 1;
 
-	int msgLen = (int)strlen(message);
+	size_t msgLen = strlen(message);
 	int len = 0;
 
 	IFOR(i, 0, msgLen)
@@ -925,12 +925,12 @@ CPacketBulletinBoardPostMessage::CPacketBulletinBoardPostMessage(uint serial, ui
 	Resize(size, true);
 
 	WriteUInt8(0x71);
-	WriteUInt16BE(size);
+	WriteUInt16BE((ushort)size);
 	WriteUInt8(0x05);
 	WriteUInt32BE(serial);
 	WriteUInt32BE(replySerial);
 
-	WriteUInt8(subjectLen + 1);
+	WriteUInt8((uchar)subjectLen + 1);
 	WriteString(subject, subjectLen, false);
 	WriteUInt8(0);
 
@@ -976,13 +976,13 @@ CPacketBulletinBoardRemoveMessage::CPacketBulletinBoardRemoveMessage(uint serial
 CPacketAssistVersion::CPacketAssistVersion(uint version, string clientVersion)
 : CPacket(1)
 {
-	int size = 7 + (int)clientVersion.length();
+	size_t size = 7 + clientVersion.length();
 	Resize(size, true);
 
 	WriteUInt8(0xBE);
-	WriteUInt16BE(size);
+	WriteUInt16BE((ushort)size);
 	WriteUInt32BE(version);
-	WriteString(clientVersion.c_str(), (int)clientVersion.length(), false);
+	WriteString(clientVersion.c_str(), clientVersion.length(), false);
 }
 //---------------------------------------------------------------------------
 CPacketRazorAnswer::CPacketRazorAnswer()
@@ -996,13 +996,13 @@ CPacketRazorAnswer::CPacketRazorAnswer()
 CPacketLanguage::CPacketLanguage(const string &lang)
 : CPacket(1)
 {
-	int size = 5 + (int)lang.length() + 1;
+	size_t size = 5 + lang.length() + 1;
 	Resize(size, true);
 
 	WriteUInt8(0xBF);
 	WriteUInt16BE(0x0009);
 	WriteUInt16BE(0x000B);
-	WriteString(lang, (int)lang.length(), false);
+	WriteString(lang, lang.length(), false);
 }
 //---------------------------------------------------------------------------
 CPacketClientType::CPacketClientType()
@@ -1045,7 +1045,7 @@ CPacketOpenChat::CPacketOpenChat(const wstring &name)
 {
 	WriteUInt8(0xB5);
 
-	int len = (int)name.length();
+	size_t len = name.length();
 
 	if (len > 0)
 	{
@@ -1121,16 +1121,16 @@ CPacketMegaClilocRequestOld::CPacketMegaClilocRequestOld(const uint &serial)
 CPacketMegaClilocRequest::CPacketMegaClilocRequest(UINT_LIST &list)
 : CPacket(1)
 {
-	int len = (int)list.size();
+	size_t len = list.size();
 
 	if (len > 50)
 		len = 50;
 
-	int size = 3 + (len * 4);
+	size_t size = 3 + (len * 4);
 	Resize(size, true);
 
 	WriteUInt8(0xD6);
-	WriteUInt16BE(size);
+	WriteUInt16BE((ushort)size);
 
 	IFOR(i, 0, len)
 		WriteUInt32BE(list[i]);
@@ -1162,8 +1162,8 @@ CPacketBookPageData::CPacketBookPageData(CGumpBook *gump, int page)
 	{
 		CEntryText &textEntry = entry->m_Entry;
 		string data = EncodeUTF8(textEntry.Data());
-		int len = (int)data.length();
-		int size = 9 + 4 + 1;
+		size_t len = data.length();
+		size_t size = 9 + 4 + 1;
 
 		if (len)
 		{
@@ -1183,7 +1183,7 @@ CPacketBookPageData::CPacketBookPageData(CGumpBook *gump, int page)
 		Resize(size, true);
 
 		WriteUInt8(0x66);
-		WriteUInt16BE(size);
+		WriteUInt16BE((ushort)size);
 		WriteUInt32BE(gump->Serial);
 		WriteUInt16BE(0x0001);
 
@@ -1223,7 +1223,7 @@ CPacketBookPageDataRequest::CPacketBookPageDataRequest(const uint &serial, const
 CPacketBuyRequest::CPacketBuyRequest(CGumpShop *gump)
 : CPacket(1)
 {
-	int size = 8;
+	size_t size = 8;
 	int count = 0;
 
 	QFOR(item, gump->m_ItemList[1]->m_Items, CBaseGUI*)
@@ -1238,7 +1238,7 @@ CPacketBuyRequest::CPacketBuyRequest(CGumpShop *gump)
 	Resize(size, true);
 
 	WriteUInt8(0x3B);
-	WriteUInt16BE(size);
+	WriteUInt16BE((ushort)size);
 	WriteUInt32BE(gump->Serial);
 
 	if (count)
@@ -1262,7 +1262,7 @@ CPacketBuyRequest::CPacketBuyRequest(CGumpShop *gump)
 CPacketSellRequest::CPacketSellRequest(CGumpShop *gump)
 : CPacket(1)
 {
-	int size = 9;
+	size_t size = 9;
 	int count = 0;
 
 	QFOR(item, gump->m_ItemList[1]->m_Items, CBaseGUI*)
@@ -1277,7 +1277,7 @@ CPacketSellRequest::CPacketSellRequest(CGumpShop *gump)
 	Resize(size, true);
 
 	WriteUInt8(0x9F);
-	WriteUInt16BE(size);
+	WriteUInt16BE((ushort)size);
 	WriteUInt32BE(gump->Serial);
 	WriteUInt16BE(count);
 

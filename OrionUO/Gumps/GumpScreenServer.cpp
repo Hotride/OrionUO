@@ -75,11 +75,11 @@ void CGumpScreenServer::UpdateContent()
 
 	IFOR(i, 0, g_ServerList.ServersCount())
 	{
-		CServer *server = g_ServerList.GetServer(i);
+		CServer *server = g_ServerList.GetServer((uint)i);
 
-		htmlGump->Add(new CGUIHitBox(ID_SS_SERVER_LIST + i, 74, 10 + (i * 25), 280, 25));
+		htmlGump->Add(new CGUIHitBox(ID_SS_SERVER_LIST + (int)i, 74, 10 + ((int)i * 25), 280, 25));
 
-		CGUITextEntry *entry = new CGUITextEntry(ID_SS_SERVER_LIST + i, 0x034F, 0x0021, 0x0021, 74, 10 + (i * 25), 0, false, 5);
+		CGUITextEntry *entry = new CGUITextEntry(ID_SS_SERVER_LIST + (int)i, 0x034F, 0x0021, 0x0021, 74, 10 + ((int)i * 25), 0, false, 5);
 		entry->m_Entry.SetText(server->Name);
 		entry->ReadOnly = true;
 		entry->CheckOnSerial = true;

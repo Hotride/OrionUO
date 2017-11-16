@@ -36,7 +36,6 @@ extern bool g_Asmut;
 #include "EnumList.h"
 #include "DefinitionMacro.h"
 #include "Constants.h"
-
 //----------------------------------------------------------------------------------
 #define CWISPDEBUGLOGGER 0
 

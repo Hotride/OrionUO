@@ -27,8 +27,8 @@ void CPluginPacket::SendToPlugin()
 {
 	if (m_Data.size() >= 5)
 	{
-		pack16(&m_Data[1], m_Data.size());
-		g_PluginManager.PacketRecv(&m_Data[0], m_Data.size());
+		pack16(&m_Data[1], (ushort)m_Data.size());
+		g_PluginManager.PacketRecv(&m_Data[0], (int)m_Data.size());
 	}
 }
 //----------------------------------------------------------------------------------
@@ -42,7 +42,7 @@ CPluginPacketSkillsList::CPluginPacketSkillsList()
 
 	IFOR(i, 0, count)
 	{
-		CSkill *skill = g_SkillsManager.Get(i);
+		CSkill *skill = g_SkillsManager.Get((uint)i);
 
 		if (skill == NULL)
 			continue;

@@ -154,7 +154,7 @@ void CustomHousesManager::Save(const string &path)
 
 		writter.WriteUInt32LE(house->Serial);
 		writter.WriteUInt32LE(house->Revision);
-		writter.WriteInt32LE(house->m_Items.size());
+		writter.WriteInt32LE((uint)house->m_Items.size());
 		writter.WriteBuffer();
 
 		for (const CBuildObject &item : house->m_Items)

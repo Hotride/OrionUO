@@ -246,7 +246,7 @@ void CMacro::Save(WISP_FILE::CBinaryFileWritter &writter)
 		if (obj->HaveString()) //with string
 		{
 			string str = ((CMacroObjectString*)obj)->String;
-			size += str.length() + 3;
+			size += (short)str.length() + 3;
 		}
 	}
 

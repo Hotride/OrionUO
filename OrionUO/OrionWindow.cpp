@@ -323,7 +323,7 @@ void COrionWindow::OnCharPress(const WPARAM &wParam, const LPARAM &lParam)
 	if (g_PluginManager.WindowProc(m_Handle, WM_CHAR, wParam, lParam))
 		return;
 
-	if ((iswprint(wParam) || (g_GameState >= GS_GAME && (wParam == 0x11 || wParam == 0x17))) && g_CurrentScreen != NULL && g_ScreenEffectManager.Mode == SEM_NONE)
+	if ((iswprint((wchar_t)wParam) || (g_GameState >= GS_GAME && (wParam == 0x11 || wParam == 0x17))) && g_CurrentScreen != NULL && g_ScreenEffectManager.Mode == SEM_NONE)
 		g_CurrentScreen->OnCharPress(wParam, lParam);
 	else if (wParam == VK_RETURN)
 		g_CurrentScreen->OnKeyDown(wParam, lParam);
@@ -363,9 +363,9 @@ HRESULT COrionWindow::OnRepaint(const WPARAM &wParam, const LPARAM &lParam)
 {
 	WISPFUN_DEBUG("c195_f22");
 	if (!g_PluginManager.Empty())
-		return g_PluginManager.WindowProc(m_Handle, WM_NCPAINT, wParam, lParam);
+		return (HRESULT)g_PluginManager.WindowProc(m_Handle, WM_NCPAINT, wParam, lParam);
 
-	return DefWindowProc(m_Handle, WM_NCPAINT, wParam, lParam);
+	return (HRESULT)DefWindowProc(m_Handle, WM_NCPAINT, wParam, lParam);
 }
 //----------------------------------------------------------------------------------
 void COrionWindow::OnShow(const bool &show)

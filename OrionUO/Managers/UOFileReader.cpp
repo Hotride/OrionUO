@@ -23,7 +23,7 @@ UOFileReader g_UOFileReader;
 USHORT_LIST UOFileReader::GetGumpPixels(CIndexObject &io)
 {
 	WISPFUN_DEBUG("c148_f1");
-	int dataStart = io.Address;
+	size_t dataStart = io.Address;
 	puint lookupList = (puint)dataStart;
 
 	int blocksize = io.Width * io.Height;
@@ -56,7 +56,7 @@ USHORT_LIST UOFileReader::GetGumpPixels(CIndexObject &io)
 			gSize = (io.DataSize / 4) - lookupList[y];
 
 		PGUMP_BLOCK gmul = (PGUMP_BLOCK)(dataStart + lookupList[y] * 4);
-		int pos = y * io.Width;
+		int pos = (int)y * io.Width;
 
 		IFOR(i, 0, gSize)
 		{
@@ -126,9 +126,9 @@ CGLTexture *UOFileReader::ReadArt(const ushort &id, CIndexObject &io, const bool
 		
 		IFOR(i, 0, 22)
 		{
-			int start = (22 - (i + 1));
-			int pos = i * 44 + start;
-			int end = start + (i + 1) * 2;
+			int start = (22 - ((int)i + 1));
+			int pos = (int)i * 44 + start;
+			int end = start + ((int)i + 1) * 2;
 
 			IFOR(j, start, end)
 			{
@@ -149,8 +149,8 @@ CGLTexture *UOFileReader::ReadArt(const ushort &id, CIndexObject &io, const bool
 
 		IFOR(i, 0, 22)
 		{
-			int pos = (i + 22) * 44 + i;
-			int end = i + (22 - i) * 2;
+			int pos = ((int)i + 22) * 44 + (int)i;
+			int end = (int)i + (22 - (int)i) * 2;
 
 			IFOR(j, i, end)
 			{
@@ -175,9 +175,9 @@ CGLTexture *UOFileReader::ReadArt(const ushort &id, CIndexObject &io, const bool
 		{
 			IFOR(i, 0, 22)
 			{
-				int start = (22 - (i + 1));
-				int pos = i * 44 + start;
-				int end = start + (i + 1) * 2;
+				int start = (22 - ((int)i + 1));
+				int pos = (int)i * 44 + start;
+				int end = start + ((int)i + 1) * 2;
 
 				IFOR(j, start, end)
 					pixels[pos++] = 0x8000;
@@ -185,8 +185,8 @@ CGLTexture *UOFileReader::ReadArt(const ushort &id, CIndexObject &io, const bool
 
 			IFOR(i, 0, 22)
 			{
-				int pos = (i + 22) * 44 + i;
-				int end = i + (22 - i) * 2;
+				int pos = ((int)i + 22) * 44 + (int)i;
+				int end = (int)i + (22 - (int)i) * 2;
 
 				IFOR(j, i, end)
 					pixels[pos++] = 0x8000;
@@ -347,11 +347,11 @@ CGLTexture *UOFileReader::ReadArt(const ushort &id, CIndexObject &io, const bool
 
 							IFOR(i, startY, endY)
 							{
-								int currentY = y + i;
+								int currentY = (int)y + (int)i;
 
 								IFOR(j, startX, endX)
 								{
-									int currentX = x + j;
+									int currentX = (int)x + (int)j;
 
 									ushort &currentPixel = pixels[currentY * w + currentX];
 
@@ -458,7 +458,7 @@ WISP_GEOMETRY::CRect UOFileReader::ReadStaticArtPixelDimension(CIndexObject &io)
 				{
 					if (*ptr)
 					{
-						int testX = X + j;
+						int testX = X + (int)j;
 
 						if (testX < minX)
 							minX = testX;
@@ -531,7 +531,7 @@ CGLTexture *UOFileReader::ReadTexture(CIndexObject &io)
 
 	IFOR(i, 0, h)
 	{
-		int pos = i * w;
+		int pos = (int)i * w;
 
 		IFOR(j, 0, w)
 		{
@@ -568,7 +568,7 @@ CGLTexture *UOFileReader::ReadLight(CIndexObject &io)
 
 	IFOR(i, 0, io.Height)
 	{
-		int pos = i * io.Width;
+		int pos = (int)i * io.Width;
 
 		IFOR(j, 0, io.Width)
 		{

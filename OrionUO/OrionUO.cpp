@@ -42,7 +42,7 @@ uint Reflect(uint source, int c)
 	return value;
 }
 //----------------------------------------------------------------------------------
-uint COrion::GetFileHashCode(puchar ptr, uint size)
+uint COrion::GetFileHashCode(puchar ptr, size_t size)
 {
 	WISPFUN_DEBUG("c194_f1");
 	uint crc = 0xFFFFFFFF;
@@ -115,11 +115,11 @@ void COrion::ParseCommandLine()
 			else if (str == "proxyaccount")
 			{
 				g_ConnectionManager.ProxySocks5 = true;
-				g_ConnectionManager.ProxyAccount = DecodeArgumentString(strings[1].c_str(), strings[1].length());
-				g_ConnectionManager.ProxyPassword = DecodeArgumentString(strings[2].c_str(), strings[2].length());
+				g_ConnectionManager.ProxyAccount = DecodeArgumentString(strings[1].c_str(), (int)strings[1].length());
+				g_ConnectionManager.ProxyPassword = DecodeArgumentString(strings[2].c_str(), (int)strings[2].length());
 			}
 			else if (str == "account")
-				g_MainScreen.SetAccounting(DecodeArgumentString(strings[1].c_str(), strings[1].length()), DecodeArgumentString(strings[2].c_str(), strings[2].length()));
+				g_MainScreen.SetAccounting(DecodeArgumentString(strings[1].c_str(), (int)strings[1].length()), DecodeArgumentString(strings[2].c_str(), (int)strings[2].length()));
 			else if (str == "plugin")
 			{
 				if (strings.size() > 4)
@@ -159,7 +159,7 @@ void COrion::ParseCommandLine()
 		else if (str == "fastlogin")
 			fastLogin = true;
 		else if (str == "autologinname")
-			g_PacketManager.AutoLoginNames = string("|") + DecodeArgumentString(strings[1].c_str(), strings[1].length());
+			g_PacketManager.AutoLoginNames = string("|") + DecodeArgumentString(strings[1].c_str(), (int)strings[1].length());
 		else if (str == "nowarnings")
 			g_ShowWarnings = false;
 	}
@@ -175,14 +175,14 @@ UINT_LIST COrion::FindPattern(puchar ptr, const int &size, const UCHAR_LIST &pat
 	WISPFUN_DEBUG("c194_f4");
 	UINT_LIST result;
 
-	int patternSize = pattern.size();
+	int patternSize = (int)pattern.size();
 
 	int count = size - patternSize - 1;
 
 	IFOR(i, 0, count)
 	{
 		if (!memcmp(&ptr[0], &pattern[0], patternSize))
-			result.push_back(0x00400000 + i);
+			result.push_back(0x00400000 + (int)i);
 
 		ptr++;
 	}
@@ -211,7 +211,7 @@ bool COrion::Install()
 
 	IFOR(i, 0, 256)
 	{
-		m_CRC_Table[i] = Reflect(i, 8) << 24;
+		m_CRC_Table[i] = Reflect((int)i, 8) << 24;
 
 		IFOR(j, 0, 8)
 			m_CRC_Table[i] = (m_CRC_Table[i] << 1) ^ ((m_CRC_Table[i] & (1 << 31)) ? 0x04C11DB7 : 0);
@@ -263,9 +263,9 @@ bool COrion::Install()
 	int staticsCount = 512;
 
 	if (g_PacketManager.ClientVersion >= CV_7090)
-		staticsCount = (g_FileManager.m_TiledataMul.Size - (512 * sizeof(LAND_GROUP_NEW))) / sizeof(STATIC_GROUP_NEW);
+		staticsCount = (int)(g_FileManager.m_TiledataMul.Size - (512 * sizeof(LAND_GROUP_NEW))) / sizeof(STATIC_GROUP_NEW);
 	else
-		staticsCount = (g_FileManager.m_TiledataMul.Size - (512 * sizeof(LAND_GROUP_OLD))) / sizeof(STATIC_GROUP_OLD);
+		staticsCount = (int)(g_FileManager.m_TiledataMul.Size - (512 * sizeof(LAND_GROUP_OLD))) / sizeof(STATIC_GROUP_OLD);
 
 	if (staticsCount > 2048)
 		staticsCount = 2048;
@@ -348,7 +348,7 @@ bool COrion::Install()
 	g_CreateCharacterManager.Init();
 
 	IFOR(i, 0, 6)
-		g_AnimationManager.Init(i, (uint)g_FileManager.m_AnimIdx[i].Start, (uint)g_FileManager.m_AnimMul[i].Start, (uint)g_FileManager.m_AnimIdx[i].Size);
+		g_AnimationManager.Init((int)i, (size_t)g_FileManager.m_AnimIdx[i].Start, (size_t)g_FileManager.m_AnimMul[i].Start, (size_t)g_FileManager.m_AnimIdx[i].Size);
 
 	g_AnimationManager.InitIndexReplaces((puint)g_FileManager.m_VerdataMul.Start);
 
@@ -964,7 +964,7 @@ void COrion::LoadClientConfig()
 	if (config.Load(g_App.UOFilesPath("Client.cuo")))
 	{
 		UCHAR_LIST realData;
-		install(config.Start, config.Size, &realData);
+		install(config.Start, (int)config.Size, &realData);
 		config.Unload();
 
 		if (!realData.size())
@@ -998,11 +998,19 @@ void COrion::LoadClientConfig()
 		int len = file.ReadInt8();
 		m_ClientVersionText = file.ReadString(len);
 
+#if defined(_M_IX86)
 		g_NetworkInit = (NETWORK_INIT_TYPE*)file.ReadUInt32LE();
 		g_NetworkAction = (NETWORK_ACTION_TYPE*)file.ReadUInt32LE();
 		if (dllVersion == 0xFE)
 			g_NetworkPostAction = (NETWORK_POST_ACTION_TYPE*)file.ReadUInt32LE();
 		g_PluginInit = (PLUGIN_INIT_TYPE*)file.ReadUInt32LE();
+#else
+		g_NetworkInit = (NETWORK_INIT_TYPE*)file.ReadUInt64LE();
+		g_NetworkAction = (NETWORK_ACTION_TYPE*)file.ReadUInt64LE();
+		if (dllVersion == 0xFE)
+			g_NetworkPostAction = (NETWORK_POST_ACTION_TYPE*)file.ReadUInt64LE();
+		g_PluginInit = (PLUGIN_INIT_TYPE*)file.ReadUInt64LE();
+#endif
 
 		file.Move(1);
 
@@ -1791,7 +1799,7 @@ void COrion::ChangeSeason(const SEASON_TYPE &season, const int &music)
 		{
 			IFOR(y, 0, 8)
 			{
-				QFOR(obj, item->GetRender(x, y), CRenderWorldObject*)
+				QFOR(obj, item->GetRender((int)x, (int)y), CRenderWorldObject*)
 				{
 					obj->UpdateGraphicBySeason();
 				}
@@ -2505,7 +2513,7 @@ int COrion::ValueInt(const VALUE_KEY_INT &key, int value)
 		case VKI_STATIC_ART_ADDRESS:
 		{
 			if (value >= 0 && value < (int)m_StaticData.size())
-				value = m_StaticDataIndex[value].Address;
+				value = (int)m_StaticDataIndex[value].Address;
 
 			break;
 		}
@@ -2646,7 +2654,7 @@ int COrion::ValueInt(const VALUE_KEY_INT &key, int value)
 		case VKI_MAP_MUL_SIZE:
 		{
 			if (value >= 0 && value < 6)
-				value = g_FileManager.m_MapMul[value].Size;
+				value = (int)g_FileManager.m_MapMul[value].Size;
 
 			break;
 		}
@@ -2660,7 +2668,7 @@ int COrion::ValueInt(const VALUE_KEY_INT &key, int value)
 		case VKI_STATIC_IDX_SIZE:
 		{
 			if (value >= 0 && value < 6)
-				value = g_FileManager.m_StaticIdx[value].Size;
+				value = (int)g_FileManager.m_StaticIdx[value].Size;
 
 			break;
 		}
@@ -2674,7 +2682,7 @@ int COrion::ValueInt(const VALUE_KEY_INT &key, int value)
 		case VKI_STATIC_MUL_SIZE:
 		{
 			if (value >= 0 && value < 6)
-				value = g_FileManager.m_StaticMul[value].Size;
+				value = (int)g_FileManager.m_StaticMul[value].Size;
 
 			break;
 		}
@@ -2688,7 +2696,7 @@ int COrion::ValueInt(const VALUE_KEY_INT &key, int value)
 		case VKI_MAP_DIFL_SIZE:
 		{
 			if (value >= 0 && value < 6)
-				value = g_FileManager.m_MapDifl[value].Size;
+				value = (int)g_FileManager.m_MapDifl[value].Size;
 
 			break;
 		}
@@ -2702,7 +2710,7 @@ int COrion::ValueInt(const VALUE_KEY_INT &key, int value)
 		case VKI_MAP_DIF_SIZE:
 		{
 			if (value >= 0 && value < 6)
-				value = g_FileManager.m_MapDif[value].Size;
+				value = (int)g_FileManager.m_MapDif[value].Size;
 
 			break;
 		}
@@ -2716,7 +2724,7 @@ int COrion::ValueInt(const VALUE_KEY_INT &key, int value)
 		case VKI_STATIC_DIFL_SIZE:
 		{
 			if (value >= 0 && value < 6)
-				value = g_FileManager.m_StaDifl[value].Size;
+				value = (int)g_FileManager.m_StaDifl[value].Size;
 
 			break;
 		}
@@ -2730,7 +2738,7 @@ int COrion::ValueInt(const VALUE_KEY_INT &key, int value)
 		case VKI_STATIC_DIFI_SIZE:
 		{
 			if (value >= 0 && value < 6)
-				value = g_FileManager.m_StaDifi[value].Size;
+				value = (int)g_FileManager.m_StaDifi[value].Size;
 
 			break;
 		}
@@ -2744,7 +2752,7 @@ int COrion::ValueInt(const VALUE_KEY_INT &key, int value)
 		case VKI_STATIC_DIF_SIZE:
 		{
 			if (value >= 0 && value < 6)
-				value = g_FileManager.m_StaDif[value].Size;
+				value = (int)g_FileManager.m_StaDif[value].Size;
 
 			break;
 		}
@@ -2756,7 +2764,7 @@ int COrion::ValueInt(const VALUE_KEY_INT &key, int value)
 		}
 		case VKI_VERDATA_SIZE:
 		{
-			value = g_FileManager.m_VerdataMul.Size;
+			value = (int)g_FileManager.m_VerdataMul.Size;
 
 			break;
 		}
@@ -2770,7 +2778,7 @@ int COrion::ValueInt(const VALUE_KEY_INT &key, int value)
 		case VKI_MAP_UOP_SIZE:
 		{
 			if (value >= 0 && value < 6)
-				value = g_FileManager.m_MapUOP[value].Size;
+				value = (int)g_FileManager.m_MapUOP[value].Size;
 
 			break;
 		}
@@ -2784,7 +2792,7 @@ int COrion::ValueInt(const VALUE_KEY_INT &key, int value)
 		case VKI_MAP_X_UOP_SIZE:
 		{
 			if (value >= 0 && value < 6)
-				value = g_FileManager.m_MapXUOP[value].Size;
+				value = (int)g_FileManager.m_MapXUOP[value].Size;
 
 			break;
 		}
@@ -2796,14 +2804,14 @@ int COrion::ValueInt(const VALUE_KEY_INT &key, int value)
 		}
 		case VKI_CLILOC_ENU_SIZE:
 		{
-			value = g_ClilocManager.Cliloc("enu")->m_File.Size;
+			value = (int)g_ClilocManager.Cliloc("enu")->m_File.Size;
 
 			break;
 		}
 		case VKI_GUMP_ART_ADDRESS:
 		{
 			if (value >= 0 && value < MAX_GUMP_DATA_INDEX_COUNT)
-				value = m_GumpDataIndex[value].Address;
+				value = (int)m_GumpDataIndex[value].Address;
 
 			break;
 		}
@@ -3086,18 +3094,17 @@ void COrion::LoadTiledata(const int &landSize, const int &staticsSize)
 	}
 }
 //----------------------------------------------------------------------------------
-void COrion::ReadMulIndexFile(int indexMaxCount, std::function<CIndexObject*(int index)> getIdxObj, const uint &address, PBASE_IDX_BLOCK ptr, std::function<PBASE_IDX_BLOCK()> getNewPtrValue)
+void COrion::ReadMulIndexFile(size_t indexMaxCount, std::function<CIndexObject*(int index)> getIdxObj, const size_t &address, PBASE_IDX_BLOCK ptr, std::function<PBASE_IDX_BLOCK()> getNewPtrValue)
 {
 	IFOR(i, 0, indexMaxCount)
 	{
-		CIndexObject *obj = getIdxObj(i);
-		obj->ReadIndexFile(address, ptr, i);
+		CIndexObject *obj = getIdxObj((int)i);
+		obj->ReadIndexFile(address, ptr, (ushort)i);
 		ptr = getNewPtrValue();
 	}
-
 }
 //----------------------------------------------------------------------------------
-void COrion::ReadUOPIndexFile(int indexMaxCount, std::function<CIndexObject*(int)> getIdxObj, const char *uopFileName, const int &padding, const char *extesion, CUopMappedFile &uopFile, int startIndex)
+void COrion::ReadUOPIndexFile(size_t indexMaxCount, std::function<CIndexObject*(int)> getIdxObj, const char *uopFileName, const int &padding, const char *extesion, CUopMappedFile &uopFile, int startIndex)
 {
 	bool isGump = (string("gumpartlegacymul") == uopFileName);
 
@@ -3107,13 +3114,13 @@ void COrion::ReadUOPIndexFile(int indexMaxCount, std::function<CIndexObject*(int
 	IFOR(i, startIndex, indexMaxCount)
 	{
 		char hashString[200] = { 0 };
-		sprintf_s(hashString, basePath, i);
+		sprintf_s(hashString, basePath, (int)i);
 
 		CUopBlockHeader *block = uopFile.GetBlock(CreateHash(hashString));
 
 		if (block != NULL)
 		{
-			CIndexObject *obj = getIdxObj(i);
+			CIndexObject *obj = getIdxObj((int)i);
 			obj->Address = (uint)uopFile.Start + (uint)block->Offset;
 			obj->DataSize = block->DecompressedSize;
 			obj->UopBlock = block;
@@ -3139,7 +3146,7 @@ unsigned long long COrion::CreateHash(string s)
 	unsigned long eax, ecx, edx, ebx, esi, edi;
 
 	eax = ecx = edx = ebx = esi = edi = 0;
-	ebx = edi = esi = s.length() + 0xDEADBEEF;
+	ebx = edi = esi = (int)s.length() + 0xDEADBEEF;
 
 	unsigned long i = 0;
 
@@ -3243,7 +3250,7 @@ unsigned long long COrion::CreateHash(string s)
 void COrion::LoadIndexFiles()
 {
 	PART_IDX_BLOCK LandArtPtr = (PART_IDX_BLOCK)g_FileManager.m_ArtIdx.Start;
-	PART_IDX_BLOCK StaticArtPtr = (PART_IDX_BLOCK)((uint)g_FileManager.m_ArtIdx.Start + (m_LandData.size() * sizeof(ART_IDX_BLOCK)));
+	PART_IDX_BLOCK StaticArtPtr = (PART_IDX_BLOCK)((size_t)g_FileManager.m_ArtIdx.Start + (m_LandData.size() * sizeof(ART_IDX_BLOCK)));
 	PGUMP_IDX_BLOCK GumpArtPtr = (PGUMP_IDX_BLOCK)g_FileManager.m_GumpIdx.Start;
 	PTEXTURE_IDX_BLOCK TexturePtr = (PTEXTURE_IDX_BLOCK)g_FileManager.m_TextureIdx.Start;
 	PMULTI_IDX_BLOCK MultiPtr = (PMULTI_IDX_BLOCK)g_FileManager.m_MultiIdx.Start;
@@ -3254,18 +3261,18 @@ void COrion::LoadIndexFiles()
 		g_MultiIndexCount = MAX_MULTI_DATA_INDEX_COUNT;
 	else
 	{
-		g_MultiIndexCount = g_FileManager.m_MultiIdx.Size / sizeof(MULTI_IDX_BLOCK);
+		g_MultiIndexCount = (int)(g_FileManager.m_MultiIdx.Size / sizeof(MULTI_IDX_BLOCK));
 
 		if (g_MultiIndexCount > MAX_MULTI_DATA_INDEX_COUNT)
 			g_MultiIndexCount = MAX_MULTI_DATA_INDEX_COUNT;
 	}
 
-	int maxGumpsCount = g_FileManager.m_GumpIdx.Start == nullptr ? MAX_GUMP_DATA_INDEX_COUNT : (g_FileManager.m_GumpIdx.End - g_FileManager.m_GumpIdx.Start) / sizeof(GUMP_IDX_BLOCK);
+	int maxGumpsCount = (int)(g_FileManager.m_GumpIdx.Start == nullptr ? MAX_GUMP_DATA_INDEX_COUNT : (g_FileManager.m_GumpIdx.End - g_FileManager.m_GumpIdx.Start) / sizeof(GUMP_IDX_BLOCK));
 
 	if (g_FileManager.m_ArtMul.Start != nullptr)
 	{
-		ReadMulIndexFile(MAX_LAND_DATA_INDEX_COUNT, [&](int i){ return &m_LandDataIndex[i]; }, (uint)g_FileManager.m_ArtMul.Start, LandArtPtr, [&LandArtPtr]() { return ++LandArtPtr; });
-		ReadMulIndexFile(m_StaticData.size(), [&](int i){ return &m_StaticDataIndex[i]; }, (uint)g_FileManager.m_ArtMul.Start, StaticArtPtr, [&StaticArtPtr]() { return ++StaticArtPtr; });
+		ReadMulIndexFile(MAX_LAND_DATA_INDEX_COUNT, [&](int i){ return &m_LandDataIndex[i]; }, (size_t)g_FileManager.m_ArtMul.Start, LandArtPtr, [&LandArtPtr]() { return ++LandArtPtr; });
+		ReadMulIndexFile(m_StaticData.size(), [&](int i){ return &m_StaticDataIndex[i]; }, (size_t)g_FileManager.m_ArtMul.Start, StaticArtPtr, [&StaticArtPtr]() { return ++StaticArtPtr; });
 	}
 	else
 	{
@@ -3274,20 +3281,20 @@ void COrion::LoadIndexFiles()
 	}
 
 	if (g_FileManager.m_SoundMul.Start != nullptr)
-		ReadMulIndexFile(MAX_SOUND_DATA_INDEX_COUNT, [&](int i){ return &m_SoundDataIndex[i]; }, (uint)g_FileManager.m_SoundMul.Start, SoundPtr, [&SoundPtr]() { return ++SoundPtr; });
+		ReadMulIndexFile(MAX_SOUND_DATA_INDEX_COUNT, [&](int i){ return &m_SoundDataIndex[i]; }, (size_t)g_FileManager.m_SoundMul.Start, SoundPtr, [&SoundPtr]() { return ++SoundPtr; });
 	else
 		ReadUOPIndexFile(MAX_SOUND_DATA_INDEX_COUNT, [&](int i){ return &m_SoundDataIndex[i]; }, "soundlegacymul", 8, ".dat", g_FileManager.m_SoundLegacyMUL);
 
 	if (g_FileManager.m_GumpMul.Start != nullptr)
-		ReadMulIndexFile(maxGumpsCount, [&](int i){ return &m_GumpDataIndex[i]; }, (uint)g_FileManager.m_GumpMul.Start, GumpArtPtr, [&GumpArtPtr]() { return ++GumpArtPtr; });
+		ReadMulIndexFile(maxGumpsCount, [&](int i){ return &m_GumpDataIndex[i]; }, (size_t)g_FileManager.m_GumpMul.Start, GumpArtPtr, [&GumpArtPtr]() { return ++GumpArtPtr; });
 	else
 		ReadUOPIndexFile(maxGumpsCount, [&](int i){ return &m_GumpDataIndex[i]; }, "gumpartlegacymul", 8, ".tga", g_FileManager.m_GumpartLegacyMUL);
 
-	ReadMulIndexFile(g_FileManager.m_TextureIdx.Size / sizeof(TEXTURE_IDX_BLOCK), [&](int i){ return &m_TextureDataIndex[i]; }, (uint)g_FileManager.m_TextureMul.Start, TexturePtr, [&TexturePtr]() { return ++TexturePtr; });
-	ReadMulIndexFile(MAX_LIGHTS_DATA_INDEX_COUNT, [&](int i){ return &m_LightDataIndex[i]; }, (uint)g_FileManager.m_LightMul.Start, LightPtr, [&LightPtr]() { return ++LightPtr; });
+	ReadMulIndexFile(g_FileManager.m_TextureIdx.Size / sizeof(TEXTURE_IDX_BLOCK), [&](int i){ return &m_TextureDataIndex[i]; }, (size_t)g_FileManager.m_TextureMul.Start, TexturePtr, [&TexturePtr]() { return ++TexturePtr; });
+	ReadMulIndexFile(MAX_LIGHTS_DATA_INDEX_COUNT, [&](int i){ return &m_LightDataIndex[i]; }, (size_t)g_FileManager.m_LightMul.Start, LightPtr, [&LightPtr]() { return ++LightPtr; });
 
 	if (g_FileManager.m_MultiMul.Start != nullptr)
-		ReadMulIndexFile(g_MultiIndexCount, [&](int i){ return &m_MultiDataIndex[i]; }, (uint)g_FileManager.m_MultiMul.Start, MultiPtr, [&MultiPtr]() { return ++MultiPtr; });
+		ReadMulIndexFile(g_MultiIndexCount, [&](int i){ return &m_MultiDataIndex[i]; }, (size_t)g_FileManager.m_MultiMul.Start, MultiPtr, [&MultiPtr]() { return ++MultiPtr; });
 	else
 	{
 		CUopMappedFile &file = g_FileManager.m_MultiCollection;
@@ -3308,7 +3315,7 @@ void COrion::LoadIndexFiles()
 			{
 				CIndexMulti &index = m_MultiDataIndex[id];
 
-				index.Address = (uint)file.Start + (uint)block.Offset;
+				index.Address = (size_t)file.Start + (size_t)block.Offset;
 				index.DataSize = block.DecompressedSize;
 				index.UopBlock = &i->second;
 				index.ID = -1;
@@ -3373,7 +3380,7 @@ void COrion::InitStaticAnimList()
 
 		IFOR(i, 0, (int)m_StaticData.size())
 		{
-			m_StaticDataIndex[i].Index = i;
+			m_StaticDataIndex[i].Index = (ushort)i;
 
 			m_StaticDataIndex[i].LightColor = CalculateLightColor((ushort)i);
 
@@ -3396,7 +3403,7 @@ void COrion::InitStaticAnimList()
 
 			if (IsAnimated(m_StaticData[i].Flags))
 			{
-				uint addr = (i * 68) + 4 * ((i / 8) + 1);
+				uint addr = (uint)((i * 68) + 4 * ((i / 8) + 1));
 				uint offset = (uint)(&m_AnimData[0] + addr);
 
 				if (offset <= lastElement)
@@ -3629,7 +3636,7 @@ void COrion::PatchFiles()
 
 	int dataCount = *(pint)file.Start;
 
-	uint vAddr = (uint)file.Start;
+	size_t vAddr = (size_t)file.Start;
 
 	IFOR(i, 0, dataCount)
 	{
@@ -3969,7 +3976,7 @@ void COrion::IndexReplaces()
 	{
 		STRING_LIST strings = mp3Parser.ReadTokens();
 
-		int size = strings.size();
+		size_t size = strings.size();
 
 		if (size > 0)
 		{
@@ -4023,7 +4030,7 @@ void COrion::CreateObjectHandlesBackground()
 
 	IFOR(i, 0, 9)
 	{
-		CGLTexture *pth = ExecuteGump(0x24EA + i);
+		CGLTexture *pth = ExecuteGump(0x24EA + (ushort)i);
 
 		if (pth == NULL)
 		{
@@ -4034,17 +4041,17 @@ void COrion::CreateObjectHandlesBackground()
 		if (i == 4)
 		{
 			th[8] = pth;
-			gumpID[8] = 0x24EA + i;
+			gumpID[8] = 0x24EA + (ushort)i;
 		}
 		else if (i > 4)
 		{
 			th[i - 1] = pth;
-			gumpID[i - 1] = 0x24EA + i;
+			gumpID[i - 1] = 0x24EA + (ushort)i;
 		}
 		else
 		{
 			th[i] = pth;
-			gumpID[i] = 0x24EA + i;
+			gumpID[i] = 0x24EA + (ushort)i;
 		}
 	}
 
@@ -4467,7 +4474,7 @@ bool COrion::ExecuteGumpPart(const ushort &id, const int &count)
 
 	IFOR(i, 0, count)
 	{
-		if (ExecuteGump(id + i) == NULL)
+		if (ExecuteGump(id + (ushort)i) == NULL)
 			result = false;
 	}
 
@@ -4527,7 +4534,7 @@ void COrion::DrawResizepicGump(const ushort &id, const int &x, const int &y, con
 
 	IFOR(i, 0, 9)
 	{
-		CGLTexture *pth = ExecuteGump(id + i);
+		CGLTexture *pth = ExecuteGump(id + (ushort)i);
 
 		if (pth == NULL)
 			return;
@@ -5676,7 +5683,7 @@ void COrion::LogOut()
 void COrion::ConsolePromptSend()
 {
 	WISPFUN_DEBUG("c194_f125");
-	int len = g_GameConsole.Length();
+	size_t len = g_GameConsole.Length();
 	bool cancel = (len < 1);
 
 	if (g_ConsolePrompt == PT_ASCII)

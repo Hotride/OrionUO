@@ -168,7 +168,7 @@ UCHAR_LIST CSoundManager::CreateWaveFile(CIndexSound &is)
 	strcpy(waveHeader->subChunkId, "fmt ");
 	strcpy(waveHeader->dataChunkId, "data");
 
-	waveHeader->chunkSize = waveSound.size();
+	waveHeader->chunkSize = (uint)waveSound.size();
 	waveHeader->subChunkSize = 16;
 	waveHeader->audioFormat = 1;
 	waveHeader->numChannels = 1;
@@ -176,7 +176,7 @@ UCHAR_LIST CSoundManager::CreateWaveFile(CIndexSound &is)
 	waveHeader->bitsPerSample = 16;
 	waveHeader->bytesPerSecond = 88200;
 	waveHeader->blockAlign = 4;	
-	waveHeader->dataSize = dataSize;
+	waveHeader->dataSize = (uint)dataSize;
 
 	is.Delay = static_cast<DWORD>((dataSize - 16) / 88.2f);
 

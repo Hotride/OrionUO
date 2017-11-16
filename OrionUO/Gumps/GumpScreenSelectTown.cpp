@@ -91,9 +91,9 @@ void CGumpScreenSelectTown::UpdateContent()
 	IFOR(i, 0, g_CityList.CityCount())
 	{
 		if (g_PacketManager.ClientVersion >= CV_70130)
-			city = g_CityList.GetCity(i);
+			city = g_CityList.GetCity((uint)i);
 		else
-			city = g_CityList.GetCity(i + 1);
+			city = g_CityList.GetCity((uint)i + 1);
 
 		if (city == NULL)
 			continue;
@@ -119,14 +119,14 @@ void CGumpScreenSelectTown::UpdateContent()
 			y = m_TownButtonText[i].Y;
 		}
 
-		Add(new CGUIButton(ID_STS_TOWN + i, 0x04B9, 0x04BA, 0x04BA, x, y));
+		Add(new CGUIButton(ID_STS_TOWN + (int)i, 0x04B9, 0x04BA, 0x04BA, x, y));
 
 		y -= 20;
 
 		if (i == 3) //Moonglow
 			x -= 60;
 
-		CGUITextEntry *entry = (CGUITextEntry*)Add(new CGUITextEntry(ID_STS_TOWN + i, 0x0058, 0x0099, 0x0481, x, y, 0, false, 3));
+		CGUITextEntry *entry = (CGUITextEntry*)Add(new CGUITextEntry(ID_STS_TOWN + (int)i, 0x0058, 0x0099, 0x0481, x, y, 0, false, 3));
 		entry->m_Entry.SetText(city->Name);
 		entry->CheckOnSerial = true;
 		entry->ReadOnly = true;

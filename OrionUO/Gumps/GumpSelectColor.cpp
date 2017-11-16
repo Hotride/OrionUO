@@ -57,7 +57,7 @@ void CGumpSelectColor::UpdateContent()
 
 			uint clr = g_ColorManager.Color16To32(color);
 
-			CGUIColoredPolygone *polygone = (CGUIColoredPolygone*)m_DataBox->Add(new CGUIColoredPolygone(ID_GSC_COLORS + (x * 30 + y), startColor, 34 + (x * cellWidthX), 34 + (y * cellWidthY), cellWidthX, cellWidthY, clr));
+			CGUIColoredPolygone *polygone = (CGUIColoredPolygone*)m_DataBox->Add(new CGUIColoredPolygone(ID_GSC_COLORS + ((int)x * 30 + (int)y), startColor, 34 + ((int)x * cellWidthX), 34 + ((int)y * cellWidthY), cellWidthX, cellWidthY, clr));
 			polygone->CallOnMouseUp = true;
 			polygone->Focused = focused;
 			focused = false;

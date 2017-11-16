@@ -101,7 +101,7 @@ void CContainerRect::Calculate(ushort gumpID)
 					m_Y = CONTAINERS_RECT_DEFAULT_POS;
 				}
 				else //!Все отлично, пропускаем дальше
-					passed = i + 1;
+					passed = (int)i + 1;
 			}
 
 			if (!passed) //!Смещение не вычислено. Выставим значение по-умолчанию

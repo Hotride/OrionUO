@@ -722,12 +722,12 @@ int CPathFinder::AddNodeToList(int list, int direction, int x, int y, int z, CPa
 						if (GetDistance(m_EndPoint, p) <= m_PathFindDistance)
 						{
 							m_GoalFound = true;
-							m_GoalNode = i;
+							m_GoalNode = (int)i;
 						}
 
 						m_ActiveOpenNodes++;
 
-						return i;
+						return (int)i;
 					}
 				}
 			}
@@ -750,7 +750,7 @@ int CPathFinder::AddNodeToList(int list, int direction, int x, int y, int z, CPa
 								node.Cost = node.DistFromGoalCost + node.DistFromStartCost;
 							}
 
-							return i;
+							return (int)i;
 						}
 					}
 				}
@@ -783,7 +783,7 @@ int CPathFinder::AddNodeToList(int list, int direction, int x, int y, int z, CPa
 				m_ActiveOpenNodes--;
 				m_ActiveClosedNodes++;
 
-				return i;
+				return (int)i;
 			}
 		}
 	}
@@ -846,7 +846,7 @@ int CPathFinder::FindCheapestNode()
 		{
 			if (m_OpenList[i].Cost < cheapestCost)
 			{
-				cheapestNode = i;
+				cheapestNode = (int)i;
 				cheapestCost = m_OpenList[i].Cost;
 			}
 		}

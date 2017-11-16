@@ -237,11 +237,11 @@ void CGameObject::GenerateObjectHandlesTexture(wstring text)
 
 	IFOR(x, 0, width)
 	{
-		int gumpDataX = x + 10;
+		int gumpDataX = (int)x + 10;
 
 		IFOR(y, 0, maxHeight)
 		{
-			int gumpDataY = y + 1;
+			int gumpDataY = (int)y + 1;
 
 			if (gumpDataY >= g_ObjectHandlesHeight)
 				break;

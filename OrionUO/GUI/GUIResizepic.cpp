@@ -35,7 +35,7 @@ void CGUIResizepic::Draw(const bool &checktrans)
 
 	IFOR(i, 0, 9)
 	{
-		CGLTexture *pth = g_Orion.ExecuteGump(m_Graphic + i);
+		CGLTexture *pth = g_Orion.ExecuteGump(m_Graphic + (int)i);
 
 		if (pth == NULL)
 			return;

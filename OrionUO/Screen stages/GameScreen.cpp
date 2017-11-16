@@ -380,11 +380,11 @@ void CGameScreen::CalculateRenderList()
 		IFOR(lead, minValue, maxValue)
 		{
 			int x = minX;
-			int y = lead;
+			int y = (int)lead;
 
 			if (i)
 			{
-				x = lead;
+				x = (int)lead;
 				y = maxY;
 			}
 
@@ -744,7 +744,7 @@ void CGameScreen::AddTileToRenderList(CRenderWorldObject *obj, const int &worldX
 
 		if (m_RenderListCount >= (int)m_RenderList.size())
 		{
-			int newSize = m_RenderList.size() + 1000;
+			size_t newSize = m_RenderList.size() + 1000;
 
 			m_RenderList.resize(newSize);
 
@@ -830,7 +830,7 @@ void CGameScreen::AddOffsetCharacterTileToRenderList(CGameObject *obj, const boo
 	coordinates.push_back(pair<int, int>(characterX + 2, characterY - 1));
 	coordinates.push_back(pair<int, int>(characterX + 1, characterY + 1));
 
-	int size = coordinates.size();
+	size_t size = coordinates.size();
 
 	int maxZ = obj->PriorityZ;
 
@@ -2269,7 +2269,7 @@ void CGameScreen::OnCharPress(const WPARAM &wParam, const LPARAM &lParam)
 	if (g_EntryPointer == &g_GameConsole && (wParam == 0x00000011 || wParam == 0x00000017) && ctrlPressed)
 		g_GameConsole.ChangeConsoleMessage(wParam == 0x00000017);
 	else if ((altGR || (!altPressed && !ctrlPressed)) && g_EntryPointer->Length() < 60)
-		g_EntryPointer->Insert(wParam);
+		g_EntryPointer->Insert((wchar_t)wParam);
 }
 //----------------------------------------------------------------------------------
 void CGameScreen::OnKeyDown(const WPARAM &wParam, const LPARAM &lParam)
@@ -2413,7 +2413,7 @@ void CGameScreen::OnKeyDown(const WPARAM &wParam, const LPARAM &lParam)
 		bool ctrlPressed = GetAsyncKeyState(VK_CONTROL) & 0x80000000;
 		bool shiftPressed = GetAsyncKeyState(VK_SHIFT) & 0x80000000;
 
-		CMacro *macro = g_MacroManager.FindMacro(wParam, altPressed, ctrlPressed, shiftPressed);
+		CMacro *macro = g_MacroManager.FindMacro((ushort)wParam, altPressed, ctrlPressed, shiftPressed);
 
 		if (macro != NULL)
 		{

@@ -62,7 +62,7 @@ void CGumpScreenCreateCharacter::UpdateContent()
 	combo->SetText(text);
 
 	IFOR(i, 0, facialHairCount)
-		combo->Add(new CGUIComboboxText(0x0381, 9, g_CreateCharacterManager.GetBeard(i).Name));
+		combo->Add(new CGUIComboboxText(0x0381, 9, g_CreateCharacterManager.GetBeard((uchar)i).Name));
 
 	combo->RecalculateWidth();
 
@@ -78,7 +78,7 @@ void CGumpScreenCreateCharacter::UpdateContent()
 	combo->SetText(text);
 
 	IFOR(i, 0, hairCount)
-		combo->Add(new CGUIComboboxText(0x0381, 9, g_CreateCharacterManager.GetHair(i).Name));
+		combo->Add(new CGUIComboboxText(0x0381, 9, g_CreateCharacterManager.GetHair((uchar)i).Name));
 
 	combo->RecalculateWidth();
 
@@ -222,7 +222,7 @@ void CGumpScreenCreateCharacter::UpdateContent()
 
 					uint clr = g_ColorManager.Color16To32(color);
 
-					CGUIColoredPolygone *polygone = (CGUIColoredPolygone*)Add(new CGUIColoredPolygone(ID_CCS_COLOR_RANGE + (x * maxY + y), startColor, 491 + (x * polygoneWidth), 138 + (y * polygoneHeight), polygoneWidth, polygoneHeight, clr));
+					CGUIColoredPolygone *polygone = (CGUIColoredPolygone*)Add(new CGUIColoredPolygone(ID_CCS_COLOR_RANGE + ((int)x * maxY + (int)y), startColor, 491 + ((int)x * polygoneWidth), 138 + ((int)y * polygoneHeight), polygoneWidth, polygoneHeight, clr));
 					polygone->DrawDot = true;
 				}
 			}
@@ -231,7 +231,7 @@ void CGumpScreenCreateCharacter::UpdateContent()
 		{
 			IFOR(y, 1, 48)
 			{
-				ushort startColor = (1 << (y % 4)) * 100 + 1 + (y / 4);
+				ushort startColor = (1 << (y % 4)) * 100 + 1 + ((ushort)y / 4);
 
 				IFOR(x, 0, 20)
 				{
@@ -241,7 +241,7 @@ void CGumpScreenCreateCharacter::UpdateContent()
 
 					uint clr = g_ColorManager.Color16To32(color);
 
-					CGUIColoredPolygone *polygone = (CGUIColoredPolygone*)Add(new CGUIColoredPolygone(ID_CCS_COLOR_RANGE + (y * 20 + x), startColor, 492 + (x * 6), 148 + (y * 5), 6, 5, clr));
+					CGUIColoredPolygone *polygone = (CGUIColoredPolygone*)Add(new CGUIColoredPolygone(ID_CCS_COLOR_RANGE + ((int)y * 20 + (int)x), startColor, 492 + ((int)x * 6), 148 + ((int)y * 5), 6, 5, clr));
 					polygone->DrawDot = true;
 
 					startColor += 5;
@@ -277,7 +277,7 @@ void CGumpScreenCreateCharacter::UpdateContent()
 
 					uint clr = g_ColorManager.Color16To32(color);
 
-					CGUIColoredPolygone *polygone = (CGUIColoredPolygone*)Add(new CGUIColoredPolygone(ID_CCS_COLOR_RANGE + (x * maxY + y), startColor, 490 + (x * 20), 140 + (y * polygoneHeight), 20, polygoneHeight, clr));
+					CGUIColoredPolygone *polygone = (CGUIColoredPolygone*)Add(new CGUIColoredPolygone(ID_CCS_COLOR_RANGE + ((int)x * maxY + (int)y), startColor, 490 + ((int)x * 20), 140 + ((int)y * polygoneHeight), 20, polygoneHeight, clr));
 					polygone->DrawDot = true;
 				}
 			}

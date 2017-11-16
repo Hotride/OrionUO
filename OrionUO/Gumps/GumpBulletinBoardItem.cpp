@@ -196,7 +196,7 @@ void CGumpBulletinBoardItem::GUMP_BUTTON_EVENT_C
 void CGumpBulletinBoardItem::OnCharPress(const WPARAM &wParam, const LPARAM &lParam)
 {
 	WISPFUN_DEBUG("c90_f5");
-	g_EntryPointer->Insert(wParam);
+	g_EntryPointer->Insert((wchar_t)wParam);
 
 	RecalculateHeight();
 	m_WantRedraw = true;

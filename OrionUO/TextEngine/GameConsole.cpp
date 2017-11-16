@@ -28,7 +28,7 @@ CGameConsole::~CGameConsole()
 void CGameConsole::Send()
 {
 	WISPFUN_DEBUG("c170_f2");
-	int len = Length();
+	size_t len = Length();
 
 	if (len)
 	{
@@ -131,7 +131,7 @@ void CGameConsole::Send()
 	}
 }
 //----------------------------------------------------------------------------------
-wstring CGameConsole::IsSystemCommand(const wchar_t *text, int &len, int &member)
+wstring CGameConsole::IsSystemCommand(const wchar_t *text, size_t &len, int &member)
 {
 	WISPFUN_DEBUG("c170_f3");
 	m_Type = GCTT_NORMAL;
@@ -242,7 +242,7 @@ void CGameConsole::DrawW(BYTE font, WORD color, int x, int y, TEXT_ALIGN_TYPE al
 	if (Changed || Color != color)
 		FixMaxWidthW(font);
 	
-	int len = Length();
+	size_t len = Length();
 	const wchar_t *text = Data();
 
 	if (len >= 2)
@@ -330,7 +330,7 @@ void CGameConsole::ChangeConsoleMessage(const bool &next)
 			m_ConsoleSelectedIndex = 0;
 
 		SetText(m_ConsoleStack[m_ConsoleSelectedIndex]);
-		SetPos(m_ConsoleStack[m_ConsoleSelectedIndex].length());
+		SetPos((int)m_ConsoleStack[m_ConsoleSelectedIndex].length());
 		m_PositionChanged = true;
 	}
 }

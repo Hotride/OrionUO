@@ -168,11 +168,11 @@ void CGumpMinimap::GenerateMap()
 
 			IFOR(x, 0, 8)
 			{
-				int px = ((realBlockX + x) - m_LastX) + gumpCenterX;
+				int px = ((realBlockX + (int)x) - m_LastX) + gumpCenterX;
 
 				IFOR(y, 0, 8)
 				{
-					int py = (realBlockY + y) - m_LastY;
+					int py = (realBlockY + (int)y) - m_LastY;
 
 					int gx = px - py;
 					int gy = px + py;
@@ -182,7 +182,7 @@ void CGumpMinimap::GenerateMap()
 
 					if (mapBlock != NULL)
 					{
-						ushort multiColor = mapBlock->GetRadarColor(x, y);
+						ushort multiColor = mapBlock->GetRadarColor((int)x, (int)y);
 
 						if (multiColor)
 						{

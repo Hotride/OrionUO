@@ -450,7 +450,7 @@ LRESULT CWindow::OnWindowProc(HWND &hWnd, UINT &message, WPARAM &wParam, LPARAM 
 		}
 		case WM_NCACTIVATE:
 		{
-			HRESULT res = DefWindowProc(m_Handle, WM_NCACTIVATE, wParam, lParam);
+			HRESULT res = (HRESULT)DefWindowProc(m_Handle, WM_NCACTIVATE, wParam, lParam);
 
 			if (wParam == 0)
 				OnDeactivate();
@@ -463,7 +463,7 @@ LRESULT CWindow::OnWindowProc(HWND &hWnd, UINT &message, WPARAM &wParam, LPARAM 
 			return OnRepaint(wParam, lParam);
 		case WM_SHOWWINDOW:
 		{
-			HRESULT res = DefWindowProc(m_Handle, WM_SHOWWINDOW, wParam, lParam);
+			HRESULT res = (HRESULT)DefWindowProc(m_Handle, WM_SHOWWINDOW, wParam, lParam);
 
 			OnShow(wParam != 0);
 
@@ -471,7 +471,7 @@ LRESULT CWindow::OnWindowProc(HWND &hWnd, UINT &message, WPARAM &wParam, LPARAM 
 		}
 		case WM_SETTEXT:
 		{
-			HRESULT res = DefWindowProc(m_Handle, WM_SETTEXT, wParam, lParam);
+			HRESULT res = (HRESULT)DefWindowProc(m_Handle, WM_SETTEXT, wParam, lParam);
 
 			OnSetText(lParam);
 
@@ -479,13 +479,13 @@ LRESULT CWindow::OnWindowProc(HWND &hWnd, UINT &message, WPARAM &wParam, LPARAM 
 		}
 		case WM_TIMER:
 		{
-			OnTimer(wParam);
+			OnTimer((uint)wParam);
 
 			break;
 		}
 		case WISP_THREADED_TIMER::CThreadedTimer::MessageID:
 		{
-			OnThreadedTimer(wParam, (WISP_THREADED_TIMER::CThreadedTimer*)lParam);
+			OnThreadedTimer((uint)wParam, (WISP_THREADED_TIMER::CThreadedTimer*)lParam);
 
 			//DebugMsg("OnThreadedTimer %i, 0x%08X\n", wParam, lParam);
 

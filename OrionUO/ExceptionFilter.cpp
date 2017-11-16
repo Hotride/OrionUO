@@ -162,7 +162,11 @@ LONG __stdcall OrionUnhandledExceptionFilter(struct _EXCEPTION_POINTERS *excepti
 
 	if (exceptionInfo->ExceptionRecord)
 	{
+#if defined(_WIN64)
+		CRASHLOG("Unhandled exception #%i: 0x%016LX at %016LX\n", errorCount, exceptionInfo->ExceptionRecord->ExceptionCode, exceptionInfo->ExceptionRecord->ExceptionAddress);
+#else
 		CRASHLOG("Unhandled exception #%i: 0x%08X at %08X\n", errorCount, exceptionInfo->ExceptionRecord->ExceptionCode, exceptionInfo->ExceptionRecord->ExceptionAddress);
+#endif
 
 		if (errorCount > 10 && (ticks - lastErrorTime) < 5000)
 		{
@@ -190,7 +194,7 @@ LONG __stdcall OrionUnhandledExceptionFilter(struct _EXCEPTION_POINTERS *excepti
 				IFOR(i, 0, 16)
 					pattern.push_back(eipBytes[i]);
 
-				UINT_LIST list = COrion::FindPattern(file.Start, file.Size, pattern);
+				UINT_LIST list = COrion::FindPattern(file.Start, (int)file.Size, pattern);
 
 				for (const int &item : list)
 					CRASHLOG("Address in exe (by EIP): 0x%08X\n", item);

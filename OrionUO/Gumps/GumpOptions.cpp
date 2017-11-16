@@ -1426,7 +1426,7 @@ void CGumpOptions::RedrawMacroData()
 			combobox->SelectedIndex = obj->Code;
 
 			IFOR(i, 0, CMacro::MACRO_ACTION_NAME_COUNT)
-				combobox->Add(new CGUIComboboxText(0x0386, 1, CMacro::GetActionName(i)));
+				combobox->Add(new CGUIComboboxText(0x0386, 1, CMacro::GetActionName((int)i)));
 
 			if (obj->HasSubMenu == 1)
 			{
@@ -1438,7 +1438,7 @@ void CGumpOptions::RedrawMacroData()
 				combobox->SelectedIndex = obj->SubCode - macroListOffset;
 
 				IFOR(i, 0, macroListCount)
-					combobox->Add(new CGUIComboboxText(0x0386, 1, CMacro::GetAction(macroListOffset + i), 150, TS_LEFT, UOFONT_FIXED));
+					combobox->Add(new CGUIComboboxText(0x0386, 1, CMacro::GetAction(macroListOffset + (int)i), 150, TS_LEFT, UOFONT_FIXED));
 			}
 			else if (obj->HasSubMenu == 2)
 			{
@@ -2835,7 +2835,7 @@ void CGumpOptions::OnCharPress(const WPARAM &wParam, const LPARAM &lParam)
 	{
 		if (wParam >= '0' && wParam <= '9')
 		{
-			g_EntryPointer->Insert(wParam);
+			g_EntryPointer->Insert((wchar_t)wParam);
 
 			int val = atoi(g_EntryPointer->c_str());
 
@@ -2908,7 +2908,7 @@ void CGumpOptions::OnCharPress(const WPARAM &wParam, const LPARAM &lParam)
 
 			if (canAdd)
 			{
-				g_EntryPointer->Insert(wParam);
+				g_EntryPointer->Insert((wchar_t)wParam);
 				((CMacroObjectString*)obj)->String = g_EntryPointer->c_str();
 				m_WantRedraw = true;
 			}

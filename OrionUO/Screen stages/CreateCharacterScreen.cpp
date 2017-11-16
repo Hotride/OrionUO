@@ -108,13 +108,13 @@ void CCreateCharacterScreen::OnLeftMouseButtonDown()
 void CCreateCharacterScreen::OnCharPress(const WPARAM &wParam, const LPARAM &lParam)
 {
 	WISPFUN_DEBUG("c162_f4");
-	if (wParam >= 0x0100 || !g_FontManager.IsPrintASCII(wParam))
+	if (wParam >= 0x0100 || !g_FontManager.IsPrintASCII((uchar)wParam))
 		return;
 	else if (g_EntryPointer == NULL)
 		return;
 
 	if (g_EntryPointer->Length() < 20) //add char to text field
-		g_EntryPointer->Insert(wParam);
+		g_EntryPointer->Insert((wchar_t)wParam);
 
 	m_Name = g_EntryPointer->c_str();
 	m_Gump.WantRedraw = true;

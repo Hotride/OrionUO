@@ -375,16 +375,16 @@ void CGumpWorldMap::LoadMap(const int &map)
 
 			IFOR(bx, 0, g_MapBlockSize[map].Width)
 			{
-				int mapX = bx * 8;
+				int mapX = (int)bx * 8;
 
 				IFOR(by, 0, g_MapBlockSize[map].Height)
 				{
-					CIndexMap *indexMap = g_MapManager.GetIndex(map, bx, by);
+					CIndexMap *indexMap = g_MapManager.GetIndex(map, (int)bx, (int)by);
 
 					if (indexMap == NULL || indexMap->MapAddress == 0)
 						continue;
 
-					int mapY = by * 8;
+					int mapY = (int)by * 8;
 					MAP_BLOCK info = { 0 };
 
 					PMAP_BLOCK mapBlock = (PMAP_BLOCK)indexMap->MapAddress;
@@ -433,7 +433,7 @@ void CGumpWorldMap::LoadMap(const int &map)
 
 					IFOR(y, 0, 8)
 					{
-						int block = ((mapY + y) * g_MapSize[map].Width) + mapX;
+						int block = ((mapY + (int)y) * g_MapSize[map].Width) + mapX;
 
 						IFOR(x, 0, 8)
 						{

@@ -458,7 +458,7 @@ void CGumpCustomHouse::DrawWallSection()
 
 			m_DataBox->Add(new CGUITilepic(vec[0].East1, 0, offsetX, offsetY));
 
-			m_DataBox->Add(new CGUIHitBox(ID_GCH_ITEM_IN_LIST + i, offsetX, offsetY, dims.Width, dims.Height, true));
+			m_DataBox->Add(new CGUIHitBox(ID_GCH_ITEM_IN_LIST + (int)i, offsetX, offsetY, dims.Width, dims.Height, true));
 
 			x += 48;
 
@@ -497,7 +497,7 @@ void CGumpCustomHouse::DrawWallSection()
 
 					m_DataBox->Add(new CGUITilepic(graphic, 0, offsetX, offsetY));
 
-					m_DataBox->Add(new CGUIHitBox(ID_GCH_ITEM_IN_LIST + i, offsetX, offsetY, dims.Width, dims.Height, true));
+					m_DataBox->Add(new CGUIHitBox(ID_GCH_ITEM_IN_LIST + (int)i, offsetX, offsetY, dims.Width, dims.Height, true));
 				}
 
 				x += 48;
@@ -546,7 +546,7 @@ void CGumpCustomHouse::DrawDoorSection()
 
 				m_DataBox->Add(new CGUITilepic(graphic, 0, offsetX, offsetY));
 
-				m_DataBox->Add(new CGUIHitBox(ID_GCH_ITEM_IN_LIST + i, offsetX, offsetY, dims.Width, dims.Height, true));
+				m_DataBox->Add(new CGUIHitBox(ID_GCH_ITEM_IN_LIST + (int)i, offsetX, offsetY, dims.Width, dims.Height, true));
 			}
 
 			x += 48;
@@ -699,7 +699,7 @@ void CGumpCustomHouse::DrawStairSection()
 			m_DataBox->Add(new CGUIScissor(true, 0, 0, 123, 36 + y, 384, 60));
 
 			CGUIText *text = (CGUIText*)m_DataBox->Add(new CGUIText(0xFFFF, 137, (j ? 111 : 51)));
-			text->CreateTextureW(0, g_ClilocManager.Cliloc(g_Language)->GetW(1062113 + j), 30, 90);
+			text->CreateTextureW(0, g_ClilocManager.Cliloc(g_Language)->GetW(1062113 + (int)j), 30, 90);
 
 			int start = (j ? 0 : 5);
 			int end = (j ? 6 : 9);
@@ -718,7 +718,7 @@ void CGumpCustomHouse::DrawStairSection()
 
 					m_DataBox->Add(new CGUITilepic(graphic, 0, offsetX, offsetY));
 
-					m_DataBox->Add(new CGUIHitBox(ID_GCH_ITEM_IN_LIST + i + combinedStair, offsetX, offsetY, dims.Width, dims.Height, true));
+					m_DataBox->Add(new CGUIHitBox(ID_GCH_ITEM_IN_LIST + (int)i + combinedStair, offsetX, offsetY, dims.Width, dims.Height, true));
 				}
 
 				x += 48;
@@ -760,7 +760,7 @@ void CGumpCustomHouse::DrawRoofSection()
 
 			m_DataBox->Add(new CGUITilepic(vec[0].NSCrosspiece, 0, offsetX, offsetY));
 
-			m_DataBox->Add(new CGUIHitBox(ID_GCH_ITEM_IN_LIST + i, offsetX, offsetY, dims.Width, dims.Height, true));
+			m_DataBox->Add(new CGUIHitBox(ID_GCH_ITEM_IN_LIST + (int)i, offsetX, offsetY, dims.Width, dims.Height, true));
 
 			x += 48;
 
@@ -863,7 +863,7 @@ void CGumpCustomHouse::DrawMiscSection()
 
 			m_DataBox->Add(new CGUITilepic(vec[0].Piece5, 0, offsetX, offsetY));
 
-			m_DataBox->Add(new CGUIHitBox(ID_GCH_ITEM_IN_LIST + i, offsetX, offsetY, dims.Width, dims.Height, true));
+			m_DataBox->Add(new CGUIHitBox(ID_GCH_ITEM_IN_LIST + (int)i, offsetX, offsetY, dims.Width, dims.Height, true));
 
 			x += 48;
 
@@ -902,7 +902,7 @@ void CGumpCustomHouse::DrawMiscSection()
 
 					m_DataBox->Add(new CGUITilepic(graphic, 0, offsetX, offsetY));
 
-					m_DataBox->Add(new CGUIHitBox(ID_GCH_ITEM_IN_LIST + i, offsetX, offsetY, dims.Width, dims.Height, true));
+					m_DataBox->Add(new CGUIHitBox(ID_GCH_ITEM_IN_LIST + (int)i, offsetX, offsetY, dims.Width, dims.Height, true));
 				}
 
 				x += 48;
@@ -975,7 +975,7 @@ pair<int, int> SeekGraphicInCustomHouseObjectListWithCategory(const vector<A> &l
 			int contains = cat.m_Items[j].Contains(graphic);
 
 			if (contains != -1)
-				return pair<int, int>(i, j);
+				return pair<int, int>((int)i, (int)j);
 		}
 	}
 
@@ -990,7 +990,7 @@ pair<int, int> SeekGraphicInCustomHouseObjectList(const vector<T> &list, const u
 		int contains = list[i].Contains(graphic);
 
 		if (contains != -1)
-			return pair<int, int>(i, graphic);
+			return pair<int, int>((int)i, graphic);
 	}
 
 	return pair<int, int>(-1, -1);
@@ -1199,7 +1199,7 @@ void CGumpCustomHouse::UpdateMaxPage()
 				{
 					if (cat.Index == m_Category)
 					{
-						m_MaxPage = cat.m_Items.size();
+						m_MaxPage = (int)cat.m_Items.size();
 						break;
 					}
 				}
@@ -1235,7 +1235,7 @@ void CGumpCustomHouse::UpdateMaxPage()
 				{
 					if (cat.Index == m_Category)
 					{
-						m_MaxPage = cat.m_Items.size();
+						m_MaxPage = (int)cat.m_Items.size();
 						break;
 					}
 				}
@@ -1253,7 +1253,7 @@ void CGumpCustomHouse::UpdateMaxPage()
 				{
 					if (cat.Index == m_Category)
 					{
-						m_MaxPage = cat.m_Items.size();
+						m_MaxPage = (int)cat.m_Items.size();
 						break;
 					}
 				}
@@ -1915,11 +1915,11 @@ void CGumpCustomHouse::GenerateFloorPlace()
 
 				IFOR(i, 0, 4)
 				{
-					int offset = (i ? 0 : 7);
+					int offset = ((int)i ? 0 : 7);
 
 					if (itemZ >= floorZ - offset && itemZ < floorZ + 20)
 					{
-						currentFloor = i;
+						currentFloor = (int)i;
 						break;
 					}
 
@@ -1984,7 +1984,7 @@ void CGumpCustomHouse::GenerateFloorPlace()
 		{
 			IFOR(y, m_StartPos.Y + 1, m_EndPos.Y)
 			{
-				CMulti *multi = foundationItem->GetMultiAtXY(x, y);
+				CMulti *multi = foundationItem->GetMultiAtXY((int)x, (int)y);
 
 				if (multi == NULL)
 					continue;
@@ -2005,7 +2005,7 @@ void CGumpCustomHouse::GenerateFloorPlace()
 
 				if (floorMulti != NULL && floorCustomMulti == NULL)
 				{
-					CMultiObject *mo = foundationItem->AddMulti(floorMulti->Graphic, 0, x - foundationItem->X, y - foundationItem->Y, z, true);
+					CMultiObject *mo = foundationItem->AddMulti(floorMulti->Graphic, 0, (int)x - foundationItem->X, (int)y - foundationItem->Y, z, true);
 
 					int state = CHMOF_FLOOR;
 
@@ -2021,7 +2021,7 @@ void CGumpCustomHouse::GenerateFloorPlace()
 
 		IFOR(i, 0, m_FloorCount)
 		{
-			int minZ = foundationItem->Z + 7 + (i * 20);
+			int minZ = foundationItem->Z + 7 + ((int)i * 20);
 			int maxZ = minZ + 20;
 
 			IFOR(j, 0, 2)
@@ -2032,7 +2032,7 @@ void CGumpCustomHouse::GenerateFloorPlace()
 				{
 					IFOR(y, m_StartPos.Y, m_EndPos.Y + 1)
 					{
-						CMulti *multi = foundationItem->GetMultiAtXY(x, y);
+						CMulti *multi = foundationItem->GetMultiAtXY((int)x, (int)y);
 
 						if (multi == NULL)
 							continue;
@@ -2093,7 +2093,7 @@ void CGumpCustomHouse::GenerateFloorPlace()
 
 						IFOR(y, m_StartPos.Y, m_EndPos.Y + 1)
 						{
-							CMulti *multi = foundationItem->GetMultiAtXY(x, y);
+							CMulti *multi = foundationItem->GetMultiAtXY((int)x, (int)y);
 
 							if (multi == NULL)
 								continue;
@@ -2102,7 +2102,7 @@ void CGumpCustomHouse::GenerateFloorPlace()
 							{
 								if (item->IsCustomHouseMulti() && (item->State & CHMOF_FLOOR) && (item->State & CHMOF_VALIDATED_PLACE) && !(item->State & CHMOF_INCORRECT_PLACE) && item->Z >= minZ && item->Z < maxZ)
 								{
-									minY = y;
+									minY = (int)y;
 									break;
 								}
 							}
@@ -2113,7 +2113,7 @@ void CGumpCustomHouse::GenerateFloorPlace()
 
 						DFOR(y, m_EndPos.Y, m_StartPos.Y)
 						{
-							CMulti *multi = foundationItem->GetMultiAtXY(x, y);
+							CMulti *multi = foundationItem->GetMultiAtXY((int)x, (int)y);
 
 							if (multi == NULL)
 								continue;
@@ -2122,7 +2122,7 @@ void CGumpCustomHouse::GenerateFloorPlace()
 							{
 								if (item->IsCustomHouseMulti() && (item->State & CHMOF_FLOOR) && (item->State & CHMOF_VALIDATED_PLACE) && !(item->State & CHMOF_INCORRECT_PLACE) && item->Z >= minZ && item->Z < maxZ)
 								{
-									maxY = y;
+									maxY = (int)y;
 									break;
 								}
 							}
@@ -2133,7 +2133,7 @@ void CGumpCustomHouse::GenerateFloorPlace()
 
 						IFOR(y, minY, maxY)
 						{
-							CMulti *multi = foundationItem->GetMultiAtXY(x, y);
+							CMulti *multi = foundationItem->GetMultiAtXY((int)x, (int)y);
 
 							if (multi == NULL)
 								continue;
@@ -2153,7 +2153,7 @@ void CGumpCustomHouse::GenerateFloorPlace()
 
 						IFOR(x, m_StartPos.X, m_EndPos.X + 1)
 						{
-							CMulti *multi = foundationItem->GetMultiAtXY(x, y);
+							CMulti *multi = foundationItem->GetMultiAtXY((int)x, (int)y);
 
 							if (multi == NULL)
 								continue;
@@ -2162,7 +2162,7 @@ void CGumpCustomHouse::GenerateFloorPlace()
 							{
 								if (item->IsCustomHouseMulti() && (item->State & CHMOF_FLOOR) && (item->State & CHMOF_VALIDATED_PLACE) && !(item->State & CHMOF_INCORRECT_PLACE) && item->Z >= minZ && item->Z < maxZ)
 								{
-									minX = x;
+									minX = (int)x;
 									break;
 								}
 							}
@@ -2173,7 +2173,7 @@ void CGumpCustomHouse::GenerateFloorPlace()
 
 						DFOR(x, m_EndPos.X, m_StartPos.X)
 						{
-							CMulti *multi = foundationItem->GetMultiAtXY(x, y);
+							CMulti *multi = foundationItem->GetMultiAtXY((int)x, (int)y);
 
 							if (multi == NULL)
 								continue;
@@ -2182,7 +2182,7 @@ void CGumpCustomHouse::GenerateFloorPlace()
 							{
 								if (item->IsCustomHouseMulti() && (item->State & CHMOF_FLOOR) && (item->State & CHMOF_VALIDATED_PLACE) && !(item->State & CHMOF_INCORRECT_PLACE) && item->Z >= minZ && item->Z < maxZ)
 								{
-									maxX = x;
+									maxX = (int)x;
 									break;
 								}
 							}
@@ -2193,7 +2193,7 @@ void CGumpCustomHouse::GenerateFloorPlace()
 
 						IFOR(x, minX, maxX)
 						{
-							CMulti *multi = foundationItem->GetMultiAtXY(x, y);
+							CMulti *multi = foundationItem->GetMultiAtXY((int)x, (int)y);
 
 							if (multi == NULL)
 								continue;
@@ -2224,7 +2224,7 @@ void CGumpCustomHouse::GenerateFloorPlace()
 					if (x == m_StartPos.X || y == m_StartPos.Y)
 						tempColor++;
 
-					CMultiObject *mo = foundationItem->AddMulti(0x0496, tempColor, x - foundationItem->X, y - foundationItem->Y, z, true);
+					CMultiObject *mo = foundationItem->AddMulti(0x0496, tempColor, (int)x - foundationItem->X, (int)y - foundationItem->Y, z, true);
 					mo->State = CHMOF_GENERIC_INTERNAL | CHMOF_TRANSPARENT;
 					g_MapManager.AddRender(mo);
 				}

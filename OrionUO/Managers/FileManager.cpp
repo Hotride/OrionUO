@@ -458,7 +458,7 @@ void CFileManager::ReadTask()
 			if (hashes.find(hash) != hashes.end())
 			{
 				if (grpId > maxGroup)
-					maxGroup = grpId;
+					maxGroup = (int)grpId;
 
 				UOPAnimationData dataStruct = hashes.at(hash);
 				indexAnim->IsUOP = true;
@@ -607,7 +607,7 @@ bool CFileManager::LoadUOPFile(CUopMappedFile &file, const char *fileName)
 
 		//LOG("%s\n", reader.ReadString(decompressedSize).c_str());
 
-		LOG_DUMP(reader.Start, reader.Size);
+		LOG_DUMP(reader.Start, (int)reader.Size);
 
 		LOG("item dump end:\n");
 	}

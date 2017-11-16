@@ -225,7 +225,7 @@ void CSpeechManager::GetKeywords(const wchar_t *text, UINT_LIST &codes)
 	if (!m_Loaded || g_PacketManager.ClientVersion < CV_305D) //Но по факту с 2.0.7 версии клиента
 		return;
 
-	int size = m_SpeechEntries.size();
+	size_t size = m_SpeechEntries.size();
 	wstring input = ToLowerW(text);
 	//to lower, case insensitive approach.
 
@@ -240,24 +240,24 @@ void CSpeechManager::GetKeywords(const wchar_t *text, UINT_LIST &codes)
 		if (!entry.CheckStart)
 		{
 			wstring start = input.substr(0, data.length());
-			int hits = start.find(data);
+			size_t hits = start.find(data);
 
-			if (hits < 0)
+			if (hits == wstring::npos)
 				continue;
 		}
 
 		if (!entry.CheckEnd)
 		{
 			wstring end = input.substr(input.length() - data.length());
-			int hits = end.find(data);
+			size_t hits = end.find(data);
 
-			if (hits < 0)
+			if (hits == wstring::npos)
 				continue;
 		}
 
-		int hits = input.find(data);
+		size_t hits = input.find(data);
 
-		if (hits > -1)
+		if (hits != wstring::npos)
 			codes.push_back(entry.Code);
 	}
 }

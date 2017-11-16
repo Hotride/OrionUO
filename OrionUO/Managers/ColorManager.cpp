@@ -32,7 +32,7 @@ void CColorManager::Init()
 	{
 		size_t entryCount = size / sizeof(HUES_GROUP);
 
-		m_HuesCount = entryCount * 8;
+		m_HuesCount = (int)entryCount * 8;
 		m_HuesRange.resize(entryCount);
 
 		memcpy(&m_HuesRange[0], (PVOID)addr, entryCount * sizeof(HUES_GROUP));
@@ -82,7 +82,7 @@ void CColorManager::CreateHuesPalette()
 
 			IFOR(h, 0, 32)
 			{
-				int idx = h * 3;
+				int idx = (int)h * 3;
 
 				ushort c = m_HuesRange[i].Entries[j].ColorTable[h];
 

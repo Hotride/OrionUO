@@ -42,7 +42,7 @@ void CCharacterList::Clear()
 @param [__in] name Новое имя
 @return 
 */
-void CCharacterList::SetName(int pos, string name)
+void CCharacterList::SetName(intptr_t pos, const string &name)
 {
 	WISPFUN_DEBUG("c182_f3");
 	//!При корректной позиции записываем имя
@@ -55,7 +55,7 @@ void CCharacterList::SetName(int pos, string name)
 @param [__in] pos Позиция в списке
 @return Имя персонажа
 */
-string CCharacterList::GetName(int pos) const
+string CCharacterList::GetName(intptr_t pos) const
 {
 	WISPFUN_DEBUG("c182_f4");
 	string result = "";

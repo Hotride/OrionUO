@@ -85,7 +85,7 @@ void CGumpDrag::OnCharPress(const WPARAM &wParam, const LPARAM &lParam)
 			m_StartText = false;
 		}
 
-		g_EntryPointer->Insert(wParam);
+		g_EntryPointer->Insert((wchar_t)wParam);
 
 		int val = 0;
 		

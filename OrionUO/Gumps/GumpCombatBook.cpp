@@ -414,7 +414,7 @@ void CGumpCombatBook::UpdateContent()
 
 	IFOR(page, 0, m_DictionaryPagesCount)
 	{
-		Add(new CGUIPage(page));
+		Add(new CGUIPage((int)page));
 
 		int indexX = 96;
 		int dataX = 52;
@@ -472,13 +472,13 @@ void CGumpCombatBook::UpdateContent()
 		Add(new CGUIPage(page));
 		page += 2;
 
-		CGUIGumppic *icon = (CGUIGumppic*)Add(new CGUIGumppic(0x5200 + i, 62, 40));
-		icon->Serial = ID_GCB_ICON + i;
+		CGUIGumppic *icon = (CGUIGumppic*)Add(new CGUIGumppic(0x5200 + (int)i, 62, 40));
+		icon->Serial = ID_GCB_ICON + (int)i;
 		icon->MoveOnDrag = true;
 
 		Add(new CGUIGumppicTiled(0x0835, 62, 88, 128, 0));
 
-		USHORT_LIST list = GetItemsList(i);
+		USHORT_LIST list = GetItemsList((uchar)i);
 
 		int size = (int)list.size();
 		size_t maxStaticCount = g_Orion.m_StaticData.size();

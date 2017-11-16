@@ -163,7 +163,7 @@ void CGumpRacialAbilitiesBook::UpdateContent()
 
 	IFOR(page, 0, m_DictionaryPagesCount)
 	{
-		Add(new CGUIPage(page));
+		Add(new CGUIPage((int)page));
 
 		int indexX = 106;
 		int dataX = 62;
@@ -215,7 +215,7 @@ void CGumpRacialAbilitiesBook::UpdateContent()
 		page++;
 
 		bool passive = true;
-		string spellName = GetAbilityName(i, passive);
+		string spellName = GetAbilityName((int)i, passive);
 
 		CGUIText *text = (CGUIText*)Add(new CGUIText(0x0288, iconTextX, 34));
 		text->CreateTextureA(6, spellName, 100);
@@ -226,8 +226,8 @@ void CGumpRacialAbilitiesBook::UpdateContent()
 			text->CreateTextureA(6, "(Passive)");
 		}
 
-		CGUIGumppic *icon = (CGUIGumppic*)Add(new CGUIGumppic(iconStartGraphic + i, iconX, 40));
-		icon->Serial = ID_GRAB_ICON + i;
+		CGUIGumppic *icon = (CGUIGumppic*)Add(new CGUIGumppic(iconStartGraphic + (int)i, iconX, 40));
+		icon->Serial = ID_GRAB_ICON + (int)i;
 		icon->CheckPolygone = true;
 		icon->MoveOnDrag = passive;
 

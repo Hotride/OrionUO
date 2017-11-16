@@ -559,7 +559,7 @@ void CPacketManager::OnPacket()
 {
 	WISPFUN_DEBUG("c150_f8");
 	uint ticks = g_Ticks;
-	g_TotalRecvSize += m_Size;
+	g_TotalRecvSize += (uint)m_Size;
 
 	CPacketInfo &info = m_Packets[*m_Start];
 
@@ -573,14 +573,14 @@ void CPacketManager::OnPacket()
 		localtime_s(&timeinfo, &rawtime);
 		strftime(buffer, sizeof(buffer), "%d-%m-%Y %H:%M:%S", &timeinfo);
 		LOG("--- ^(%d) r(+%d => %d) %s Server:: %s\n", ticks - g_LastPacketTime, m_Size, g_TotalRecvSize, buffer, info.Name);
-		LOG_DUMP(m_Start, m_Size);
+		LOG_DUMP(m_Start, (int)m_Size);
 	}
 
 	g_LastPacketTime = ticks;
 
 	if (info.Direction != DIR_RECV && info.Direction != DIR_BOTH)
 		LOG("message direction invalid: 0x%02X\n", *m_Start);
-	else if (g_PluginManager.PacketRecv(m_Start, m_Size))
+	else if (g_PluginManager.PacketRecv(m_Start, (int)m_Size))
 	{
 		if (info.Handler != 0)
 		{
@@ -611,7 +611,7 @@ void CPacketManager::ProcessPluginPackets()
 	{
 		UCHAR_LIST &packet = m_PluginData.back();
 
-		PluginReceiveHandler(&packet[0], packet.size());
+		PluginReceiveHandler(&packet[0], (int)packet.size());
 		packet.clear();
 
 		m_PluginData.pop_back();
@@ -624,12 +624,12 @@ void CPacketManager::PluginReceiveHandler(puchar buf, const int &size)
 	SetData(buf, size);
 
 	uint ticks = g_Ticks;
-	g_TotalRecvSize += m_Size;
+	g_TotalRecvSize += (uint)m_Size;
 
 	CPacketInfo &info = m_Packets[*m_Start];
 
 	LOG("--- ^(%d) r(+%d => %d) Plugin->Client:: %s\n", ticks - g_LastPacketTime, m_Size, g_TotalRecvSize, info.Name);
-	LOG_DUMP(m_Start, m_Size);
+	LOG_DUMP(m_Start, (int)m_Size);
 
 	g_LastPacketTime = ticks;
 
@@ -774,14 +774,14 @@ PACKET_HANDLER(ResendCharacterList)
 				g_CharacterList.SetName(i, name);
 
 				if (autoLogin && autoPos == -1 && AutoLoginNameExists(name))
-					autoPos = i;
+					autoPos = (int)i;
 
 				if (name == g_CharacterList.LastCharacterName)
 				{
-					g_CharacterList.Selected = i;
+					g_CharacterList.Selected = (int)i;
 
 					if (autoLogin && autoPos == -1)
-						autoPos = i;
+						autoPos = (int)i;
 				}
 			}
 
@@ -2025,7 +2025,7 @@ PACKET_HANDLER(OpenContainer)
 
 			IFOR(layer, OL_BUY_RESTOCK, OL_BUY + 1)
 			{
-				CGameItem *item = vendor->FindLayer(layer);
+				CGameItem *item = vendor->FindLayer((int)layer);
 
 				if (item == NULL)
 				{
@@ -2093,7 +2093,7 @@ PACKET_HANDLER(OpenContainer)
 		{
 			if (gumpid == g_ContainerOffset[i].Gump)
 			{
-				graphic = i;
+				graphic = (ushort)i;
 				break;
 			}
 		}
@@ -2282,7 +2282,7 @@ PACKET_HANDLER(ExtendedCommand)
 		case 1: //Initialize Fast Walk Prevention
 		{
 			IFOR(i, 0, 6)
-				g_Player->m_FastWalkStack.SetValue(i, ReadUInt32BE());
+				g_Player->m_FastWalkStack.SetValue((int)i, ReadUInt32BE());
 
 			break;
 		}
@@ -2520,7 +2520,7 @@ PACKET_HANDLER(ExtendedCommand)
 					{
 						CGameItem *spellItem = new CGameItem();
 						spellItem->Graphic = 0x1F2E;
-						spellItem->Count = (j * 32) + i + 1;
+						spellItem->Count = ((int)j * 32) + (int)i + 1;
 
 						spellbook->AddItem(spellItem);
 					}
@@ -2598,7 +2598,7 @@ PACKET_HANDLER(ExtendedCommand)
 			IFOR(i, 0, 2)
 			{
 				g_Ability[i] &= 0x7F;
-				g_GumpManager.UpdateContent(i, 0, GT_ABILITY);
+				g_GumpManager.UpdateContent((int)i, 0, GT_ABILITY);
 			}
 
 			break;
@@ -4029,7 +4029,7 @@ PACKET_HANDLER(OpenMenuGump)
 				else
 					posY = ((47 - posY) / 2);
 
-				CGUIMenuObject *menuObject = (CGUIMenuObject*)htmlGump->Add(new CGUIMenuObject(i + 1, graphic, color, posX, posY, name));
+				CGUIMenuObject *menuObject = (CGUIMenuObject*)htmlGump->Add(new CGUIMenuObject((int)i + 1, graphic, color, posX, posY, name));
 
 				posX += size.Width;
 			}
@@ -4066,7 +4066,7 @@ PACKET_HANDLER(OpenMenuGump)
 			nameLen = ReadUInt8();
 			name = ReadString(nameLen);
 
-			gump->Add(new CGUIRadio(i + 1, 0x138A, 0x138B, 0x138A, 20, offsetY)); //Button
+			gump->Add(new CGUIRadio((int)i + 1, 0x138A, 0x138B, 0x138A, 20, offsetY)); //Button
 
 			offsetY += 2;
 
@@ -4578,9 +4578,9 @@ PACKET_HANDLER(OpenGump)
 		int linelen = ReadInt16BE();
 
 		if (linelen)
-			gump->AddText(i, ReadWString(linelen, true));
+			gump->AddText((int)i, ReadWString(linelen, true));
 		else
-			gump->AddText(i, L"");
+			gump->AddText((int)i, L"");
 	}
 
 	g_GumpManager.AddGump(gump);

@@ -89,7 +89,7 @@ void CMainScreen::SetAccounting(const string &account, const string &password)
 	m_Account->SetText(account);
 	m_Password->SetText(password);
 
-	int len = password.length();
+	size_t len = password.length();
 	m_MainGump.m_PasswordFake->Clear();
 
 	IFOR(i, 0, len)
@@ -103,7 +103,7 @@ void CMainScreen::Paste()
 	{
 		m_Password->Paste();
 
-		int len = m_Password->Length();
+		size_t len = m_Password->Length();
 		g_EntryPointer->Clear();
 
 		IFOR(i, 0, len)
@@ -122,7 +122,7 @@ void CMainScreen::Paste()
 void CMainScreen::OnCharPress(const WPARAM &wParam, const LPARAM &lParam)
 {
 	WISPFUN_DEBUG("c165_f7");
-	if (wParam >= 0x0100 || !g_FontManager.IsPrintASCII(wParam))
+	if (wParam >= 0x0100 || !g_FontManager.IsPrintASCII((uchar)wParam))
 		return;
 	else if (g_EntryPointer == NULL)
 		g_EntryPointer = m_MainGump.m_PasswordFake;
@@ -132,10 +132,10 @@ void CMainScreen::OnCharPress(const WPARAM &wParam, const LPARAM &lParam)
 		if (g_EntryPointer == m_MainGump.m_PasswordFake)
 		{
 			if (g_EntryPointer->Insert(L'*'))
-				m_Password->Insert(wParam);
+				m_Password->Insert((wchar_t)wParam);
 		}
 		else
-			g_EntryPointer->Insert(wParam);
+			g_EntryPointer->Insert((wchar_t)wParam);
 	}
 
 	m_Gump.WantRedraw = true;
@@ -212,7 +212,7 @@ int CMainScreen::GetConfigKeyCode(const string &key)
 	IFOR(i, 0, keyCount && !result)
 	{
 		if (str == m_Keys[i])
-			result = i + 1;
+			result = (int)i + 1;
 	}
 
 	return result;
@@ -277,26 +277,26 @@ void CMainScreen::LoadGlobalConfig()
 				case MSCC_ACTID:
 				{
 					m_Account->SetText(strings[1]);
-					m_Account->SetPos(strings[1].length());
+					m_Account->SetPos((int)strings[1].length());
 					
 					break;
 				}
 				case MSCC_ACTPWD:
 				{
 					string password = file.GetRawLine();
-					int pos = password.find_first_of("=");
+					size_t pos = password.find_first_of("=");
 					password = password.substr(pos + 1, password.length() - (pos + 1));
 
-					int len = password.length();
+					size_t len = password.length();
 
 					if (len)
 					{
-						m_Password->SetText(DecryptPW(password.c_str(), len));
+						m_Password->SetText(DecryptPW(password.c_str(), (int)len));
 
 						IFOR(zv, 0, len)
 							m_MainGump.m_PasswordFake->Insert(L'*');
 
-						m_Password->SetPos(len);
+						m_Password->SetPos((int)len);
 					}
 					else
 					{
@@ -381,7 +381,7 @@ void CMainScreen::SaveGlobalConfig()
 
 	if (m_SavePassword->Checked)
 	{
-		sprintf_s(buf, "AcctPassword=%s\n", CryptPW(m_Password->c_str(), m_Password->Length()).c_str());
+		sprintf_s(buf, "AcctPassword=%s\n", CryptPW(m_Password->c_str(), (int)m_Password->Length()).c_str());
 		fputs(buf, uo_cfg);
 		sprintf_s(buf, "RememberAcctPW=yes\n");
 		fputs(buf, uo_cfg);

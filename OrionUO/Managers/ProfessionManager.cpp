@@ -59,7 +59,7 @@ int CProfessionManager::GetKeyCode(const string &key)
 	IFOR(i, 0, m_KeyCount && !result)
 	{
 		if (str == m_Keys[i])
-			result = i + 1;
+			result = (int)i + 1;
 	}
 
 	return result;
@@ -156,11 +156,11 @@ bool CProfessionManager::ParseFilePart(WISP_FILE::CTextFileParser &file)
 				{
 					IFOR(j, 0, 54)
 					{
-						CSkill *skillPtr = g_SkillsManager.Get(j);
+						CSkill *skillPtr = g_SkillsManager.Get((uint)j);
 
 						if (skillPtr != NULL && strings[1] == skillPtr->Name)
 						{
-							skillIndex[skillCount] = j;
+							skillIndex[skillCount] = (int)j;
 							skillValue[skillCount] = atoi(strings[2].c_str());
 							skillCount++;
 
@@ -225,8 +225,8 @@ bool CProfessionManager::ParseFilePart(WISP_FILE::CTextFileParser &file)
 
 		IFOR(i, 0, 4)
 		{
-			temp->SetSkillIndex(i, (BYTE)skillIndex[i]);
-			temp->SetSkillValue(i, (BYTE)skillValue[i]);
+			temp->SetSkillIndex((int)i, (uchar)skillIndex[i]);
+			temp->SetSkillValue((int)i, (uchar)skillValue[i]);
 		}
 
 		obj = temp;
@@ -436,7 +436,7 @@ void CProfessionManager::LoadProfessionDescription()
 
 				IFOR(i, 0, (int)list.size())
 				{
-					if (!((CBaseProfession*)m_Items)->AddDescription(i - 1, list[i], ptr))
+					if (!((CBaseProfession*)m_Items)->AddDescription((int)i - 1, list[i], ptr))
 					{
 						//LOG("Failed to add description! (%s)\n", list[i].c_str());
 					}

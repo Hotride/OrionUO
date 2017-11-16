@@ -21,7 +21,7 @@ CSkillGroupObject::~CSkillGroupObject()
 {
 }
 //----------------------------------------------------------------------------------
-uchar CSkillGroupObject::GetItem(int index)
+uchar CSkillGroupObject::GetItem(intptr_t index)
 {
 	WISPFUN_DEBUG("c207_f2");
 	if (index < 0 || index >= m_Count)
@@ -103,7 +103,7 @@ void CSkillGroupObject::Sort()
 	{
 		IFOR(j, 0, m_Count)
 		{
-			if (g_SkillsManager.GetSortedIndex(i) == m_Items[j])
+			if (g_SkillsManager.GetSortedIndex((int)i) == m_Items[j])
 			{
 				table[Ptr] = m_Items[j];
 				Ptr++;

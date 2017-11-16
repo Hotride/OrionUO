@@ -18,7 +18,7 @@ private:
 	GAME_CONSOLE_TEXT_TYPE m_Type{ GCTT_NORMAL };
 
 	//Тест данных на не стандартное сообщение
-	wstring IsSystemCommand(const wchar_t *text, int &len, int &member);
+	wstring IsSystemCommand(const wchar_t *text, size_t &len, int &member);
 
 	//!Стек последнего введенного текста
 	wstring m_ConsoleStack[MAX_CONSOLE_STACK_SIZE];

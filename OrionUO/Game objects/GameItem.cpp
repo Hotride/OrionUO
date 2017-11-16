@@ -640,7 +640,7 @@ void CGameItem::LoadMulti(const bool &dropAlpha)
 
 	CIndexMulti &index = g_Orion.m_MultiDataIndex[m_Graphic];
 
-	uint address = index.Address;
+	size_t address = index.Address;
 	int count = index.Count;
 
 	int minX = 0;
@@ -698,7 +698,7 @@ void CGameItem::LoadMulti(const bool &dropAlpha)
 				maxY = y;
 		}
 	}
-	else if (index.Address != NULL)
+	else if (address != 0)
 	{
 		int itemOffset = sizeof(MULTI_BLOCK);
 

@@ -361,7 +361,7 @@ void CSkillGroupManager::Save(string path)
 		short size = (short)len + 2 + 2 + 2 + group->GetCount();
 		writter.WriteUInt16LE(size); //Block size
 		
-		writter.WriteUInt16LE(len); //Name length
+		writter.WriteUInt16LE((short)len); //Name length
 		writter.WriteString(str, false); //Name
 		
 		short count = group->GetCount();

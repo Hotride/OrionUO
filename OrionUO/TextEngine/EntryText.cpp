@@ -101,7 +101,7 @@ void CEntryText::OnKey(CGump *gump, WPARAM wParam)
 		}
 		case VK_END:
 		{
-			SetPos(Length(), gump);
+			SetPos((int)Length(), gump);
 
 			break;
 		}
@@ -141,7 +141,7 @@ int CEntryText::GetLinesCountA(uchar font, TEXT_ALIGN_TYPE align, ushort flags, 
 	if (!width)
 		width = m_Width;
 
-	MULTILINES_FONT_INFO *info = g_FontManager.GetInfoA(font, c_str(), Length(), align, flags, width);
+	MULTILINES_FONT_INFO *info = g_FontManager.GetInfoA(font, c_str(), (int)Length(), align, flags, width);
 
 	int count = 0;
 
@@ -163,7 +163,7 @@ int CEntryText::GetLinesCountW(uchar font, TEXT_ALIGN_TYPE align, ushort flags, 
 	if (!width)
 		width = m_Width;
 
-	MULTILINES_FONT_INFO *info = g_FontManager.GetInfoW(font, Data(), Length(), align, flags, width);
+	MULTILINES_FONT_INFO *info = g_FontManager.GetInfoW(font, Data(), (int)Length(), align, flags, width);
 
 	int count = 0;
 
@@ -188,7 +188,7 @@ bool CEntryText::Insert(wchar_t ch, CGump *gump)
 
 	//Коррекция позиции
 	if (m_Position > (int)m_Text.length())
-		m_Position = m_Text.length();
+		m_Position = (int)m_Text.length();
 
 	//Если максимальная ширина задана
 	if (m_MaxLength > 0)
@@ -304,7 +304,7 @@ void CEntryText::AddPos(int val, CGump *gump)
 
 	//Корректировка
 	if (m_Position > (int)m_Text.length())
-		m_Position = m_Text.length();
+		m_Position = (int)m_Text.length();
 	
 	//Регистрируем изменения
 	m_Changed = true;
@@ -327,7 +327,7 @@ void CEntryText::SetPos(int val, CGump *gump)
 
 	//Корректировка
 	if (m_Position > (int)m_Text.length())
-		m_Position = m_Text.length();
+		m_Position = (int)m_Text.length();
 	
 	//Регистрируем изменения
 	m_Changed = true;
@@ -357,7 +357,7 @@ void CEntryText::SetText(const wstring &text)
 
 	//Изменим текст и выставим указатель в конец текста
 	m_Text = text;
-	m_Position = m_Text.length();
+	m_Position = (int)m_Text.length();
 
 	if (m_Position < 0)
 		m_Position = 0;
@@ -373,7 +373,7 @@ void CEntryText::SetText(const wstring &text)
 			//Пока строка не пустая и значение больше допустимого - удаляем по 1 символу сзади
 			while (true)
 			{
-				int len = str.length();
+				size_t len = str.length();
 
 				if (std::atoi(str.c_str()) >= m_MaxLength && len > 0)
 					str.resize(len - 1);
@@ -401,7 +401,7 @@ string CEntryText::CheckMaxWidthA(uchar font, string str)
 	{
 		//Вычислим текущую ширину
 		int width = g_FontManager.GetWidthA(font, str);
-		int len = str.length();
+		size_t len = str.length();
 
 		//И пока строка не будет соответствовать указанным параметрам - урезаем ее
 		while (m_MaxWidth < width && len > 0)
@@ -423,7 +423,7 @@ wstring CEntryText::CheckMaxWidthW(uchar font, wstring str)
 	{
 		//Вычислим текущую ширину
 		int width = g_FontManager.GetWidthW(font, str);
-		int len = str.length();
+		size_t len = str.length();
 
 		//И пока строка не будет соответствовать указанным параметрам - урезаем ее
 		while (m_MaxWidth < width && len > 0)
@@ -447,7 +447,7 @@ void CEntryText::FixMaxWidthA(uchar font)
 	{
 		//Вычислим текущую ширину
 		int width = g_FontManager.GetWidthA(font, m_CText);
-		int len = m_CText.length();
+		size_t len = m_CText.length();
 
 		//И пока строка не будет соответствовать указанным параметрам - урезаем ее
 		while (m_MaxWidth < width && len > 0)
@@ -467,7 +467,7 @@ void CEntryText::FixMaxWidthW(uchar font)
 	{
 		//Вычислим текущую ширину
 		int width = g_FontManager.GetWidthW(font, m_Text);
-		int len = m_Text.length();
+		size_t len = m_Text.length();
 
 		//И пока строка не будет соответствовать указанным параметрам - урезаем ее
 		while (m_MaxWidth < width && len > 0)
@@ -649,7 +649,7 @@ void CEntryText::DrawMaskA(uchar font, ushort color, int x, int y, TEXT_ALIGN_TY
 {
 	WISPFUN_DEBUG("c169_f26");
 	//Накладываем на текст маску из "*"
-	int len = Length();
+	size_t len = Length();
 	string str = "";
 	IFOR(i, 0, len)
 		str += "*";
@@ -681,7 +681,7 @@ void CEntryText::DrawMaskW(uchar font, ushort color, int x, int y, TEXT_ALIGN_TY
 {
 	WISPFUN_DEBUG("c169_f27");
 	//Накладываем на текст маску из "*"
-	int len = Length();
+	size_t len = Length();
 	wstring str = L"";
 	IFOR(i, 0, len)
 		str += L"*";

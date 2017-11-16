@@ -112,7 +112,7 @@ wstring ToCamelCaseW(wstring str)
 string ToString(const wstring &wstr)
 {
 	string str = "";
-	int size = wstr.length();
+	int size = (int)wstr.length();
 	int newSize = ::WideCharToMultiByte(GetACP(), 0, wstr.c_str(), size, NULL, 0, NULL, NULL);
 
 	if (newSize > 0)
@@ -127,7 +127,7 @@ string ToString(const wstring &wstr)
 //----------------------------------------------------------------------------------
 wstring ToWString(const string &str)
 {
-	int size = str.length();
+	int size = (int)str.length();
 	wstring wstr = L"";
 
 	if (size > 0)

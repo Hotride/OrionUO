@@ -206,7 +206,7 @@ void CGumpConsoleType::UpdateContent()
 
 		IFOR(i, 0, 7)
 		{
-			CGUITextEntry *entry = new CGUITextEntry(i + 1, 0, 0, 0, offsetX, offsetY, 0, false, 3);
+			CGUITextEntry *entry = new CGUITextEntry((int)i + 1, 0, 0, 0, offsetX, offsetY, 0, false, 3);
 			entry->CheckOnSerial = true;
 			entry->ReadOnly = true;
 			entry->SetGlobalColor(true, 0xFFFFFFFF, 0xFF267FFF, 0xFF00FF00);
@@ -232,7 +232,7 @@ void CGumpConsoleType::UpdateContent()
 			if (!i)
 				text0Height = entry->m_Entry.m_Texture.Height;
 
-			Add(new CGUIColoredPolygone(i + 1, 0, offsetX + 1, offsetY, entry->m_Entry.m_Texture.Width - 2, entry->m_Entry.m_Texture.Height, 0x3F000000));
+			Add(new CGUIColoredPolygone((int)i + 1, 0, offsetX + 1, offsetY, entry->m_Entry.m_Texture.Width - 2, entry->m_Entry.m_Texture.Height, 0x3F000000));
 			Add(entry);
 
 			offsetX += entry->m_Entry.m_Texture.Width;

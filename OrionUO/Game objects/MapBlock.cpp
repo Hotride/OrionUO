@@ -35,7 +35,7 @@ CMapBlock::~CMapBlock()
 
 			if (obj != NULL)
 			{
-				CRenderWorldObject *render = GetRender(i, j);
+				CRenderWorldObject *render = GetRender((int)i, (int)j);
 
 				while (render != NULL)
 				{
@@ -61,7 +61,7 @@ bool CMapBlock::HasNoExternalData()
 	{
 		IFOR(y, 0, 8)
 		{
-			for (CRenderWorldObject *obj = GetRender(x, y); obj != NULL; obj = obj->m_NextXY)
+			for (CRenderWorldObject *obj = GetRender((int)x, (int)y); obj != NULL; obj = obj->m_NextXY)
 			{
 				if (!obj->IsLandObject() && !obj->IsStaticObject())
 					return false;
@@ -115,7 +115,7 @@ void CMapBlock::CreateLandTextureRect()
 		IFOR(y, 0, 8)
 		{
 			//Указатель на землю
-			CLandObject *obj = GetLand(x, y);
+			CLandObject *obj = GetLand((int)x, (int)y);
 
 			if (obj != NULL)
 			{
@@ -142,13 +142,13 @@ void CMapBlock::CreateLandTextureRect()
 
 					IFOR(i, -1, 2)
 					{
-						int curX = tileX + i;
-						int curI = i + 1;
+						int curX = tileX + (int)i;
+						int curI = (int)i + 1;
 
 						IFOR(j, -1, 2)
 						{
-							int curY = tileY + j;
-							int curJ = j + 1;
+							int curY = tileY + (int)j;
+							int curJ = (int)j + 1;
 
 							char currentZ = GetLandZ(curX, curY, map);
 							char leftZ = GetLandZ(curX, curY + 1, map);
@@ -248,7 +248,7 @@ void CMapBlock::CreateLandTextureRect()
 					}
 				}
 
-				AddRender(obj, x, y);
+				AddRender(obj, (int)x, (int)y);
 			}
 		}
 	}
@@ -264,10 +264,10 @@ bool CMapBlock::TestStretched(const int &x, const int &y, const char &z, const i
 		IFOR(j, -1, 2 && !result)
 		{
 			if (recurse)
-				result = TestStretched(x + i, y + j, z, map, false);
+				result = TestStretched(x + (int)i, y + (int)j, z, map, false);
 			else
 			{
-				char testZ = GetLandZ(x + i, y + j, map);
+				char testZ = GetLandZ(x + (int)i, y + (int)j, map);
 
 				result = (testZ != z && testZ != -125);
 			}

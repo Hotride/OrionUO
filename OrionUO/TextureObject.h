@@ -38,17 +38,17 @@ class CTextureAnimationDirection
 	//Количество кадров
 	SETGET(uchar, FrameCount, 0);
 	//Адрес в памяти (*.mul / *.uop)
-	SETGET(uint, BaseAddress, 0);
+	SETGET(size_t, BaseAddress, 0);
 	//Размер данных в памяти (*.mul / *.uop)
 	SETGET(uint, BaseSize, 0);
 	//Адрес в памяти (Bodyconv.def)
-	SETGET(uint, PatchedAddress, 0);
+	SETGET(size_t, PatchedAddress, 0);
 	//Размер данных в памяти (Bodyconv.def)
 	SETGET(uint, PatchedSize, 0);
 	//Индекс файла с анимацией
 	SETGET(int, FileIndex, 0);
 	//Адрес в памяти
-	SETGET(uint, Address, 0);
+	SETGET(size_t, Address, 0);
 	//Размер данных в памяти
 	SETGET(uint, Size, 0);
 	//Время последнего доступа

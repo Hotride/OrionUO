@@ -284,14 +284,14 @@ void CAnimationManager::UpdateAnimationAddressTable()
 void CAnimationManager::Load(puint verdata)
 {
 	WISPFUN_DEBUG("c133_f3");
-	uint maxAddress = m_AddressIdx[0] + m_SizeIdx[0];
+	size_t maxAddress = m_AddressIdx[0] + m_SizeIdx[0];
 
 	IFOR(i, 0, MAX_ANIMATIONS_DATA_INDEX_COUNT)
 	{
 		CIndexAnimation &index = m_DataIndex[i];
 
 		ANIMATION_GROUPS_TYPE groupType = AGT_UNKNOWN;
-		uint findID = 0;
+		size_t findID = 0;
 
 		if (i >= 200)
 		{
@@ -315,7 +315,7 @@ void CAnimationManager::Load(puint verdata)
 		if (findID >= m_SizeIdx[0])
 			break;
 
-		index.Graphic = i;
+		index.Graphic = (int)i;
 
 		if (index.Type != AGT_UNKNOWN)
 			groupType = index.Type;
@@ -346,12 +346,12 @@ void CAnimationManager::Load(puint verdata)
 
 		index.Type = groupType;
 
-		uint address = m_AddressIdx[0] + findID;
+		size_t address = m_AddressIdx[0] + findID;
 
 		IFOR(j, 0, count)
 		{
 			CTextureAnimationGroup &group = index.m_Groups[j];
-			int offset = j * 5;
+			int offset = (int)j * 5;
 
 			IFOR(d, 0, 5)
 			{
@@ -359,7 +359,7 @@ void CAnimationManager::Load(puint verdata)
 
 				PANIM_IDX_BLOCK aidx = (PANIM_IDX_BLOCK)(address + ((offset + d) * sizeof(ANIM_IDX_BLOCK)));
 
-				if ((uint)aidx >= maxAddress)
+				if ((size_t)aidx >= maxAddress)
 					break;
 
 				if (aidx->Size && aidx->Position != 0xFFFFFFFF && aidx->Size != 0xFFFFFFFF)
@@ -379,7 +379,7 @@ void CAnimationManager::Load(puint verdata)
 
 		IFOR(j, 0, dataCount)
 		{
-			PVERDATA_HEADER vh = (PVERDATA_HEADER)((uint)verdata + 4 + (j * sizeof(VERDATA_HEADER)));
+			PVERDATA_HEADER vh = (PVERDATA_HEADER)((size_t)verdata + 4 + (j * sizeof(VERDATA_HEADER)));
 
 			if (vh->FileID == 0x06) //Anim
 			{
@@ -438,7 +438,7 @@ void CAnimationManager::Load(puint verdata)
 
 				CTextureAnimationDirection &direction = index.m_Groups[group].m_Direction[dir];
 
-				direction.BaseAddress = (uint)g_FileManager.m_VerdataMul.Start + vh->Position;
+				direction.BaseAddress = (size_t)g_FileManager.m_VerdataMul.Start + vh->Position;
 				direction.BaseSize = vh->Size;
 				direction.Address = direction.BaseAddress;
 				direction.Size = direction.BaseSize;
@@ -716,13 +716,13 @@ void CAnimationManager::InitIndexReplaces(puint verdata)
 						}
 					}
 
-					uint address = m_AddressIdx[animFile] + startAnimID;
-					uint maxAddress = m_AddressIdx[animFile] + m_SizeIdx[animFile];
+					size_t address = m_AddressIdx[animFile] + startAnimID;
+					size_t maxAddress = m_AddressIdx[animFile] + m_SizeIdx[animFile];
 
 					IFOR(j, 0, count)
 					{
 						CTextureAnimationGroup &group = dataIndex.m_Groups[j];
-						int offset = j * 5;
+						int offset = (int)j * 5;
 
 						IFOR(d, 0, 5)
 						{
@@ -730,7 +730,7 @@ void CAnimationManager::InitIndexReplaces(puint verdata)
 
 							PANIM_IDX_BLOCK aidx = (PANIM_IDX_BLOCK)(address + ((offset + d) * sizeof(ANIM_IDX_BLOCK)));
 
-							if ((uint)aidx >= maxAddress)
+							if ((size_t)aidx >= maxAddress)
 								break;
 
 							if (aidx->Size && aidx->Position != 0xFFFFFFFF && aidx->Size != 0xFFFFFFFF)
@@ -830,7 +830,7 @@ void CAnimationManager::InitIndexReplaces(puint verdata)
 					if (!direction.BaseAddress)
 					{
 						direction.BaseAddress = direction.PatchedAddress;
-						direction.BaseSize = direction.PatchedAddress;
+						direction.BaseSize = direction.PatchedSize;
 						direction.Address = direction.BaseAddress;
 						direction.Size = direction.BaseSize;
 						direction.PatchedAddress = 0;
@@ -926,7 +926,7 @@ void CAnimationManager::InitIndexReplaces(puint verdata)
 					if (!direction.BaseAddress)
 					{
 						direction.BaseAddress = direction.PatchedAddress;
-						direction.BaseSize = direction.PatchedAddress;
+						direction.BaseSize = direction.PatchedSize;
 						direction.Address = direction.BaseAddress;
 						direction.Size = direction.BaseSize;
 						direction.PatchedAddress = 0;
@@ -2274,7 +2274,7 @@ bool CAnimationManager::TryReadUOPAnimDimins(CTextureAnimationDirection &directi
 	SetData(reinterpret_cast<puchar>(&decLayoutData[0]), decompressedLength);
 	vector<UOPFrameData> pixelDataOffsets = ReadUOPFrameDataOffsets();
 
-	direction.FrameCount = pixelDataOffsets.size() / 5;
+	direction.FrameCount = (int)pixelDataOffsets.size() / 5;
 	int dirFrameStartIdx = direction.FrameCount * Direction;
 	if (direction.m_Frames == NULL)
 		direction.m_Frames = new CTextureAnimationFrame[direction.FrameCount];

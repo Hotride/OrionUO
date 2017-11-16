@@ -44,7 +44,7 @@ void CMapManager::CreateBlocksTable()
 {
 	WISPFUN_DEBUG("c146_f2");
 	IFOR(map, 0, MAX_MAPS_COUNT)
-		CreateBlockTable(map);
+		CreateBlockTable((int)map);
 }
 //----------------------------------------------------------------------------------
 void CMapManager::CreateBlockTable(int map)
@@ -61,44 +61,44 @@ void CMapManager::CreateBlockTable(int map)
 
 	list.resize(maxBlockCount);
 
-	uint mapAddress = (uint)g_FileManager.m_MapMul[map].Start;
-	uint endMapAddress = mapAddress + g_FileManager.m_MapMul[map].Size;
+	size_t mapAddress = (size_t)g_FileManager.m_MapMul[map].Start;
+	size_t endMapAddress = mapAddress + g_FileManager.m_MapMul[map].Size;
 
 	CUopMappedFile &uopFile = g_FileManager.m_MapUOP[map];
 	bool isUop = (uopFile.Start != NULL);
 
 	if (isUop)
 	{
-		mapAddress = (uint)uopFile.Start;
+		mapAddress = (size_t)uopFile.Start;
 		endMapAddress = mapAddress + uopFile.Size;
 	}
 
-	uint staticIdxAddress = (uint)g_FileManager.m_StaticIdx[map].Start;
-	uint endStaticIdxAddress = staticIdxAddress + g_FileManager.m_StaticIdx[map].Size;
+	size_t staticIdxAddress = (size_t)g_FileManager.m_StaticIdx[map].Start;
+	size_t endStaticIdxAddress = staticIdxAddress + g_FileManager.m_StaticIdx[map].Size;
 
-	uint staticAddress = (uint)g_FileManager.m_StaticMul[map].Start;
-	uint endStaticAddress = staticAddress + g_FileManager.m_StaticMul[map].Size;
+	size_t staticAddress = (size_t)g_FileManager.m_StaticMul[map].Start;
+	size_t endStaticAddress = staticAddress + g_FileManager.m_StaticMul[map].Size;
 
 	if (!mapAddress || !staticIdxAddress || !staticAddress)
 		return;
 
 	int fileNumber = -1;
-	uint uopOffset = 0;
+	size_t uopOffset = 0;
 
 	IFOR(block, 0, maxBlockCount)
 	{
 		CIndexMap &index = list[block];
 
-		uint realMapAddress = 0;
-		uint realStaticAddress = 0;
+		size_t realMapAddress = 0;
+		size_t realStaticAddress = 0;
 		int realStaticCount = 0;
 
-		int blockNumber = block;
+		int blockNumber = (int)block;
 
 		if (isUop)
 		{
 			blockNumber &= 4095;
-			int shifted = block >> 12;
+			int shifted = (int)block >> 12;
 
 			if (fileNumber != shifted)
 			{
@@ -109,22 +109,22 @@ void CMapManager::CreateBlockTable(int map)
 				CUopBlockHeader *uopBlock = uopFile.GetBlock(COrion::CreateHash(mapFilePath));
 
 				if (uopBlock != NULL)
-					uopOffset = (uint)uopBlock->Offset;
+					uopOffset = (size_t)uopBlock->Offset;
 				else
 					LOG("Hash not found in uop map %i file.\n", map);
 			}
 		}
 
-		uint address = mapAddress + uopOffset + (blockNumber * sizeof(MAP_BLOCK));
+		size_t address = mapAddress + uopOffset + (blockNumber * sizeof(MAP_BLOCK));
 
 		if (address < endMapAddress)
 			realMapAddress = address;
 
 		PSTAIDX_BLOCK sidx = (PSTAIDX_BLOCK)(staticIdxAddress + block * sizeof(STAIDX_BLOCK));
 
-		if ((uint)sidx < endStaticIdxAddress && sidx->Size > 0 && sidx->Position != 0xFFFFFFFF)
+		if ((size_t)sidx < endStaticIdxAddress && sidx->Size > 0 && sidx->Position != 0xFFFFFFFF)
 		{
-			uint address = staticAddress + sidx->Position;
+			size_t address = staticAddress + sidx->Position;
 
 			if (address < endStaticAddress)
 			{
@@ -146,7 +146,7 @@ void CMapManager::CreateBlockTable(int map)
 	}
 }
 //----------------------------------------------------------------------------------
-void CMapManager::SetPatchedMapBlock(const uint &block, const uint &address)
+void CMapManager::SetPatchedMapBlock(const size_t &block, const size_t &address)
 {
 	WISPFUN_DEBUG("c146_f4");
 	MAP_INDEX_LIST &list = m_BlockData[0];
@@ -214,9 +214,9 @@ void CMapManager::ApplyPatches(WISP_DATASTREAM::CDataReader &stream)
 		}
 
 		intptr_t mapPatchesCount = stream.ReadUInt32BE();
-		m_MapPatchCount[i] = mapPatchesCount;
+		m_MapPatchCount[i] = (int)mapPatchesCount;
 		intptr_t staticsPatchesCount = stream.ReadUInt32BE();
-		m_StaticPatchCount[i] = staticsPatchesCount;
+		m_StaticPatchCount[i] = (int)staticsPatchesCount;
 
 		MAP_INDEX_LIST &list = m_BlockData[i];
 		WISP_GEOMETRY::CSize &size = g_MapBlockSize[i];
@@ -238,7 +238,7 @@ void CMapManager::ApplyPatches(WISP_DATASTREAM::CDataReader &stream)
 				uint blockIndex = difl.ReadUInt32LE();
 
 				if (blockIndex < maxBlockCount)
-					list[blockIndex].MapAddress = (uint)dif.Ptr;
+					list[blockIndex].MapAddress = (size_t)dif.Ptr;
 
 				dif.Move(sizeof(MAP_BLOCK));
 			}
@@ -248,7 +248,7 @@ void CMapManager::ApplyPatches(WISP_DATASTREAM::CDataReader &stream)
 		{
 			WISP_FILE::CMappedFile &difl = g_FileManager.m_StaDifl[i];
 			WISP_FILE::CMappedFile &difi = g_FileManager.m_StaDifi[i];
-			uint startAddress = (uint)g_FileManager.m_StaDif[i].Start;
+			size_t startAddress = (size_t)g_FileManager.m_StaDif[i].Start;
 
 			staticsPatchesCount = min(staticsPatchesCount, (intptr_t)difl.Size / 4);
 
@@ -265,7 +265,7 @@ void CMapManager::ApplyPatches(WISP_DATASTREAM::CDataReader &stream)
 
 				if (blockIndex < maxBlockCount)
 				{
-					uint realStaticAddress = 0;
+					size_t realStaticAddress = 0;
 					int realStaticCount = 0;
 
 					if (sidx->Size > 0 && sidx->Position != 0xFFFFFFFF)
@@ -306,7 +306,7 @@ void CMapManager::UpdatePatched()
 			{
 				IFOR(y, 0, 8)
 				{
-					for (CRenderWorldObject *item = block->GetRender(x, y); item != NULL; item = item->m_NextXY)
+					for (CRenderWorldObject *item = block->GetRender((int)x, (int)y); item != NULL; item = item->m_NextXY)
 {
 						if (!item->IsLandObject() && !item->IsStaticObject())
 							objectsList.push_back(item);
@@ -649,9 +649,9 @@ void CMapManager::LoadBlock(CMapBlock *block)
 	{
 		IFOR(y, 0, 8)
 		{
-			int pos = y * 8 + x;
-			CMapObject *obj = new CLandObject(pos, pmb->Cells[pos].TileID & 0x3FFF, 0, bx + x, by + y, pmb->Cells[pos].Z);
-			block->AddObject(obj, x, y);
+			int pos = (int)y * 8 + (int)x;
+			CMapObject *obj = new CLandObject(pos, pmb->Cells[pos].TileID & 0x3FFF, 0, bx + (int)x, by + (int)y, pmb->Cells[pos].Z);
+			block->AddObject(obj, (int)x, (int)y);
 		}
 	}
 

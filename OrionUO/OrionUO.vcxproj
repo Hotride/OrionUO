@@ -191,7 +191,7 @@ xcopy /y /d  "$(SolutionDir)bin32\Orion.dll" "$(ProjectDir)"
       <AdditionalManifestFiles>$(SolutionDir)OrionUO.manifest %(AdditionalManifestFiles)</AdditionalManifestFiles>
     </Manifest>
     <PreBuildEvent>
-      <Command>if exist "$(ProjectDir)Release\DateTimeStamp.obj" (del "$(ProjectDir)Release\DateTimeStamp.obj")</Command>
+      <Command>if exist "$(ProjectDir)Release\DateTimeStamp1.obj" (del "$(ProjectDir)Release\DateTimeStamp.obj")</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -222,11 +222,11 @@ if exist "$(ProjectDir)Orion.dll" (del "$(ProjectDir)Orion.dll")
 xcopy /y /d  "$(SolutionDir)bin64\bass.dll" "$(OutDir)"
 
 xcopy /y /d  "$(SolutionDir)bin64\glew32.dll" "$(OutDir)"
-xcopy /y /d  "$(SolutionDir)bin32\zlib1.dll" "$(OutDir)"
+xcopy /y /d  "$(SolutionDir)bin64\zlib1.dll" "$(OutDir)"
 
 xcopy /y /d  "$(SolutionDir)bin64\bassmidi.dll" "$(OutDir)"
 xcopy /y /d  "$(SolutionDir)bin64\Freeimage.dll" "$(OutDir)"
-xcopy /y /d  "$(SolutionDir)bin32\Orion.dll" "$(ProjectDir)"
+xcopy /y /d  "$(SolutionDir)bin64\Orion.dll" "$(ProjectDir)"
 
 </Command>
     </PostBuildEvent>
@@ -747,6 +747,9 @@ xcopy /y /d  "$(SolutionDir)bin32\Orion.dll" "$(ProjectDir)"
   </ItemGroup>
   <ItemGroup>
     <None Include="cursor1.cur" />
+  </ItemGroup>
+  <ItemGroup>
+    <Midl Include="OrionUO.idl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

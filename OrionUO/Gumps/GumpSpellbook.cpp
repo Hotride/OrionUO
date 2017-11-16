@@ -656,7 +656,7 @@ void CGumpSpellbook::UpdateContent()
 
 	IFOR(page, 0, dictionaryPagesCount)
 	{
-		Add(new CGUIPage(page));
+		Add(new CGUIPage((int)page));
 
 		if (!page && m_BookType == ST_PALADIN)
 		{
@@ -721,14 +721,14 @@ void CGumpSpellbook::UpdateContent()
 		int iconX = 62;
 		int topTextX = 87;
 		int iconTextX = 112;
-		uint iconSerial = ID_GSB_SPELL_ICON_LEFT + i;
+		uint iconSerial = ID_GSB_SPELL_ICON_LEFT + (uint)i;
 
 		if (page % 2)
 		{
 			iconX = 225;
 			topTextX = 244;
 			iconTextX = 275;
-			iconSerial = ID_GSB_SPELL_ICON_RIGHT + i;
+			iconSerial = ID_GSB_SPELL_ICON_RIGHT + (int)i;
 		}
 
 		Add(new CGUIPage(page));
@@ -736,7 +736,7 @@ void CGumpSpellbook::UpdateContent()
 
 		string spellAbbreviature = "";
 		string reagents = "";
-		string spellName = GetSpellName(i, spellAbbreviature, reagents);
+		string spellName = GetSpellName((int)i, spellAbbreviature, reagents);
 
 		CGUIText *text = (CGUIText*)Add(new CGUIText(0x0288, topTextX, topTextY));
 
@@ -768,7 +768,7 @@ void CGumpSpellbook::UpdateContent()
 			}
 		}
 
-		CGUIGumppic *icon = (CGUIGumppic*)Add(new CGUIGumppic(iconStartGraphic + i, iconX, 40));
+		CGUIGumppic *icon = (CGUIGumppic*)Add(new CGUIGumppic(iconStartGraphic + (int)i, iconX, 40));
 		icon->Serial = iconSerial;
 
 		if (haveReagents)
@@ -785,7 +785,7 @@ void CGumpSpellbook::UpdateContent()
 		if (!isMageSpellbook)
 		{
 			int requriesY = 0;
-			string requries = GetSpellRequries(i, requriesY);
+			string requries = GetSpellRequries((int)i, requriesY);
 
 			text = (CGUIText*)Add(new CGUIText(0x0288, iconX, requriesY));
 			text->CreateTextureA(6, requries);
@@ -861,7 +861,7 @@ void CGumpSpellbook::GUMP_BUTTON_EVENT_C
 			{
 				IFOR(i, 0, spellsOnPage)
 				{
-					int offs = i + (spellsOnPage * (m_Page + j));
+					intptr_t offs = i + (spellsOnPage * (m_Page + j));
 
 					if (!m_Spells[offs])
 						continue;

@@ -35,7 +35,7 @@
 #include "Dependencies/include/bass.h"
 #include "Dependencies/include/bassmidi.h"
 #include "Dependencies/include/FreeImage.h"
-#include "zlib.h"
+#include "Dependencies/include/zlib.h"
 
 #pragma comment(lib, "Winmm.lib")
 #pragma comment(lib, "Shlwapi.lib")
@@ -48,7 +48,7 @@
 #pragma comment(lib, "Dependencies/lib/Win32/bassmidi.lib")
 #pragma comment(lib, "Dependencies/lib/Win32/FreeImage.lib")
 #pragma comment(lib, "Dependencies/lib/Win32/Psapi.lib")
-#pragma comment(lib, "zdll.lib")
+#pragma comment(lib, "Dependencies/lib/Win32/zdll.lib")
 //----------------------------------------------------------------------------------
 #else
 #pragma comment(lib, "Dependencies/lib/x64/glew32.lib")
@@ -56,7 +56,7 @@
 #pragma comment(lib, "Dependencies/lib/x64/bassmidi.lib")
 #pragma comment(lib, "Dependencies/lib/x64/FreeImage.lib")
 #pragma comment(lib, "Dependencies/lib/x64/Psapi.lib")
-#pragma comment(lib, "zdll.lib")
+#pragma comment(lib, "Dependencies/lib/x64/zdll.lib")
 #endif
 //----------------------------------------------------------------------------------
 #include "targetver.h"

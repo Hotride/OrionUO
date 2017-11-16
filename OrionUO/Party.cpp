@@ -147,7 +147,7 @@ void CParty::ParsePacketData(WISP_DATASTREAM::CDataReader &reader)
 			{
 				if (Member[i].Serial == serial)
 				{
-					string str = "[" + Member[i].GetName(i) + "]: " + ToString(name);
+					string str = "[" + Member[i].GetName((int)i) + "]: " + ToString(name);
 
 					g_Orion.CreateTextMessage(TT_SYSTEM, serial, 3, g_ConfigManager.PartyMessageColor, str);
 

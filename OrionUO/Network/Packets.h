@@ -13,7 +13,7 @@
 class CPacket : public WISP_DATASTREAM::CDataWritter
 {
 public:
-	CPacket(const int &size, const bool &autoResize = false);
+	CPacket(const size_t &size, const bool &autoResize = false);
 
 	void Send();
 };
@@ -237,13 +237,13 @@ public:
 class CPacketASCIIPromptResponse : public CPacket
 {
 public:
-	CPacketASCIIPromptResponse(const char *text, int len, bool cancel);
+	CPacketASCIIPromptResponse(const char *text, size_t len, bool cancel);
 };
 //----------------------------------------------------------------------------------
 class CPacketUnicodePromptResponse : public CPacket
 {
 public:
-	CPacketUnicodePromptResponse(const wchar_t *text, int len, const string &lang, bool cancel);
+	CPacketUnicodePromptResponse(const wchar_t *text, size_t len, const string &lang, bool cancel);
 };
 //----------------------------------------------------------------------------------
 class CPacketDyeDataResponse : public CPacket
@@ -261,7 +261,7 @@ public:
 class CPacketProfileUpdate : public CPacket
 {
 public:
-	CPacketProfileUpdate(uint serial, const wchar_t *text, int len);
+	CPacketProfileUpdate(uint serial, const wchar_t *text, size_t len);
 };
 //----------------------------------------------------------------------------------
 class CPacketCloseStatusbarGump : public CPacket
@@ -303,7 +303,7 @@ public:
 class CPacketPartyMessage : public CPacket
 {
 public:
-	CPacketPartyMessage(const wchar_t *text, int len, uint serial = 0x00000000);
+	CPacketPartyMessage(const wchar_t *text, size_t len, uint serial = 0x00000000);
 };
 //----------------------------------------------------------------------------------
 class CPacketGameWindowSize : public CPacket

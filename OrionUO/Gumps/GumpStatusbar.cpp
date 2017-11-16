@@ -925,7 +925,7 @@ void CGumpStatusbar::UpdateContent()
 					CGUIGumppic *bodyGump = (CGUIGumppic*)Add(new CGUIGumppic(0x0803, 0, 0));
 					bodyGump->SelectOnly = true;
 
-					string memberName = member.GetName(i);
+					string memberName = member.GetName((int)i);
 					bool outofRange = false;
 					if (member.Character->RemovedFromRender())
 					{
@@ -1227,7 +1227,7 @@ void CGumpStatusbar::OnCharPress(const WPARAM &wParam, const LPARAM &lParam)
 
 		if ((g_EntryPointer->Length() <= 15) && g_FontManager.GetWidthA(1, str) <= 100 && ((wParam >= 'a' && wParam <= 'z') || (wParam >= 'A' && wParam <= 'Z')))
 		{
-			g_EntryPointer->Insert(wParam);
+			g_EntryPointer->Insert((wchar_t)wParam);
 			m_WantRedraw = true;
 		}
 	}

@@ -63,11 +63,11 @@ void CGumpSelectFont::UpdateContent()
 	{
 		drawY += 22;
 
-		CGUIRadio *radio = (CGUIRadio*)Add(new CGUIRadio(i + ID_GSF_FONTS, 0x00D0, 0x00D1, 0x00D0, 50, drawY));
+		CGUIRadio *radio = (CGUIRadio*)Add(new CGUIRadio((int)i + ID_GSF_FONTS, 0x00D0, 0x00D1, 0x00D0, 50, drawY));
 		radio->Checked = (i == selected);
 
 		text = (CGUIText*)Add(new CGUIText(0, 74, drawY));
-		text->CreateTextureW(i, L"This font");
+		text->CreateTextureW((uchar)i, L"This font");
 	}
 
 	Add(new CGUIGroup(0));

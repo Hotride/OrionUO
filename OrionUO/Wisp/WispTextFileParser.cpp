@@ -35,21 +35,21 @@ void CTextFileParser::StartupInitalize(const char *delimiters, const char *comen
 	WISPFUN_DEBUG("c11_f4");
 	//Инициализация разделителей
 	memset(&m_Delimiters[0], 0, sizeof(m_Delimiters));
-	m_DelimitersSize = strlen(delimiters);
+	m_DelimitersSize = (int)strlen(delimiters);
 
 	if (m_DelimitersSize)
 		memcpy(&m_Delimiters[0], &delimiters[0], m_DelimitersSize);
 
 	//Инициализация комментариев
 	memset(&m_Comentaries[0], 0, sizeof(m_Comentaries));
-	m_ComentariesSize = strlen(comentaries);
+	m_ComentariesSize = (int)strlen(comentaries);
 
 	if (m_ComentariesSize)
 		memcpy(&m_Comentaries[0], &comentaries[0], m_ComentariesSize);
 
 	//Инициализация кавычек
 	memset(&m_Quotes[0], 0, sizeof(m_Quotes));
-	m_QuotesSize = strlen(quotes);
+	m_QuotesSize = (int)strlen(quotes);
 
 	if (m_QuotesSize)
 		memcpy(&m_Quotes[0], &quotes[0], m_QuotesSize);
@@ -229,7 +229,7 @@ string CTextFileParser::ObtainQuotedData()
 				ptr++;
 
 			//Размер фрагмента
-			int size = ptr - m_Ptr;
+			size_t size = ptr - m_Ptr;
 
 			if (size > 0)
 			{
@@ -241,7 +241,7 @@ string CTextFileParser::ObtainQuotedData()
 				result[size] = 0;
 
 				//Пройдемся по фрагменту с конца и затрем лишнее
-				for (int j = size - 1; j >= 0 && result[j] == '\r'; j--)
+				for (int j = (int)size - 1; j >= 0 && result[j] == '\r'; j--)
 					result[j] = 0;
 
 				//Указатель на конец фрагмена
@@ -266,7 +266,7 @@ string CTextFileParser::ObtainQuotedData()
 void CTextFileParser::SaveRawLine()
 {
 	WISPFUN_DEBUG("c11_f13");
-	int size = m_EOL - m_Ptr;
+	size_t size = m_EOL - m_Ptr;
 
 	if (size > 0)
 	{

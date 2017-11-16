@@ -67,9 +67,9 @@ class CAnimationManager : public WISP_DATASTREAM::CDataReader
 
 private:
 	//!Адреса файлов в памяти
-	uint m_AddressIdx[6];
-	uint m_AddressMul[6];
-	uint m_SizeIdx[6];
+	size_t m_AddressIdx[6];
+	size_t m_AddressMul[6];
+	size_t m_SizeIdx[6];
 
 	//!Высота текстуры персонажа.
 	int m_CharacterFrameHeight{ 0 };
@@ -150,7 +150,7 @@ public:
 	@param [__in] SizeIdx Размер файла с таблицей адресов
 	@return 
 	*/
-	void Init(const int &graphic, const uint &addressIdx, const uint &addressMul, const uint &sizeIdx)
+	void Init(const int &graphic, const size_t &addressIdx, const size_t &addressMul, const size_t &sizeIdx)
 	{
 		m_AddressIdx[graphic] = addressIdx;
 		m_AddressMul[graphic] = addressMul;

@@ -29,7 +29,7 @@ public:
 	CSkillGroupObject();
 	~CSkillGroupObject();
 
-	uchar GetItem(int index);
+	uchar GetItem(intptr_t index);
 
 	//Добавить навык в группу	
 	void Add(uchar index);

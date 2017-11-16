@@ -166,7 +166,7 @@ void CGumpBook::ChangePage(int newPage)
 		if (m_ChangedPage[m_Page + i])
 		{
 			m_ChangedPage[m_Page + i] = false;
-			CPacketBookPageData(this, m_Page + i).Send();
+			CPacketBookPageData(this, m_Page + (int)i).Send();
 		}
 	}
 
@@ -296,7 +296,7 @@ void CGumpBook::InsertInContent(const WPARAM &wparam, const bool &isCharPress)
 			if (!m_Unicode && wparam >= 0x0100)
 				return;
 
-			if (g_EntryPointer->Insert(wparam))
+			if (g_EntryPointer->Insert((wchar_t)wparam))
 			{
 				int linesCount = 0;
 				int maxLinesCount = 8;
@@ -334,7 +334,7 @@ void CGumpBook::OnCharPress(const WPARAM &wParam, const LPARAM &lParam)
 
 	if (g_EntryPointer == &m_EntryTitle->m_Entry || g_EntryPointer == &m_EntryAuthor->m_Entry)
 	{
-		if (g_EntryPointer->Insert(wParam))
+		if (g_EntryPointer->Insert((wchar_t)wParam))
 		{
 			if (m_Unicode)
 			{

@@ -102,8 +102,8 @@ bool CFontsManager::LoadFonts()
 
 	IFOR(i, 0, g_FileManager.UnicodeFontsCount)
 	{
-		m_UnicodeFontAddress[i] = (uint)g_FileManager.m_UnifontMul[i].Start;
-		m_UnicodeFontSize[i] = g_FileManager.m_UnifontMul[i].Size;
+		m_UnicodeFontAddress[i] = (size_t)g_FileManager.m_UnifontMul[i].Start;
+		m_UnicodeFontSize[i] = (uint)g_FileManager.m_UnifontMul[i].Size;
 
 		if (!m_UnicodeFontAddress[i] && i == 1)
 		{
@@ -202,7 +202,7 @@ WISP_GEOMETRY::CPoint2Di CFontsManager::GetCaretPosA(const uchar &font, const st
 	if (!width)
 		width = GetWidthA(font, str);
 
-	PMULTILINES_FONT_INFO info = GetInfoA(font, str.c_str(), str.length(), align, flags, width);
+	PMULTILINES_FONT_INFO info = GetInfoA(font, str.c_str(), (int)str.length(), align, flags, width);
 	if (info == NULL)
 		return p;
 
@@ -285,7 +285,7 @@ int CFontsManager::CalculateCaretPosA(const uchar &font, const string &str, cons
 	if (x >= width)
 		return (int)str.length();
 
-	PMULTILINES_FONT_INFO info = GetInfoA(font, str.c_str(), str.length(), align, flags, width);
+	PMULTILINES_FONT_INFO info = GetInfoA(font, str.c_str(), (int)str.length(), align, flags, width);
 	if (info == NULL)
 		return 0;
 
@@ -403,7 +403,7 @@ int CFontsManager::GetWidthExA(const uchar &font, const string &str, const int &
 	if (font >= m_FontCount || str.empty())
 		return 0;
 
-	PMULTILINES_FONT_INFO info = GetInfoA(font, str.c_str(), str.length(), align, flags, maxWidth);
+	PMULTILINES_FONT_INFO info = GetInfoA(font, str.c_str(), (int)str.length(), align, flags, maxWidth);
 
 	int textWidth = 0;
 
@@ -440,7 +440,7 @@ int CFontsManager::GetHeightA(const uchar &font, const string &str, int width, c
 	if (!width)
 		width = GetWidthA(font, str);
 
-	PMULTILINES_FONT_INFO info = GetInfoA(font, str.c_str(), str.length(), align, flags, width);
+	PMULTILINES_FONT_INFO info = GetInfoA(font, str.c_str(), (int)str.length(), align, flags, width);
 
 	int textHeight = 0;
 
@@ -580,7 +580,7 @@ PMULTILINES_FONT_INFO CFontsManager::GetInfoA(uchar font, const char *str, int l
 
 		if (si == ' ')
 		{
-			lastSpace = i;
+			lastSpace = (int)i;
 			ptr->Width += readWidth;
 			readWidth = 0;
 			ptr->CharCount += charCount;
@@ -599,7 +599,7 @@ PMULTILINES_FONT_INFO CFontsManager::GetInfoA(uchar font, const char *str, int l
 				ptr->Width += readWidth;
 				ptr->CharCount += charCount;
 
-				lastSpace = i;
+				lastSpace = (int)i;
 
 				if (!ptr->Width)
 					ptr->Width = 1;
@@ -617,7 +617,7 @@ PMULTILINES_FONT_INFO CFontsManager::GetInfoA(uchar font, const char *str, int l
 				ptr = newptr;
 
 				ptr->Align = align;
-				ptr->CharStart = i + 1;
+				ptr->CharStart = (int)i + 1;
 
 				readWidth = 0;
 				charCount = 0;
@@ -646,8 +646,8 @@ PMULTILINES_FONT_INFO CFontsManager::GetInfoA(uchar font, const char *str, int l
 				ptr = newptr;
 
 				ptr->Align = align;
-				ptr->CharStart = i;
-				lastSpace = i - 1;
+				ptr->CharStart = (int)i;
+				lastSpace = (int)i - 1;
 				charCount = 0;
 
 				if (ptr->Align == TS_LEFT && (flags & UOFONT_INDENTION))
@@ -698,7 +698,7 @@ PMULTILINES_FONT_INFO CFontsManager::GetInfoA(uchar font, const char *str, int l
 				ptr = newptr;
 
 				ptr->Align = align;
-				ptr->CharStart = i;
+				ptr->CharStart = (int)i;
 
 				if (ptr->Align == TS_LEFT && (flags & UOFONT_INDENTION))
 					indentionOffset = 14;
@@ -801,7 +801,7 @@ UINT_LIST CFontsManager::GeneratePixelsA(const uchar &font, CGLTextTexture &th, 
 	if (font >= m_FontCount)
 		return pData;
 
-	int len = strlen(str);
+	int len = (int)strlen(str);
 	if (!len)
 		return pData;
 
@@ -890,14 +890,14 @@ UINT_LIST CFontsManager::GeneratePixelsA(const uchar &font, CGLTextTexture &th, 
 
 			IFOR(y, 0, dh)
 			{
-				int testY = y + lineOffsY + offsY;
+				int testY = (int)y + lineOffsY + offsY;
 
 				if (testY >= height)
 					break;
 
 				IFOR(x, 0, dw)
 				{
-					if ((x + w) >= width)
+					if (((int)x + w) >= width)
 						break;
 
 					ushort pic = fcd.Data[(y * dw) + x];
@@ -911,7 +911,7 @@ UINT_LIST CFontsManager::GeneratePixelsA(const uchar &font, CGLTextTexture &th, 
 						else
 							pcl = g_ColorManager.GetColor(pic, charColor);
 
-						int block = (testY * width) + (x + w);
+						int block = (testY * width) + ((int)x + w);
 
 						pData[block] = pcl << 8 | 0xFF; // (0xFF << 24) | (GetBValue(pcl) << 16) | (GetGValue(pcl) << 8) | GetRValue(pcl);
 					}
@@ -1015,7 +1015,7 @@ WISP_GEOMETRY::CPoint2Di CFontsManager::GetCaretPosW(const uchar &font, const ws
 	if (!width)
 		width = GetWidthW(font, str);
 
-	PMULTILINES_FONT_INFO info = GetInfoW(font, str.c_str(), str.length(), align, flags, width);
+	PMULTILINES_FONT_INFO info = GetInfoW(font, str.c_str(), (int)str.length(), align, flags, width);
 	if (info == NULL)
 		return p;
 	
@@ -1038,7 +1038,7 @@ WISP_GEOMETRY::CPoint2Di CFontsManager::GetCaretPosW(const uchar &font, const ws
 
 					if (offset && offset != 0xFFFFFFFF)
 					{
-						puchar cptr = (puchar)((uint)table + offset);
+						puchar cptr = (puchar)((size_t)table + offset);
 						p.X += ((char)cptr[0] + (char)cptr[2] + 1);
 					}
 					else if (ch == L' ')
@@ -1104,7 +1104,7 @@ int CFontsManager::CalculateCaretPosW(const uchar &font, const wstring &str, con
 	if (x >= width)
 		return (int)str.length();
 
-	PMULTILINES_FONT_INFO info = GetInfoW(font, str.c_str(), str.length(), align, flags, width);
+	PMULTILINES_FONT_INFO info = GetInfoW(font, str.c_str(), (int)str.length(), align, flags, width);
 	if (info == NULL)
 		return 0;
 
@@ -1148,7 +1148,7 @@ int CFontsManager::CalculateCaretPosW(const uchar &font, const wstring &str, con
 
 					if (offset && offset != 0xFFFFFFFF)
 					{
-						puchar cptr = (puchar)((uint)table + offset);
+						puchar cptr = (puchar)((size_t)table + offset);
 						width += ((char)cptr[0] + (char)cptr[2] + 1);
 					}
 					else if (ch == L' ')
@@ -1203,7 +1203,7 @@ int CFontsManager::GetWidthW(const uchar &font, const wstring &str)
 
 		if (offset && offset != 0xFFFFFFFF)
 		{
-			puchar ptr = (puchar)((uint)table + offset);
+			puchar ptr = (puchar)((size_t)table + offset);
 			textLength += ((char)ptr[0] + (char)ptr[2] + 1);
 		}
 		else if (c == L' ')
@@ -1234,7 +1234,7 @@ int CFontsManager::GetWidthExW(const uchar &font, const wstring &str, const int 
 	if (font >= 20 || !m_UnicodeFontAddress[font] || str.empty())
 		return 0;
 
-	PMULTILINES_FONT_INFO info = GetInfoW(font, str.c_str(), str.length(), align, flags, maxWidth);
+	PMULTILINES_FONT_INFO info = GetInfoW(font, str.c_str(), (int)str.length(), align, flags, maxWidth);
 
 	int textWidth = 0;
 
@@ -1272,7 +1272,7 @@ int CFontsManager::GetHeightW(const uchar &font, const wstring &str, int width, 
 	if (!width)
 		width = GetWidthW(font, str);
 
-	PMULTILINES_FONT_INFO info = GetInfoW(font, str.c_str(), str.length(), align, flags, width);
+	PMULTILINES_FONT_INFO info = GetInfoW(font, str.c_str(), (int)str.length(), align, flags, width);
 
 	int textHeight = 0;
 
@@ -1338,7 +1338,7 @@ wstring CFontsManager::GetTextByWidthW(const uchar &font, const wstring &str, in
 		uint offset = table[L'.'];
 
 		if (offset && offset != 0xFFFFFFFF)
-			width -= (*((puchar)((uint)table + offset + 2)) * 3);
+			width -= (*((puchar)((size_t)table + offset + 2)) * 3);
 	}
 
 	int textLength = 0;
@@ -1351,7 +1351,7 @@ wstring CFontsManager::GetTextByWidthW(const uchar &font, const wstring &str, in
 
 		if (offset && offset != 0xFFFFFFFF)
 		{
-			puchar ptr = (puchar)((uint)table + offset);
+			puchar ptr = (puchar)((size_t)table + offset);
 			charWidth = ((char)ptr[0] + (char)ptr[2] + 1);
 		}
 		else if (c == L' ')
@@ -1833,7 +1833,7 @@ HTML_TAG_TYPE CFontsManager::ParseHTMLTag(const wchar_t *str, const int &len, in
 	while (str[i] == L' ' && i < len)
 		i++;
 
-	int j = i;
+	int j = (int)i;
 
 	for (; i < len; i++)
 	{
@@ -1841,9 +1841,9 @@ HTML_TAG_TYPE CFontsManager::ParseHTMLTag(const wchar_t *str, const int &len, in
 			break;
 	}
 
-	if (j != i && i < len)
+	if (j != (int)i && i < len)
 	{
-		int cmdLen = i - j;
+		int cmdLen = (int)i - j;
 		//LOG("cmdLen = %i\n", cmdLen);
 		wstring cmd;
 		cmd.resize(cmdLen);
@@ -1851,7 +1851,7 @@ HTML_TAG_TYPE CFontsManager::ParseHTMLTag(const wchar_t *str, const int &len, in
 		//LOG(L"cmd[%s] = %s\n", (endTag ? L"end" : L"start"), cmd.c_str());
 		cmd = ToLowerW(cmd);
 
-		j = i;
+		j = (int)i;
 			
 		while (str[i] != L'>' && i < len)
 			i++;
@@ -1903,7 +1903,7 @@ HTML_TAG_TYPE CFontsManager::ParseHTMLTag(const wchar_t *str, const int &len, in
 		{
 			info = GetHTMLInfoFromTag(tag);
 
-			if (i < len && j != i)
+			if (i < len && j != (int)i)
 			{
 				switch (tag)
 				{
@@ -1913,7 +1913,7 @@ HTML_TAG_TYPE CFontsManager::ParseHTMLTag(const wchar_t *str, const int &len, in
 					case HTT_DIV:
 					{
 						wstring content = L"";
-						cmdLen = i - j;
+						cmdLen = (int)i - j;
 						//LOG("contentCmdLen = %i\n", cmdLen);
 						content.resize(cmdLen);
 						memcpy(&content[0], &str[j], cmdLen * 2);
@@ -1988,11 +1988,11 @@ PMULTILINES_FONT_INFO CFontsManager::GetInfoHTML(uchar font, const wchar_t *str,
 		if ((!table[si] || table[si] == 0xFFFFFFFF) && si != L' ' && si != L'\n')
 			continue;
 
-		puchar data = (puchar)((uint)table + table[si]);
+		puchar data = (puchar)((size_t)table + table[si]);
 
 		if (si == L' ')
 		{
-			lastSpace = i;
+			lastSpace = (int)i;
 			ptr->Width += readWidth;
 			readWidth = 0;
 			ptr->CharCount += charCount;
@@ -2011,7 +2011,7 @@ PMULTILINES_FONT_INFO CFontsManager::GetInfoHTML(uchar font, const wchar_t *str,
 				ptr->Width += readWidth;
 				ptr->CharCount += charCount;
 
-				lastSpace = i;
+				lastSpace = (int)i;
 
 				if (!ptr->Width)
 					ptr->Width = 1;
@@ -2030,7 +2030,7 @@ PMULTILINES_FONT_INFO CFontsManager::GetInfoHTML(uchar font, const wchar_t *str,
 				ptr = newptr;
 
 				ptr->Align = htmlData[i].Align;
-				ptr->CharStart = i + 1;
+				ptr->CharStart = (int)i + 1;
 
 				readWidth = 0;
 				charCount = 0;
@@ -2060,8 +2060,8 @@ PMULTILINES_FONT_INFO CFontsManager::GetInfoHTML(uchar font, const wchar_t *str,
 				ptr = newptr;
 
 				ptr->Align = htmlData[i].Align;
-				ptr->CharStart = i;
-				lastSpace = i - 1;
+				ptr->CharStart = (int)i;
+				lastSpace = (int)i - 1;
 				charCount = 0;
 
 				if (ptr->Align == TS_LEFT && (htmlData[i].Flags & UOFONT_INDENTION))
@@ -2116,7 +2116,7 @@ PMULTILINES_FONT_INFO CFontsManager::GetInfoHTML(uchar font, const wchar_t *str,
 				ptr = newptr;
 
 				ptr->Align = htmlData[i].Align;
-				ptr->CharStart = i;
+				ptr->CharStart = (int)i;
 
 				if (ptr->Align == TS_LEFT && (htmlData[i].Flags & UOFONT_INDENTION))
 					indentionOffset = 14;
@@ -2224,11 +2224,11 @@ PMULTILINES_FONT_INFO CFontsManager::GetInfoW(uchar font, const wchar_t *str, in
 		if ((!table[si] || table[si] == 0xFFFFFFFF) && si != L' ' && si != L'\n')
 			continue;
 
-		puchar data = (puchar)((uint)table + table[si]);
+		puchar data = (puchar)((size_t)table + table[si]);
 
 		if (si == L' ')
 		{
-			lastSpace = i;
+			lastSpace = (int)i;
 			ptr->Width += readWidth;
 			readWidth = 0;
 			ptr->CharCount += charCount;
@@ -2247,7 +2247,7 @@ PMULTILINES_FONT_INFO CFontsManager::GetInfoW(uchar font, const wchar_t *str, in
 				ptr->Width += readWidth;
 				ptr->CharCount += charCount;
 
-				lastSpace = i;
+				lastSpace = (int)i;
 
 				if (!ptr->Width)
 					ptr->Width = 1;
@@ -2265,7 +2265,7 @@ PMULTILINES_FONT_INFO CFontsManager::GetInfoW(uchar font, const wchar_t *str, in
 				ptr = newptr;
 
 				ptr->Align = current_align;
-				ptr->CharStart = i + 1;
+				ptr->CharStart = (int)i + 1;
 
 				readWidth = 0;
 				charCount = 0;
@@ -2294,8 +2294,8 @@ PMULTILINES_FONT_INFO CFontsManager::GetInfoW(uchar font, const wchar_t *str, in
 				ptr = newptr;
 
 				ptr->Align = current_align;
-				ptr->CharStart = i;
-				lastSpace = i - 1;
+				ptr->CharStart = (int)i;
+				lastSpace = (int)i - 1;
 				charCount = 0;
 
 				if (ptr->Align == TS_LEFT && (current_flags & UOFONT_INDENTION))
@@ -2348,7 +2348,7 @@ PMULTILINES_FONT_INFO CFontsManager::GetInfoW(uchar font, const wchar_t *str, in
 				ptr = newptr;
 
 				ptr->Align = current_align;
-				ptr->CharStart = i;
+				ptr->CharStart = (int)i;
 				charCount = 0;
 
 				if (ptr->Align == TS_LEFT && (current_flags & UOFONT_INDENTION))
@@ -2613,7 +2613,7 @@ UINT_LIST CFontsManager::GeneratePixelsW(const uchar &font, CGLTextTexture &th, 
 				}
 				else
 				{
-					puchar xData = (puchar)((uint)table + table[si]);
+					puchar xData = (puchar)((size_t)table + table[si]);
 					ofsX = (char)xData[2];
 				}
 
@@ -2631,7 +2631,7 @@ UINT_LIST CFontsManager::GeneratePixelsW(const uchar &font, CGLTextTexture &th, 
 			if ((!table[si] || table[si] == 0xFFFFFFFF) && si != L' ')
 				continue;
 
-			puchar data = (puchar)((uint)table + table[si]);
+			puchar data = (puchar)((size_t)table + table[si]);
 
 			int offsX = 0;
 			int offsY = 0;
@@ -2673,7 +2673,7 @@ UINT_LIST CFontsManager::GeneratePixelsW(const uchar &font, CGLTextTexture &th, 
 
 				IFOR(y, 0, dh)
 				{
-					int testY = offsY + lineOffsY + y;
+					int testY = offsY + lineOffsY + (int)y;
 
 					if (testY >= height)
 						break;
@@ -2683,7 +2683,7 @@ UINT_LIST CFontsManager::GeneratePixelsW(const uchar &font, CGLTextTexture &th, 
 
 					int italicOffset = 0;
 					if (isItalic)
-						italicOffset = (int)((dh - y) / ITALIC_FONT_KOEFFICIENT);
+						italicOffset = (int)((dh - (int)y) / ITALIC_FONT_KOEFFICIENT);
 
 					int testX = w + offsX + italicOffset + (int)isSolid;
 
@@ -2691,11 +2691,12 @@ UINT_LIST CFontsManager::GeneratePixelsW(const uchar &font, CGLTextTexture &th, 
 					{
 						IFOR(j, 0, 8)
 						{
-							int x = (c * 8) + j;
+							int x = ((int)c * 8) + (int)j;
+
 							if (x >= dw)
 								break;
 
-							int nowX = testX + x;
+							int nowX = testX + (int)x;
 
 							if (nowX >= width)
 								break;
@@ -2723,18 +2724,18 @@ UINT_LIST CFontsManager::GeneratePixelsW(const uchar &font, CGLTextTexture &th, 
 
 					IFOR(cy, 0, dh)
 					{
-						int testY = offsY + lineOffsY + cy;
+						int testY = offsY + lineOffsY + (int)cy;
 
 						if (testY >= height)
 							break;
 
 						int italicOffset = 0;
 						if (isItalic && cy < dh)
-							italicOffset = (int)((dh - cy) / ITALIC_FONT_KOEFFICIENT);
+							italicOffset = (int)((dh - (int)cy) / ITALIC_FONT_KOEFFICIENT);
 
 						IFOR(cx, minXOk, maxXOk)
 						{
-							int testX = cx + w + offsX + italicOffset;
+							int testX = (int)cx + w + offsX + italicOffset;
 
 							if (testX >= width/* + italicOffset*/)
 								break;
@@ -2750,7 +2751,7 @@ UINT_LIST CFontsManager::GeneratePixelsW(const uchar &font, CGLTextTexture &th, 
 
 								IFOR(x, 0, endX)
 								{
-									int nowX = testX + x;
+									int nowX = testX + (int)x;
 
 									int testBlock = (testY * width) + nowX;
 
@@ -2766,7 +2767,7 @@ UINT_LIST CFontsManager::GeneratePixelsW(const uchar &font, CGLTextTexture &th, 
 
 					IFOR(cy, 0, dh)
 					{
-						int testY = offsY + lineOffsY + cy;
+						int testY = offsY + lineOffsY + (int)cy;
 
 						if (testY >= height)
 							break;
@@ -2777,7 +2778,7 @@ UINT_LIST CFontsManager::GeneratePixelsW(const uchar &font, CGLTextTexture &th, 
 
 						IFOR(cx, 0, dw)
 						{
-							int testX = cx + w + offsX + italicOffset;
+							int testX = (int)cx + w + offsX + italicOffset;
 
 							if (testX >= width/* + italicOffset*/)
 								break;
@@ -2802,18 +2803,18 @@ UINT_LIST CFontsManager::GeneratePixelsW(const uchar &font, CGLTextTexture &th, 
 
 					IFOR(cy, minYOk, maxYOk)
 					{
-						int testY = offsY + lineOffsY + cy;
+						int testY = offsY + lineOffsY + (int)cy;
 
 						if (testY >= height)
 							break;
 
 						int italicOffset = 0;
 						if (isItalic && cy >= 0 && cy < dh)
-							italicOffset = (int)((dh - cy) / ITALIC_FONT_KOEFFICIENT);
+							italicOffset = (int)((dh - (int)cy) / ITALIC_FONT_KOEFFICIENT);
 
 						IFOR(cx, minXOk, maxXOk)
 						{
-							int testX = cx + w + offsX + italicOffset;
+							int testX = (int)cx + w + offsX + italicOffset;
 
 							if (testX >= width/* + italicOffset*/)
 								break;
@@ -2834,11 +2835,11 @@ UINT_LIST CFontsManager::GeneratePixelsW(const uchar &font, CGLTextTexture &th, 
 
 								IFOR(x, startX, endX)
 								{
-									int nowX = testX + x;
+									int nowX = testX + (int)x;
 
 									IFOR(y, startY, endY)
 									{
-										int testBlock = ((testY + y) * width) + nowX;
+										int testBlock = ((testY + (int)y) * width) + nowX;
 
 										if (pData[testBlock] && pData[testBlock] != blackColor)
 										{
@@ -2878,7 +2879,7 @@ UINT_LIST CFontsManager::GeneratePixelsW(const uchar &font, CGLTextTexture &th, 
 				int minXOk = ((tmpW + offsX) > 0) ? -1 : 0;
 				int maxXOk = ((w + offsX + dw) < width) ? 1 : 0;
 
-				puchar aData = (puchar)((uint)table + table[L'a']);
+				puchar aData = (puchar)((size_t)table + table[L'a']);
 
 				int testY = lineOffsY + (char)aData[1] + (char)aData[3];
 
@@ -2887,7 +2888,7 @@ UINT_LIST CFontsManager::GeneratePixelsW(const uchar &font, CGLTextTexture &th, 
 
 				IFOR(cx, minXOk, dw + maxXOk)
 				{
-					int testX = (cx + tmpW + offsX + (int)isSolid);
+					int testX = ((int)cx + tmpW + offsX + (int)isSolid);
 
 					if (testX >= width)
 						break;
@@ -2913,7 +2914,7 @@ UINT_LIST CFontsManager::GeneratePixelsW(const uchar &font, CGLTextTexture &th, 
 
 		IFOR(y, 0, height)
 		{
-			int yPos = (y * width);
+			int yPos = ((int)y * width);
 
 			IFOR(x, 0, width)
 			{

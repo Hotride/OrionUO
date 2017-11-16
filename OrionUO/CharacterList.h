@@ -43,14 +43,14 @@ public:
 	@param [__in] name Новое имя
 	@return 
 	*/
-	void SetName(int pos, string name);
+	void SetName(intptr_t pos, const string &name);
 
 	/*!
 	Получить имя персонажа в указанном слоте
 	@param [__in] pos Позиция в списке
 	@return Имя персонажа
 	*/
-	string GetName(int pos) const;
+	string GetName(intptr_t pos) const;
 
 	/*!
 	Получить имя выбранного персонажа
