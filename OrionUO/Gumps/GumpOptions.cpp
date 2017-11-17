@@ -1414,7 +1414,7 @@ void CGumpOptions::RedrawMacroData()
 		if (obj->m_Prev != NULL)
 			m_MacroDataBox->Add(new CGUIButton(ID_GO_P5_BUTTON_UP, 0x0983, 0x0984, 0x0984, 415, 173));
 
-		const int maxMacroDraw = 7;
+		const int maxMacroDraw = 3;
 		int macroCount = 0;
 
 		int x = 164;
