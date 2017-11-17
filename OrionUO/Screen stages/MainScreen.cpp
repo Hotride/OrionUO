@@ -397,7 +397,7 @@ void CMainScreen::SaveGlobalConfig()
 
 	if (g_App.UOFilesPathA != g_App.ExePathA)
 	{
-		sprintf_s(buf, "CustomPath=%s\n", g_App.UOFilesPathA);
+		sprintf_s(buf, "CustomPath=%s\n", g_App.UOFilesPathA.c_str());
 		fputs(buf, uo_cfg);
 	}
 	fclose(uo_cfg);
