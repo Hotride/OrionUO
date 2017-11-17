@@ -245,8 +245,6 @@ void CMainScreen::LoadCustomPath()
 					g_App.SetUOFilesPathA(pathA);
 					g_App.SetUOFilesPathW(pathW);
 				}
-				default:
-					break;
 			}
 		}
 	}
@@ -346,14 +344,6 @@ void CMainScreen::LoadGlobalConfig()
 
 					break;
 				}
-				case MSCC_CUSTOM_PATH:
-				{
-					string pathA = strings[1];
-					wstring pathW = ToWString(pathA);
-					g_App.SetExePathA(pathA);
-					g_App.SetExePathW(pathW);
-					break;
-				}
 				default:
 					break;
 			}
@@ -405,6 +395,11 @@ void CMainScreen::SaveGlobalConfig()
 	sprintf_s(buf, "Asmut=%s\n", (g_Asmut ? "yes" : "no"));
 	fputs(buf, uo_cfg);
 
+	if (g_App.UOFilesPathA != g_App.ExePathA)
+	{
+		sprintf_s(buf, "CustomPath=%s\n", g_App.UOFilesPathA);
+		fputs(buf, uo_cfg);
+	}
 	fclose(uo_cfg);
 }
 //----------------------------------------------------------------------------------
