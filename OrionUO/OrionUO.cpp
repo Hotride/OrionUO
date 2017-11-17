@@ -202,11 +202,15 @@ bool COrion::Install()
 
 	if (!PathFileExistsA(clientCuoPath.c_str()))
 	{
-		LOG("Client.cuo is missing!\n");
-		CRASHLOG("Client.cuo is missing!\n");
-		g_OrionWindow.ShowMessage("Configuration file 'Client.cuo' not found in " + clientCuoPath + "! Client can't be started!", "Error!");
-		ExitProcess(0);
-		return false;
+		clientCuoPath = g_App.ExeFilePath("Client.cuo").c_str();
+		if (!PathFileExistsA(clientCuoPath.c_str()))
+		{
+			LOG("Client.cuo is missing!\n");
+			CRASHLOG("Client.cuo is missing!\n");
+			g_OrionWindow.ShowMessage("Configuration file 'Client.cuo' not found in " + clientCuoPath + "! Client can't be started!", "Error!");
+			ExitProcess(0);
+			return false;
+		}
 	}
 
 	IFOR(i, 0, 256)
@@ -961,7 +965,7 @@ void COrion::LoadClientConfig()
 
 	WISP_FILE::CMappedFile config;
 
-	if (config.Load(g_App.UOFilesPath("Client.cuo")))
+	if (config.Load(g_App.UOFilesPath("Client.cuo")) || config.Load(g_App.ExeFilePath("Client.cuo")))
 	{
 		UCHAR_LIST realData;
 		install(config.Start, (int)config.Size, &realData);
@@ -1367,7 +1371,7 @@ void COrion::LoadPluginConfig()
 
 	g_PluginInit(libName, functions, flags);
 
-	LoadPlugin(g_App.ExeFilePath("OA/OrionAssistant.dll"), "Install", 0xFFFFFFFF);
+	LoadPlugin(g_App.ExeFilePath("OA\\OrionAssistant.dll"), "Install", 0xFFFFFFFF);
 
 	IFOR(i, 0, (int)libName.size())
 		LoadPlugin(g_App.ExeFilePath(libName[i].c_str()), functions[i], flags[i]);
