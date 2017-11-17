@@ -1371,7 +1371,7 @@ void COrion::LoadPluginConfig()
 
 	g_PluginInit(libName, functions, flags);
 
-	LoadPlugin(g_App.ExeFilePath("OA\\OrionAssistant.dll"), "Install", 0xFFFFFFFF);
+	LoadPlugin(g_App.ExeFilePath("OA/OrionAssistant.dll"), "Install", 0xFFFFFFFF);
 
 	IFOR(i, 0, (int)libName.size())
 		LoadPlugin(g_App.ExeFilePath(libName[i].c_str()), functions[i], flags[i]);
