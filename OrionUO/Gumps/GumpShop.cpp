@@ -304,7 +304,11 @@ bool CGumpShop::OnLeftMouseButtonDoubleClick()
 
 				if (minmax->Value < minmax->MaxValue)
 				{
-					minmax->Value += 1;
+					if (g_ShiftPressed)
+						minmax->Value = minmax->MaxValue;
+					else
+						minmax->Value += 1;
+
 					minmax->UpdateText();
 					shopItem->CreateCountText(minmax->Value);
 					m_WantRedraw = true;
@@ -315,7 +319,16 @@ bool CGumpShop::OnLeftMouseButtonDoubleClick()
 			else
 			{
 				shopResult = (CGUIShopResult*)m_ItemList[1]->Add(new CGUIShopResult(shopItem, 0, posY));
-				shopItem->CreateCountText(shopResult->m_MinMaxButtons->Value);
+
+				CGUIMinMaxButtons *minmax = shopResult->m_MinMaxButtons;
+
+				if (g_ShiftPressed)
+				{
+					minmax->Value = minmax->MaxValue;
+					minmax->UpdateText();
+				}
+
+				shopItem->CreateCountText(minmax->Value);
 				m_WantRedraw = true;
 				result = true;
 				UpdateTotalPrice();
