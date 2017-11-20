@@ -1412,9 +1412,9 @@ void CGumpOptions::RedrawMacroData()
 	if (obj != NULL)
 	{
 		if (obj->m_Prev != NULL)
-			m_MacroDataBox->Add(new CGUIButton(ID_GO_P5_BUTTON_UP, 0x0983, 0x0984, 0x0984, 456, 173));
+			m_MacroDataBox->Add(new CGUIButton(ID_GO_P5_BUTTON_UP, 0x0983, 0x0984, 0x0984, 415, 173));
 
-		const int maxMacroDraw = 7;
+		const int maxMacroDraw = 3;
 		int macroCount = 0;
 
 		int x = 164;
@@ -1422,7 +1422,7 @@ void CGumpOptions::RedrawMacroData()
 
 		while (obj != NULL && macroCount < maxMacroDraw)
 		{
-			CGUIComboBox *combobox = (CGUIComboBox*)m_MacroDataBox->Add(new CGUIComboBox(ID_GO_P5_MACRO_SELECTION + (macroCount * 1000), 0x098D, true, 0x09B5, 168, y, 0, 20, true));
+			CGUIComboBox *combobox = (CGUIComboBox*)m_MacroDataBox->Add(new CGUIComboBox(ID_GO_P5_MACRO_SELECTION + (macroCount * 1000), 0x098D, true, 0x09B5, 135, y, 0, 20, true));
 			combobox->SelectedIndex = obj->Code;
 
 			IFOR(i, 0, CMacro::MACRO_ACTION_NAME_COUNT)
@@ -1434,7 +1434,7 @@ void CGumpOptions::RedrawMacroData()
 				int macroListCount = 0;
 				CMacro::GetBoundByCode(obj->Code, macroListCount, macroListOffset);
 
-				combobox = (CGUIComboBox*)m_MacroDataBox->Add(new CGUIComboBox(ID_GO_P5_ACTION_SELECTION + (macroCount * 1000), 0x098E, true, 0x09B5, 286, y, 0, 20, true));
+				combobox = (CGUIComboBox*)m_MacroDataBox->Add(new CGUIComboBox(ID_GO_P5_ACTION_SELECTION + (macroCount * 1000), 0x098E, true, 0x09B5, 245, y, 0, 20, true));
 				combobox->SelectedIndex = obj->SubCode - macroListOffset;
 
 				IFOR(i, 0, macroListCount)
@@ -1442,13 +1442,13 @@ void CGumpOptions::RedrawMacroData()
 			}
 			else if (obj->HasSubMenu == 2)
 			{
-				m_MacroDataBox->Add(new CGUIGumppic(0x098E, 286, y));
+				m_MacroDataBox->Add(new CGUIGumppic(0x098E, 245, y));
 
-				m_MacroDataBox->Add(new CGUIScissor(true, 0, 0, 292, y + 5, 150, 20));
+				m_MacroDataBox->Add(new CGUIScissor(true, 0, 0, 251, y + 5, 150, 20));
 
-				m_MacroDataBox->Add(new CGUIHitBox(ID_GO_P5_ACTION_SELECTION + (macroCount * 1000), 292, y + 5, 150, 20));
+				m_MacroDataBox->Add(new CGUIHitBox(ID_GO_P5_ACTION_SELECTION + (macroCount * 1000), 251, y + 5, 150, 20));
 
-				CGUITextEntry *entry = (CGUITextEntry*)m_MacroDataBox->Add(new CGUITextEntry(ID_GO_P5_ACTION_SELECTION + (macroCount * 1000), 0x0386, 0x0386, 0x0386, 292, y + 5, 0, false, 1));
+				CGUITextEntry *entry = (CGUITextEntry*)m_MacroDataBox->Add(new CGUITextEntry(ID_GO_P5_ACTION_SELECTION + (macroCount * 1000), 0x0386, 0x0386, 0x0386, 251, y + 5, 0, false, 1));
 				entry->CheckOnSerial = true;
 				entry->m_Entry.SetText(((CMacroObjectString*)obj)->String);
 
@@ -1462,7 +1462,7 @@ void CGumpOptions::RedrawMacroData()
 		}
 
 		if (macroCount >= maxMacroDraw)
-			m_MacroDataBox->Add(new CGUIButton(ID_GO_P5_BUTTON_DOWN, 0x0985, 0x0986, 0x0986, 456, y /*295 /*269*/));
+			m_MacroDataBox->Add(new CGUIButton(ID_GO_P5_BUTTON_DOWN, 0x0985, 0x0986, 0x0986, 415, y /*295 /*269*/));
 	}
 }
 //----------------------------------------------------------------------------
