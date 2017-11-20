@@ -92,14 +92,19 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy /y /d  "$(SolutionDir)bin\bass.dll" "$(OutDir)"
-
-xcopy /y /d  "$(SolutionDir)bin\glew32.dll" "$(OutDir)"
-
-xcopy /y /d  "$(SolutionDir)bin\zlib1.dll" "$(OutDir)"
-xcopy /y /d  "$(SolutionDir)bin\bassmidi.dll" "$(OutDir)"
-xcopy /y /d  "$(SolutionDir)bin\Freeimage.dll" "$(OutDir)"
+      <Command>if exist "$(OutDir)bass.dll" (del "$(OutDir)bass.dll")
+if exist "$(OutDir)bassmidi.dll" (del "$(OutDir)bassmidi.dll")
+if exist "$(OutDir)glew32.dll" (del "$(OutDir)glew32.dll")
+if exist "$(OutDir)zlib1.dll" (del "$(OutDir)zlib1.dll")
+if exist "$(OutDir)Freeimage.dll" (del "$(OutDir)Freeimage.dll")
 if exist "$(ProjectDir)Orion.dll" (del "$(ProjectDir)Orion.dll")
+xcopy /y /d  "$(SolutionDir)bin32\bass.dll" "$(OutDir)"
+
+xcopy /y /d  "$(SolutionDir)bin32\glew32.dll" "$(OutDir)"
+xcopy /y /d  "$(SolutionDir)bin32\zlib1.dll" "$(OutDir)"
+
+xcopy /y /d  "$(SolutionDir)bin32\bassmidi.dll" "$(OutDir)"
+xcopy /y /d  "$(SolutionDir)bin32\Freeimage.dll" "$(OutDir)"
 xcopy /y /d  "$(SolutionDir)debug_bin\Orion.dll" "$(ProjectDir)"
 
 </Command>
