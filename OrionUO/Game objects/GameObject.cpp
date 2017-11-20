@@ -385,7 +385,7 @@ bool CGameObject::Poisoned()
 {
 	WISPFUN_DEBUG("c20_f12");
 	if (g_PacketManager.ClientVersion >= CV_7000)
-		return SA_Poisoned;
+		return m_SA_Poisoned;
 	else
 		return (m_Flags & 0x04);
 }

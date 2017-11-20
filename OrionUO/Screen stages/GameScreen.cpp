@@ -2268,7 +2268,7 @@ void CGameScreen::OnCharPress(const WPARAM &wParam, const LPARAM &lParam)
 
 	if (g_EntryPointer == &g_GameConsole && (wParam == 0x00000011 || wParam == 0x00000017) && ctrlPressed)
 		g_GameConsole.ChangeConsoleMessage(wParam == 0x00000017);
-	else if ((altGR || (!altPressed && !ctrlPressed)) && g_EntryPointer->Length() < 60)
+	else if ((altGR || (!altPressed && !ctrlPressed)) && (int)g_EntryPointer->Length() < max(g_EntryPointer->MaxLength, 60))
 		g_EntryPointer->Insert((wchar_t)wParam);
 }
 //----------------------------------------------------------------------------------
