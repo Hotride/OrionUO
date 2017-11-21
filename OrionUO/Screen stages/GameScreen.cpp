@@ -1088,8 +1088,8 @@ void CGameScreen::AddLight(CRenderWorldObject *rwo, CRenderWorldObject *lightObj
 
 			if ((graphic >= 0x3E02 && graphic <= 0x3E0B) || (graphic >= 0x3914 && graphic <= 0x3929))
 				light.ID = 2;
-			//else if (rwo == lightObject && rwo->IsGameObject())
-			//	light.ID = ((CGameItem*)lightObject)->LightID;
+			else if (rwo == lightObject && rwo->IsGameObject())
+				light.ID = ((CGameItem*)lightObject)->LightID;
 			else
 				light.ID = (uchar)lightObject->GetLightID();
 

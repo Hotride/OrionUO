@@ -912,6 +912,7 @@ void CGameWorld::UpdateGameObject(const uint &serial, ushort graphic, const ucha
 		item->X = x;
 		item->Y = y;
 		item->Z = z;
+		item->LightID = direction;
 
 		if (graphic == 0x2006)
 			item->Layer = direction;
@@ -926,7 +927,7 @@ void CGameWorld::UpdateGameObject(const uint &serial, ushort graphic, const ucha
 
 		item->OnGraphicChange(direction);
 
-		LOG("serial:0x%08X graphic:0x%04X color:0x%04X count:%i xyz:%d,%d,%d flags:0x%02X\n", obj->Serial, obj->Graphic, obj->Color, item->Count, obj->X, obj->Y, obj->Z, obj->Flags);
+		LOG("serial:0x%08X graphic:0x%04X color:0x%04X count:%i xyz:%d,%d,%d light:%i flags:0x%02X\n", obj->Serial, obj->Graphic, obj->Color, item->Count, obj->X, obj->Y, obj->Z, direction, obj->Flags);
 	}
 	else
 	{

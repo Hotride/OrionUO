@@ -37,6 +37,8 @@ class CGameItem : public CGameObject
 	SETGET(bool, NameFromCliloc, false);
 	//!Тайл мульти для отображения
 	SETGET(ushort, MultiTileGraphic, 0);
+	//!Индекс источника света
+	SETGET(uchar, LightID, 0);
 
 protected:
 	/*!

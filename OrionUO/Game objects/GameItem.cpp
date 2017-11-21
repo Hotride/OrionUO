@@ -12,7 +12,7 @@
 #include "stdafx.h"
 //----------------------------------------------------------------------------------
 CGameItem::CGameItem(const uint &serial)
-: CGameObject(serial), m_Layer(0), m_AnimID(0)
+: CGameObject(serial)
 {
 	m_NPC = false;
 }
