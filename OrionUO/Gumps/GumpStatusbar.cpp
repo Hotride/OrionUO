@@ -412,6 +412,7 @@ void CGumpStatusbar::PrepareContent()
 			m_Body->Color = 0x0386;
 			m_HitsBody->Color = 0x0386;
 			m_Entry->Color = 0x0386;
+			m_Entry->ReadOnly = true;
 		}
 		else if (obj != NULL && m_HitsBody->Color == 0x0386)
 		{
@@ -419,9 +420,15 @@ void CGumpStatusbar::PrepareContent()
 			m_HitsBody->Color = 0;
 
 			if (obj->CanChangeName)
+			{
+				m_Entry->ReadOnly = false;
 				m_Entry->Color = 0x000E;
+			}
 			else
+			{
+				m_Entry->ReadOnly = true;
 				m_Entry->Color = 0x0386;
+			}
 		}
 	}
 }
@@ -1093,6 +1100,8 @@ void CGumpStatusbar::OnLeftMouseButtonDown()
 		g_Target.SendTargetObject(m_Serial);
 		g_MouseManager.CancelDoubleClick = true;
 	}
+	else
+		CGump::OnLeftMouseButtonDown();
 }
 //----------------------------------------------------------------------------------
 void CGumpStatusbar::GUMP_BUTTON_EVENT_C
