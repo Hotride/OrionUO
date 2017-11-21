@@ -330,8 +330,13 @@ void CMapBlock::AddRender(CRenderWorldObject *item, const int &x, const int &y)
 	}
 	else if (item->IsStaticGroupObject())
 	{
-		if (item->IsGameObject() && (((CGameObject*)item)->NPC || ((CGameObject*)item)->IsCorpse()))
+		if (item->IsGameObject())
+		{
 			priorityZ++;
+
+			if (((CGameObject*)item)->NPC || ((CGameObject*)item)->IsCorpse())
+				priorityZ++;
+		}
 		else if (item->IsMultiObject() && (((CMultiObject*)item)->State & CHMOF_GENERIC_INTERNAL))
 			priorityZ--;
 		else
