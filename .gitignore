@@ -47,12 +47,8 @@
 !/bin/*.exe
 !/bin/*.pdb
 !/bin/*.sf2
-!/bin32/*.dll
-!/bin32/*.exe
-!/bin32/*.pdb
-!/bin32/*.sf2
-!/bin64/*.dll
-!/bin64/*.exe
-!/bin64/*.pdb
-!/bin64/*.sf2
+!/test_bin64/*.dll
+!/test_bin64/*.exe
+!/test_bin64/*.pdb
+!/test_bin64/*.sf2
 !/WikiData/RU/*.txt

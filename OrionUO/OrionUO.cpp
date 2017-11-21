@@ -1016,9 +1016,14 @@ void COrion::LoadClientConfig()
 		g_PluginInit = (PLUGIN_INIT_TYPE*)file.ReadUInt64LE();
 #endif
 
-		file.Move(1);
+		int mapsCount = MAX_MAPS_COUNT;
 
-		IFOR(i, 0, MAX_MAPS_COUNT)
+		if (version >= 4)
+			mapsCount = file.ReadUInt8();
+		else
+			file.Move(1);
+
+		IFOR(i, 0, mapsCount)
 		{
 			g_MapSize[i].Width = file.ReadUInt16LE();
 			g_MapSize[i].Height = file.ReadUInt16LE();
