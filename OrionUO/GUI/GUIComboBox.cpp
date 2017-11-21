@@ -97,16 +97,8 @@ void CGUIComboBox::SetShowItemsCount(const int &val)
 WISP_GEOMETRY::CSize CGUIComboBox::GetSize()
 {
 	WISPFUN_DEBUG("c49_f5");
-	WISP_GEOMETRY::CSize size;
-	/*CGLTexture *th = g_Orion.ExecuteGump(GetDrawGraphic());
 
-	if (th != NULL)
-	{
-		size.Width = th->Width;
-		size.Height = th->Height;
-	}*/
-
-	return size;
+	return WISP_GEOMETRY::CSize(m_WorkWidth, m_WorkHeight);
 }
 //----------------------------------------------------------------------------------
 void CGUIComboBox::PrepareTextures()

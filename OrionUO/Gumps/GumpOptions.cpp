@@ -1386,6 +1386,7 @@ void CGumpOptions::RedrawMacroData()
 {
 	WISPFUN_DEBUG("c104_f10");
 	m_WantRedrawMacroData = false;
+	m_WantUpdateContent = true;
 	m_MacroDataBox->Clear();
 
 	bool alt = false;
@@ -1414,7 +1415,7 @@ void CGumpOptions::RedrawMacroData()
 		if (obj->m_Prev != NULL)
 			m_MacroDataBox->Add(new CGUIButton(ID_GO_P5_BUTTON_UP, 0x0983, 0x0984, 0x0984, 415, 173));
 
-		const int maxMacroDraw = 3;
+		const int maxMacroDraw = 7;
 		int macroCount = 0;
 
 		int x = 164;
