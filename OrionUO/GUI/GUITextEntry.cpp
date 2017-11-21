@@ -14,7 +14,7 @@
 CGUITextEntry::CGUITextEntry(const uint &serial, const ushort &color, const ushort &colorSelected, const ushort &colorFocused, const int &x, const int &y, const int &maxWidth, const bool &unicode, const uchar &font, const TEXT_ALIGN_TYPE &align, const ushort &textFlags, const int &maxLength)
 : CBaseGUI(GOT_TEXTENTRY, serial, 0, color, x, y), m_ColorSelected(colorSelected),
 m_ColorFocused(colorFocused), m_Unicode(unicode), m_Font(font), m_Align(align),
-m_Entry(maxLength, maxWidth, maxWidth)
+m_TextFlags(textFlags), m_Entry(maxLength, maxWidth, maxWidth)
 {
 }
 //----------------------------------------------------------------------------------
