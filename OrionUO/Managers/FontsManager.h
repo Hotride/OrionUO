@@ -208,6 +208,8 @@ private:
 	*/
 	bool GenerateWBase(const uchar &font, CGLTextTexture &th, const wstring &str, const ushort &color, const uchar &cell, const int &width, const TEXT_ALIGN_TYPE &align, const ushort &flags);
 
+	uchar GetCharIndexA(const uchar &c);
+
 public:
 	CFontsManager();
 	~CFontsManager();

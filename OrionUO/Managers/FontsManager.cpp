@@ -179,6 +179,16 @@ int CFontsManager::GetFontOffsetY(const uchar &font, const uchar &index)
 	return 0;
 }
 //----------------------------------------------------------------------------------
+uchar CFontsManager::GetCharIndexA(const uchar &c)
+{
+	uchar index = m_FontIndex[c];
+
+	if (index >= 0xE0)
+		index = m_FontIndex[' '];
+
+	return index;
+}
+//----------------------------------------------------------------------------------
 /*!
 Получить позицию каретки в тексте
 @param [__in] font Шрифт
@@ -221,7 +231,7 @@ WISP_GEOMETRY::CPoint2Di CFontsManager::GetCaretPosA(const uchar &font, const st
 			{
 				IFOR(i, 0, len)
 				{
-					uchar index = m_FontIndex[(uchar)ptr->Data[i].item];
+					uchar index = GetCharIndexA((uchar)ptr->Data[i].item);
 
 					if (index >= 0xE0)
 						continue;
@@ -327,7 +337,7 @@ int CFontsManager::CalculateCaretPosA(const uchar &font, const string &str, cons
 
 				IFOR(i, 0, len)
 				{
-					uchar index = m_FontIndex[(uchar)ptr->Data[i].item];
+					uchar index = GetCharIndexA((uchar)ptr->Data[i].item);
 
 					if (index >= 0xE0)
 						continue;
@@ -376,7 +386,7 @@ int CFontsManager::GetWidthA(const uchar &font, const string &str)
 
 	for (const char &c : str)
 	{
-		uchar index = m_FontIndex[(uchar)c];
+		uchar index = GetCharIndexA((uchar)c);
 
 		if (index >= 0xE0)
 			continue;
@@ -497,7 +507,7 @@ string CFontsManager::GetTextByWidthA(const uchar &font, const string &str, int 
 
 	if (isCropped)
 	{
-		uchar idx = m_FontIndex[(uchar)'.'];
+		uchar idx = GetCharIndexA((uchar)'.');
 
 		if (idx < 0xE0)
 			width -= fd.Chars[idx].Width * 3;
@@ -508,7 +518,7 @@ string CFontsManager::GetTextByWidthA(const uchar &font, const string &str, int 
 
 	for (const char &c : str)
 	{
-		uchar index = m_FontIndex[(uchar)c];
+		uchar index = GetCharIndexA((uchar)c);
 
 		if (index >= 0xE0)
 			continue;
@@ -574,7 +584,7 @@ PMULTILINES_FONT_INFO CFontsManager::GetInfoA(uchar font, const char *str, int l
 				si = '\n';
 		}
 
-		uchar index = m_FontIndex[(uchar)si];
+		uchar index = GetCharIndexA((uchar)si);
 		if (index >= 0xE0 && si != '\n')
 			continue;
 
@@ -877,7 +887,7 @@ UINT_LIST CFontsManager::GeneratePixelsA(const uchar &font, CGLTextTexture &th, 
 			uchar index = (uchar)ptr->Data[i].item;
 			int offsY = GetFontOffsetY(font, index);
 
-			index = m_FontIndex[index];
+			index = GetCharIndexA(index);
 			if (index >= 0xE0)
 				continue;
 
