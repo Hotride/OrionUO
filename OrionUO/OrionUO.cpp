@@ -1768,8 +1768,6 @@ void COrion::LoginComplete(const bool &reload)
 
 	if (load)
 	{
-		g_Orion.CreateTextMessageF(3, 0x35, "Loading config");
-
 		char buf[256] = { 0 };
 		CServer *server = g_ServerList.GetSelectedServer();
 
