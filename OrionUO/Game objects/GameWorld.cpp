@@ -102,7 +102,7 @@ void CGameWorld::ProcessAnimation()
 
 			ProcessSound(g_Ticks, gc);
 
-			if (gc->LastAnimationChangeTime < g_Ticks)
+			if (gc->LastAnimationChangeTime < g_Ticks &&!gc->NoIterateAnimIndex())
 			{
 				char frameIndex = gc->AnimIndex;
 				

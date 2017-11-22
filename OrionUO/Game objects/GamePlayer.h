@@ -77,6 +77,10 @@ public:
 	*/
 	bool IsPlayer() {return true;}
 
+	virtual bool Walking() { return (m_LastStepTime > (uint)(g_Ticks - PLAYER_WALKING_DELAY)); }
+
+	virtual bool NoIterateAnimIndex() { return false; }
+
 	void UpdateAbilities();
 
 	void UpdateRemoveRange();

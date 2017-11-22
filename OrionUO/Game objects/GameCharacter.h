@@ -150,7 +150,9 @@ public:
 	Если персонаж идет (или только что закончил передвигаться)
 	@return true - в движении, false - нет
 	*/
-	bool Walking() { return (m_LastStepTime > (uint)(g_Ticks - WALKING_DELAY));	}
+	virtual bool Walking() { return (m_LastStepTime > (uint)(g_Ticks - WALKING_DELAY)); }
+
+	virtual bool NoIterateAnimIndex() { return ((m_LastStepTime > (uint)(g_Ticks - WALKING_DELAY)) && m_Steps.empty()); }
 
 	/*!
 	не подписанная функция

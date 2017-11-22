@@ -198,7 +198,10 @@ const int TURN_DELAY = 100;
 const int TURN_DELAY_FAST = 45;
 
 //!Задержка таймера хотьбы
-const int WALKING_DELAY = 200;
+const int WALKING_DELAY = 750;
+
+//!Задержка таймера хотьбы для игрока
+const int PLAYER_WALKING_DELAY = 150;
 
 //!Таблица задержек перемещений
 const int CHARACTER_ANIMATION_DELAY_TABLE[2][2] =
