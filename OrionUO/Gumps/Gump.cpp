@@ -297,7 +297,7 @@ bool CGump::ApplyTransparent(CBaseGUI *item, int page, const int &currentPage, c
 	return transparent;
 }
 //----------------------------------------------------------------------------------
-void CGump::DrawItems(CBaseGUI *start, const int &currentPage, const int draw2Page)
+void CGump::DrawItems(CBaseGUI *start, const int &currentPage, const int &draw2Page, int page)
 {
 	WISPFUN_DEBUG("c84_f9");
 	float alpha[2] = { 1.0f, 0.7f };
@@ -306,8 +306,7 @@ void CGump::DrawItems(CBaseGUI *start, const int &currentPage, const int draw2Pa
 	bool transparent = ApplyTransparent(start, 0, currentPage, draw2Page);
 	glColor4f(1.0f, 1.0f, 1.0f, alpha[transparent]);
 
-	int page = 0;
-	bool canDraw = (!draw2Page || (page >= currentPage && page <= currentPage + draw2Page));
+	bool canDraw = ((page == -1) || (!page && !draw2Page) || (page >= currentPage && page <= currentPage + draw2Page));
 
 	QFOR(item, start, CBaseGUI*)
 	{
@@ -326,7 +325,7 @@ void CGump::DrawItems(CBaseGUI *start, const int &currentPage, const int draw2Pa
 			{
 				case GOT_DATABOX:
 				{
-					CGump::DrawItems((CBaseGUI*)item->m_Items, currentPage, draw2Page);
+					CGump::DrawItems((CBaseGUI*)item->m_Items, currentPage, draw2Page, page);
 					break;
 				}
 				case GOT_HTMLGUMP:
@@ -355,7 +354,7 @@ void CGump::DrawItems(CBaseGUI *start, const int &currentPage, const int draw2Pa
 
 					glTranslatef(offsetX, offsetY, 0.0f);
 
-					CGump::DrawItems(item, currentPage, draw2Page);
+					CGump::DrawItems(item, currentPage, draw2Page, page);
 					g_GL.PopScissor();
 
 					glTranslatef(-(x + offsetX), -(y + offsetY), 0.0f);
@@ -394,13 +393,12 @@ void CGump::DrawItems(CBaseGUI *start, const int &currentPage, const int draw2Pa
 	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 }
 //----------------------------------------------------------------------------------
-CRenderObject *CGump::SelectItems(CBaseGUI *start, const int &currentPage, const int draw2Page)
+CRenderObject *CGump::SelectItems(CBaseGUI *start, const int &currentPage, const int &draw2Page, int page)
 {
 	WISPFUN_DEBUG("c84_f10");
 	CRenderObject *selected = NULL;
 
-	int page = 0;
-	bool canDraw = (!draw2Page || (page >= currentPage && page <= currentPage + draw2Page));
+	bool canDraw = ((page == -1) || (!page && !draw2Page) || (page >= currentPage && page <= currentPage + draw2Page));
 	vector<bool> scissorList;
 	bool currentScissorState = true;
 	CGUIComboBox *combo = NULL;
@@ -472,7 +470,7 @@ CRenderObject *CGump::SelectItems(CBaseGUI *start, const int &currentPage, const
 
 						g_MouseManager.Position = WISP_GEOMETRY::CPoint2Di(g_MouseManager.Position.X - offsetX, g_MouseManager.Position.Y - offsetY);
 
-						selected = CGump::SelectItems((CBaseGUI*)item->m_Next, currentPage, draw2Page);
+						selected = CGump::SelectItems((CBaseGUI*)item->m_Next, currentPage, draw2Page, page);
 					}
 					else
 						selected = NULL;
@@ -491,7 +489,7 @@ CRenderObject *CGump::SelectItems(CBaseGUI *start, const int &currentPage, const
 				}
 				case GOT_DATABOX:
 				{
-					CRenderObject *selectedBox = CGump::SelectItems((CBaseGUI*)item->m_Items, currentPage, draw2Page);
+					CRenderObject *selectedBox = CGump::SelectItems((CBaseGUI*)item->m_Items, currentPage, draw2Page, page);
 
 					if (selectedBox)
 						selected = selectedBox;
@@ -543,12 +541,11 @@ CRenderObject *CGump::SelectItems(CBaseGUI *start, const int &currentPage, const
 	return selected;
 }
 //----------------------------------------------------------------------------------
-void CGump::TestItemsLeftMouseDown(CGump *gump, CBaseGUI *start, const int &currentPage, const int &draw2Page, int count)
+void CGump::TestItemsLeftMouseDown(CGump *gump, CBaseGUI *start, const int &currentPage, const int &draw2Page, int page, int count)
 {
 	WISPFUN_DEBUG("c84_f11");
-	int page = 0;
 	int group = 0;
-	bool canDraw = (!draw2Page || (page >= currentPage && page <= currentPage + draw2Page));
+	bool canDraw = ((page == -1) || (!page && !draw2Page) || (page >= currentPage && page <= currentPage + draw2Page));
 
 	static bool htmlTextBackgroundCanBeColored = false;
 
@@ -704,7 +701,7 @@ void CGump::TestItemsLeftMouseDown(CGump *gump, CBaseGUI *start, const int &curr
 				}
 				case GOT_DATABOX:
 				{
-					CGump::TestItemsLeftMouseDown(gump, (CBaseGUI*)item->m_Items, currentPage, draw2Page);
+					CGump::TestItemsLeftMouseDown(gump, (CBaseGUI*)item->m_Items, currentPage, draw2Page, page);
 					break;
 				}
 				case GOT_BUTTON:
@@ -769,7 +766,7 @@ void CGump::TestItemsLeftMouseDown(CGump *gump, CBaseGUI *start, const int &curr
 
 					CBaseGUI *item = (CBaseGUI*)htmlGump->m_Items;
 
-					TestItemsLeftMouseDown(gump, item, currentPage, draw2Page, 5);
+					TestItemsLeftMouseDown(gump, item, currentPage, draw2Page, page, 5);
 
 					IFOR(j, 0, 5)
 						item = (CBaseGUI*)item->m_Next;
@@ -779,7 +776,7 @@ void CGump::TestItemsLeftMouseDown(CGump *gump, CBaseGUI *start, const int &curr
 
 					g_MouseManager.Position = WISP_GEOMETRY::CPoint2Di(g_MouseManager.Position.X - offsetX, g_MouseManager.Position.Y - offsetY);
 
-					TestItemsLeftMouseDown(gump, item, currentPage, draw2Page);
+					TestItemsLeftMouseDown(gump, item, currentPage, draw2Page, page);
 
 					g_MouseManager.Position = oldPos;
 
@@ -792,12 +789,11 @@ void CGump::TestItemsLeftMouseDown(CGump *gump, CBaseGUI *start, const int &curr
 	}
 }
 //----------------------------------------------------------------------------------
-void CGump::TestItemsLeftMouseUp(CGump *gump, CBaseGUI *start, const int &currentPage, const int &draw2Page)
+void CGump::TestItemsLeftMouseUp(CGump *gump, CBaseGUI *start, const int &currentPage, const int &draw2Page, int page)
 {
 	WISPFUN_DEBUG("c84_f12");
-	int page = 0;
 	int group = 0;
-	bool canDraw = (!draw2Page || (page >= currentPage && page <= currentPage + draw2Page));
+	bool canDraw = ((page == -1) || (!page && !draw2Page) || (page >= currentPage && page <= currentPage + draw2Page));
 
 	QFOR(item, start, CBaseGUI*)
 	{
@@ -890,6 +886,9 @@ void CGump::TestItemsLeftMouseUp(CGump *gump, CBaseGUI *start, const int &curren
 					if (button->ToPage != -1)
 					{
 						gump->Page = button->ToPage;
+
+						if (gump->GumpType == GT_GENERIC)
+							gump->WantUpdateContent = true;
 
 						//if (gump->Page < 1)
 						//	gump->Page = 1;
@@ -1001,7 +1000,7 @@ void CGump::TestItemsLeftMouseUp(CGump *gump, CBaseGUI *start, const int &curren
 						gump->WantRedraw = true;
 					}
 					else
-						TestItemsLeftMouseUp(gump, (CBaseGUI*)skillGroup->m_Items, currentPage, draw2Page);
+						TestItemsLeftMouseUp(gump, (CBaseGUI*)skillGroup->m_Items, currentPage, draw2Page, page);
 
 					break;
 				}
@@ -1009,7 +1008,7 @@ void CGump::TestItemsLeftMouseUp(CGump *gump, CBaseGUI *start, const int &curren
 				case GOT_XFMHTMLGUMP:
 				case GOT_XFMHTMLTOKEN:
 				{
-					TestItemsLeftMouseUp(gump, (CBaseGUI*)item->m_Items, currentPage, draw2Page);
+					TestItemsLeftMouseUp(gump, (CBaseGUI*)item->m_Items, currentPage, draw2Page, page);
 
 					break;
 				}
@@ -1020,14 +1019,13 @@ void CGump::TestItemsLeftMouseUp(CGump *gump, CBaseGUI *start, const int &curren
 	}
 }
 //----------------------------------------------------------------------------------
-void CGump::TestItemsScrolling(CGump *gump, CBaseGUI *start, const bool &up, const int &currentPage, const int &draw2Page)
+void CGump::TestItemsScrolling(CGump *gump, CBaseGUI *start, const bool &up, const int &currentPage, const int &draw2Page, int page)
 {
 	WISPFUN_DEBUG("c84_f13");
 	const int delay = SCROLL_LISTING_DELAY / 7;
 
-	int page = 0;
 	int group = 0;
-	bool canDraw = (!draw2Page || (page >= currentPage && page <= currentPage + draw2Page));
+	bool canDraw = ((page == -1) || (!page && !draw2Page) || (page >= currentPage && page <= currentPage + draw2Page));
 
 	QFOR(item, start, CBaseGUI*)
 	{
@@ -1076,7 +1074,7 @@ void CGump::TestItemsScrolling(CGump *gump, CBaseGUI *start, const bool &up, con
 				}
 				case GOT_DATABOX:
 				{
-					CGump::TestItemsScrolling(gump, (CBaseGUI*)item->m_Items, up, currentPage, draw2Page);
+					CGump::TestItemsScrolling(gump, (CBaseGUI*)item->m_Items, up, currentPage, draw2Page, page);
 					break;
 				}
 				case GOT_HTMLGUMP:
@@ -1109,7 +1107,7 @@ void CGump::TestItemsScrolling(CGump *gump, CBaseGUI *start, const bool &up, con
 
 						g_MouseManager.Position = WISP_GEOMETRY::CPoint2Di(g_MouseManager.Position.X - offsetX, g_MouseManager.Position.Y - offsetY);
 
-						TestItemsScrolling(gump, (CBaseGUI*)item, up, currentPage, draw2Page);
+						TestItemsScrolling(gump, (CBaseGUI*)item, up, currentPage, draw2Page, page);
 
 						g_MouseManager.Position = oldPos;
 
@@ -1125,12 +1123,11 @@ void CGump::TestItemsScrolling(CGump *gump, CBaseGUI *start, const bool &up, con
 	}
 }
 //----------------------------------------------------------------------------------
-void CGump::TestItemsDragging(CGump *gump, CBaseGUI *start, const int &currentPage, const int &draw2Page, int count)
+void CGump::TestItemsDragging(CGump *gump, CBaseGUI *start, const int &currentPage, const int &draw2Page, int page, int count)
 {
 	WISPFUN_DEBUG("c84_f14");
-	int page = 0;
 	int group = 0;
-	bool canDraw = (!draw2Page || (page >= currentPage && page <= currentPage + draw2Page));
+	bool canDraw = ((page == -1) || (!page && !draw2Page) || (page >= currentPage && page <= currentPage + draw2Page));
 
 	QFOR(item, start, CBaseGUI*)
 	{
@@ -1174,7 +1171,7 @@ void CGump::TestItemsDragging(CGump *gump, CBaseGUI *start, const int &currentPa
 				}
 				case GOT_DATABOX:
 				{
-					CGump::TestItemsDragging(gump, (CBaseGUI*)item->m_Items, currentPage, draw2Page);
+					CGump::TestItemsDragging(gump, (CBaseGUI*)item->m_Items, currentPage, draw2Page, page);
 					break;
 				}
 				case GOT_RESIZEBUTTON:
@@ -1195,7 +1192,7 @@ void CGump::TestItemsDragging(CGump *gump, CBaseGUI *start, const int &currentPa
 
 					CBaseGUI *item = (CBaseGUI*)htmlGump->m_Items;
 
-					TestItemsDragging(gump, item, currentPage, draw2Page, 5);
+					TestItemsDragging(gump, item, currentPage, draw2Page, page, 5);
 
 					IFOR(j, 0, 5)
 						item = (CBaseGUI*)item->m_Next;
@@ -1205,7 +1202,7 @@ void CGump::TestItemsDragging(CGump *gump, CBaseGUI *start, const int &currentPa
 
 					g_MouseManager.Position = WISP_GEOMETRY::CPoint2Di(g_MouseManager.Position.X - offsetX, g_MouseManager.Position.Y - offsetY);
 
-					TestItemsDragging(gump, item, currentPage, draw2Page);
+					TestItemsDragging(gump, item, currentPage, draw2Page, page);
 
 					g_MouseManager.Position = oldPos;
 
@@ -1416,12 +1413,11 @@ void CGump::RecalculateSize()
 	m_GumpRect = WISP_GEOMETRY::CRect(minPosition, size);
 }
 //----------------------------------------------------------------------------------
-void CGump::GetItemsSize(CGump *gump, CBaseGUI *start, WISP_GEOMETRY::CPoint2Di &minPosition, WISP_GEOMETRY::CPoint2Di &maxPosition, WISP_GEOMETRY::CPoint2Di &offset, int count, const int &currentPage, const int &draw2Page)
+void CGump::GetItemsSize(CGump *gump, CBaseGUI *start, WISP_GEOMETRY::CPoint2Di &minPosition, WISP_GEOMETRY::CPoint2Di &maxPosition, WISP_GEOMETRY::CPoint2Di &offset, int count, const int &currentPage, const int &draw2Page, int page)
 {
 	WISPFUN_DEBUG("c84_f19_2");
 
-	int page = 0;
-	bool canDraw = (!draw2Page || (page >= currentPage && page <= currentPage + draw2Page));
+	bool canDraw = ((page == -1) || (!page && !draw2Page) || (page >= currentPage && page <= currentPage + draw2Page));
 
 	QFOR(item, start, CBaseGUI*)
 	{
@@ -1459,7 +1455,7 @@ void CGump::GetItemsSize(CGump *gump, CBaseGUI *start, WISP_GEOMETRY::CPoint2Di 
 				break;
 			case GOT_DATABOX:
 			{
-				CGump::GetItemsSize(gump, (CBaseGUI*)item->m_Items, minPosition, maxPosition, offset, count, currentPage, draw2Page);
+				CGump::GetItemsSize(gump, (CBaseGUI*)item->m_Items, minPosition, maxPosition, offset, count, currentPage, draw2Page, page);
 				break;
 			}
 			case GOT_HTMLGUMP:
@@ -1467,7 +1463,7 @@ void CGump::GetItemsSize(CGump *gump, CBaseGUI *start, WISP_GEOMETRY::CPoint2Di 
 			case GOT_XFMHTMLTOKEN:
 			{
 				WISP_GEOMETRY::CPoint2Di htmlOffset(offset.X + item->X, offset.X + item->Y);
-				CGump::GetItemsSize(gump, (CBaseGUI*)item->m_Items, minPosition, maxPosition, htmlOffset, 5, currentPage, draw2Page);
+				CGump::GetItemsSize(gump, (CBaseGUI*)item->m_Items, minPosition, maxPosition, htmlOffset, 5, currentPage, draw2Page, page);
 				break;
 			}
 			case GOT_SCISSOR:
