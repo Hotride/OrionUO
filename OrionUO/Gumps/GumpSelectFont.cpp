@@ -25,9 +25,7 @@ void CGumpSelectFont::UpdateContent()
 	WISPFUN_DEBUG("c122_f1");
 	Clear();
 
-	int unicodeFontsCount = g_FileManager.UnicodeFontsCount;
-
-	Add(new CGUIResizepic(0, 0x0A28, 0, 0, 200, 70 + (unicodeFontsCount * 22)));
+	Add(new CGUIResizepic(0, 0x0A28, 0, 0, 200, 70 + (g_FileManager.UnicodeFontsCount * 22)));
 
 	CGUIText *text = (CGUIText*)Add(new CGUIText(0, 60, 22));
 	text->CreateTextureW(0, L"Select font");
@@ -59,15 +57,18 @@ void CGumpSelectFont::UpdateContent()
 
 	Add(new CGUIGroup(1));
 
-	IFOR(i, 0, unicodeFontsCount)
+	IFOR(i, 0, 20)
 	{
-		drawY += 22;
+		if (g_FontManager.UnicodeFontExists(i))
+		{
+			drawY += 22;
 
-		CGUIRadio *radio = (CGUIRadio*)Add(new CGUIRadio((int)i + ID_GSF_FONTS, 0x00D0, 0x00D1, 0x00D0, 50, drawY));
-		radio->Checked = (i == selected);
+			CGUIRadio *radio = (CGUIRadio*)Add(new CGUIRadio((int)i + ID_GSF_FONTS, 0x00D0, 0x00D1, 0x00D0, 50, drawY));
+			radio->Checked = (i == selected);
 
-		text = (CGUIText*)Add(new CGUIText(0, 74, drawY));
-		text->CreateTextureW((uchar)i, L"This font");
+			text = (CGUIText*)Add(new CGUIText(0, 74, drawY));
+			text->CreateTextureW((uchar)i, L"This font");
+		}
 	}
 
 	Add(new CGUIGroup(0));
@@ -79,25 +80,45 @@ void CGumpSelectFont::GUMP_RADIO_EVENT_C
 	if (!state)
 		return;
 
+	int realFont = -1;
+	int count = serial - ID_GSF_FONTS;
+
+	IFOR(i, 0, 20)
+	{
+		if (g_FontManager.UnicodeFontExists(i))
+		{
+			if (!count)
+			{
+				realFont = i;
+				break;
+			}
+
+			count--;
+		}
+	}
+
+	if (realFont == -1)
+		return;
+
 	switch (m_State)
 	{
 		case SFGS_OPT_TOOLTIP:
 		{
-			g_OptionsConfig.ToolTipsTextFont = serial - ID_GSF_FONTS;
+			g_OptionsConfig.ToolTipsTextFont = realFont;
 			m_RemoveMark = true;
 
 			break;
 		}
 		case SFGS_OPT_CHAT:
 		{
-			g_OptionsConfig.ChatFont = serial - ID_GSF_FONTS;
+			g_OptionsConfig.ChatFont = realFont;
 			m_RemoveMark = true;
 
 			break;
 		}
 		case SFGS_OPT_MISCELLANEOUS:
 		{
-			g_OptionsConfig.SpeechFont = serial - ID_GSF_FONTS;
+			g_OptionsConfig.SpeechFont = realFont;
 			m_RemoveMark = true;
 
 			break;

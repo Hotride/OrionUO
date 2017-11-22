@@ -325,16 +325,16 @@ public:
 	void CreateUnicodeTextMessageF(uchar font, ushort color, const char *format, ...);
 
 	//Создать текстовое сообщение (ASCII)
-	void CreateTextMessage(TEXT_TYPE type, uint serial, uchar font, ushort color, string text);
+	void CreateTextMessage(const TEXT_TYPE &type, const uint &serial, const uchar &font, const ushort &color, const string &text);
 
 	//Создать текстовое сообщение (Unicode)
-	void CreateUnicodeTextMessage(TEXT_TYPE type, uint serial, uchar font, ushort color, wstring text);
+	void CreateUnicodeTextMessage(const TEXT_TYPE &type, const uint &serial, const uchar &font, const ushort &color, const wstring &text);
 
 	//Добавить сообщение в систем чат
 	void AddSystemMessage(class CTextData *msg);
 
 	//Добавить сообщение в журнал
-	void AddJournalMessage(class CTextData *msg, string name);
+	void AddJournalMessage(class CTextData *msg, const string &name);
 
 
 

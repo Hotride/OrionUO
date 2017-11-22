@@ -2039,17 +2039,15 @@ void CGameScreen::OnLeftMouseButtonUp()
 						{
 							ushort id = rwo->Graphic;
 
-							string str = g_ClilocManager.Cliloc(g_Language)->GetA(1020000 + id, true, g_Orion.m_StaticData[id].Name);
+							wstring str = g_ClilocManager.Cliloc(g_Language)->GetW(1020000 + id, true, g_Orion.m_StaticData[id].Name);
 
 							if (str.length())
 							{
 								if (g_PacketManager.ClientVersion >= CV_6000)
-									g_Orion.CreateUnicodeTextMessage(TT_CLIENT, (uint)rwo, 3, 946, ToWString(str));
+									g_Orion.CreateUnicodeTextMessage(TT_CLIENT, (uint)rwo, 1, 0x03B2, str);
 								else
-									g_Orion.CreateTextMessage(TT_CLIENT, (uint)rwo, 3, 0x3B2, str);
+									g_Orion.CreateTextMessage(TT_CLIENT, (uint)rwo, 3, 0x03B2, ToString(str));
 							}
-								
-			
 						}
 					}
 				}

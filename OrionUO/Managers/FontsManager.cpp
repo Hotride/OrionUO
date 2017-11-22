@@ -100,7 +100,7 @@ bool CFontsManager::LoadFonts()
 		}
 	}
 
-	IFOR(i, 0, g_FileManager.UnicodeFontsCount)
+	IFOR(i, 0, 20)
 	{
 		m_UnicodeFontAddress[i] = (size_t)g_FileManager.m_UnifontMul[i].Start;
 		m_UnicodeFontSize[i] = (uint)g_FileManager.m_UnifontMul[i].Size;
@@ -118,9 +118,7 @@ bool CFontsManager::LoadFonts()
 uchar CFontsManager::UnicodeFontExists(const uchar &font)
 {
 	WISPFUN_DEBUG("c143_f4");
-	if (font >= g_FileManager.UnicodeFontsCount)
-		return 0;
-	else if (m_UnicodeFontAddress[font] == NULL)
+	if (font >= 20 || m_UnicodeFontAddress[font] == NULL)
 		return 0;
 
 	return font;

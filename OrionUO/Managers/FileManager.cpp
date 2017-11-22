@@ -154,10 +154,8 @@ bool CFileManager::Load()
 		else
 			s = g_App.UOFilesPath("unifont.mul");
 
-		if (!m_UnifontMul[i].Load(s) && i > 1)
-			break;
-
-		m_UnicodeFontsCount++;
+		if (m_UnifontMul[i].Load(s))
+			m_UnicodeFontsCount++;
 	}
 
 	if (m_UseVerdata && !m_VerdataMul.Load(g_App.UOFilesPath("verdata.mul")))
@@ -288,10 +286,8 @@ bool CFileManager::LoadWithUOP()
 		else
 			s = g_App.UOFilesPath("unifont.mul");
 
-		if (!m_UnifontMul[i].Load(s) && i > 1)
-			break;
-
-		m_UnicodeFontsCount++;
+		if (m_UnifontMul[i].Load(s))
+			m_UnicodeFontsCount++;
 	}
 
 	if (m_UseVerdata && !m_VerdataMul.Load(g_App.UOFilesPath("verdata.mul")))

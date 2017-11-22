@@ -5221,7 +5221,7 @@ void COrion::CreateUnicodeTextMessageF(uchar font, ushort color, const char *for
 	va_end(arg);
 }
 //----------------------------------------------------------------------------------
-void COrion::CreateTextMessage(TEXT_TYPE type, uint serial, uchar font, ushort color, string text)
+void COrion::CreateTextMessage(const TEXT_TYPE &type, const uint &serial, const uchar &font, const ushort &color, const string &text)
 {
 	WISPFUN_DEBUG("c194_f98");
 	CTextData *td = new CTextData();
@@ -5336,7 +5336,7 @@ void COrion::CreateTextMessage(TEXT_TYPE type, uint serial, uchar font, ushort c
 	}
 }
 //----------------------------------------------------------------------------------
-void COrion::CreateUnicodeTextMessage(TEXT_TYPE type, uint serial, uchar font, ushort color, wstring text)
+void COrion::CreateUnicodeTextMessage(const TEXT_TYPE &type, const uint &serial, const uchar &font, const ushort &color, const wstring &text)
 {
 	WISPFUN_DEBUG("c194_f99");
 	CTextData *td = new CTextData();
@@ -5455,7 +5455,7 @@ void COrion::AddSystemMessage(CTextData *msg)
 	AddJournalMessage(msg, "");
 }
 //----------------------------------------------------------------------------------
-void COrion::AddJournalMessage(CTextData *msg, string name)
+void COrion::AddJournalMessage(CTextData *msg, const string &name)
 {
 	WISPFUN_DEBUG("c194_f101");
 	CTextData *jmsg = new CTextData(msg);
