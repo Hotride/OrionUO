@@ -10,36 +10,88 @@
 #ifndef GAMECHARACTER_H
 #define GAMECHARACTER_H
 //----------------------------------------------------------------------------------
-//!Игровой персонаж
+//!Game character class
 class CGameCharacter: public CGameObject
 {
+	//!Hitpoints
 	SETGET(short, Hits, 0);
+
+	//!Max hitpoints
 	SETGET(short, MaxHits, 0);
-	SETGET(short, MaxMana, 0);
-	SETGET(short, MaxStam, 0);
+
+	//!Mana
 	SETGET(short, Mana, 0);
+
+	//!Max mana
+	SETGET(short, MaxMana, 0);
+
+	//!Stamina
 	SETGET(short, Stam, 0);
+
+	//!Max stamina
+	SETGET(short, MaxStam, 0);
+
+	//!Is female
 	SETGET(bool, Female, false);
+
+	//!Character's race
 	SETGET(RACE_TYPE, Race, RT_HUMAN);
+
+	//!Current direction
 	SETGET(uchar, Direction, 0);
+
+	//!Character's notoriety
 	SETGET(uchar, Notoriety, 0);
+
+	//!Player can change the name for this character
 	SETGET(bool, CanChangeName, false);
+
+	//!Interval between animation playback
 	SETGET(uchar, AnimationInterval, 0);
+
+	//!Current animation frame count
 	SETGET(uchar, AnimationFrameCount, 0);
+
+	//!Current animation repeat mode
 	SETGET(uchar, AnimationRepeatMode, 1);
+
+	//!Current animation group
 	SETGET(uchar, AnimationGroup, 0xFF);
+
+	//!Current animation is repeat
 	SETGET(bool, AnimationRepeat, false);
+
+	//!Current animation direction (front or back)
 	SETGET(bool, AnimationDirection, false);
+
+	//!Current animation called from the server
 	SETGET(bool, AnimationFromServer, false);
+
+	//!Last step sound time stamp
 	SETGET(uint, LastStepSoundTime, 0);
+
+	//!Time stamp to fidget animation
 	SETGET(uint, TimeToRandomFidget, 0);
+
+	//!Offset to step sound
 	SETGET(uchar, StepSoundOffset, 0);
 
+	//!Sprite offset by X coordinate on the tile
 	SETGET(int, OffsetX, 0);
+
+	//!Sprite offset by Y coordinate on the tile
 	SETGET(int, OffsetY, 0);
+
+	//!Sprite offset by Z coordinate on the tile
 	SETGET(int, OffsetZ, 0);
+
+	//!Last step time stamp
 	SETGET(uint, LastStepTime, 0);
-	SETGET(string, PaperdollText, "");
+
+	//!Character's title
+	SETGET(string, Title, "");
+
+	//!Percent of hits
 	SETGET(uchar, HitsPercent, 0);
 
 protected:
@@ -56,12 +108,13 @@ public:
 	CGameCharacter(const uint &serial = 0);
 	virtual ~CGameCharacter();
 
-	//Ссылка на контейнер для текста урона
+	//!Damage text container
 	CTextContainer m_DamageTextControl{ CTextContainer(10) };
 
-	//!Стек шагов
+	//!Steps stack
 	deque<CWalkData> m_Steps;
 
+	//!Texture for hurrent hitpoints value
 	CGLTextTexture m_HitsTexture{ CGLTextTexture() };
 
 	virtual void UpdateTextCoordinates();

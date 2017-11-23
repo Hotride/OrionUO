@@ -392,7 +392,7 @@ void CGumpPaperdoll::UpdateContent()
 	m_DataBox->Clear();
 
 	m_Description = (CGUIText*)m_DataBox->Add(new CGUIText(0x0386, 39, 262));
-	m_Description->CreateTextureA(1, obj->PaperdollText, 185);
+	m_Description->CreateTextureA(1, obj->Title, 185);
 
 	m_DataBox->Add(new CGUIShader(&g_ColorizerShader, true));
 

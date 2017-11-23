@@ -1857,7 +1857,7 @@ PACKET_HANDLER(OpenPaperdoll)
 	uchar flags = ReadUInt8();
 
 	if (obj != NULL)
-		obj->PaperdollText = text;
+		obj->Title = text;
 
 	CGumpPaperdoll *gump = (CGumpPaperdoll*)g_GumpManager.UpdateGump(serial, 0, GT_PAPERDOLL);
 
@@ -5622,10 +5622,7 @@ PACKET_HANDLER(OrionMessages)
 			ushort color = ReadUInt16BE();
 			wstring text = ReadWString(0);
 
-			if (!color)
-				color = g_ConfigManager.SpeechColor;
-
-			CPacketUnicodeSpeechRequest(text.c_str(), ST_NORMAL, 3, color, (puchar)g_Language.c_str()).Send();
+			CGameConsole::Send(text, color);
 
 			break;
 		}
