@@ -1806,7 +1806,7 @@ void CFontsManager::GetHTMLInfoFromContent(HTML_DATA_INFO &info, const string &c
 				{
 					uchar font = atoi(value.c_str());
 
-					if (font < 3)
+					if (font <= 5)
 						info.Font = font;
 				}
 
