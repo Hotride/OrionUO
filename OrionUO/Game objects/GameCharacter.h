@@ -96,16 +96,26 @@ class CGameCharacter: public CGameObject
 
 protected:
 	/*!
-	Скорректировать отношение индексов групп анимаций
-	@param [__in] graphic Индекс картинки
-	@param [__in] group Группа анимаций
-	@param [__inout] animation Индекс анимации в группе
+	Correct animation index by group
+	@param [__in] graphic Body graphic
+	@param [__in] group Animation group
+	@param [__inout] animation Animation index
 	@return 
 	*/
 	void CorrectAnimationGroup(const ushort &graphic, const ANIMATION_GROUPS &group, uchar &animation);
 
 public:
-	CGameCharacter(const uint &serial = 0);
+	/*!
+	Constructor
+	@param [__in] serial Character's serial
+	@return
+	*/
+	CGameCharacter(const uint &serial);
+
+	/*!
+	Destructor
+	@return
+	*/
 	virtual ~CGameCharacter();
 
 	//!Damage text container
@@ -117,118 +127,160 @@ public:
 	//!Texture for hurrent hitpoints value
 	CGLTextTexture m_HitsTexture{ CGLTextTexture() };
 
+	/*!
+	Update text coordinates
+	@return
+	*/
 	virtual void UpdateTextCoordinates();
 
+	/*!
+	Update hitpoints text texture
+	@param [__in] hits Current hitpoints
+	@return
+	*/
 	void UpdateHitsTexture(const uchar &hits);
 
-	//Обработка особенностей анимаций гаргулей.
+	/*!
+	Process gargoyle animations
+	@param [__in] animGroup Animation group
+	@return
+	*/
 	void ProcessGargoyleAnims(int &animGroup);
 
 	/*!
 	Сидит ли персонаж
 	@return Индекс объекта из таблицы, на котором он восседает
 	*/
+	/*!
+	Sitting/staying character state
+	@return Sitting table index+1, 0 if not sitting
+	*/
 	int IsSitting();
 
+	/*!
+	Draw character in the world
+	@param [__in] x Place on screen coordinate X
+	@param [__in] y Place on screen coordinate Y
+	@return
+	*/
 	virtual void Draw(const int &x, const int &y);
+
+	/*!
+	Select character in the world
+	@param [__in] x Place on screen coordinate X
+	@param [__in] y Place on screen coordinate Y
+	@return
+	*/
 	virtual void Select(const int &x, const int &y);
 
 	/*!
-	Обновить информацию о поле персонажа, обновление гампов
-	@param [__in_opt] direction Направление персонажа
-	@return 
+	Update graphic event
+	@param [__in_opt] direction Direction of character
+	@return
 	*/
 	void OnGraphicChange(int direction = 0);
 
 	/*!
-	Установка группы анимации
-	@param [__in] val Новое значение группы анимации
-	@return 
+	Reset animation group index
+	@param [__in] val New animation group index
+	@return
 	*/
 	void ResetAnimationGroup(const uchar &val);
 
 	/*!
-	Установка случайной анимации (при длительном простое)
-	@return 
+	Reset animation group index to random fidget
+	@return
 	*/
 	void SetRandomFidgetAnimation();
 
 	/*!
-	Установка анимации от сервера
-	@param [__in] id Группа анимаци
-	@param [__in_opt] interval Задержка между кадрами
-	@param [__in_opt] frameCount Количество кадлов анимации
-	@param [__in_opt] repeatCount Количество повторов анимации
-	@param [__in_opt] repeat Зациклено или нет
-	@param [__out_opt] frameDirection Направление прокрутки кадров (вперед/назад)
-	@return 
+	Set animation data
+	@param [__in] id Animation group
+	@param [__in_opt] interval Frame delay
+	@param [__in_opt] frameCount Frame count
+	@param [__in_opt] repeatCount Repeat animation count
+	@param [__in_opt] repeat Is repeated
+	@param [__in_opt] frameDirection Frame direction (forwarf/backward)
+	@return
 	*/
 	void SetAnimation(const uchar &id, const uchar &interval = 0, const uchar &frameCount = 0, const uchar &repeatCount = 0, const bool &repeat = false, const bool &frameDirection = false);
 
 	/*!
-	Получить индекс картинки для вычисления картинки анимации
-	@return Индекс картинки персонажа
+	Get mount animation index
+	@return Graphic
 	*/
 	ushort GetMountAnimation();
 
 	/*!
-	Получить текущую группу анимации
-	@param [__in_opt] graphic Индекс картинки персонажа
-	@return Индекс группы анимации
+	Get current animation index
+	@param [__in_opt] checkGraphic Current graphic
+	@return Animation group index
 	*/
 	uchar GetAnimationGroup(ushort checkGraphic = 0);
 
 	/*!
-	Скорректировать отношение анимаций
-	@param [__in] group Группа анимации
-	@param [__inout] animation Индекс группы анимации
-	@return 
+	Correct animation index
+	@param [__in] group Animation group
+	@param [__out] animation Animation index
+	@return
 	*/
 	void GetAnimationGroup(const ANIMATION_GROUPS &group, uchar &animation);
 
 	/*!
-	Состояние, если персонаж не движется
-	@return true - стоит, false - в движении
+	Staying character state
+	@return true if character is staying
 	*/
 	bool Staying() { return m_AnimationGroup == 0xFF && m_Steps.empty(); }
 
 	/*!
-	Проверка на возможность изменения направления персонажа при движении в сидячем положении
-	@param [__in] group Индекс группы анимации
-	@return Можно изменять направление или нет
+	Check for the possibility of changing the direction of the character when driving in a seated position
+	@param [__in] group Animation group
+	@return true if direction can be changed
 	*/
 	bool TestStepNoChangeDirection(const uchar &group);
 
 	/*!
-	Если персонаж идет (или только что закончил передвигаться)
-	@return true - в движении, false - нет
+	Character walking state
+	@return true if walking
 	*/
 	virtual bool Walking() { return (m_LastStepTime > (uint)(g_Ticks - WALKING_DELAY)); }
 
+	/*!
+	Check for animation frame changing
+	@return true if don't need iterate frames
+	*/
 	virtual bool NoIterateAnimIndex() { return ((m_LastStepTime > (uint)(g_Ticks - WALKING_DELAY)) && m_Steps.empty()); }
 
 	/*!
-	не подписанная функция
-	@param [__inout] dir не подписанный параметр
-	@param [__in] canChange Можно ли изменять состояние стека хотьбы или нет
-	@return 
+	Update character animation state and world position
+	@param [__out] dir Direction
+	@param [__in_opt] canChange Can change private fields/stacks
+	@return
 	*/
 	void UpdateAnimationInfo(uchar &dir, const bool &canChange = false);
 
 	/*!
-	Проверка на человекоподобного персонажа
-	@return Человекоподобное или нет
+	Check on humanoid
+	@return true if character is humanoid
 	*/
 	bool IsHuman() { return (IN_RANGE(m_Graphic, 0x0190, 0x0193) || IN_RANGE(m_Graphic, 0x025D, 0x025E) || IN_RANGE(m_Graphic, 0x029A, 0x029B) || (m_Graphic == 0x03DB) || (m_Graphic == 0x03DF) || (m_Graphic == 0x03E2)); }
 
 	/*!
-	Жив или мертв объект
-	@return Мертв или нет
+	Check on dead
+	@return true if graphic is ghost
 	*/
 	bool Dead() { return ((m_Graphic == 0x0192) || (m_Graphic == 0x0193)); }
 
+	/*!
+	Get character pointer
+	@return Always self
+	*/
 	virtual CGameCharacter *GameCharacterPtr() { return this; }
 
+	/*!
+	Find secure trade box object
+	@return Item pointer or NULL if box is not found
+	*/
 	virtual CGameItem *FindSecureTradeBox();
  };
  //----------------------------------------------------------------------------------

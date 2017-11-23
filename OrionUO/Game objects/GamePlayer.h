@@ -50,39 +50,68 @@ class CPlayer: public CGameCharacter
 	SETGET(short, CastRecovery, 0);
 	SETGET(short, CastSpeed, 0);
 	SETGET(short, LowerManaCost, 0);
-	//SETGET(CHARACTER_RACE_TYPE, Race);
 
 	SETGET(short, OldX, 0);
 	SETGET(short, OldY, 0);
 	SETGET(char, OldZ, 0);
 
 public:
+	/*!
+	Constructor
+	@param [__in] serial Player's serial
+	@return
+	*/
 	CPlayer(const uint &serial);
+
+	/*!
+	Destructor
+	@return
+	*/
 	virtual ~CPlayer();
 
-	//Указатель на Fast Walk Stack
+	//!Fast Walk Stack
 	CFastWalkStack m_FastWalkStack;
 
+	/*!
+	Close bank gump
+	@return
+	*/
 	void CloseBank();
 
 	/*!
-	Поиск бинтов в сумке (и подсумках)
-	@return Ссылка на бинт или NULL
+	Search bandage in backpack
+	@return Item pointer or NULL if bandage is not found
 	*/
 	class CGameItem *FindBandage();
 
 	/*!
-	Проверка на игрока (персонаж - игрок человека за компьютером)
-	@return Игрок или нет
+	Check on player
+	@return Always true
 	*/
 	bool IsPlayer() {return true;}
 
+	/*!
+	Player walking state
+	@return true if player if walking
+	*/
 	virtual bool Walking() { return (m_LastStepTime > (uint)(g_Ticks - PLAYER_WALKING_DELAY)); }
 
+	/*!
+	No iterate animation frames
+	@return Always false for player
+	*/
 	virtual bool NoIterateAnimIndex() { return false; }
 
+	/*!
+	Update current abilities
+	@return
+	*/
 	void UpdateAbilities();
 
+	/*!
+	Update coordinates for remove items
+	@return
+	*/
 	void UpdateRemoveRange();
 };
 //----------------------------------------------------------------------------------

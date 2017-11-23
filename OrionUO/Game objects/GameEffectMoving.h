@@ -10,19 +10,31 @@
 #ifndef GAMEEFFECTMOVING_H
 #define GAMEEFFECTMOVING_H
 //----------------------------------------------------------------------------------
-//Движущийся эффект
+//!Moving effect
 class CGameEffectMoving : public CGameEffectDrag
 {
-	//!Угол поворота эффекта
+	//!Effect's angle
 	SETGET(float, Angle, 0.0f);
+
+	//!Offset in the world Z
 	SETGET(int, OffsetZ, 0);
 
 public:
+	/*!
+	Constructor
+	@return
+	*/
 	CGameEffectMoving();
+
+	/*!
+	Destructor
+	@return
+	*/
 	virtual ~CGameEffectMoving();
 
 	/*!
-	Обновить эффект
+	Update effect data
+	@param [__in] parent Parent object
 	@return
 	*/
 	virtual void Update(class CGameObject *parent);

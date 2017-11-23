@@ -10,34 +10,68 @@
 #ifndef MULTIOBJECT_H
 #define MULTIOBJECT_H
 //----------------------------------------------------------------------------------
-//Объект для мульти-объекта
+//Multi component object
 class CMultiObject : public CRenderStaticObject
 {
-	//Мульти с таргета
+	//!This object is temp object on mouse (when you placing a house)
 	SETGET(bool, OnTarget, false);
 
-	//Оригинальный индекс картинки
+	//!Original object's graphic
 	SETGET(ushort, OriginalGraphic, 0);
 
-	//Состояние объекта (для конструктора кастомных домов)
+	//!Object's state for custom houses buildings
 	SETGET(int, State, 0);
 
 public:
+	/*!
+	Constructor
+	@param [__in] graphic Multi object's graphic
+	@param [__in] x Coordinate X in the world
+	@param [__in] y Coordinate Y in the world
+	@param [__in] z Coordinate Z in the world
+	@param [__in] flags Multi object flags
+	@return
+	*/
 	CMultiObject(const ushort &graphic, const short &x, const short &y, const char &z, const uint &flags);
+
+	/*!
+	Destructor
+	@return
+	*/
 	virtual ~CMultiObject();
 
+	/*!
+	Update draw graphic by current season
+	@return
+	*/
 	virtual void UpdateGraphicBySeason();
 
-	//Отрисовать объект
+	/*!
+	Draw object in the world
+	@param [__in] x Coordinate X on screen
+	@param [__in] y Coordinate Y on screen
+	@return
+	*/
 	virtual void Draw(const int &x, const int &y);
 
-	//Выбрать объект
+	/*!
+	Select object in the world
+	@param [__in] x Coordinate X on screen
+	@param [__in] y Coordinate Y on screen
+	@return
+	*/
 	virtual void Select(const int &x, const int &y);
 
-	//Это объект мульти
+	/*!
+	Check on multi component object
+	@return Always true
+	*/
 	bool IsMultiObject() { return true; }
 
-	//Это объект мульти для кастомных домов
+	/*!
+	Check on custom house multi component object
+	@return Always false
+	*/
 	virtual bool IsCustomHouseMulti() { return false; }
 };
 //----------------------------------------------------------------------------------

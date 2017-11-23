@@ -10,11 +10,12 @@
 #ifndef GAMEEFFECT_H
 #define GAMEEFFECT_H
 //----------------------------------------------------------------------------------
-//!Игровой эффект
+//!Game effect class
 class CGameEffect : public CRenderWorldObject
 {
-	//!Тип эффекта
+	//!Effect type
 	SETGET(EFFECT_TYPE, EffectType, EF_MOVING);
+
 	//!Серийник назначения
 	SETGET(uint, DestSerial, 0);
 	//!Координата назначения по оси X
