@@ -1803,7 +1803,12 @@ void CFontsManager::GetHTMLInfoFromContent(HTML_DATA_INFO &info, const string &c
 				if (str == "color")
 					info.Color = GetHTMLColorFromText(value);
 				else if (str == "size")
-					info.Font = atoi(value.c_str());
+				{
+					uchar font = atoi(value.c_str());
+
+					if (font < 3)
+						info.Font = font;
+				}
 
 				break;
 			}
