@@ -28,7 +28,13 @@ CGameConsole::~CGameConsole()
 void CGameConsole::Send()
 {
 	WISPFUN_DEBUG("c170_f2");
-	size_t len = Length();
+	Send(m_Text);
+}
+//----------------------------------------------------------------------------------
+void CGameConsole::Send(wstring text, const ushort &defaultColor)
+{
+	WISPFUN_DEBUG("c170_f2.1");
+	size_t len = text.length();
 
 	if (len)
 	{
@@ -36,49 +42,46 @@ void CGameConsole::Send()
 		ushort sendColor = g_ConfigManager.SpeechColor;
 		int offset = 0;
 
-		if (m_Type == GCTT_EMOTE)
-		{
-			m_Text = m_Text.replace(0, 2, L": *").append(L"*");
-		}
-
 		if (len > 1)
 		{
 			int member = -1;
-			IsSystemCommand(Data(), len, member);
+			GAME_CONSOLE_TEXT_TYPE type = GCTT_NORMAL;
+			IsSystemCommand(text.c_str(), len, member, type);
 
-			if ((m_Type != GCTT_NORMAL && len > 2) || m_Type == GCTT_PARTY)
+			if ((type != GCTT_NORMAL && len > 2) || type == GCTT_PARTY)
 			{
-				if (m_Type == GCTT_YELL)
+				if (type == GCTT_YELL)
 				{
 					speechType = ST_YELL;
 					offset = 2;
 				}
-				else if (m_Type == GCTT_WHISPER)
+				else if (type == GCTT_WHISPER)
 				{
 					speechType = ST_WHISPER;
 					offset = 2;
 				}
-				else if (m_Type == GCTT_EMOTE)
+				else if (type == GCTT_EMOTE)
 				{
+					text = text.replace(0, 2, L": *").append(L"*");
 					speechType = ST_EMOTE;
 					sendColor = g_ConfigManager.EmoteColor;
 					offset = 2;
 				}
-				else if (m_Type == GCTT_GUILD)
+				else if (type == GCTT_GUILD)
 				{
 					speechType = ST_GUILD_CHAT;
 					sendColor = g_ConfigManager.GuildMessageColor;
 					offset = 2;
 				}
-				else if (m_Type == GCTT_ALLIANCE)
+				else if (type == GCTT_ALLIANCE)
 				{
 					sendColor = g_ConfigManager.AllianceMessageColor;
 					speechType = ST_ALLIANCE_CHAT;
 					offset = 2;
 				}
-				else if (m_Type == GCTT_PARTY)
+				else if (type == GCTT_PARTY)
 				{
-					DWORD serial = 0;
+					uint serial = 0;
 					offset = 1;
 					sendColor = g_ConfigManager.PartyMessageColor;
 
@@ -86,16 +89,16 @@ void CGameConsole::Send()
 						serial = g_Party.Member[member].Serial;
 
 					if (g_Party.Leader != 0)
-						CPacketPartyMessage(Data() + offset, len - offset, serial).Send();
+						CPacketPartyMessage(text.c_str() + offset, len - offset, serial).Send();
 					else
 					{
-						string str = "Note to self: " + ToString(Data() + offset);
+						string str = "Note to self: " + ToString(text.c_str() + offset);
 						g_Orion.CreateTextMessage(TT_SYSTEM, 0, 3, 0, str);
 					}
 
 					return;
 				}
-				else if (m_Type == GCTT_PARTY_ACCEPT)
+				else if (type == GCTT_PARTY_ACCEPT)
 				{
 					if (g_Party.Inviter != 0 && g_Party.Leader == 0)
 					{
@@ -109,7 +112,7 @@ void CGameConsole::Send()
 
 					return;
 				}
-				else if (m_Type == GCTT_PARTY_DECLINE)
+				else if (type == GCTT_PARTY_DECLINE)
 				{
 					if (g_Party.Inviter != 0 && g_Party.Leader == 0)
 					{
@@ -127,14 +130,17 @@ void CGameConsole::Send()
 
 		}
 
-		CPacketUnicodeSpeechRequest(Data() + offset, speechType, 3, sendColor, (puchar)g_Language.c_str()).Send();
+		if (defaultColor)
+			sendColor = defaultColor;
+
+		CPacketUnicodeSpeechRequest(text.c_str() + offset, speechType, 3, sendColor, (puchar)g_Language.c_str()).Send();
 	}
 }
 //----------------------------------------------------------------------------------
-wstring CGameConsole::IsSystemCommand(const wchar_t *text, size_t &len, int &member)
+wstring CGameConsole::IsSystemCommand(const wchar_t *text, size_t &len, int &member, GAME_CONSOLE_TEXT_TYPE &type)
 {
 	WISPFUN_DEBUG("c170_f3");
-	m_Type = GCTT_NORMAL;
+	type = GCTT_NORMAL;
 	wstring result = L"";
 
 	if (*text == g_ConsolePrefix[GCTT_PARTY][0]) //Party
@@ -164,12 +170,12 @@ wstring CGameConsole::IsSystemCommand(const wchar_t *text, size_t &len, int &mem
 
 				result = ToWString(pmBuf);
 
-				m_Type = GCTT_PARTY;
+				type = GCTT_PARTY;
 				member = i - 1;
 			}
 		}
 
-		if (m_Type == GCTT_NORMAL && len >= 7)
+		if (type == GCTT_NORMAL && len >= 7)
 		{
 			int lLen = 7;
 
@@ -183,51 +189,51 @@ wstring CGameConsole::IsSystemCommand(const wchar_t *text, size_t &len, int &mem
 			_strlwr(lBuf);
 
 			if (!memcmp(&lBuf[0], "/accept", 7)) //Party accept
-				m_Type = GCTT_PARTY_ACCEPT;
+				type = GCTT_PARTY_ACCEPT;
 			else if (!memcmp(&lBuf[0], "/decline", 8)) //Party decline
-				m_Type = GCTT_PARTY_DECLINE;
+				type = GCTT_PARTY_DECLINE;
 		}
 
-		if (m_Type == GCTT_NORMAL && !result.length())
+		if (type == GCTT_NORMAL && !result.length())
 		{
 			result = g_ClilocManager.Cliloc(g_Language)->GetW(3002009, false, "Party:");
-			m_Type = GCTT_PARTY;
+			type = GCTT_PARTY;
 		}
 	}
 	else if (!memcmp(&text[0], g_ConsolePrefix[GCTT_YELL].c_str(), 4)) //Yell
 	{
 		result = g_ClilocManager.Cliloc(g_Language)->GetW(3002010, false, "Yell:");
-		m_Type = GCTT_YELL;
+		type = GCTT_YELL;
 	}
 	else if (!memcmp(&text[0], g_ConsolePrefix[GCTT_WHISPER].c_str(), 4)) //Whisper
 	{
 		result = g_ClilocManager.Cliloc(g_Language)->GetW(3002009, false, "Whisper:");
-		m_Type = GCTT_WHISPER;
+		type = GCTT_WHISPER;
 	}
 	else if (!memcmp(&text[0], g_ConsolePrefix[GCTT_EMOTE].c_str(), 4)) //Emote
 	{
 		result = g_ClilocManager.Cliloc(g_Language)->GetW(3002008, false, "Emote:");
-		m_Type = GCTT_EMOTE;
+		type = GCTT_EMOTE;
 	}
 	else if (g_Player->Graphic == 0x03DB && (*text == L'=' || *text == g_ConsolePrefix[GCTT_C][0])) //C
 	{
 		result = L"C:";
-		m_Type = GCTT_C;
+		type = GCTT_C;
 	}
 	else if (!memcmp(&text[0], g_ConsolePrefix[GCTT_BROADCAST].c_str(), 4)) //Broadcast
 	{
 		result = L"Broadcast:";
-		m_Type = GCTT_BROADCAST;
+		type = GCTT_BROADCAST;
 	}
 	else if (!memcmp(&text[0], g_ConsolePrefix[GCTT_GUILD].c_str(), 4)) //Guild
 	{
 		result = L"Guild:";
-		m_Type = GCTT_GUILD;
+		type = GCTT_GUILD;
 	}
 	else if (!memcmp(&text[0], g_ConsolePrefix[GCTT_ALLIANCE].c_str(), 4)) //Alliance
 	{
 		result = L"Alliance:";
-		m_Type = GCTT_ALLIANCE;
+		type = GCTT_ALLIANCE;
 	}
 
 	return result;
@@ -248,7 +254,7 @@ void CGameConsole::DrawW(BYTE font, WORD color, int x, int y, TEXT_ALIGN_TYPE al
 	if (len >= 2)
 	{
 		int member = 0;
-		wstring sysStr = IsSystemCommand(text, len, member);
+		wstring sysStr = IsSystemCommand(text, len, member, m_Type);
 
 		if (sysStr.length())
 		{

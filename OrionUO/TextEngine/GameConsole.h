@@ -17,9 +17,6 @@ private:
 	//Тип консоли
 	GAME_CONSOLE_TEXT_TYPE m_Type{ GCTT_NORMAL };
 
-	//Тест данных на не стандартное сообщение
-	wstring IsSystemCommand(const wchar_t *text, size_t &len, int &member);
-
 	//!Стек последнего введенного текста
 	wstring m_ConsoleStack[MAX_CONSOLE_STACK_SIZE];
 
@@ -37,6 +34,11 @@ public:
 
 	//Отправить данные консоли
 	void Send();
+
+	static void Send(wstring text, const ushort &defaultColor = 0);
+
+	//Тест данных на не стандартное сообщение
+	static wstring IsSystemCommand(const wchar_t *text, size_t &len, int &member, GAME_CONSOLE_TEXT_TYPE &type);
 
 	//Отрисовать текст консоли
 	void DrawW(BYTE font, WORD color, int x, int y, TEXT_ALIGN_TYPE align = TS_LEFT, WORD flags = 0);
