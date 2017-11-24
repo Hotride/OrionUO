@@ -37,5 +37,29 @@ public:
 	CPluginPacketMacrosList();
 };
 //----------------------------------------------------------------------------------
+class CPluginPacketFileInfo : public CPluginPacket
+{
+public:
+	CPluginPacketFileInfo(const int &index, const uint64 &address, const uint64 &size);
+};
+//----------------------------------------------------------------------------------
+class CPluginPacketFileInfoLocalized : public CPluginPacket
+{
+public:
+	CPluginPacketFileInfoLocalized(const int &index, const uint64 &address, const uint64 &size, const string &language);
+};
+//----------------------------------------------------------------------------------
+class CPluginPacketStaticArtGraphicDataInfo : public CPluginPacket
+{
+public:
+	CPluginPacketStaticArtGraphicDataInfo(const ushort &graphic, const uint64 &address, const uint64 &size, const uint64 &compressedSize);
+};
+//----------------------------------------------------------------------------------
+class CPluginPacketGumpArtGraphicDataInfo : public CPluginPacket
+{
+public:
+	CPluginPacketGumpArtGraphicDataInfo(const ushort &graphic, const uint64 &address, const uint64 &size, const uint64 &compressedSize, const ushort &width, const ushort &height);
+};
+//----------------------------------------------------------------------------------
 #endif //PLUGINPACKETS_H
 //----------------------------------------------------------------------------------

@@ -120,6 +120,8 @@ public:
 	//Разжатие данных с кадрами из УОП аним файла.
 	static bool DecompressUOPFileData(UOPAnimationData &animData, UCHAR_LIST &decLayoutData, char *buf);
 
+	void SendFilesInfo();
+
 private:
 	void ReadTask();
 	static bool FileExists(const std::string& filename);

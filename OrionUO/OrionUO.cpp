@@ -1388,6 +1388,35 @@ void COrion::LoadPluginConfig()
 		CPluginPacketSkillsList().SendToPlugin();
 		CPluginPacketSpellsList().SendToPlugin();
 		CPluginPacketMacrosList().SendToPlugin();
+
+		g_FileManager.SendFilesInfo();
+
+		IFOR(i, 0, 0x10000)
+		{
+			CIndexObjectStatic &staticObj = m_StaticDataIndex[i];
+
+			if (staticObj.Address)
+			{
+				uint64 compressedSize = 0;
+
+				if (staticObj.UopBlock)
+					compressedSize = staticObj.UopBlock->CompressedSize;
+
+				CPluginPacketStaticArtGraphicDataInfo(i, staticObj.Address, staticObj.DataSize, compressedSize).SendToPlugin();
+			}
+
+			CIndexGump &gumpObj = m_GumpDataIndex[i];
+
+			if (gumpObj.Address)
+			{
+				uint64 compressedSize = 0;
+
+				if (gumpObj.UopBlock)
+					compressedSize = gumpObj.UopBlock->CompressedSize;
+
+				CPluginPacketGumpArtGraphicDataInfo(i, gumpObj.Address, gumpObj.DataSize, compressedSize, gumpObj.Width, gumpObj.Height).SendToPlugin();
+			}
+		}
 	}
 
 	BringWindowToTop(g_OrionWindow.Handle);

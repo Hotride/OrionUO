@@ -360,6 +360,66 @@ void CFileManager::Unload()
 	m_VerdataMul.Unload();
 }
 //----------------------------------------------------------------------------------
+void CFileManager::SendFilesInfo()
+{
+	if (m_TiledataMul.Start != NULL)
+		CPluginPacketFileInfo(OFI_TILEDATA_MUL, (uint64)m_TiledataMul.Start, (uint64)m_TiledataMul.Size).SendToPlugin();
+
+	if (m_MultiIdx.Start != NULL)
+		CPluginPacketFileInfo(OFI_MULTI_IDX, (uint64)m_MultiIdx.Start, (uint64)m_MultiIdx.Size).SendToPlugin();
+
+	if (m_MultiMul.Start != NULL)
+		CPluginPacketFileInfo(OFI_MULTI_MUL, (uint64)m_MultiMul.Start, (uint64)m_MultiMul.Size).SendToPlugin();
+
+	if (m_MultiCollection.Start != NULL)
+		CPluginPacketFileInfo(OFI_MULTI_UOP, (uint64)m_MultiCollection.Start, (uint64)m_MultiCollection.Size).SendToPlugin();
+
+	if (m_HuesMul.Start != NULL)
+		CPluginPacketFileInfo(OFI_HUES_MUL, (uint64)m_HuesMul.Start, (uint64)m_HuesMul.Size).SendToPlugin();
+
+	IFOR(i, 0, 6)
+	{
+		if (m_MapMul[i].Start != NULL)
+			CPluginPacketFileInfo(OFI_MAP_0_MUL + i, (uint64)m_MapMul[i].Start, (uint64)m_MapMul[i].Size).SendToPlugin();
+
+		if (m_MapUOP[i].Start != NULL)
+			CPluginPacketFileInfo(OFI_MAP_0_UOP + i, (uint64)m_MapUOP[i].Start, (uint64)m_MapUOP[i].Size).SendToPlugin();
+
+		if (m_MapXUOP[i].Start != NULL)
+			CPluginPacketFileInfo(OFI_MAPX_0_UOP + i, (uint64)m_MapXUOP[i].Start, (uint64)m_MapXUOP[i].Size).SendToPlugin();
+
+		if (m_StaticIdx[i].Start != NULL)
+			CPluginPacketFileInfo(OFI_STAIDX_0_MUL + i, (uint64)m_StaticIdx[i].Start, (uint64)m_StaticIdx[i].Size).SendToPlugin();
+
+		if (m_StaticMul[i].Start != NULL)
+			CPluginPacketFileInfo(OFI_STATICS_0_MUL + i, (uint64)m_StaticMul[i].Start, (uint64)m_StaticMul[i].Size).SendToPlugin();
+
+		if (m_MapDif[i].Start != NULL)
+			CPluginPacketFileInfo(OFI_MAP_DIF_0_MUL + i, (uint64)m_MapDif[i].Start, (uint64)m_MapDif[i].Size).SendToPlugin();
+
+		if (m_MapDifl[i].Start != NULL)
+			CPluginPacketFileInfo(OFI_MAP_DIFL_0_MUL + i, (uint64)m_MapDifl[i].Start, (uint64)m_MapDifl[i].Size).SendToPlugin();
+
+		if (m_StaDif[i].Start != NULL)
+			CPluginPacketFileInfo(OFI_STA_DIF_0_MUL + i, (uint64)m_StaDif[i].Start, (uint64)m_StaDif[i].Size).SendToPlugin();
+
+		if (m_StaDifi[i].Start != NULL)
+			CPluginPacketFileInfo(OFI_STA_DIFI_0_MUL + i, (uint64)m_StaDifi[i].Start, (uint64)m_StaDifi[i].Size).SendToPlugin();
+
+		if (m_StaDifl[i].Start != NULL)
+			CPluginPacketFileInfo(OFI_STA_DIFL_0_MUL + i, (uint64)m_StaDifl[i].Start, (uint64)m_StaDifl[i].Size).SendToPlugin();
+	}
+
+	if (m_VerdataMul.Start != NULL)
+		CPluginPacketFileInfo(OFI_VERDATA_MUL, (uint64)m_VerdataMul.Start, (uint64)m_VerdataMul.Size).SendToPlugin();
+
+	QFOR(item, g_ClilocManager.m_Items, CCliloc*)
+	{
+		if (item->Loaded && item->m_File.Start != NULL)
+			CPluginPacketFileInfoLocalized(OFI_CLILOC_MUL, (uint64)item->m_File.Start, (uint64)item->m_File.Size, item->Language).SendToPlugin();
+	}
+}
+//----------------------------------------------------------------------------------
 void CFileManager::TryReadUOPAnimations()
 {
 	std::thread readThread(&CFileManager::ReadTask, this);
