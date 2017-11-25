@@ -79,15 +79,15 @@ public:
 
 	static bool ApplyTransparent(CBaseGUI *item, int page, const int &currentPage, const int draw2Page = 0);
 
-	static void DrawItems(CBaseGUI *start, const int &currentPage, const int &draw2Page = 0, int page = 0);
+	static void DrawItems(CBaseGUI *start, const int &currentPage, const int &draw2Page = 0);
 
-	static class CRenderObject *SelectItems(CBaseGUI *start, const int &currentPage, const int &draw2Page = 0, int page = 0);
+	static class CRenderObject *SelectItems(CBaseGUI *start, const int &currentPage, const int &draw2Page = 0);
 
-	static void GetItemsSize(CGump *gump, CBaseGUI *start, WISP_GEOMETRY::CPoint2Di &minPosition, WISP_GEOMETRY::CPoint2Di &maxPosition, WISP_GEOMETRY::CPoint2Di &offset, int count, const int &currentPage, const int &draw2Page, int page = 0);
-	static void TestItemsLeftMouseDown(CGump *gump, CBaseGUI *start, const int &currentPage, const int &draw2Page = 0, int page = 0, int count = -1);
-	static void TestItemsLeftMouseUp(CGump *gump, CBaseGUI *start, const int &currentPage, const int &draw2Page = 0, int page = 0);
-	static void TestItemsDragging(CGump *gump, CBaseGUI *start, const int &currentPage, const int &draw2Page = 0, int page = 0, int count = -1);
-	static void TestItemsScrolling(CGump *gump, CBaseGUI *start, const bool &up, const int &currentPage, const int &draw2Page = 0, int page = 0);
+	static void GetItemsSize(CGump *gump, CBaseGUI *start, WISP_GEOMETRY::CPoint2Di &minPosition, WISP_GEOMETRY::CPoint2Di &maxPosition, WISP_GEOMETRY::CPoint2Di &offset, int count, const int &currentPage, const int &draw2Page);
+	static void TestItemsLeftMouseDown(CGump *gump, CBaseGUI *start, const int &currentPage, const int &draw2Page = 0, int count = -1);
+	static void TestItemsLeftMouseUp(CGump *gump, CBaseGUI *start, const int &currentPage, const int &draw2Page = 0);
+	static void TestItemsDragging(CGump *gump, CBaseGUI *start, const int &currentPage, const int &draw2Page = 0, int count = -1);
+	static void TestItemsScrolling(CGump *gump, CBaseGUI *start, const bool &up, const int &currentPage, const int &draw2Page = 0);
 
 	virtual void DelayedClick(class CRenderObject *obj) {}
 
