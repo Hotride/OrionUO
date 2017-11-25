@@ -120,7 +120,7 @@ CPluginPacketMacrosList::CPluginPacketMacrosList()
 CPluginPacketFileInfo::CPluginPacketFileInfo(const int &index, const uint64 &address, const uint64 &size)
 : CPluginPacket()
 {
-	WriteUInt16BE(OCT_FILE_INFO);
+	WriteUInt16BE(OIPMT_FILE_INFO);
 	WriteUInt16BE(index);
 	WriteUInt64BE(address);
 	WriteUInt64BE(size);
@@ -129,7 +129,7 @@ CPluginPacketFileInfo::CPluginPacketFileInfo(const int &index, const uint64 &add
 CPluginPacketFileInfoLocalized::CPluginPacketFileInfoLocalized(const int &index, const uint64 &address, const uint64 &size, const string &language)
 : CPluginPacket()
 {
-	WriteUInt16BE(OCT_FILE_INFO_LOCALIZED);
+	WriteUInt16BE(OIPMT_FILE_INFO_LOCALIZED);
 	WriteUInt16BE(index);
 	WriteUInt64BE(address);
 	WriteUInt64BE(size);
@@ -139,7 +139,7 @@ CPluginPacketFileInfoLocalized::CPluginPacketFileInfoLocalized(const int &index,
 CPluginPacketStaticArtGraphicDataInfo::CPluginPacketStaticArtGraphicDataInfo(const ushort &graphic, const uint64 &address, const uint64 &size, const uint64 &compressedSize)
 : CPluginPacket()
 {
-	WriteUInt16BE(OCT_GRAPHIC_DATA_INFO);
+	WriteUInt16BE(OIPMT_GRAPHIC_DATA_INFO);
 	WriteUInt8(OGDT_STATIC_ART);
 	WriteUInt16BE(graphic);
 	WriteUInt64BE(address);
@@ -150,7 +150,7 @@ CPluginPacketStaticArtGraphicDataInfo::CPluginPacketStaticArtGraphicDataInfo(con
 CPluginPacketGumpArtGraphicDataInfo::CPluginPacketGumpArtGraphicDataInfo(const ushort &graphic, const uint64 &address, const uint64 &size, const uint64 &compressedSize, const ushort &width, const ushort &height)
 : CPluginPacket()
 {
-	WriteUInt16BE(OCT_GRAPHIC_DATA_INFO);
+	WriteUInt16BE(OIPMT_GRAPHIC_DATA_INFO);
 	WriteUInt8(OGDT_GUMP_ART);
 	WriteUInt16BE(graphic);
 	WriteUInt64BE(address);
@@ -158,5 +158,11 @@ CPluginPacketGumpArtGraphicDataInfo::CPluginPacketGumpArtGraphicDataInfo(const u
 	WriteUInt64BE(compressedSize);
 	WriteUInt16BE(width);
 	WriteUInt16BE(height);
+}
+//----------------------------------------------------------------------------------
+CPluginPacketFilesTransfered::CPluginPacketFilesTransfered()
+: CPluginPacket()
+{
+	WriteUInt16BE(OIPMT_FILES_TRANSFERED);
 }
 //----------------------------------------------------------------------------------

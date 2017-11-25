@@ -1417,6 +1417,8 @@ void COrion::LoadPluginConfig()
 				CPluginPacketGumpArtGraphicDataInfo(i, gumpObj.Address, gumpObj.DataSize, compressedSize, gumpObj.Width, gumpObj.Height).SendToPlugin();
 			}
 		}
+
+		CPluginPacketFilesTransfered().SendToPlugin();
 	}
 
 	BringWindowToTop(g_OrionWindow.Handle);

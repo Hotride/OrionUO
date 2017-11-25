@@ -61,5 +61,11 @@ public:
 	CPluginPacketGumpArtGraphicDataInfo(const ushort &graphic, const uint64 &address, const uint64 &size, const uint64 &compressedSize, const ushort &width, const ushort &height);
 };
 //----------------------------------------------------------------------------------
+class CPluginPacketFilesTransfered : public CPluginPacket
+{
+public:
+	CPluginPacketFilesTransfered();
+};
+//----------------------------------------------------------------------------------
 #endif //PLUGINPACKETS_H
 //----------------------------------------------------------------------------------
