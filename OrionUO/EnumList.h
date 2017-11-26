@@ -520,7 +520,9 @@ enum ORION_FILE_INDEX
 	OFI_MULTI_UOP,
 	OFI_HUES_MUL,
 	OFI_VERDATA_MUL,
-	OFI_CLILOC_MUL
+	OFI_CLILOC_MUL,
+	OFI_RADARCOL_MUL,
+	OFI_FILES_COUNT
 };
 //----------------------------------------------------------------------------------
 enum ORION_GRAPHIC_DATA_TYPE

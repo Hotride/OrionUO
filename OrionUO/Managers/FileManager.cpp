@@ -413,6 +413,9 @@ void CFileManager::SendFilesInfo()
 	if (m_VerdataMul.Start != NULL)
 		CPluginPacketFileInfo(OFI_VERDATA_MUL, (uint64)m_VerdataMul.Start, (uint64)m_VerdataMul.Size).SendToPlugin();
 
+	if (m_RadarcolMul.Start != NULL)
+		CPluginPacketFileInfo(OFI_RADARCOL_MUL, (uint64)m_RadarcolMul.Start, (uint64)m_RadarcolMul.Size).SendToPlugin();
+
 	QFOR(item, g_ClilocManager.m_Items, CCliloc*)
 	{
 		if (item->Loaded && item->m_File.Start != NULL)
