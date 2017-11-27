@@ -2028,7 +2028,7 @@ void CAnimationManager::DrawCorpse(CGameItem *obj, const int &x, const int &y)
 		return;
 
 	m_Sitting = 0;
-	m_Direction = obj->Layer & 0x7F;
+	m_Direction = (obj->Layer & 0x7F) & 7;
 	bool mirror = false;
 
 	GetAnimDirection(m_Direction, mirror);
@@ -2062,7 +2062,7 @@ bool CAnimationManager::CorpsePixelsInXY(CGameItem *obj, const int &x, const int
 		return false;
 
 	m_Sitting = 0;
-	m_Direction = obj->Layer & 0x7F;
+	m_Direction = (obj->Layer & 0x7F) & 7;
 	bool mirror = false;
 
 	GetAnimDirection(m_Direction, mirror);
@@ -2240,7 +2240,7 @@ ANIMATION_DIMENSIONS CAnimationManager::GetAnimationDimensions(CGameObject *obj,
 	}
 	else if (obj->IsCorpse())
 	{
-		dir = ((CGameItem*)obj)->Layer;
+		dir = ((CGameItem*)obj)->Layer & 7;
 		animGroup = GetDieGroupIndex(id, ((CGameItem*)obj)->UsedLayer);
 		GetAnimDirection(dir, mirror);
 	}
@@ -2468,7 +2468,7 @@ DRAW_FRAME_INFORMATION CAnimationManager::CollectFrameInformation(CGameObject *g
 	{
 		CGameItem *obj = (CGameItem*)gameObject;
 
-		m_Direction = obj->Layer & 0x7F;
+		m_Direction = (obj->Layer & 0x7F) & 7;
 		bool mirror = false;
 
 		GetAnimDirection(m_Direction, mirror);
