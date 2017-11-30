@@ -1726,7 +1726,7 @@ void CAnimationManager::DrawCharacter(CGameCharacter *obj, int x, int y)
 	
 	int lightOffset = 20;
 	
-	if (obj->IsHuman() && goi != NULL) //Draw mount
+	if (/*obj->IsHuman() &&*/ goi != NULL) //Draw mount
 	{
 		m_Sitting = 0;
 		lightOffset += 20;
@@ -1776,7 +1776,7 @@ void CAnimationManager::DrawCharacter(CGameCharacter *obj, int x, int y)
 
 	Draw(obj, drawX, drawY, mirror, animIndex); //Draw character
 
-	if (obj->IsHuman()) //Draw layered objects
+	//if (obj->IsHuman()) //Draw layered objects
 	{
 		DrawEquippedLayers(false, obj, drawX, drawY, mirror, layerDir, animIndex, lightOffset);
 
@@ -1982,7 +1982,7 @@ bool CAnimationManager::CharacterPixelsInXY(CGameCharacter *obj, int x, int y)
 	int drawX = x - obj->OffsetX;
 	int drawY = y - obj->OffsetY - obj->OffsetZ;
 	
-	if (obj->IsHuman() && goi != NULL) //Check mount
+	if (/*obj->IsHuman() &&*/ goi != NULL) //Check mount
 	{
 		ushort mountID = goi->GetMountAnimation();
 
@@ -2442,7 +2442,7 @@ DRAW_FRAME_INFORMATION CAnimationManager::CollectFrameInformation(CGameObject *g
 
 		CalculateFrameInformation(info, obj, mirror, animIndex);
 
-		if (obj->IsHuman() && checkLayers) //Check layred objects
+		if (/*obj->IsHuman() &&*/ checkLayers) //Check layred objects
 		{
 			IFOR(l, 0, USED_LAYER_COUNT)
 			{
