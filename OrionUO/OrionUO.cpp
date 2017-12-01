@@ -5795,6 +5795,7 @@ void COrion::RemoveRangedObjects()
 	if (g_World != NULL)
 	{
 		int objectsRange = g_ConfigManager.UpdateRange + 1;
+		int objectsRangeItems = g_ConfigManager.UpdateRange;
 
 		CGameObject *go = g_World->m_Items;
 
@@ -5823,7 +5824,7 @@ void COrion::RemoveRangedObjects()
 						((CGameItem*)go)->ClearMultiItems();
 						//g_World->RemoveObject(go);
 				}
-				else if (GetRemoveDistance(g_RemoveRangeXY, go) > objectsRange)
+				else if (GetRemoveDistance(g_RemoveRangeXY, go) > objectsRangeItems)
 					g_World->RemoveObject(go);
 			}
 
