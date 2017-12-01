@@ -492,6 +492,25 @@ LRESULT COrionWindow::OnUserMessages(const UINT &message, const WPARAM &wParam, 
 
 			break;
 		}
+		case CPingThread::MessageID:
+		{
+			PING_INFO_DATA *info = (PING_INFO_DATA*)wParam;
+
+			if (info != NULL)
+			{
+				if (info->ServerID == 0xFFFFFFFF)
+				{
+					memcpy(&g_GameServerPingInfo, info, sizeof(g_GameServerPingInfo));
+					char ping[50] = { 0 };
+					sprintf_s(ping, "ping(min:%i max:%i avg:%i lost:%i) ", g_GameServerPingInfo.Min, g_GameServerPingInfo.Max, g_GameServerPingInfo.Average, g_GameServerPingInfo.Lost);
+					g_PingString = ping;
+				}
+
+				//LOG("Ping info: id:%i min:%i max:%i average:%i lost:%i\n", info->ServerID, info->Min, info->Max, info->Average, info->Lost);
+			}
+
+			break;
+		}
 		default:
 			break;
 	}

@@ -114,6 +114,8 @@ void CConfigManager::DefaultPage2()
 	m_HighlightTargetByType = true;
 	m_AutoDisplayWorldMap = false;
 	m_UseGLListsForInterface = false;
+	m_CheckPing = true;
+	m_PingTimer = 10;
 }
 //---------------------------------------------------------------------------
 void CConfigManager::DefaultPage3()
@@ -579,6 +581,14 @@ void CConfigManager::SetUseGLListsForInterface(const bool &val)
 	}
 }
 //---------------------------------------------------------------------------
+void CConfigManager::SetPingTimer(const uchar &val)
+{
+	WISPFUN_DEBUG("c138_f26");
+
+	m_PingTimer = max(min(val, 120), 10);
+	g_PingTimer = 0;
+}
+//---------------------------------------------------------------------------
 void CConfigManager::SetItemPropertiesMode(const uchar &val)
 {
 	WISPFUN_DEBUG("c138_f26_1");
@@ -770,6 +780,8 @@ bool CConfigManager::LoadBin(string path)
 		m_HighlightTargetByType = true;
 		m_AutoDisplayWorldMap = false;
 		UseGLListsForInterface = false;
+		m_CheckPing = true;
+		m_PingTimer = 10;
 
 		if (file.ReadInt8() == 2)
 		{
@@ -1333,7 +1345,9 @@ int CConfigManager::GetConfigKeyCode(const string &key)
 		"DeveloperMode",
 		"LastServer",
 		"LastCharacter",
-		"CharacterBackpackStyle"
+		"CharacterBackpackStyle",
+		"CheckPing",
+		"PingTimer"
 	};
 
 	string str = ToLowerA(key);
@@ -1490,6 +1504,12 @@ bool CConfigManager::Load(const string &path)
 					break;
 				case CMKC_USE_GL_LISTS_FOR_INTERFACE:
 					UseGLListsForInterface = ToBool(strings[1]);
+					break;
+				case CMKC_CHECK_PING:
+					m_CheckPing = ToBool(strings[1]);
+					break;
+				case CMKC_PING_TIMER:
+					PingTimer = atoi(strings[1].c_str());
 					break;
 
 				//Page 3
@@ -1854,7 +1874,9 @@ void CConfigManager::Save(const string &path)
 		writter.WriteBool("NoDrawRoofs", m_NoDrawRoofs);
 		writter.WriteBool("HighlightTargetByType", m_HighlightTargetByType);
 		writter.WriteBool("AutoDisplayWorldMap", m_AutoDisplayWorldMap);
-		writter.WriteBool("UseGLListsForInterface", m_UseGLListsForInterface);
+		writter.WriteBool("UseGLListsForInterface", m_CheckPing);
+		writter.WriteBool("CheckPing", m_UseGLListsForInterface);
+		writter.WriteInt("PingTimer", m_PingTimer);
 
 		//Page 3
 		writter.WriteBool("UseToolTips", m_UseToolTips);

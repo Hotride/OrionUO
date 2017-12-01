@@ -195,6 +195,9 @@ uint g_ProcessStaticAnimationTimer = 0;
 uint g_ProcessRemoveRangedTimer = 0;
 int g_MaxViewRange = MAX_VIEW_RANGE_OLD;
 uint g_OrionFeaturesFlags = OFF_ALL_FLAGS;
+PING_INFO_DATA g_GameServerPingInfo = { 0 };
+string g_PingString = "";
+uint g_PingTimer = 0;
 //----------------------------------------------------------------------------------
 bool CanBeDraggedByOffset(const WISP_GEOMETRY::CPoint2Di &point)
 {

@@ -36,6 +36,8 @@ private:
 
 	UCHAR_LIST m_AnimData;
 
+	string m_GameServerIP{ "" };
+
 	void LoadClientConfig();
 	void LoadAutoLoginNames();
 

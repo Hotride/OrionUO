@@ -834,6 +834,9 @@
     <ClInclude Include="Network\PluginPackets.h">
       <Filter>Header Files\Network</Filter>
     </ClInclude>
+    <ClInclude Include="Utility\PingThread.h">
+      <Filter>Header Files\Utility</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="OrionUO.cpp">
@@ -1549,6 +1552,9 @@
     </ClCompile>
     <ClCompile Include="Network\PluginPackets.cpp">
       <Filter>Source Files\Network</Filter>
+    </ClCompile>
+    <ClCompile Include="Utility\PingThread.cpp">
+      <Filter>Source Files\Utility</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

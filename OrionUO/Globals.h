@@ -267,6 +267,9 @@ extern uint g_ProcessStaticAnimationTimer;
 extern uint g_ProcessRemoveRangedTimer;
 extern int g_MaxViewRange;
 extern uint g_OrionFeaturesFlags;
+extern struct PING_INFO_DATA g_GameServerPingInfo;
+extern string g_PingString;
+extern uint g_PingTimer;
 //----------------------------------------------------------------------------------
 inline bool IsBackground(const __int64 &flags) { return (flags & 0x00000001); }
 inline bool IsWeapon(const __int64 &flags) { return (flags & 0x00000002); }

@@ -476,6 +476,7 @@ xcopy /y /d  "$(SolutionDir)bin64\Orion.dll" "$(ProjectDir)"
     <ClInclude Include="ToolTip.h" />
     <ClInclude Include="UseItemsList.h" />
     <ClInclude Include="Utility\AutoResetEvent.h" />
+    <ClInclude Include="Utility\PingThread.h" />
     <ClInclude Include="VMQuery.h" />
     <ClInclude Include="Walker\FastWalk.h" />
     <ClInclude Include="Walker\PathFinder.h" />
@@ -723,6 +724,7 @@ xcopy /y /d  "$(SolutionDir)bin64\Orion.dll" "$(ProjectDir)"
     <ClCompile Include="ToolTip.cpp" />
     <ClCompile Include="UseItemsList.cpp" />
     <ClCompile Include="Utility\AutoResetEvent.cpp" />
+    <ClCompile Include="Utility\PingThread.cpp" />
     <ClCompile Include="VMQuery.cpp" />
     <ClCompile Include="Walker\FastWalk.cpp" />
     <ClCompile Include="Walker\PathFinder.cpp" />

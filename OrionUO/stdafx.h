@@ -94,6 +94,7 @@
 #include "GLEngine/GLEngine.h"
 
 #include "Globals.h"
+#include "Utility/PingThread.h"
 
 class CGump;
 

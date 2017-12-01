@@ -1124,6 +1124,13 @@ void COrion::Process(const bool &rendering)
 			return;
 		}
 
+		if (g_ConfigManager.CheckPing && g_PingTimer < g_Ticks)
+		{
+			CPingThread *pingThread = new CPingThread(0xFFFFFFFF, m_GameServerIP, 10);
+			pingThread->Run();
+			g_PingTimer = g_Ticks + (g_ConfigManager.PingTimer * 1000);
+		}
+
 		g_UseItemActions.Process();
 
 		g_ShowGumpLocker = g_ConfigManager.LockGumpsMoving && g_AltPressed && g_CtrlPressed;
@@ -1757,6 +1764,8 @@ void COrion::RelayServer(const char *ip, int port, puchar gameSeed)
 	WISPFUN_DEBUG("c194_f26");
 	memcpy(&g_GameSeed[0], &gameSeed[0], 4);
 	g_ConnectionManager.Init(gameSeed);
+	m_GameServerIP = ip;
+	memset(&g_GameServerPingInfo, 0, sizeof(g_GameServerPingInfo));
 
 	if (g_ConnectionManager.Connect(ip, port, gameSeed))
 	{

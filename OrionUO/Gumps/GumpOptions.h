@@ -104,6 +104,8 @@ private:
 	static const int ID_GO_P2_HIGHLIGHT_TARGET_BY_TYPE = 247;
 	static const int ID_GO_P2_AUTO_DISPLAY_WORLD_MAP = 248;
 	static const int ID_GO_P2_USE_GL_LISTS_FOR_INTERFACE = 249;
+	static const int ID_GO_P2_CHECK_PING = 250;
+	static const int ID_GO_P2_PING_TIMER = 251;
 	static const int ID_GO_P2_DEV_MODE_1 = 290;
 	static const int ID_GO_P2_DEV_MODE_2 = 291;
 	static const int ID_GO_P2_DEV_MODE_3 = 292;
@@ -199,6 +201,7 @@ private:
 	CGUISlider *m_SliderSpeechDuration{ NULL };
 	CGUISlider *m_SliderCircleTransparency{ NULL };
 	CGUISlider *m_SliderInformSkills{ NULL };
+	CGUISlider *m_SliderPingTimer{ NULL };
 
 	CGUIColoredPolygone *m_ColorTooltipText{ NULL };
 
