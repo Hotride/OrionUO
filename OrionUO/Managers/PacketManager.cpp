@@ -2904,6 +2904,19 @@ PACKET_HANDLER(UnicodeTalk)
 
 	CGameObject *obj = g_World->FindWorldObject(serial);
 
+	if (type == ST_GUILD_CHAT)
+	{
+		serial = 0xFFFFFFFF;
+		textColor = g_ConfigManager.GuildMessageColor;
+		str = L"[Guild][" + ToWString(name) + L"]: " + str;
+	}
+	else if (type == ST_ALLIANCE_CHAT || true)
+	{
+		serial = 0xFFFFFFFF;
+		textColor = g_ConfigManager.AllianceMessageColor;
+		str = L"[Alliance][" + ToWString(name) + L"]: " + str;
+	}
+
 	if (type == ST_BROADCAST /*|| type == ST_SYSTEM*/ || serial == 0xFFFFFFFF || !serial || (ToLowerA(name) == "system" && obj == NULL))
 		g_Orion.CreateUnicodeTextMessage(TT_SYSTEM, serial, (uchar)g_ConfigManager.SpeechFont, textColor, str);
 	else
