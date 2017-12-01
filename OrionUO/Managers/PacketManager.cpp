@@ -2910,7 +2910,7 @@ PACKET_HANDLER(UnicodeTalk)
 		textColor = g_ConfigManager.GuildMessageColor;
 		str = L"[Guild][" + ToWString(name) + L"]: " + str;
 	}
-	else if (type == ST_ALLIANCE_CHAT || true)
+	else if (type == ST_ALLIANCE_CHAT)
 	{
 		serial = 0xFFFFFFFF;
 		textColor = g_ConfigManager.AllianceMessageColor;
