@@ -18,6 +18,8 @@ CLandObject::CLandObject(const uint &serial, const ushort &graphic, const ushort
 	m_OriginalGraphic = graphic;
 	UpdateGraphicBySeason();
 
+	m_DrawTextureColor[3] = 0xFF;
+
 	LAND_TILES &tile = g_Orion.m_LandData[graphic];
 
 	m_IsStretched = (!tile.TexID && ::IsWet(tile.Flags));
