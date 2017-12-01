@@ -620,7 +620,8 @@ enum VALUE_KEY_INT
 	VKI_MAP_X_UOP_SIZE,
 	VKI_CLILOC_ENU_ADDRESS,
 	VKI_CLILOC_ENU_SIZE,
-	VKI_GUMP_ART_ADDRESS
+	VKI_GUMP_ART_ADDRESS,
+	VKI_VIEW_RANGE
 };
 //----------------------------------------------------------------------------------
 enum VALUE_KEY_STRING

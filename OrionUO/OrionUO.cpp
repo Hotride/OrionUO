@@ -2853,6 +2853,12 @@ int COrion::ValueInt(const VALUE_KEY_INT &key, int value)
 
 			break;
 		}
+		case VKI_VIEW_RANGE:
+		{
+			value = g_ConfigManager.UpdateRange;
+
+			break;
+		}
 		default:
 			break;
 	}
