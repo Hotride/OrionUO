@@ -180,7 +180,7 @@ void CConfigManager::DefaultPage7()
 	m_EmoteColor = 0x0021;
 	m_PartyMessageColor = 0x0044;
 	m_GuildMessageColor = 0x0044;
-	m_AllianceMessageColor = 0x0044;
+	m_AllianceMessageColor = 0x0057;
 	m_IgnoreGuildMessage = false;
 	m_IgnoreAllianceMessage = false;
 	m_DarkNights = false;
