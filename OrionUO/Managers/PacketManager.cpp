@@ -3379,7 +3379,10 @@ PACKET_HANDLER(ClientViewRange)
 PACKET_HANDLER(KrriosClientSpecial)
 {
 	WISPFUN_DEBUG("c150_f68");
-	CPacketRazorAnswer().Send();
+	uchar type = ReadUInt8();
+
+	if (type == 0xFE)
+		CPacketRazorAnswer().Send();
 }
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(AssistVersion)
