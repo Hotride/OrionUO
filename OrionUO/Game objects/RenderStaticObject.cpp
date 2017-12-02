@@ -35,6 +35,9 @@ CRenderStaticObject::CRenderStaticObject(const RENDER_OBJECT_TYPE &renderType, c
 	}
 	else
 	{
+		if (IsWet())
+			m_DrawTextureColor[3] = 0xFF;
+
 		if (IsTranslucent())
 			m_DrawTextureColor[3] = TRANSLUCENT_ALPHA;
 
