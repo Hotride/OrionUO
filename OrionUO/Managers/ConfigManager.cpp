@@ -116,6 +116,7 @@ void CConfigManager::DefaultPage2()
 	m_UseGLListsForInterface = false;
 	m_CheckPing = true;
 	m_PingTimer = 10;
+	m_CancelNewTargetSystemOnShiftEsc = false;
 }
 //---------------------------------------------------------------------------
 void CConfigManager::DefaultPage3()
@@ -782,6 +783,7 @@ bool CConfigManager::LoadBin(string path)
 		UseGLListsForInterface = false;
 		m_CheckPing = true;
 		m_PingTimer = 10;
+		m_CancelNewTargetSystemOnShiftEsc = false;
 
 		if (file.ReadInt8() == 2)
 		{
@@ -1347,7 +1349,8 @@ int CConfigManager::GetConfigKeyCode(const string &key)
 		"LastCharacter",
 		"CharacterBackpackStyle",
 		"CheckPing",
-		"PingTimer"
+		"PingTimer",
+		"CancelNewTargetSystemOnShiftEsc"
 	};
 
 	string str = ToLowerA(key);
@@ -1510,6 +1513,9 @@ bool CConfigManager::Load(const string &path)
 					break;
 				case CMKC_PING_TIMER:
 					PingTimer = atoi(strings[1].c_str());
+					break;
+				case CMKC_CANCEL_NEW_TARGET_SYSTEM_ON_SHIFT_ESC:
+					m_CancelNewTargetSystemOnShiftEsc = ToBool(strings[1]);
 					break;
 
 				//Page 3
@@ -1874,9 +1880,10 @@ void CConfigManager::Save(const string &path)
 		writter.WriteBool("NoDrawRoofs", m_NoDrawRoofs);
 		writter.WriteBool("HighlightTargetByType", m_HighlightTargetByType);
 		writter.WriteBool("AutoDisplayWorldMap", m_AutoDisplayWorldMap);
-		writter.WriteBool("UseGLListsForInterface", m_CheckPing);
-		writter.WriteBool("CheckPing", m_UseGLListsForInterface);
+		writter.WriteBool("UseGLListsForInterface", m_UseGLListsForInterface);
+		writter.WriteBool("CheckPing", m_CheckPing);
 		writter.WriteInt("PingTimer", m_PingTimer);
+		writter.WriteBool("CancelNewTargetSystemOnShiftEsc", m_CancelNewTargetSystemOnShiftEsc);
 
 		//Page 3
 		writter.WriteBool("UseToolTips", m_UseToolTips);

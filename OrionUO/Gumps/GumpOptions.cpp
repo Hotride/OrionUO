@@ -505,6 +505,11 @@ void CGumpOptions::InitToolTip()
 				g_ToolTip.Set(L"Delay between ping requests");
 				break;
 			}
+			case ID_GO_P2_CANCEL_NEW_TARGET_SYSTEM_ON_SHIFT_ESC:
+			{
+				g_ToolTip.Set(L"Cancel new target system target on Shift+Esc only");
+				break;
+			}
 			case ID_GO_P2_DEV_MODE_1:
 			{
 				g_ToolTip.Set(L"Original client work");
@@ -1119,6 +1124,10 @@ void CGumpOptions::DrawPage2()
 
 	m_SliderPingTimer = (CGUISlider*)html->Add(new CGUISlider(ID_GO_P2_PING_TIMER, 0x00D8, 0x00D8, 0x00D8, 0x00D5, true, false, 286, 904, 90, 10, 120, g_OptionsConfig.PingTimer));
 	m_SliderPingTimer->SetTextParameters(true, STP_RIGHT, 0, g_OptionsTextColor, true);
+
+	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P2_CANCEL_NEW_TARGET_SYSTEM_ON_SHIFT_ESC, 0x00D2, 0x00D3, 0x00D2, 0, 920));
+	checkbox->Checked = g_OptionsConfig.CancelNewTargetSystemOnShiftEsc;
+	checkbox->SetTextParameters(0, L"Cancel new target system target on Shift+Esc only", g_OptionsTextColor);
 
 	html->CalculateDataSize();
 }
@@ -2470,6 +2479,8 @@ void CGumpOptions::GUMP_CHECKBOX_EVENT_C
 				g_OptionsConfig.UseGLListsForInterface = state;
 			else if (serial == ID_GO_P2_CHECK_PING)
 				g_OptionsConfig.CheckPing = state;
+			else if (serial == ID_GO_P2_CANCEL_NEW_TARGET_SYSTEM_ON_SHIFT_ESC)
+				g_OptionsConfig.CancelNewTargetSystemOnShiftEsc = state;
 			else if (serial == ID_GO_P2_DEV_MODE_1)
 				g_OptionsDeveloperMode = DM_NO_DEBUG;
 			else if (serial == ID_GO_P2_DEV_MODE_2)
@@ -3070,6 +3081,7 @@ void CGumpOptions::ApplyPageChanges()
 			g_ConfigManager.UseGLListsForInterface = g_OptionsConfig.UseGLListsForInterface;
 			g_ConfigManager.CheckPing = g_OptionsConfig.CheckPing;
 			g_ConfigManager.PingTimer = g_OptionsConfig.PingTimer;
+			g_ConfigManager.CancelNewTargetSystemOnShiftEsc = g_OptionsConfig.CancelNewTargetSystemOnShiftEsc;
 			g_DeveloperMode = g_OptionsDeveloperMode;
 
 			break;

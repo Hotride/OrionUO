@@ -2383,7 +2383,7 @@ void CGameScreen::OnKeyDown(const WPARAM &wParam, const LPARAM &lParam)
 		{
 			if (g_Target.IsTargeting())
 				g_Target.SendCancelTarget();
-			else if (g_NewTargetSystem.Serial)
+			else if (g_NewTargetSystem.Serial && (!g_ConfigManager.CancelNewTargetSystemOnShiftEsc || g_ShiftPressed))
 				g_NewTargetSystem.Serial = 0;
 			else if (g_PathFinder.AutoWalking && g_PathFinder.PathFindidngCanBeCancelled)
 				g_PathFinder.StopAutoWalk();
