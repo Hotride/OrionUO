@@ -336,11 +336,14 @@ void CMapBlock::AddRender(CRenderWorldObject *item, const int &x, const int &y)
 
 			if (((CGameObject*)item)->NPC || ((CGameObject*)item)->IsCorpse())
 				priorityZ++;
+			else
+				goto process_static;
 		}
 		else if (item->IsMultiObject() && (((CMultiObject*)item)->State & CHMOF_GENERIC_INTERNAL))
 			priorityZ--;
 		else
 		{
+			process_static:
 			if (item->IsBackground())
 				priorityZ--;
 
