@@ -86,7 +86,7 @@ int CPingThread::CalculatePing()
 
 	WSADATA wsa;
 
-	if (!::WSAStartup(MAKEWORD(2, 2), &wsa) != 0)
+	if (!::WSAStartup(MAKEWORD(2, 2), &wsa))
 	{
 		SOCKET socket = ::socket(AF_INET, SOCK_RAW, IPPROTO_ICMP);
 

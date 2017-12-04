@@ -505,8 +505,24 @@ LRESULT COrionWindow::OnUserMessages(const UINT &message, const WPARAM &wParam, 
 					sprintf_s(ping, "ping(min:%i max:%i avg:%i lost:%i) ", g_GameServerPingInfo.Min, g_GameServerPingInfo.Max, g_GameServerPingInfo.Average, g_GameServerPingInfo.Lost);
 					g_PingString = ping;
 				}
+				else
+				{
+					CServer *server = g_ServerList.GetServer(info->ServerID);
 
-				//LOG("Ping info: id:%i min:%i max:%i average:%i lost:%i\n", info->ServerID, info->Min, info->Max, info->Average, info->Lost);
+					if (server != NULL)
+					{
+						if (info->Min < 9999)
+						{
+							server->Ping = info->Average;
+
+							server->PacketsLoss = info->Lost;
+
+							g_ServerScreen.UpdateContent();
+						}
+					}
+				}
+
+				LOG("Ping info: id:%i min:%i max:%i average:%i lost:%i\n", info->ServerID, info->Min, info->Max, info->Average, info->Lost);
 			}
 
 			break;

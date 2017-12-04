@@ -18,6 +18,8 @@ class CServer
 	SETGET(uchar, Timezone, 0);
 	SETGET(uint, IP, 0);
 	SETGET(bool, Selected, false);
+	SETGET(int, Ping, -1);
+	SETGET(int, PacketsLoss, -1);
 
 public:
 	CServer();
