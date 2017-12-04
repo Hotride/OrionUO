@@ -510,7 +510,7 @@ CPacketEmoteAction::CPacketEmoteAction(const char *action)
 	WriteString(action, len, false);
 }
 //----------------------------------------------------------------------------------
-CPacketGumpResponse::CPacketGumpResponse(CGump *gump, int code)
+CPacketGumpResponse::CPacketGumpResponse(CGumpGeneric *gump, int code)
 : CPacket(1)
 {
 	int switchesCount = 0;
@@ -553,7 +553,7 @@ CPacketGumpResponse::CPacketGumpResponse(CGump *gump, int code)
 	WriteUInt8(0xB1);
 	WriteUInt16BE((ushort)size);
 	WriteUInt32BE(gump->Serial);
-	WriteUInt32BE(gump->ID);
+	WriteUInt32BE(gump->MasterGump ? gump->MasterGump : gump->ID);
 	WriteUInt32BE(code);
 	WriteUInt32BE(switchesCount);
 	

@@ -40,12 +40,30 @@ void CGumpScreenServer::UpdateContent()
 	if (g_PacketManager.ClientVersion >= CV_500A)
 		textColor = 0xFFFF;
 
-	CGUIText *text = new CGUIText(textColor, 233, 62);
+	CGUIText *text = new CGUIText(textColor, 155, 70);
 
 	if (g_PacketManager.ClientVersion >= CV_500A)
 		text->CreateTextureW(0, cliloc->GetW(1044579, false, "Select which shard to play on:"));
 	else
 		text->CreateTextureA(9, "Select which shard to play on:");
+
+	Add(text);
+
+	text = new CGUIText(textColor, 400, 70);
+
+	if (g_PacketManager.ClientVersion >= CV_500A)
+		text->CreateTextureW(0, cliloc->GetW(1044577, false, "Latency:"));
+	else
+		text->CreateTextureA(9, "Latency:");
+
+	Add(text);
+
+	text = new CGUIText(textColor, 470, 70);
+
+	if (g_PacketManager.ClientVersion >= CV_500A)
+		text->CreateTextureW(0, cliloc->GetW(1044578, false, "Packet Loss:"));
+	else
+		text->CreateTextureA(9, "Packet Loss:");
 
 	Add(text);
 
@@ -79,11 +97,31 @@ void CGumpScreenServer::UpdateContent()
 
 		htmlGump->Add(new CGUIHitBox(ID_SS_SERVER_LIST + (int)i, 74, 10 + ((int)i * 25), 280, 25));
 
-		CGUITextEntry *entry = new CGUITextEntry(ID_SS_SERVER_LIST + (int)i, 0x034F, 0x0021, 0x0021, 74, 10 + ((int)i * 25), 0, false, 5);
+		CGUITextEntry *entry = new CGUITextEntry(ID_SS_SERVER_LIST + (int)i, 0x034F, 0x0021, 0x0021, 74, 10 + offsetY, 0, false, 5);
 		entry->m_Entry.SetText(server->Name);
 		entry->ReadOnly = true;
 		entry->CheckOnSerial = true;
 		htmlGump->Add(entry);
+
+		entry = new CGUITextEntry(ID_SS_SERVER_LIST + (int)i, 0x034F, 0x0021, 0x0021, 250, 10 + offsetY, 0, false, 5);
+		if (server->Ping == -1)
+			entry->m_Entry.SetText("-");
+		else
+			entry->m_Entry.SetText(std::to_string(server->Ping) + "ms");
+		entry->ReadOnly = true;
+		entry->CheckOnSerial = true;
+		htmlGump->Add(entry);
+
+		entry = new CGUITextEntry(ID_SS_SERVER_LIST + (int)i, 0x034F, 0x0021, 0x0021, 320, 10 + offsetY, 0, false, 5);
+		if (server->PacketsLoss == -1)
+			entry->m_Entry.SetText("-");
+		else
+			entry->m_Entry.SetText(std::to_string(server->PacketsLoss) + "%");
+		entry->ReadOnly = true;
+		entry->CheckOnSerial = true;
+		htmlGump->Add(entry);
+
+		offsetY += 25;
 	}
 
 	htmlGump->CalculateDataSize();

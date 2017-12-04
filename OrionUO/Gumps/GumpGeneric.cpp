@@ -26,57 +26,48 @@ void CGumpGeneric::InitToolTip()
 {
 	WISPFUN_DEBUG("c128_f3");
 
-	if (g_SelectedObject.Object != NULL && g_SelectedObject.Object->IsGUI() && ((CBaseGUI*)g_SelectedObject.Object)->Type == GOT_VIRTURE_GUMP)
+	if (g_SelectedObject.Object != NULL && g_SelectedObject.Object->IsGUI())
 	{
-		int offset = 0;
+		CBaseGUI *obj = (CBaseGUI*)g_SelectedObject.Object;
 
-		switch (g_SelectedObject.Serial)
+		if (obj->Type == GOT_VIRTURE_GUMP)
 		{
-			case 0x69:
-			{
-				offset = 2;
-				break;
-			}
-			case 0x6A:
-			{
-				offset = 7;
-				break;
-			}
-			case 0x6B:
-			{
-				offset = 5;
-				break;
-			}
-			case 0x6C:
-			{
-				offset = 0;
-				break;
-			}
-			case 0x6D:
-			{
-				offset = 6;
-				break;
-			}
-			case 0x6E:
-			{
-				offset = 1;
-				break;
-			}
-			case 0x6F:
-			{
-				offset = 3;
-				break;
-			}
-			case 0x70:
-			{
-				offset = 4;
-				break;
-			}
-			default:
-				break;
-		}
+			int offset = 0;
 
-		g_ToolTip.Set(1051000 + offset,"Some virture gump item", 100);
+			switch (g_SelectedObject.Serial)
+			{
+				case 0x69:
+					offset = 2;
+					break;
+				case 0x6A:
+					offset = 7;
+					break;
+				case 0x6B:
+					offset = 5;
+					break;
+				case 0x6C:
+					offset = 0;
+					break;
+				case 0x6D:
+					offset = 6;
+					break;
+				case 0x6E:
+					offset = 1;
+					break;
+				case 0x6F:
+					offset = 3;
+					break;
+				case 0x70:
+					offset = 4;
+					break;
+				default:
+					break;
+			}
+
+			g_ToolTip.Set(1051000 + offset, "Some virture gump item", 100);
+		}
+		else if (obj->ClilocID)
+			g_ToolTip.Set(obj->ClilocID, "");
 	}
 }
 //----------------------------------------------------------------------------------

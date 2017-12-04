@@ -40,6 +40,8 @@ class CBaseGUI : public CRenderObject
 	//!Флаг, отвечающий только за отрисовку компоненты, без ее выбора
 	SETGET(bool, DrawOnly, false);
 
+	SETGET(uint, ClilocID, 0);
+
 public:
 	CBaseGUI(const GUMP_OBJECT_TYPE &type, const uint &serial, const ushort &graphic, const ushort &color, const int &x, const int &y);
 	virtual ~CBaseGUI();

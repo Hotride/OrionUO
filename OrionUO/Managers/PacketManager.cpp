@@ -4189,8 +4189,10 @@ PACKET_HANDLER(OpenGump)
 
 	WISP_FILE::CTextFileParser parser("", " ", "", "{}");
 	WISP_FILE::CTextFileParser cmdParser("", " ", "", "");
+	WISP_FILE::CTextFileParser tilepicGraphicParser("", ",", "", "");
 
 	STRING_LIST commandList = parser.GetTokens(commands.c_str());
+	CBaseGUI *lastGumpObject = NULL;
 
 	for (const string &str : commandList)
 	{
@@ -4437,28 +4439,28 @@ PACKET_HANDLER(OpenGump)
 				((CGUITextEntry*)go)->m_Entry.Width = width;
 			}
 		}
-		else if (cmd == "tilepic")
+		else if (cmd == "tilepic" || cmd == "tilepichue")
 		{
 			if (listSize >= 4)
 			{
 				int x = ToInt(list[1]);
 				int y = ToInt(list[2]);
-				int graphic = ToInt(list[3]);
-
-				go = new CGUITilepic(graphic, 0, x, y);
-				go->DrawOnly = true;
-			}
-		}
-		else if (cmd == "tilepichue")
-		{
-			if (listSize >= 4)
-			{
-				int x = ToInt(list[1]);
-				int y = ToInt(list[2]);
-				int graphic = ToInt(list[3]);
 				int color = 0;
+				int graphic = 0;
 
-				if (listSize >= 5)
+				if (cmd == "tilepic")
+				{
+					STRING_LIST graphicList = tilepicGraphicParser.GetTokens(list[3].c_str());
+
+					if (graphicList.size() >= 1)
+					{
+						graphic = ToInt(graphicList[0]);
+
+						if (graphicList.size() >= 2)
+							color = ToInt(graphicList[1]);
+					}
+				}
+				else if (listSize >= 5)
 					color = ToInt(list[4]);
 
 				if (color)
@@ -4553,29 +4555,47 @@ PACKET_HANDLER(OpenGump)
 				htmlGumlList.push_back(htmlInfo);
 			}
 		}
-		/*else if (cmd == "xmfhtmltok")
+		else if (cmd == "xmfhtmltok")
 		{
-			if (listSize >= 5)
+			if (listSize >= 9)
 			{
+				HTMLGumpDataInfo htmlInfo = { 0 };
+				htmlInfo.IsXMF = true;
+
+				htmlInfo.X = ToInt(list[1]);
+				htmlInfo.Y = ToInt(list[2]);
+				htmlInfo.Width = ToInt(list[3]);
+				htmlInfo.Height = ToInt(list[4]);
+				htmlInfo.HaveBackground = ToInt(list[5]);
+				htmlInfo.HaveScrollbar = ToInt(list[6]);
+				htmlInfo.Color = ToInt(list[7]);
+
+				if (htmlInfo.Color == 0x7FFF)
+					htmlInfo.Color = 0x00FFFFFF;
+
+				htmlInfo.TextID = ToInt(list[8]);
+
+				if (listSize >= 10)
+				{
+				}
+
+				htmlGumlList.push_back(htmlInfo);
 			}
 		}
 		else if (cmd == "tooltip")
 		{
-			if (listSize >= 2)
-			{
-				int cliloc = ToInt(list[1]);
-			}
+			if (listSize >= 2 && lastGumpObject != NULL)
+				lastGumpObject->ClilocID = ToInt(list[1]);
 		}
 		else if (cmd == "mastergump")
 		{
 			if (listSize >= 2)
-			{
-				int index = ToInt(list[1]);
-			}
-		}*/
+				gump->MasterGump = ToInt(list[1]);
+		}
 
 		if (go != NULL)
 		{
+			lastGumpObject = go;
 			gump->Add(go);
 
 			if ((go->Type == GOT_TILEPIC || go->Type == GOT_GUMPPIC) && go->Color)

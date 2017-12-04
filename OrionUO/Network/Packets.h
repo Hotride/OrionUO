@@ -183,7 +183,7 @@ public:
 class CPacketGumpResponse : public CPacket
 {
 public:
-	CPacketGumpResponse(class CGump *gump, int code);
+	CPacketGumpResponse(class CGumpGeneric *gump, int code);
 };
 //----------------------------------------------------------------------------------
 class CPacketVirtureGumpResponse : public CPacket
