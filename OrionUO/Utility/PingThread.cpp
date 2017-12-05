@@ -53,6 +53,7 @@ CPingThread::CPingThread(const uint &serverID, const string &serverIP, const int
 : WISP_THREAD::CThread(), m_ServerID(serverID), m_ServerIP(serverIP),
 m_RequestsCount(requestsCount)
 {
+	LOG("CPingThread => %s\n", serverIP.c_str());
 	WISPFUN_DEBUG("");
 }
 //----------------------------------------------------------------------------------

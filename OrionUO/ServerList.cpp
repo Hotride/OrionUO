@@ -67,7 +67,7 @@ void CServerList::ParsePacket(WISP_DATASTREAM::CDataReader &reader)
 		m_Servers.push_back(CServer(id, name, fullPercent, timezone, ip, selected));
 
 		char ipString[30] = { 0 };
-		sprintf_s(ipString, "%i.%i.%i.%i", ip & 0xFF, (ip >> 8) & 0xFF, (ip >> 16) & 0xFF, (ip >> 24) & 0xFF);
+		sprintf_s(ipString, "%i.%i.%i.%i", (ip >> 24) & 0xFF, (ip >> 16) & 0xFF, (ip >> 8) & 0xFF, ip & 0xFF);
 		CPingThread *pingThread = new CPingThread(i, ipString, 100);
 		pingThread->Run();
 	}
