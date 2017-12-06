@@ -1679,7 +1679,7 @@ void CAnimationManager::DrawCharacter(CGameCharacter *obj, int x, int y)
 
 		if (g_ConfigManager.ApplyStateColorOnCharacters)
 		{
-			if (obj->Poisoned())
+			if (obj->Poisoned() || obj->SA_Poisoned)
 				m_Color = 0x0044;
 			else if (obj->Notoriety != NT_INVULNERABLE && obj->YellowHits())
 				m_Color = 0x0030;
@@ -1899,7 +1899,7 @@ void CAnimationManager::DrawCharacter(CGameCharacter *obj, int x, int y)
 				g_NewTargetSystem.TopY = drawY - frameHeight - 8;
 				g_NewTargetSystem.BottomY = drawY + 7;
 				g_NewTargetSystem.TargetedCharacter = obj;
-				if (obj->Poisoned())
+				if (obj->Poisoned() || obj->SA_Poisoned)
 					g_NewTargetSystem.HealthColor = 63; //Character status line (green)
 				else if (obj->YellowHits())
 					g_NewTargetSystem.HealthColor = 53; //Character status line (green)
@@ -1945,7 +1945,7 @@ void CAnimationManager::PrepareTargetAttackGump(CTargetGump &gump, int drawX, in
 	gump.Color = targetColor;
 	gump.Hits = per;
 	gump.TargetedCharacter = &obj;
-	if (obj.Poisoned())
+	if (obj.Poisoned() || obj.SA_Poisoned)
 		gump.HealthColor = 63; //Character status line (green)
 	else if (obj.YellowHits())
 		gump.HealthColor = 53; //Character status line (green)
