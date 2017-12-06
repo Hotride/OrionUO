@@ -1040,6 +1040,8 @@ PACKET_HANDLER(NewHealthbarUpdate)
 
 		obj->Flags = flags;
 	}
+
+	g_GumpManager.UpdateContent(serial, 0, GT_STATUSBAR);
 }
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(UpdatePlayer)
