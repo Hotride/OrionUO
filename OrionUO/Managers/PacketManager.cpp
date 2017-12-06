@@ -5495,6 +5495,17 @@ PACKET_HANDLER(OrionMessages)
 
 			break;
 		}
+		case OCT_ORION_IGNORE_TILES_IN_FILTER:
+		{
+			g_Orion.m_IgnoreInFilterFiles.clear();
+
+			ushort count = ReadUInt16BE();
+
+			IFOR(i, 0, count)
+				g_Orion.m_IgnoreInFilterFiles.push_back(ReadUInt16BE());
+
+			break;
+		}
 		case OCT_CLOSE_GENERIC_GUMP_WITHOUT_RESPONSE:
 		{
 			uint serial = ReadUInt32BE();

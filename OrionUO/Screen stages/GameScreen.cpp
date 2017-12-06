@@ -560,7 +560,7 @@ void CGameScreen::AddTileToRenderList(CRenderWorldObject *obj, const int &worldX
 			}
 			else
 			{
-				if (!g_DrawFoliage && rso->IsFoliage())
+				if (!rso->CheckDrawFoliage())
 					continue;
 				else if (g_NoDrawRoof && rso->IsRoof())
 				{
@@ -572,7 +572,7 @@ void CGameScreen::AddTileToRenderList(CRenderWorldObject *obj, const int &worldX
 					if (!aphaChanged)
 						continue;
 				}
-				else if (g_ConfigManager.NoVegetation && rso->Vegetation)
+				else if (!rso->CheckDrawVegetation())
 					continue;
 
 				maxObjectZ += rso->GetStaticHeight();
@@ -883,8 +883,6 @@ void CGameScreen::AddOffsetCharacterTileToRenderList(CGameObject *obj, const boo
 void CGameScreen::CalculateGameWindowBounds()
 {
 	WISPFUN_DEBUG("c164_f13");
-	g_DrawFoliage = (g_Season < ST_WINTER) && !g_ConfigManager.DrawStumps;
-
 	g_GrayedPixels = g_Player->Dead();
 
 	if (g_GrayedPixels && g_Season != ST_DESOLATION)

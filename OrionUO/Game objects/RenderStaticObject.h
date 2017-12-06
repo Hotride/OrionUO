@@ -96,6 +96,9 @@ public:
 	bool IsStaticGroupObject() {return true;}
 
 	virtual CRenderStaticObject *StaticGroupObjectPtr() { return this; }
+
+	bool CheckDrawFoliage();
+	bool CheckDrawVegetation();
 };
 //----------------------------------------------------------------------------------
 #endif

@@ -135,7 +135,6 @@ int g_OldSeasonMusic = 0;
 uint g_LockedClientFeatures = 0;
 
 bool g_GeneratedMouseDown = false;
-bool g_DrawFoliage = true;
 
 DEVELOPER_MODE g_DeveloperMode = DM_SHOW_FPS_ONLY;
 DEVELOPER_MODE g_OptionsDeveloperMode = DM_SHOW_FPS_ONLY;

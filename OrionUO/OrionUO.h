@@ -141,6 +141,10 @@ public:
 
 	ushort m_WinterTile[MAX_LAND_DATA_INDEX_COUNT];
 
+	USHORT_LIST m_IgnoreInFilterFiles;
+
+	bool InTileFilter(const ushort &graphic);
+
 	static string FixServerName(string name);
 
 

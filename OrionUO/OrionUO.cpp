@@ -3008,10 +3008,24 @@ void COrion::ClearTreesTextures()
 	ClearRemovedStaticsTextures();
 }
 //----------------------------------------------------------------------------------
+bool COrion::InTileFilter(const ushort &graphic)
+{
+	if (!m_IgnoreInFilterFiles.empty())
+	{
+		for (const ushort &i : m_IgnoreInFilterFiles)
+		{
+			if (graphic == i)
+				return true;
+		}
+	}
+
+	return false;
+}
+//----------------------------------------------------------------------------------
 bool COrion::IsTreeTile(const ushort &graphic, int &index)
 {
 	WISPFUN_DEBUG("c194_f41");
-	if (!g_ConfigManager.DrawStumps)
+	if (!g_ConfigManager.DrawStumps || InTileFilter(graphic))
 		return false;
 
 	uchar flags = m_StaticTilesFilterFlags[graphic];

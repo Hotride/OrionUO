@@ -264,4 +264,30 @@ bool CRenderStaticObject::TranparentTest(const int &playerZPlus5)
 
 	return result;
 }
+//---------------------------------------------------------------------------
+bool CRenderStaticObject::CheckDrawFoliage()
+{
+	if (IsFoliage())
+	{
+		if (g_Season < ST_WINTER)
+		{
+			if (g_ConfigManager.DrawStumps)
+				return g_Orion.InTileFilter(m_Graphic);
+
+			return true;
+		}
+
+		return false;
+	}
+
+	return true;
+}
+//---------------------------------------------------------------------------
+bool CRenderStaticObject::CheckDrawVegetation()
+{
+	if (g_ConfigManager.NoVegetation && m_Vegetation)
+		return g_Orion.InTileFilter(m_Graphic);
+
+	return true;
+}
 //----------------------------------------------------------------------------------
