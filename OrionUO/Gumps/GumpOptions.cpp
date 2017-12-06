@@ -16,7 +16,7 @@ const ushort g_OptionsTextColor = 0;
 CGumpOptions::CGumpOptions(short x, short y)
 : CGump(GT_OPTIONS, 0, x, y)
 {
-	m_Page = 1;
+	m_Page = 2;
 }
 //----------------------------------------------------------------------------------
 CGumpOptions::~CGumpOptions()
