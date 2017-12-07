@@ -24,7 +24,7 @@ CGLTextureCircleOfTransparency::~CGLTextureCircleOfTransparency()
 	Clear();
 }
 //---------------------------------------------------------------------------
-void CGLTextureCircleOfTransparency::CreatePixels(const int &radius, int &width, int &height, UINT_LIST &pixels)
+void CGLTextureCircleOfTransparency::CreatePixels(const int &radius, short &width, short &height, UINT_LIST &pixels)
 {
 	WISPFUN_DEBUG("c37_f2");
 	int fixRadius = radius + 1;

@@ -28,7 +28,7 @@ bool CGUIMenuObject::Select()
 	int x = g_MouseManager.Position.X - m_X;
 	int y = g_MouseManager.Position.Y - m_Y;
 
-	WISP_GEOMETRY::CSize size = g_Orion.GetArtDimension(m_Graphic, true);
+	WISP_GEOMETRY::CSize size = g_Orion.GetStaticArtDimension(m_Graphic);
 
 	return (x >= 0 && y >= 0 && x < size.Width && y < size.Height);
 }

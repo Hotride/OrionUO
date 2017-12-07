@@ -4036,7 +4036,7 @@ PACKET_HANDLER(OpenMenuGump)
 			nameLen = ReadUInt8();
 			name = ReadString(nameLen);
 
-			WISP_GEOMETRY::CSize size = g_Orion.GetArtDimension(graphic, true);
+			WISP_GEOMETRY::CSize size = g_Orion.GetStaticArtDimension(graphic);
 
 			if (size.Width && size.Height)
 			{

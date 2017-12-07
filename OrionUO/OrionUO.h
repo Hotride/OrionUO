@@ -213,10 +213,7 @@ public:
 
 
 	//Получить габариты картинки статики
-	WISP_GEOMETRY::CSize GetArtDimension(const ushort &id, const bool &run);
-
-	//Получить габариты картинки статики (реальные пиксельные границы)
-	WISP_GEOMETRY::CRect GetStaticArtRealPixelDimension(const ushort &id);
+	WISP_GEOMETRY::CSize GetStaticArtDimension(const ushort &id);
 
 	//Получить габариты картинки гампа
 	WISP_GEOMETRY::CSize GetGumpDimension(const ushort &id);

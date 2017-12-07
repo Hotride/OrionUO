@@ -11,9 +11,9 @@
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
 //----------------------------------------------------------------------------------
-CGUIExternalTexture::CGUIExternalTexture(CGLTexture *texture, const bool &deleteTextureOnDestroy, const int &x, const int &y)
+CGUIExternalTexture::CGUIExternalTexture(CGLTexture *texture, const bool &deleteTextureOnDestroy, const int &x, const int &y, const int &drawWidth, const int &drawHeight)
 : CBaseGUI(GOT_EXTERNALTEXTURE, 0, 0, 0, x, y), m_Texture(texture),
-m_DeleteTextureOnDestroy(deleteTextureOnDestroy)
+m_DeleteTextureOnDestroy(deleteTextureOnDestroy), m_DrawWidth(drawWidth), m_DrawHeight(drawHeight)
 {
 }
 //----------------------------------------------------------------------------------
@@ -33,8 +33,15 @@ WISP_GEOMETRY::CSize CGUIExternalTexture::GetSize()
 
 	if (m_Texture != NULL)
 	{
-		size.Width = m_Texture->Width;
-		size.Height = m_Texture->Height;
+		if (m_DrawWidth)
+			size.Width = m_DrawWidth;
+		else
+			size.Width = m_Texture->Width;
+
+		if (m_DrawHeight)
+			size.Height = m_DrawHeight;
+		else
+			size.Height = m_Texture->Height;
 	}
 
 	return size;
@@ -47,7 +54,27 @@ void CGUIExternalTexture::Draw(const bool &checktrans)
 	{
 		SetShaderMode();
 
-		m_Texture->Draw(m_X, m_Y, checktrans);
+		if (m_DrawWidth || m_DrawHeight)
+		{
+			CGLTexture tex;
+			tex.Texture = m_Texture->Texture;
+
+			if (m_DrawWidth)
+				tex.Width = m_DrawWidth;
+			else
+				tex.Width = m_Texture->Width;
+
+			if (m_DrawHeight)
+				tex.Height = m_DrawHeight;
+			else
+				tex.Height = m_Texture->Height;
+
+			g_GL.GL1_Draw(tex, m_X, m_Y);
+
+			tex.Texture = 0;
+		}
+		else
+			m_Texture->Draw(m_X, m_Y, checktrans);
 	}
 }
 //----------------------------------------------------------------------------------

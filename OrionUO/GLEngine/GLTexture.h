@@ -15,8 +15,14 @@ typedef vector<bool> HIT_MAP_TYPE;
 class CGLTexture
 {
 	//!Габариты текстуры
-	SETGET(int, Width, 0);
-	SETGET(int, Height, 0);
+	SETGET(short, Width, 0);
+	SETGET(short, Height, 0);
+
+	SETGET(short, ImageOffsetX, 0);
+	SETGET(short, ImageOffsetY, 0);
+
+	SETGET(short, ImageWidth, 0);
+	SETGET(short, ImageHeight, 0);
 
 	//!Буфер вершин
 	SETGET(GLuint, VertexBuffer, 0);

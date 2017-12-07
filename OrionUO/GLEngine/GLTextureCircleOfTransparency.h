@@ -21,7 +21,7 @@ public:
 	virtual ~CGLTextureCircleOfTransparency();
 
 	//Создать текстуру
-	static void CreatePixels(const int &radius, int &width, int &height, UINT_LIST &pixels);
+	static void CreatePixels(const int &radius, short &width, short &height, UINT_LIST &pixels);
 
 	//Создать текстуру
 	bool Create(int radius);

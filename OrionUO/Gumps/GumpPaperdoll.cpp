@@ -581,10 +581,20 @@ void CGumpPaperdoll::UpdateContent()
 				{
 					uint slotSerial = ID_GP_ITEMS + equipment->Layer;
 
-					WISP_GEOMETRY::CRect rect = g_Orion.GetStaticArtRealPixelDimension(equipment->Graphic);
+					CIndexObjectStatic &sio = g_Orion.m_StaticDataIndex[equipment->Graphic];
+					CGLTexture *texture = sio.Texture;
 
-					int tileOffsetX = (13 - rect.Size.Width) / 2;
-					int tileOffsetY = (14 - rect.Size.Height) / 2;
+					if (texture == NULL)
+						texture = g_Orion.ExecuteStaticArt(equipment->Graphic);
+
+					if (texture == NULL)
+					{
+						yPtr += 21;
+						continue;
+					}
+
+					int tileOffsetX = (13 - texture->ImageWidth) / 2;
+					int tileOffsetY = (14 - texture->ImageHeight) / 2;
 
 					int tileX = 4;
 					int tileY = 3 + yPtr;
@@ -593,43 +603,46 @@ void CGumpPaperdoll::UpdateContent()
 
 					if (scaleImages && (tileOffsetX < 0 || tileOffsetY < 0))
 					{
-						CGLTexture *th = g_Orion.ExecuteStaticArt(m_Graphic);
+						short imageWidth = 0;
+						short imageHeight = 0;
+						USHORT_LIST pixels = g_UOFileReader.GetArtPixels(equipment->Graphic, sio, true, imageWidth, imageHeight);
 
-						if (th != NULL)
+						int wantImageWidth = texture->ImageWidth;
+						int wantImageHeight = texture->ImageHeight;
+
+						if (pixels.size() == 0 || !wantImageWidth || !wantImageHeight)
 						{
-							int width = th->Width;
-							int height = th->Height;
-
-							if (tileOffsetX < 0 && width)
-							{
-								float percents = (rect.Size.Width / 13.0f) / (float)(rect.Size.Width / (float)width) / 2.0f;
-
-								tileX -= (int)(rect.Position.X / percents);
-								width = (int)(width / percents);
-							}
-							else
-								tileX -= rect.Position.X + tileOffsetX;
-
-							if (tileOffsetY < 0 && height)
-							{
-								float percents = (rect.Size.Height / 14.0f) / (float)(rect.Size.Height / (float)height) / 2.0f;
-
-								tileY -= (int)(rect.Position.Y / percents);
-								height = (int)(height / percents);
-							}
-							else
-								tileY -= rect.Position.Y + tileOffsetY;
-
-							m_DataBox->Add(new CGUITilepicScaled(equipment->Graphic, equipment->Color & 0x3FFF, tileX, tileY, width, height));
-
-							drawed = true;
+							yPtr += 21;
+							continue;
 						}
+
+						USHORT_LIST wantPixels(wantImageWidth * wantImageHeight, 0);
+
+						int imageOffsetX = texture->ImageOffsetX;
+						int imageOffsetY = texture->ImageOffsetY;
+
+						IFOR(y, 0, wantImageHeight)
+						{
+							int srcPos = (y + imageOffsetY) * imageWidth + imageOffsetX;
+							int destPos = y * wantImageWidth;
+
+							IFOR(x, 0, wantImageWidth)
+								wantPixels[destPos + x] = pixels[srcPos + x];
+						}
+
+						texture = new CGLTexture();
+						g_GL_BindTexture16(*texture, wantImageWidth, wantImageHeight, &wantPixels[0]);
+
+						CGUIExternalTexture *ext = (CGUIExternalTexture*)m_DataBox->Add(new CGUIExternalTexture(texture, true, tileX - 2, tileY - 2, 18, 18));
+						ext->DrawOnly = true;
+
+						drawed = true;
 					}
 					
 					if (!drawed)
 					{
-						tileX -= rect.Position.X - tileOffsetX;
-						tileY -= rect.Position.Y - tileOffsetY;
+						tileX -= texture->ImageOffsetX - tileOffsetX;
+						tileY -= texture->ImageOffsetY - tileOffsetY;
 						CGUITilepic *pic = new CGUITilepic(equipment->Graphic, equipment->Color & 0x3FFF, tileX, tileY);
 						pic->PartialHue = equipment->IsPartialHue();
 						m_DataBox->Add(pic);

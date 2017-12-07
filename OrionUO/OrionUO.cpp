@@ -4245,8 +4245,8 @@ void COrion::CreateAuraTexture()
 {
 	WISPFUN_DEBUG("c194_f57");
 	UINT_LIST pixels;
-	int width = 0;
-	int height = 0;
+	short width = 0;
+	short height = 0;
 
 	CGLTextureCircleOfTransparency::CreatePixels(30, width, height, pixels);
 
@@ -5972,16 +5972,11 @@ uint64 COrion::GetStaticFlags(const ushort &id)
 	return 0;
 }
 //----------------------------------------------------------------------------------
-WISP_GEOMETRY::CSize COrion::GetArtDimension(const ushort &id, const bool &run)
+WISP_GEOMETRY::CSize COrion::GetStaticArtDimension(const ushort &id)
 {
 	WISPFUN_DEBUG("c194_f129");
 
-	CGLTexture *th = NULL;
-
-	if (run) //run
-		th = ExecuteStaticArt(id);
-	else //raw
-		th = ExecuteLandArt(id);
+	CGLTexture *th = ExecuteStaticArt(id);
 
 	if (th != NULL)
 		return WISP_GEOMETRY::CSize(th->Width, th->Height);
@@ -5989,24 +5984,15 @@ WISP_GEOMETRY::CSize COrion::GetArtDimension(const ushort &id, const bool &run)
 	return WISP_GEOMETRY::CSize();
 }
 //----------------------------------------------------------------------------------
-WISP_GEOMETRY::CRect COrion::GetStaticArtRealPixelDimension(const ushort &id)
-{
-	return g_UOFileReader.ReadStaticArtPixelDimension(m_StaticDataIndex[id]);
-}
-//----------------------------------------------------------------------------------
 WISP_GEOMETRY::CSize COrion::GetGumpDimension(const ushort &id)
 {
 	WISPFUN_DEBUG("c194_f131");
-	WISP_GEOMETRY::CSize size;
 	CGLTexture *th = ExecuteGump(id);
 
 	if (th != NULL)
-	{
-		size.Width = th->Width;
-		size.Height = th->Height;
-	}
+		return WISP_GEOMETRY::CSize(th->Width, th->Height);
 
-	return size;
+	return WISP_GEOMETRY::CSize();
 }
 //----------------------------------------------------------------------------------
 void COrion::OpenStatus(uint serial)

@@ -31,6 +31,8 @@ public:
 	*/
 	CGLTexture *ReadGump(CIndexObject &io);
 
+	USHORT_LIST GetArtPixels(const ushort &id, CIndexObject &io, const bool &run, short &width, short &height);
+
 	/*!
 	Прочитать арт и сгенерировать текстуру
 	@param [__in] ID Индекс арта
@@ -38,14 +40,6 @@ public:
 	@return Ссылка на данные о текстуре
 	*/
 	CGLTexture *ReadArt(const ushort &id, CIndexObject &io, const bool &run);
-
-	/*!
-	Прочитать арт и вычислить реальные пииксельные границы картинки
-	@param [__in] io Ссылка на данные о арте
-	@param [__out] r Структура с габаритами на выходе
-	@return Ссылка на данные о текстуре
-	*/
-	WISP_GEOMETRY::CRect ReadStaticArtPixelDimension(CIndexObject &io);
 
 	/*!
 	Прочитать текстуру ландшафта и сгенерировать тексруту

@@ -451,7 +451,7 @@ void CGumpCustomHouse::DrawWallSection()
 			if (!vec.size())
 				continue;
 
-			WISP_GEOMETRY::CSize dims = g_Orion.GetArtDimension(vec[0].East1, true);
+			WISP_GEOMETRY::CSize dims = g_Orion.GetStaticArtDimension(vec[0].East1);
 
 			int offsetX = x + 121 + (48 - dims.Width) / 2;
 			int offsetY = y + 36;
@@ -490,7 +490,7 @@ void CGumpCustomHouse::DrawWallSection()
 				
 				if (graphic)
 				{
-					WISP_GEOMETRY::CSize dims = g_Orion.GetArtDimension(graphic, true);
+					WISP_GEOMETRY::CSize dims = g_Orion.GetStaticArtDimension(graphic);
 
 					int offsetX = x + 130 + (48 - dims.Width) / 2;
 					int offsetY = y + 36 + (120 - dims.Height) / 2;
@@ -535,7 +535,7 @@ void CGumpCustomHouse::DrawDoorSection()
 
 			if (graphic)
 			{
-				WISP_GEOMETRY::CSize dims = g_Orion.GetArtDimension(graphic, true);
+				WISP_GEOMETRY::CSize dims = g_Orion.GetStaticArtDimension(graphic);
 
 				int offsetX = x + 138 + (48 - dims.Width) / 2;
 
@@ -663,7 +663,7 @@ void CGumpCustomHouse::DrawFloorSection()
 
 				if (graphic)
 				{
-					WISP_GEOMETRY::CSize dims = g_Orion.GetArtDimension(graphic, true);
+					WISP_GEOMETRY::CSize dims = g_Orion.GetStaticArtDimension(graphic);
 
 					int offsetX = x + 123 + (48 - dims.Width) / 2;
 					int offsetY = y + 36 + (60 - dims.Height) / 2;
@@ -711,7 +711,7 @@ void CGumpCustomHouse::DrawStairSection()
 
 				if (graphic)
 				{
-					WISP_GEOMETRY::CSize dims = g_Orion.GetArtDimension(graphic, true);
+					WISP_GEOMETRY::CSize dims = g_Orion.GetStaticArtDimension(graphic);
 
 					int offsetX = x + 123 + (48 - dims.Width) / 2;
 					int offsetY = y + 36 + (60 - dims.Height) / 2;
@@ -753,7 +753,7 @@ void CGumpCustomHouse::DrawRoofSection()
 			if (!vec.size())
 				continue;
 
-			WISP_GEOMETRY::CSize dims = g_Orion.GetArtDimension(vec[0].NSCrosspiece, true);
+			WISP_GEOMETRY::CSize dims = g_Orion.GetStaticArtDimension(vec[0].NSCrosspiece);
 
 			int offsetX = x + 121 + (48 - dims.Width) / 2;
 			int offsetY = y + 36;
@@ -796,7 +796,7 @@ void CGumpCustomHouse::DrawRoofSection()
 
 					if (graphic)
 					{
-						WISP_GEOMETRY::CSize dims = g_Orion.GetArtDimension(graphic, true);
+						WISP_GEOMETRY::CSize dims = g_Orion.GetStaticArtDimension(graphic);
 
 						int offsetX = x + 130 + (48 - dims.Width) / 2;
 						int offsetY = y + 44 + (60 - dims.Height) / 2;
@@ -856,7 +856,7 @@ void CGumpCustomHouse::DrawMiscSection()
 			if (!vec.size())
 				continue;
 
-			WISP_GEOMETRY::CSize dims = g_Orion.GetArtDimension(vec[0].Piece5, true);
+			WISP_GEOMETRY::CSize dims = g_Orion.GetStaticArtDimension(vec[0].Piece5);
 
 			int offsetX = x + 121 + (48 - dims.Width) / 2;
 			int offsetY = y + 36;
@@ -895,7 +895,7 @@ void CGumpCustomHouse::DrawMiscSection()
 
 				if (graphic)
 				{
-					WISP_GEOMETRY::CSize dims = g_Orion.GetArtDimension(graphic, true);
+					WISP_GEOMETRY::CSize dims = g_Orion.GetStaticArtDimension(graphic);
 
 					int offsetX = x + 130 + (48 - dims.Width) / 2;
 					int offsetY = y + 44 + (120 - dims.Height) / 2;

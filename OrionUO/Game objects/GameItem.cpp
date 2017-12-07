@@ -230,7 +230,7 @@ void CGameItem::Draw(const int &x, const int &y)
 
 		if (!g_ConfigManager.DisableNewTargetSystem && g_NewTargetSystem.Serial == m_Serial && !Locked())
 		{
-			WISP_GEOMETRY::CSize size = g_Orion.GetArtDimension(m_Graphic, true);
+			WISP_GEOMETRY::CSize size = g_Orion.GetStaticArtDimension(m_Graphic);
 
 			if (size.Width >= 80)
 			{

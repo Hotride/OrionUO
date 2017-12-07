@@ -121,7 +121,7 @@ void CGameObject::DrawObjectHandlesTexture()
 		y += gc->OffsetY - (gc->OffsetZ + dims.Height + dims.CenterY + 8);
 	}
 	else
-		y -= g_Orion.GetArtDimension(m_Graphic, true).Height;
+		y -= g_Orion.GetStaticArtDimension(m_Graphic).Height;
 
 	m_TextureObjectHalndes.Draw(x, y);
 }
@@ -150,7 +150,7 @@ void CGameObject::SelectObjectHandlesTexture()
 			y += gc->OffsetY - (gc->OffsetZ + dims.Height + dims.CenterY + 8);
 		}
 		else
-			y -= g_Orion.GetArtDimension(m_Graphic, true).Height;
+			y -= g_Orion.GetStaticArtDimension(m_Graphic).Height;
 
 		x = g_MouseManager.Position.X - x;
 		y = g_MouseManager.Position.Y - y;

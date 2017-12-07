@@ -98,32 +98,22 @@ CGLTexture *UOFileReader::ReadGump(CIndexObject &io)
 	return th;
 }
 //---------------------------------------------------------------------------
-/*!
-Прочитать арт и сгенерировать текстуру
-@param [__in] ID Индекс арта
-@param [__in] io Ссылка на данные о арте
-@return Ссылка на данные о текстуре
-*/
-CGLTexture *UOFileReader::ReadArt(const ushort &id, CIndexObject &io, const bool &run)
+USHORT_LIST UOFileReader::GetArtPixels(const ushort &id, CIndexObject &io, const bool &run, short &width, short &height)
 {
 	WISPFUN_DEBUG("c148_f4");
-	CGLTexture *th = new CGLTexture();
-	th->Texture = 0;
 
 	uint flag = *(puint)io.Address;
-	int h = 44;
-	int w = 44;
 	pushort P = (pushort)io.Address;
 	ushort color = io.Color;
 
-	//if (!flag || flag > 0xFFFF) //raw tile
+	USHORT_LIST pixels;
+
 	if (!run) //raw tile
 	{
-		const int blocksize = 44 * 44;
+		width = 44;
+		height = 44;
+		pixels.resize(44 * 44, 0);
 
-		bool allBlack = true;
-		ushort pixels[blocksize] = { 0 };
-		
 		IFOR(i, 0, 22)
 		{
 			int start = (22 - ((int)i + 1));
@@ -138,10 +128,7 @@ CGLTexture *UOFileReader::ReadArt(const ushort &id, CIndexObject &io, const bool
 					val = g_ColorManager.GetColor16(val, color);
 
 				if (val)
-				{
-					allBlack = false;
 					val = 0x8000 | val;
-				}
 
 				pixels[pos++] = val;
 			}
@@ -160,44 +147,14 @@ CGLTexture *UOFileReader::ReadArt(const ushort &id, CIndexObject &io, const bool
 					val = g_ColorManager.GetColor16(val, color);
 
 				if (val)
-				{
-					allBlack = false;
 					val = 0x8000 | val;
-				}
 
 				pixels[pos++] = val;
 			}
 		}
-
-		((CIndexObjectLand*)&io)->AllBlack = allBlack;
-
-		if (allBlack)
-		{
-			IFOR(i, 0, 22)
-			{
-				int start = (22 - ((int)i + 1));
-				int pos = (int)i * 44 + start;
-				int end = start + ((int)i + 1) * 2;
-
-				IFOR(j, start, end)
-					pixels[pos++] = 0x8000;
-			}
-
-			IFOR(i, 0, 22)
-			{
-				int pos = ((int)i + 22) * 44 + (int)i;
-				int end = (int)i + (22 - (int)i) * 2;
-
-				IFOR(j, i, end)
-					pixels[pos++] = 0x8000;
-			}
-		}
-
-		g_GL_BindTexture16(*th, 44, 44, &pixels[0]);
 	}
 	else //run tile
 	{
-		USHORT_LIST pixels;
 		int stumpIndex = 0;
 
 		if (g_Orion.IsTreeTile(id, stumpIndex))
@@ -206,26 +163,26 @@ CGLTexture *UOFileReader::ReadArt(const ushort &id, CIndexObject &io, const bool
 
 			if (stumpIndex == g_StumpHatchedID)
 			{
-				w = g_StumpHatchedWidth;
-				h = g_StumpHatchedHeight;
+				width = g_StumpHatchedWidth;
+				height = g_StumpHatchedHeight;
 				ptr = (pushort)g_StumpHatched;
 			}
 			else
 			{
-				w = g_StumpWidth;
-				h = g_StumpHeight;
+				width = g_StumpWidth;
+				height = g_StumpHeight;
 				ptr = (pushort)g_Stump;
 			}
 
-			int blocksize = w * h;
+			int blocksize = width * height;
 
 			pixels.resize(blocksize);
 
 			if (pixels.size() != blocksize)
 			{
 				LOG("Allocation pixels memory for ReadArt::LandTile failed (want size: %i)\n", blocksize);
-				delete th;
-				return NULL;
+				pixels.clear();
+				return pixels;
 			}
 
 			IFOR(i, 0, blocksize)
@@ -235,49 +192,47 @@ CGLTexture *UOFileReader::ReadArt(const ushort &id, CIndexObject &io, const bool
 		{
 			pushort ptr = (pushort)(io.Address + 4);
 
-			w = *ptr;
-			if (!w || w >= 1024)
+			width = *ptr;
+			if (!width || width >= 1024)
 			{
-				LOG("UOFileReader::ReadArt bad width:%i\n", w);
-				delete th;
-				return NULL;
+				LOG("UOFileReader::ReadArt bad width:%i\n", width);
+				return pixels;
 			}
 
 			ptr++;
 
-			h = *ptr;
+			height = *ptr;
 
-			if (!h || (h * 2) > 5120)
+			if (!height || (height * 2) > 5120)
 			{
-				LOG("UOFileReader::ReadArt bad height:%i\n", h);
-				delete th;
-				return NULL;
+				LOG("UOFileReader::ReadArt bad height:%i\n", height);
+				return pixels;
 			}
 
 			ptr++;
 
 			pushort lineOffsets = ptr;
-			puchar dataStart = (puchar)ptr + (h * 2);
+			puchar dataStart = (puchar)ptr + (height * 2);
 
 			int X = 0;
 			int Y = 0;
 			ushort XOffs = 0;
 			ushort Run = 0;
 
-			int blocksize = w * h;
+			int blocksize = width * height;
 
 			pixels.resize(blocksize, 0);
 
 			if (pixels.size() != blocksize)
 			{
 				LOG("Allocation pixels memory for ReadArt::StaticTile failed (want size: %i)\n", blocksize);
-				delete th;
-				return NULL;
+				pixels.clear();
+				return pixels;
 			}
 
 			ptr = (pushort)(dataStart + (lineOffsets[0] * 2));
 
-			while (Y < h)
+			while (Y < height)
 			{
 				XOffs = *ptr;
 				ptr++;
@@ -286,22 +241,26 @@ CGLTexture *UOFileReader::ReadArt(const ushort &id, CIndexObject &io, const bool
 				if (XOffs + Run >= 2048)
 				{
 					LOG("UOFileReader::ReadArt bad offset:%i, %i\n", XOffs, Run);
-					delete th;
-					return NULL;
+					pixels.clear();
+					return pixels;
 				}
 				else if (XOffs + Run != 0)
 				{
 					X += XOffs;
-					int pos = Y * w + X;
+					int pos = Y * width + X;
 
 					IFOR(j, 0, Run)
 					{
 						ushort val = *ptr++;
 
-						if (color && val)
-							val = g_ColorManager.GetColor16(val, color);
+						if (val)
+						{
+							if (color)
+								val = g_ColorManager.GetColor16(val, color);
 
-						val = (val ? 0x8000 : 0) | val;
+							val = 0x8000 | val;
+						}
+
 						pixels[pos++] = val;
 					}
 
@@ -317,33 +276,33 @@ CGLTexture *UOFileReader::ReadArt(const ushort &id, CIndexObject &io, const bool
 
 			if ((id >= 0x2053 && id <= 0x2062) || (id >= 0x206A && id <= 0x2079)) //Убираем рамку (если это курсор мышки)
 			{
-				IFOR(i, 0, w)
+				IFOR(i, 0, width)
 				{
 					pixels[i] = 0;
-					pixels[(h - 1) * w + i] = 0;
+					pixels[(height - 1) * width + i] = 0;
 				}
 
-				IFOR(i, 0, h)
+				IFOR(i, 0, height)
 				{
-					pixels[i * w] = 0;
-					pixels[i * w + w - 1] = 0;
+					pixels[i * width] = 0;
+					pixels[i * width + width - 1] = 0;
 				}
 			}
 			else if (g_Orion.IsCaveTile(id))
 			{
-				IFOR(y, 0, h)
+				IFOR(y, 0, height)
 				{
 					int startY = (y ? -1 : 0);
-					int endY = (y + 1 < h ? 2 : 1);
+					int endY = (y + 1 < height ? 2 : 1);
 
-					IFOR(x, 0, w)
+					IFOR(x, 0, width)
 					{
-						ushort &pixel = pixels[y * w + x];
+						ushort &pixel = pixels[y * width + x];
 
 						if (pixel)
 						{
 							int startX = (x ? -1 : 0);
-							int endX = (x + 1 < w ? 2 : 1);
+							int endX = (x + 1 < width ? 2 : 1);
 
 							IFOR(i, startY, endY)
 							{
@@ -353,7 +312,7 @@ CGLTexture *UOFileReader::ReadArt(const ushort &id, CIndexObject &io, const bool
 								{
 									int currentX = (int)x + (int)j;
 
-									ushort &currentPixel = pixels[currentY * w + currentX];
+									ushort &currentPixel = pixels[currentY * width + currentX];
 
 									if (!currentPixel)
 										pixel = 0x8000;
@@ -364,133 +323,107 @@ CGLTexture *UOFileReader::ReadArt(const ushort &id, CIndexObject &io, const bool
 				}
 			}
 		}
-
-		g_GL_BindTexture16(*th, w, h, &pixels[0]);
 	}
 
-	return th;
+	return pixels;
 }
 //---------------------------------------------------------------------------
 /*!
-Прочитать арт и вычислить реальные пииксельные границы картинки
+Прочитать арт и сгенерировать текстуру
+@param [__in] ID Индекс арта
 @param [__in] io Ссылка на данные о арте
-@param [__out] r Структура с габаритами на выходе
 @return Ссылка на данные о текстуре
 */
-WISP_GEOMETRY::CRect UOFileReader::ReadStaticArtPixelDimension(CIndexObject &io)
+CGLTexture *UOFileReader::ReadArt(const ushort &id, CIndexObject &io, const bool &run)
 {
-	WISPFUN_DEBUG("c148_f5");
-	WISP_GEOMETRY::CRect r;
+	WISPFUN_DEBUG("c148_f2");
+	CGLTexture *texture = NULL;
+	short width = 0;
+	short height = 0;
 
-	int stumpIndex = 0;
+	USHORT_LIST pixels = GetArtPixels(id, io, run, width, height);
 
-	ushort h = 44;
-	ushort w = 44;
-
-	int minX = 0;
-	int minY = 0;
-	int maxX = 0;
-	int maxY = 0;
-
-	if (g_Orion.IsTreeTile(io.ID, stumpIndex))
+	if (pixels.size())
 	{
-		pushort ptr = NULL;
+		int minX = width;
+		int minY = height;
+		int maxX = 0;
+		int maxY = 0;
 
-		if (stumpIndex == g_StumpHatchedID)
+		if (!run)
 		{
-			w = g_StumpHatchedWidth;
-			h = g_StumpHatchedHeight;
-			ptr = (pushort)g_StumpHatched;
+			maxX = 44;
+			maxY = 44;
+			bool allBlack = true;
+			int pos = 0;
+
+			IFOR(i, 0, 44)
+			{
+				IFOR(j, 0, 44)
+				{
+					if (pixels[pos++])
+					{
+						i = 44;
+						allBlack = false;
+						break;
+					}
+				}
+			}
+
+			((CIndexObjectLand*)&io)->AllBlack = allBlack;
+
+			if (allBlack)
+			{
+				IFOR(i, 0, 22)
+				{
+					int start = (22 - ((int)i + 1));
+					int pos = (int)i * 44 + start;
+					int end = start + ((int)i + 1) * 2;
+
+					IFOR(j, start, end)
+						pixels[pos++] = 0x8000;
+				}
+
+				IFOR(i, 0, 22)
+				{
+					int pos = ((int)i + 22) * 44 + (int)i;
+					int end = (int)i + (22 - (int)i) * 2;
+
+					IFOR(j, i, end)
+						pixels[pos++] = 0x8000;
+				}
+			}
 		}
 		else
 		{
-			w = g_StumpWidth;
-			h = g_StumpHeight;
-			ptr = (pushort)g_Stump;
-		}
-	}
-	else
-	{
-		uint flag = *(PDWORD)io.Address;
-		pushort P = (pushort)io.Address;
+			int pos = 0;
 
-		pushort ptr = (pushort)(io.Address + 4);
-
-		w = *ptr;
-		if (!w || w >= 1024)
-			return r;
-
-		ptr++;
-
-		h = *ptr;
-
-		if (!h || (h * 2) > 5120)
-			return r;
-
-		ptr++;
-
-		pushort lineOffsets = ptr;
-		PVOID dataStart = (PVOID)((uint)ptr + (h * 2));
-
-		int X = 0;
-		int Y = 0;
-		ushort XOffs = 0;
-		ushort Run = 0;
-
-		ptr = (pushort)((uint)dataStart + (lineOffsets[0] * 2));
-
-		minX = w;
-		minY = h;
-
-		while (Y < h)
-		{
-			XOffs = *ptr;
-			ptr++;
-			Run = *ptr;
-			ptr++;
-			if (XOffs + Run >= 2048)
-				return r;
-			else if (XOffs + Run != 0)
+			IFOR(y, 0, height)
 			{
-				X += XOffs;
-
-				IFOR(j, 0, Run)
+				IFOR(x, 0, width)
 				{
-					if (*ptr)
+					if (pixels[pos++])
 					{
-						int testX = X + (int)j;
-
-						if (testX < minX)
-							minX = testX;
-
-						if (testX > maxX)
-							maxX = testX;
-
-						if (Y < minY)
-							minY = Y;
-
-						if (Y > maxY)
-							maxY = Y;
+						minX = min(minX, x);
+						maxX = max(maxX, x);
+						minY = min(minY, y);
+						maxY = max(maxY, y);
 					}
-
-					ptr++;
 				}
-
-				X += Run;
-			}
-			else
-			{
-				X = 0;
-				Y++;
-				ptr = (pushort)((uint)dataStart + (lineOffsets[Y] * 2));
 			}
 		}
+
+		texture = new CGLTexture();
+		g_GL_BindTexture16(*texture, width, height, &pixels[0]);
+
+		texture->ImageOffsetX = minX;
+		texture->ImageOffsetY = minY;
+
+		texture->ImageWidth = maxX - minX;
+		texture->ImageHeight = maxY - minY;
 	}
 
-	r.Position = WISP_GEOMETRY::CPoint2Di(minX, minY);
-	r.Size = WISP_GEOMETRY::CSize(maxX - minX, maxY - minY);
-
-	return r;
+	return texture;
 }
 //---------------------------------------------------------------------------
 /*!

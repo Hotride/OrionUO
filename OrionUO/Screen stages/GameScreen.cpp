@@ -709,18 +709,13 @@ void CGameScreen::AddTileToRenderList(CRenderWorldObject *obj, const int &worldX
 
 			if (foliageCanBeChecked)
 			{
-				WISP_GEOMETRY::CSize fp = g_Orion.GetArtDimension(obj->Graphic, true);
+				CGLTexture *texturePtr = g_Orion.ExecuteStaticArt(obj->Graphic);
 
-				CImageBounds fib(drawX - fp.Width / 2, drawY - fp.Height, fp.Width, fp.Height);
-
-				if (fib.InRect(g_PlayerRect))
+				if (texturePtr != NULL)
 				{
-					WISP_GEOMETRY::CRect realRect = g_Orion.GetStaticArtRealPixelDimension(obj->Graphic);
+					CGLTexture &texture = *texturePtr;
 
-					fib.X += realRect.Position.X;
-					fib.Y += realRect.Position.Y;
-					fib.Width = realRect.Size.Width;
-					fib.Height = realRect.Size.Height;
+					CImageBounds fib(drawX - texture.Width / 2 + texture.ImageOffsetX, drawY - texture.Height + texture.ImageOffsetY, texture.ImageWidth, texture.ImageHeight);
 
 					if (fib.InRect(g_PlayerRect))
 					{
