@@ -4462,7 +4462,7 @@ PACKET_HANDLER(OpenGump)
 							color = ToInt(graphicList[1]);
 					}
 				}
-				else if (listSize >= 5)
+				if (listSize >= 5)
 					color = ToInt(list[4]);
 
 				if (color)
