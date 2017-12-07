@@ -4462,8 +4462,13 @@ PACKET_HANDLER(OpenGump)
 							color = ToInt(graphicList[1]);
 					}
 				}
-				if (listSize >= 5)
-					color = ToInt(list[4]);
+				else
+				{
+					graphic = ToInt(list[3]);
+
+					if (listSize >= 5)
+						color = ToInt(list[4]);
+				}
 
 				if (color)
 					gump->Add(new CGUIShader(&g_ColorizerShader, true));
