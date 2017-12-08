@@ -89,7 +89,7 @@ public:
 	Человекоподобный труп ли это?
 	@return 
 	*/
-	bool IsHuman() { return (IsCorpse() && (m_Count >= 0x0190) && (m_Count <= 0x0193)); }
+	bool IsHuman() { return (IsCorpse() && (IN_RANGE(m_Count, 0x0192, 0x0193) || IN_RANGE(m_Count, 0x025F, 0x0260) || IN_RANGE(m_Count, 0x02B6, 0x02B7))); }
 
 	/*!
 	Загрузка мульти в текущий объект
