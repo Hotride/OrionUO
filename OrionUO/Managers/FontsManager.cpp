@@ -1806,8 +1806,10 @@ void CFontsManager::GetHTMLInfoFromContent(HTML_DATA_INFO &info, const string &c
 				{
 					uchar font = atoi(value.c_str());
 
-					if (font <= 5)
-						info.Font = font;
+					if (font && font <= 3)
+						info.Font = 2;
+					else
+						info.Font = 0;
 				}
 
 				break;
@@ -2668,6 +2670,7 @@ UINT_LIST CFontsManager::GeneratePixelsW(const uchar &font, CGLTextTexture &th, 
 
 			int tmpW = w;
 			uint charcolor = datacolor;
+			bool isBlackPixel = (((charcolor >> 24) & 0xFF) <= 8 && ((charcolor >> 16) & 0xFF) <= 8 && ((charcolor >> 8) & 0xFF) <= 8);
 
 			if (si != L' ')
 			{
@@ -2679,7 +2682,10 @@ UINT_LIST CFontsManager::GeneratePixelsW(const uchar &font, CGLTextTexture &th, 
 					isUnderline = (dataPtr.flags & UOFONT_UNDERLINE);
 
 					if (dataPtr.color != 0xFFFFFFFF)
+					{
 						charcolor = dataPtr.color;
+						isBlackPixel = (((charcolor >> 24) & 0xFF) <= 8 && ((charcolor >> 16) & 0xFF) <= 8 && ((charcolor >> 8) & 0xFF) <= 8);
+					}
 				}
 
 				int scanlineCount = (int)((dw - 1) / 8) + 1;
@@ -2727,6 +2733,7 @@ UINT_LIST CFontsManager::GeneratePixelsW(const uchar &font, CGLTextTexture &th, 
 				if (isSolid)
 				{
 					uint solidColor = blackColor;
+
 					if (solidColor == charcolor)
 						solidColor++;
 
@@ -2804,7 +2811,7 @@ UINT_LIST CFontsManager::GeneratePixelsW(const uchar &font, CGLTextTexture &th, 
 					}
 				}
 
-				if (isBlackBorder && blackColor != charcolor)
+				if (isBlackBorder && !isBlackPixel)
 				{
 					int minXOk = (w + offsX > 0) ? -1 : 0;
 					int minYOk = (offsY + lineOffsY > 0) ? -1 : 0;
@@ -2883,7 +2890,10 @@ UINT_LIST CFontsManager::GeneratePixelsW(const uchar &font, CGLTextTexture &th, 
 					isUnderline = (dataPtr.flags & UOFONT_UNDERLINE);
 
 					if (dataPtr.color != 0xFFFFFFFF)
+					{
 						charcolor = dataPtr.color;
+						isBlackPixel = (((charcolor >> 24) & 0xFF) <= 8 && ((charcolor >> 16) & 0xFF) <= 8 && ((charcolor >> 8) & 0xFF) <= 8);
+					}
 				}
 			}
 
