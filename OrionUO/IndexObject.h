@@ -94,6 +94,7 @@ class CIndexAnimation
 	SETGET(ushort, Graphic, 0);
 	SETGET(ushort, Color, 0);
 	SETGET(ANIMATION_GROUPS_TYPE, Type, AGT_UNKNOWN);
+	SETGET(uint, Flags, 0);
 	SETGET(char, MountedHeightOffset, 0);
 	SETGET(bool, IsUOP, false);
 

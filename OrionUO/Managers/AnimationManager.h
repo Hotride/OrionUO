@@ -135,6 +135,18 @@ private:
 
 	//Чтение указанных в аргументах данных о кадре.
 	void ReadUOPFrameData(short &imageCenterX, short &imageCenterY, short &imageWidth, short &imageHeight, pushort &palette, UOPFrameData &frameData);
+
+	uchar GetObjectNewAnimationType_0(CGameCharacter *obj, const ushort &action, const uchar &mode);
+	uchar GetObjectNewAnimationType_1_2(CGameCharacter *obj, const ushort &action, const uchar &mode);
+	uchar GetObjectNewAnimationType_3(CGameCharacter *obj, const ushort &action, const uchar &mode);
+	uchar GetObjectNewAnimationType_4(CGameCharacter *obj, const ushort &action, const uchar &mode);
+	uchar GetObjectNewAnimationType_5(CGameCharacter *obj, const ushort &action, const uchar &mode);
+	uchar GetObjectNewAnimationType_6_14(CGameCharacter *obj, const ushort &action, const uchar &mode);
+	uchar GetObjectNewAnimationType_7(CGameCharacter *obj, const ushort &action, const uchar &mode);
+	uchar GetObjectNewAnimationType_8(CGameCharacter *obj, const ushort &action, const uchar &mode);
+	uchar GetObjectNewAnimationType_9_10(CGameCharacter *obj, const ushort &action, const uchar &mode);
+	uchar GetObjectNewAnimationType_11(CGameCharacter *obj, const ushort &action, const uchar &mode);
+
 public:
 	CAnimationManager();
 	~CAnimationManager();
@@ -279,6 +291,8 @@ public:
 	struct DRAW_FRAME_INFORMATION CollectFrameInformation(class CGameObject *gameObject, const bool &checkLayers = true);
 
 	uchar GetReplacedObjectAnimation(CGameCharacter *obj, const ushort &index);
+
+	uchar GetObjectNewAnimation(CGameCharacter *obj, const ushort &type, const ushort &action, const uchar &delay);
  };
 //----------------------------------------------------------------------------------
 //!Ссылка на менеджер анимаций

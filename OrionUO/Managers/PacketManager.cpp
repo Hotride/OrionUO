@@ -3353,12 +3353,20 @@ PACKET_HANDLER(NewCharacterAnimation)
 
 	if (obj != NULL)
 	{
+		ushort type = ReadUInt16BE();
 		ushort action = ReadUInt16BE();
-		ushort frameCount = ReadUInt16BE();
-		frameCount = 0;
-		uchar delay = ReadUInt8();
+		uchar mode = ReadUInt8();
 
-		obj->SetAnimation(g_AnimationManager.GetReplacedObjectAnimation(obj, action), delay, (uchar)frameCount);
+		uchar group = g_AnimationManager.GetObjectNewAnimation(obj, type, action, mode);
+
+		obj->SetAnimation(group);
+
+		obj->AnimationRepeatMode = 1;
+		obj->AnimationDirection = true;
+
+		if ((type == 1 || type == 2) && obj->Graphic == 0x0015)
+			obj->AnimationRepeat = true;
+
 		obj->AnimationFromServer = true;
 	}
 }

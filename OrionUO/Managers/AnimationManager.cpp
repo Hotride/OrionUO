@@ -509,7 +509,14 @@ void CAnimationManager::InitIndexReplaces(puint verdata)
 				IFOR(i, 0, 5)
 				{
 					if (testType == typeNames[i])
+					{
 						m_DataIndex[index].Type = (ANIMATION_GROUPS_TYPE)i;
+
+						char *endP = NULL;
+						m_DataIndex[index].Flags = 0x80000000 | strtoul(("0x" + strings[2]).c_str(), &endP, 16);
+
+						break;
+					}
 				}
 			}
 		}
@@ -2787,5 +2794,372 @@ uchar CAnimationManager::GetReplacedObjectAnimation(CGameCharacter *obj, const u
 		return (uchar)(getReplaceGroup(m_GroupReplaces[1], index, PAG_WALK_UNARMED) % PAG_ANIMATION_COUNT);
 
 	return (uchar)(index % HAG_ANIMATION_COUNT);
+}
+//----------------------------------------------------------------------------------
+uchar CAnimationManager::GetObjectNewAnimationType_0(CGameCharacter *obj, const ushort &action, const uchar &mode)
+{
+	if (action <= 10)
+	{
+		CIndexAnimation &ia = m_DataIndex[obj->Graphic];
+
+		ANIMATION_GROUPS_TYPE type = AGT_ANIMAL;
+
+		if (ia.Flags & 0x80000000)
+			type = ia.Type;
+
+		if (type == AGT_ANIMAL)
+		{
+			switch (mode % 4)
+			{
+				case 1:
+					return 5;
+				case 2:
+					return 6;
+				case 3:
+					if (ia.Flags & 1)
+						return 12;
+				case 0:
+					return 4;
+				default:
+					break;
+			}
+		}
+		else if (type == AGT_MONSTER)
+		{
+			if (mode % 2)
+				return 6;
+
+			return 5;
+		}
+		else if (type != AGT_SEA_MONSTER)
+		{
+			if (obj->FindLayer(OL_MOUNT) != NULL)
+			{
+				if (action)
+				{
+					if (action == 1)
+						return 27;
+					else if (action == 2)
+						return 28;
+					
+					return 26;
+				}
+
+				return 29;
+			}
+			else
+			{
+				switch (action)
+				{
+					default:
+						return 31;
+					case 1:
+						return 18;
+					case 2:
+						return 19;
+					case 6:
+						return 12;
+					case 7:
+						return 13;
+					case 8:
+						return 14;
+					case 3:
+						return 11;
+					case 4:
+						return 9;
+					case 5:
+						return 10;
+				}
+			}
+
+			return 0;
+		}
+
+		if (mode % 2)
+			return 6;
+
+		return 5;
+	}
+
+	return 0;
+}
+//----------------------------------------------------------------------------------
+uchar CAnimationManager::GetObjectNewAnimationType_1_2(CGameCharacter *obj, const ushort &action, const uchar &mode)
+{
+	CIndexAnimation &ia = m_DataIndex[obj->Graphic];
+
+	ANIMATION_GROUPS_TYPE type = AGT_ANIMAL;
+
+	if (ia.Flags & 0x80000000)
+		type = ia.Type;
+
+	if (type != AGT_ANIMAL)
+	{
+		if (type <= AGT_SEA_MONSTER || obj->FindLayer(OL_MOUNT) != NULL)
+			return 0xFF;
+
+		return 30;
+	}
+	else if (mode % 2)
+		return 15;
+	
+	return 16;
+}
+//----------------------------------------------------------------------------------
+uchar CAnimationManager::GetObjectNewAnimationType_3(CGameCharacter *obj, const ushort &action, const uchar &mode)
+{
+	CIndexAnimation &ia = m_DataIndex[obj->Graphic];
+
+	ANIMATION_GROUPS_TYPE type = AGT_ANIMAL;
+
+	if (ia.Flags & 0x80000000)
+		type = ia.Type;
+
+	if (type != AGT_ANIMAL)
+	{
+		if (type == AGT_MONSTER)
+			return 8;
+		else if (type == AGT_SEA_MONSTER)
+		{
+			if (mode % 2)
+				return 21;
+			
+			return 22;
+		}
+
+		if (mode % 2)
+			return 8;
+
+		return 12;
+	}
+	else if (mode % 2)
+		return 2;
+
+	return 3;
+}
+//----------------------------------------------------------------------------------
+uchar CAnimationManager::GetObjectNewAnimationType_4(CGameCharacter *obj, const ushort &action, const uchar &mode)
+{
+	CIndexAnimation &ia = m_DataIndex[obj->Graphic];
+
+	ANIMATION_GROUPS_TYPE type = AGT_ANIMAL;
+
+	if (ia.Flags & 0x80000000)
+		type = ia.Type;
+
+	if (type != AGT_ANIMAL)
+	{
+		if (type > AGT_SEA_MONSTER)
+		{
+			if (obj->FindLayer(OL_MOUNT) != NULL)
+				return 0xFF;
+
+			return 20;
+		}
+		
+		return 7;
+	}
+
+	return 10;
+}
+//----------------------------------------------------------------------------------
+uchar CAnimationManager::GetObjectNewAnimationType_5(CGameCharacter *obj, const ushort &action, const uchar &mode)
+{
+	CIndexAnimation &ia = m_DataIndex[obj->Graphic];
+
+	ANIMATION_GROUPS_TYPE type = AGT_ANIMAL;
+
+	if (ia.Flags & 0x80000000)
+		type = ia.Type;
+
+	if (type <= AGT_MONSTER)
+	{
+		if (mode % 2)
+			return 18;
+
+		return 17;
+	}
+	else if (type != AGT_SEA_MONSTER)
+	{
+		if (obj->FindLayer(OL_MOUNT) != NULL)
+			return 0xFF;
+
+		if (mode % 2)
+			return 6;
+		
+		return 5;
+	}
+	else
+	{
+		switch (mode % 3)
+		{
+			case 1:
+				return 10;
+			case 2:
+				return 3;
+			default:
+				break;
+		}
+	}
+	
+	return 9;
+}
+//----------------------------------------------------------------------------------
+uchar CAnimationManager::GetObjectNewAnimationType_6_14(CGameCharacter *obj, const ushort &action, const uchar &mode)
+{
+	CIndexAnimation &ia = m_DataIndex[obj->Graphic];
+
+	ANIMATION_GROUPS_TYPE type = AGT_ANIMAL;
+
+	if (ia.Flags & 0x80000000)
+		type = ia.Type;
+
+	if (type != AGT_ANIMAL)
+	{
+		if (type != AGT_MONSTER)
+		{
+			if (type == AGT_SEA_MONSTER)
+				return 3;
+
+			if (obj->FindLayer(OL_MOUNT) != NULL)
+				return 0xFF;
+			
+			return 34;
+		}
+		
+		return 5;
+	}
+	
+	return 11;
+}
+//----------------------------------------------------------------------------------
+uchar CAnimationManager::GetObjectNewAnimationType_7(CGameCharacter *obj, const ushort &action, const uchar &mode)
+{
+	if (obj->FindLayer(OL_MOUNT) != NULL)
+		return 0xFF;
+
+	if (action)
+	{
+		if (action == 1)
+			return 33;
+	}
+	else
+		return 32;
+
+	return 0;
+}
+//----------------------------------------------------------------------------------
+uchar CAnimationManager::GetObjectNewAnimationType_8(CGameCharacter *obj, const ushort &action, const uchar &mode)
+{
+	CIndexAnimation &ia = m_DataIndex[obj->Graphic];
+
+	ANIMATION_GROUPS_TYPE type = AGT_ANIMAL;
+
+	if (ia.Flags & 0x80000000)
+		type = ia.Type;
+
+	if (type != AGT_ANIMAL)
+	{
+		if (type != AGT_MONSTER)
+		{
+			if (type == AGT_SEA_MONSTER)
+				return 9;
+
+			if (obj->FindLayer(OL_MOUNT) != NULL)
+				return 0xFF;
+
+			return 33;
+		}
+		
+		return 3;
+	}
+	
+	return 11;
+}
+//----------------------------------------------------------------------------------
+uchar CAnimationManager::GetObjectNewAnimationType_9_10(CGameCharacter *obj, const ushort &action, const uchar &mode)
+{
+	CIndexAnimation &ia = m_DataIndex[obj->Graphic];
+
+	ANIMATION_GROUPS_TYPE type = AGT_ANIMAL;
+
+	if (ia.Flags & 0x80000000)
+		type = ia.Type;
+
+	if (type != AGT_ANIMAL)
+		return 0xFF;
+
+	return 20;
+}
+//----------------------------------------------------------------------------------
+uchar CAnimationManager::GetObjectNewAnimationType_11(CGameCharacter *obj, const ushort &action, const uchar &mode)
+{
+	CIndexAnimation &ia = m_DataIndex[obj->Graphic];
+
+	ANIMATION_GROUPS_TYPE type = AGT_ANIMAL;
+
+	if (ia.Flags & 0x80000000)
+		type = ia.Type;
+
+	if (type != AGT_ANIMAL)
+	{
+		if (type >= AGT_SEA_MONSTER)
+		{
+			if (obj->FindLayer(OL_MOUNT) != NULL)
+				return 0xFF;
+
+			switch (action)
+			{
+				case 1:
+				case 2:
+					return 17;
+				default:
+					break;
+			}
+
+			return 16;
+		}
+		
+		return 5;
+	}
+	
+	return 12;
+}
+//----------------------------------------------------------------------------------
+uchar CAnimationManager::GetObjectNewAnimation(CGameCharacter *obj, const ushort &type, const ushort &action, const uchar &mode)
+{
+	if (obj->Graphic >= MAX_ANIMATIONS_DATA_INDEX_COUNT)
+		return 0;
+
+	switch (type)
+	{
+		case 0:
+			return GetObjectNewAnimationType_0(obj, action, mode);
+		case 1:
+		case 2:
+			return GetObjectNewAnimationType_1_2(obj, action, mode);
+		case 3:
+			return GetObjectNewAnimationType_3(obj, action, mode);
+		case 4:
+			return GetObjectNewAnimationType_4(obj, action, mode);
+		case 5:
+			return GetObjectNewAnimationType_5(obj, action, mode);
+		case 6:
+		case 14:
+			return GetObjectNewAnimationType_6_14(obj, action, mode);
+		case 7:
+			return GetObjectNewAnimationType_7(obj, action, mode);
+		case 8:
+			return GetObjectNewAnimationType_8(obj, action, mode);
+		case 9:
+		case 10:
+			return GetObjectNewAnimationType_9_10(obj, action, mode);
+		case 11:
+			return GetObjectNewAnimationType_11(obj, action, mode);
+		default:
+			break;
+	}
+
+	return 0;
 }
 //----------------------------------------------------------------------------------
