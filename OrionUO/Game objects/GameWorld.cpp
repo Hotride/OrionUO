@@ -223,6 +223,8 @@ void CGameWorld::ProcessAnimation()
 						
 						gc->AnimIndex = frameIndex;
 					}
+					else if (obj->Serial & 0x80000000)
+						toRemove.push_back(obj);
 				}
 				else if (obj->Serial & 0x80000000)
 					toRemove.push_back(obj);
