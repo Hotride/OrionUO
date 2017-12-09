@@ -18,9 +18,6 @@ private:
 	uint m_CorpseEyesTicks{ 0 };
 	uchar m_CorpseEyesOffset{ 0 };
 
-	static const uint ID_GC_LOCK_MOVING = 0xFFFFFFFE;
-	static const uint ID_GC_MINIMIZE = 0xFFFFFFFF;
-
 	CTextRenderer m_TextRenderer{ CTextRenderer() };
 
 	CGUIGumppic *m_CorpseEyes{ NULL };
@@ -32,6 +29,9 @@ protected:
 public:
 	CGumpContainer(uint serial, uint id, short x, short y);
 	virtual ~CGumpContainer();
+
+	static const uint ID_GC_LOCK_MOVING = 0xFFFFFFFE;
+	static const uint ID_GC_MINIMIZE = 0xFFFFFFFF;
 
 	CGUIGumppic *m_BodyGump{ NULL };
 	

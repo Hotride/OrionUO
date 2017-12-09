@@ -38,13 +38,6 @@ void CGumpSecureTrading::CalculateGumpState()
 		m_WantRedraw = true;
 }
 //----------------------------------------------------------------------------------
-void CGumpSecureTrading::InitToolTip()
-{
-	WISPFUN_DEBUG("c120_f2");
-	if (g_ConfigManager.UseToolTips || g_TooltipsEnabled)
-		g_ObjectPropertiesManager.Display(g_SelectedObject.Serial);
-}
-//----------------------------------------------------------------------------------
 void CGumpSecureTrading::PrepareContent()
 {
 	WISPFUN_DEBUG("c120_f3");

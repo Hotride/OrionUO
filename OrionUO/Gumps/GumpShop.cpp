@@ -150,16 +150,6 @@ void CGumpShop::UpdateTotalPrice()
 	}
 }
 //----------------------------------------------------------------------------------
-void CGumpShop::InitToolTip()
-{
-	WISPFUN_DEBUG("c123_f3_1");
-
-	if (g_SelectedObject.Object == NULL || !g_SelectedObject.Object->IsGUI() || ((CBaseGUI*)g_SelectedObject.Object)->Type != GOT_SHOPITEM)
-		return;
-
-	g_ObjectPropertiesManager.Display(g_SelectedObject.Serial);
-}
-//----------------------------------------------------------------------------------
 void CGumpShop::PrepareContent()
 {
 	WISPFUN_DEBUG("c123_f4");

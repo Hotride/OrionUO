@@ -67,18 +67,52 @@ void CGameScreen::InitToolTip()
 {
 	WISPFUN_DEBUG("c164_f5");
 
-	if (!(g_ConfigManager.UseToolTips || g_TooltipsEnabled))
-		return;
+	CRenderObject *obj = g_SelectedObject.Object;
+	CGump *gump = g_SelectedObject.Gump;
 
-	if (g_SelectedObject.Gump)
+	if (obj != NULL && g_TooltipsEnabled)
 	{
-		if (g_SelectedObject.Gump == &m_GameScreenGump)
+		uint serial = 0;
+		
+		if (obj->IsGameObject())
+			serial = g_SelectedObject.Serial;
+		else if (gump != NULL && obj->IsGUI())
+		{
+			if (gump->GumpType == GT_TRADE || (gump->GumpType == GT_SHOP && ((CBaseGUI*)obj)->Type == GOT_SHOPITEM))
+				serial = g_SelectedObject.Serial;
+			else if (!gump->Minimized)
+			{
+				if (gump->GumpType == GT_CONTAINER && g_SelectedObject.Serial != CGumpContainer::ID_GC_LOCK_MOVING && g_SelectedObject.Serial != CGumpContainer::ID_GC_MINIMIZE)
+					serial = g_SelectedObject.Serial;
+				else if (gump->GumpType == GT_PAPERDOLL && g_SelectedObject.Serial >= CGumpPaperdoll::ID_GP_ITEMS && g_World != NULL)
+				{
+					CGameCharacter *character = g_World->FindWorldCharacter(gump->Serial);
+
+					if (character != NULL)
+					{
+						CGameObject *item = character->FindLayer(g_SelectedObject.Serial - CGumpPaperdoll::ID_GP_ITEMS);
+
+						if (item != NULL)
+							serial = item->Serial;
+					}
+				}
+			}
+		}
+
+		if (serial)
+		{
+			g_ObjectPropertiesManager.Display(serial);
+			return;
+		}
+	}
+
+	if (g_ConfigManager.UseToolTips && gump != NULL)
+	{
+		if (gump == &m_GameScreenGump)
 			m_GameScreenGump.InitToolTip();
 		else
 			g_GumpManager.InitToolTip();
 	}
-	else if (g_SelectedObject.Object != NULL && g_SelectedObject.Object->IsGameObject())
-		g_ObjectPropertiesManager.Display(g_SelectedObject.Serial);
 }
 //----------------------------------------------------------------------------------
 /*!

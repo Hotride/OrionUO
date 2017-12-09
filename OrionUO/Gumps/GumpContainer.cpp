@@ -109,16 +109,12 @@ void CGumpContainer::InitToolTip()
 	WISPFUN_DEBUG("c93_f6");
 	if (!m_Minimized)
 	{
-		uint id = g_SelectedObject.Serial;
-
-		if (id == ID_GC_MINIMIZE && g_ConfigManager.UseToolTips)
+		if (g_SelectedObject.Serial == ID_GC_MINIMIZE)
 			g_ToolTip.Set(L"Minimize the container gump");
-		else if (id == ID_GC_LOCK_MOVING && g_ConfigManager.UseToolTips)
+		else if (g_SelectedObject.Serial == ID_GC_LOCK_MOVING)
 			g_ToolTip.Set(L"Lock moving/closing the container gump");
-		else if (g_ConfigManager.UseToolTips || g_TooltipsEnabled)
-			g_ObjectPropertiesManager.Display(id);
 	}
-	else if (g_ConfigManager.UseToolTips)
+	else
 		g_ToolTip.Set(L"Double click to maximize container gump");
 }
 //----------------------------------------------------------------------------------

@@ -39,8 +39,6 @@ public:
 	
 	CTextRenderer *GetTextRenderer() {return &m_TextRenderer;}
 
-	virtual void InitToolTip();
-
 	virtual void PrepareContent();
 
 	virtual void UpdateContent();

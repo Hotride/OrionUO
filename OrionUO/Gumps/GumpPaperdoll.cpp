@@ -166,9 +166,6 @@ void CGumpPaperdoll::InitToolTip()
 
 	if (!m_Minimized)
 	{
-		if (!g_ConfigManager.UseToolTips)
-			id = 0;
-
 		switch (id)
 		{
 			case ID_GP_BUTTON_HELP:
@@ -236,7 +233,7 @@ void CGumpPaperdoll::InitToolTip()
 			}
 			case ID_GP_BUTTON_VIRTURE:
 			{
-				g_ToolTip.Set(L"Open server's virture(?) gump");
+				g_ToolTip.Set(L"Open server's virture gump");
 				break;
 			}
 			case ID_GP_COMBAT_BOOK:
@@ -255,28 +252,10 @@ void CGumpPaperdoll::InitToolTip()
 				break;
 			}
 			default:
-			{
-				if (g_PacketManager.ClientVersion >= CV_308Z)
-					id = g_SelectedObject.Serial;
-
-				if (id >= ID_GP_ITEMS)
-				{
-					CGameCharacter *character = g_World->FindWorldCharacter(m_Serial);
-
-					if (character != NULL)
-					{
-						CGameObject *obj = character->FindLayer(id - ID_GP_ITEMS);
-
-						if (obj != NULL)
-							g_ObjectPropertiesManager.Display(obj->Serial);
-					}
-				}
-
 				break;
-			}
 		}
 	}
-	else if (g_ConfigManager.UseToolTips)
+	else
 		g_ToolTip.Set(L"Double click to maximize paperdoll gump");
 }
 //----------------------------------------------------------------------------------
