@@ -850,9 +850,9 @@ enum DIRECTION_TYPE
 //----------------------------------------------------------------------------------
 enum ANIMATION_GROUPS_TYPE
 {
-	AGT_ANIMAL = 0,
-	AGT_MONSTER,
+	AGT_MONSTER = 0,
 	AGT_SEA_MONSTER,
+	AGT_ANIMAL,
 	AGT_HUMAN,
 	AGT_EQUIPMENT,
 	AGT_UNKNOWN

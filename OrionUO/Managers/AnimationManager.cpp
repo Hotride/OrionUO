@@ -317,8 +317,8 @@ void CAnimationManager::Load(puint verdata)
 
 		index.Graphic = (int)i;
 
-		if (index.Type != AGT_UNKNOWN)
-			groupType = index.Type;
+		//if (index.Type != AGT_UNKNOWN)
+		//	groupType = index.Type;
 
 		int count = 0;
 
@@ -458,38 +458,9 @@ void CAnimationManager::Load(puint verdata)
 void CAnimationManager::InitIndexReplaces(puint verdata)
 {
 	WISPFUN_DEBUG("c133_f4");
-	Load(verdata);
-
-	//std::pair<ushort, char> m_GroupReplaces[2];
-
-	WISP_FILE::CTextFileParser animParser[2]
-	{
-		WISP_FILE::CTextFileParser(g_App.UOFilesPath("Anim1.def").c_str(), " \t", "#;//", "{}"),
-			WISP_FILE::CTextFileParser(g_App.UOFilesPath("Anim2.def").c_str(), " \t", "#;//", "{}")
-	};
-
-	IFOR(i, 0, 2)
-	{
-		while (!animParser[i].IsEOF())
-		{
-			STRING_LIST strings = animParser[i].ReadTokens();
-
-			if (strings.size() < 2)
-				continue;
-
-			ushort group = (ushort)atoi(strings[0].c_str());
-			int replaceGroup = atoi(strings[1].c_str());
-
-			m_GroupReplaces[i].push_back(std::pair<ushort, uchar>(group, (uchar)replaceGroup));
-		}
-	}
-
-	if (g_PacketManager.ClientVersion < CV_305D) //CV_204C
-		return;
-
 	if (g_PacketManager.ClientVersion >= CV_500A)
 	{
-		static const string typeNames[5] = { "animal", "monster", "sea_monster", "human", "equipment" };
+		static const string typeNames[5] = { "monster", "sea_monster", "animal", "human", "equipment" };
 
 		WISP_FILE::CTextFileParser mobtypesParser(g_App.UOFilesPath("mobtypes.txt").c_str(), " \t", "#;//", "");
 
@@ -521,6 +492,35 @@ void CAnimationManager::InitIndexReplaces(puint verdata)
 			}
 		}
 	}
+
+	Load(verdata);
+
+	//std::pair<ushort, char> m_GroupReplaces[2];
+
+	WISP_FILE::CTextFileParser animParser[2]
+	{
+		WISP_FILE::CTextFileParser(g_App.UOFilesPath("Anim1.def").c_str(), " \t", "#;//", "{}"),
+			WISP_FILE::CTextFileParser(g_App.UOFilesPath("Anim2.def").c_str(), " \t", "#;//", "{}")
+	};
+
+	IFOR(i, 0, 2)
+	{
+		while (!animParser[i].IsEOF())
+		{
+			STRING_LIST strings = animParser[i].ReadTokens();
+
+			if (strings.size() < 2)
+				continue;
+
+			ushort group = (ushort)atoi(strings[0].c_str());
+			int replaceGroup = atoi(strings[1].c_str());
+
+			m_GroupReplaces[i].push_back(std::pair<ushort, uchar>(group, (uchar)replaceGroup));
+		}
+	}
+
+	if (g_PacketManager.ClientVersion < CV_305D) //CV_204C
+		return;
 
 	WISP_FILE::CTextFileParser newBodyParser("", " \t,{}", "#;//", "");
 	WISP_FILE::CTextFileParser bodyParser(g_App.UOFilesPath("Body.def").c_str(), " \t", "#;//", "{}");
@@ -1733,7 +1733,7 @@ void CAnimationManager::DrawCharacter(CGameCharacter *obj, int x, int y)
 	
 	int lightOffset = 20;
 	
-	if (/*obj->IsHuman() &&*/ goi != NULL) //Draw mount
+	if (obj->IsHuman() && goi != NULL) //Draw mount
 	{
 		m_Sitting = 0;
 		lightOffset += 20;
@@ -1783,7 +1783,7 @@ void CAnimationManager::DrawCharacter(CGameCharacter *obj, int x, int y)
 
 	Draw(obj, drawX, drawY, mirror, animIndex); //Draw character
 
-	//if (obj->IsHuman()) //Draw layered objects
+	if (obj->IsHuman()) //Draw layered objects
 	{
 		DrawEquippedLayers(false, obj, drawX, drawY, mirror, layerDir, animIndex, lightOffset);
 
@@ -1989,7 +1989,7 @@ bool CAnimationManager::CharacterPixelsInXY(CGameCharacter *obj, int x, int y)
 	int drawX = x - obj->OffsetX;
 	int drawY = y - obj->OffsetY - obj->OffsetZ;
 	
-	if (/*obj->IsHuman() &&*/ goi != NULL) //Check mount
+	if (obj->IsHuman() && goi != NULL) //Check mount
 	{
 		ushort mountID = goi->GetMountAnimation();
 
@@ -2449,7 +2449,7 @@ DRAW_FRAME_INFORMATION CAnimationManager::CollectFrameInformation(CGameObject *g
 
 		CalculateFrameInformation(info, obj, mirror, animIndex);
 
-		if (/*obj->IsHuman() &&*/ checkLayers) //Check layred objects
+		if (obj->IsHuman() && checkLayers) //Check layred objects
 		{
 			IFOR(l, 0, USED_LAYER_COUNT)
 			{
@@ -2802,12 +2802,12 @@ uchar CAnimationManager::GetObjectNewAnimationType_0(CGameCharacter *obj, const 
 	{
 		CIndexAnimation &ia = m_DataIndex[obj->Graphic];
 
-		ANIMATION_GROUPS_TYPE type = AGT_ANIMAL;
+		ANIMATION_GROUPS_TYPE type = AGT_MONSTER;
 
 		if (ia.Flags & 0x80000000)
 			type = ia.Type;
 
-		if (type == AGT_ANIMAL)
+		if (type == AGT_MONSTER)
 		{
 			switch (mode % 4)
 			{
@@ -2824,14 +2824,14 @@ uchar CAnimationManager::GetObjectNewAnimationType_0(CGameCharacter *obj, const 
 					break;
 			}
 		}
-		else if (type == AGT_MONSTER)
+		else if (type == AGT_SEA_MONSTER)
 		{
 			if (mode % 2)
 				return 6;
 
 			return 5;
 		}
-		else if (type != AGT_SEA_MONSTER)
+		else if (type != AGT_ANIMAL)
 		{
 			if (obj->FindLayer(OL_MOUNT) != NULL)
 			{
@@ -2888,14 +2888,14 @@ uchar CAnimationManager::GetObjectNewAnimationType_1_2(CGameCharacter *obj, cons
 {
 	CIndexAnimation &ia = m_DataIndex[obj->Graphic];
 
-	ANIMATION_GROUPS_TYPE type = AGT_ANIMAL;
+	ANIMATION_GROUPS_TYPE type = AGT_MONSTER;
 
 	if (ia.Flags & 0x80000000)
 		type = ia.Type;
 
-	if (type != AGT_ANIMAL)
+	if (type != AGT_MONSTER)
 	{
-		if (type <= AGT_SEA_MONSTER || obj->FindLayer(OL_MOUNT) != NULL)
+		if (type <= AGT_ANIMAL || obj->FindLayer(OL_MOUNT) != NULL)
 			return 0xFF;
 
 		return 30;
@@ -2910,16 +2910,16 @@ uchar CAnimationManager::GetObjectNewAnimationType_3(CGameCharacter *obj, const 
 {
 	CIndexAnimation &ia = m_DataIndex[obj->Graphic];
 
-	ANIMATION_GROUPS_TYPE type = AGT_ANIMAL;
+	ANIMATION_GROUPS_TYPE type = AGT_MONSTER;
 
 	if (ia.Flags & 0x80000000)
 		type = ia.Type;
 
-	if (type != AGT_ANIMAL)
+	if (type != AGT_MONSTER)
 	{
-		if (type == AGT_MONSTER)
+		if (type == AGT_SEA_MONSTER)
 			return 8;
-		else if (type == AGT_SEA_MONSTER)
+		else if (type == AGT_ANIMAL)
 		{
 			if (mode % 2)
 				return 21;
@@ -2942,14 +2942,14 @@ uchar CAnimationManager::GetObjectNewAnimationType_4(CGameCharacter *obj, const 
 {
 	CIndexAnimation &ia = m_DataIndex[obj->Graphic];
 
-	ANIMATION_GROUPS_TYPE type = AGT_ANIMAL;
+	ANIMATION_GROUPS_TYPE type = AGT_MONSTER;
 
 	if (ia.Flags & 0x80000000)
 		type = ia.Type;
 
-	if (type != AGT_ANIMAL)
+	if (type != AGT_MONSTER)
 	{
-		if (type > AGT_SEA_MONSTER)
+		if (type > AGT_ANIMAL)
 		{
 			if (obj->FindLayer(OL_MOUNT) != NULL)
 				return 0xFF;
@@ -2967,19 +2967,19 @@ uchar CAnimationManager::GetObjectNewAnimationType_5(CGameCharacter *obj, const 
 {
 	CIndexAnimation &ia = m_DataIndex[obj->Graphic];
 
-	ANIMATION_GROUPS_TYPE type = AGT_ANIMAL;
+	ANIMATION_GROUPS_TYPE type = AGT_MONSTER;
 
 	if (ia.Flags & 0x80000000)
 		type = ia.Type;
 
-	if (type <= AGT_MONSTER)
+	if (type <= AGT_SEA_MONSTER)
 	{
 		if (mode % 2)
 			return 18;
 
 		return 17;
 	}
-	else if (type != AGT_SEA_MONSTER)
+	else if (type != AGT_ANIMAL)
 	{
 		if (obj->FindLayer(OL_MOUNT) != NULL)
 			return 0xFF;
@@ -3009,16 +3009,16 @@ uchar CAnimationManager::GetObjectNewAnimationType_6_14(CGameCharacter *obj, con
 {
 	CIndexAnimation &ia = m_DataIndex[obj->Graphic];
 
-	ANIMATION_GROUPS_TYPE type = AGT_ANIMAL;
+	ANIMATION_GROUPS_TYPE type = AGT_MONSTER;
 
 	if (ia.Flags & 0x80000000)
 		type = ia.Type;
 
-	if (type != AGT_ANIMAL)
+	if (type != AGT_MONSTER)
 	{
-		if (type != AGT_MONSTER)
+		if (type != AGT_SEA_MONSTER)
 		{
-			if (type == AGT_SEA_MONSTER)
+			if (type == AGT_ANIMAL)
 				return 3;
 
 			if (obj->FindLayer(OL_MOUNT) != NULL)
@@ -3053,16 +3053,16 @@ uchar CAnimationManager::GetObjectNewAnimationType_8(CGameCharacter *obj, const 
 {
 	CIndexAnimation &ia = m_DataIndex[obj->Graphic];
 
-	ANIMATION_GROUPS_TYPE type = AGT_ANIMAL;
+	ANIMATION_GROUPS_TYPE type = AGT_MONSTER;
 
 	if (ia.Flags & 0x80000000)
 		type = ia.Type;
 
-	if (type != AGT_ANIMAL)
+	if (type != AGT_MONSTER)
 	{
-		if (type != AGT_MONSTER)
+		if (type != AGT_SEA_MONSTER)
 		{
-			if (type == AGT_SEA_MONSTER)
+			if (type == AGT_ANIMAL)
 				return 9;
 
 			if (obj->FindLayer(OL_MOUNT) != NULL)
@@ -3081,12 +3081,12 @@ uchar CAnimationManager::GetObjectNewAnimationType_9_10(CGameCharacter *obj, con
 {
 	CIndexAnimation &ia = m_DataIndex[obj->Graphic];
 
-	ANIMATION_GROUPS_TYPE type = AGT_ANIMAL;
+	ANIMATION_GROUPS_TYPE type = AGT_MONSTER;
 
 	if (ia.Flags & 0x80000000)
 		type = ia.Type;
 
-	if (type != AGT_ANIMAL)
+	if (type != AGT_MONSTER)
 		return 0xFF;
 
 	return 20;
@@ -3096,14 +3096,14 @@ uchar CAnimationManager::GetObjectNewAnimationType_11(CGameCharacter *obj, const
 {
 	CIndexAnimation &ia = m_DataIndex[obj->Graphic];
 
-	ANIMATION_GROUPS_TYPE type = AGT_ANIMAL;
+	ANIMATION_GROUPS_TYPE type = AGT_MONSTER;
 
 	if (ia.Flags & 0x80000000)
 		type = ia.Type;
 
-	if (type != AGT_ANIMAL)
+	if (type != AGT_MONSTER)
 	{
-		if (type >= AGT_SEA_MONSTER)
+		if (type >= AGT_ANIMAL)
 		{
 			if (obj->FindLayer(OL_MOUNT) != NULL)
 				return 0xFF;
