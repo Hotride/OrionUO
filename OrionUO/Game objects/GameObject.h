@@ -51,13 +51,6 @@ protected:
 	//!Указатель на текстуру для опции Object Handles
 	CGLTexture m_TextureObjectHalndes{ CGLTexture() };
 
-	/*!
-	Создать текстуру для опции Object Handles
-	@param [__in] text Текст названия объекта
-	@return
-	*/
-	void GenerateObjectHandlesTexture(wstring text);
-
 public:
 	CGameObject(const uint &serial = 0);
 	virtual ~CGameObject();
@@ -73,6 +66,13 @@ public:
 	@return
 	*/
 	virtual void AddText(CTextData *td);
+
+	/*!
+	Создать текстуру для опции Object Handles
+	@param [__in] text Текст названия объекта
+	@return
+	*/
+	void GenerateObjectHandlesTexture(wstring text);
 
 	/*!
 	Отрисовать текстуру опции Object Handles (автоматически создает текстуру, если она не была создана)

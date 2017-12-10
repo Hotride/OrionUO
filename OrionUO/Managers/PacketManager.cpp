@@ -3635,7 +3635,10 @@ PACKET_HANDLER(MegaCliloc)
 				name = str;
 
 				if (obj != NULL && !obj->NPC)
+				{
 					obj->Name = ToString(str);
+					obj->GenerateObjectHandlesTexture(str);
+				}
 
 				first = false;
 			}
