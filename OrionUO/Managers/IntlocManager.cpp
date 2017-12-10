@@ -143,7 +143,7 @@ wstring CIntlocManager::Intloc(const string &lang, uint clilocID, const bool &is
 
 	wstring str = L"";
 
-	if (!isNewCliloc)
+	if (!isNewCliloc && false)
 	{
 		int fileIndex = (clilocID / 1000) % 1000;
 		CIntloc *obj = Intloc(fileIndex, language);
