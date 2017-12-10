@@ -51,7 +51,7 @@ CPacketInfo CPacketManager::m_Packets[0x100] =
 	/*0x13*/ SMSG(ORION_IGNORE_PACKET, "Client Equip Item", 0x0a),
 	/*0x14*/ BMSG(ORION_SAVE_PACKET, "Change tile Z (God client)", 0x06),
 	/*0x15*/ BMSG(ORION_SAVE_PACKET, "Follow", 0x09),
-	/*0x16*/ UMSG(ORION_SAVE_PACKET, 0x01),
+	/*0x16*/ RMSGH(ORION_SAVE_PACKET, "Health status bar update (0x16)", 0x01, NewHealthbarUpdate),
 	/*0x17*/ RMSGH(ORION_IGNORE_PACKET, "Health status bar update (KR)", PACKET_VARIABLE_SIZE, NewHealthbarUpdate),
 	/*0x18*/ BMSG(ORION_SAVE_PACKET, "Add script (God client)", PACKET_VARIABLE_SIZE),
 	/*0x19*/ BMSG(ORION_SAVE_PACKET, "Edit NPC speech (God client)", PACKET_VARIABLE_SIZE),
@@ -990,6 +990,9 @@ PACKET_HANDLER(NewHealthbarUpdate)
 {
 	WISPFUN_DEBUG("c150_f24");
 	if (g_World == NULL)
+		return;
+
+	if (*m_Start == 0x16 && m_ClientVersion < CV_500A)
 		return;
 
 	uint serial = ReadUInt32BE();
