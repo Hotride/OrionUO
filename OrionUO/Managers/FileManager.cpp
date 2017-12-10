@@ -521,7 +521,6 @@ void CFileManager::ReadTask()
 
 				UOPAnimationData dataStruct = hashes.at(hash);
 				indexAnim->IsUOP = true;
-				group->IsUOP = true;
 				group->m_UOPAnimData = dataStruct;
 				IFOR(dirId, 0, 5)
 				{

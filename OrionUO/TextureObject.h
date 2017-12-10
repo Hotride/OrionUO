@@ -66,9 +66,6 @@ public:
 //Класс для работы с группой анимаций
 class CTextureAnimationGroup
 {
-	//UOP animation indicator
-	SETGET(bool, IsUOP, false);
-
 public:
 	CTextureAnimationGroup();
 	virtual ~CTextureAnimationGroup();
