@@ -85,7 +85,7 @@ CPacketInfo CPacketManager::m_Packets[0x100] =
 	/*0x35*/ BMSG(ORION_SAVE_PACKET, "Resource type (God client)", 0x28d),
 	/*0x36*/ BMSG(ORION_SAVE_PACKET, "Resource tile data (God client)", PACKET_VARIABLE_SIZE),
 	/*0x37*/ BMSG(ORION_SAVE_PACKET, "Move object (God client)", 0x08),
-	/*0x38*/ BMSG(ORION_SAVE_PACKET, "Pathfinding in Client", 0x07),
+	/*0x38*/ RMSGH(ORION_SAVE_PACKET, "Pathfinding", 0x07, Pathfinding),
 	/*0x39*/ BMSG(ORION_SAVE_PACKET, "Remove group (God client)", 0x09),
 	/*0x3A*/ BMSGH(ORION_IGNORE_PACKET, "Update Skills", PACKET_VARIABLE_SIZE, UpdateSkills),
 	/*0x3B*/ BMSGH(ORION_IGNORE_PACKET, "Vendor Buy Reply", PACKET_VARIABLE_SIZE, BuyReply),
@@ -5824,5 +5824,17 @@ PACKET_HANDLER(MovePlayer)
 
 	uchar direction = ReadUInt8();
 	g_PathFinder.Walk(direction & 0x80, direction & 7);
+}
+//----------------------------------------------------------------------------------
+PACKET_HANDLER(Pathfinding)
+{
+	WISPFUN_DEBUG("c150_f103");
+	if (g_World == NULL)
+		return;
+
+	ushort x = ReadInt16BE();
+	ushort y = ReadInt16BE();
+	ushort z = ReadInt16BE();
+	g_PathFinder.WalkTo(x, y, z, 0);
 }
 //----------------------------------------------------------------------------------
