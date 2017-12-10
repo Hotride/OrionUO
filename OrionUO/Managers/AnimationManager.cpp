@@ -613,6 +613,7 @@ void CAnimationManager::InitIndexReplaces(puint verdata)
 			int animFile = 1;
 			ushort realAnimID = 0;
 			char mountedHeightOffset = 0;
+			ANIMATION_GROUPS_TYPE groupType = AGT_UNKNOWN;
 
 			if (anim[0] != -1 && m_AddressIdx[2] != 0 && m_AddressMul[2] != 0)
 			{
@@ -624,9 +625,15 @@ void CAnimationManager::InitIndexReplaces(puint verdata)
 					realAnimID = 122;
 
 				if (realAnimID >= 200) //Low
+				{
 					startAnimID = ((realAnimID - 200) * 65) + 22000;
+					groupType = AGT_ANIMAL;
+				}
 				else //Hight
+				{
 					startAnimID = realAnimID * 110;
+					groupType = AGT_MONSTER;
+				}
 			}
 			else if (anim[1] != -1 && m_AddressIdx[3] != 0 && m_AddressMul[3] != 0)
 			{
@@ -636,12 +643,21 @@ void CAnimationManager::InitIndexReplaces(puint verdata)
 				if (realAnimID >= 200)
 				{
 					if (realAnimID >= 400) //People
+					{
 						startAnimID = ((realAnimID - 400) * 175) + 35000;
+						groupType = AGT_HUMAN;
+					}
 					else //Low
+					{
 						startAnimID = ((realAnimID - 200) * 110) + 22000;
+						groupType = AGT_ANIMAL;
+					}
 				}
 				else //Hight
+				{
 					startAnimID = (realAnimID * 65) + 9000;
+					groupType = AGT_MONSTER;
+				}
 			}
 			else if (anim[2] != -1 && m_AddressIdx[4] != 0 && m_AddressMul[4] != 0)
 			{
@@ -651,12 +667,21 @@ void CAnimationManager::InitIndexReplaces(puint verdata)
 				if (realAnimID >= 200)
 				{
 					if (realAnimID >= 400) //People
+					{
 						startAnimID = ((realAnimID - 400) * 175) + 35000;
+						groupType = AGT_HUMAN;
+					}
 					else //Low
+					{
 						startAnimID = ((realAnimID - 200) * 65) + 22000;
+						groupType = AGT_ANIMAL;
+					}
 				}
 				else //Hight
+				{
 					startAnimID = realAnimID * 110;
+					groupType = AGT_MONSTER;
+				}
 			}
 			else if (anim[3] != -1 && m_AddressIdx[5] != 0 && m_AddressMul[5] != 0)
 			{
@@ -669,12 +694,21 @@ void CAnimationManager::InitIndexReplaces(puint verdata)
 				else if (realAnimID >= 200)
 				{
 					if (realAnimID >= 400) //People
+					{
 						startAnimID = ((realAnimID - 400) * 175) + 35000;
+						groupType = AGT_HUMAN;
+					}
 					else //Low
+					{
 						startAnimID = ((realAnimID - 200) * 65) + 22000;
+						groupType = AGT_ANIMAL;
+					}
 				}
 				else //Hight
+				{
 					startAnimID = realAnimID * 110;
+					groupType = AGT_MONSTER;
+				}
 			}
 
 			if (animFile != 1 && startAnimID != -1)
@@ -686,7 +720,7 @@ void CAnimationManager::InitIndexReplaces(puint verdata)
 					CIndexAnimation &dataIndex = m_DataIndex[index];
 					dataIndex.MountedHeightOffset = mountedHeightOffset;
 
-					if (g_PacketManager.ClientVersion < CV_500A)
+					if (g_PacketManager.ClientVersion < CV_500A || groupType == AGT_UNKNOWN)
 					{
 						if (realAnimID >= 200)
 						{
@@ -698,6 +732,8 @@ void CAnimationManager::InitIndexReplaces(puint verdata)
 						else
 							dataIndex.Type = AGT_MONSTER;
 					}
+					else if (groupType != AGT_UNKNOWN)
+						dataIndex.Type = groupType;
 
 					int count = 0;
 
@@ -848,6 +884,7 @@ void CAnimationManager::InitIndexReplaces(puint verdata)
 			}
 
 			dataIndex.Type = checkDataIndex.Type;
+			dataIndex.Flags = checkDataIndex.Flags;
 			dataIndex.Graphic = checkIndex;
 			dataIndex.Color = atoi(strings[2].c_str());
 		}
@@ -944,6 +981,7 @@ void CAnimationManager::InitIndexReplaces(puint verdata)
 			}
 
 			dataIndex.Type = checkDataIndex.Type;
+			dataIndex.Flags = checkDataIndex.Flags;
 			dataIndex.Graphic = checkIndex;
 			dataIndex.Color = atoi(strings[2].c_str());
 		}
@@ -2167,8 +2205,9 @@ ANIMATION_DIMENSIONS CAnimationManager::GetAnimationDimensions(uchar frameIndex,
 		}
 		else if (direction.IsUOP) //try reading uop anim frame
 		{
-			UOPAnimationData animDataStruct = m_DataIndex[m_AnimID].m_Groups[m_AnimGroup].m_UOPAnimData;
-			if (animDataStruct.path == NULL)
+			UOPAnimationData &animDataStruct = m_DataIndex[m_AnimID].m_Groups[m_AnimGroup].m_UOPAnimData;
+
+			if (!animDataStruct.path.length())
 				return result;
 
 			//reading compressed data from uop file stream
@@ -2262,8 +2301,8 @@ ANIMATION_DIMENSIONS CAnimationManager::GetAnimationDimensions(CGameObject *obj,
 //----------------------------------------------------------------------------------
 bool CAnimationManager::TryReadUOPAnimDimins(CTextureAnimationDirection &direction)
 {
-	UOPAnimationData animDataStruct = m_DataIndex[m_AnimID].m_Groups[m_AnimGroup].m_UOPAnimData;
-	if (animDataStruct.path == NULL)
+	UOPAnimationData &animDataStruct = m_DataIndex[m_AnimID].m_Groups[m_AnimGroup].m_UOPAnimData;
+	if (!animDataStruct.path.length())
 	{
 		//LOG("CAnimationManager::TryReadUOPAnimDimins bad address\n");
 		return false;

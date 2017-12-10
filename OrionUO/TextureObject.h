@@ -13,7 +13,7 @@
 //Данные о местонахождении сжатого блока данных с уоп фреймами
 struct UOPAnimationData
 {
-	std::string *path;
+	std::string path;
 	unsigned int offset;
 	unsigned int compressedLength;
 	unsigned int decompressedLength;

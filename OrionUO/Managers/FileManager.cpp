@@ -440,12 +440,12 @@ void CFileManager::ReadTask()
 		char nextBlock[8];
 
 		std::fstream *animFile = new std::fstream();
-		string *path = new string(g_App.UOFilesPath("AnimationFrame%i.uop", i));
-		if (!FileExists(*path))
+		string path(g_App.UOFilesPath("AnimationFrame%i.uop", i));
+		if (!FileExists(path))
 		{
 			continue;
 		}
-		animFile->open(*path, std::ios::binary | std::ios::in);
+		animFile->open(path, std::ios::binary | std::ios::in);
 
 		if (!animFile) continue;
 
@@ -569,7 +569,7 @@ bool CFileManager::DecompressUOPFileData(UOPAnimationData &animData, UCHAR_LIST 
 	if (z_err != Z_OK)
 	{
 		LOG("UOP anim decompression failed %d\n", z_err);
-		LOG("Anim file: %s\n", animData.path->c_str());
+		LOG("Anim file: %s\n", animData.path.c_str());
 		LOG("Anim offset: %d\n", animData.offset);
 		return false;
 	}
