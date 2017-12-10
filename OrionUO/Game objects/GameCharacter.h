@@ -263,7 +263,7 @@ public:
 	Check on humanoid
 	@return true if character is humanoid
 	*/
-	bool IsHuman() { return (IN_RANGE(m_Graphic, 0x0190, 0x0193) || IN_RANGE(m_Graphic, 0x025D, 0x0260) || IN_RANGE(m_Graphic, 0x029A, 0x029B) || IN_RANGE(m_Graphic, 0x02B6, 0x02B7) || (m_Graphic == 0x03DB) || (m_Graphic == 0x03DF) || (m_Graphic == 0x03E2)); }
+	bool IsHuman() { return (IN_RANGE(m_Graphic, 0x0190, 0x0193) || IN_RANGE(m_Graphic, 0x00B7, 0x00BA) || IN_RANGE(m_Graphic, 0x025D, 0x0260) || IN_RANGE(m_Graphic, 0x029A, 0x029B) || IN_RANGE(m_Graphic, 0x02B6, 0x02B7) || (m_Graphic == 0x03DB) || (m_Graphic == 0x03DF) || (m_Graphic == 0x03E2)); }
 
 	/*!
 	Check on dead
