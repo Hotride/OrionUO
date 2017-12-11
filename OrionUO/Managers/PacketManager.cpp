@@ -5516,12 +5516,21 @@ PACKET_HANDLER(OrionMessages)
 		}
 		case OCT_ORION_IGNORE_TILES_IN_FILTER:
 		{
-			g_Orion.m_IgnoreInFilterFiles.clear();
+			g_Orion.m_IgnoreInFilterTiles.clear();
 
 			ushort count = ReadUInt16BE();
 
 			IFOR(i, 0, count)
-				g_Orion.m_IgnoreInFilterFiles.push_back(ReadUInt16BE());
+				g_Orion.m_IgnoreInFilterTiles.push_back(std::pair<ushort, ushort>(ReadUInt16BE(), 0));
+
+			ushort countRange = ReadUInt16BE();
+
+			IFOR(i, 0, countRange)
+			{
+				ushort rangeStart = ReadUInt16BE();
+				ushort rangeEnd = ReadUInt16BE();
+				g_Orion.m_IgnoreInFilterTiles.push_back(std::pair<ushort, ushort>(rangeStart, rangeEnd));
+			}
 
 			break;
 		}

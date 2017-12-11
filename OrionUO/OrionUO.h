@@ -141,7 +141,7 @@ public:
 
 	ushort m_WinterTile[MAX_LAND_DATA_INDEX_COUNT];
 
-	USHORT_LIST m_IgnoreInFilterFiles;
+	vector<std::pair<ushort, ushort>> m_IgnoreInFilterTiles;
 
 	bool InTileFilter(const ushort &graphic);
 

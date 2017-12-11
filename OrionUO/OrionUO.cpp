@@ -3010,11 +3010,11 @@ void COrion::ClearTreesTextures()
 //----------------------------------------------------------------------------------
 bool COrion::InTileFilter(const ushort &graphic)
 {
-	if (!m_IgnoreInFilterFiles.empty())
+	if (!m_IgnoreInFilterTiles.empty())
 	{
-		for (const ushort &i : m_IgnoreInFilterFiles)
+		for (const std::pair<ushort, ushort> &i : m_IgnoreInFilterTiles)
 		{
-			if (graphic == i)
+			if (i.first == graphic || (i.second && IN_RANGE(graphic, i.first, i.second)))
 				return true;
 		}
 	}
