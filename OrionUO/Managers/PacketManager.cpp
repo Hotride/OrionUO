@@ -863,6 +863,9 @@ PACKET_HANDLER(EnterWorld)
 	Move(2); //serverBoundaryWidth
 	Move(2); //serverBoundaryHeight*/
 
+	g_RemoveRangeXY.X = g_Player->X;
+	g_RemoveRangeXY.Y = g_Player->Y;
+
 	g_Player->OffsetX = 0;
 	g_Player->OffsetY = 0;
 	g_Player->OffsetZ = 0;

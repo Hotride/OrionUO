@@ -19,6 +19,8 @@ class CStepInfo
 	SETGET(bool, Running, false);
 	SETGET(bool, NoRotation, false);
 	SETGET(uint, Timer, 0);
+	SETGET(ushort, X, 0);
+	SETGET(ushort, Y, 0);
 	SETGET(uchar, Z, 0);
 
 public:

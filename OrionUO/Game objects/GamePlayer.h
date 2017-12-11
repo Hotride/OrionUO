@@ -107,12 +107,6 @@ public:
 	@return
 	*/
 	void UpdateAbilities();
-
-	/*!
-	Update coordinates for remove items
-	@return
-	*/
-	void UpdateRemoveRange();
 };
 //----------------------------------------------------------------------------------
 //!Ссылка на игрока

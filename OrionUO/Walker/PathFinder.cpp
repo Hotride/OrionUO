@@ -584,6 +584,8 @@ bool CPathFinder::Walk(bool run, uchar direction)
 	step.OldDirection = oldDirection & 7;
 	step.Direction = direction;
 	step.Timer = g_Ticks;
+	step.X = x;
+	step.Y = y;
 	step.Z = z;
 	step.NoRotation = ((step.OldDirection == direction) && ((oldZ - z) >= 11));
 

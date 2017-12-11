@@ -114,8 +114,6 @@ void CGameItem::OnGraphicChange(int direction)
 	}
 	else if (m_Items == NULL || m_WantUpdateMulti)
 	{
-		g_Player->UpdateRemoveRange();
-
 		if (!m_MultiDistanceBonus || CheckMultiDistance(g_RemoveRangeXY, this, g_ConfigManager.UpdateRange))
 			LoadMulti(m_Items == NULL);
 	}

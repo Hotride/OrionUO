@@ -1008,6 +1008,10 @@ void CGameWorld::UpdatePlayer(const uint &serial, const ushort &graphic, const u
 		g_Player->X = x;
 		g_Player->Y = y;
 		g_Player->Z = z;
+
+		g_RemoveRangeXY.X = x;
+		g_RemoveRangeXY.Y = y;
+
 		g_GameScreen.UpdateDrawPos = true;
 
 		bool oldDead = g_Player->Dead();
@@ -1042,7 +1046,6 @@ void CGameWorld::UpdatePlayer(const uint &serial, const ushort &graphic, const u
 
 		g_Walker.ResendPacketSended = false;
 
-		g_Player->UpdateRemoveRange();
 		g_GumpManager.RemoveRangedGumps();
 
 		MoveToTop(g_Player);

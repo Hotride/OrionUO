@@ -55,6 +55,9 @@ void CWalker::DenyWalk(const uchar &sequence, const int &x, const int &y, const 
 		g_Player->X = x;
 		g_Player->Y = y;
 		g_Player->Z = z;
+
+		g_RemoveRangeXY.X = x;
+		g_RemoveRangeXY.Y = y;
 	}
 }
 //----------------------------------------------------------------------------------
@@ -78,9 +81,16 @@ void CWalker::ConfirmWalk(const uchar &sequence)
 	if (!isBadStep)
 	{
 		if (stepIndex >= m_CurrentWalkSequence)
+		{
 			m_Step[stepIndex].Accepted = true;
+			g_RemoveRangeXY.X = m_Step[stepIndex].X;
+			g_RemoveRangeXY.Y = m_Step[stepIndex].Y;
+		}
 		else if (!stepIndex)
 		{
+			g_RemoveRangeXY.X = m_Step[0].X;
+			g_RemoveRangeXY.Y = m_Step[0].Y;
+
 			IFOR(i, 1, m_StepsCount)
 			{
 				m_Step[i - 1] = m_Step[i];

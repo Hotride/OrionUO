@@ -1096,6 +1096,7 @@ void COrion::Process(const bool &rendering)
 	static uint removeUnusedTexturesTime = 0;
 	static uint removeUnusedAnimationTexturesTime = 0;
 
+	g_ConnectionManager.Recv();
 	g_PacketManager.ProcessPluginPackets();
 	g_PacketManager.SendMegaClilocRequests();
 	g_MouseManager.Update();
@@ -1189,8 +1190,6 @@ void COrion::Process(const bool &rendering)
 
 			if (g_ProcessRemoveRangedTimer < g_Ticks)
 			{
-				g_Player->UpdateRemoveRange();
-
 				g_Orion.RemoveRangedObjects();
 
 				g_ProcessRemoveRangedTimer = g_Ticks + 50;
@@ -5808,7 +5807,7 @@ void COrion::RemoveRangedObjects()
 	WISPFUN_DEBUG("c194_f123");
 	if (g_World != NULL)
 	{
-		int objectsRange = g_ConfigManager.UpdateRange + 1;
+		int objectsRange = g_ConfigManager.UpdateRange;
 		int objectsRangeItems = g_ConfigManager.UpdateRange;
 
 		CGameObject *go = g_World->m_Items;
