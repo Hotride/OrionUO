@@ -104,24 +104,24 @@ bool CFontsManager::LoadFonts()
 	{
 		m_UnicodeFontAddress[i] = (size_t)g_FileManager.m_UnifontMul[i].Start;
 		m_UnicodeFontSize[i] = (uint)g_FileManager.m_UnifontMul[i].Size;
+	}
 
-		if (!m_UnicodeFontAddress[i] && i == 1)
-		{
-			m_UnicodeFontAddress[i] = m_UnicodeFontAddress[0];
-			m_UnicodeFontSize[i] = m_UnicodeFontSize[0];
-		}
+	if (m_UnicodeFontAddress[1] == 0)
+	{
+		m_UnicodeFontAddress[1] = m_UnicodeFontAddress[0];
+		m_UnicodeFontSize[1] = m_UnicodeFontSize[0];
 	}
 
 	return true;
 }
 //----------------------------------------------------------------------------------
-uchar CFontsManager::UnicodeFontExists(const uchar &font)
+bool CFontsManager::UnicodeFontExists(const uchar &font)
 {
 	WISPFUN_DEBUG("c143_f4");
 	if (font >= 20 || m_UnicodeFontAddress[font] == NULL)
-		return 0;
+		return false;
 
-	return font;
+	return true;
 }
 //----------------------------------------------------------------------------------
 /*!

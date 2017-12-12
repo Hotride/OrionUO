@@ -25,7 +25,7 @@ void CGumpSelectFont::UpdateContent()
 	WISPFUN_DEBUG("c122_f1");
 	Clear();
 
-	Add(new CGUIResizepic(0, 0x0A28, 0, 0, 200, 70 + (g_FileManager.UnicodeFontsCount * 22)));
+	CGUIResizepic *background = (CGUIResizepic*)Add(new CGUIResizepic(0, 0x0A28, 0, 0, 200, 70));
 
 	CGUIText *text = (CGUIText*)Add(new CGUIText(0, 60, 22));
 	text->CreateTextureW(0, L"Select font");
@@ -53,23 +53,24 @@ void CGumpSelectFont::UpdateContent()
 			break;
 	}
 		
-	int drawY = 24;
+	int drawY = 46;
 
 	Add(new CGUIGroup(1));
+	int count = 0;
 
 	IFOR(i, 0, 20)
 	{
 		if (g_FontManager.UnicodeFontExists(i))
 		{
-			drawY += 22;
-
 			CGUIRadio *radio = (CGUIRadio*)Add(new CGUIRadio((int)i + ID_GSF_FONTS, 0x00D0, 0x00D1, 0x00D0, 50, drawY));
 			radio->Checked = (i == selected);
-
-			text = (CGUIText*)Add(new CGUIText(0, 74, drawY));
-			text->CreateTextureW((uchar)i, L"This font");
+			radio->SetTextParameters((uchar)i, L"This font", 0);
+			drawY += 22;
+			count++;
 		}
 	}
+
+	background->Height = 70 + (count * 22);
 
 	Add(new CGUIGroup(0));
 }

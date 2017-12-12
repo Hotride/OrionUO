@@ -230,7 +230,7 @@ public:
 	*/
 	bool LoadFonts();
 
-	uchar UnicodeFontExists(const uchar &font);
+	bool UnicodeFontExists(const uchar &font);
 
 	/*!
 	Переход по ссылке по индексу

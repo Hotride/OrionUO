@@ -3512,8 +3512,11 @@ PACKET_HANDLER(DisplayClilocString)
 	ushort graphic = ReadUInt16BE();
 	uchar type = ReadUInt8();
 	ushort color = ReadUInt16BE();
-	ushort font = g_FontManager.UnicodeFontExists((uchar)ReadUInt16BE());
+	ushort font = ReadUInt16BE();
 	uint cliloc = ReadUInt32BE();
+
+	if (!g_FontManager.UnicodeFontExists((uchar)font))
+		font = 0;
 
 	uchar flags = 0;
 
