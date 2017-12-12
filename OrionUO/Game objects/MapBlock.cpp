@@ -332,7 +332,7 @@ void CMapBlock::AddRender(CRenderWorldObject *item, const int &x, const int &y)
 	{
 		if (item->IsGameObject())
 		{
-			priorityZ++;
+			//priorityZ++;
 
 			if (((CGameObject*)item)->NPC || ((CGameObject*)item)->IsCorpse())
 				priorityZ++;
