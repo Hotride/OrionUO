@@ -832,7 +832,8 @@ enum ORION_INTERNAL_PACKET_MESSAGE_TYPE
 	OIPMT_GRAPHIC_DATA_INFO = 4,
 	OIPMT_SKILL_LIST = 100,
 	OIPMT_SPELL_LIST = 101,
-	OIPMT_MACRO_LIST = 102
+	OIPMT_MACRO_LIST = 102,
+	OIPMT_OPEN_MAP = 103
 };
 //----------------------------------------------------------------------------------
 //!Направления чара

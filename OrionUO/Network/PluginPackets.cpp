@@ -166,3 +166,9 @@ CPluginPacketFilesTransfered::CPluginPacketFilesTransfered()
 	WriteUInt16BE(OIPMT_FILES_TRANSFERED);
 }
 //----------------------------------------------------------------------------------
+CPluginPacketOpenMap::CPluginPacketOpenMap()
+: CPluginPacket()
+{
+	WriteUInt16BE(OIPMT_OPEN_MAP);
+}
+//----------------------------------------------------------------------------------
