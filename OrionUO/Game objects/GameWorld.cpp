@@ -970,13 +970,10 @@ void CGameWorld::UpdateGameObject(const uint &serial, ushort graphic, const ucha
 
 		if (!found)
 		{
-			character->Graphic = graphic & 0x3FFF;
 			character->X = x;
 			character->Y = y;
 			character->Z = z;
 			character->Direction = direction;
-			character->Color = g_ColorManager.FixColor(color, (color & 0x8000));
-			character->Flags = flags;
 
 			character->m_Steps.clear();
 
@@ -984,6 +981,10 @@ void CGameWorld::UpdateGameObject(const uint &serial, ushort graphic, const ucha
 			character->OffsetY = 0;
 			character->OffsetZ = 0;
 		}
+
+		character->Graphic = graphic & 0x3FFF;
+		character->Color = g_ColorManager.FixColor(color, (color & 0x8000));
+		character->Flags = flags;
 
 		LOG("NPC serial:0x%08X graphic:0x%04X color:0x%04X xyz:%d,%d,%d flags:0x%02X direction:%d notoriety:%d\n", obj->Serial, obj->Graphic, obj->Color, obj->X, obj->Y, obj->Z, obj->Flags, character->Direction, character->Notoriety);
 	}
