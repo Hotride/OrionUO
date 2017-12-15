@@ -276,10 +276,10 @@ void CConfigManager::SetClientFPS(const uchar &val)
 
 	if (this == &g_ConfigManager)
 	{
-		if (m_ClientFPS < 16)
-			m_ClientFPS = 16;
-		else if (m_ClientFPS > 64)
-			m_ClientFPS = 64;
+		if (m_ClientFPS < MIN_FPS_LIMIT)
+			m_ClientFPS = MIN_FPS_LIMIT;
+		else if (m_ClientFPS > MAX_FPS_LIMIT)
+			m_ClientFPS = MAX_FPS_LIMIT;
 
 		g_FrameDelay[1] = 1000 / m_ClientFPS;
 

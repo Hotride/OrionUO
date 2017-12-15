@@ -2375,10 +2375,10 @@ int COrion::ValueInt(const VALUE_KEY_INT &key, int value)
 				value = g_ConfigManager.ClientFPS;
 			else
 			{
-				if (value < 16)
-					value = 16;
-				else if (value > 64)
-					value = 64;
+				if (value < MIN_FPS_LIMIT)
+					value = MIN_FPS_LIMIT;
+				else if (value > MAX_FPS_LIMIT)
+					value = MAX_FPS_LIMIT;
 
 				g_ConfigManager.ClientFPS = value;
 			}

@@ -160,6 +160,12 @@ bool CGLEngine::Install()
 
 	glEnable(GL_TEXTURE_2D);
 
+	typedef BOOL(WINAPI *PFNWGLSWAPINTERVALEXTPROC)(int interval);
+	PFNWGLSWAPINTERVALEXTPROC wglSwapIntervalEXT = (PFNWGLSWAPINTERVALEXTPROC)wglGetProcAddress("wglSwapIntervalEXT");
+
+	if (wglSwapIntervalEXT != NULL)
+		wglSwapIntervalEXT(0);
+
 	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
 	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
 

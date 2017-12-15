@@ -902,7 +902,7 @@ void CGumpOptions::DrawPage2()
 	text = (CGUIText*)html->Add(new CGUIText(g_OptionsTextColor, 0, 0));
 	text->CreateTextureW(0, L"FPS rate:");
 
-	m_SliderClientFPS = (CGUISlider*)html->Add(new CGUISlider(ID_GO_P2_CLIENT_FPS, 0x00D8, 0x00D8, 0x00D8, 0x00D5, true, false, 0, 21, 90, 16, 64, g_OptionsConfig.ClientFPS));
+	m_SliderClientFPS = (CGUISlider*)html->Add(new CGUISlider(ID_GO_P2_CLIENT_FPS, 0x00D8, 0x00D8, 0x00D8, 0x00D5, true, false, 0, 21, 90, MIN_FPS_LIMIT, MAX_FPS_LIMIT, g_OptionsConfig.ClientFPS));
 	m_SliderClientFPS->SetTextParameters(true, STP_RIGHT, 0, g_OptionsTextColor, true);
 
 
