@@ -5738,7 +5738,7 @@ void COrion::AttackReq(uint serial)
 	WISPFUN_DEBUG("c194_f115");
 	g_LastAttackObject = serial;
 
-	CPacketStatusRequest(serial).Send();
+	//CPacketStatusRequest(serial).Send();
 
 	CPacketAttackRequest(serial).Send();
 }

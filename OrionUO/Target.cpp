@@ -133,7 +133,7 @@ void CTarget::SendTargetObject(const uint &serial)
 		//Скопируем для LastTarget
 		memcpy(m_LastData, m_Data, sizeof(m_Data));
 
-		if (serial < 0x40000000)
+		if (obj != NULL && obj->NPC && ((CGameCharacter*)obj)->MaxHits == 0)
 			CPacketStatusRequest(serial).Send();
 	}
 
@@ -220,7 +220,7 @@ void CTarget::Plugin_SendTargetObject(const uint &serial)
 		//Скопируем для LastTarget
 		memcpy(m_LastData, m_Data, sizeof(m_Data));
 
-		if (serial < 0x40000000)
+		if (obj != NULL && obj->NPC && ((CGameCharacter*)obj)->MaxHits == 0)
 		{
 			CPacketStatusRequest packet(serial);
 			SendMessage(g_OrionWindow.Handle, UOMSG_SEND, (WPARAM)packet.Data().data(), packet.Data().size());

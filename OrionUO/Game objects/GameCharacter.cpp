@@ -365,7 +365,7 @@ void CGameCharacter::OnGraphicChange(int direction)
 	{
 		g_GumpManager.UpdateContent(m_Serial, 0, GT_PAPERDOLL);
 
-		if (g_GumpManager.UpdateContent(m_Serial, 0, GT_STATUSBAR) != NULL || g_GumpManager.UpdateContent(m_Serial, 0, GT_TARGET_SYSTEM) != NULL)
+		if ((g_GumpManager.UpdateContent(m_Serial, 0, GT_STATUSBAR) != NULL || g_GumpManager.UpdateContent(m_Serial, 0, GT_TARGET_SYSTEM) != NULL) && m_MaxHits == 0)
 			CPacketStatusRequest(m_Serial).Send();
 	}
 }
