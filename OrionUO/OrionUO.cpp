@@ -3103,7 +3103,16 @@ void COrion::GoToWebLink(const string &url)
 {
 	WISPFUN_DEBUG("c194_f46");
 	if (url.length())
-		ShellExecuteA(0, "Open", url.c_str(), NULL, NULL, SW_SHOWNORMAL);
+	{
+		std::size_t found = url.find("http://");
+		if (found == std::string::npos)
+			found = url.find("https://");
+		const string header = "http://";
+		if (found != std::string::npos)
+			ShellExecuteA(0, "Open", url.c_str(), NULL, NULL, SW_SHOWNORMAL);
+		else
+			ShellExecuteA(0, "Open", (header + url).c_str(), NULL, NULL, SW_SHOWNORMAL);
+	}
 }
 //----------------------------------------------------------------------------------
 void COrion::LoadTiledata(const int &landSize, const int &staticsSize)
