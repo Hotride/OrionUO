@@ -64,11 +64,6 @@ void CRenderStaticObject::UpdateTextCoordinates()
 
 	if (IsGameObject() && ((CGameObject*)this)->Container != 0xFFFFFFFF)
 	{
-		/*uint container = ((CGameObject*)this)->Container;
-		g_GumpManager.UpdateGump(container, 0, GT_CONTAINER);
-		g_GumpManager.UpdateGump(container, 0, GT_PAPERDOLL);
-		g_GumpManager.UpdateGump(container, 0, GT_TRADE);*/
-
 		for (CTextData *item = (CTextData*)m_TextControl->Last(); item != NULL; item = (CTextData*)item->m_Prev)
 		{
 			CTextData &text = *item;
@@ -137,15 +132,7 @@ void CRenderStaticObject::FixTextCoordinates()
 			offsetY = minY - startY;
 
 		if (offsetY)
-			item->RealDrawY += offsetY;
-
-		/*if (endY > maxY)
-		{
-			//if (startY >= maxY)
-			//	continue;
-
-			item->RealDrawY -= endY - maxY;
-		}*/
+			text.RealDrawY += offsetY;
 	}
 }
 //---------------------------------------------------------------------------
