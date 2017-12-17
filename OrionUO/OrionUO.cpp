@@ -6046,13 +6046,13 @@ void COrion::OpenWorldMap()
 	WISPFUN_DEBUG("c194_f137");
 	CPluginPacketOpenMap().SendToPlugin();
 
-	int x = g_ConfigManager.GameWindowX + (g_ConfigManager.GameWindowWidth / 2) - 200;
+	/*int x = g_ConfigManager.GameWindowX + (g_ConfigManager.GameWindowWidth / 2) - 200;
 	int y = g_ConfigManager.GameWindowY + (g_ConfigManager.GameWindowHeight / 2) - 150;
 
 	CGumpWorldMap *gump = new CGumpWorldMap(x, y);
 	gump->Called = true;
 
-	g_GumpManager.AddGump(gump);
+	g_GumpManager.AddGump(gump);*/
 }
 //----------------------------------------------------------------------------------
 void COrion::OpenJournal()

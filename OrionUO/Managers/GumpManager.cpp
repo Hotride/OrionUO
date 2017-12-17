@@ -1218,7 +1218,7 @@ void CGumpManager::Load(const string &path)
 				}
 				case GT_WORLD_MAP:
 				{
-					CGumpWorldMap *wmg = new CGumpWorldMap(gumpX, gumpY);
+					/*CGumpWorldMap *wmg = new CGumpWorldMap(gumpX, gumpY);
 					gump = wmg;
 					wmg->Called = g_ConfigManager.AutoDisplayWorldMap;
 
@@ -1239,7 +1239,7 @@ void CGumpManager::Load(const string &path)
 					wmg->OffsetX = file.ReadInt16LE();
 					wmg->OffsetY = file.ReadInt16LE();
 
-					wmg->UpdateSize();
+					wmg->UpdateSize();*/
 
 					break;
 				}
