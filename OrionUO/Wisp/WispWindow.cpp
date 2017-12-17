@@ -491,6 +491,12 @@ LRESULT CWindow::OnWindowProc(HWND &hWnd, UINT &message, WPARAM &wParam, LPARAM 
 
 			return 0;
 		}
+		case WM_SYSCHAR:
+		{
+			if (wParam == VK_F4 && (GetAsyncKeyState(VK_MENU) & 0x80000000)) //Alt + F4
+				break;
+			return 0;
+		}	
 		default:
 			break;
 	}
