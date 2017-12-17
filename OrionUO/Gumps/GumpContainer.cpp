@@ -364,7 +364,7 @@ void CGumpContainer::OnLeftMouseButtonUp()
 
 	if (canDrop && g_ObjectInHand.Enabled)
 	{
-		const CContainerOffsetRect &r = g_ContainerOffset[Graphic].Rect;
+		const CContainerOffsetRect &r = g_ContainerOffset[m_Graphic].Rect;
 
 		bool doubleDraw = false;
 		ushort graphic = g_ObjectInHand.GetDrawGraphic(doubleDraw);

@@ -5296,7 +5296,7 @@ void COrion::CreateTextMessage(const TEXT_TYPE &type, const uint &serial, const 
 	td->Color = color;
 	td->Timer = g_Ticks;
 	td->Type = type;
-	td->SetText(text);
+	td->Text = text;
 	
 	switch (type)
 	{
@@ -5411,7 +5411,7 @@ void COrion::CreateUnicodeTextMessage(const TEXT_TYPE &type, const uint &serial,
 	td->Color = color;
 	td->Timer = g_Ticks;
 	td->Type = type;
-	td->SetUnicodeText(text);
+	td->UnicodeText = text;
 	
 	switch (type)
 	{

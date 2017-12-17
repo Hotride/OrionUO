@@ -98,6 +98,9 @@ void CRenderStaticObject::UpdateTextCoordinates()
 //---------------------------------------------------------------------------
 void CRenderStaticObject::FixTextCoordinates()
 {
+	if (IsGameObject() && ((CGameObject*)this)->Container != 0xFFFFFFFF)
+		return;
+
 	int offsetY = 0;
 
 	int minX = g_RenderBounds.GameWindowPosX;
