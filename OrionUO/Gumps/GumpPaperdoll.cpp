@@ -578,8 +578,6 @@ void CGumpPaperdoll::UpdateContent()
 					int tileX = 4;
 					int tileY = 3 + yPtr;
 
-					bool drawed = false;
-
 					if (scaleImages && (tileOffsetX < 0 || tileOffsetY < 0))
 					{
 						short imageWidth = 0;
@@ -612,13 +610,31 @@ void CGumpPaperdoll::UpdateContent()
 						texture = new CGLTexture();
 						g_GL_BindTexture16(*texture, wantImageWidth, wantImageHeight, &wantPixels[0]);
 
-						CGUIExternalTexture *ext = (CGUIExternalTexture*)m_DataBox->Add(new CGUIExternalTexture(texture, true, tileX - 2, tileY - 2, 18, 18));
-						ext->DrawOnly = true;
+						if (wantImageWidth < 14)
+							tileX += 7 - (wantImageWidth / 2);
+						else
+						{
+							tileX -= 2;
 
-						drawed = true;
+							if (wantImageWidth > 18)
+								wantImageWidth = 18;
+						}
+
+						if (wantImageHeight < 14)
+							tileY += 7 - (wantImageHeight / 2);
+						else
+						{
+							tileY -= 2;
+
+							if (wantImageHeight > 18)
+								wantImageHeight = 18;
+						}
+
+						CGUIExternalTexture *ext = (CGUIExternalTexture*)m_DataBox->Add(new CGUIExternalTexture(texture, true, tileX, tileY, wantImageWidth, wantImageHeight));
+						ext->DrawOnly = true;
+						ext->Color = equipment->Color & 0x3FFF;
 					}
-					
-					if (!drawed)
+					else
 					{
 						tileX -= texture->ImageOffsetX - tileOffsetX;
 						tileY -= texture->ImageOffsetY - tileOffsetY;

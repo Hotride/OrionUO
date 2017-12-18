@@ -29,6 +29,7 @@ public:
 
 	virtual WISP_GEOMETRY::CSize GetSize();
 
+	virtual void SetShaderMode();
 	virtual void Draw(const bool &checktrans = false);
 	virtual bool Select();
 };
