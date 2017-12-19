@@ -1811,17 +1811,16 @@ void COrion::LoginComplete(const bool &reload)
 		InitScreen(GS_GAME);
 	}
 
-	if (load)
+	if (load && g_Player != NULL)
 	{
-		char buf[256] = { 0 };
+		string title = "Ultima Online - " + g_Player->Name;
+
 		CServer *server = g_ServerList.GetSelectedServer();
 
 		if (server != NULL)
-			sprintf_s(buf, "Ultima Online - %s (%s)", g_Player->Name.c_str(), server->Name.c_str());
-		else
-			sprintf_s(buf, "Ultima Online - %s", g_Player->Name.c_str());
+			title += " (" + server->Name + ")";
 
-		g_OrionWindow.SetTitle(buf);
+		g_OrionWindow.SetTitle(title);
 
 		CPacketSkillsRequest(g_PlayerSerial).Send();
 		g_UseItemActions.Add(g_PlayerSerial);

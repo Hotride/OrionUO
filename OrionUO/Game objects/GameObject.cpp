@@ -70,14 +70,14 @@ void CGameObject::SetName(const string &newName)
 	{
 		if (g_GameState >= GS_GAME)
 		{
-			char buf[256] = { 0 };
-			CServer *server = g_ServerList.GetSelectedServer();
-			if (server != NULL)
-				sprintf_s(buf, "Ultima Online - %s (%s)", newName.c_str(), server->Name.c_str());
-			else
-				sprintf_s(buf, "Ultima Online - %s", newName.c_str());
+			string title = "Ultima Online - " + g_Player->Name;
 
-			g_OrionWindow.SetTitle(buf);
+			CServer *server = g_ServerList.GetSelectedServer();
+
+			if (server != NULL)
+				title += " (" + server->Name + ")";
+
+			g_OrionWindow.SetTitle(title);
 		}
 
 		g_PluginManager.WindowProc(g_OrionWindow.Handle, UOMSG_SET_PLAYER_NAME, (WPARAM)newName.c_str(), 0);
