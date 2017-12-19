@@ -137,7 +137,7 @@ ushort CMacroManager::ConvertStringToKeyCode(const STRING_LIST &strings)
 bool CMacroManager::Convert(const string &path)
 {
 	WISPFUN_DEBUG("c145_f2");
-	WISP_FILE::CTextFileParser file(path, " ", "", "");
+	WISP_FILE::CTextFileParser file(path, "", "", "");
 	WISP_FILE::CTextFileParser unicodeParser("", " ", "", "");
 
 	//Позиции доп. кнопок в списке, индексация с конца, т.е. strings.size() - position
@@ -148,6 +148,7 @@ bool CMacroManager::Convert(const string &path)
 	while (!file.IsEOF())
 	{
 		vector<string> strings = file.ReadTokens();
+		strings = unicodeParser.GetTokens(file.RawLine.c_str(), false);
 		size_t size = strings.size();
 
 		if (!size)
@@ -164,13 +165,17 @@ bool CMacroManager::Convert(const string &path)
 
 		CMacro *macro = new CMacro(ConvertStringToKeyCode(strings), atoi(strings[size - MACRO_POSITION_ALT].c_str()), atoi(strings[size - MACRO_POSITION_CTRL].c_str()), atoi(strings[size - MACRO_POSITION_SHIFT].c_str()));
 
+		string TestLine = "";
 		while (!file.IsEOF())
 		{
-			vector<string> data = file.ReadTokens();
-
+			vector<string> datas = file.ReadTokens();
+			TestLine.append(file.RawLine);
+			if ((*file.RawLine.c_str() != '\n') && (*file.RawLine.c_str() != '\r') && (file.RawLine != "") && (*file.RawLine.c_str() != '#'))
+				continue;
+			vector<string> data = unicodeParser.GetTokens(TestLine.c_str(),false);
+			TestLine = "";
 			if (!data.size())
 				continue;
-
 			//Конец секции макросов
 			if (*data[0].c_str() == '#')
 			{
@@ -182,16 +187,8 @@ bool CMacroManager::Convert(const string &path)
 			}
 			else if (*data[0].c_str() == '+')
 			{
-				data.clear();
-				string raw = file.RawLine.c_str() + 1;
-				string newData = "";
-
-				for (int i = 0; i < (int)raw.length(); i += 2)
-					newData.push_back(raw[i]);
-
-				//LOG("Is raw unicode: %s\n", raw.c_str());
-				//LOG("Is unicode: %s\n", newData.c_str());
-				data = unicodeParser.GetTokens(newData.c_str(), false);
+				string raw = data[0].c_str() + 1;
+				data[0] = raw;
 			}
 
 			string upData = ToUpperA(data[0]);
@@ -204,15 +201,13 @@ bool CMacroManager::Convert(const string &path)
 					code = (MACRO_CODE)i;
 
 					//LOG("Action found (%i): %s\n", i, CMacro::m_MacroActionName[i]);
-
 					break;
 				}
 			}
-			
+
 			if (code != MC_NONE)
 			{
 				CMacroObject *obj = CMacro::CreateMacro(code);
-
 				if (obj->HaveString()) //Аргументы - строка
 				{
 					if (data.size() > 1)
@@ -248,6 +243,7 @@ bool CMacroManager::Convert(const string &path)
 						}
 					}
 				}
+				macro->Add(obj);
 			}
 		}
 
