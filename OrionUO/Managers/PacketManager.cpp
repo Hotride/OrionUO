@@ -762,6 +762,8 @@ PACKET_HANDLER(ResendCharacterList)
 		LOG("Warning!!! No slots in character list\n");
 	else
 	{
+		int selectedPos = -1;
+
 		IFOR(i, 0, numSlots)
 		{
 			string name = ReadString(30);
@@ -780,13 +782,16 @@ PACKET_HANDLER(ResendCharacterList)
 				{
 					g_CharacterList.Selected = (int)i;
 
-					if (autoLogin && autoPos == -1)
-						autoPos = (int)i;
+					if (autoLogin && selectedPos == -1)
+						selectedPos = (int)i;
 				}
 			}
 
 			LOG("%d: %s\n", i, name.c_str());
 		}
+
+		if (autoLogin && autoPos == -1)
+			autoPos = selectedPos;
 	}
 
 	if (autoLogin && numSlots)
