@@ -5633,7 +5633,7 @@ void COrion::PickupItem(CGameItem *obj, int count, const bool &isGameFigure)
 void COrion::DropItem(const uint &container, const ushort &x, const ushort &y, const char &z)
 {
 	WISPFUN_DEBUG("c194_f104");
-	if (g_ObjectInHand.Enabled)
+	if (g_ObjectInHand.Enabled && g_ObjectInHand.Serial != container)
 	{
 		if (g_PacketManager.ClientVersion >= CV_6017)
 			CPacketDropRequestNew(g_ObjectInHand.Serial, x, y, z, 0, container).Send();
