@@ -47,6 +47,7 @@
 !/bin/*.exe
 !/bin/*.pdb
 !/bin/*.sf2
+!/bin/OA/*.dll
 !/test_bin64/*.dll
 !/test_bin64/*.exe
 !/test_bin64/*.pdb
