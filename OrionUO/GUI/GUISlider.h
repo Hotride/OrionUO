@@ -33,7 +33,7 @@ class CGUISlider : public CBaseGUI
 	SETGET(int, Lenght, 0);
 
 	//!Смещение в процентах
-	SETGET(int, Percents, 0);
+	SETGET(float, Percents, 0.0f);
 
 	//!Смещение
 	SETGET(int, Offset, 0);

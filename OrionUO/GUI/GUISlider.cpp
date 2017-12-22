@@ -221,7 +221,7 @@ void CGUISlider::CalculateOffset()
 	if (th != NULL)
 		lenght -= (m_Vertical ? th->Height : th->Width);
 
-	m_Percents = (int)((value / (float)maxValue) * 100.0f);
+	m_Percents = ((value / (float)maxValue) * 100.0f);
 
 	m_Offset = (int)((lenght * m_Percents) / 100.0f);
 
