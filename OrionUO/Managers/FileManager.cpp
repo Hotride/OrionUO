@@ -105,8 +105,6 @@ bool CFileManager::Load()
 		return false;
 	else if (!m_HuesMul.Load(g_App.UOFilesPath("hues.mul")))
 		return false;
-	else if (!m_FontsMul.Load(g_App.UOFilesPath("fonts.mul")))
-		return false;
 	else if (!m_LightMul.Load(g_App.UOFilesPath("light.mul")))
 		return false;
 	else if (!m_MultiMul.Load(g_App.UOFilesPath("multi.mul")))
@@ -235,8 +233,6 @@ bool CFileManager::LoadWithUOP()
 		return false;
 	else if (!m_HuesMul.Load(g_App.UOFilesPath("hues.mul")))
 		return false;
-	else if (!m_FontsMul.Load(g_App.UOFilesPath("fonts.mul")))
-		return false;
 	else if (!m_LightMul.Load(g_App.UOFilesPath("light.mul")))
 		return false;
 	else if (!m_RadarcolMul.Load(g_App.UOFilesPath("radarcol.mul")))
@@ -323,7 +319,6 @@ void CFileManager::Unload()
 	m_AnimdataMul.Unload();
 
 	m_HuesMul.Unload();
-	m_FontsMul.Unload();
 
 	m_LightMul.Unload();
 	m_MultiMul.Unload();

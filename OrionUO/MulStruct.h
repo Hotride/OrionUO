@@ -315,7 +315,7 @@ typedef struct FONT_CHARACTER_DATA
 {
 	unsigned char Width;
 	unsigned char Height;
-	unsigned short *Data;
+	USHORT_LIST Data;
 } *PFONT_CHARACTER_DATA;
 //----------------------------------------------------------------------------------
 typedef struct FONT_DATA

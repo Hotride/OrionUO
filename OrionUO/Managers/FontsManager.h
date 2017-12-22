@@ -108,7 +108,7 @@ private:
 	WEBLINK_MAP m_WebLink;
 
 	//!Таблица ассоциации ASCII шрифтов
-	static const uchar m_FontIndex[256];
+	static uchar m_FontIndex[256];
 
 	//!Данные о юникод шрифтах: адрес, размер
 	size_t m_UnicodeFontAddress[20];
@@ -207,8 +207,6 @@ private:
 	@return true при успешной генерации
 	*/
 	bool GenerateWBase(const uchar &font, CGLTextTexture &th, const wstring &str, const ushort &color, const uchar &cell, const int &width, const TEXT_ALIGN_TYPE &align, const ushort &flags);
-
-	uchar GetCharIndexA(const uchar &c);
 
 public:
 	CFontsManager();

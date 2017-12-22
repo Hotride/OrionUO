@@ -71,7 +71,6 @@ public:
 	WISP_FILE::CMappedFile m_AnimdataMul;
 	WISP_FILE::CMappedFile m_ArtMul;
 	WISP_FILE::CMappedFile m_HuesMul;
-	WISP_FILE::CMappedFile m_FontsMul;
 	WISP_FILE::CMappedFile m_GumpMul;
 	WISP_FILE::CMappedFile m_LightMul;
 	WISP_FILE::CMappedFile m_MapMul[6];

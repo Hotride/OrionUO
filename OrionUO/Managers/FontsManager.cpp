@@ -35,7 +35,12 @@ CFontsManager::~CFontsManager()
 bool CFontsManager::LoadFonts()
 {
 	WISPFUN_DEBUG("c143_f3");
-	WISP_FILE::CMappedFile &fontFile = g_FileManager.m_FontsMul;
+
+	WISP_FILE::CMappedFile fontFile;
+
+	if (!fontFile.Load(g_App.UOFilesPath("fonts.mul")))
+		return false;
+
 	m_FontCount = 0;
 
 	while (!fontFile.IsEOF())
@@ -85,18 +90,14 @@ bool CFontsManager::LoadFonts()
 
 		IFOR(j, 0, 224)
 		{
-			PFONT_HEADER fh = (PFONT_HEADER)fontFile.Ptr;
-			fontFile.Move(sizeof(FONT_HEADER));
-
 			FONT_CHARACTER_DATA &fcd = fd.Chars[j];
-			fcd.Width = fh->Width;
-			fcd.Height = fh->Height;
+			fcd.Width = fontFile.ReadUInt8();
+			fcd.Height = fontFile.ReadUInt8();
+			fontFile.Move(1);
 
-			int bcount = fh->Width * fh->Height * 2;
-
-			fcd.Data = (pushort)fontFile.Ptr;
-
-			fontFile.Move(bcount);
+			int dataSize = fcd.Width * fcd.Height;
+			fcd.Data.resize(dataSize);
+			fontFile.ReadDataLE((puchar)&fcd.Data[0], dataSize * 2);
 		}
 	}
 
@@ -110,6 +111,12 @@ bool CFontsManager::LoadFonts()
 	{
 		m_UnicodeFontAddress[1] = m_UnicodeFontAddress[0];
 		m_UnicodeFontSize[1] = m_UnicodeFontSize[0];
+	}
+
+	IFOR(i, 0, 256)
+	{
+		if (m_FontIndex[i] >= 0xE0)
+			m_FontIndex[i] = m_FontIndex[' '];
 	}
 
 	return true;
@@ -136,8 +143,8 @@ void CFontsManager::GoToWebLink(ushort link)
 
 	if (it != m_WebLink.end())
 	{
-		(*it).second.Visited = true;
-		g_Orion.GoToWebLink((*it).second.WebLink);
+		it->second.Visited = true;
+		g_Orion.GoToWebLink(it->second.WebLink);
 	}
 }
 //----------------------------------------------------------------------------------
@@ -175,16 +182,6 @@ int CFontsManager::GetFontOffsetY(const uchar &font, const uchar &index)
 	}
 
 	return 0;
-}
-//----------------------------------------------------------------------------------
-uchar CFontsManager::GetCharIndexA(const uchar &c)
-{
-	uchar index = m_FontIndex[c];
-
-	if (index >= 0xE0)
-		index = m_FontIndex[' '];
-
-	return index;
 }
 //----------------------------------------------------------------------------------
 /*!
@@ -229,10 +226,7 @@ WISP_GEOMETRY::CPoint2Di CFontsManager::GetCaretPosA(const uchar &font, const st
 			{
 				IFOR(i, 0, len)
 				{
-					uchar index = GetCharIndexA((uchar)ptr->Data[i].item);
-
-					if (index >= 0xE0)
-						continue;
+					const uchar &index = m_FontIndex[(uchar)ptr->Data[i].item];
 
 					p.X += fd.Chars[index].Width;
 					pos--;
@@ -335,10 +329,7 @@ int CFontsManager::CalculateCaretPosA(const uchar &font, const string &str, cons
 
 				IFOR(i, 0, len)
 				{
-					uchar index = GetCharIndexA((uchar)ptr->Data[i].item);
-
-					if (index >= 0xE0)
-						continue;
+					const uchar &index = m_FontIndex[(uchar)ptr->Data[i].item];
 
 					width += fd.Chars[index].Width;
 
@@ -384,12 +375,7 @@ int CFontsManager::GetWidthA(const uchar &font, const string &str)
 
 	for (const char &c : str)
 	{
-		uchar index = GetCharIndexA((uchar)c);
-
-		if (index >= 0xE0)
-			continue;
-
-		textLength += fd.Chars[index].Width;
+		textLength += fd.Chars[m_FontIndex[(uchar)c]].Width;
 	}
 
 	return textLength;
@@ -505,10 +491,7 @@ string CFontsManager::GetTextByWidthA(const uchar &font, const string &str, int 
 
 	if (isCropped)
 	{
-		uchar idx = GetCharIndexA((uchar)'.');
-
-		if (idx < 0xE0)
-			width -= fd.Chars[idx].Width * 3;
+		width -= fd.Chars[m_FontIndex[(uchar)'.']].Width * 3;
 	}
 
 	int textLength = 0;
@@ -516,12 +499,7 @@ string CFontsManager::GetTextByWidthA(const uchar &font, const string &str, int 
 
 	for (const char &c : str)
 	{
-		uchar index = GetCharIndexA((uchar)c);
-
-		if (index >= 0xE0)
-			continue;
-
-		textLength += fd.Chars[index].Width;
+		textLength += fd.Chars[m_FontIndex[(uchar)c]].Width;
 
 		if (textLength > width)
 			break;
@@ -582,10 +560,6 @@ PMULTILINES_FONT_INFO CFontsManager::GetInfoA(uchar font, const char *str, int l
 				si = '\n';
 		}
 
-		uchar index = GetCharIndexA((uchar)si);
-		if (index >= 0xE0 && si != '\n')
-			continue;
-
 		if (si == ' ')
 		{
 			lastSpace = (int)i;
@@ -595,7 +569,7 @@ PMULTILINES_FONT_INFO CFontsManager::GetInfoA(uchar font, const char *str, int l
 			charCount = 0;
 		}
 
-		FONT_CHARACTER_DATA &fcd = fd.Chars[index];
+		FONT_CHARACTER_DATA &fcd = fd.Chars[m_FontIndex[(uchar)si]];
 
 		if (si == '\n' || ptr->Width + readWidth + fcd.Width > width)
 		{
@@ -885,11 +859,7 @@ UINT_LIST CFontsManager::GeneratePixelsA(const uchar &font, CGLTextTexture &th, 
 			uchar index = (uchar)ptr->Data[i].item;
 			int offsY = GetFontOffsetY(font, index);
 
-			index = GetCharIndexA(index);
-			if (index >= 0xE0)
-				continue;
-
-			FONT_CHARACTER_DATA &fcd = fd.Chars[index];
+			FONT_CHARACTER_DATA &fcd = fd.Chars[m_FontIndex[index]];
 
 			int dw = fcd.Width;
 			int dh = fcd.Height;
@@ -3006,7 +2976,7 @@ void CFontsManager::DrawW(const uchar &font, const wstring &str, const ushort &c
 }
 //----------------------------------------------------------------------------------
 //!Таблица ассоциации ASCII шрифтов
-const uchar CFontsManager::m_FontIndex[256] =
+uchar CFontsManager::m_FontIndex[256] =
 {
 	0xFF, //0
 	0xFF, //1
