@@ -3826,33 +3826,37 @@ void COrion::ProcessStaticAnimList()
 
 		for (deque<CIndexObjectStatic*>::iterator i = m_StaticAnimList.begin(); i != m_StaticAnimList.end(); ++i)
 		{
-			CIndexObjectStatic *obj = *i;
+			CIndexObjectStatic &obj = *(*i);
 
-			if (noAnimateFields && obj->IsFiled)
+			if (noAnimateFields && obj.IsFiled)
 			{
-				obj->AnimIndex = 0;
+				obj.AnimIndex = 0;
 				continue;
 			}
 
-			if (obj->ChangeTime < g_Ticks)
+			if (obj.ChangeTime < g_Ticks)
 			{
-				uint addr = (obj->Index * 68) + 4 * ((obj->Index / 8) + 1);
-				PANIM_DATA pad = (PANIM_DATA)(&m_AnimData[0] + addr);
+				uint addr = (obj.Index * 68) + 4 * ((obj.Index / 8) + 1);
+				ANIM_DATA &pad = *(PANIM_DATA)(&m_AnimData[0] + addr);
 
-				int offset = obj->AnimIndex;
+				int offset = obj.AnimIndex;
 
-				obj->ChangeTime = g_Ticks + (pad->FrameInterval * delay);
+				if (pad.FrameInterval > 0)
+					obj.ChangeTime = g_Ticks + (pad.FrameInterval * delay);
+				else
+					obj.ChangeTime = g_Ticks + delay;
 
-				if (offset < pad->FrameCount)
-					obj->Offset = pad->FrameData[offset++];
+				if (offset < pad.FrameCount)
+					obj.Offset = pad.FrameData[offset++];
 
-				if (offset >= pad->FrameCount)
+				if (offset >= pad.FrameCount)
 					offset = 0;
 
-				obj->AnimIndex = offset;
+				obj.AnimIndex = offset;
 			}
 
-			nextTime = min(nextTime, obj->ChangeTime);
+			if (obj.ChangeTime < nextTime)
+				nextTime = obj.ChangeTime;
 		}
 
 		g_ProcessStaticAnimationTimer = nextTime;
