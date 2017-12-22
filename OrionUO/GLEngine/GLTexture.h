@@ -10,7 +10,7 @@
 #ifndef GLTEXTURE_H
 #define GLTEXTURE_H
 //----------------------------------------------------------------------------------
-typedef vector<bool> HIT_MAP_TYPE;
+typedef vector<uchar> HIT_MAP_TYPE;
 //----------------------------------------------------------------------------------
 class CGLTexture
 {
