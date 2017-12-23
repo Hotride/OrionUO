@@ -164,31 +164,31 @@ bool CSocket::Connect(const string &address, const int &port)
 					switch (str[1])
 					{
 					case 1:
-						LOG("general SOCKS server failure\n", num);
+						LOG("general SOCKS server failure\n");
 						break;
 					case 2:
-						LOG("connection not allowed by ruleset\n", num);
+						LOG("connection not allowed by ruleset\n");
 						break;
 					case 3:
-						LOG("Network unreachable\n", num);
+						LOG("Network unreachable\n");
 						break;
 					case 4:
-						LOG("Host unreachable\n", num);
+						LOG("Host unreachable\n");
 						break;
 					case 5:
-						LOG("Connection refused\n", num);
+						LOG("Connection refused\n");
 						break;
 					case 6:
-						LOG("TTL expired\n", num);
+						LOG("TTL expired\n");
 						break;	
 					case 7:
-						LOG("Command not supported\n", num);
+						LOG("Command not supported\n");
 						break;
 					case 8:
-						LOG("Address type not supported\n", num);
+						LOG("Address type not supported\n");
 						break;
 					case 9:
-						LOG("to X'FF' unassigned\n", num);
+						LOG("to X'FF' unassigned\n");
 						break;
 					default:
 						LOG("proxy error != 10 <%d>\n", num);
