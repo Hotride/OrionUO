@@ -112,11 +112,12 @@ bool CSocket::Connect(const string &address, const int &port)
 			LOG("proxy connection open (auth)\n");
 			char str[255] = { 0 };
 			str[0] = 5;
-			str[1] = 1;
-			str[2] = 2;
-			::send(m_Socket, str, 3, 0);
-			::recv(m_Socket, str, 255, 0);
-			if (str[2] != 2)
+			str[1] = 2;
+			str[2] = 0;
+			str[3] = 2;
+			::send(m_Socket, str, 4, 0);
+			int num = ::recv(m_Socket, str, 255, 0);
+			if ((str[0] != 5) || (num != 2))
 			{
 				LOG("proxy error != 2\n");
 				closesocket(m_Socket);
@@ -156,7 +157,7 @@ bool CSocket::Connect(const string &address, const int &port)
 				memcpy(&str[8], &caddr.sin_port, 2);
 				::send(m_Socket, str, 10, 0);
 
-				int num = ::recv(m_Socket, str, 255, 0);
+				num = ::recv(m_Socket, str, 255, 0);
 
 				if (str[1] != 0)
 				{
