@@ -1283,7 +1283,9 @@ enum GAME_CONSOLE_TEXT_TYPE
 	GCTT_GUILD,
 	GCTT_ALLIANCE,
 	GCTT_PARTY_ACCEPT,
-	GCTT_PARTY_DECLINE
+	GCTT_PARTY_DECLINE,
+	GCTT_PARTY_ADD,
+	GCTT_PARTY_LEAVE
 };
 //----------------------------------------------------------------------------------
 enum SEASON_TYPE
