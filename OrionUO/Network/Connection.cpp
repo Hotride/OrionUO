@@ -110,13 +110,13 @@ bool CSocket::Connect(const string &address, const int &port)
 		else
 		{
 			LOG("proxy connection open (auth)\n");
-			char str[10] = { 0 };
+			char str[255] = { 0 };
 			str[0] = 5;
-			str[1] = 2;
+			str[1] = 1;
 			str[2] = 2;
-			::send(m_Socket, str, 4, 0);
-
-			if (::recv(m_Socket, str, 2, 0) != 2)
+			::send(m_Socket, str, 3, 0);
+			::recv(m_Socket, str, 255, 0);
+			if (str[2] != 2)
 			{
 				LOG("proxy error != 2\n");
 				closesocket(m_Socket);
@@ -136,8 +136,8 @@ bool CSocket::Connect(const string &address, const int &port)
 						buffer[1] = (char)m_ProxyAccount.length();
 						buffer[2 + (int)m_ProxyAccount.length()] = (char)m_ProxyPassword.length();
 						::send(m_Socket, &buffer[0], totalSize, 0);
-
-						if (::recv(m_Socket, str, 2, 0) != 2)
+						::recv(m_Socket, str, 255, 0);
+						if (str[1] != 0)
 						{
 							LOG("proxy error != 2 (2)\n");
 							closesocket(m_Socket);
@@ -156,15 +156,51 @@ bool CSocket::Connect(const string &address, const int &port)
 				memcpy(&str[8], &caddr.sin_port, 2);
 				::send(m_Socket, str, 10, 0);
 
-				int num = ::recv(m_Socket, str, 10, 0);
+				int num = ::recv(m_Socket, str, 255, 0);
 
-				if (num != 10)
+				if (str[1] != 0)
 				{
-					LOG("proxy error != 10 <%d>\n", num);
+					switch (str[1])
+					{
+					case 1:
+						LOG("general SOCKS server failure\n", num);
+						break;
+					case 2:
+						LOG("connection not allowed by ruleset\n", num);
+						break;
+					case 3:
+						LOG("Network unreachable\n", num);
+						break;
+					case 4:
+						LOG("Host unreachable\n", num);
+						break;
+					case 5:
+						LOG("Connection refused\n", num);
+						break;
+					case 6:
+						LOG("TTL expired\n", num);
+						break;	
+					case 7:
+						LOG("Command not supported\n", num);
+						break;
+					case 8:
+						LOG("Address type not supported\n", num);
+						break;
+					case 9:
+						LOG("to X'FF' unassigned\n", num);
+						break;
+					default:
+						LOG("proxy error != 10 <%d>\n", num);
+					}
+					
 					closesocket(m_Socket);
 					m_Socket = INVALID_SOCKET;
 					return WISP_NETWORK::CConnection::Connect(address, port);
 				}
+				LOG("Connected to server via proxy\n");
+				m_Connected = true;
+				WSASetLastError(0);
+				m_MessageParser->Clear();
 			}
 		}
 	}
