@@ -126,7 +126,7 @@ void CGameConsole::Send(wstring text, const ushort &defaultColor)
 
 					return;
 				}
-				else if (m_Type == GCTT_PARTY_ADD)
+				else if (type == GCTT_PARTY_ADD)
 				{
 					if (g_Party.Leader == 0 || g_Party.Leader == g_PlayerSerial)
 						CPacketPartyInviteRequest().Send();
@@ -135,7 +135,7 @@ void CGameConsole::Send(wstring text, const ushort &defaultColor)
 
 					return;
 				}
-				else if (m_Type == GCTT_PARTY_LEAVE)
+				else if (type == GCTT_PARTY_LEAVE)
 				{
 					if (g_Party.Leader != 0)
 					{
