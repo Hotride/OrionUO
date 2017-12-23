@@ -126,6 +126,30 @@ void CGameConsole::Send(wstring text, const ushort &defaultColor)
 
 					return;
 				}
+				else if (type == GCTT_PARTY_ADD)
+				{
+					if (g_Party.Leader == 0 || g_Party.Leader == g_PlayerSerial)
+						CPacketPartyInviteRequest().Send();
+					else
+						g_Orion.CreateTextMessage(TT_SYSTEM, 0, 3, 0, "You are not party leader.");
+
+					return;
+				}
+				else if (type == GCTT_PARTY_LEAVE)
+				{
+					if (g_Party.Leader != 0)
+					{
+						IFOR(i, 0, 10)
+						{
+							if (g_Party.Member[i].Serial != 0)
+								CPacketPartyRemoveRequest(g_Party.Member[i].Serial).Send();
+						}
+					}
+					else
+						g_Orion.CreateTextMessage(TT_SYSTEM, 0xFFFFFFFF, 3, 0, "You are not in a party.");
+
+					return;
+				}
 			}
 
 		}
@@ -175,12 +199,12 @@ wstring CGameConsole::IsSystemCommand(const wchar_t *text, size_t &len, int &mem
 			}
 		}
 
-		if (type == GCTT_NORMAL && len >= 7)
+		if (type == GCTT_NORMAL && len >= 4 && len <= 8)
 		{
-			int lLen = 7;
+			int lLen = 4;
 
-			if (len > 7)
-				lLen++;
+			if (len > 4)
+				lLen = len;
 
 			char lBuf[10] = {0};
 
@@ -188,12 +212,19 @@ wstring CGameConsole::IsSystemCommand(const wchar_t *text, size_t &len, int &mem
 
 			_strlwr(lBuf);
 
-			if (!memcmp(&lBuf[0], "/accept", 7)) //Party accept
+			if (!memcmp(&lBuf[0], "/add", 4)) //Party add
+				type = GCTT_PARTY_ADD;
+			else if ((!memcmp(&lBuf[0], "/quit", 5)) || (!memcmp(&lBuf[0], "/leave", 6))) //Party leave & quit
+				type = GCTT_PARTY_LEAVE;
+			else if (memcmp(&lBuf[0], "/accept", 7)) //Party accept
 				type = GCTT_PARTY_ACCEPT;
 			else if (!memcmp(&lBuf[0], "/decline", 8)) //Party decline
 				type = GCTT_PARTY_DECLINE;
 		}
-
+		
+		if ((type == GCTT_PARTY_ADD || type == GCTT_PARTY_LEAVE || type == GCTT_PARTY_ACCEPT || type == GCTT_PARTY_DECLINE) && !result.length())
+			result = L"Party:";
+		
 		if (type == GCTT_NORMAL && !result.length())
 		{
 			result = L"Party:";
