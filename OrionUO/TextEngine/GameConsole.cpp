@@ -199,7 +199,7 @@ wstring CGameConsole::IsSystemCommand(const wchar_t *text, size_t &len, int &mem
 			}
 		}
 
-		if (m_Type == GCTT_NORMAL && len >= 4 && len <= 8)
+		if (type == GCTT_NORMAL && len >= 4 && len <= 8)
 		{
 			int lLen = 4;
 
