@@ -126,6 +126,30 @@ void CGameConsole::Send(wstring text, const ushort &defaultColor)
 
 					return;
 				}
+				else if (m_Type == GCTT_PARTY_ADD)
+				{
+					if (g_Party.Leader == 0 || g_Party.Leader == g_PlayerSerial)
+						CPacketPartyInviteRequest().Send();
+					else
+						g_Orion.CreateTextMessage(TT_SYSTEM, 0, 3, 0, "You are not party leader.");
+
+					return;
+				}
+				else if (m_Type == GCTT_PARTY_LEAVE)
+				{
+					if (g_Party.Leader != 0)
+					{
+						IFOR(i, 0, 10)
+						{
+							if (g_Party.Member[i].Serial != 0)
+								CPacketPartyRemoveRequest(g_Party.Member[i].Serial).Send();
+						}
+					}
+					else
+						g_Orion.CreateTextMessage(TT_SYSTEM, 0xFFFFFFFF, 3, 0, "You are not in a party.");
+
+					return;
+				}
 			}
 
 		}
