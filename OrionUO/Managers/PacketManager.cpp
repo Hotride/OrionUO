@@ -4433,8 +4433,8 @@ PACKET_HANDLER(OpenGump)
 				int index = ToInt(list[6]);
 				int textIndex = ToInt(list[7]);
 
-				if (color)
-					color++;
+				//if (color)
+				//	color++;
 
 				gump->Add(new CGUIHitBox(index + 1, x, y, width, height));
 				gump->Add(new CGUIScissor(true, x, y, 0, 0, width, height));
@@ -4456,8 +4456,8 @@ PACKET_HANDLER(OpenGump)
 				int textIndex = ToInt(list[7]);
 				int length = ToInt(list[8]);
 
-				if (color)
-					color++;
+				//if (color)
+				//	color++;
 
 				gump->Add(new CGUIHitBox(index + 1, x, y, width, height));
 				gump->Add(new CGUIScissor(true, x, y, 0, 0, width, height));
