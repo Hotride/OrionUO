@@ -28,6 +28,6 @@ void CGUIGenericText::CreateTexture(const wstring &str)
 	if (m_MaxWidth)
 		flags |= UOFONT_CROPPED;
 
-	CreateTextureW((uchar)(g_PacketManager.ClientVersion >= CV_308Z), str, 30, m_MaxWidth, TS_LEFT, flags);
+	CreateTextureW((uchar)(g_PacketManager.ClientVersion >= CV_305D), str, 30, m_MaxWidth, TS_LEFT, flags);
 }
 //----------------------------------------------------------------------------------

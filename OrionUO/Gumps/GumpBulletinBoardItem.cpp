@@ -19,7 +19,7 @@ m_Variant(variant)
 	m_ID = id;
 	m_MinHeight = 200;
 
-	bool useUnicode = (g_PacketManager.ClientVersion >= CV_308Z);
+	bool useUnicode = (g_PacketManager.ClientVersion >= CV_305D);
 	int unicodeFontIndex = 1;
 	int unicodeHeightOffset = 0;
 	ushort textColor = 0x0386;

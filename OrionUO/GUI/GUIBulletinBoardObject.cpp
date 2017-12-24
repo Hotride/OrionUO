@@ -17,7 +17,7 @@ CGUIBulletinBoardObject::CGUIBulletinBoardObject(const uint &serial, const int &
 	WISPFUN_DEBUG("c43_f1");
 	m_MoveOnDrag = true;
 
-	if (g_PacketManager.ClientVersion >= CV_308Z)
+	if (g_PacketManager.ClientVersion >= CV_305D)
 		g_FontManager.GenerateW(1, m_Texture, text, 0);
 	else
 		g_FontManager.GenerateA(9, m_Texture, ToString(text), 0x0386);
