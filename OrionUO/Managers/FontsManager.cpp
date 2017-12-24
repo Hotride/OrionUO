@@ -1645,6 +1645,7 @@ HTML_DATA_INFO CFontsManager::GetCurrentHTMLInfo(const HTMLINFO_LIST &list)
 				info.Align = current.Align;
 				break;
 			case HTT_DIV:
+				info.Align = current.Align;
 				break;
 			default:
 				break;
@@ -1791,6 +1792,22 @@ void CFontsManager::GetHTMLInfoFromContent(HTML_DATA_INFO &info, const string &c
 					info.Flags = UOFONT_UNDERLINE;
 					info.Color = m_WebLinkColor;
 					info.Link = GetWebLinkID(value, info.Color);
+				}
+
+				break;
+			}
+			case HTT_DIV:
+			{
+				if (str == "align")
+				{
+					str = ToLowerA(value);
+
+					if (str == "left")
+						info.Align = TS_LEFT;
+					else if (str == "center")
+						info.Align = TS_CENTER;
+					else if (str == "right")
+						info.Align = TS_RIGHT;
 				}
 
 				break;
