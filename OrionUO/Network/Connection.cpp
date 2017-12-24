@@ -29,63 +29,33 @@ bool CSocket::Connect(const string &address, const int &port)
 	{
 		if (m_Connected)
 			return false;
-		else if (m_Socket == INVALID_SOCKET)
-		{
-			m_Socket = socket(m_Af, m_Type, m_Protocol);
-
-			if (m_Socket == INVALID_SOCKET)
-				return false;
-		}
-
-
-
-		sockaddr_in caddr;
-		memset(&caddr, 0, sizeof(sockaddr_in));
-		caddr.sin_family = AF_INET;
-
-		int rt = inet_addr(address.c_str());
-
-		if (rt != -1)
-			caddr.sin_addr.s_addr = rt;
-		else
-		{
-			struct hostent *uohe = gethostbyname(address.c_str());
-
-			if (uohe == NULL)
-				return false;
-
-			memcpy(&caddr.sin_addr, uohe->h_addr, uohe->h_length);
-		}
-
-		caddr.sin_port = htons(port);
-
-
-
-		struct sockaddr_in sin;
-
-		memset(&sin, 0, sizeof(sin));
-		sin.sin_family = AF_INET;
-		sin.sin_port = htons(m_ProxyPort);
 
 		LOG("using proxy %s:%d\n", m_ProxyAddress.c_str(), m_ProxyPort);
 
-		int r = inet_addr(m_ProxyAddress.c_str());
-
-		if (r != -1)
-			sin.sin_addr.s_addr = r;
-		else
-		{
-			struct hostent *he = gethostbyname(m_ProxyAddress.c_str());
-
-			if (he == NULL)
-				return false;
-
-			memcpy(&sin.sin_addr, he->h_addr, he->h_length);
-		}
-
-		if (connect(m_Socket, (struct sockaddr*)&sin, sizeof(sin)) == -1)
+		if (!CConnection::Connect(m_ProxyAddress, m_ProxyPort))
 		{
 			LOG("Can't connect to proxy\n");
+			return WISP_NETWORK::CConnection::Connect(address, port);
+		}
+
+		ushort serverPort = htons(port);
+		uint serverIP = inet_addr(address.c_str());
+
+		if (serverIP == 0xFFFFFFFF)
+		{
+			struct hostent *uohe = gethostbyname(address.c_str());
+
+			if (uohe != NULL)
+			{
+				sockaddr_in caddr;
+				memcpy(&caddr.sin_addr, uohe->h_addr, uohe->h_length);
+				serverIP = caddr.sin_addr.S_un.S_addr;
+			}
+		}
+
+		if (serverIP == 0xFFFFFFFF)
+		{
+			LOG("Unknowm server address\n");
 			return WISP_NETWORK::CConnection::Connect(address, port);
 		}
 
@@ -95,11 +65,12 @@ bool CSocket::Connect(const string &address, const int &port)
 			char str[9] = { 0 };
 			str[0] = 4;
 			str[1] = 1;
-			memcpy(&str[2], &caddr.sin_port, 2);
-			memcpy(&str[4], &caddr.sin_addr.S_un.S_addr, 4);
+			memcpy(&str[2], &serverPort, 2);
+			memcpy(&str[4], &serverIP, 4);
 			::send(m_Socket, str, 9, 0);
+			int recvSize = ::recv(m_Socket, str, 8, 0);
 
-			if (::recv(m_Socket, str, 8, 0) != 8)
+			if (recvSize != 8)
 			{
 				LOG("proxy error != 8\n");
 				closesocket(m_Socket);
@@ -153,8 +124,8 @@ bool CSocket::Connect(const string &address, const int &port)
 				str[1] = 1;
 				str[2] = 0;
 				str[3] = 1;
-				memcpy(&str[4], &caddr.sin_addr.S_un.S_addr, 4);
-				memcpy(&str[8], &caddr.sin_port, 2);
+				memcpy(&str[4], &serverIP, 4);
+				memcpy(&str[8], &serverPort, 2);
 				::send(m_Socket, str, 10, 0);
 
 				num = ::recv(m_Socket, str, 255, 0);
