@@ -29,12 +29,13 @@ bool CSocket::Connect(const string &address, const int &port)
 	{
 		if (m_Connected)
 			return false;
-
-		LOG("using proxy %s:%d\n", m_ProxyAddress.c_str(), m_ProxyPort);
-
+		LOG("Connecting using proxy %s:%d\n", m_ProxyAddress.c_str(), m_ProxyPort);
 		if (!CConnection::Connect(m_ProxyAddress, m_ProxyPort))
 		{
 			LOG("Can't connect to proxy\n");
+			m_Socket = INVALID_SOCKET;
+			m_Connected = false;
+			LOG("Connecting...%s:%i\n", address.c_str(), port);
 			return WISP_NETWORK::CConnection::Connect(address, port);
 		}
 
@@ -56,51 +57,39 @@ bool CSocket::Connect(const string &address, const int &port)
 		if (serverIP == 0xFFFFFFFF)
 		{
 			LOG("Unknowm server address\n");
+			closesocket(m_Socket);
+			m_Socket = INVALID_SOCKET;
+			m_Connected = false;
+			LOG("Connecting...%s:%i\n", address.c_str(), port);
 			return WISP_NETWORK::CConnection::Connect(address, port);
 		}
 
-		if (!m_ProxySocks5)
+		if (m_ProxySocks5)
 		{
-			LOG("proxy connection open\n");
-			char str[9] = { 0 };
-			str[0] = 4;
-			str[1] = 1;
-			memcpy(&str[2], &serverPort, 2);
-			memcpy(&str[4], &serverIP, 4);
-			::send(m_Socket, str, 9, 0);
-			int recvSize = ::recv(m_Socket, str, 8, 0);
-
-			if (recvSize != 8)
-			{
-				LOG("proxy error != 8\n");
-				closesocket(m_Socket);
-				m_Socket = INVALID_SOCKET;
-				return WISP_NETWORK::CConnection::Connect(address, port);
-			}
-		}
-		else
-		{
-			LOG("proxy connection open (auth)\n");
+			LOG("Proxy Server Version 5 Selected\n");
 			char str[255] = { 0 };
-			str[0] = 5;
-			str[1] = 2;
-			str[2] = 0;
-			str[3] = 2;
+			str[0] = 5;		//Proxy Version
+			str[1] = 2;		//Number of authentication method
+			str[2] = 0;		//No auth required
+			str[3] = 2;		//Username/Password auth
 			::send(m_Socket, str, 4, 0);
 			int num = ::recv(m_Socket, str, 255, 0);
 			if ((str[0] != 5) || (num != 2))
 			{
-				LOG("proxy error != 2\n");
+				LOG("Proxy Server Version Missmatch\n");
 				closesocket(m_Socket);
 				m_Socket = INVALID_SOCKET;
+				m_Connected = false;
+				LOG("Connecting...%s:%i\n", address.c_str(), port);
 				return WISP_NETWORK::CConnection::Connect(address, port);
 			}
 			else
 			{
-				if (str[1])
+				if ((str[1] == 0) || (str[1] == 2))
 				{
 					if (str[1] == 2)
 					{
+						LOG("Proxy wants Username/Password\n");
 						int totalSize = 3 + (int)m_ProxyAccount.length() + (int)m_ProxyPassword.length();
 						vector<char> buffer(totalSize, 0);
 						sprintf(&buffer[0], "  %s %s", m_ProxyAccount.c_str(), m_ProxyPassword.c_str());
@@ -111,69 +100,124 @@ bool CSocket::Connect(const string &address, const int &port)
 						::recv(m_Socket, str, 255, 0);
 						if (str[1] != 0)
 						{
-							LOG("proxy error != 2 (2)\n");
+							LOG("Wrong Username/Password\n");
 							closesocket(m_Socket);
 							m_Socket = INVALID_SOCKET;
+							m_Connected = false;
+							LOG("Connecting...%s:%i\n", address.c_str(), port);
 							return WISP_NETWORK::CConnection::Connect(address, port);
 						}
 					}
-				}
-
-				memset(str, 0, 10);
-				str[0] = 5;
-				str[1] = 1;
-				str[2] = 0;
-				str[3] = 1;
-				memcpy(&str[4], &serverIP, 4);
-				memcpy(&str[8], &serverPort, 2);
-				::send(m_Socket, str, 10, 0);
-
-				num = ::recv(m_Socket, str, 255, 0);
-
-				if (str[1] != 0)
-				{
-					switch (str[1])
+					memset(str, 0, 10);
+					str[0] = 5;
+					str[1] = 1;
+					str[2] = 0;
+					str[3] = 1;
+					memcpy(&str[4], &serverIP, 4);
+					memcpy(&str[8], &serverPort, 2);
+					::send(m_Socket, str, 10, 0);
+					num = ::recv(m_Socket, str, 255, 0);
+					if (str[1] != 0)
 					{
-					case 1:
-						LOG("general SOCKS server failure\n");
-						break;
-					case 2:
-						LOG("connection not allowed by ruleset\n");
-						break;
-					case 3:
-						LOG("Network unreachable\n");
-						break;
-					case 4:
-						LOG("Host unreachable\n");
-						break;
-					case 5:
-						LOG("Connection refused\n");
-						break;
-					case 6:
-						LOG("TTL expired\n");
-						break;	
-					case 7:
-						LOG("Command not supported\n");
-						break;
-					case 8:
-						LOG("Address type not supported\n");
-						break;
-					case 9:
-						LOG("to X'FF' unassigned\n");
-						break;
-					default:
-						LOG("proxy error != 10 <%d>\n", num);
+						switch (str[1])
+						{
+						case 1:
+							LOG("general SOCKS server failure\n");
+							break;
+						case 2:
+							LOG("connection not allowed by ruleset\n");
+							break;
+						case 3:
+							LOG("Network unreachable\n");
+							break;
+						case 4:
+							LOG("Host unreachable\n");
+							break;
+						case 5:
+							LOG("Connection refused\n");
+							break;
+						case 6:
+							LOG("TTL expired\n");
+							break;
+						case 7:
+							LOG("Command not supported\n");
+							break;
+						case 8:
+							LOG("Address type not supported\n");
+							break;
+						case 9:
+							LOG("to X'FF' unassigned\n");
+							break;
+						default:
+							LOG("Unknown Error <%d> recieved\n", str[1]);
+						}
+
+						closesocket(m_Socket);
+						m_Socket = INVALID_SOCKET;
+						m_Connected = false;
+						LOG("Connecting...%s:%i\n", address.c_str(), port);
+						return WISP_NETWORK::CConnection::Connect(address, port);
 					}
-					
+					LOG("Connected to server via proxy\n");
+				}
+				else
+				{
+					LOG("No acceptable methods\n");
 					closesocket(m_Socket);
 					m_Socket = INVALID_SOCKET;
+					m_Connected = false;
+					LOG("Connecting...%s:%i\n", address.c_str(), port);
 					return WISP_NETWORK::CConnection::Connect(address, port);
 				}
-				LOG("Connected to server via proxy\n");
-				m_Connected = true;
-				WSASetLastError(0);
-				m_MessageParser->Clear();
 			}
+		}
+		else
+		{
+			LOG("Proxy Server Version 4 Selected\n");
+			char str[9] = { 0 };
+			str[0] = 4;
+			str[1] = 1;
+			memcpy(&str[2], &serverPort, 2);
+			memcpy(&str[4], &serverIP, 4);
+			::send(m_Socket, str, 9, 0);
+			int recvSize = ::recv(m_Socket, str, 8, 0);
+			if ((recvSize != 8) || (str[0] != 0) || (str[1] != 90))
+			{
+				if (str[0] == 5)
+				{
+					LOG("Proxy Server Version is 5\n");
+					LOG("Trying  SOCKS5\n");
+					closesocket(m_Socket);
+					m_Socket = INVALID_SOCKET;
+					m_Connected = false;
+					m_ProxySocks5 = true;
+					return Connect(address, port);
+				}
+				switch (str[1])
+				{
+				case 1:
+				case 91:
+					LOG("Proxy request rejected or failed\n");
+					break;
+				case 2:
+				case 92:
+					LOG("Proxy rejected becasue SOCKS server cannot connect to identd on the client\n");
+					break;
+				case 3:
+				case 93:
+					LOG("Proxy rejected becasue SOCKS server cannot connect to identd on the client\n");
+					break;
+				default:
+					LOG("Unknown Error <%d> recieved\n", str[1]);
+					break;
+				}
+				closesocket(m_Socket);
+				m_Socket = INVALID_SOCKET;
+				m_Connected = false;
+				LOG("Connecting...%s:%i\n", address.c_str(), port);
+				return WISP_NETWORK::CConnection::Connect(address, port);
+			}
+			LOG("Connected to server via proxy\n");
 		}
 	}
 	else
