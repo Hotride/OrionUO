@@ -159,7 +159,12 @@ void COrion::ParseCommandLine()
 		else if (str == "fastlogin")
 			fastLogin = true;
 		else if (str == "autologinname")
-			g_PacketManager.AutoLoginNames = string("|") + DecodeArgumentString(strings[1].c_str(), (int)strings[1].length());
+		{
+			if (g_PacketManager.AutoLoginNames.length())
+				g_PacketManager.AutoLoginNames = string("|") + DecodeArgumentString(strings[1].c_str(), (int)strings[1].length()) + g_PacketManager.AutoLoginNames;
+			else
+				g_PacketManager.AutoLoginNames = string("|") + DecodeArgumentString(strings[1].c_str(), (int)strings[1].length());
+		}
 		else if (str == "nowarnings")
 			g_ShowWarnings = false;
 	}
