@@ -840,28 +840,6 @@ CPacketGameWindowSize::CPacketGameWindowSize()
 	WriteUInt32BE(g_ConfigManager.GameWindowHeight);
 }
 //---------------------------------------------------------------------------
-CPacketOpenGuildGump::CPacketOpenGuildGump()
-: CPacket(10)
-{
-	WriteUInt8(0xD7);
-	WriteUInt16BE(0x000A);
-	WriteUInt16BE(0x0002);
-	WriteUInt32BE(g_PlayerSerial);
-	WriteUInt16BE(0x0028);
-	WriteUInt16BE(0x07);
-}
-//---------------------------------------------------------------------------
-CPacketOpenQuestGump::CPacketOpenQuestGump()
-: CPacket(10)
-{
-	WriteUInt8(0xD7);
-	WriteUInt16BE(0x000A);
-	WriteUInt16BE(0x0002);
-	WriteUInt32BE(g_PlayerSerial);
-	WriteUInt16BE(0x0032);
-	WriteUInt16BE(0x07);
-}
-//---------------------------------------------------------------------------
 CPacketClientViewRange::CPacketClientViewRange(uchar range)
 : CPacket(2)
 {
@@ -1084,6 +1062,16 @@ CPacketQuestMenuRequest::CPacketQuestMenuRequest()
 	WriteUInt16BE(0x000A);
 	WriteUInt32BE(g_PlayerSerial);
 	WriteUInt16BE(0x0032);
+	WriteUInt8(0x0A);
+}
+//---------------------------------------------------------------------------
+CPacketEquipLastWeapon::CPacketEquipLastWeapon()
+: CPacket(10)
+{
+	WriteUInt8(0xD7);
+	WriteUInt16BE(0x000A);
+	WriteUInt32BE(g_PlayerSerial);
+	WriteUInt16BE(0x001E);
 	WriteUInt8(0x0A);
 }
 //---------------------------------------------------------------------------

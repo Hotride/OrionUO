@@ -312,18 +312,6 @@ public:
 	CPacketGameWindowSize();
 };
 //----------------------------------------------------------------------------------
-class CPacketOpenGuildGump : public CPacket
-{
-public:
-	CPacketOpenGuildGump();
-};
-//----------------------------------------------------------------------------------
-class CPacketOpenQuestGump : public CPacket
-{
-public:
-	CPacketOpenQuestGump();
-};
-//----------------------------------------------------------------------------------
 class CPacketClientViewRange : public CPacket
 {
 public:
@@ -412,6 +400,12 @@ class CPacketQuestMenuRequest : public CPacket
 {
 public:
 	CPacketQuestMenuRequest();
+};
+//----------------------------------------------------------------------------------
+class CPacketEquipLastWeapon : public CPacket
+{
+public:
+	CPacketEquipLastWeapon();
 };
 //----------------------------------------------------------------------------------
 class CPacketVirtureRequest : public CPacket

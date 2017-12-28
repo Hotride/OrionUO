@@ -520,13 +520,13 @@ void CMacroManager::ProcessSubMenu()
 				}
 				case MSC_G2_GUILD:
 				{
-					CPacketOpenGuildGump().Send();
+					CPacketGuildMenuRequest().Send();
 
 					break;
 				}
 				case MSC_G2_QUEST_LOG:
 				{
-					CPacketOpenQuestGump().Send();
+					CPacketQuestMenuRequest().Send();
 
 					break;
 				}
@@ -1367,8 +1367,12 @@ MACRO_RETURN_CODE CMacroManager::Process(CMacroObject *macro)
 
 			break;
 		}
-		case MC_KILL_GUMP_OPEN:
 		case MC_EQUIP_LAST_WEAPON:
+		{
+			CPacketEquipLastWeapon().Send();
+			break;
+		}
+		case MC_KILL_GUMP_OPEN:
 		{
 			g_Orion.CreateTextMessage(TT_SYSTEM, 0xFFFFFFFF, 3, 0x77, "That macro is not work now");
 
