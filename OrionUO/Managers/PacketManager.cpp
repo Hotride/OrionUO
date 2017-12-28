@@ -153,7 +153,7 @@ CPacketInfo CPacketManager::m_Packets[0x100] =
 	/*0x79*/ BMSG(ORION_SAVE_PACKET, "Resource query (God client)", 0x09),
 	/*0x7A*/ BMSG(ORION_SAVE_PACKET, "Resource data (God client)", PACKET_VARIABLE_SIZE),
 	/*0x7B*/ RMSG(ORION_SAVE_PACKET, "Sequence?", 0x02),
-	/*0x7C*/ RMSGH(ORION_IGNORE_PACKET, "Open Menu Gump", PACKET_VARIABLE_SIZE, OpenMenuGump),
+	/*0x7C*/ RMSGH(ORION_IGNORE_PACKET, "Open Menu Gump", PACKET_VARIABLE_SIZE, OpenMenu),
 	/*0x7D*/ SMSG(ORION_IGNORE_PACKET, "Menu Choice", 0x0d),
 	/*0x7E*/ BMSG(ORION_SAVE_PACKET, "God view query (God client)", 0x02),
 	/*0x7F*/ BMSG(ORION_SAVE_PACKET, "God view data (God client)", PACKET_VARIABLE_SIZE),
@@ -4021,7 +4021,7 @@ PACKET_HANDLER(TextEntryDialog)
 	g_GumpManager.AddGump(gump);
 }
 //----------------------------------------------------------------------------------
-PACKET_HANDLER(OpenMenuGump)
+PACKET_HANDLER(OpenMenu)
 {
 	WISPFUN_DEBUG("c150_f82");
 	if (g_World == NULL)
@@ -4097,10 +4097,10 @@ PACKET_HANDLER(OpenMenuGump)
 		CGUIResizepic *background = (CGUIResizepic*)gump->Add(new CGUIResizepic(0, 0x13EC, 0, 0, 400, 11111));
 
 		CGUIText *text = (CGUIText*)gump->Add(new CGUIText(0x0386, 20, 16));
-		text->CreateTextureA(1, name);
+		text->CreateTextureA(1, name, 370);
 
-		int offsetY = 51;
-		int gumpHeight = 121;
+		int offsetY = 35 + text->m_Texture.Height;
+		int gumpHeight = 70 + offsetY;
 
 		IFOR(i, 0, count)
 		{

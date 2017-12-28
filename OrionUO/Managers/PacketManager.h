@@ -164,7 +164,7 @@ protected:
 	HANDLER_PACKET(BuffDebuff);
 	HANDLER_PACKET(SecureTrading);
 	HANDLER_PACKET(TextEntryDialog);
-	HANDLER_PACKET(OpenMenuGump);
+	HANDLER_PACKET(OpenMenu);
 	HANDLER_PACKET(OpenGump);
 	HANDLER_PACKET(OpenCompressedGump);
 	HANDLER_PACKET(DyeData);
