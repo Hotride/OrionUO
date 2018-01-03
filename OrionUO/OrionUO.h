@@ -129,7 +129,7 @@ public:
 	void LoadLocalConfig(const uint &serial);
 
 	//Сохранение конфига персонажа
-	void SaveLocalConfig();
+	void SaveLocalConfig(const uint &serial);
 
 	CIndexObjectLand m_LandDataIndex[MAX_LAND_DATA_INDEX_COUNT];
 	CIndexObjectStatic m_StaticDataIndex[MAX_STATIC_DATA_INDEX_COUNT];
