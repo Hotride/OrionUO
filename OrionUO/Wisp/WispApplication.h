@@ -14,7 +14,7 @@ class CApplication
 	SETGET(wstring, UOFilesPathW, L"");
 
 protected:
-	virtual void OnIDLELoop() {}
+	virtual void OnMainLoop() {}
 
 public:
 	CApplication();

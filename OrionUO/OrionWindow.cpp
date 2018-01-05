@@ -54,15 +54,6 @@ COrionWindow::~COrionWindow()
 {
 }
 //----------------------------------------------------------------------------------
-void COrionWindow::SetRenderTimerDelay(const int &delay)
-{
-	WISPFUN_DEBUG("c195_f1");
-	WISP_THREADED_TIMER::CThreadedTimer *timer = GetThreadedTimer(RENDER_TIMER_ID);
-
-	if (timer != NULL)
-		timer->ChangeDelay(delay);
-}
-//----------------------------------------------------------------------------------
 bool COrionWindow::OnCreate()
 {
 	WISPFUN_DEBUG("c195_f2");
@@ -77,10 +68,6 @@ bool COrionWindow::OnCreate()
 		return false;
 
 	g_GL.UpdateRect();
-
-	CreateThreadedTimer(RENDER_TIMER_ID, FRAME_DELAY_ACTIVE_WINDOW, false, true, true);
-	//CreateThreadedTimer(UPDATE_TIMER_ID, 10);
-	CreateTimer(UPDATE_TIMER_ID, 10);
 
 	return true;
 }
@@ -300,7 +287,7 @@ void COrionWindow::OnActivate()
 {
 	WISPFUN_DEBUG("c195_f17");
 	g_Orion.ResumeSound();
-	SetRenderTimerDelay(g_FrameDelay[1]);
+	m_RenderTimerDelay = g_FrameDelay[1];
 
 	if (!g_PluginManager.Empty())
 		g_PluginManager.WindowProc(m_Handle, WM_NCACTIVATE, 1, 0);
@@ -311,7 +298,7 @@ void COrionWindow::OnDeactivate()
 	WISPFUN_DEBUG("c195_f18");
 	g_Orion.PauseSound();
 	if (g_ConfigManager.ReduceFPSUnactiveWindow)
-		SetRenderTimerDelay(g_FrameDelay[0]);
+		m_RenderTimerDelay = g_FrameDelay[0];
 
 	if (!g_PluginManager.Empty())
 		g_PluginManager.WindowProc(m_Handle, WM_NCACTIVATE, 0, 0);
@@ -385,12 +372,7 @@ void COrionWindow::OnSetText(const LPARAM &lParam)
 void COrionWindow::OnTimer(uint id)
 {
 	WISPFUN_DEBUG("c195_f25");
-	if (id == UPDATE_TIMER_ID)
-	{
-		g_Ticks = timeGetTime();
-		g_Orion.Process(false);
-	}
-	else if (id == FASTLOGIN_TIMER_ID)
+	if (id == FASTLOGIN_TIMER_ID)
 	{
 		RemoveTimer(FASTLOGIN_TIMER_ID);
 		g_Orion.Connect();
@@ -400,16 +382,6 @@ void COrionWindow::OnTimer(uint id)
 void COrionWindow::OnThreadedTimer(uint nowTime, WISP_THREADED_TIMER::CThreadedTimer *timer)
 {
 	WISPFUN_DEBUG("c195_f26");
-	g_Ticks = nowTime;
-
-	if (timer->TimerID == RENDER_TIMER_ID)
-	{
-		g_Orion.Process(true);
-	}
-	else if (timer->TimerID == UPDATE_TIMER_ID)
-	{
-		g_Orion.Process(false);
-	}
 }
 //----------------------------------------------------------------------------------
 LRESULT COrionWindow::OnUserMessages(const UINT &message, const WPARAM &wParam, const LPARAM &lParam)

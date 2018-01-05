@@ -13,9 +13,24 @@
 //----------------------------------------------------------------------------------
 COrionApplication g_App;
 //----------------------------------------------------------------------------------
-void COrionApplication::OnIDLELoop()
+void COrionApplication::OnMainLoop()
 {
 	WISPFUN_DEBUG("c193_f1");
-	g_ConnectionManager.Recv();
+
+	g_Ticks = timeGetTime();
+
+	if (m_NextRenderTime <= g_Ticks)
+	{
+		m_NextUpdateTime = g_Ticks + 50;
+		m_NextRenderTime = g_Ticks + g_OrionWindow.RenderTimerDelay;
+
+		g_Orion.Process(true);
+	}
+	else if (m_NextUpdateTime <= g_Ticks)
+	{
+		m_NextUpdateTime = g_Ticks + 50;
+
+		g_Orion.Process(false);
+	}
 }
 //----------------------------------------------------------------------------------
