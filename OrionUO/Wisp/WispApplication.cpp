@@ -48,8 +48,6 @@ int CApplication::Run(HINSTANCE hinstance)
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
 		}
-		else
-			Sleep(1);
 
 		OnMainLoop();
 	}

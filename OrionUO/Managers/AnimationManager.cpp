@@ -996,6 +996,13 @@ void CAnimationManager::InitIndexReplaces(puint verdata)
 ANIMATION_GROUPS CAnimationManager::GetGroupIndex(const ushort &id)
 {
 	WISPFUN_DEBUG("c133_f5");
+
+	if (id >= MAX_ANIMATIONS_DATA_INDEX_COUNT)
+	{
+		//LOG("GetGroupIndex: Invalid ID: 0x%04X\n", id);
+		return AG_HIGHT;
+	}
+
 	switch (m_DataIndex[id].Type)
 	{
 		case AGT_ANIMAL:

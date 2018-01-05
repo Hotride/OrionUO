@@ -834,8 +834,6 @@ void CGameCharacter::UpdateAnimationInfo(BYTE &dir, const bool &canChange)
 	if (!m_Steps.empty())
 	{
 		CWalkData &wd = m_Steps.front();
-
-		m_TimeToRandomFidget = g_Ticks + RANDOM_FIDGET_ANIMATION_DELAY;
 		
 		dir = wd.Direction;
 		int run = 0;
@@ -958,6 +956,8 @@ void CGameCharacter::UpdateAnimationInfo(BYTE &dir, const bool &canChange)
 				m_OffsetZ = 0;
 
 				m_Steps.pop_front();
+
+				m_TimeToRandomFidget = g_Ticks + RANDOM_FIDGET_ANIMATION_DELAY;
 
 				if (directionChange)
 				{

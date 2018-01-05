@@ -21,16 +21,18 @@ void COrionApplication::OnMainLoop()
 
 	if (m_NextRenderTime <= g_Ticks)
 	{
-		m_NextUpdateTime = g_Ticks + 50;
+		//m_NextUpdateTime = g_Ticks + 50;
 		m_NextRenderTime = g_Ticks + g_OrionWindow.RenderTimerDelay;
 
 		g_Orion.Process(true);
 	}
-	else if (m_NextUpdateTime <= g_Ticks)
+	/*else if (m_NextUpdateTime <= g_Ticks)
 	{
 		m_NextUpdateTime = g_Ticks + 50;
 
 		g_Orion.Process(false);
-	}
+	}*/
+	else
+		Sleep(1);
 }
 //----------------------------------------------------------------------------------
