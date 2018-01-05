@@ -357,15 +357,15 @@ void CMacro::GetBoundByCode(const MACRO_CODE &code, int &count, int &offset)
 		case MC_CAST_SPELL:
 		{
 			offset = MSC_G6_CLUMSY;
-			count = MSC_G7_HOSTLE - MSC_G6_CLUMSY;
+			count = MSC_G7_HOSTILE - MSC_G6_CLUMSY;
 			break;
 		}
 		case MC_SELECT_NEXT:
 		case MC_SELECT_PREVEOUS:
 		case MC_SELECT_NEAREST:
 		{
-			offset = MSC_G7_HOSTLE;
-			count = MSC_TOTAL_COUNT - MSC_G7_HOSTLE;
+			offset = MSC_G7_HOSTILE;
+			count = MSC_TOTAL_COUNT - MSC_G7_HOSTILE;
 			break;
 		}
 		default:
@@ -645,7 +645,7 @@ const char *CMacro::m_MacroAction[MACRO_ACTION_COUNT] =
 	"Perseverance",
 	"Tribulation",
 	"Despair",
-	"Hostle", //Select Next/Previous/Nearest group
+	"Hostile", //Select Next/Previous/Nearest group
 	"Party",
 	"Follower",
 	"Object",

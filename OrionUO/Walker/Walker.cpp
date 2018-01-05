@@ -58,6 +58,9 @@ void CWalker::DenyWalk(const uchar &sequence, const int &x, const int &y, const 
 
 		g_RemoveRangeXY.X = x;
 		g_RemoveRangeXY.Y = y;
+
+		UOI_PLAYER_XYZ_DATA xyzData = { g_RemoveRangeXY.X, g_RemoveRangeXY.Y, 0 };
+		g_PluginManager.WindowProc(g_OrionWindow.Handle, UOMSG_UPDATE_REMOVE_POS, (WPARAM)&xyzData, 0);
 	}
 }
 //----------------------------------------------------------------------------------
@@ -114,6 +117,11 @@ void CWalker::ConfirmWalk(const uchar &sequence)
 		m_WalkingFailed = true;
 		m_StepsCount = 0;
 		m_CurrentWalkSequence = 0;
+	}
+	else
+	{
+		UOI_PLAYER_XYZ_DATA xyzData = { g_RemoveRangeXY.X, g_RemoveRangeXY.Y, 0 };
+		g_PluginManager.WindowProc(g_OrionWindow.Handle, UOMSG_UPDATE_REMOVE_POS, (WPARAM)&xyzData, 0);
 	}
 }
 //----------------------------------------------------------------------------------

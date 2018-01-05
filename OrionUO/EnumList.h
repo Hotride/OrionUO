@@ -44,7 +44,7 @@ enum RENDER_OBJECT_TYPE
 //!Тип объекта поиска
 enum SCAN_TYPE_OBJECT
 {
-	STO_HOSTLE = 0,
+	STO_HOSTILE = 0,
 	STO_PARTY,
 	STO_FOLLOWERS,
 	STO_OBJECTS,
@@ -450,7 +450,8 @@ enum ORION_COMMAND_TYPE
 	OCT_RENAME_MOUNT_REQUEST = 109,
 	OCT_RECONNECT = 110,
 	OCT_PLAY_MACRO = 111,
-	OCT_MOVE_PAPERDOLL = 112
+	OCT_MOVE_PAPERDOLL = 112,
+	OCT_USE_ABILITY = 113
 };
 //----------------------------------------------------------------------------------
 enum ORION_FILE_INDEX
@@ -1256,7 +1257,7 @@ enum MACRO_SUB_CODE
 	MSC_G6_PERSEVERANCE,
 	MSC_G6_TRIBULATION,
 	MSC_G6_DESPAIR,
-	MSC_G7_HOSTLE, //Select Next/Preveous/Nearest group
+	MSC_G7_HOSTILE, //Select Next/Preveous/Nearest group
 	MSC_G7_PARTY,
 	MSC_G7_FOLLOWER,
 	MSC_G7_OBJECT,

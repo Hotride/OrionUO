@@ -758,7 +758,7 @@ CGameObject *CGameWorld::SearchWorldObject(const uint &serialStart, const int &s
 						condition = (!obj->NPC && !((CGameItem*)obj)->MultiBody);
 					else if (obj->NPC && !obj->IsPlayer())
 					{
-						if (scanType == STO_HOSTLE)
+						if (scanType == STO_HOSTILE)
 						{
 							CGameCharacter *gc = obj->GameCharacterPtr();
 
@@ -1012,6 +1012,9 @@ void CGameWorld::UpdatePlayer(const uint &serial, const ushort &graphic, const u
 
 		g_RemoveRangeXY.X = x;
 		g_RemoveRangeXY.Y = y;
+
+		UOI_PLAYER_XYZ_DATA xyzData = { g_RemoveRangeXY.X, g_RemoveRangeXY.Y, 0 };
+		g_PluginManager.WindowProc(g_OrionWindow.Handle, UOMSG_UPDATE_REMOVE_POS, (WPARAM)&xyzData, 0);
 
 		g_GameScreen.UpdateDrawPos = true;
 

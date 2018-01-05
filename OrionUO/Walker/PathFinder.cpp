@@ -598,9 +598,6 @@ bool CPathFinder::Walk(bool run, uchar direction)
 
 	CPacketWalkRequest(direction, g_Walker.WalkSequence, g_Player->m_FastWalkStack.GetValue()).Send();
 
-	g_PingByWalk[g_Walker.WalkSequence][0] = g_Ticks;
-	g_PingByWalk[g_Walker.WalkSequence][1] = g_Ticks;
-
 	if (g_Walker.WalkSequence == 0xFF)
 		g_Walker.WalkSequence = 1;
 	else

@@ -83,10 +83,6 @@ extern bool g_LogoutAfterClick;
 //!Значения задержек в массиве
 extern int g_FrameDelay[2];
 
-//!Счетчик стека пинга
-extern uint g_PingByPacket;
-extern uint g_PingByPacketSendTime;
-
 //!Время последней отправки пакета серверу
 extern uint g_LastSendTime;
 
@@ -247,7 +243,6 @@ const int g_ObjectHandlesWidthOffset = g_ObjectHandlesWidth / 2;
 const int g_ObjectHandlesHeight = 20;
 extern ushort g_ObjectHandlesBackgroundPixels[g_ObjectHandlesWidth * g_ObjectHandlesHeight];
 
-extern uint g_PingByWalk[0x100][2];
 extern uint g_Ping;
 
 extern bool g_DrawAura;

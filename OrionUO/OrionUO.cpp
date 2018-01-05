@@ -1106,11 +1106,9 @@ void COrion::Process(const bool &rendering)
 	g_PacketManager.SendMegaClilocRequests();
 	g_MouseManager.Update();
 
-	if (g_GameState >= GS_CHARACTER && (g_PingByPacketSendTime + SEND_TIMEOUT_DELAY) < g_Ticks)
+	if (g_GameState >= GS_CHARACTER && (g_LastSendTime + SEND_TIMEOUT_DELAY) < g_Ticks)
 	{
-		//классик клиент постоянно присылает 0
 		uchar ping[2] = { 0x73, 0};
-		g_PingByPacketSendTime = g_Ticks;
 		Send(ping, 2);
 	}
 
@@ -1386,6 +1384,7 @@ void COrion::LoadPluginConfig()
 	g_PluginClientInterface.ClilocManager = &g_Interface_ClilocManager;
 	g_PluginClientInterface.ColorManager = &g_Interface_ColorManager;
 	g_PluginClientInterface.PathFinder = &g_Interface_PathFinder;
+	//g_PluginClientInterface.FileManager = &g_Interface_FileManager;
 
 	STRING_LIST libName;
 	STRING_LIST functions;
@@ -1420,18 +1419,6 @@ void COrion::LoadPluginConfig()
 					compressedSize = staticObj.UopBlock->CompressedSize;
 
 				CPluginPacketStaticArtGraphicDataInfo(i, staticObj.Address, staticObj.DataSize, compressedSize).SendToPlugin();
-			}
-
-			CIndexGump &gumpObj = m_GumpDataIndex[i];
-
-			if (gumpObj.Address)
-			{
-				uint64 compressedSize = 0;
-
-				if (gumpObj.UopBlock)
-					compressedSize = gumpObj.UopBlock->CompressedSize;
-
-				CPluginPacketGumpArtGraphicDataInfo(i, gumpObj.Address, gumpObj.DataSize, compressedSize, gumpObj.Width, gumpObj.Height).SendToPlugin();
 			}
 		}
 

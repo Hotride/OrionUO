@@ -241,8 +241,8 @@ const int CHANGE_MACRO_DELAY = 100;
 //!Задержка между прокруткой макросов в опциях
 const int CHANGE_MACRO_LIST_DELAY = 500;
 
-//!Задержка между отправкой последнего пакета и Ping (0x73) пакетом, 20 секунд
-const int SEND_TIMEOUT_DELAY = 20000;
+//!Задержка между отправкой последнего пакета и Ping (0x73) пакетом, 55 секунд
+const int SEND_TIMEOUT_DELAY = 55000;
 
 //!Шаг в пикселях при прокрутке предметов в меню
 const int GUMP_MENU_PIXEL_STEP = 5;

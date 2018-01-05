@@ -1307,7 +1307,7 @@ MACRO_RETURN_CODE CMacroManager::Process(CMacroObject *macro)
 			if (g_ConfigManager.DisableNewTargetSystem)
 				break;
 				
-			SCAN_TYPE_OBJECT scanType = (SCAN_TYPE_OBJECT)(macro->SubCode - MSC_G7_HOSTLE);
+			SCAN_TYPE_OBJECT scanType = (SCAN_TYPE_OBJECT)(macro->SubCode - MSC_G7_HOSTILE);
 
 			CGameObject *obj = g_World->SearchWorldObject(g_NewTargetSystem.Serial, 10, scanType, (SCAN_MODE_OBJECT)(macro->Code - MC_SELECT_NEXT));
 
@@ -1327,7 +1327,7 @@ MACRO_RETURN_CODE CMacroManager::Process(CMacroObject *macro)
 			}
 			else
 			{
-				const char *resultNames[5] = {"Hostles", "Party Members", "Followers", "Objects", "Mobiles"};
+				const char *resultNames[5] = {"Hostiles", "Party Members", "Followers", "Objects", "Mobiles"};
 
 				g_Orion.CreateUnicodeTextMessageF(0, 0x038A, "There are no %s on the screen to select.", resultNames[scanType]);
 			}

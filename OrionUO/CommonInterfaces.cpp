@@ -394,6 +394,261 @@ bool __cdecl FUNCBODY_GetAutowalking()
 	return g_PathFinder.AutoWalking;
 }
 //----------------------------------------------------------------------------------
+//IFileManager
+//----------------------------------------------------------------------------------
+void __cdecl FUNCBODY_GetFileInfo(unsigned int index, ORION_RAW_FILE_INFO &info)
+{
+	WISP_FILE::CMappedFile *file = NULL;
+	unsigned int extra = 0;
+
+	switch (index)
+	{
+		case OFI_TILEDATA_MUL:
+		{
+			file = &g_FileManager.m_TiledataMul;
+			break;
+		}
+		case OFI_MULTI_IDX:
+		{
+			file = &g_FileManager.m_MultiIdx;
+			break;
+		}
+		case OFI_MULTI_MUL:
+		{
+			file = &g_FileManager.m_MultiMul;
+			break;
+		}
+		case OFI_MULTI_UOP:
+		{
+			file = &g_FileManager.m_MultiCollection;
+			break;
+		}
+		case OFI_HUES_MUL:
+		{
+			file = &g_FileManager.m_HuesMul;
+			break;
+		}
+		case OFI_VERDATA_MUL:
+		{
+			file = &g_FileManager.m_VerdataMul;
+			break;
+		}
+		case OFI_RADARCOL_MUL:
+		{
+			file = &g_FileManager.m_RadarcolMul;
+			break;
+		}
+		case OFI_MAP_0_MUL:
+		case OFI_MAP_1_MUL:
+		case OFI_MAP_2_MUL:
+		case OFI_MAP_3_MUL:
+		case OFI_MAP_4_MUL:
+		case OFI_MAP_5_MUL:
+		{
+			file = &g_FileManager.m_MapMul[index - OFI_MAP_0_MUL];
+			break;
+		}
+		case OFI_MAP_0_UOP:
+		case OFI_MAP_1_UOP:
+		case OFI_MAP_2_UOP:
+		case OFI_MAP_3_UOP:
+		case OFI_MAP_4_UOP:
+		case OFI_MAP_5_UOP:
+		{
+			file = &g_FileManager.m_MapUOP[index - OFI_MAP_0_UOP];
+			break;
+		}
+		case OFI_MAPX_0_UOP:
+		case OFI_MAPX_1_UOP:
+		case OFI_MAPX_2_UOP:
+		case OFI_MAPX_3_UOP:
+		case OFI_MAPX_4_UOP:
+		case OFI_MAPX_5_UOP:
+		{
+			file = &g_FileManager.m_MapXUOP[index - OFI_MAPX_0_UOP];
+			break;
+		}
+		case OFI_STAIDX_0_MUL:
+		case OFI_STAIDX_1_MUL:
+		case OFI_STAIDX_2_MUL:
+		case OFI_STAIDX_3_MUL:
+		case OFI_STAIDX_4_MUL:
+		case OFI_STAIDX_5_MUL:
+		{
+			file = &g_FileManager.m_StaticIdx[index - OFI_STAIDX_0_MUL];
+			break;
+		}
+		case OFI_STATICS_0_MUL:
+		case OFI_STATICS_1_MUL:
+		case OFI_STATICS_2_MUL:
+		case OFI_STATICS_3_MUL:
+		case OFI_STATICS_4_MUL:
+		case OFI_STATICS_5_MUL:
+		{
+			file = &g_FileManager.m_StaticMul[index - OFI_STATICS_0_MUL];
+			break;
+		}
+		case OFI_MAP_DIF_0_MUL:
+		case OFI_MAP_DIF_1_MUL:
+		case OFI_MAP_DIF_2_MUL:
+		case OFI_MAP_DIF_3_MUL:
+		case OFI_MAP_DIF_4_MUL:
+		case OFI_MAP_DIF_5_MUL:
+		{
+			file = &g_FileManager.m_MapDif[index - OFI_MAP_DIF_0_MUL];
+			break;
+		}
+		case OFI_MAP_DIFL_0_MUL:
+		case OFI_MAP_DIFL_1_MUL:
+		case OFI_MAP_DIFL_2_MUL:
+		case OFI_MAP_DIFL_3_MUL:
+		case OFI_MAP_DIFL_4_MUL:
+		case OFI_MAP_DIFL_5_MUL:
+		{
+			file = &g_FileManager.m_MapDifl[index - OFI_MAP_DIFL_0_MUL];
+			break;
+		}
+		case OFI_STA_DIF_0_MUL:
+		case OFI_STA_DIF_1_MUL:
+		case OFI_STA_DIF_2_MUL:
+		case OFI_STA_DIF_3_MUL:
+		case OFI_STA_DIF_4_MUL:
+		case OFI_STA_DIF_5_MUL:
+		{
+			file = &g_FileManager.m_StaDif[index - OFI_STA_DIF_0_MUL];
+			break;
+		}
+		case OFI_STA_DIFI_0_MUL:
+		case OFI_STA_DIFI_1_MUL:
+		case OFI_STA_DIFI_2_MUL:
+		case OFI_STA_DIFI_3_MUL:
+		case OFI_STA_DIFI_4_MUL:
+		case OFI_STA_DIFI_5_MUL:
+		{
+			file = &g_FileManager.m_StaDifi[index - OFI_STA_DIFI_0_MUL];
+			break;
+		}
+		case OFI_STA_DIFL_0_MUL:
+		case OFI_STA_DIFL_1_MUL:
+		case OFI_STA_DIFL_2_MUL:
+		case OFI_STA_DIFL_3_MUL:
+		case OFI_STA_DIFL_4_MUL:
+		case OFI_STA_DIFL_5_MUL:
+		{
+			file = &g_FileManager.m_StaDifl[index - OFI_STA_DIFL_0_MUL];
+			break;
+		}
+		case OFI_CLILOC_MUL:
+		{
+			QFOR(item, g_ClilocManager.m_Items, CCliloc*)
+			{
+				if (item->Loaded && item->m_File.Start != NULL && item->Language == "enu")
+				{
+					file = &item->m_File;
+					extra = 'ENU';
+					break;
+				}
+			}
+
+			break;
+		}
+		default:
+			break;
+	}
+
+	if (file != NULL)
+	{
+		info.Address = (unsigned __int64)file->Start;
+		info.Size = (unsigned __int64)file->Size;
+		info.Extra = extra;
+	}
+	else
+	{
+		info.Address = 0;
+		info.Size = 0;
+		info.Extra = 0;
+	}
+}
+//----------------------------------------------------------------------------------
+void __cdecl FUNCBODY_GetLandArtInfo(unsigned short index, ORION_RAW_ART_INFO &info)
+{
+	if (index < MAX_LAND_DATA_INDEX_COUNT)
+	{
+		CIndexObjectLand &landData = g_Orion.m_LandDataIndex[index];
+
+		if (landData.Address != NULL)
+		{
+			info.Address = (unsigned __int64)landData.Address;
+			info.Size = (unsigned __int64)landData.DataSize;
+
+			if (landData.UopBlock != NULL)
+				info.CompressedSize = (unsigned __int64)landData.UopBlock->CompressedSize;
+			else
+				info.CompressedSize = 0;
+
+			return;
+		}
+	}
+
+	info.Address = 0;
+	info.Size = 0;
+	info.CompressedSize = 0;
+}
+//----------------------------------------------------------------------------------
+void __cdecl FUNCBODY_GetStaticArtInfo(unsigned short index, ORION_RAW_ART_INFO &info)
+{
+	if (index < MAX_STATIC_DATA_INDEX_COUNT)
+	{
+		CIndexObjectStatic &staticData = g_Orion.m_StaticDataIndex[index];
+
+		if (staticData.Address != NULL)
+		{
+			info.Address = (unsigned __int64)staticData.Address;
+			info.Size = (unsigned __int64)staticData.DataSize;
+
+			if (staticData.UopBlock != NULL)
+				info.CompressedSize = (unsigned __int64)staticData.UopBlock->CompressedSize;
+			else
+				info.CompressedSize = 0;
+
+			return;
+		}
+	}
+
+	info.Address = 0;
+	info.Size = 0;
+	info.CompressedSize = 0;
+}
+//----------------------------------------------------------------------------------
+void __cdecl FUNCBODY_GetGumpArtInfo(unsigned short index, ORION_RAW_GUMP_INFO &info)
+{
+	if (index < MAX_GUMP_DATA_INDEX_COUNT)
+	{
+		CIndexGump &gumpData = g_Orion.m_GumpDataIndex[index];
+
+		if (gumpData.Address != NULL)
+		{
+			info.Address = (unsigned __int64)gumpData.Address;
+			info.Size = (unsigned __int64)gumpData.DataSize;
+			info.Width = gumpData.Width;
+			info.Height = gumpData.Height;
+
+			if (gumpData.UopBlock != NULL)
+				info.CompressedSize = (unsigned __int64)gumpData.UopBlock->CompressedSize;
+			else
+				info.CompressedSize = 0;
+
+			return;
+		}
+	}
+
+	info.Address = 0;
+	info.Size = 0;
+	info.CompressedSize = 0;
+	info.Width = 0;
+	info.Height = 0;
+}
+//----------------------------------------------------------------------------------
 //----------------------------------------------------------------------------------
 //----------------------------------------------------------------------------------
 IGLEngine g_Interface_GL =
@@ -472,5 +727,15 @@ IPathFinder g_Interface_PathFinder =
 	FUNCBODY_GetWalkTo,
 	FUNCBODY_GetStopAutowalk,
 	FUNCBODY_GetAutowalking
+};
+//----------------------------------------------------------------------------------
+IFileManager g_Interface_FileManager =
+{
+	0,
+	sizeof(IFileManager),
+	FUNCBODY_GetFileInfo,
+	FUNCBODY_GetLandArtInfo,
+	FUNCBODY_GetStaticArtInfo,
+	FUNCBODY_GetGumpArtInfo
 };
 //----------------------------------------------------------------------------------

@@ -28,9 +28,6 @@ bool g_LogoutAfterClick = false;
 
 int g_FrameDelay[2] = { FRAME_DELAY_UNACTIVE_WINDOW, FRAME_DELAY_ACTIVE_WINDOW };
 
-uint g_PingByPacket = 0;
-uint g_PingByPacketSendTime = 0;
-
 uint g_LastSendTime = 0;
 uint g_LastPacketTime = 0;
 uint g_TotalSendSize = 0;
@@ -141,7 +138,6 @@ DEVELOPER_MODE g_OptionsDeveloperMode = DM_SHOW_FPS_ONLY;
 
 ushort g_ObjectHandlesBackgroundPixels[g_ObjectHandlesWidth * g_ObjectHandlesHeight] = { 0 };
 
-uint g_PingByWalk[0x100][2] = { 0 };
 uint g_Ping = 0;
 
 bool g_DrawAura = false;

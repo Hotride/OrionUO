@@ -30,6 +30,29 @@ public:
 //----------------------------------------------------------------------------------
 #pragma pack (push,1)
 //----------------------------------------------------------------------------------
+struct ORION_RAW_FILE_INFO
+{
+	unsigned __int64 Address;
+	unsigned __int64 Size;
+	unsigned int Extra;
+};
+//----------------------------------------------------------------------------------
+struct ORION_RAW_ART_INFO
+{
+	unsigned __int64 Address;
+	unsigned __int64 Size;
+	unsigned __int64 CompressedSize;
+};
+//----------------------------------------------------------------------------------
+struct ORION_RAW_GUMP_INFO
+{
+	unsigned __int64 Address;
+	unsigned __int64 Size;
+	unsigned __int64 CompressedSize;
+	int Width;
+	int Height;
+};
+//----------------------------------------------------------------------------------
 //IGLEngine
 typedef void __cdecl FUNCDEF_PUSH_SCISSOR(int, int, int, int);
 typedef void __cdecl FUNCDEF_POP_SCISSOR();
@@ -87,6 +110,12 @@ typedef bool __cdecl FUNCDEF_GET_WALK(bool, unsigned char);
 typedef bool __cdecl FUNCDEF_GET_WALK_TO(int, int, int, int);
 typedef void __cdecl FUNCDEF_GET_STOP_AUTOWALK();
 typedef bool __cdecl FUNCDEF_GET_AUTOWALKING();
+
+//IFileManager
+typedef void __cdecl FUNCDEF_GET_FILE_INFO(unsigned int, ORION_RAW_FILE_INFO&);
+typedef void __cdecl FUNCDEF_GET_LAND_ART_INFO(unsigned short, ORION_RAW_ART_INFO&);
+typedef void __cdecl FUNCDEF_GET_STATIC_ART_INFO(unsigned short, ORION_RAW_ART_INFO&);
+typedef void __cdecl FUNCDEF_GET_GUMP_ART_INFO(unsigned short, ORION_RAW_GUMP_INFO&);
 //----------------------------------------------------------------------------------
 UOInterface IGLEngine
 {
@@ -169,11 +198,22 @@ UOInterface IPathFinder
 	FUNCDEF_GET_AUTOWALKING *GetAutowalking;
 };
 //----------------------------------------------------------------------------------
+UOInterface IFileManager
+{
+	int Version;
+	int Size;
+	FUNCDEF_GET_FILE_INFO *GetFileInfo;
+	FUNCDEF_GET_LAND_ART_INFO *GetLandArtInfo;
+	FUNCDEF_GET_STATIC_ART_INFO *GetStaticArtInfo;
+	FUNCDEF_GET_GUMP_ART_INFO *GetGumpArtInfo;
+};
+//----------------------------------------------------------------------------------
 extern IGLEngine g_Interface_GL;
 extern IUltimaOnline g_Interface_UO;
 extern IClilocManager g_Interface_ClilocManager;
 extern IColorManager g_Interface_ColorManager;
 extern IPathFinder g_Interface_PathFinder;
+extern IFileManager g_Interface_FileManager;
 //----------------------------------------------------------------------------------
 typedef struct PLUGIN_CLIENT_INTERFACE
 {
@@ -184,6 +224,7 @@ typedef struct PLUGIN_CLIENT_INTERFACE
 	IClilocManager *ClilocManager;
 	IColorManager *ColorManager;
 	IPathFinder *PathFinder;
+	IFileManager *FileManager;
 } *PPLUGIN_CLIENT_INTERFACE;
 //----------------------------------------------------------------------------------
 #pragma pack (pop)

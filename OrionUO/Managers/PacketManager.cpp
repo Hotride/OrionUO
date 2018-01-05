@@ -871,6 +871,9 @@ PACKET_HANDLER(EnterWorld)
 	g_RemoveRangeXY.X = g_Player->X;
 	g_RemoveRangeXY.Y = g_Player->Y;
 
+	UOI_PLAYER_XYZ_DATA xyzData = { g_RemoveRangeXY.X, g_RemoveRangeXY.Y, 0 };
+	g_PluginManager.WindowProc(g_OrionWindow.Handle, UOMSG_UPDATE_REMOVE_POS, (WPARAM)&xyzData, 0);
+
 	g_Player->OffsetX = 0;
 	g_Player->OffsetY = 0;
 	g_Player->OffsetZ = 0;
@@ -1894,7 +1897,6 @@ PACKET_HANDLER(Ping)
 {
 	WISPFUN_DEBUG("c150_f40");
 	g_Ping = 0;
-	g_PingByPacket = g_Ticks - g_PingByPacketSendTime;
 }
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(SetWeather)
@@ -2705,30 +2707,6 @@ PACKET_HANDLER(ConfirmWalk)
 		return;
 
 	uchar sequence = ReadUInt8();
-
-	g_PingByWalk[sequence][1] = g_Ticks;
-
-	if (sequence >= 10 && !(sequence % 10))
-	{
-		g_Ping = 0;
-
-		IFOR(i, 0, 10)
-		{
-			int delay = g_PingByWalk[sequence - i][1] - g_PingByWalk[sequence - i][0];
-
-			if (delay > 0)
-			{
-				if (delay >= 600)
-					delay = 0;
-				else
-					delay--;
-			}
-
-			g_Ping += delay;
-		}
-
-		g_Ping /= 10;
-	}
 
 	//player->SetDirection(newdir);
 
@@ -5769,7 +5747,7 @@ PACKET_HANDLER(OrionMessages)
 						{
 							if (param == CMacro::m_MacroAction[i])
 							{
-								macroCode = (MACRO_CODE)i;
+								macro->SubCode = (MACRO_SUB_CODE)i;
 								break;
 							}
 						}
@@ -5808,6 +5786,14 @@ PACKET_HANDLER(OrionMessages)
 					gump->Y = y;
 				}
 			}
+
+			break;
+		}
+		case OCT_USE_ABILITY:
+		{
+			CGumpAbility::OnAbilityUse(ReadUInt8() % 2);
+
+			break;
 		}
 		default:
 			break;
