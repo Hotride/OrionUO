@@ -1183,6 +1183,9 @@ void CGameScreen::DrawGameWindow(const bool &mode)
 				{
 					CGameCharacter *gc = (CGameCharacter*)obj;
 
+					if (g_ConfigManager.DrawStatusForHumanoids && !gc->IsHuman())
+						continue;
+
 					ushort color = g_ConfigManager.GetColorByNotoriety(gc->Notoriety);
 
 					//usual color

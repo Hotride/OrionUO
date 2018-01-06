@@ -510,6 +510,11 @@ void CGumpOptions::InitToolTip()
 				g_ToolTip.Set(L"Cancel new target system target on Shift+Esc only");
 				break;
 			}
+			case ID_GO_P2_DRAW_STATUS_FOR_HUMANOIDS:
+			{
+				g_ToolTip.Set(L"Draw status in the world only for humanoids (humans, elfs, gargoyles)");
+				break;
+			}
 			case ID_GO_P2_DEV_MODE_1:
 			{
 				g_ToolTip.Set(L"Original client work");
@@ -928,6 +933,10 @@ void CGumpOptions::DrawPage2()
 
 	text = (CGUIText*)html->Add(new CGUIText(g_OptionsTextColor, 0, 120));
 	text->CreateTextureW(0, L"Draw character's status in game window");
+
+	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P2_DRAW_STATUS_FOR_HUMANOIDS, 0x00D2, 0x00D3, 0x00D2, 300, 120));
+	checkbox->Checked = g_OptionsConfig.DrawStatusForHumanoids;
+	checkbox->SetTextParameters(0, L"For humanoids only", g_OptionsTextColor);
 
 	html->Add(new CGUIGroup(1));
 	CGUIRadio *radio = (CGUIRadio*)html->Add(new CGUIRadio(ID_GO_P2_NO_DRAW_CHARACTERS_STATUS, 0x00D0, 0x00D1, 0x00D2, 10, 140));
@@ -2481,6 +2490,8 @@ void CGumpOptions::GUMP_CHECKBOX_EVENT_C
 				g_OptionsConfig.CheckPing = state;
 			else if (serial == ID_GO_P2_CANCEL_NEW_TARGET_SYSTEM_ON_SHIFT_ESC)
 				g_OptionsConfig.CancelNewTargetSystemOnShiftEsc = state;
+			else if (serial == ID_GO_P2_DRAW_STATUS_FOR_HUMANOIDS)
+				g_OptionsConfig.DrawStatusForHumanoids = state;
 			else if (serial == ID_GO_P2_DEV_MODE_1)
 				g_OptionsDeveloperMode = DM_NO_DEBUG;
 			else if (serial == ID_GO_P2_DEV_MODE_2)
@@ -3082,6 +3093,7 @@ void CGumpOptions::ApplyPageChanges()
 			g_ConfigManager.CheckPing = g_OptionsConfig.CheckPing;
 			g_ConfigManager.PingTimer = g_OptionsConfig.PingTimer;
 			g_ConfigManager.CancelNewTargetSystemOnShiftEsc = g_OptionsConfig.CancelNewTargetSystemOnShiftEsc;
+			g_ConfigManager.DrawStatusForHumanoids = g_OptionsConfig.DrawStatusForHumanoids;
 			g_DeveloperMode = g_OptionsDeveloperMode;
 
 			break;

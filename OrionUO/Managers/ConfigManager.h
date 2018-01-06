@@ -61,6 +61,7 @@ class CConfigManager
 	SETGET(bool, CheckPing, true);
 	SETGETE(uchar, PingTimer, 10);
 	SETGET(bool, CancelNewTargetSystemOnShiftEsc, false);
+	SETGET(bool, DrawStatusForHumanoids, true);
 
 	SETGET(bool, UseToolTips, false);
 	SETGET(ushort, ToolTipsTextColor, 0);
@@ -303,6 +304,7 @@ public:
 		CMKC_CHECK_PING,
 		CMKC_PING_TIMER,
 		CMKC_CANCEL_NEW_TARGET_SYSTEM_ON_SHIFT_ESC,
+		CMKC_DRAW_STATUS_FOR_HUMANOIDS,
 		CMKC_COUNT
 	};
 

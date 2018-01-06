@@ -117,6 +117,7 @@ void CConfigManager::DefaultPage2()
 	m_CheckPing = true;
 	m_PingTimer = 10;
 	m_CancelNewTargetSystemOnShiftEsc = false;
+	m_DrawStatusForHumanoids = true;
 }
 //---------------------------------------------------------------------------
 void CConfigManager::DefaultPage3()
@@ -784,6 +785,7 @@ bool CConfigManager::LoadBin(string path)
 		m_CheckPing = true;
 		m_PingTimer = 10;
 		m_CancelNewTargetSystemOnShiftEsc = false;
+		m_DrawStatusForHumanoids = true;
 
 		if (file.ReadInt8() == 2)
 		{
@@ -1350,7 +1352,8 @@ int CConfigManager::GetConfigKeyCode(const string &key)
 		"CharacterBackpackStyle",
 		"CheckPing",
 		"PingTimer",
-		"CancelNewTargetSystemOnShiftEsc"
+		"CancelNewTargetSystemOnShiftEsc",
+		"DrawStatusForHumanoids"
 	};
 
 	string str = ToLowerA(key);
@@ -1516,6 +1519,9 @@ bool CConfigManager::Load(const string &path)
 					break;
 				case CMKC_CANCEL_NEW_TARGET_SYSTEM_ON_SHIFT_ESC:
 					m_CancelNewTargetSystemOnShiftEsc = ToBool(strings[1]);
+					break;
+				case CMKC_DRAW_STATUS_FOR_HUMANOIDS:
+					m_DrawStatusForHumanoids = ToBool(strings[1]);
 					break;
 
 				//Page 3
@@ -1884,6 +1890,7 @@ void CConfigManager::Save(const string &path)
 		writter.WriteBool("CheckPing", m_CheckPing);
 		writter.WriteInt("PingTimer", m_PingTimer);
 		writter.WriteBool("CancelNewTargetSystemOnShiftEsc", m_CancelNewTargetSystemOnShiftEsc);
+		writter.WriteBool("DrawStatusForHumanoids", m_DrawStatusForHumanoids);
 
 		//Page 3
 		writter.WriteBool("UseToolTips", m_UseToolTips);

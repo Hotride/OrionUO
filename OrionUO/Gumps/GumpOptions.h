@@ -107,6 +107,7 @@ private:
 	static const int ID_GO_P2_CHECK_PING = 250;
 	static const int ID_GO_P2_PING_TIMER = 251;
 	static const int ID_GO_P2_CANCEL_NEW_TARGET_SYSTEM_ON_SHIFT_ESC = 252;
+	static const int ID_GO_P2_DRAW_STATUS_FOR_HUMANOIDS = 253;
 	static const int ID_GO_P2_DEV_MODE_1 = 290;
 	static const int ID_GO_P2_DEV_MODE_2 = 291;
 	static const int ID_GO_P2_DEV_MODE_3 = 292;
