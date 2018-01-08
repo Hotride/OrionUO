@@ -224,7 +224,7 @@ typedef struct PLUGIN_CLIENT_INTERFACE
 	IClilocManager *ClilocManager;
 	IColorManager *ColorManager;
 	IPathFinder *PathFinder;
-	//IFileManager *FileManager;
+	IFileManager *FileManager;
 } *PPLUGIN_CLIENT_INTERFACE;
 //----------------------------------------------------------------------------------
 #pragma pack (pop)

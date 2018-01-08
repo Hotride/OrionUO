@@ -89,7 +89,7 @@ void CGumpScreenMain::UpdateContent()
 	text->CreateTextureA(9, string("UO Version " + g_Orion.ClientVersionText + "."));
 
 	text = (CGUIText*)Add(new CGUIText(0x034E, 286, 467));
-	text->CreateTextureA(9, string("Orion pre-alpha v") + g_App.GetFileVersion());
+	text->CreateTextureA(9, string("Orion beta v") + g_App.GetFileVersion());
 
 	CGUITextEntry *entry = (CGUITextEntry*)Add(new CGUITextEntry(ID_MS_ACCOUNT, 0x034F, 0x03E3, 0x0021, 335, 343, 190, false, 5, TS_LEFT, 0, 32));
 	entry->CheckOnSerial = true;

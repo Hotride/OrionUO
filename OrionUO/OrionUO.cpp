@@ -1384,14 +1384,14 @@ void COrion::LoadPlugin(const string &libpath, const string &function, const uin
 void COrion::LoadPluginConfig()
 {
 	WISPFUN_DEBUG("c194_f17");
-	g_PluginClientInterface.Version = 1;
+	g_PluginClientInterface.Version = 2;
 	g_PluginClientInterface.Size = sizeof(g_PluginClientInterface);
 	g_PluginClientInterface.GL = &g_Interface_GL;
 	g_PluginClientInterface.UO = &g_Interface_UO;
 	g_PluginClientInterface.ClilocManager = &g_Interface_ClilocManager;
 	g_PluginClientInterface.ColorManager = &g_Interface_ColorManager;
 	g_PluginClientInterface.PathFinder = &g_Interface_PathFinder;
-	//g_PluginClientInterface.FileManager = &g_Interface_FileManager;
+	g_PluginClientInterface.FileManager = &g_Interface_FileManager;
 
 	STRING_LIST libName;
 	STRING_LIST functions;
@@ -1410,7 +1410,7 @@ void COrion::LoadPluginConfig()
 		CPluginPacketSpellsList().SendToPlugin();
 		CPluginPacketMacrosList().SendToPlugin();
 
-		g_FileManager.SendFilesInfo();
+		/*g_FileManager.SendFilesInfo();
 
 		IFOR(i, 0, 0x10000)
 		{
@@ -1427,7 +1427,7 @@ void COrion::LoadPluginConfig()
 			}
 		}
 
-		CPluginPacketFilesTransfered().SendToPlugin();
+		CPluginPacketFilesTransfered().SendToPlugin();*/
 	}
 
 	BringWindowToTop(g_OrionWindow.Handle);
