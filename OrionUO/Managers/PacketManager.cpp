@@ -1503,10 +1503,6 @@ PACKET_HANDLER(UpdateContainedItems)
 		return;
 
 	ushort itemsCount = ReadUInt16BE();
-	bool tempUseTooltips = g_TooltipsEnabled;
-
-	if (itemsCount > 300)
-		g_TooltipsEnabled = false;
 
 	IFOR(i, 0, itemsCount)
 	{
@@ -1562,8 +1558,6 @@ PACKET_HANDLER(UpdateContainedItems)
 		
 		g_World->UpdateContainedItem(serial, graphic, graphicIncrement, count, x, y, containerSerial, color);
 	}
-
-	g_TooltipsEnabled = tempUseTooltips;
 }
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(DenyMoveItem)
