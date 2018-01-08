@@ -60,7 +60,6 @@ typedef struct UOI_MENU_RESPONSE
 	unsigned int ID;
 	int Code;
 } *PUOI_MENU_RESPONSE;
-#pragma pack (pop)
 //----------------------------------------------------------------------------------
 bool __cdecl PluginRecvFunction(unsigned char *buf, const int &size);
 bool __cdecl PluginSendFunction(unsigned char *buf, const int &size);
@@ -70,7 +69,7 @@ typedef struct PLUGIN_INTERFACE
 	struct PLUGIN_CLIENT_INTERFACE *Client;
 
 	HWND hWnd;
-	CLIENT_VERSION ClientVersion;
+	int ClientVersion;
 	bool UseVerdata;
 
 	PACKET_PROC *Recv;
@@ -86,6 +85,7 @@ typedef struct PLUGIN_INTERFACE
 	VOID_PROC *OnSceneDraw;
 	WORLD_MAP_DRAW_PROC *OnWorldMapDraw;
 } *PPLUGIN_INTERFACE;
+#pragma pack (pop)
 //----------------------------------------------------------------------------------
 #endif
 //----------------------------------------------------------------------------------
