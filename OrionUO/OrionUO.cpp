@@ -81,6 +81,10 @@ void COrion::ParseCommandLine()
 	int argc = 0;
 	LPWSTR *args = CommandLineToArgvW(GetCommandLineW(), &argc);
 
+	string defaultPluginPath = g_App.ExeFilePath("OA/OrionAssistant.dll");
+	string defaultPluginFunction = "Install";
+	uint defaultPluginFlags = 0xFFFFFFFF;
+
 	IFOR(i, 0, argc)
 	{
 		if (!args[i] || *args[i] != L'-')
@@ -124,17 +128,18 @@ void COrion::ParseCommandLine()
 			{
 				if (strings.size() > 4)
 				{
-					uint flags = 0;
+					defaultPluginFlags = 0;
 
 					if (ToLowerA(strings[4]).find("0x") == 0)
 					{
 						char *end = NULL;
-						flags = strtoul(strings[4].c_str(), &end, 16);
+						defaultPluginFlags = strtoul(strings[4].c_str(), &end, 16);
 					}
 					else
-						flags = atoi(strings[4].c_str());
+						defaultPluginFlags = atoi(strings[4].c_str());
 
-					LoadPlugin(strings[1] + ":" + strings[2], strings[3], flags);
+					defaultPluginPath = strings[1] + ":" + strings[2];
+					defaultPluginFunction = strings[3];
 				}
 			}
 		}
@@ -170,6 +175,8 @@ void COrion::ParseCommandLine()
 	}
 
 	LocalFree(args);
+
+	LoadPlugin(defaultPluginPath, defaultPluginFunction, defaultPluginFlags);
 
 	if (fastLogin)
 		g_OrionWindow.CreateTimer(COrionWindow::FASTLOGIN_TIMER_ID, 50);
@@ -1391,8 +1398,6 @@ void COrion::LoadPluginConfig()
 	UINT_LIST flags;
 
 	g_PluginInit(libName, functions, flags);
-
-	LoadPlugin(g_App.ExeFilePath("OA/OrionAssistant.dll"), "Install", 0xFFFFFFFF);
 
 	IFOR(i, 0, (int)libName.size())
 		LoadPlugin(g_App.ExeFilePath(libName[i].c_str()), functions[i], flags[i]);
