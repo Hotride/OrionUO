@@ -126,6 +126,8 @@ void COrion::ParseCommandLine()
 				g_MainScreen.SetAccounting(DecodeArgumentString(strings[1].c_str(), (int)strings[1].length()), DecodeArgumentString(strings[2].c_str(), (int)strings[2].length()));
 			else if (str == "plugin")
 			{
+				strings = WISP_FILE::CTextFileParser("", ",:", "", "").GetTokens(ToString(args[i] + 1).c_str(), false);
+
 				if (strings.size() > 4)
 				{
 					defaultPluginFlags = 0;
