@@ -67,7 +67,7 @@ void CGumpDye::UpdateContent()
 void CGumpDye::OnSelectColor(const ushort &color)
 {
 	WISPFUN_DEBUG("c95_f3");
-	CPacketDyeDataResponse(m_Serial, m_Graphic, color).Send();
+	CPacketDyeDataResponse(m_Serial, m_Graphic, color + 1).Send();
 	m_RemoveMark = true;
 }
 //----------------------------------------------------------------------------------
