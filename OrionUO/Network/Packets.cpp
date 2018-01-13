@@ -954,13 +954,13 @@ CPacketBulletinBoardRemoveMessage::CPacketBulletinBoardRemoveMessage(uint serial
 CPacketAssistVersion::CPacketAssistVersion(uint version, string clientVersion)
 : CPacket(1)
 {
-	size_t size = 7 + clientVersion.length();
+	size_t size = 7 + clientVersion.length() + 1;
 	Resize(size, true);
 
 	WriteUInt8(0xBE);
 	WriteUInt16BE((ushort)size);
 	WriteUInt32BE(version);
-	WriteString(clientVersion.c_str(), clientVersion.length(), false);
+	WriteString(clientVersion.c_str(), clientVersion.length());
 }
 //---------------------------------------------------------------------------
 CPacketRazorAnswer::CPacketRazorAnswer()
