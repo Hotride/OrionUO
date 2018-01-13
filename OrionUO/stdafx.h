@@ -48,7 +48,7 @@
 #pragma comment(lib, "Dependencies/lib/Win32/bassmidi.lib")
 #pragma comment(lib, "Dependencies/lib/Win32/FreeImage.lib")
 #pragma comment(lib, "Dependencies/lib/Win32/Psapi.lib")
-#pragma comment(lib, "Dependencies/lib/Win32/zdll.lib")
+#pragma comment(lib, "Dependencies/lib/Win32/zlib.lib")
 //----------------------------------------------------------------------------------
 #else
 #pragma comment(lib, "Dependencies/lib/x64/glew32.lib")
