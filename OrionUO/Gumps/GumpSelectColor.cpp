@@ -38,13 +38,11 @@ void CGumpSelectColor::UpdateContent()
 
 	const int cellWidthX = 8;
 	const int cellWidthY = 8;
-	m_SelectedIndex = 10;
 
 	ushort startColor = m_ColorRef + 1;
 
 	puchar huesData = (puchar)g_ColorManager.GetHuesRangePointer() + 32 + 4;
 	const int colorOffsetDivider = sizeof(HUES_GROUP) - 4;
-	bool focused = true;
 
 	IFOR(y, 0, 10)
 	{
@@ -57,10 +55,10 @@ void CGumpSelectColor::UpdateContent()
 
 			uint clr = g_ColorManager.Color16To32(color);
 
-			CGUIColoredPolygone *polygone = (CGUIColoredPolygone*)m_DataBox->Add(new CGUIColoredPolygone(ID_GSC_COLORS + ((int)x * 30 + (int)y), startColor, 34 + ((int)x * cellWidthX), 34 + ((int)y * cellWidthY), cellWidthX, cellWidthY, clr));
+			uint serial = ID_GSC_COLORS + ((int)x * 30 + (int)y);
+			CGUIColoredPolygone *polygone = (CGUIColoredPolygone*)m_DataBox->Add(new CGUIColoredPolygone(serial, startColor, 34 + ((int)x * cellWidthX), 34 + ((int)y * cellWidthY), cellWidthX, cellWidthY, clr));
 			polygone->CallOnMouseUp = true;
-			polygone->Focused = focused;
-			focused = false;
+			polygone->Focused = (m_SelectedIndex == serial);
 
 			startColor += 5;
 		}
@@ -78,7 +76,7 @@ void CGumpSelectColor::GUMP_BUTTON_EVENT_C
 		{
 			if (item->Serial == m_SelectedIndex)
 			{
-				OnSelectColor(item->Color);
+				OnSelectColor(item->Color + 1);
 
 				break;
 			}
