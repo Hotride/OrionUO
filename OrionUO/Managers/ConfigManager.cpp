@@ -197,7 +197,7 @@ void CConfigManager::DefaultPage8()
 	m_FriendlyColor = 0x0044;
 	m_SomeoneColor = 0x03B2;
 	m_CriminalColor = 0x03B2;
-	m_EnemyColor = 0x002B;
+	m_EnemyColor = 0x0031;
 	m_MurdererColor = 0x0023;
 	m_CriminalActionsQuery = true;
 }
