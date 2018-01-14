@@ -66,11 +66,13 @@ bool __cdecl PluginSendFunction(unsigned char *buf, const int &size);
 //----------------------------------------------------------------------------------
 typedef struct PLUGIN_INTERFACE
 {
+	int InterfaceVersion;
+	int Size;
 	struct PLUGIN_CLIENT_INTERFACE *Client;
 
-	HWND hWnd;
+	HWND WindowHandle;
 	int ClientVersion;
-	bool UseVerdata;
+	int ClientFlags;
 
 	PACKET_PROC *Recv;
 	PACKET_PROC *Send;

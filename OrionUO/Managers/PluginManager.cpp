@@ -60,9 +60,9 @@ CPlugin::CPlugin(uint flags)
 	m_PPS = new PLUGIN_INTERFACE();
 	memset(m_PPS, 0, sizeof(PLUGIN_INTERFACE));
 
-	m_PPS->hWnd = g_OrionWindow.Handle;
+	m_PPS->WindowHandle = g_OrionWindow.Handle;
 	m_PPS->ClientVersion = g_PacketManager.ClientVersion;
-	m_PPS->UseVerdata = g_FileManager.UseVerdata;
+	m_PPS->ClientFlags = (g_FileManager.UseVerdata ? 0x01 : 0);
 }
 //----------------------------------------------------------------------------------
 CPlugin::~CPlugin()
