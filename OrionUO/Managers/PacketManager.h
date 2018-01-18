@@ -86,6 +86,8 @@ private:
 
 	deque<UCHAR_LIST> m_PluginData;
 
+	CRITICAL_SECTION m_CSPluginNetwork;
+
 protected:
 	virtual void OnPacket();
 

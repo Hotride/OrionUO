@@ -290,10 +290,12 @@ CPacketInfo CPacketManager::m_Packets[0x100] =
 CPacketManager::CPacketManager()
 : WISP_NETWORK::CPacketReader()
 {
+	InitializeCriticalSection(&m_CSPluginNetwork);
 }
 //----------------------------------------------------------------------------------
 CPacketManager::~CPacketManager()
 {
+	DeleteCriticalSection(&m_CSPluginNetwork);
 }
 //---------------------------------------------------------------------------
 bool CPacketManager::AutoLoginNameExists(const string &name)
@@ -601,12 +603,15 @@ void CPacketManager::SavePluginReceivePacket(puchar buf, const int &size)
 
 	memcpy(&packet[0], &buf[0], size);
 
+	EnterCriticalSection(&m_CSPluginNetwork);
 	m_PluginData.push_front(packet);
+	LeaveCriticalSection(&m_CSPluginNetwork);
 }
 //----------------------------------------------------------------------------------
 void CPacketManager::ProcessPluginPackets()
 {
 	WISPFUN_DEBUG("c150_f10");
+	EnterCriticalSection(&m_CSPluginNetwork);
 	while (!m_PluginData.empty())
 	{
 		UCHAR_LIST &packet = m_PluginData.back();
@@ -616,6 +621,7 @@ void CPacketManager::ProcessPluginPackets()
 
 		m_PluginData.pop_back();
 	}
+	LeaveCriticalSection(&m_CSPluginNetwork);
 }
 //----------------------------------------------------------------------------------
 void CPacketManager::PluginReceiveHandler(puchar buf, const int &size)
