@@ -22,17 +22,23 @@ void COrionApplication::OnMainLoop()
 	if (m_NextRenderTime <= g_Ticks)
 	{
 		m_NextUpdateTime = g_Ticks + 50;
-		m_NextRenderTime = g_Ticks + g_OrionWindow.RenderTimerDelay;
+		m_NextRenderTime = m_NextUpdateTime;// g_Ticks + g_OrionWindow.RenderTimerDelay;
 
-		g_Orion.Process(true);
+		//g_Orion.Process(true);
+		g_ConnectionManager.Recv();
+		g_PacketManager.ProcessPluginPackets();
+		g_PacketManager.SendMegaClilocRequests();
 	}
 	else if (m_NextUpdateTime <= g_Ticks)
 	{
 		m_NextUpdateTime = g_Ticks + 50;
 
-		g_Orion.Process(false);
+		//g_Orion.Process(false);
+		g_ConnectionManager.Recv();
+		g_PacketManager.ProcessPluginPackets();
+		g_PacketManager.SendMegaClilocRequests();
 	}
-	else
-		Sleep(1);
+	//else
+	//	Sleep(1);
 }
 //----------------------------------------------------------------------------------
