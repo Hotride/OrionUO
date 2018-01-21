@@ -829,7 +829,7 @@ void CGameScreen::AddOffsetCharacterTileToRenderList(CGameObject *obj, const boo
 	int characterX = obj->X;
 	int characterY = obj->Y;
 
-	ANIMATION_DIMENSIONS dims = g_AnimationManager.GetAnimationDimensions(obj);
+	//ANIMATION_DIMENSIONS dims = g_AnimationManager.GetAnimationDimensions(obj);
 	CGameCharacter *character = obj->GameCharacterPtr();
 
 	DRAW_FRAME_INFORMATION &dfInfo = obj->m_FrameInfo;
