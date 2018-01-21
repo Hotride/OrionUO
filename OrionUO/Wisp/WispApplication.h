@@ -22,7 +22,7 @@ public:
 
 	int Run(HINSTANCE hinstance);
 
-	string GetFileVersion();
+	string GetFileVersion(uint *numericVerion = NULL);
 
 	string ExeFilePath(const char *str, ...);
 	wstring ExeFilePath(const wchar_t *str, ...);

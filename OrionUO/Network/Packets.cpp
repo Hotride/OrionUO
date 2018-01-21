@@ -1529,3 +1529,12 @@ CPacketCustomHouseAddStair::CPacketCustomHouseAddStair(const ushort &graphic, co
 	WriteUInt8(0x0A);
 }
 //----------------------------------------------------------------------------------
+CPacketOrionVersion::CPacketOrionVersion(const uint &version)
+: CPacket(9)
+{
+	WriteUInt8(0xFC);
+	WriteUInt16BE(9);
+	WriteUInt16BE(OCT_ORION_VERSION);
+	WriteUInt32BE(version);
+}
+//----------------------------------------------------------------------------------

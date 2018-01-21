@@ -594,5 +594,11 @@ public:
 	CPacketCustomHouseAddStair(const ushort &graphic, const int &x, const int &y);
 };
 //----------------------------------------------------------------------------------
+class CPacketOrionVersion : public CPacket
+{
+public:
+	CPacketOrionVersion(const uint &version);
+};
+//----------------------------------------------------------------------------------
 #endif
 //----------------------------------------------------------------------------------

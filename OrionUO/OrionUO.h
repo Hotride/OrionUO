@@ -16,6 +16,7 @@ class COrion
 	SETGET(int, TexturesDataCount, 0);
 	SETGET(string, DefaultLogin, "");
 	SETGET(int, DefaultPort, 0);
+	SETGET(uint, OrionVersionNumeric, 0);
 
 private:
 	uint m_CRC_Table[256];

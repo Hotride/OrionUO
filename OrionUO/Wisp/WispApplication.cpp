@@ -59,7 +59,7 @@ int CApplication::Run(HINSTANCE hinstance)
 	return (int)msg.wParam;
 }
 //---------------------------------------------------------------------------
-string CApplication::GetFileVersion()
+string CApplication::GetFileVersion(uint *numericVerion)
 {
 	//File version info
 	wchar_t szFilename[MAX_PATH] = { 0 };
@@ -93,6 +93,9 @@ string CApplication::GetFileVersion()
 				int dwSecondLeft = (int)LOWORD(dwFileVersionMS);
 				int dwSecondRight = (int)HIWORD(dwFileVersionLS);
 				int dwRightMost = (int)LOWORD(dwFileVersionLS);
+
+				if (numericVerion != NULL)
+					*numericVerion = ((dwLeftMost & 0xFF) << 24) | ((dwSecondLeft & 0xFF) << 16) | ((dwSecondRight & 0xFF) << 8) | (dwRightMost & 0xFF);
 
 				char fileVersion[100] = { 0 };
 				sprintf_s(fileVersion, "%i.%i.%i.%i", dwLeftMost, dwSecondLeft, dwSecondRight, dwRightMost);

@@ -5523,6 +5523,11 @@ PACKET_HANDLER(OrionMessages)
 
 			break;
 		}
+		case OCT_ORION_VERSION:
+		{
+			CPacketOrionVersion(g_Orion.OrionVersionNumeric).Send();
+			break;
+		}
 		case OCT_CLOSE_GENERIC_GUMP_WITHOUT_RESPONSE:
 		{
 			uint serial = ReadUInt32BE();
