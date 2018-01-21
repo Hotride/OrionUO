@@ -2303,7 +2303,19 @@ ANIMATION_DIMENSIONS CAnimationManager::GetAnimationDimensions(CGameObject *obj,
 	if (frameIndex == 0xFF)
 		frameIndex = (uchar)obj->AnimIndex;
 
-	return GetAnimationDimensions(frameIndex, id, dir, animGroup, obj->IsCorpse());
+	ANIMATION_DIMENSIONS dims = GetAnimationDimensions(frameIndex, id, dir, animGroup, obj->IsCorpse());
+
+	if (!dims.Width && !dims.Height && !dims.CenterX && !dims.CenterY)
+	{
+		dims.Width = 20;
+
+		if (obj->NPC && obj->FindLayer(OL_MOUNT) != NULL)
+			dims.Height = 100;
+		else
+			dims.Height = 60;
+	}
+
+	return dims;
 }
 //----------------------------------------------------------------------------------
 bool CAnimationManager::TryReadUOPAnimDimins(CTextureAnimationDirection &direction)
