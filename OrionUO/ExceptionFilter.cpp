@@ -228,6 +228,8 @@ LONG __stdcall OrionUnhandledExceptionFilter(struct _EXCEPTION_POINTERS *excepti
 					initFunc();
 				}
 			}
+
+			g_Orion.Uninstall();
 			MessageBoxA(0, "Orion client performed an unrecoverable invalid operation.\nTermination...", 0, MB_ICONSTOP | MB_OK);
 
 			ExitProcess(1);
