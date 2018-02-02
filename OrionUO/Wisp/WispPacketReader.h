@@ -7,6 +7,8 @@ namespace WISP_NETWORK
 //----------------------------------------------------------------------------------
 class CPacketReader : public WISP_DATASTREAM::CDataReader
 {
+	SETGET(int, MaxPacketStackSize, 5);
+
 public:
 	CPacketReader();
 	virtual ~CPacketReader();
@@ -19,6 +21,9 @@ protected:
 	virtual void OnPacket() {}
 
 	virtual void OnReadFailed() {}
+
+public:
+	deque<UCHAR_LIST> m_PacketsStack;
 };
 //----------------------------------------------------------------------------------
 }; //namespace

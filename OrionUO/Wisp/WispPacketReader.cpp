@@ -36,6 +36,14 @@ void CPacketReader::Read(class CConnection *connection)
 			if (!packet.size())
 				break;
 
+			if (m_MaxPacketStackSize)
+			{
+				m_PacketsStack.push_back(packet);
+
+				if ((int)m_PacketsStack.size() > m_MaxPacketStackSize)
+					m_PacketsStack.pop_front();
+			}
+
 			SetData((puchar)&packet[0], packet.size(), offset);
 			OnPacket();
 		}
