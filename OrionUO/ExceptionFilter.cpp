@@ -181,7 +181,7 @@ LONG __stdcall OrionUnhandledExceptionFilter(struct _EXCEPTION_POINTERS *excepti
 
 			wchar_t fileName[MAX_PATH] = { 0 };
 			GetModuleFileName(0, fileName, MAX_PATH);
-
+			bool crashlog = false;
 			if (file.Load(fileName))
 			{
 				UCHAR_LIST pattern;
@@ -213,11 +213,13 @@ LONG __stdcall OrionUnhandledExceptionFilter(struct _EXCEPTION_POINTERS *excepti
 						CRASHLOG_DUMP((puchar)i->data(), i->size());
 					}
 				}
+				crashlog = true;
 			}
 
 			string reporterPath = g_App.ExeFilePath("Reporter.dll");
 			string functionName = "SendCrashReport";
 			HMODULE dll = LoadLibraryA(reporterPath.c_str());
+			bool reportSent = false;
 			if (dll != NULL)
 			{
 				typedef void __cdecl dllFunc();
@@ -226,11 +228,21 @@ LONG __stdcall OrionUnhandledExceptionFilter(struct _EXCEPTION_POINTERS *excepti
 				if (initFunc != NULL)
 				{
 					initFunc();
+					reportSent = true;
 				}
 			}
 
 			g_Orion.Uninstall();
-			MessageBoxA(0, "Orion client performed an unrecoverable invalid operation.\nTermination...", 0, MB_ICONSTOP | MB_OK);
+
+			if (!reportSent)
+			{
+				string msg = "Orion client performed an unrecoverable operation.";
+				if (crashlog)
+					msg += "\nCrashlog has been created in crashlogs folder.";
+				msg += "\nTerminating...";
+
+				MessageBoxA(0, msg.c_str(), 0, MB_ICONSTOP | MB_OK);
+			}
 
 			ExitProcess(1);
 		}
