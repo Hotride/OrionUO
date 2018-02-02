@@ -1318,13 +1318,14 @@ void COrion::LoadStartupConfig(const uint &serial)
 	else
 		sprintf_s(buf, "Desktop\\%s\\0x%08X", g_MainScreen.m_Account->c_str(), serial);
 
-	string uoFilesPath = g_App.UOFilesPath(buf);
+	string orionFilesPath = g_App.ExeFilePath(buf);
 
-	if (!g_ConfigManager.Load(uoFilesPath + "/orion_options.cfg"))
+	if (!g_ConfigManager.Load(orionFilesPath + "/orion_options.cfg"))
 	{
-		string orionFilesPath = g_App.ExeFilePath(buf);
-		if (!g_ConfigManager.Load(orionFilesPath + "/orion_options.cfg"))
-			g_ConfigManager.LoadBin(uoFilesPath + "/options_debug.cuo");
+		string uoFilesPath = g_App.UOFilesPath(buf);
+		if (!g_ConfigManager.Load(uoFilesPath + "/orion_options.cfg"))
+			if (!g_ConfigManager.LoadBin(orionFilesPath + "/options_debug.cuo"))
+				g_ConfigManager.LoadBin(uoFilesPath + "/options_debug.cuo");
 	}
 		
 	
@@ -1521,7 +1522,7 @@ void COrion::SaveLocalConfig()
 		return;
 
 	LOG("SaveLocalConfig step 1\n");
-	string path = g_App.UOFilesPath("Desktop");
+	string path = g_App.ExeFilePath("Desktop");
 	CreateDirectoryA(path.c_str(), NULL);
 
 	LOG("SaveLocalConfig step 2\n");
@@ -4490,8 +4491,13 @@ void COrion::LoadShaders()
 void COrion::LoadClientStartupConfig()
 {
 	WISPFUN_DEBUG("c194_f60");
-	if (!g_ConfigManager.Load(g_App.UOFilesPath("orion_options.cfg")))
-		g_ConfigManager.LoadBin(g_App.UOFilesPath("options_debug.cuo"));
+	if (!g_ConfigManager.Load(g_App.ExeFilePath("orion_options.cfg")))
+	{
+		if (!g_ConfigManager.Load(g_App.UOFilesPath("orion_options.cfg")))
+			if (!g_ConfigManager.LoadBin(g_App.ExeFilePath("options_debug.cuo")))
+				g_ConfigManager.LoadBin(g_App.UOFilesPath("options_debug.cuo"));
+	}
+
 
 	g_SoundManager.SetMusicVolume(g_ConfigManager.MusicVolume);
 
