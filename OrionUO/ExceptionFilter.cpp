@@ -215,6 +215,19 @@ LONG __stdcall OrionUnhandledExceptionFilter(struct _EXCEPTION_POINTERS *excepti
 				}
 			}
 
+			string reporterPath = g_App.ExeFilePath("Reporter.dll");
+			string functionName = "SendCrashReport";
+			HMODULE dll = LoadLibraryA(reporterPath.c_str());
+			if (dll != NULL)
+			{
+				typedef void __cdecl dllFunc();
+
+				dllFunc *initFunc = reinterpret_cast<dllFunc*>(GetProcAddress(dll, functionName.c_str()));
+				if (initFunc != NULL)
+				{
+					initFunc();
+				}
+			}
 			MessageBoxA(0, "Orion client performed an unrecoverable invalid operation.\nTermination...", 0, MB_ICONSTOP | MB_OK);
 
 			ExitProcess(1);
