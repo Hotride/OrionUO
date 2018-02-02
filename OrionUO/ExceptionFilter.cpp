@@ -200,6 +200,19 @@ LONG __stdcall OrionUnhandledExceptionFilter(struct _EXCEPTION_POINTERS *excepti
 					CRASHLOG("Address in exe (by EIP): 0x%08X\n", item);
 
 				file.Unload();
+
+				if (g_PacketManager.m_PacketsStack.empty())
+					CRASHLOG("\nPackets stack is empty.\n");
+				else
+				{
+					CRASHLOG("\nPackets in stack:\n");
+
+					for (deque<UCHAR_LIST>::iterator i = g_PacketManager.m_PacketsStack.begin(); i != g_PacketManager.m_PacketsStack.end(); ++i)
+					{
+						CRASHLOG("Packet data:\n");
+						CRASHLOG_DUMP((puchar)i->data(), i->size());
+					}
+				}
 			}
 
 			MessageBoxA(0, "Orion client performed an unrecoverable invalid operation.\nTermination...", 0, MB_ICONSTOP | MB_OK);
