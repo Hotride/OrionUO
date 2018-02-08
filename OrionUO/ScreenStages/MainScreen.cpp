@@ -34,7 +34,7 @@ CMainScreen::~CMainScreen()
 //----------------------------------------------------------------------------------
 /*!
 Инициализация
-@return 
+@return
 */
 void CMainScreen::Init()
 {
@@ -74,7 +74,7 @@ void CMainScreen::Init()
 /*!
 Обработка события после плавного затемнения экрана
 @param [__in_opt] action Идентификатор действия
-@return 
+@return
 */
 void CMainScreen::ProcessSmoothAction(uchar action)
 {
@@ -123,7 +123,7 @@ void CMainScreen::Paste()
 Обработка нажатия клавиши
 @param [__in] wparam не подписанный параметр
 @param [__in] lparam не подписанный параметр
-@return 
+@return
 */
 void CMainScreen::OnCharPress(const WPARAM &wParam, const LPARAM &lParam)
 {
@@ -151,7 +151,7 @@ void CMainScreen::OnCharPress(const WPARAM &wParam, const LPARAM &lParam)
 Обработка нажатия клавиши
 @param [__in] wparam не подписанный параметр
 @param [__in] lparam не подписанный параметр
-@return 
+@return
 */
 void CMainScreen::OnKeyDown(const WPARAM &wParam, const LPARAM &lParam)
 {
@@ -203,7 +203,7 @@ void CMainScreen::OnKeyDown(const SDL_KeyboardEvent &ev)
 /*!
 Получить код конфига по ключу
 @param [__in] key Ключ
-@return 
+@return
 */
 int CMainScreen::GetConfigKeyCode(const string &key)
 {
@@ -242,7 +242,7 @@ void CMainScreen::LoadCustomPath()
 {
 	WISPFUN_DEBUG("c165_f14");
 
-	WISP_FILE::CTextFileParser file(g_App.ExeFilePath("uo_debug.cfg"), "=", "#;", "");
+	WISP_FILE::CTextFileParser file(g_App.ExeFilePath("client.cfg"), "=", "#;", "");
 
 	while (!file.IsEOF())
 	{
@@ -265,7 +265,7 @@ void CMainScreen::LoadCustomPath()
 //----------------------------------------------------------------------------------
 /*!
 Загрузка конфига
-@return 
+@return
 */
 void CMainScreen::LoadGlobalConfig()
 {
@@ -273,7 +273,7 @@ void CMainScreen::LoadGlobalConfig()
 	m_AutoLogin->Checked = false;
 	g_ScreenEffectManager.Enabled = false;
 
-	WISP_FILE::CTextFileParser file(g_App.ExeFilePath("uo_debug.cfg"), "=", "#;", "");
+	WISP_FILE::CTextFileParser file(g_App.ExeFilePath("client.cfg"), "=", "#;", "");
 
 	while (!file.IsEOF())
 	{
@@ -289,7 +289,7 @@ void CMainScreen::LoadGlobalConfig()
 				{
 					m_Account->SetText(strings[1]);
 					m_Account->SetPos((int)strings[1].length());
-					
+
 					break;
 				}
 				case MSCC_ACTPWD:
@@ -322,7 +322,7 @@ void CMainScreen::LoadGlobalConfig()
 				case MSCC_REMEMBERPWD:
 				{
 					m_SavePassword->Checked = ToBool(strings[1]);
-					
+
 					if (!m_SavePassword->Checked)
 					{
 						m_MainGump.m_PasswordFake->SetText("");
@@ -366,52 +366,52 @@ void CMainScreen::LoadGlobalConfig()
 //----------------------------------------------------------------------------------
 /*!
 Сохранение конфига
-@return 
+@return
 */
 void CMainScreen::SaveGlobalConfig()
 {
 	WISPFUN_DEBUG("c165_f11");
-	FILE *uo_cfg = fs_open(g_App.ExeFilePath("uo_debug.cfg"), FS_WRITE);
-	if (uo_cfg == nullptr)
+	FILE *client_cfg = fs_open(g_App.ExeFilePath("client.cfg"), FS_WRITE);
+	if (client_cfg == nullptr)
 		return;
 
 	char buf[128] = { 0 };
 
 	sprintf_s(buf, "AcctID=%s\n", m_Account->c_str());
-	fputs(buf, uo_cfg);
+	fputs(buf, client_cfg);
 
 	if (m_SavePassword->Checked)
 	{
 		sprintf_s(buf, "AcctPassword=%s\n", CryptPW(m_Password->c_str(), (int)m_Password->Length()).c_str());
-		fputs(buf, uo_cfg);
+		fputs(buf, client_cfg);
 		sprintf_s(buf, "RememberAcctPW=yes\n");
-		fputs(buf, uo_cfg);
+		fputs(buf, client_cfg);
 	}
 	else
 	{
-		fputs("AcctPassword=\n", uo_cfg);
+		fputs("AcctPassword=\n", client_cfg);
 		sprintf_s(buf, "RememberAcctPW=no\n");
-		fputs(buf, uo_cfg);
+		fputs(buf, client_cfg);
 	}
 
 	sprintf_s(buf, "AutoLogin=%s\n", (m_AutoLogin->Checked ? "yes" : "no"));
-	fputs(buf, uo_cfg);
+	fputs(buf, client_cfg);
 
 	sprintf_s(buf, "SmoothMonitor=%s\n", (g_ScreenEffectManager.Enabled ? "yes" : "no"));
-	fputs(buf, uo_cfg);
+	fputs(buf, client_cfg);
 
 	sprintf_s(buf, "TheAbyss=%s\n", (g_TheAbyss ? "yes" : "no"));
-	fputs(buf, uo_cfg);
+	fputs(buf, client_cfg);
 
 	sprintf_s(buf, "Asmut=%s\n", (g_Asmut ? "yes" : "no"));
-	fputs(buf, uo_cfg);
+	fputs(buf, client_cfg);
 
 	if (g_App.m_UOPath != g_App.m_ExePath)
 	{
 		sprintf_s(buf, "CustomPath=%s\n", CStringFromPath(g_App.m_UOPath));
-		fputs(buf, uo_cfg);
+		fputs(buf, client_cfg);
 	}
-	fs_close(uo_cfg);
+	fs_close(client_cfg);
 }
 //----------------------------------------------------------------------------------
 /*!
