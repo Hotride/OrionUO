@@ -65,19 +65,9 @@ void CParty::ParsePacketData(WISP_DATASTREAM::CDataReader &reader)
 		}
 		case 2: //Remove member
 		{
-			Clear();
-
 			uchar count = reader.ReadUInt8();
 
-			if (code == 1)
-			{
-				if (m_Leader == 0)
-				{
-					m_Leader = g_PlayerSerial;
-					m_Inviter = 0;
-				}
-			}
-			else if (count <= 1)
+			if (count <= 1)
 			{
 				m_Leader = 0;
 				m_Inviter = 0;
@@ -88,9 +78,11 @@ void CParty::ParsePacketData(WISP_DATASTREAM::CDataReader &reader)
 					CGumpStatusbar *gump = (CGumpStatusbar*)g_GumpManager.UpdateContent(member.Character->Serial, 0, GT_STATUSBAR);
 					if (gump != NULL) gump->WantRedraw = true;
 				}
+				Clear();
+				g_GumpManager.UpdateContent(0, 0, GT_PARTY_MANIFEST);
 				break;
 			}
-
+			Clear();
 			WISP_GEOMETRY::CPoint2Di oldPos = g_MouseManager.Position;
 			WISP_GEOMETRY::CPoint2Di mousePos(76, 30);
 			g_MouseManager.Position = mousePos;
@@ -102,6 +94,8 @@ void CParty::ParsePacketData(WISP_DATASTREAM::CDataReader &reader)
 				uint serial = reader.ReadUInt32BE();
 				Member[i].Serial = serial;
 				Member[i].Character = g_World->FindWorldCharacter(serial);
+				if (i == 0)
+					g_Party.Leader = serial;
 
 				CGumpStatusbar *gump = (CGumpStatusbar*)g_GumpManager.UpdateContent(serial, 0, GT_STATUSBAR);
 
