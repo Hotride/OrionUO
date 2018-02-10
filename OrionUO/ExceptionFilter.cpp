@@ -216,21 +216,23 @@ LONG __stdcall OrionUnhandledExceptionFilter(struct _EXCEPTION_POINTERS *excepti
 				crashlog = true;
 			}
 
-			string reporterPath = g_App.ExeFilePath("Reporter.dll");
-			string functionName = "SendCrashReport";
-			HMODULE dll = LoadLibraryA(reporterPath.c_str());
-			bool reportSent = false;
-			if (dll != NULL)
-			{
-				typedef void __cdecl dllFunc();
-
-				dllFunc *initFunc = reinterpret_cast<dllFunc*>(GetProcAddress(dll, functionName.c_str()));
-				if (initFunc != NULL)
-				{
-					initFunc();
-					reportSent = true;
-				}
-			}
+			Wisp::g_WispCrashLogger.Close();
+			string crashlogPath = g_App.ExeFilePath("OrionCrashReporter.exe ") + Wisp::g_WispCrashLogger.GetFileName();
+			STARTUPINFOA si;
+			PROCESS_INFORMATION pi;
+			ZeroMemory(&si, sizeof(si));
+			si.cb = sizeof(si);
+			ZeroMemory(&pi, sizeof(pi));
+			bool reportSent = CreateProcessA(NULL,   // No module name (use command line)
+				&crashlogPath[0],        // Command line
+				NULL,           // Process handle not inheritable
+				NULL,           // Thread handle not inheritable
+				FALSE,          // Set handle inheritance to FALSE
+				0,              // No creation flags
+				NULL,           // Use parent's environment block
+				NULL,           // Use parent's starting directory 
+				&si,            // Pointer to STARTUPINFO structure
+				&pi);
 
 			g_Orion.Uninstall();
 
