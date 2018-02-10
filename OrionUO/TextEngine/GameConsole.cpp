@@ -216,7 +216,7 @@ wstring CGameConsole::IsSystemCommand(const wchar_t *text, size_t &len, int &mem
 				type = GCTT_PARTY_ADD;
 			else if ((!memcmp(&lBuf[0], "/quit", 5)) || (!memcmp(&lBuf[0], "/leave", 6))) //Party leave & quit
 				type = GCTT_PARTY_LEAVE;
-			else if (memcmp(&lBuf[0], "/accept", 7)) //Party accept
+			else if (!memcmp(&lBuf[0], "/accept", 7)) //Party accept
 				type = GCTT_PARTY_ACCEPT;
 			else if (!memcmp(&lBuf[0], "/decline", 8)) //Party decline
 				type = GCTT_PARTY_DECLINE;
