@@ -1203,16 +1203,41 @@ void StackWalker::OnSymInit(LPCSTR szSearchPath, DWORD symOptions, LPCSTR szUser
 		OnOutput(buffer);
 	}
 #else
-	OSVERSIONINFOEXA ver;
-	ZeroMemory(&ver, sizeof(OSVERSIONINFOEXA));
-	ver.dwOSVersionInfoSize = sizeof(ver);
-	if (GetVersionExA((OSVERSIONINFOA*)&ver) != FALSE)
+	TCHAR path[MAX_PATH];
+	UINT n;
+	BOOL r;
+	DWORD versz;
+	UINT blocksz;
+	VS_FIXEDFILEINFO *vinfo;
+	WORD* block;
+
+
+	if (GetSystemDirectory(path, MAX_PATH) != 0)
 	{
-		_snprintf_s(buffer, STACKWALK_MAX_NAMELEN, "OS-Version: %d.%d.%d (%s) 0x%x-0x%x\n",
-			ver.dwMajorVersion, ver.dwMinorVersion, ver.dwBuildNumber,
-			ver.szCSDVersion, ver.wSuiteMask, ver.wProductType);
-		OnOutput(buffer);
+		std::wstring pathS(path);
+		pathS += L"\\kernel32.dll";
+		versz = GetFileVersionInfoSize(pathS.c_str(), NULL);
+		if (versz != 0)
+		{
+			BYTE* ver = new BYTE[versz];
+			if (GetFileVersionInfo(pathS.c_str(), 0, versz, ver) != 0)
+			{
+				if (VerQueryValue(ver, L"\\", (LPVOID*)&block, &blocksz))
+				{
+					vinfo = (VS_FIXEDFILEINFO *)block;
+					_snprintf_s(buffer, 1024, "Windows version: %d.%d.%d\n",
+						(int)HIWORD(vinfo->dwProductVersionMS),
+						(int)LOWORD(vinfo->dwProductVersionMS),
+						(int)HIWORD(vinfo->dwProductVersionLS));
+					OnOutput(buffer);
+				}
+			}
+
+			delete ver;
+		}
 	}
+
+
 #endif
 }
 
