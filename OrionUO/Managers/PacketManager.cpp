@@ -845,7 +845,7 @@ PACKET_HANDLER(EnterWorld)
 	{
 		LOG("Warning!!! Duplicate enter world message\n");
 
-		g_Orion.SaveLocalConfig();
+		g_Orion.SaveLocalConfig(g_PacketManager.ConfigSerial);
 		m_ConfigSerial = g_PlayerSerial;
 		g_ConfigLoaded = false;
 		loadConfig = true;

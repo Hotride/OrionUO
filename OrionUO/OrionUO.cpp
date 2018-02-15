@@ -487,7 +487,7 @@ void COrion::Uninstall()
 {
 	WISPFUN_DEBUG("c194_f6");
 	LOG("COrion::Uninstall()\n");
-	SaveLocalConfig();
+	SaveLocalConfig(g_PacketManager.ConfigSerial);
 	g_MainScreen.SaveGlobalConfig();
 	g_GumpManager.OnDelete();
 
@@ -1515,32 +1515,41 @@ void COrion::LoadLocalConfig(const uint &serial)
 	g_ConfigLoaded = true;
 }
 //----------------------------------------------------------------------------------
-void COrion::SaveLocalConfig()
+void COrion::SaveLocalConfig(const uint &serial)
 {
 	WISPFUN_DEBUG("c194_f20");
 	if (!g_ConfigLoaded)
 		return;
-
-	LOG("SaveLocalConfig step 1\n");
+	char buf[MAX_PATH] = { 0 };
 	string path = g_App.ExeFilePath("Desktop");
-	CreateDirectoryA(path.c_str(), NULL);
+	struct stat info;
 
-	LOG("SaveLocalConfig step 2\n");
+	if (stat(path.c_str(), &info) != 0){
+		LOG("%s Does not exist, creating.\n", path);
+		CreateDirectoryA(path.c_str(), NULL);
+	}
+
 	path += string("\\") + g_MainScreen.m_Account->c_str();
-	CreateDirectoryA(path.c_str(), NULL);
 
-	LOG("SaveLocalConfig step 3\n");
+	if (stat(path.c_str(), &info) != 0){
+		LOG("%s Does not exist, creating.\n", path);
+		CreateDirectoryA(path.c_str(), NULL);
+	}
 	CServer *server = g_ServerList.GetSelectedServer();
 	if (server != NULL)
 		path += string("\\") + FixServerName(server->Name);
-
-	CreateDirectoryA(path.c_str(), NULL);
-
+	if (stat(path.c_str(), &info) != 0){
+		LOG("%s Does not exist, creating.\n", path);
+		CreateDirectoryA(path.c_str(), NULL);
+	}
 	char serbuf[20] = { 0 };
 	sprintf_s(serbuf, "\\0x%08X", g_PlayerSerial);
-
 	path += serbuf;
-	CreateDirectoryA(path.c_str(), NULL);
+	if (stat(path.c_str(), &info) != 0){
+		LOG("%s Does not exist, creating.\n", path);
+		CreateDirectoryA(path.c_str(), NULL);
+	} else if (info.st_mode & S_IFDIR)
+		LOG("SaveLocalConfig using path: %s\n", path);
 
 	LOG("managers:saving\n");
 	g_ConfigManager.Save(path + "\\orion_options.cfg");
@@ -5932,7 +5941,7 @@ void COrion::LogOut()
 {
 	WISPFUN_DEBUG("c194_f124");
 	LOG("COrion::LogOut->Start\n");
-	SaveLocalConfig();
+	SaveLocalConfig(g_PacketManager.ConfigSerial);
 
 	if (g_SendLogoutNotification)
 		CPacketLogoutNotification().Send();
