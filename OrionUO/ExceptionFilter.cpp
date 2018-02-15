@@ -217,13 +217,13 @@ LONG __stdcall OrionUnhandledExceptionFilter(struct _EXCEPTION_POINTERS *excepti
 			}
 
 			Wisp::g_WispCrashLogger.Close();
-			string crashlogPath = g_App.ExeFilePath("OrionCrashReporter.exe ") + Wisp::g_WispCrashLogger.GetFileName();
+			string crashlogPath = "\"" + Wisp::g_WispCrashLogger.GetFileName() + "\"";
 			STARTUPINFOA si;
 			PROCESS_INFORMATION pi;
 			ZeroMemory(&si, sizeof(si));
 			si.cb = sizeof(si);
 			ZeroMemory(&pi, sizeof(pi));
-			bool reportSent = CreateProcessA(NULL,   // No module name (use command line)
+			bool reportSent = CreateProcessA("OrionCrashReporter.exe",
 				&crashlogPath[0],        // Command line
 				NULL,           // Process handle not inheritable
 				NULL,           // Thread handle not inheritable
