@@ -438,12 +438,17 @@ void CGumpManager::RemoveRangedGumps()
 				case GT_PAPERDOLL:
 				case GT_MAP:
 				case GT_SPELLBOOK:
-				case GT_DRAG:
-				case GT_TRADE:
-				case GT_SHOP:
+				case GT_DRAG:						
 				{
 					if (g_World->FindWorldObject(gump->Serial) == NULL)
 						RemoveGump(gump); //Или CloseGump() ?
+					break;
+				}
+				case GT_TRADE:
+				case GT_SHOP:
+				{
+					if (GetTopObjDistance(g_Player, g_World->FindWorldObject(gump->Serial)) > MAX_VIEW_RANGE_OLD)
+						RemoveGump(gump);
 					break;
 				}
 				case GT_CONTAINER:
