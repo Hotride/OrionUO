@@ -175,6 +175,7 @@ xcopy /y /d  "$(SolutionDir)debug_bin\Orion.dll" "$(ProjectDir)"
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
+      <UACExecutionLevel>RequireAdministrator</UACExecutionLevel>
     </Link>
     <PostBuildEvent>
       <Command>if exist "$(OutDir)bass.dll" (del "$(OutDir)bass.dll")
