@@ -1161,7 +1161,7 @@ void CGumpOptions::DrawPage3()
 	checkbox->SetTextParameters(0, L"Use Tool-tips", g_OptionsTextColor);
 
 	text = (CGUIText*)Add(new CGUIText(g_OptionsTextColor, 64, 112));
-	text->CreateTextureW(0, L"Delay befor Tool-tip appears");
+	text->CreateTextureW(0, L"Delay before Tool-tip appears");
 
 	m_SliderTooltipDelay = (CGUISlider*)Add(new CGUISlider(ID_GO_P3_DELAY_BEFORE_TOOLTIP, 0x00D8, 0x00D8, 0x00D8, 0x00D5, true, false, 64, 133, 90, 0, 5000, g_OptionsConfig.ToolTipsDelay));
 	m_SliderTooltipDelay->SetTextParameters(true, STP_RIGHT, 0, g_OptionsTextColor, true);
