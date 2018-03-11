@@ -2353,16 +2353,20 @@ PACKET_HANDLER(ExtendedCommand)
 		{
 			uint serial = ReadUInt32BE();
 			CGameItem *item = g_World->FindWorldItem(serial);
+			if (item == NULL) return;
+
 			wstring str = L"";
 			int clilocNum = ReadInt32BE();
 			if (clilocNum)
 			{
 				str = g_ClilocManager.Cliloc(g_Language)->GetW(clilocNum, true);
-				g_Orion.CreateUnicodeTextMessage(TT_OBJECT, serial, 0x03, 0x3B2, str);
-				if (item != NULL && !item->NPC)
+				if (str.length() > 0)
+				{
 					item->Name = ToString(str);
-
+				}
+				g_Orion.CreateUnicodeTextMessage(TT_OBJECT, serial, 0x03, 0x3B2, str);
 			}
+			
 			str = L"";
 			ushort crafterNameLen = 0;
 			uint next = ReadUInt32BE();
@@ -2892,6 +2896,7 @@ PACKET_HANDLER(UnicodeTalk)
 	}
 
 	LOG("%s: %s\n", name.c_str(), ToString(str).c_str());
+	
 
 	CGameObject *obj = g_World->FindWorldObject(serial);
 
