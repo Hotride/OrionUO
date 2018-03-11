@@ -66,7 +66,8 @@ string CCliloc::Load(uint &id)
 
 			if (currentID == id)
 			{
-				result = m_File.ReadString(len);
+				if (len > 0)
+					result = m_File.ReadString(len);
 
 				if (id >= 3000000)
 					m_ClilocSupport[currentID] = result;
@@ -75,7 +76,7 @@ string CCliloc::Load(uint &id)
 				else
 					m_ClilocSystem[currentID] = result;
 
-				break;
+				return result;
 			}
 			else
 				m_File.Move(len);
@@ -126,20 +127,20 @@ wstring CCliloc::Get(const uint &id, const bool &toCamelCase, string result)
 	uint tmpID = id;
 	string loadStr = Load(tmpID);
 
-	if (!tmpID && loadStr.length())
+
+	if (loadStr.length())
 		return CamelCaseTest(toCamelCase, loadStr);
-	else
+	if (tmpID == id && !loadStr.length())
+		return L"";
+	if (m_Language != "ENU" && this->Language != "enu")
+		return g_ClilocManager.Cliloc("enu")->Get(id, toCamelCase, result);
+	if (!result.length())
 	{
-		if (m_Language != "ENU" && this->Language != "enu")
-			return g_ClilocManager.Cliloc("enu")->Get(id, toCamelCase, result);
-		else if (!result.length())
-		{
 
-			char str[50] = { 0 };
-			sprintf_s(str, "Unknown Cliloc #%i", id);
+		char str[50] = { 0 };
+		sprintf_s(str, "Unknown Cliloc #%i", id);
 
-			result = str;
-		}
+		result = str;
 	}
 
 	return CamelCaseTest(toCamelCase, result);
