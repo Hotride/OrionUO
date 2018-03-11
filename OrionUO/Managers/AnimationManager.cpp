@@ -1733,6 +1733,8 @@ void CAnimationManager::DrawCharacter(CGameCharacter *obj, int x, int y)
 		{
 			if (obj->Poisoned() || obj->SA_Poisoned)
 				m_Color = 0x0044;
+			else if (obj->Frozen())
+				m_Color = 0x014C;
 			else if (obj->Notoriety != NT_INVULNERABLE && obj->YellowHits())
 				m_Color = 0x0030;
 		}
