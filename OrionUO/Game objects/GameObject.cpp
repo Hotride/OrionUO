@@ -288,7 +288,7 @@ void CGameObject::AddText(CTextData *msg)
 	string msgname = "You see: ";
 
 	if (!m_YouSeeJournalPrefix)
-		msgname = m_Name + ": ";
+		msgname = m_Name;
 
 	/*if (m_Clicked)
 	{
