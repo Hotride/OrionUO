@@ -28,7 +28,7 @@ CRenderStaticObject::CRenderStaticObject(const RENDER_OBJECT_TYPE &renderType, c
 
 	if (renderType == ROT_GAME_OBJECT)
 	{
-		m_TextControl = new CTextContainer(3);
+		m_TextControl = new CTextContainer(5);
 
 		if (IsSurface() || (IsBackground() && IsUnknown2()))
 			m_CanBeTransparent |= 0x10;
