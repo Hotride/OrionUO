@@ -675,6 +675,7 @@ uchar CGameCharacter::GetAnimationGroup(ushort checkGraphic)
 
 		if (IsPlayer())
 			InWar = g_Player->Warmode;
+
 		if (isWalking)
 		{
 			if (isRun)
@@ -694,14 +695,14 @@ uchar CGameCharacter::GetAnimationGroup(ushort checkGraphic)
 			test_walk:
 				if (FindLayer(OL_MOUNT) != NULL)
 					result = (uchar)PAG_ONMOUNT_RIDE_SLOW;
-				else if (FindLayer(OL_1_HAND) != NULL || FindLayer(OL_2_HAND) != NULL)
+				else if ((FindLayer(OL_1_HAND) != NULL || FindLayer(OL_2_HAND) != NULL) && !Dead())
 				{
-					if (InWar)
+					if (InWar )
 						result = (uchar)PAG_WALK_WARMODE;
 					else
 						result = (uchar)PAG_WALK_ARMED;
 				}
-				else if (InWar)
+				else if (InWar && !Dead())
 					result = (uchar)PAG_WALK_WARMODE;
 				else
 					result = (uchar)PAG_WALK_UNARMED;
@@ -711,7 +712,7 @@ uchar CGameCharacter::GetAnimationGroup(ushort checkGraphic)
 		{
 			if (FindLayer(OL_MOUNT) != NULL)
 				result = (uchar)PAG_ONMOUNT_STAND;
-			else if (InWar)
+			else if (InWar && !Dead())
 			{
 				if (FindLayer(OL_1_HAND) != NULL)
 					result = (uchar)PAG_STAND_ONEHANDED_ATTACK;
