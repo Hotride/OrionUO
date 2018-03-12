@@ -63,6 +63,7 @@ bool CMappedFile::Load()
 bool CMappedFile::Load(const string &path)
 {
 	WISPFUN_DEBUG("c7_f2");
+	LOG("Mmaping  %s\n", path);
 	bool result = false;
 
 	if (PathFileExistsA(path.c_str()))
@@ -73,10 +74,19 @@ bool CMappedFile::Load(const string &path)
 
 		if (m_File != INVALID_HANDLE_VALUE)
 			result = Load();
+		else
+			LOG("INVALID_HANDLE_VALUE for CreateFileA  %s\n", path);
 	}
+	else
+		LOG("File not found %s\n", path);
 
 	if (!result)
+	{
+		DWORD errorCode = GetLastError();
+		LOG("Failed to memory map, error code: %i\n", errorCode);
 		g_WispMappedFileError = path;
+	}
+		
 
 	return result;
 }
