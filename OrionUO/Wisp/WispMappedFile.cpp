@@ -63,7 +63,7 @@ bool CMappedFile::Load()
 bool CMappedFile::Load(const string &path)
 {
 	WISPFUN_DEBUG("c7_f2");
-	LOG("Mmaping  %s\n", path);
+	LOG("Mmaping  %s\n", path.c_str());
 	bool result = false;
 
 	if (PathFileExistsA(path.c_str()))
@@ -75,10 +75,10 @@ bool CMappedFile::Load(const string &path)
 		if (m_File != INVALID_HANDLE_VALUE)
 			result = Load();
 		else
-			LOG("INVALID_HANDLE_VALUE for CreateFileA  %s\n", path);
+			LOG("INVALID_HANDLE_VALUE for CreateFileA  %s\n", path.c_str());
 	}
 	else
-		LOG("File not found %s\n", path);
+		LOG("File not found %s\n", path.c_str());
 
 	if (!result)
 	{
