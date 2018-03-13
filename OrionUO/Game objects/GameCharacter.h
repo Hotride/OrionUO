@@ -104,6 +104,11 @@ protected:
 	*/
 	void CorrectAnimationGroup(const ushort &graphic, const ANIMATION_GROUPS &group, uchar &animation);
 
+	/*!
+	Bonded pets status dead/alive
+	*/
+	bool m_Dead = false;
+
 public:
 	/*!
 	Constructor
@@ -269,7 +274,7 @@ public:
 	Check on dead
 	@return true if graphic is ghost
 	*/
-	bool Dead() { return (IN_RANGE(m_Graphic, 0x0192, 0x0193) || IN_RANGE(m_Graphic, 0x025F, 0x0260) || IN_RANGE(m_Graphic, 0x02B6, 0x02B7)); }
+	bool Dead() { return (IN_RANGE(m_Graphic, 0x0192, 0x0193) || IN_RANGE(m_Graphic, 0x025F, 0x0260) || IN_RANGE(m_Graphic, 0x02B6, 0x02B7)) || m_Dead; }
 
 	/*!
 	Get character pointer
@@ -282,6 +287,11 @@ public:
 	@return Item pointer or NULL if box is not found
 	*/
 	virtual CGameItem *FindSecureTradeBox();
+
+	/*!
+	Set dead/alive status
+	*/
+	void SetDead(bool &dead);
  };
  //----------------------------------------------------------------------------------
 #endif

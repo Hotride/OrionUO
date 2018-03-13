@@ -995,3 +995,8 @@ CGameItem *CGameCharacter::FindSecureTradeBox()
 	return NULL;
 }
 //----------------------------------------------------------------------------------
+void CGameCharacter::SetDead(bool &dead)
+{
+	m_Dead = dead;
+}
+//----------------------------------------------------------------------------------
