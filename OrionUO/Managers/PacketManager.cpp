@@ -2478,34 +2478,50 @@ PACKET_HANDLER(ExtendedCommand)
 		{
 			uchar version = ReadUInt8();
 			uint serial = ReadUInt32BE();
-			uchar updateGump = ReadUInt8();
 
-			if (version > 1)
+			switch (version)
 			{
-				if (serial == g_PlayerSerial)
+				case 0:
 				{
-					uchar state = ReadUInt8();
+					CGameCharacter* bonded = g_World->FindWorldCharacter(serial);
+					if (bonded == NULL) break;
 
-					g_DrawStatLockers = true;
-
-					g_Player->LockStr = (state >> 4) & 3;
-					g_Player->LockDex = (state >> 2) & 3;
-					g_Player->LockInt = state & 3;
-
-					CGump *statusbar = g_GumpManager.GetGump(g_PlayerSerial, 0, GT_STATUSBAR);
-
-					if (statusbar != NULL && !statusbar->Minimized)
-						statusbar->WantUpdateContent = true;
+					bool dead = ReadUInt8();
+					bonded->SetDead(dead);
+					break;
 				}
+				case 2:
+				{
+					if (serial == g_PlayerSerial)
+					{
+						uchar updateGump = ReadUInt8();
+						uchar state = ReadUInt8();
+						g_DrawStatLockers = true;
+
+						g_Player->LockStr = (state >> 4) & 3;
+						g_Player->LockDex = (state >> 2) & 3;
+						g_Player->LockInt = state & 3;
+
+						CGump *statusbar = g_GumpManager.GetGump(g_PlayerSerial, 0, GT_STATUSBAR);
+
+						if (statusbar != NULL && !statusbar->Minimized)
+							statusbar->WantUpdateContent = true;
+					}
+					break;
+				}
+				case 5:
+				{
+					CGameCharacter* character = g_World->FindWorldCharacter(serial);
+					if (character == NULL) break;
+
+					if (Size == 19)
+					{
+						bool dead = ReadUInt8();
+						character->SetDead(dead);
+					}
+					break;
+				}				
 			}
-
-			/*if (version > 4)
-			{
-				uchar wtf1 = ReadUInt8();
-				ushort wtf2 = ReadUInt16BE();
-				ushort wtf3 = ReadUInt16BE();
-			}*/
-
 			break;
 		}
 		case 0x1B: //New spellbook content
