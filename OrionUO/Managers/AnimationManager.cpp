@@ -1738,6 +1738,9 @@ void CAnimationManager::DrawCharacter(CGameCharacter *obj, int x, int y)
 			else if (obj->Notoriety != NT_INVULNERABLE && obj->YellowHits())
 				m_Color = 0x0030;
 		}
+
+		if (obj->Dead())
+			m_Color = g_ConfigManager.GetColorByNotoriety(3);
 	}
 
 	puchar drawTextureColor = obj->m_DrawTextureColor;
