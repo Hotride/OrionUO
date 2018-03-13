@@ -123,7 +123,7 @@ bool CFileManager::Load()
 
 	IFOR(i, 0, 6)
 	{
-		if (i > 0)
+		if (i > 1)
 		{
 			m_AnimIdx[i].Load(g_App.UOFilesPath("anim%i.idx", i));
 			m_AnimMul[i].Load(g_App.UOFilesPath("anim%i.mul", i));
@@ -249,7 +249,7 @@ bool CFileManager::LoadWithUOP()
 
 	IFOR(i, 0, 6)
 	{
-		if (i > 0)
+		if (i > 1)
 		{
 			m_AnimIdx[i].Load(g_App.UOFilesPath("anim%i.idx", i));
 			m_AnimMul[i].Load(g_App.UOFilesPath("anim%i.mul", i));
