@@ -1740,7 +1740,7 @@ void CAnimationManager::DrawCharacter(CGameCharacter *obj, int x, int y)
 		}
 
 		if (obj->Dead())
-			m_Color = g_ConfigManager.GetColorByNotoriety(3);
+			m_Color = 0x0386;
 	}
 
 	puchar drawTextureColor = obj->m_DrawTextureColor;
