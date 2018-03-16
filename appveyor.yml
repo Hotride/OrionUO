@@ -1,3 +1,7 @@
 version: 1.0.{build}
 build:
   verbosity: minimal
+  notifications:
+  - provider: Webhook
+    url: https://discordapp.com/api/webhooks/237606690495791104/ewURTxkzbXphiOgXbzImxaHAsFCDuIDsVIDSADAeSs8a_6sd5VgWGWUG42Ij_qRTkocf
+  
