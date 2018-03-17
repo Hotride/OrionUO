@@ -1188,13 +1188,11 @@ bool CAnimationManager::LoadDirectionGroup(CTextureAnimationDirection &direction
 
 	if (direction.IsUOP)
 		return TryReadUOPAnimDimins(direction);
-	else if (direction.Address == 0)
-	{
-		//LOG("CAnimationManager::LoadDirectionGroup bad address\n");
-		return false;
-	}
+	if (direction.Address == 0) return false;
 
-	SetData((puchar)direction.Address, direction.Size);
+	UCHAR_LIST animData(direction.Size);
+	g_FileManager.ReadAnimMulDataFromFileStream(animData, direction);
+	SetData(reinterpret_cast<puchar>(&animData[0]), direction.Size);
 
 	pushort palette = (pushort)m_Start;
 	Move(sizeof(ushort[256])); //Palette
@@ -2188,7 +2186,10 @@ ANIMATION_DIMENSIONS CAnimationManager::GetAnimationDimensions(uchar frameIndex,
 
 		if (ptr != NULL)
 		{
-			SetData(ptr, direction.Size);
+			UCHAR_LIST animData(direction.Size);
+			g_FileManager.ReadAnimMulDataFromFileStream(animData, direction);
+			SetData(reinterpret_cast<puchar>(&animData[0]), direction.Size);
+
 			Move(sizeof(ushort[256]));  //Palette
 			puchar dataStart = m_Ptr;
 
