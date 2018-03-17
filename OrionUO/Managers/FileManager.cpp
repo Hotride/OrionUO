@@ -695,3 +695,9 @@ bool CFileManager::IsMulFileOpen(int idx) const
 	return m_AnimMul[idx].is_open();
 }
 //----------------------------------------------------------------------------------
+void CFileManager::ReadAnimMulDataFromFileStream(UCHAR_LIST &animData, CTextureAnimationDirection &direction)
+{
+	m_AnimMul[direction.FileIndex].seekg(direction.Address);
+	m_AnimMul[direction.FileIndex].read(reinterpret_cast<char*>(animData.data()), direction.Size);
+}
+//----------------------------------------------------------------------------------
