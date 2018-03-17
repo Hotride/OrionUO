@@ -4219,7 +4219,12 @@ PACKET_HANDLER(OpenGump)
 
 	STRING_LIST commandList = parser.GetTokens(commands.c_str());
 	CBaseGUI *lastGumpObject = NULL;
-
+	
+	bool EntryChanged = false;
+	int FirstPage = 0;
+	int CurrentPage = 0;
+	CEntryText *ChangeEntry;
+	
 	for (const string &str : commandList)
 	{
 		STRING_LIST list = cmdParser.GetTokens(str.c_str());
@@ -4252,6 +4257,9 @@ PACKET_HANDLER(OpenGump)
 
 				int page = ToInt(list[1]);
 				go = new CGUIPage(page);
+				if (FirstPage == 0)
+					FirstPage = page;
+				CurrentPage = page;
 			}
 		}
 		else if (cmd == "group")
@@ -4440,6 +4448,14 @@ PACKET_HANDLER(OpenGump)
 				go = new CGUIGenericTextEntry(index + 1, textIndex, color, x, y);
 				((CGUIGenericTextEntry*)go)->CheckOnSerial = true;
 				((CGUITextEntry*)go)->m_Entry.Width = width;
+				if (!EntryChanged)
+				{
+					if (CurrentPage == 0 || CurrentPage == FirstPage)
+					{
+						ChangeEntry = &((CGUITextEntry*)go)->m_Entry;
+						EntryChanged = true;
+					}
+				}
 			}
 		}
 		else if (cmd == "textentrylimited")
@@ -4463,6 +4479,14 @@ PACKET_HANDLER(OpenGump)
 				go = new CGUIGenericTextEntry(index + 1, textIndex, color, x, y, width, length);
 				((CGUIGenericTextEntry*)go)->CheckOnSerial = true;
 				((CGUITextEntry*)go)->m_Entry.Width = width;
+				if (!EntryChanged)
+				{
+					if (CurrentPage == 0 || CurrentPage == FirstPage)
+					{
+						ChangeEntry = &((CGUITextEntry*)go)->m_Entry;
+						EntryChanged = true;
+					}
+				}
 			}
 		}
 		else if (cmd == "tilepic" || cmd == "tilepichue")
@@ -4647,7 +4671,10 @@ PACKET_HANDLER(OpenGump)
 		else
 			gump->AddText((int)i, L"");
 	}
-
+	
+	if (EntryChanged)
+		g_EntryPointer = ChangeEntry;
+	
 	g_GumpManager.AddGump(gump);
 }
 //----------------------------------------------------------------------------------
