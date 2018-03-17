@@ -1020,7 +1020,7 @@ void CGumpStatusbar::UpdateContent()
 			ushort hitsColor = 0x0386;
 			ushort textColor = 0x0386;
 			CGameCharacter *obj = g_World->FindWorldCharacter(m_Serial);
-			string objName = "";
+			string objName = m_Name;
 			bool canChangeName = false;
 
 			if (obj != NULL)
@@ -1033,6 +1033,7 @@ void CGumpStatusbar::UpdateContent()
 					color = 0;
 
 				objName = obj->Name;
+				m_Name = objName;
 
 				if (obj->CanChangeName)
 				{
