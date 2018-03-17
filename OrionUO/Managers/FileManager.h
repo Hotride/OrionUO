@@ -67,7 +67,7 @@ public:
 	WISP_FILE::CMappedFile m_StaticIdx[6];
 	WISP_FILE::CMappedFile m_TextureIdx;
 
-	WISP_FILE::CMappedFile m_AnimMul[6];
+	std::fstream m_AnimMul[6];
 	WISP_FILE::CMappedFile m_AnimdataMul;
 	WISP_FILE::CMappedFile m_ArtMul;
 	WISP_FILE::CMappedFile m_HuesMul;
@@ -121,9 +121,13 @@ public:
 
 	void SendFilesInfo();
 
+	bool IsMulFileOpen(int idx) const;
+
 private:
 	void ReadTask();
 	static bool FileExists(const std::string& filename);
+
+	static bool TryOpenFileStream(std::fstream &fileStream, std::string &filePath);
 
 	bool LoadUOPFile(CUopMappedFile &file, const char *fileName);
 };

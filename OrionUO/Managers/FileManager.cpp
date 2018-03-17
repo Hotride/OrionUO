@@ -99,7 +99,7 @@ bool CFileManager::Load()
 		return false;
 	else if (!m_TextureIdx.Load(g_App.UOFilesPath("texidx.mul")))
 		return false;
-	else if (!m_AnimMul[0].Load(g_App.UOFilesPath("anim.mul")))
+	else if (!TryOpenFileStream(m_AnimMul[0], g_App.UOFilesPath("anim.mul")))
 		return false;
 	else if (!m_AnimdataMul.Load(g_App.UOFilesPath("animdata.mul")))
 		return false;
@@ -126,7 +126,7 @@ bool CFileManager::Load()
 		if (i > 1)
 		{
 			m_AnimIdx[i].Load(g_App.UOFilesPath("anim%i.idx", i));
-			m_AnimMul[i].Load(g_App.UOFilesPath("anim%i.mul", i));
+			TryOpenFileStream(m_AnimMul[i], g_App.UOFilesPath("anim%i.mul", i));
 		}
 
 		m_MapMul[i].Load(g_App.UOFilesPath("map%i.mul", i));
@@ -227,7 +227,7 @@ bool CFileManager::LoadWithUOP()
 		return false;
 	else if (!m_TextureIdx.Load(g_App.UOFilesPath("texidx.mul")))
 		return false;
-	else if (!m_AnimMul[0].Load(g_App.UOFilesPath("anim.mul")))
+	else if (!TryOpenFileStream(m_AnimMul[0], g_App.UOFilesPath("anim.mul")))
 		return false;
 	else if (!m_AnimdataMul.Load(g_App.UOFilesPath("animdata.mul")))
 		return false;
@@ -252,7 +252,7 @@ bool CFileManager::LoadWithUOP()
 		if (i > 1)
 		{
 			m_AnimIdx[i].Load(g_App.UOFilesPath("anim%i.idx", i));
-			m_AnimMul[i].Load(g_App.UOFilesPath("anim%i.mul", i));
+			TryOpenFileStream(m_AnimMul[i], g_App.UOFilesPath("anim%i.mul", i));
 		}
 
 		string mapName = string("map") + std::to_string(i);
@@ -333,7 +333,7 @@ void CFileManager::Unload()
 	IFOR(i, 0, 6)
 	{
 		m_AnimIdx[i].Unload();
-		m_AnimMul[i].Unload();
+		m_AnimMul[i].close();
 		m_MapUOP[i].Unload();
 		m_MapXUOP[i].Unload();
 		m_MapMul[i].Unload();
@@ -673,5 +673,25 @@ bool CFileManager::LoadUOPFile(CUopMappedFile &file, const char *fileName)
 
 
 	return true;
+}
+//----------------------------------------------------------------------------------
+bool CFileManager::TryOpenFileStream(std::fstream &fileStream, std::string &filePath)
+{
+	LOG("Trying to open file stream for %s\n", filePath);
+	if(!FileExists(filePath))
+	{
+		LOG("%s doesnt exist\n", filePath);
+		return false;
+	}
+	fileStream.open(filePath, std::ios::binary | std::ios::in);
+	LOG("Opened file stream for %s\n", filePath);
+	return true;
+}
+//----------------------------------------------------------------------------------
+bool CFileManager::IsMulFileOpen(int idx) const
+{
+	//we only have 5 anim mul files atm
+	if (idx > 5) return false;
+	return m_AnimMul[idx].is_open();
 }
 //----------------------------------------------------------------------------------
