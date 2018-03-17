@@ -224,7 +224,6 @@ CAnimationManager::CAnimationManager()
 {
 	WISPFUN_DEBUG("c133_f1");
 	memset(m_AddressIdx, 0, sizeof(m_AddressIdx));
-	memset(m_AddressMul, 0, sizeof(m_AddressMul));
 	memset(m_SizeIdx, 0, sizeof(m_SizeIdx));
 
 	memset(m_CharacterLayerGraphic, 0, sizeof(m_CharacterLayerGraphic));
@@ -364,7 +363,7 @@ void CAnimationManager::Load(puint verdata)
 
 				if (aidx->Size && aidx->Position != 0xFFFFFFFF && aidx->Size != 0xFFFFFFFF)
 				{
-					direction.BaseAddress = m_AddressMul[0] + aidx->Position;
+					direction.BaseAddress = aidx->Position;
 					direction.BaseSize = aidx->Size;
 					direction.Address = direction.BaseAddress;
 					direction.Size = direction.BaseSize;
@@ -615,7 +614,7 @@ void CAnimationManager::InitIndexReplaces(puint verdata)
 			char mountedHeightOffset = 0;
 			ANIMATION_GROUPS_TYPE groupType = AGT_UNKNOWN;
 
-			if (anim[0] != -1 && m_AddressIdx[2] != 0 && m_AddressMul[2] != 0)
+			if (anim[0] != -1 && m_AddressIdx[2] != 0 && g_FileManager.IsMulFileOpen(2))
 			{
 				animFile = 2;
 
@@ -635,7 +634,7 @@ void CAnimationManager::InitIndexReplaces(puint verdata)
 					groupType = AGT_MONSTER;
 				}
 			}
-			else if (anim[1] != -1 && m_AddressIdx[3] != 0 && m_AddressMul[3] != 0)
+			else if (anim[1] != -1 && m_AddressIdx[3] != 0 && g_FileManager.IsMulFileOpen(3))
 			{
 				animFile = 3;
 				realAnimID = anim[1];
@@ -659,7 +658,7 @@ void CAnimationManager::InitIndexReplaces(puint verdata)
 					groupType = AGT_MONSTER;
 				}
 			}
-			else if (anim[2] != -1 && m_AddressIdx[4] != 0 && m_AddressMul[4] != 0)
+			else if (anim[2] != -1 && m_AddressIdx[4] != 0 && g_FileManager.IsMulFileOpen(4))
 			{
 				animFile = 4;
 				realAnimID = anim[2];
@@ -683,7 +682,7 @@ void CAnimationManager::InitIndexReplaces(puint verdata)
 					groupType = AGT_MONSTER;
 				}
 			}
-			else if (anim[3] != -1 && m_AddressIdx[5] != 0 && m_AddressMul[5] != 0)
+			else if (anim[3] != -1 && m_AddressIdx[5] != 0 && g_FileManager.IsMulFileOpen(5))
 			{
 				animFile = 5;
 				realAnimID = anim[3];
@@ -778,7 +777,7 @@ void CAnimationManager::InitIndexReplaces(puint verdata)
 
 							if (aidx->Size && aidx->Position != 0xFFFFFFFF && aidx->Size != 0xFFFFFFFF)
 							{
-								direction.PatchedAddress = m_AddressMul[animFile] + aidx->Position;
+								direction.PatchedAddress = aidx->Position;
 								direction.PatchedSize = aidx->Size;
 								direction.FileIndex = animFile;
 							}

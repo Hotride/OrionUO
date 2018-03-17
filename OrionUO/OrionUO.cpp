@@ -367,7 +367,7 @@ bool COrion::Install()
 	g_CreateCharacterManager.Init();
 
 	IFOR(i, 0, 6)
-		g_AnimationManager.Init((int)i, (size_t)g_FileManager.m_AnimIdx[i].Start, (size_t)g_FileManager.m_AnimMul[i].Start, (size_t)g_FileManager.m_AnimIdx[i].Size);
+		g_AnimationManager.Init((int)i, (size_t)g_FileManager.m_AnimIdx[i].Start, (size_t)g_FileManager.m_AnimIdx[i].Size);
 
 	g_AnimationManager.InitIndexReplaces((puint)g_FileManager.m_VerdataMul.Start);
 
