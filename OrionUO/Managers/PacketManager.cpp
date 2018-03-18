@@ -2364,7 +2364,7 @@ PACKET_HANDLER(ExtendedCommand)
 				{
 					item->Name = ToString(str);
 				}
-				g_Orion.CreateUnicodeTextMessage(TT_OBJECT, serial, 0x03, 0x3B2, str);
+				g_Orion.CreateUnicodeTextMessage(TT_SYSTEM, serial, 0x03, 0x3B2, str);
 			}
 			
 			str = L"";
@@ -2419,7 +2419,7 @@ PACKET_HANDLER(ExtendedCommand)
 				str += L"]";
 
 			if (str.length())
-				g_Orion.CreateUnicodeTextMessage(TT_OBJECT, serial, 0x03, 0x3B2, str);
+				g_Orion.CreateUnicodeTextMessage(TT_SYSTEM, serial, 0x03, 0x3B2, str);
 			//g_Orion.CreateTextMessage(TT_OBJECT, serial, 0x03, 0x3B2, str);
 			CPacketMegaClilocRequestOld(serial).Send();
 			break;
@@ -3550,15 +3550,18 @@ PACKET_HANDLER(DisplayClilocString)
 
 		if (obj != NULL)
 		{
-			if (!obj->Name.length())
+			if (!name.length())
 			{
+				obj->YouSeeJournalPrefix = true;
+			}
+			else
+			{
+				obj->YouSeeJournalPrefix = false;
 				obj->Name = name;
 
 				if (obj->NPC)
 					g_GumpManager.UpdateContent(serial, 0, GT_STATUSBAR);
 			}
-			else //names in journal should always be seen as -> You see: NAME, unless speaking, emoting or else
-				obj->YouSeeJournalPrefix = true;
 		}
 
 		g_Orion.CreateUnicodeTextMessage(TT_OBJECT, serial, (uchar)font, color, message);
