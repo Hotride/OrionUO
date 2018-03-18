@@ -131,9 +131,7 @@ private:
 
 	static bool TryOpenFileStream(std::fstream &fileStream, std::string &filePath);
 
-	static bool PopulateHashDic(int fileIdx, std::unordered_map<unsigned long long, UOPAnimationData*> &hashDic);
-
-	static UOPAnimationData* FindDataByHash(unsigned long long hash, std::unordered_map<unsigned long long, UOPAnimationData*>* hashDic);
+	static void PopulateHashesDic(std::unordered_map<unsigned long long, UOPAnimationData> &hashes);
 
 	bool LoadUOPFile(CUopMappedFile &file, const char *fileName);
 };
