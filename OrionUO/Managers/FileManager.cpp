@@ -427,75 +427,10 @@ void CFileManager::TryReadUOPAnimations()
 //----------------------------------------------------------------------------------
 void CFileManager::ReadTask()
 {
-	std::unordered_map<unsigned long long, UOPAnimationData> hashes;
+	std::unordered_map<unsigned long long, UOPAnimationData*> hashes[4];
 	IFOR(i, 1, 5)
 	{
-		char magic[4];
-		char version[4];
-		char signature[4];
-		char nextBlock[8];
-
-		std::fstream *animFile = new std::fstream();
-		string path(g_App.UOFilesPath("AnimationFrame%i.uop", i));
-		if (!FileExists(path))
-		{
-			continue;
-		}
-		animFile->open(path, std::ios::binary | std::ios::in);
-
-		if (!animFile) continue;
-
-
-		animFile->read(magic, 4);
-		animFile->read(version, 4);
-		animFile->read(signature, 4);
-		animFile->read(nextBlock, 8);
-
-		animFile->seekg(*reinterpret_cast<unsigned long long*>(nextBlock), 0);
-
-		do
-		{
-			char fileCount[4];
-			char offset[8];
-			char headerlength[4];
-			char compressedlength[4];
-			char hash[8];
-			char decompressedlength[4];
-			char skip1[4];
-			char skip2[2];
-
-			animFile->read(fileCount, 4);
-			animFile->read(nextBlock, 8);
-			int count = *reinterpret_cast<unsigned int*>(fileCount);
-			IFOR(i, 0, count)
-			{
-				animFile->read(offset, 8);
-				animFile->read(headerlength, 4);
-				animFile->read(compressedlength, 4);
-				animFile->read(decompressedlength, 4);
-				animFile->read(hash, 8);
-				animFile->read(skip1, 4);
-				animFile->read(skip2, 2);
-
-				auto hashVal = *reinterpret_cast<unsigned long long*>(hash);
-				auto offsetVal = *reinterpret_cast<unsigned long long*>(offset);
-				if (offsetVal == 0)
-				{
-					continue;
-				}
-
-				UOPAnimationData dataStruct;
-				dataStruct.offset = static_cast<uint>(offsetVal + *reinterpret_cast<unsigned int*>(headerlength));
-				dataStruct.compressedLength = *reinterpret_cast<unsigned int*>(compressedlength);
-				dataStruct.decompressedLength = *reinterpret_cast<unsigned int*>(decompressedlength);
-
-				dataStruct.fileStream = animFile;
-				dataStruct.path = path;
-				hashes[hashVal] = dataStruct;
-			}
-
-			animFile->seekg(*reinterpret_cast<unsigned long long*>(nextBlock), 0);
-		} while (*reinterpret_cast<unsigned long long*>(nextBlock) != 0);
+		PopulateHashDic(i, hashes[i - 1]);
 	}
 
 	int maxGroup = 0;
@@ -510,14 +445,14 @@ void CFileManager::ReadTask()
 			char hashString[100];
 			sprintf_s(hashString, "build/animationlegacyframe/%06i/%02i.bin", animId, grpId);
 			auto hash = g_Orion.CreateHash(hashString);
-			if (hashes.find(hash) != hashes.end())
+			UOPAnimationData* dataStruct = FindDataByHash(hash, hashes);
+			if (dataStruct != NULL)
 			{
 				if (grpId > maxGroup)
 					maxGroup = (int)grpId;
 
-				UOPAnimationData dataStruct = hashes.at(hash);
 				indexAnim->IsUOP = true;
-				group->m_UOPAnimData = dataStruct;
+				group->m_UOPAnimData = *(dataStruct);
 				IFOR(dirId, 0, 5)
 				{
 					CTextureAnimationDirection *dir = &group->m_Direction[dirId];
@@ -700,5 +635,90 @@ void CFileManager::ReadAnimMulDataFromFileStream(UCHAR_LIST &animData, CTextureA
 {
 	m_AnimMul[direction.FileIndex].seekg(direction.Address);
 	m_AnimMul[direction.FileIndex].read(reinterpret_cast<char*>(animData.data()), direction.Size);
+}
+//----------------------------------------------------------------------------------
+bool CFileManager::PopulateHashDic(const int fileIdx, std::unordered_map<unsigned long long, UOPAnimationData*> &hashDic)
+{
+	char magic[4];
+	char version[4];
+	char signature[4];
+	char nextBlock[8];
+
+	std::fstream *animFile = new std::fstream();
+	string path(g_App.UOFilesPath("AnimationFrame%i.uop", fileIdx));
+	if (!FileExists(path))
+	{
+		return false;
+	}
+	animFile->open(path, std::ios::binary | std::ios::in);
+
+	if (!animFile) return false;
+
+
+	animFile->read(magic, 4);
+	animFile->read(version, 4);
+	animFile->read(signature, 4);
+	animFile->read(nextBlock, 8);
+
+	animFile->seekg(*reinterpret_cast<unsigned long long*>(nextBlock), 0);
+
+	do
+	{
+		char fileCount[4];
+		char offset[8];
+		char headerlength[4];
+		char compressedlength[4];
+		char hash[8];
+		char decompressedlength[4];
+		char skip1[4];
+		char skip2[2];
+
+		animFile->read(fileCount, 4);
+		animFile->read(nextBlock, 8);
+		int count = *reinterpret_cast<unsigned int*>(fileCount);
+		IFOR(i, 0, count)
+		{
+			animFile->read(offset, 8);
+			animFile->read(headerlength, 4);
+			animFile->read(compressedlength, 4);
+			animFile->read(decompressedlength, 4);
+			animFile->read(hash, 8);
+			animFile->read(skip1, 4);
+			animFile->read(skip2, 2);
+
+			auto hashVal = *reinterpret_cast<unsigned long long*>(hash);
+			auto offsetVal = *reinterpret_cast<unsigned long long*>(offset);
+			if (offsetVal == 0)
+			{
+				continue;
+			}
+
+			UOPAnimationData *dataStruct = new UOPAnimationData();
+			dataStruct->offset = static_cast<uint>(offsetVal + *reinterpret_cast<unsigned int*>(headerlength));
+			dataStruct->compressedLength = *reinterpret_cast<unsigned int*>(compressedlength);
+			dataStruct->decompressedLength = *reinterpret_cast<unsigned int*>(decompressedlength);
+
+			dataStruct->fileStream = animFile;
+			dataStruct->path = path;
+			hashDic[hashVal] = dataStruct;
+		}
+
+		animFile->seekg(*reinterpret_cast<unsigned long long*>(nextBlock), 0);
+	} while (*reinterpret_cast<unsigned long long*>(nextBlock) != 0);
+
+	return true;
+}
+//----------------------------------------------------------------------------------
+UOPAnimationData* CFileManager::FindDataByHash(unsigned long long hash, std::unordered_map<unsigned long long, UOPAnimationData*>* hashDic)
+{
+	IFOR(i, 0, 4)
+	{
+		std::unordered_map<unsigned long long, UOPAnimationData*> hashes = hashDic[i];
+		if (hashes.find(hash) != hashes.end())
+		{
+			return hashes.at(hash);
+		}
+	}
+	return NULL;	
 }
 //----------------------------------------------------------------------------------
