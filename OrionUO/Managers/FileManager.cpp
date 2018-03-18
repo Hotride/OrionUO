@@ -420,6 +420,7 @@ void CFileManager::SendFilesInfo()
 //----------------------------------------------------------------------------------
 void CFileManager::TryReadUOPAnimations()
 {
+	LOG("Start UOP Animations reading thread\n");
 	std::thread readThread(&CFileManager::ReadTask, this);
 	readThread.detach();
 }
