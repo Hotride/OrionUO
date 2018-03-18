@@ -105,6 +105,27 @@ bool CGLShader::Init(const char *vertexShaderData, const char *fragmentShaderDat
 	}
 	LOG("shader program compiled successfully\n");
 
+	GLint isLinked = 0;
+	glGetProgramiv(m_Shader, GL_LINK_STATUS, &isLinked);
+	if (isLinked == GL_FALSE)
+	{
+		GLint maxLength = 0;
+		glGetProgramiv(m_Shader, GL_INFO_LOG_LENGTH, &maxLength);
+
+		// The maxLength includes the NULL character
+		std::vector<GLchar> infoLog(maxLength);
+		glGetProgramInfoLog(m_Shader, maxLength, &maxLength, &infoLog[0]);
+
+		// The program is useless now. So delete it.
+		glDeleteProgram(m_Shader);
+
+		LOG("shader program failed to link\n");
+		LOG("%s\n", infoLog);
+		std::wstring str(infoLog.begin(), infoLog.end());
+		LOG("%s\n", str);
+		return false;
+	}
+
 	return val == GL_TRUE;
 }
 //----------------------------------------------------------------------------------
