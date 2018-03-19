@@ -136,6 +136,8 @@ private:
 	bool LoadUOPFile(CUopMappedFile &file, const char *fileName);
 
 	void SetUOPAnimGroups(int &maxGroup, std::mutex* mtx, int &start, int &end, std::unordered_map<unsigned long long, UOPAnimationData> &hashes);
+
+	void ProcessAnimSequeceData();
 };
 //---------------------------------------------------------------------------
 extern CFileManager g_FileManager;

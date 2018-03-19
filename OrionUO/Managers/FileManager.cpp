@@ -442,12 +442,13 @@ void CFileManager::ReadTask()
 	}
 	IFOR(i, 0, 4)
 		threads[i].join();
-
 	delete mtx;
+
+	ProcessAnimSequeceData();
+
 	if (g_AnimationManager.AnimGroupCount < maxGroup)
 		g_AnimationManager.AnimGroupCount = maxGroup;
-
-
+	
 	m_AnimationSequence.Unload();
 	m_AutoResetEvent.Set();
 }
@@ -710,9 +711,6 @@ void CFileManager::SetUOPAnimGroups(int &maxGroup, std::mutex* mtx, int &start, 
 			auto animGroupHash = g_Orion.CreateHash(hashString);
 			if (hashes.find(animGroupHash) != hashes.end())
 			{
-				sprintf_s(hashString, "build/animationsequence/%i.bin", i);
-				auto animSeqHash = g_Orion.CreateHash(hashString);
-				auto block = m_AnimationSequence.GetBlock(animSeqHash);
 				mtx->lock();
 				if (grpId > maxGroup)
 					maxGroup = (int)grpId;
@@ -733,5 +731,25 @@ void CFileManager::SetUOPAnimGroups(int &maxGroup, std::mutex* mtx, int &start, 
 	mtx->lock();
 	LOG("UOP Anim reading thread finished\n");
 	mtx->unlock();
+}
+//----------------------------------------------------------------------------------
+void CFileManager::ProcessAnimSequeceData()
+{
+	LOG("Processing AnimationSequence data...\n");
+	for (unordered_map<uint64, CUopBlockHeader>::iterator i = m_AnimationSequence.m_Map.begin(); i != m_AnimationSequence.m_Map.end(); ++i)
+	{
+		CUopBlockHeader header = i->second;
+		UCHAR_LIST data = m_AnimationSequence.GetData(header);
+		SetData(reinterpret_cast<puchar>(&data[0]), data.size());
+		uint animId = ReadInt32LE();
+		CIndexAnimation *indexAnim = &g_AnimationManager.m_DataIndex[animId];
+
+		Move(48); // there's nothing there
+		uint unknown = ReadInt32LE(); //format or something size related, values in file: 29, 31, 32, 48, 68
+		LOG("AnimId: %i with formatValue: %i\n", animId, unknown);
+
+		//CTextureAnimationGroup *group = &(*indexAnim).m_Groups[grpId];
+	}
+	LOG("AnimationSequence processed %i entries!!\n", m_AnimationSequence.m_Map.size());
 }
 //----------------------------------------------------------------------------------
