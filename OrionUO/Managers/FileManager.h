@@ -134,6 +134,8 @@ private:
 	static void PopulateHashesDic(std::unordered_map<unsigned long long, UOPAnimationData> &hashes);
 
 	bool LoadUOPFile(CUopMappedFile &file, const char *fileName);
+
+	void SetUOPAnimGroups(int &maxGroup, std::mutex* mtx, int &start, int &end, std::unordered_map<unsigned long long, UOPAnimationData> &hashes);
 };
 //---------------------------------------------------------------------------
 extern CFileManager g_FileManager;

@@ -430,36 +430,19 @@ void CFileManager::ReadTask()
 	std::unordered_map<unsigned long long, UOPAnimationData> hashes;
 	PopulateHashesDic(hashes);
 
+	std::mutex* mtx = new std::mutex();
 	int maxGroup = 0;
-
-	IFOR(animId, 0, MAX_ANIMATIONS_DATA_INDEX_COUNT)
+	int range = MAX_ANIMATIONS_DATA_INDEX_COUNT / 4;
+	IFOR(i, 1, 5)
 	{
-		CIndexAnimation *indexAnim = &g_AnimationManager.m_DataIndex[animId];
+		int end = range * i;
+		int start = range * (i - 1);
+		std::thread th (&CFileManager::SetUOPAnimGroups, this, maxGroup, mtx, start, end, hashes);
+		th.join();
 
-		IFOR(grpId, 0, ANIMATION_GROUPS_COUNT)
-		{
-			CTextureAnimationGroup *group = &(*indexAnim).m_Groups[grpId];
-			char hashString[100];
-			sprintf_s(hashString, "build/animationlegacyframe/%06i/%02i.bin", animId, grpId);
-			auto hash = g_Orion.CreateHash(hashString);
-			if (hashes.find(hash) != hashes.end())
-			{
-				if (grpId > maxGroup)
-					maxGroup = (int)grpId;
-
-				indexAnim->IsUOP = true;
-				group->m_UOPAnimData = hashes.at(hash);
-				IFOR(dirId, 0, 5)
-				{
-					CTextureAnimationDirection *dir = &group->m_Direction[dirId];
-					dir->IsUOP = true;
-					dir->BaseAddress = 0;
-					dir->Address = 0;
-				}
-			}
-		}
 	}
 
+	delete mtx;
 	if (g_AnimationManager.AnimGroupCount < maxGroup)
 		g_AnimationManager.AnimGroupCount = maxGroup;
 
@@ -703,6 +686,39 @@ void CFileManager::PopulateHashesDic(std::unordered_map<unsigned long long, UOPA
 
 			animFile->seekg(*reinterpret_cast<unsigned long long*>(nextBlock), 0);
 		} while (*reinterpret_cast<unsigned long long*>(nextBlock) != 0);
+	}
+}
+//----------------------------------------------------------------------------------
+void CFileManager::SetUOPAnimGroups(int &maxGroup, std::mutex* mtx, int &start, int &end, std::unordered_map<unsigned long long, UOPAnimationData> &hashes)
+{
+	IFOR(i, start, end)
+	{
+		CIndexAnimation *indexAnim = &g_AnimationManager.m_DataIndex[i];
+
+		IFOR(grpId, 0, ANIMATION_GROUPS_COUNT)
+		{
+			CTextureAnimationGroup *group = &(*indexAnim).m_Groups[grpId];
+			char hashString[100];
+			sprintf_s(hashString, "build/animationlegacyframe/%06i/%02i.bin", i, grpId);
+			auto hash = g_Orion.CreateHash(hashString);
+			if (hashes.find(hash) != hashes.end())
+			{
+				mtx->lock();
+				if (grpId > maxGroup)
+					maxGroup = (int)grpId;
+				mtx->unlock();
+
+				indexAnim->IsUOP = true;
+				group->m_UOPAnimData = hashes.at(hash);
+				IFOR(dirId, 0, 5)
+				{
+					CTextureAnimationDirection *dir = &group->m_Direction[dirId];
+					dir->IsUOP = true;
+					dir->BaseAddress = 0;
+					dir->Address = 0;
+				}
+			}
+		}
 	}
 }
 //----------------------------------------------------------------------------------
