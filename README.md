@@ -16,7 +16,7 @@
 
 ```
    If you want to build Orion Client with MVS 2015 or 2017, you need Orion.dll built with v140/v141 toolset.
-    You can find them here(both for release and debug): https://orion-client.online/index.php?threads/orion-dll-question.144/#post-708
+   These can be found in bin and debug_bin
 ```
 
 * Download [Orion Launcher](https://orion-client.online/index.php?pages/downloads/) to set everything up!
@@ -35,7 +35,7 @@
 
 --------------
 
-#Support this project, make a donation!
+# Support this project, make a donation!
 
 --------------
 
