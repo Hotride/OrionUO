@@ -1,9 +1,9 @@
-# OrionUO
+# OrionUO Client
 
 [![Travis Build Status](https://travis-ci.org/Hotride/OrionUO.svg?branch=master)](https://travis-ci.org/Hotride/OrionUO)
 [![Build status](https://ci.appveyor.com/api/projects/status/2fk4unh8huo0bhah?svg=true)](https://ci.appveyor.com/project/AimedNuu/orionuo)
 
-* OrionUO - An alternative, open source Ultima Online graphic client.
+* OrionUO Client - is an alternative, open source Ultima Online graphic client.
 
 * Platforms: Currently only Windows
 
