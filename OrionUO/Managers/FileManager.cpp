@@ -207,7 +207,6 @@ bool CFileManager::LoadWithUOP()
 			return false;
 	}
 
-	LoadUOPFile(m_AnimationSequence, "AnimationSequence.uop");
 	LoadUOPFile(m_Tileart, "tileart.uop");
 
 	/* Эти файлы не используются самой последней версией клиента 7.0.52.2
@@ -429,6 +428,7 @@ void CFileManager::ReadTask()
 {
 	std::unordered_map<unsigned long long, UOPAnimationData> hashes;
 	PopulateHashesDic(hashes);
+	LoadUOPFile(m_AnimationSequence, "AnimationSequence.uop");
 
 	std::mutex* mtx = new std::mutex();
 	int maxGroup = 0;
@@ -447,6 +447,8 @@ void CFileManager::ReadTask()
 	if (g_AnimationManager.AnimGroupCount < maxGroup)
 		g_AnimationManager.AnimGroupCount = maxGroup;
 
+
+	m_AnimationSequence.Unload();
 	m_AutoResetEvent.Set();
 }
 //----------------------------------------------------------------------------------
@@ -705,16 +707,19 @@ void CFileManager::SetUOPAnimGroups(int &maxGroup, std::mutex* mtx, int &start, 
 			CTextureAnimationGroup *group = &(*indexAnim).m_Groups[grpId];
 			char hashString[100];
 			sprintf_s(hashString, "build/animationlegacyframe/%06i/%02i.bin", i, grpId);
-			auto hash = g_Orion.CreateHash(hashString);
-			if (hashes.find(hash) != hashes.end())
+			auto animGroupHash = g_Orion.CreateHash(hashString);
+			if (hashes.find(animGroupHash) != hashes.end())
 			{
+				sprintf_s(hashString, "build/animationsequence/%i.bin", i);
+				auto animSeqHash = g_Orion.CreateHash(hashString);
+				auto block = m_AnimationSequence.GetBlock(animSeqHash);
 				mtx->lock();
 				if (grpId > maxGroup)
 					maxGroup = (int)grpId;
 				mtx->unlock();
 
 				indexAnim->IsUOP = true;
-				group->m_UOPAnimData = hashes.at(hash);
+				group->m_UOPAnimData = hashes.at(animGroupHash);
 				IFOR(dirId, 0, 5)
 				{
 					CTextureAnimationDirection *dir = &group->m_Direction[dirId];
