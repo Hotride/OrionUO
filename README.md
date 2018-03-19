@@ -19,7 +19,7 @@
    These can be found in bin and debug_bin
 ```
 
-* Download [Orion Launcher](https://orion-client.online/index.php?pages/downloads/) to set everything up!
+* Download [Orion Launcher](https://orion-client.online/index.php?pages/downloads/) to set everything up and play!
 
 
 --------------
