@@ -420,7 +420,7 @@ void CFileManager::SendFilesInfo()
 //----------------------------------------------------------------------------------
 void CFileManager::TryReadUOPAnimations()
 {
-	LOG("Start UOP Animations reading thread\n");
+	LOG("Start UOP Animations ReadTask\n");
 	std::thread readThread(&CFileManager::ReadTask, this);
 	readThread.detach();
 }
@@ -433,14 +433,15 @@ void CFileManager::ReadTask()
 	std::mutex* mtx = new std::mutex();
 	int maxGroup = 0;
 	int range = MAX_ANIMATIONS_DATA_INDEX_COUNT / 4;
+	vector<std::thread> threads;
 	IFOR(i, 1, 5)
 	{
 		int end = range * i;
 		int start = range * (i - 1);
-		std::thread th (&CFileManager::SetUOPAnimGroups, this, maxGroup, mtx, start, end, hashes);
-		th.join();
-
+		threads.push_back(std::thread(&CFileManager::SetUOPAnimGroups, this, maxGroup, mtx, start, end, hashes));
 	}
+	IFOR(i, 0, 4)
+		threads[i].join();
 
 	delete mtx;
 	if (g_AnimationManager.AnimGroupCount < maxGroup)
@@ -691,6 +692,10 @@ void CFileManager::PopulateHashesDic(std::unordered_map<unsigned long long, UOPA
 //----------------------------------------------------------------------------------
 void CFileManager::SetUOPAnimGroups(int &maxGroup, std::mutex* mtx, int &start, int &end, std::unordered_map<unsigned long long, UOPAnimationData> &hashes)
 {
+	mtx->lock();
+	LOG("UOP Anim reading thread started\n");
+	mtx->unlock();
+
 	IFOR(i, start, end)
 	{
 		CIndexAnimation *indexAnim = &g_AnimationManager.m_DataIndex[i];
@@ -720,5 +725,8 @@ void CFileManager::SetUOPAnimGroups(int &maxGroup, std::mutex* mtx, int &start, 
 			}
 		}
 	}
+	mtx->lock();
+	LOG("UOP Anim reading thread finished\n");
+	mtx->unlock();
 }
 //----------------------------------------------------------------------------------
