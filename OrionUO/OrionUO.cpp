@@ -180,6 +180,7 @@ void COrion::ParseCommandLine()
 
 	LoadPlugin(defaultPluginPath, defaultPluginFunction, defaultPluginFlags);
 
+
 	if (fastLogin)
 		g_OrionWindow.CreateTimer(COrionWindow::FASTLOGIN_TIMER_ID, 50);
 }
@@ -1341,6 +1342,7 @@ void COrion::LoadStartupConfig(const uint &serial)
 //----------------------------------------------------------------------------------
 void COrion::LoadPlugin(const string &libpath, const string &function, const uint &flags)
 {
+	LOG("Trying to load %s into memory...\n", libpath);
 	WISPFUN_DEBUG("c194_f16");
 	HMODULE dll = LoadLibraryA(libpath.c_str());
 
@@ -1380,6 +1382,13 @@ void COrion::LoadPlugin(const string &libpath, const string &function, const uin
 			g_PluginManager.Add(plugin);
 		}
 	}
+	else
+	{
+		auto errorCode = GetLastError();
+		LOG("Failed to LoadLibrary\n", libpath);
+		LOG("Error code: %i\n", errorCode);
+	}
+		
 }
 //----------------------------------------------------------------------------------
 void COrion::LoadPluginConfig()

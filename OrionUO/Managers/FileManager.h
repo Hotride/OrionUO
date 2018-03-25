@@ -116,7 +116,7 @@ public:
 	//Чтение сжатых данных с кадрами из УОП аним файла.
 	static char *ReadUOPDataFromFileStream(UOPAnimationData &animData);
 
-	void ReadAnimMulDataFromFileStream(UCHAR_LIST &animData, CTextureAnimationDirection &direction);
+	void ReadAnimMulDataFromFileStream(vector<char> &animData, CTextureAnimationDirection &direction);
 
 	//Разжатие данных с кадрами из УОП аним файла.
 	static bool DecompressUOPFileData(UOPAnimationData &animData, UCHAR_LIST &decLayoutData, char *buf);

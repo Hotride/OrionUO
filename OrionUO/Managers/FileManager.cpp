@@ -465,6 +465,7 @@ bool CFileManager::FileExists(const std::string& filename)
 //----------------------------------------------------------------------------------
 char *CFileManager::ReadUOPDataFromFileStream(UOPAnimationData &animData)
 {
+	animData.fileStream->clear();
 	animData.fileStream->seekg(animData.offset, 0);
 	//reading into buffer on the heap
 	char *buf = new char[animData.compressedLength];
@@ -614,10 +615,12 @@ bool CFileManager::IsMulFileOpen(int idx) const
 	return m_AnimMul[idx].is_open();
 }
 //----------------------------------------------------------------------------------
-void CFileManager::ReadAnimMulDataFromFileStream(UCHAR_LIST &animData, CTextureAnimationDirection &direction)
+void CFileManager::ReadAnimMulDataFromFileStream(vector<char> &animData, CTextureAnimationDirection &direction)
 {
-	m_AnimMul[direction.FileIndex].seekg(direction.Address);
-	m_AnimMul[direction.FileIndex].read(reinterpret_cast<char*>(animData.data()), direction.Size);
+	std::fstream* fileStream = &m_AnimMul[direction.FileIndex];
+	fileStream->clear();
+	fileStream->seekg(direction.Address, 0);
+	fileStream->read(static_cast<char*>(animData.data()), direction.Size);
 }
 //----------------------------------------------------------------------------------
 void CFileManager::PopulateHashesDic(std::unordered_map<unsigned long long, UOPAnimationData> &hashes)
