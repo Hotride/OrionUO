@@ -546,6 +546,7 @@ bool CFileManager::FileExists(const std::string& filename)
 //----------------------------------------------------------------------------------
 char *CFileManager::ReadUOPDataFromFileStream(UOPAnimationData &animData)
 {
+	animData.fileStream->clear();
 	animData.fileStream->seekg(animData.offset, 0);
 	//reading into buffer on the heap
 	char *buf = new char[animData.compressedLength];
