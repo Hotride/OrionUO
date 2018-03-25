@@ -1190,7 +1190,7 @@ bool CAnimationManager::LoadDirectionGroup(CTextureAnimationDirection &direction
 		return TryReadUOPAnimDimins(direction);
 	if (direction.Address == 0) return false;
 
-	UCHAR_LIST animData(direction.Size);
+	vector<char> animData(direction.Size);
 	g_FileManager.ReadAnimMulDataFromFileStream(animData, direction);
 	SetData(reinterpret_cast<puchar>(&animData[0]), direction.Size);
 
@@ -2186,7 +2186,7 @@ ANIMATION_DIMENSIONS CAnimationManager::GetAnimationDimensions(uchar frameIndex,
 
 		if (ptr != NULL)
 		{
-			UCHAR_LIST animData(direction.Size);
+			vector<char> animData(direction.Size);
 			g_FileManager.ReadAnimMulDataFromFileStream(animData, direction);
 			SetData(reinterpret_cast<puchar>(&animData[0]), direction.Size);
 
