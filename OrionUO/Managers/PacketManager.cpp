@@ -2364,7 +2364,7 @@ PACKET_HANDLER(ExtendedCommand)
 				{
 					item->Name = ToString(str);
 				}
-				g_Orion.CreateUnicodeTextMessage(TT_SYSTEM, serial, 0x03, 0x3B2, str);
+				g_Orion.CreateUnicodeTextMessage(TT_OBJECT, serial, 0x03, 0x3B2, str);
 			}
 			
 			str = L"";
@@ -2419,8 +2419,7 @@ PACKET_HANDLER(ExtendedCommand)
 				str += L"]";
 
 			if (str.length())
-				g_Orion.CreateUnicodeTextMessage(TT_SYSTEM, serial, 0x03, 0x3B2, str);
-			//g_Orion.CreateTextMessage(TT_OBJECT, serial, 0x03, 0x3B2, str);
+				g_Orion.CreateUnicodeTextMessage(TT_OBJECT, serial, 0x03, 0x3B2, str);
 			CPacketMegaClilocRequestOld(serial).Send();
 			break;
 		}
