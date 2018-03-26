@@ -55,6 +55,8 @@ class CTextureAnimationDirection
 	SETGET(uint, LastAccessTime, 0);
 	//UOP animation indicator
 	SETGET(bool, IsUOP, false);
+	//Data is within verdata file
+	SETGET(bool, IsVerdata, false);
 
 public:
 	CTextureAnimationDirection();

@@ -284,11 +284,7 @@ void CGameObject::AddText(CTextData *msg)
 		UpdateTextCoordinates();
 		FixTextCoordinates();
 	}
-
-	string msgname = "You see: ";
-
-	if (!m_YouSeeJournalPrefix)
-		msgname = m_Name + ": ";
+		
 
 	/*if (m_Clicked)
 	{
@@ -298,7 +294,7 @@ void CGameObject::AddText(CTextData *msg)
 			msgname = m_Name + ": ";
 	}*/
 
-	g_Orion.AddJournalMessage(msg, msgname);
+	g_Orion.AddJournalMessage(msg, m_JournalPrefix);
 }
 //----------------------------------------------------------------------------------
 /*!
