@@ -38,7 +38,7 @@ class CGameObject : public CRenderStaticObject
 	//!Текущий индекс анимации
 	SETGET(char, AnimIndex, 0);
 	//!Префикс You see: в журнале
-	SETGET(bool, YouSeeJournalPrefix, false);
+	SETGET(string, JournalPrefix, "");
 	//!Время последнего изменения анимации
 	SETGET(uint, LastAnimationChangeTime, 0);
 	SETGET(bool, SA_Poisoned, false);

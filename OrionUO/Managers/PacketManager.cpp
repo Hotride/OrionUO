@@ -2355,6 +2355,7 @@ PACKET_HANDLER(ExtendedCommand)
 			CGameItem *item = g_World->FindWorldItem(serial);
 			if (item == NULL) return;
 
+			item->JournalPrefix = "";
 			wstring str = L"";
 			int clilocNum = ReadInt32BE();
 			if (clilocNum)
@@ -2364,6 +2365,7 @@ PACKET_HANDLER(ExtendedCommand)
 				{
 					item->Name = ToString(str);
 				}
+				
 				g_Orion.CreateUnicodeTextMessage(TT_OBJECT, serial, 0x03, 0x3B2, str);
 			}
 			
@@ -2824,7 +2826,9 @@ PACKET_HANDLER(Talk)
 	CGameObject *obj = g_World->FindWorldObject(serial);
 
 	if (type == ST_BROADCAST || /*type == ST_SYSTEM ||*/ serial == 0xFFFFFFFF || !serial || (ToLowerA(name) == "system" && obj == NULL))
+	{
 		g_Orion.CreateTextMessage(TT_SYSTEM, serial, (uchar)font, textColor, str);
+	}	
 	else
 	{
 		if (type == ST_EMOTE)
@@ -2834,9 +2838,9 @@ PACKET_HANDLER(Talk)
 		}
 
 		if (obj != NULL)
-		{
-			obj->YouSeeJournalPrefix = (type == ST_SYSTEM);
-
+		{			
+			//reset
+			obj->JournalPrefix = "";
 			if (!obj->Name.length())
 			{
 				obj->Name = name;
@@ -2844,12 +2848,14 @@ PACKET_HANDLER(Talk)
 				if (obj->NPC)
 					g_GumpManager.UpdateContent(serial, 0, GT_STATUSBAR);
 			}
+
+			if (type == ST_SYSTEM)
+				obj->JournalPrefix = "You see: ";
+			else if (obj->Name.length())
+				obj->JournalPrefix = obj->Name + ": ";
 		}
 
 		g_Orion.CreateTextMessage(TT_OBJECT, serial, (uchar)font, textColor, str);
-
-		if (obj != NULL)
-			obj->YouSeeJournalPrefix = false;
 	}
 }
 //----------------------------------------------------------------------------------
@@ -2940,7 +2946,8 @@ PACKET_HANDLER(UnicodeTalk)
 
 		if (obj != NULL)
 		{
-			obj->YouSeeJournalPrefix = (type == ST_SYSTEM);
+			//reset
+			obj->JournalPrefix = "";
 
 			if (!obj->Name.length())
 			{
@@ -2949,12 +2956,14 @@ PACKET_HANDLER(UnicodeTalk)
 				if (obj->NPC)
 					g_GumpManager.UpdateContent(serial, 0, GT_STATUSBAR);
 			}
+
+			if (type == ST_SYSTEM)
+				obj->JournalPrefix = "You see: ";
+			else if (obj->Name.length())
+				obj->JournalPrefix = obj->Name + ": ";
 		}
 
 		g_Orion.CreateUnicodeTextMessage(TT_OBJECT, serial, (uchar)g_ConfigManager.SpeechFont, textColor, str);
-
-		if (obj != NULL)
-			obj->YouSeeJournalPrefix = false;
 	}
 }
 //----------------------------------------------------------------------------------
@@ -3551,11 +3560,11 @@ PACKET_HANDLER(DisplayClilocString)
 		{
 			if (!name.length())
 			{
-				obj->YouSeeJournalPrefix = true;
+				obj->JournalPrefix = "You see: ";
 			}
 			else
 			{
-				obj->YouSeeJournalPrefix = false;
+				obj->JournalPrefix = name + ": ";
 				obj->Name = name;
 
 				if (obj->NPC)

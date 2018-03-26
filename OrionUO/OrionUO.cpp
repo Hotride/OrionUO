@@ -5474,7 +5474,7 @@ void COrion::CreateUnicodeTextMessage(const TEXT_TYPE &type, const uint &serial,
 				uint container = obj->Container;
 
 				if (container == 0xFFFFFFFF)
-					g_WorldTextRenderer.AddText(td);
+ 					g_WorldTextRenderer.AddText(td);
 				else if (!obj->NPC)
 				{
 					td->X = g_ClickObject.X;
