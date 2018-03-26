@@ -146,7 +146,8 @@ private:
 	uchar GetObjectNewAnimationType_9_10(CGameCharacter *obj, const ushort &action, const uchar &mode);
 	uchar GetObjectNewAnimationType_11(CGameCharacter *obj, const ushort &action, const uchar &mode);
 
-	void ReadFrameData(ANIMATION_DIMENSIONS &result, uchar frameIndex, const bool &isCorpse);
+	void ReadFrameDimensionData(ANIMATION_DIMENSIONS &result, uchar frameIndex, const bool &isCorpse);
+	void ReadFramesPixelData(CTextureAnimationDirection &direction);
 
 public:
 	CAnimationManager();

@@ -1196,97 +1196,14 @@ bool CAnimationManager::LoadDirectionGroup(CTextureAnimationDirection &direction
 	{
 		g_FileManager.ReadAnimMulDataFromFileStream(animData, direction);
 		SetData(reinterpret_cast<puchar>(&animData[0]), direction.Size);
+		ReadFramesPixelData(direction);
 	}
 	else
-		SetData((puchar)direction.Address, direction.Size);
-
-	pushort palette = (pushort)m_Start;
-	Move(sizeof(ushort[256])); //Palette
-	puchar dataStart = m_Ptr;
-
-	int frameCount = ReadUInt32LE();
-	direction.FrameCount = frameCount;
-
-	puint frameOffset = (puint)m_Ptr;
-
-	//ushort color = m_DataIndex[graphic].Color;
-
-	direction.m_Frames = new CTextureAnimationFrame[frameCount];
-
-	IFOR(i, 0, frameCount)
 	{
-		CTextureAnimationFrame &frame = direction.m_Frames[i];
-
-		if (frame.Texture != 0)
-			continue;
-
-		m_Ptr = dataStart + frameOffset[i];
-
-		uint imageCenterX = ReadInt16LE();
-		frame.CenterX = imageCenterX;
-
-		uint imageCenterY = ReadInt16LE();
-		frame.CenterY = imageCenterY;
-
-		uint imageWidth = ReadInt16LE();
-
-		uint imageHeight = ReadInt16LE();
-
-		if (!imageWidth || !imageHeight)
-		{
-			LOG("CAnimationManager::LoadDirectionGroup no image size:%i, %i\n", imageWidth, imageHeight);
-			continue;
-		}
-
-		int wantSize = imageWidth * imageHeight;
-
-		USHORT_LIST data(wantSize, 0);
-
-		if (data.size() != wantSize)
-		{
-			LOG("Allocation pixels memory for LoadDirectionGroup failed (want size: %i)\n", wantSize);
-			continue;
-		}
-
-		uint header = ReadUInt32LE();
-
-		while (header != 0x7FFF7FFF && !IsEOF())
-		{
-			ushort runLength = (header & 0x0FFF);
-
-			int x = (header >> 22) & 0x03FF;
-
-			if (x & 0x0200)
-				x |= 0xFFFFFE00;
-
-			int y = (header >> 12) & 0x03FF;
-
-			if (y & 0x0200)
-				y |= 0xFFFFFE00;
-
-			x += imageCenterX;
-			y += imageCenterY + imageHeight;
-
-			int block = (y * imageWidth) + x;
-
-			IFOR(k, 0, runLength)
-			{
-				ushort val = palette[ReadUInt8()];
-
-				if (val)
-					data[block] = 0x8000 | val;
-				else
-					data[block] = 0;
-
-				block++;
-			}
-
-			header = ReadUInt32LE();
-		}
-
-		g_GL_BindTexture16(frame, imageWidth, imageHeight, &data[0]);
+		SetData((puchar)direction.Address, direction.Size);
+		ReadFramesPixelData(direction);
 	}
-
+		
 	m_UsedAnimList.push_back(&direction);
 
 	return true;
@@ -2198,13 +2115,16 @@ ANIMATION_DIMENSIONS CAnimationManager::GetAnimationDimensions(uchar frameIndex,
 				vector<char> animData(direction.Size);
 				g_FileManager.ReadAnimMulDataFromFileStream(animData, direction);
 				SetData(reinterpret_cast<puchar>(&animData[0]), direction.Size);
-				ReadFrameData(result, frameIndex, isCorpse);
+				ReadFrameDimensionData(result, frameIndex, isCorpse);
 			}
 			else
 			{
 				SetData(ptr, direction.Size);
-				ReadFrameData(result, frameIndex, isCorpse);
-			}			
+				ReadFrameDimensionData(result, frameIndex, isCorpse);
+			}
+				
+
+			
 		}
 		else if (direction.IsUOP) //try reading uop anim frame
 		{
@@ -3217,7 +3137,7 @@ uchar CAnimationManager::GetObjectNewAnimation(CGameCharacter *obj, const ushort
 	return 0;
 }
 //----------------------------------------------------------------------------------
-void CAnimationManager::ReadFrameData(ANIMATION_DIMENSIONS &result, uchar frameIndex, const bool &isCorpse)
+void CAnimationManager::ReadFrameDimensionData(ANIMATION_DIMENSIONS &result, uchar frameIndex, const bool &isCorpse)
 {
 	Move(sizeof(ushort[256]));  //Palette
 	puchar dataStart = m_Ptr;
@@ -3245,4 +3165,93 @@ void CAnimationManager::ReadFrameData(ANIMATION_DIMENSIONS &result, uchar frameI
 	}
 }
 //----------------------------------------------------------------------------------
+void CAnimationManager::ReadFramesPixelData(CTextureAnimationDirection &direction)
+{
+	pushort palette = (pushort)m_Start;
+	Move(sizeof(ushort[256])); //Palette
+	puchar dataStart = m_Ptr;
+
+	int frameCount = ReadUInt32LE();
+	direction.FrameCount = frameCount;
+
+	puint frameOffset = (puint)m_Ptr;
+
+	//ushort color = m_DataIndex[graphic].Color;
+
+	direction.m_Frames = new CTextureAnimationFrame[frameCount];
+
+	IFOR(i, 0, frameCount)
+	{
+		CTextureAnimationFrame &frame = direction.m_Frames[i];
+
+		if (frame.Texture != 0)
+			continue;
+
+		m_Ptr = dataStart + frameOffset[i];
+
+		uint imageCenterX = ReadInt16LE();
+		frame.CenterX = imageCenterX;
+
+		uint imageCenterY = ReadInt16LE();
+		frame.CenterY = imageCenterY;
+
+		uint imageWidth = ReadInt16LE();
+
+		uint imageHeight = ReadInt16LE();
+
+		if (!imageWidth || !imageHeight)
+		{
+			LOG("CAnimationManager::LoadDirectionGroup no image size:%i, %i\n", imageWidth, imageHeight);
+			continue;
+		}
+
+		int wantSize = imageWidth * imageHeight;
+
+		USHORT_LIST data(wantSize, 0);
+
+		if (data.size() != wantSize)
+		{
+			LOG("Allocation pixels memory for LoadDirectionGroup failed (want size: %i)\n", wantSize);
+			continue;
+		}
+
+		uint header = ReadUInt32LE();
+
+		while (header != 0x7FFF7FFF && !IsEOF())
+		{
+			ushort runLength = (header & 0x0FFF);
+
+			int x = (header >> 22) & 0x03FF;
+
+			if (x & 0x0200)
+				x |= 0xFFFFFE00;
+
+			int y = (header >> 12) & 0x03FF;
+
+			if (y & 0x0200)
+				y |= 0xFFFFFE00;
+
+			x += imageCenterX;
+			y += imageCenterY + imageHeight;
+
+			int block = (y * imageWidth) + x;
+
+			IFOR(k, 0, runLength)
+			{
+				ushort val = palette[ReadUInt8()];
+
+				if (val)
+					data[block] = 0x8000 | val;
+				else
+					data[block] = 0;
+
+				block++;
+			}
+
+			header = ReadUInt32LE();
+		}
+
+		g_GL_BindTexture16(frame, imageWidth, imageHeight, &data[0]);
+	}
+}
 //----------------------------------------------------------------------------------
