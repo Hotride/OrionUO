@@ -705,7 +705,6 @@ void CFileManager::SetUOPAnimGroups(int &maxGroup, std::mutex* mtx, int &start, 
 	IFOR(i, start, end)
 	{
 		CIndexAnimation *indexAnim = &g_AnimationManager.m_DataIndex[i];
-
 		IFOR(grpId, 0, ANIMATION_GROUPS_COUNT)
 		{
 			CTextureAnimationGroup *group = &(*indexAnim).m_Groups[grpId];
@@ -746,12 +745,39 @@ void CFileManager::ProcessAnimSequeceData()
 		SetData(reinterpret_cast<puchar>(&data[0]), data.size());
 		uint animId = ReadInt32LE();
 		CIndexAnimation *indexAnim = &g_AnimationManager.m_DataIndex[animId];
-
 		Move(48); // there's nothing there
-		uint unknown = ReadInt32LE(); //format or something size related, values in file: 29, 31, 32, 48, 68
-		LOG("AnimId: %i with formatValue: %i\n", animId, unknown);
+		uint replaces = ReadInt32LE(); //amount of replaced indices, values seen in files so far: 29, 31, 32, 48, 68
 
-		//CTextureAnimationGroup *group = &(*indexAnim).m_Groups[grpId];
+		//human and gargoyle are complicated, skip for now
+		if (replaces == 48 || replaces == 68) continue;
+		IFOR(i, 0, replaces)
+		{
+			uint oldIdx = ReadInt32LE();
+			auto group = indexAnim->m_Groups[oldIdx];
+			uint frameCount = ReadInt32LE();
+			if (frameCount == 0)
+			{
+				uint newIdx = ReadInt32LE();
+				//fucking boura
+				if (animId == 432 && oldIdx == 23)
+					newIdx = 29;
+				auto newGroup = indexAnim->m_Groups[newIdx];
+				indexAnim->m_Groups[oldIdx] = newGroup;
+				Move(60);
+			}
+			else
+			{
+				Move(64);
+				/*IFOR(k, i, 5)
+				{
+					group.m_Direction[k].FrameCount = frameCount;
+				}*/
+			}	
+		}
+
+		//There will be a moderate amount of data left at the end of the file
+		//Seems like this data is essential to make AnimationSequence work
+		// Aimed
 	}
 	LOG("AnimationSequence processed %i entries!!\n", m_AnimationSequence.m_Map.size());
 }
