@@ -2192,39 +2192,19 @@ ANIMATION_DIMENSIONS CAnimationManager::GetAnimationDimensions(uchar frameIndex,
 
 		if (ptr != NULL)
 		{
-			vector<char> animData(direction.Size);
+			
 			if (!direction.IsVerdata)
 			{
+				vector<char> animData(direction.Size);
 				g_FileManager.ReadAnimMulDataFromFileStream(animData, direction);
 				SetData(reinterpret_cast<puchar>(&animData[0]), direction.Size);
+				ReadFrameData(result, frameIndex, isCorpse);
 			}
 			else
+			{
 				SetData(ptr, direction.Size);
-
-			Move(sizeof(ushort[256]));  //Palette
-			puchar dataStart = m_Ptr;
-
-			int frameCount = ReadUInt32LE();
-
-			if (frameCount > 0 && frameIndex >= frameCount)
-			{
-				if (isCorpse)
-					frameIndex = frameCount - 1;
-				else
-					frameIndex = 0;
-			}
-
-			if (frameIndex < frameCount)
-			{
-				puint frameOffset = (puint)m_Ptr;
-				//Move(frameOffset[frameIndex]);
-				m_Ptr = dataStart + frameOffset[frameIndex];
-
-				result.CenterX = ReadInt16LE();
-				result.CenterY = ReadInt16LE();
-				result.Width = ReadInt16LE();
-				result.Height = ReadInt16LE();
-			}
+				ReadFrameData(result, frameIndex, isCorpse);
+			}			
 		}
 		else if (direction.IsUOP) //try reading uop anim frame
 		{
@@ -3236,4 +3216,33 @@ uchar CAnimationManager::GetObjectNewAnimation(CGameCharacter *obj, const ushort
 
 	return 0;
 }
+//----------------------------------------------------------------------------------
+void CAnimationManager::ReadFrameData(ANIMATION_DIMENSIONS &result, uchar frameIndex, const bool &isCorpse)
+{
+	Move(sizeof(ushort[256]));  //Palette
+	puchar dataStart = m_Ptr;
+
+	int frameCount = ReadUInt32LE();
+
+	if (frameCount > 0 && frameIndex >= frameCount)
+	{
+		if (isCorpse)
+			frameIndex = frameCount - 1;
+		else
+			frameIndex = 0;
+	}
+
+	if (frameIndex < frameCount)
+	{
+		puint frameOffset = (puint)m_Ptr;
+		//Move(frameOffset[frameIndex]);
+		m_Ptr = dataStart + frameOffset[frameIndex];
+
+		result.CenterX = ReadInt16LE();
+		result.CenterY = ReadInt16LE();
+		result.Width = ReadInt16LE();
+		result.Height = ReadInt16LE();
+	}
+}
+//----------------------------------------------------------------------------------
 //----------------------------------------------------------------------------------
