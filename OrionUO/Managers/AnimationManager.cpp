@@ -437,6 +437,7 @@ void CAnimationManager::Load(puint verdata)
 
 				CTextureAnimationDirection &direction = index.m_Groups[group].m_Direction[dir];
 
+				direction.IsVerdata = true;
 				direction.BaseAddress = (size_t)g_FileManager.m_VerdataMul.Start + vh->Position;
 				direction.BaseSize = vh->Size;
 				direction.Address = direction.BaseAddress;
@@ -1191,8 +1192,13 @@ bool CAnimationManager::LoadDirectionGroup(CTextureAnimationDirection &direction
 	if (direction.Address == 0) return false;
 
 	vector<char> animData(direction.Size);
-	g_FileManager.ReadAnimMulDataFromFileStream(animData, direction);
-	SetData(reinterpret_cast<puchar>(&animData[0]), direction.Size);
+	if (!direction.IsVerdata)
+	{
+		g_FileManager.ReadAnimMulDataFromFileStream(animData, direction);
+		SetData(reinterpret_cast<puchar>(&animData[0]), direction.Size);
+	}
+	else
+		SetData((puchar)direction.Address, direction.Size);
 
 	pushort palette = (pushort)m_Start;
 	Move(sizeof(ushort[256])); //Palette
@@ -2187,8 +2193,13 @@ ANIMATION_DIMENSIONS CAnimationManager::GetAnimationDimensions(uchar frameIndex,
 		if (ptr != NULL)
 		{
 			vector<char> animData(direction.Size);
-			g_FileManager.ReadAnimMulDataFromFileStream(animData, direction);
-			SetData(reinterpret_cast<puchar>(&animData[0]), direction.Size);
+			if (!direction.IsVerdata)
+			{
+				g_FileManager.ReadAnimMulDataFromFileStream(animData, direction);
+				SetData(reinterpret_cast<puchar>(&animData[0]), direction.Size);
+			}
+			else
+				SetData(ptr, direction.Size);
 
 			Move(sizeof(ushort[256]));  //Palette
 			puchar dataStart = m_Ptr;
