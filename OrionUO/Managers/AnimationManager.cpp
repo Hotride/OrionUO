@@ -1191,9 +1191,10 @@ bool CAnimationManager::LoadDirectionGroup(CTextureAnimationDirection &direction
 		return TryReadUOPAnimDimins(direction);
 	if (direction.Address == 0) return false;
 
-	vector<char> animData(direction.Size);
+	
 	if (!direction.IsVerdata)
 	{
+		vector<char> animData(direction.Size);
 		g_FileManager.ReadAnimMulDataFromFileStream(animData, direction);
 		SetData(reinterpret_cast<puchar>(&animData[0]), direction.Size);
 		ReadFramesPixelData(direction);
