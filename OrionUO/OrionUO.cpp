@@ -76,7 +76,6 @@ string COrion::DecodeArgumentString(const char *text, const int &length)
 //----------------------------------------------------------------------------------
 void COrion::ParseCommandLine()
 {
-	return;
 	WISPFUN_DEBUG("c194_f3");
 	bool fastLogin = false;
 	int argc = 0;
