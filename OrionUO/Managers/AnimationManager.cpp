@@ -876,9 +876,6 @@ void CAnimationManager::InitIndexReplaces(puint verdata)
 						direction.BaseSize = direction.PatchedSize;
 						direction.Address = direction.BaseAddress;
 						direction.Size = direction.BaseSize;
-						direction.PatchedAddress = 0;
-						direction.PatchedSize = 0;
-						direction.FileIndex = 0;
 					}
 				}
 			}
