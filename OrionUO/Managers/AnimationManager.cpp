@@ -876,9 +876,6 @@ void CAnimationManager::InitIndexReplaces(puint verdata)
 						direction.BaseSize = direction.PatchedSize;
 						direction.Address = direction.BaseAddress;
 						direction.Size = direction.BaseSize;
-						direction.PatchedAddress = 0;
-						direction.PatchedSize = 0;
-						direction.FileIndex = 0;
 					}
 				}
 			}
@@ -1191,9 +1188,10 @@ bool CAnimationManager::LoadDirectionGroup(CTextureAnimationDirection &direction
 		return TryReadUOPAnimDimins(direction);
 	if (direction.Address == 0) return false;
 
-	vector<char> animData(direction.Size);
+	
 	if (!direction.IsVerdata)
 	{
+		vector<char> animData(direction.Size);
 		g_FileManager.ReadAnimMulDataFromFileStream(animData, direction);
 		SetData(reinterpret_cast<puchar>(&animData[0]), direction.Size);
 		ReadFramesPixelData(direction);
