@@ -560,7 +560,7 @@ bool CFileManager::DecompressUOPFileData(UOPAnimationData &animData, UCHAR_LIST 
 	uLongf dLen = animData.decompressedLength;
 
 	int z_err = uncompress(&decLayoutData[0], &dLen, reinterpret_cast<unsigned char const*>(buf), cLen);
-	delete buf;
+	delete [] buf;
 
 	if (z_err != Z_OK)
 	{
