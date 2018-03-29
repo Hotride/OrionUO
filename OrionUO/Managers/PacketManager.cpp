@@ -3697,16 +3697,11 @@ PACKET_HANDLER(MegaCliloc)
 			{
 				if (shopItem->Type == GOT_SHOPITEM && shopItem->Serial == serial && ((CGUIShopItem*)shopItem)->NameFromCliloc)
 				{
-					size_t pos = data.find_first_of(L'\n');
-
-					if (pos != wstring::npos)
-						data.resize(pos);
-
 					CGUIShopItem *si = (CGUIShopItem*)shopItem;
 
 					int oldHeight = si->GetSize().Height;
 
-					si->Name = Trim(ToString(data));
+					si->Name = ToString(name);
 					si->CreateNameText();
 					si->UpdateOffsets();
 
