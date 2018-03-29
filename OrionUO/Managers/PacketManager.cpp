@@ -4211,9 +4211,8 @@ PACKET_HANDLER(OpenGump)
 
 	if (found != m_GumpsCoordsCache.end())
 	{
-		auto gumpCoords = found->second;
-		x = gumpCoords.X;
-		y = gumpCoords.Y;
+		x = found->second.X;
+		y = found->second.Y;
 	}
 	else
 	{
@@ -4600,8 +4599,8 @@ PACKET_HANDLER(OpenGump)
 			{
 				HTMLGumpDataInfo htmlInfo = { 0 };
 				htmlInfo.IsXMF = (cmd != "htmlgump");
-				GumpCoords gumpCoords = { ToInt(list[1]), ToInt(list[2]) };
-				htmlInfo.GumpCoords = &gumpCoords;
+				GumpCoords* gumpCoords = new GumpCoords{ ToInt(list[1]), ToInt(list[2]) };
+				htmlInfo.GumpCoords = gumpCoords;
 				htmlInfo.Width = ToInt(list[3]);
 				htmlInfo.Height = ToInt(list[4]);
 				htmlInfo.TextID = ToInt(list[5]);
@@ -4626,8 +4625,8 @@ PACKET_HANDLER(OpenGump)
 			{
 				HTMLGumpDataInfo htmlInfo = { 0 };
 				htmlInfo.IsXMF = true;
-				GumpCoords gumpCoords = { ToInt(list[1]), ToInt(list[2]) };
-				htmlInfo.GumpCoords = &gumpCoords;
+				GumpCoords* gumpCoords = new GumpCoords{ ToInt(list[1]), ToInt(list[2]) };
+				htmlInfo.GumpCoords = gumpCoords;
 				htmlInfo.Width = ToInt(list[3]);
 				htmlInfo.Height = ToInt(list[4]);
 				htmlInfo.HaveBackground = ToInt(list[5]);
