@@ -2938,10 +2938,9 @@ PACKET_HANDLER(UnicodeTalk)
 		g_Orion.CreateUnicodeTextMessage(TT_SYSTEM, serial, (uchar)g_ConfigManager.SpeechFont, textColor, str);
 	else
 	{
-		if (type == ST_EMOTE)
+		if (type == ST_EMOTE && !textColor)
 		{
 			textColor = g_ConfigManager.EmoteColor;
-			str = L"*" + str + L"*";
 		}
 
 		if (obj != NULL)
