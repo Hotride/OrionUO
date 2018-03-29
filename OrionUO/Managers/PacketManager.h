@@ -51,10 +51,15 @@ public:
 	PACKET_FUNCTION Handler;
 };
 //----------------------------------------------------------------------------------
-struct HTMLGumpDataInfo
+struct GumpCoords
 {
 	int X;
 	int Y;
+};
+//----------------------------------------------------------------------------------
+struct HTMLGumpDataInfo
+{
+	GumpCoords* GumpCoords;
 	int Width;
 	int Height;
 	int TextID;
@@ -70,13 +75,12 @@ class CPacketManager : public WISP_NETWORK::CPacketReader
 {
 	SETGETE(CLIENT_VERSION, ClientVersion, CV_OLD);
 	SETGET(string, AutoLoginNames, "");
-	SETGET(uint, LastGumpID, 0);
-	SETGET(uint, LastGumpX, 0);
-	SETGET(uint, LastGumpY, 0);
 	SETGET(uint, ConfigSerial, 0);
 
 private:
 	static CPacketInfo m_Packets[0x100];
+
+	std::unordered_map<uint, GumpCoords> m_GumpsCoordsCache;
 
 	bool AutoLoginNameExists(const string &name);
 
@@ -221,6 +225,8 @@ public:
 	void ProcessPluginPackets();
 
 	void PluginReceiveHandler(puchar buf, const int &size);
+
+	void SetCachedGumpCoords(uint id, int x, int y);
 };
 //---------------------------------------------------------------------------
 extern CPacketManager g_PacketManager;

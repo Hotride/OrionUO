@@ -546,9 +546,7 @@ CPacketGumpResponse::CPacketGumpResponse(CGumpGeneric *gump, int code)
 	size_t size = 19 + (switchesCount * 4) + 4 + ((textLinesCount * 4) + textLinesLength);
 	Resize(size, true);
 
-	g_PacketManager.LastGumpID = gump->ID;
-	g_PacketManager.LastGumpX = gump->X;
-	g_PacketManager.LastGumpY = gump->Y;
+	g_PacketManager.SetCachedGumpCoords(gump->ID, gump->X, gump->Y);
 
 	WriteUInt8(0xB1);
 	WriteUInt16BE((ushort)size);
@@ -585,9 +583,7 @@ CPacketGumpResponse::CPacketGumpResponse(CGumpGeneric *gump, int code)
 CPacketVirtureGumpResponse::CPacketVirtureGumpResponse(CGump *gump, int code)
 : CPacket(15)
 {
-	g_PacketManager.LastGumpID = gump->ID;
-	g_PacketManager.LastGumpX = gump->X;
-	g_PacketManager.LastGumpY = gump->Y;
+	g_PacketManager.SetCachedGumpCoords(gump->ID, gump->X, gump->Y);
 
 	WriteUInt8(0xB1);
 	WriteUInt16BE(0x000F);

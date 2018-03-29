@@ -4147,7 +4147,7 @@ void CPacketManager::AddHTMLGumps(CGump *gump, vector<HTMLGumpDataInfo> &list)
 	{
 		HTMLGumpDataInfo &data = list[i];
 
-		CGUIHTMLGump *htmlGump = (CGUIHTMLGump*)gump->Add(new CGUIHTMLGump(data.TextID + 1, 0x0BB8, data.X, data.Y, data.Width, data.Height, data.HaveBackground, data.HaveScrollbar));
+		CGUIHTMLGump *htmlGump = (CGUIHTMLGump*)gump->Add(new CGUIHTMLGump(data.TextID + 1, 0x0BB8, data.GumpCoords->X, data.GumpCoords->Y, data.Width, data.Height, data.HaveBackground, data.HaveScrollbar));
 		htmlGump->DrawOnly = (data.HaveScrollbar == 0);
 
 		int width = htmlGump->Width;
@@ -4207,11 +4207,19 @@ PACKET_HANDLER(OpenGump)
 	int x = ReadInt32BE();
 	int y = ReadInt32BE();
 
-	if (m_LastGumpID == id)
+	std::unordered_map<uint, GumpCoords>::iterator found = m_GumpsCoordsCache.find(id);
+
+	if (found != m_GumpsCoordsCache.end())
 	{
-		x = m_LastGumpX;
-		y = m_LastGumpY;
+		auto gumpCoords = found->second;
+		x = gumpCoords.X;
+		y = gumpCoords.Y;
 	}
+	else
+	{
+		SetCachedGumpCoords(id, x, y);
+	}
+
 
 	CGumpGeneric *gump = new CGumpGeneric(serial, x, y, id);
 
@@ -4592,9 +4600,8 @@ PACKET_HANDLER(OpenGump)
 			{
 				HTMLGumpDataInfo htmlInfo = { 0 };
 				htmlInfo.IsXMF = (cmd != "htmlgump");
-
-				htmlInfo.X = ToInt(list[1]);
-				htmlInfo.Y = ToInt(list[2]);
+				GumpCoords gumpCoords = { ToInt(list[1]), ToInt(list[2]) };
+				htmlInfo.GumpCoords = &gumpCoords;
 				htmlInfo.Width = ToInt(list[3]);
 				htmlInfo.Height = ToInt(list[4]);
 				htmlInfo.TextID = ToInt(list[5]);
@@ -4619,9 +4626,8 @@ PACKET_HANDLER(OpenGump)
 			{
 				HTMLGumpDataInfo htmlInfo = { 0 };
 				htmlInfo.IsXMF = true;
-
-				htmlInfo.X = ToInt(list[1]);
-				htmlInfo.Y = ToInt(list[2]);
+				GumpCoords gumpCoords = { ToInt(list[1]), ToInt(list[2]) };
+				htmlInfo.GumpCoords = &gumpCoords;
 				htmlInfo.Width = ToInt(list[3]);
 				htmlInfo.Height = ToInt(list[4]);
 				htmlInfo.HaveBackground = ToInt(list[5]);
@@ -5900,5 +5906,20 @@ PACKET_HANDLER(Pathfinding)
 	ushort y = ReadInt16BE();
 	ushort z = ReadInt16BE();
 	g_PathFinder.WalkTo(x, y, z, 0);
+}
+//----------------------------------------------------------------------------------
+void CPacketManager::SetCachedGumpCoords(uint id, int x, int y)
+{
+	std::unordered_map<uint, GumpCoords>::iterator found = m_GumpsCoordsCache.find(id);
+
+	if (found != m_GumpsCoordsCache.end())
+	{
+		found->second.X = x;
+		found->second.Y = y;
+	}
+	else
+	{
+		m_GumpsCoordsCache[id] = GumpCoords{ x, y };
+	}
 }
 //----------------------------------------------------------------------------------
