@@ -922,6 +922,8 @@ void COrion::LoadContaierOffsets()
 		g_ContainerOffset.push_back(CContainerOffset(0x011D, 0x004F, 0x0058, CContainerOffsetRect(10, 10, 220, 130)));
 		g_ContainerOffset.push_back(CContainerOffset(0x011E, 0x004F, 0x0058, CContainerOffsetRect(15, 10, 290, 130)));
 		g_ContainerOffset.push_back(CContainerOffset(0x011F, 0x004F, 0x0058, CContainerOffsetRect(15, 10, 220, 120)));
+		//secret chest
+		g_ContainerOffset.push_back(CContainerOffset(0x058E, 0x002D, 0x002C, CContainerOffsetRect(16, 51, 184, 124)));
 	}
 	else
 	{
