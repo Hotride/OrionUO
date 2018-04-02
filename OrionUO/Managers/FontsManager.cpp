@@ -214,49 +214,39 @@ WISP_GEOMETRY::CPoint2Di CFontsManager::GetCaretPosA(const uchar &font, const st
 	int height = 0;
 	PMULTILINES_FONT_INFO ptr = info;
 
-	while (ptr != NULL)
+	//loop throgh lines to get width and height
+	while (info != NULL)
 	{
-		info = ptr;
+		p.X = 0;
+		int len = info->CharCount;
+		if (info->CharStart == pos)
+			return p;
 
-		if (pos > 0)
+		//if pos is not in this line, just skip this
+		if (pos <= info->CharStart + len)
 		{
-			int len = ptr->CharCount;
-
-			if (len && pos - len < 1)
+			IFOR(i, 0, len)
 			{
-				IFOR(i, 0, len)
-				{
-					const uchar &index = m_FontIndex[(uchar)ptr->Data[i].item];
+				//collect data about width of each character
+				const uchar &index = m_FontIndex[(uchar)ptr->Data[i].item];
+				p.X += fd.Chars[index].Width;
 
-					p.X += fd.Chars[index].Width;
-					pos--;
+				if (info->CharStart + i + 1 == pos)
+					return p;
 
-					if (pos < 1)
-						break;
-				}
 			}
-
-			pos -= len;
-
-			if (pos <= 1)
-			{
-				p.Y = height;
-
-				if (pos == 1)
-					p.Y += ptr->MaxHeight;
-
-				break;
-			}
-			else
-				height += ptr->MaxHeight;
-
-			pos--;
 		}
 
-		ptr = ptr->m_Next;
+		//add to height if there's another line
+		if (info->m_Next != NULL)
+			p.Y += info->MaxHeight;
 
-		info->Data.clear();
-		delete info;
+		PMULTILINES_FONT_INFO ptr = info;
+
+		info = info->m_Next;
+
+		ptr->Data.clear();
+		delete ptr;
 	}
 
 	return p;
@@ -294,20 +284,6 @@ int CFontsManager::CalculateCaretPosA(const uchar &font, const string &str, cons
 	int height = GetHeightA(info);
 
 	PMULTILINES_FONT_INFO ptr = info;
-
-	if (y >= height)
-	{
-		while (ptr != NULL)
-		{
-			info = ptr;
-			ptr = ptr->m_Next;
-
-			info->Data.clear();
-			delete info;
-		}
-
-		return 0;
-	}
 
 	height = 0;
 
@@ -1071,7 +1047,6 @@ int CFontsManager::CalculateCaretPosW(const uchar &font, const wstring &str, con
 	PMULTILINES_FONT_INFO info = GetInfoW(font, str.c_str(), (int)str.length(), align, flags, width);
 	if (info == NULL)
 		return 0;
-
 
 	int height = 0;
 
