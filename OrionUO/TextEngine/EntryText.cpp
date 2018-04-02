@@ -713,8 +713,24 @@ void CEntryText::DrawMaskW(uchar font, ushort color, int x, int y, TEXT_ALIGN_TY
 	}
 }
 //----------------------------------------------------------------------------------
-int CEntryText::GetPos() const
+WPARAM CEntryText::GetLastChar()
 {
-	return m_Position;
+	if (m_Text.length() == 0) return 0;
+	return m_Text[m_Text.length() - 1];
+}
+//----------------------------------------------------------------------------------
+void CEntryText::RemoveSequence(int startPos, int length)
+{
+	m_Text.erase(startPos, length);
+}
+//----------------------------------------------------------------------------------
+string CEntryText::GetTextA() const
+{
+	return m_CText;
+}
+//----------------------------------------------------------------------------------
+wstring CEntryText::GetTextW() const
+{
+	return m_Text;
 }
 //----------------------------------------------------------------------------------
