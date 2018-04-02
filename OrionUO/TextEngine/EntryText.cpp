@@ -243,7 +243,10 @@ void CEntryText::Remove(bool left, CGump *gump)
 	}
 
 	//Удаляем указанный символ
-	m_Text.erase(m_Text.begin() + m_Position);
+	if (m_Position < m_Text.length())
+		m_Text.erase(m_Text.begin() + m_Position);
+	else
+		m_Text.erase(m_Text.length() - 1);
 
 	//Регистрируем изменения
 	m_Changed = true;
