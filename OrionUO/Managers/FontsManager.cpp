@@ -998,55 +998,36 @@ WISP_GEOMETRY::CPoint2Di CFontsManager::GetCaretPosW(const uchar &font, const ws
 		return p;
 	
 	puint table = (puint)m_UnicodeFontAddress[font];
-	int height = 0;
 
 	while (info != NULL)
 	{
-		if (pos > 0)
+		p.X = 0;		
+		int len = info->CharCount;
+		if (info->CharStart == pos)
+			return p;
+
+		IFOR(i, 0, len)
 		{
-			int len = info->CharCount;
+			//collect data about width of each character
+			const wchar_t &ch = info->Data[i].item;
+			uint offset = table[ch];
 
-			if (len && pos - len < 1)
+			if (offset && offset != 0xFFFFFFFF)
 			{
-				IFOR(i, 0, len)
-				{
-					const wchar_t &ch = info->Data[i].item;
-					int cwidth = 0;
-					uint offset = table[ch];
-
-					if (offset && offset != 0xFFFFFFFF)
-					{
-						puchar cptr = (puchar)((size_t)table + offset);
-						p.X += ((char)cptr[0] + (char)cptr[2] + 1);
-					}
-					else if (ch == L' ')
-						p.X += UNICODE_SPACE_WIDTH;
-					else
-						pos++;
-
-					pos--;
-
-					if (pos < 1)
-						break;
-				}
+				puchar cptr = (puchar)((size_t)table + offset);
+				p.X += ((char)cptr[0] + (char)cptr[2] + 1);
 			}
+			else if (ch == L' ')
+				p.X += UNICODE_SPACE_WIDTH;
 
-			pos -= len;
+			if (info->CharStart + i + 1 == pos)
+				return p;	
 
-			if (pos <= 1)
-			{
-				p.Y = height;
-
-				if (pos == 1)
-					p.Y += info->MaxHeight;
-
-				break;
-			}
-			else
-				height += info->MaxHeight;
-
-			pos--;
 		}
+		
+		//add height if there's another line
+		if (info->m_Next != NULL)
+			p.Y += info->MaxHeight;
 
 		PMULTILINES_FONT_INFO ptr = info;
 
@@ -1086,23 +1067,8 @@ int CFontsManager::CalculateCaretPosW(const uchar &font, const wstring &str, con
 	if (info == NULL)
 		return 0;
 
-	int height = GetHeightW(info);
 
-	if (y >= height)
-	{
-		while (info != NULL)
-		{
-			PMULTILINES_FONT_INFO ptr = info;
-			info = info->m_Next;
-
-			ptr->Data.clear();
-			delete ptr;
-		}
-
-		return 0;
-	}
-
-	height = 0;
+	int height = 0;
 
 	puint table = (puint)m_UnicodeFontAddress[font];
 	int pos = 0;
