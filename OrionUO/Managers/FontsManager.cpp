@@ -1101,6 +1101,9 @@ int CFontsManager::CalculateCaretPosW(const uchar &font, const wstring &str, con
 		delete ptr;
 	}
 
+	if (pos > str.size())
+		pos = str.size();
+
 	return pos;
 }
 //----------------------------------------------------------------------------------
