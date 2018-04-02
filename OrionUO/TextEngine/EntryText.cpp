@@ -283,9 +283,14 @@ void CEntryText::Paste()
 		if (hData != NULL)
 		{
 			wstring text((wchar_t*)GlobalLock(hData));
-
-			IFOR(i, 0, (int)text.length())
-				Insert(text[i]);
+			CGump *gump = g_GumpManager.GetTextEntryOwner();
+			if (gump != NULL && gump->GumpType == GT_BOOK)
+				gump->PasteClipboardData(text);
+			else
+			{
+				IFOR(i, 0, (int)text.length())
+					Insert(text[i]);
+			}
 
 			GlobalUnlock(hData);
 		}

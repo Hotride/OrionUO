@@ -75,6 +75,8 @@ public:
 	CGump(GUMP_TYPE type, uint serial, int x, int y);
 	virtual ~CGump();
 
+	virtual void PasteClipboardData(wstring &data);
+
 	static void ProcessListing();
 
 	static bool ApplyTransparent(CBaseGUI *item, int page, const int &currentPage, const int draw2Page = 0);

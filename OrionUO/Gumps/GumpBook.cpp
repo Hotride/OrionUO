@@ -427,3 +427,7 @@ void CGumpBook::GoToPage(int page, bool end)
 	newEntry->OnClick(this, x, y);
 }
 //----------------------------------------------------------------------------------
+void CGumpBook::PasteClipboardData(wstring &data)
+{
+}
+//----------------------------------------------------------------------------------

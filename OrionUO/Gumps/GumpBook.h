@@ -38,6 +38,8 @@ public:
 	CGumpBook(uint serial, short x, short y, short pageCount, bool writable, bool unicode);
 	virtual ~CGumpBook();
 
+	virtual void PasteClipboardData(wstring &data) override;
+
 	CGUITextEntry *m_EntryAuthor{ NULL };
 	CGUITextEntry *m_EntryTitle{ NULL };
 
