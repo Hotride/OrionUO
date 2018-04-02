@@ -333,7 +333,7 @@ void CGumpBook::InsertInContent(const WPARAM &wparam, const bool &isCharPress)
 		}
 		else
 		{
-			if (g_EntryPointer->Length() == 0)
+			if (g_EntryPointer->GetPos() == 0)
 			{
 				int previousPage = page - 1;
 				if (previousPage > -1)
@@ -429,5 +429,7 @@ void CGumpBook::GoToPage(int page, bool end)
 //----------------------------------------------------------------------------------
 void CGumpBook::PasteClipboardData(wstring &data)
 {
+	IFOR(i, 0, (int)data.length())
+		InsertInContent(data[i]);
 }
 //----------------------------------------------------------------------------------
