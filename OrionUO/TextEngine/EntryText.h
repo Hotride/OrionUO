@@ -68,6 +68,9 @@ public:
 	//Сместить позицию каретки в тексте
 	void AddPos(int val, CGump *gump = NULL);
 
+	//Получить позицию каретки
+	int GetPos() const;
+
 	//Установить позицию каретки в тексте
 	void SetPos(int val, CGump *gump = NULL);
 

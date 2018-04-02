@@ -713,3 +713,8 @@ void CEntryText::DrawMaskW(uchar font, ushort color, int x, int y, TEXT_ALIGN_TY
 	}
 }
 //----------------------------------------------------------------------------------
+int CEntryText::GetPos() const
+{
+	return m_Position;
+}
+//----------------------------------------------------------------------------------
