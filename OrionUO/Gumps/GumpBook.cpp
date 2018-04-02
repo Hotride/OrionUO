@@ -320,7 +320,8 @@ void CGumpBook::InsertInContent(const WPARAM &wparam, const bool &isCharPress)
 						//go go the next page and click on text entry there
 						GoToPage(page + 1, false);
 
-						//insert data again
+						//insert data at the beginning of the next page
+						g_EntryPointer->SetPos(0, this);
 						InsertInContent(wparam, isCharPress);
 					}
 				}				
@@ -421,7 +422,8 @@ void CGumpBook::GoToPage(int page, bool end)
 	//emulate text entry clicking
 	CGUITextEntry *newEntry = GetEntry(m_Page);
 	g_EntryPointer == &newEntry->m_Entry;
-	int coords = end ? 160 : 0;
-	newEntry->OnClick(this, coords, coords);
+	int x = end ? 160 : 3;
+	int y = end ? 160 : 8;
+	newEntry->OnClick(this, x, y);
 }
 //----------------------------------------------------------------------------------
