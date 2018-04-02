@@ -31,7 +31,7 @@ m_Unicode(unicode)
 	Add(new CGUIPage(0));
 	CGUIText *text = (CGUIText*)Add(new CGUIText(0x0386, 78, 32));
 	g_FontManager.UnusePartialHue = true;
-	text->CreateTextureA(4, "TITLE");
+	text->CreateTextureA(9, "Title");
 	g_FontManager.UnusePartialHue = false;
 
 	uchar entryFont = 1;
@@ -47,7 +47,7 @@ m_Unicode(unicode)
 
 	text = (CGUIText*)Add(new CGUIText(0x0386, 88, 134));
 	g_FontManager.UnusePartialHue = true;
-	text->CreateTextureA(4, "by");
+	text->CreateTextureA(9, "by");
 	g_FontManager.UnusePartialHue = false;
 
 	Add(new CGUIHitBox(ID_GB_TEXT_AREA_AUTHOR, 41, 160, 150, 22));
@@ -305,7 +305,7 @@ void CGumpBook::InsertInContent(const WPARAM &wparam, const bool &isCharPress)
 					linesCount = g_EntryPointer->GetLinesCountA(4);
 				else
 				{
-					linesCount = g_EntryPointer->GetLinesCountW(0);
+					linesCount = g_EntryPointer->GetLinesCountW(1);
 					maxLinesCount = 10;
 				}
 
