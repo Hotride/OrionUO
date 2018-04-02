@@ -170,13 +170,14 @@ void CGumpBook::ChangePage(int newPage, bool playSound)
 		}
 	}
 
+	if (playSound && m_Page != newPage)
+		g_Orion.PlaySoundEffect(0x0055);
+
 	m_Page = newPage;
 
 	m_PrevPage->Visible = (m_Page != 0);
 	m_NextPage->Visible = (m_Page + 2 <= m_PageCount);
 
-	if(playSound)
-		g_Orion.PlaySoundEffect(0x0055);
 
 	if (EntryPointerHere())
 	{
@@ -397,9 +398,12 @@ void CGumpBook::InsertInContent(const WPARAM &wparam, const bool &isCharPress)
 			{
 				int previousPage = page - 2;
 				if (previousPage < 0 )
-					previousPage = 0;			
-				ChangePage(previousPage);
-				SetPagePos(-1, previousPage + 1);
+					previousPage = 0;	
+
+				if (page % 2 == 0)
+					ChangePage(previousPage);
+
+				SetPagePos(-1, page - 1);
 			}	
 			m_ChangedPage[page] = true;
 			m_WantRedraw = true;
@@ -477,9 +481,16 @@ void CGumpBook::OnKeyDown(const WPARAM &wParam, const LPARAM &lParam)
 //----------------------------------------------------------------------------------
 void CGumpBook::SetPagePos(int val, int page)
 {
-	//emulate text entry clicking
+	//safety
+	if (page < 0)
+		page = 0;
+	if (page > m_PageCount)
+		page = m_PageCount;
+
+	//set position of caret
 	CGUITextEntry *newEntry = GetEntry(page);
 	g_EntryPointer = &newEntry->m_Entry;
+
 	if (val == -1)
 		val = g_EntryPointer->Length();
 	g_EntryPointer->SetPos(val, this);
