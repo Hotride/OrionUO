@@ -999,6 +999,7 @@ WISP_GEOMETRY::CPoint2Di CFontsManager::GetCaretPosW(const uchar &font, const ws
 	
 	puint table = (puint)m_UnicodeFontAddress[font];
 
+	//loop throgh lines to get width and height
 	while (info != NULL)
 	{
 		p.X = 0;		
@@ -1006,26 +1007,30 @@ WISP_GEOMETRY::CPoint2Di CFontsManager::GetCaretPosW(const uchar &font, const ws
 		if (info->CharStart == pos)
 			return p;
 
-		IFOR(i, 0, len)
+		//if pos is not in this line, just skip this
+		if (pos <= info->CharStart + len)
 		{
-			//collect data about width of each character
-			const wchar_t &ch = info->Data[i].item;
-			uint offset = table[ch];
-
-			if (offset && offset != 0xFFFFFFFF)
+			IFOR(i, 0, len)
 			{
-				puchar cptr = (puchar)((size_t)table + offset);
-				p.X += ((char)cptr[0] + (char)cptr[2] + 1);
+				//collect data about width of each character
+				const wchar_t &ch = info->Data[i].item;
+				uint offset = table[ch];
+
+				if (offset && offset != 0xFFFFFFFF)
+				{
+					puchar cptr = (puchar)((size_t)table + offset);
+					p.X += ((char)cptr[0] + (char)cptr[2] + 1);
+				}
+				else if (ch == L' ')
+					p.X += UNICODE_SPACE_WIDTH;
+
+				if (info->CharStart + i + 1 == pos)
+					return p;
+
 			}
-			else if (ch == L' ')
-				p.X += UNICODE_SPACE_WIDTH;
-
-			if (info->CharStart + i + 1 == pos)
-				return p;	
-
 		}
-		
-		//add height if there's another line
+	
+		//add to height if there's another line
 		if (info->m_Next != NULL)
 			p.Y += info->MaxHeight;
 
