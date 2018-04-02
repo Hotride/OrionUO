@@ -314,7 +314,7 @@ void CGumpBook::InsertInContent(const WPARAM &wparam, const bool &isCharPress)
 				if (linesCount > maxLinesCount)
 				{
 					int newPage = page + 1;
-					if (newPage <= 20)
+					if (newPage <= m_PageCount)
 					{
 						int current = g_EntryPointer->Pos();
 
