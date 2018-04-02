@@ -155,8 +155,8 @@ void CGumpBook::SetPageData(const int &page, const wstring &data)
 		entry->m_Entry.SetText(data);
 }
 //----------------------------------------------------------------------------------
-void CGumpBook::ChangePage(int newPage)
-{
+void CGumpBook::ChangePage(int newPage, bool playSound = true)
+ {
 	WISPFUN_DEBUG("c87_f5");
 	IFOR(i, 0, 2)
 	{
@@ -175,7 +175,8 @@ void CGumpBook::ChangePage(int newPage)
 	m_PrevPage->Visible = (m_Page != 0);
 	m_NextPage->Visible = (m_Page + 2 <= m_PageCount);
 
-	g_Orion.PlaySoundEffect(0x0055);
+	if(playSound)
+		g_Orion.PlaySoundEffect(0x0055);
 
 	if (EntryPointerHere())
 	{
@@ -311,35 +312,77 @@ void CGumpBook::InsertInContent(const WPARAM &wparam, const bool &isCharPress)
 
 				if (linesCount > maxLinesCount)
 				{
-					//remove inserted data
-					g_EntryPointer->Remove(true);
-
 					int newPage = page + 1;
 					if (newPage <= 20)
 					{
-						//go go the next page and click on text entry there
-						GoToPage(page + 1, false);
+						int current = g_EntryPointer->Pos();
 
-						//insert data at the beginning of the next page
-						g_EntryPointer->SetPos(0, this);
-						InsertInContent(wparam, isCharPress);
+						//if we have to paste last line from text entry on the next page and flip back
+						bool goBack = true;
+						
+						//get info with last line of text on current page
+						PMULTILINES_FONT_INFO info = m_Unicode ? g_FontManager.GetInfoW(1, g_EntryPointer->GetTextW().c_str(), g_EntryPointer->Length(), TS_LEFT, 0, 166)
+							: g_FontManager.GetInfoA(4, g_EntryPointer->GetTextA().c_str(), g_EntryPointer->Length(), TS_LEFT, 0, 166);
+
+						while (info != NULL)
+						{
+							PMULTILINES_FONT_INFO next = info->m_Next;
+							if (next != NULL)
+							{
+								info->Data.clear();
+								delete info;
+								info = next;
+							}
+							else
+								break;
+						}
+
+						m_ChangedPage[page] = true;
+						if (g_EntryPointer->Pos() >= info->CharStart)
+							goBack = false;
+
+						if (info->CharCount == 0)
+							g_EntryPointer->RemoveSequence(g_EntryPointer->Length() - 1, 1);
+						else
+							g_EntryPointer->RemoveSequence(info->CharStart, info->CharCount);
+
+
+						//go to the next page and set position for text entry there
+						if (newPage % 2 == 0)
+							ChangePage(newPage, false);
+						SetPagePos(0, newPage);
+
+						//insert data on the next page
+						IFOR(i, 0, info->Data.size())
+							g_EntryPointer->Insert(info->Data[i].item);
+
+
+					    if (goBack)
+						{
+							m_ChangedPage[page + 1] = true;
+							ChangePage(page % 2 == 0 ? page : page - 1, false);
+							SetPagePos(current, page);
+						}
+						else
+							g_EntryPointer->SetPos(0, this);
 					}
-				}				
+				}	
 				else
 					m_ChangedPage[page] = true;
-
 				m_WantRedraw = true;
+
 			}
 		}
 		else
 		{
-			if (g_EntryPointer->GetPos() == 0)
+			if (g_EntryPointer->Pos() == 0)
 			{
-				int previousPage = page - 1;
-				if (previousPage > -1)
-					GoToPage(previousPage, true);
-			}
-
+				int previousPage = page - 2;
+				if (previousPage < 0 )
+					previousPage = 0;			
+				ChangePage(previousPage);
+				SetPagePos(-1, previousPage + 1);
+			}	
 			m_ChangedPage[page] = true;
 			m_WantRedraw = true;
 		}
@@ -414,17 +457,15 @@ void CGumpBook::OnKeyDown(const WPARAM &wParam, const LPARAM &lParam)
 	}
 }
 //----------------------------------------------------------------------------------
-void CGumpBook::GoToPage(int page, bool end)
+void CGumpBook::SetPagePos(int val, int page)
 {
-	//emulate page turning
-	ChangePage(page);
-
 	//emulate text entry clicking
-	CGUITextEntry *newEntry = GetEntry(m_Page);
-	g_EntryPointer == &newEntry->m_Entry;
-	int x = end ? 160 : 3;
-	int y = end ? 160 : 8;
-	newEntry->OnClick(this, x, y);
+	CGUITextEntry *newEntry = GetEntry(page);
+	g_EntryPointer = &newEntry->m_Entry;
+	if (val == -1)
+		val = g_EntryPointer->Length();
+	g_EntryPointer->SetPos(val, this);
+		
 }
 //----------------------------------------------------------------------------------
 void CGumpBook::PasteClipboardData(wstring &data)
