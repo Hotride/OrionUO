@@ -32,6 +32,8 @@ private:
 	CGUIButton *m_PrevPage{ NULL };
 	CGUIButton *m_NextPage{ NULL };
 
+	void GoToPage(int page, bool end);
+
 public:
 	CGumpBook(uint serial, short x, short y, short pageCount, bool writable, bool unicode);
 	virtual ~CGumpBook();

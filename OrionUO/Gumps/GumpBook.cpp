@@ -310,7 +310,20 @@ void CGumpBook::InsertInContent(const WPARAM &wparam, const bool &isCharPress)
 				}
 
 				if (linesCount > maxLinesCount)
+				{
+					//remove inserted data
 					g_EntryPointer->Remove(true);
+
+					int newPage = page + 1;
+					if (newPage <= 20)
+					{
+						//go go the next page and click on text entry there
+						GoToPage(page + 1, false);
+
+						//insert data again
+						InsertInContent(wparam, isCharPress);
+					}
+				}				
 				else
 					m_ChangedPage[page] = true;
 
@@ -319,6 +332,13 @@ void CGumpBook::InsertInContent(const WPARAM &wparam, const bool &isCharPress)
 		}
 		else
 		{
+			if (g_EntryPointer->Length() == 0)
+			{
+				int previousPage = page - 1;
+				if (previousPage > -1)
+					GoToPage(previousPage, true);
+			}
+
 			m_ChangedPage[page] = true;
 			m_WantRedraw = true;
 		}
@@ -391,5 +411,17 @@ void CGumpBook::OnKeyDown(const WPARAM &wParam, const LPARAM &lParam)
 		default:
 			break;
 	}
+}
+//----------------------------------------------------------------------------------
+void CGumpBook::GoToPage(int page, bool end)
+{
+	//emulate page turning
+	ChangePage(page);
+
+	//emulate text entry clicking
+	CGUITextEntry *newEntry = GetEntry(m_Page);
+	g_EntryPointer == &newEntry->m_Entry;
+	int coords = end ? 160 : 0;
+	newEntry->OnClick(this, coords, coords);
 }
 //----------------------------------------------------------------------------------
