@@ -155,7 +155,7 @@ void CGumpBook::SetPageData(const int &page, const wstring &data)
 		entry->m_Entry.SetText(data);
 }
 //----------------------------------------------------------------------------------
-void CGumpBook::ChangePage(int newPage, bool playSound = true)
+void CGumpBook::ChangePage(int newPage, bool playSound)
  {
 	WISPFUN_DEBUG("c87_f5");
 	IFOR(i, 0, 2)
@@ -324,11 +324,14 @@ void CGumpBook::InsertInContent(const WPARAM &wparam, const bool &isCharPress)
 						PMULTILINES_FONT_INFO info = m_Unicode ? g_FontManager.GetInfoW(1, g_EntryPointer->GetTextW().c_str(), g_EntryPointer->Length(), TS_LEFT, 0, 166)
 							: g_FontManager.GetInfoA(4, g_EntryPointer->GetTextA().c_str(), g_EntryPointer->Length(), TS_LEFT, 0, 166);
 
+						bool addNewLine = false;
 						while (info != NULL)
 						{
 							PMULTILINES_FONT_INFO next = info->m_Next;
 							if (next != NULL)
 							{
+								if (next->m_Next == NULL && next->Data.size() > 0 && info->Data.size() == 0)
+									addNewLine = true;
 								info->Data.clear();
 								delete info;
 								info = next;
@@ -338,27 +341,42 @@ void CGumpBook::InsertInContent(const WPARAM &wparam, const bool &isCharPress)
 						}
 
 						m_ChangedPage[page] = true;
+
+						//determine if we're staying on a new page or going back to the current
 						if (g_EntryPointer->Pos() >= info->CharStart)
 							goBack = false;
 
+						//remove characters which do not fit on current page
 						if (info->CharCount == 0)
 							g_EntryPointer->RemoveSequence(g_EntryPointer->Length() - 1, 1);
 						else
-							g_EntryPointer->RemoveSequence(info->CharStart, info->CharCount);
+						{
+							int start = info->CharStart;
+							int count = info->CharCount;
+							if (addNewLine)
+							{
+								start -= 1;
+								count += 1;
+							}					
+							g_EntryPointer->RemoveSequence(start, count);
+						}
 
 
 						//go to the next page and set position for text entry there
 						if (newPage % 2 == 0)
-							ChangePage(newPage, false);
+							ChangePage(newPage, !goBack);
 						SetPagePos(0, newPage);
 
 						//insert data on the next page
+						if (info->Data.size() == 0 || addNewLine)
+							InsertInContent('\n');
 						IFOR(i, 0, info->Data.size())
-							g_EntryPointer->Insert(info->Data[i].item);
+							InsertInContent(info->Data[i].item);
 
 
 					    if (goBack)
 						{
+							//go back to initial position on your current page
 							m_ChangedPage[page + 1] = true;
 							ChangePage(page % 2 == 0 ? page : page - 1, false);
 							SetPagePos(current, page);
