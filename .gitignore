@@ -40,6 +40,8 @@
 /OrionUO/Release
 /OrionUO/OA
 /OrionUO/x64
+/OrionUO.VC.db
+/OrionUO.VC.VC.opendb
 /Desktop
 /OrionUO/music
 !/debug_bin/*.dll
