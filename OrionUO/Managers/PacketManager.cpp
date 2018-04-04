@@ -5927,6 +5927,10 @@ PACKET_HANDLER(BoatMoving)
 	WISPFUN_DEBUG("c150_f105");
 
 	uint boatSerial = ReadUInt32BE();
+
+	CGameObject *boat = g_World->FindWorldObject(boatSerial);
+	if (boat == NULL) return;
+
 	uchar boatSpeed = ReadUInt8();
 	uchar movingDirection = ReadUInt8();
 	uchar facingDirection = ReadUInt8();
@@ -5935,12 +5939,20 @@ PACKET_HANDLER(BoatMoving)
 	ushort boatZ = ReadUInt16BE();
 	ushort boatObjectsCount = ReadUInt16BE();
 
+	g_World->UpdateGameObject(boatSerial, boat->Graphic, 0, boat->Count, boatX, boatY, boatZ, facingDirection, boat->Color, boat->Flags, 0, UGOT_MULTI, 1);
 
 	for (ushort i = 0; i < boatObjectsCount; i++)
 	{
+		uint boatObjectSerial = ReadUInt32BE();
 		ushort boatObjectX = ReadUInt16BE();
 		ushort boatObjectY = ReadUInt16BE();
 		ushort boatObjectZ = ReadUInt16BE();
+
+		CGameObject *boatObject = g_World->FindWorldObject(boatObjectSerial);
+		if (boatObject == NULL) continue;
+
+		uchar direction = boatObject->NPC ? ((CGameCharacter*)boatObject)->Direction : 0;
+		g_World->UpdateGameObject(boatObjectSerial, boatObject->Graphic, 0, 0, boatObjectX, boatObjectY, boatObjectZ, direction, boatObject->Color, boatObject->Flags, 0, UGOT_ITEM, 1);
 	}
 }
 //----------------------------------------------------------------------------------
