@@ -46,16 +46,16 @@
     <Filter Include="Source Files\GUI">
       <UniqueIdentifier>{0d03da77-165c-49aa-8a7c-e83ac36e5eea}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Screen stages">
+    <Filter Include="Header Files\ScreenStages">
       <UniqueIdentifier>{2ddcac56-949e-4ec1-b519-18eba665219e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Screen stages">
+    <Filter Include="Source Files\ScreenStages">
       <UniqueIdentifier>{e3d8e70c-4c11-4f68-8b6b-98669d266634}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Game objects">
+    <Filter Include="Header Files\GameObjects">
       <UniqueIdentifier>{72547308-423f-48a1-befa-879d8c803acf}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Game objects">
+    <Filter Include="Source Files\GameObjects">
       <UniqueIdentifier>{b15fcba6-5861-4932-b6b9-77cbc193344a}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\TextEngine">
@@ -267,8 +267,8 @@
     <ClInclude Include="PressedObject.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Screen stages\BaseScreen.h">
-      <Filter>Header Files\Screen stages</Filter>
+    <ClInclude Include="ScreenStages\BaseScreen.h">
+      <Filter>Header Files\ScreenStages</Filter>
     </ClInclude>
     <ClInclude Include="Managers\CreateCharacterManager.h">
       <Filter>Header Files\Managers</Filter>
@@ -327,8 +327,8 @@
     <ClInclude Include="GUI\GUIHTMLGump.h">
       <Filter>Header Files\GUI</Filter>
     </ClInclude>
-    <ClInclude Include="Screen stages\MainScreen.h">
-      <Filter>Header Files\Screen stages</Filter>
+    <ClInclude Include="ScreenStages\MainScreen.h">
+      <Filter>Header Files\ScreenStages</Filter>
     </ClInclude>
     <ClInclude Include="GUI\GUI.h">
       <Filter>Header Files\GUI</Filter>
@@ -339,14 +339,14 @@
     <ClInclude Include="Network\Packets.h">
       <Filter>Header Files\Network</Filter>
     </ClInclude>
-    <ClInclude Include="Screen stages\ConnectionScreen.h">
-      <Filter>Header Files\Screen stages</Filter>
+    <ClInclude Include="ScreenStages\ConnectionScreen.h">
+      <Filter>Header Files\ScreenStages</Filter>
     </ClInclude>
-    <ClInclude Include="Screen stages\ServerScreen.h">
-      <Filter>Header Files\Screen stages</Filter>
+    <ClInclude Include="ScreenStages\ServerScreen.h">
+      <Filter>Header Files\ScreenStages</Filter>
     </ClInclude>
-    <ClInclude Include="Screen stages\CharacterListScreen.h">
-      <Filter>Header Files\Screen stages</Filter>
+    <ClInclude Include="ScreenStages\CharacterListScreen.h">
+      <Filter>Header Files\ScreenStages</Filter>
     </ClInclude>
     <ClInclude Include="GUI\GUIScissor.h">
       <Filter>Header Files\GUI</Filter>
@@ -363,8 +363,8 @@
     <ClInclude Include="GUI\GUIHTMLResizepic.h">
       <Filter>Header Files\GUI</Filter>
     </ClInclude>
-    <ClInclude Include="Screen stages\SelectProfessionScreen.h">
-      <Filter>Header Files\Screen stages</Filter>
+    <ClInclude Include="ScreenStages\SelectProfessionScreen.h">
+      <Filter>Header Files\ScreenStages</Filter>
     </ClInclude>
     <ClInclude Include="Gumps\GumpScreenMain.h">
       <Filter>Header Files\Gumps</Filter>
@@ -381,8 +381,8 @@
     <ClInclude Include="Gumps\GumpScreenSelectProfession.h">
       <Filter>Header Files\Gumps</Filter>
     </ClInclude>
-    <ClInclude Include="Screen stages\CreateCharacterScreen.h">
-      <Filter>Header Files\Screen stages</Filter>
+    <ClInclude Include="ScreenStages\CreateCharacterScreen.h">
+      <Filter>Header Files\ScreenStages</Filter>
     </ClInclude>
     <ClInclude Include="Gumps\GumpScreenCreateCharacter.h">
       <Filter>Header Files\Gumps</Filter>
@@ -393,8 +393,8 @@
     <ClInclude Include="GUI\GUIHitBox.h">
       <Filter>Header Files\GUI</Filter>
     </ClInclude>
-    <ClInclude Include="Screen stages\SelectTownScreen.h">
-      <Filter>Header Files\Screen stages</Filter>
+    <ClInclude Include="ScreenStages\SelectTownScreen.h">
+      <Filter>Header Files\ScreenStages</Filter>
     </ClInclude>
     <ClInclude Include="Gumps\GumpScreenSelectTown.h">
       <Filter>Header Files\Gumps</Filter>
@@ -408,20 +408,20 @@
     <ClInclude Include="GLEngine\GLVector.h">
       <Filter>Header Files\GLEngine</Filter>
     </ClInclude>
-    <ClInclude Include="Game objects\MapObject.h">
-      <Filter>Header Files\Game objects</Filter>
+    <ClInclude Include="GameObjects\MapObject.h">
+      <Filter>Header Files\GameObjects</Filter>
     </ClInclude>
-    <ClInclude Include="Game objects\LandObject.h">
-      <Filter>Header Files\Game objects</Filter>
+    <ClInclude Include="GameObjects\LandObject.h">
+      <Filter>Header Files\GameObjects</Filter>
     </ClInclude>
-    <ClInclude Include="Game objects\RenderStaticObject.h">
-      <Filter>Header Files\Game objects</Filter>
+    <ClInclude Include="GameObjects\RenderStaticObject.h">
+      <Filter>Header Files\GameObjects</Filter>
     </ClInclude>
-    <ClInclude Include="Game objects\StaticObject.h">
-      <Filter>Header Files\Game objects</Filter>
+    <ClInclude Include="GameObjects\StaticObject.h">
+      <Filter>Header Files\GameObjects</Filter>
     </ClInclude>
-    <ClInclude Include="Game objects\MultiObject.h">
-      <Filter>Header Files\Game objects</Filter>
+    <ClInclude Include="GameObjects\MultiObject.h">
+      <Filter>Header Files\GameObjects</Filter>
     </ClInclude>
     <ClInclude Include="Multi.h">
       <Filter>Header Files</Filter>
@@ -459,35 +459,35 @@
     <ClInclude Include="WeatherEffect.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Game objects\GameObject.h">
-      <Filter>Header Files\Game objects</Filter>
+    <ClInclude Include="GameObjects\GameObject.h">
+      <Filter>Header Files\GameObjects</Filter>
     </ClInclude>
-    <ClInclude Include="Game objects\GameEffect.h">
-      <Filter>Header Files\Game objects</Filter>
+    <ClInclude Include="GameObjects\GameEffect.h">
+      <Filter>Header Files\GameObjects</Filter>
     </ClInclude>
-    <ClInclude Include="Game objects\GameEffectDrag.h">
-      <Filter>Header Files\Game objects</Filter>
+    <ClInclude Include="GameObjects\GameEffectDrag.h">
+      <Filter>Header Files\GameObjects</Filter>
     </ClInclude>
-    <ClInclude Include="Game objects\GameEffectMoving.h">
-      <Filter>Header Files\Game objects</Filter>
+    <ClInclude Include="GameObjects\GameEffectMoving.h">
+      <Filter>Header Files\GameObjects</Filter>
     </ClInclude>
     <ClInclude Include="Managers\EffectManager.h">
       <Filter>Header Files\Managers</Filter>
     </ClInclude>
-    <ClInclude Include="Game objects\GameItem.h">
-      <Filter>Header Files\Game objects</Filter>
+    <ClInclude Include="GameObjects\GameItem.h">
+      <Filter>Header Files\GameObjects</Filter>
     </ClInclude>
-    <ClInclude Include="Game objects\GameCharacter.h">
-      <Filter>Header Files\Game objects</Filter>
+    <ClInclude Include="GameObjects\GameCharacter.h">
+      <Filter>Header Files\GameObjects</Filter>
     </ClInclude>
-    <ClInclude Include="Game objects\GamePlayer.h">
-      <Filter>Header Files\Game objects</Filter>
+    <ClInclude Include="GameObjects\GamePlayer.h">
+      <Filter>Header Files\GameObjects</Filter>
     </ClInclude>
-    <ClInclude Include="Game objects\GameWorld.h">
-      <Filter>Header Files\Game objects</Filter>
+    <ClInclude Include="GameObjects\GameWorld.h">
+      <Filter>Header Files\GameObjects</Filter>
     </ClInclude>
-    <ClInclude Include="Game objects\ObjectOnCursor.h">
-      <Filter>Header Files\Game objects</Filter>
+    <ClInclude Include="GameObjects\ObjectOnCursor.h">
+      <Filter>Header Files\GameObjects</Filter>
     </ClInclude>
     <ClInclude Include="Party.h">
       <Filter>Header Files</Filter>
@@ -495,11 +495,11 @@
     <ClInclude Include="PartyObject.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Screen stages\GameScreen.h">
-      <Filter>Header Files\Screen stages</Filter>
+    <ClInclude Include="ScreenStages\GameScreen.h">
+      <Filter>Header Files\ScreenStages</Filter>
     </ClInclude>
-    <ClInclude Include="Screen stages\GameBlockedScreen.h">
-      <Filter>Header Files\Screen stages</Filter>
+    <ClInclude Include="ScreenStages\GameBlockedScreen.h">
+      <Filter>Header Files\ScreenStages</Filter>
     </ClInclude>
     <ClInclude Include="Managers\GumpManager.h">
       <Filter>Header Files\Managers</Filter>
@@ -513,8 +513,8 @@
     <ClInclude Include="Gumps\GumpScreenGame.h">
       <Filter>Header Files\Gumps</Filter>
     </ClInclude>
-    <ClInclude Include="Game objects\MapBlock.h">
-      <Filter>Header Files\Game objects</Filter>
+    <ClInclude Include="GameObjects\MapBlock.h">
+      <Filter>Header Files\GameObjects</Filter>
     </ClInclude>
     <ClInclude Include="TextEngine\EntryText.h">
       <Filter>Header Files\TextEngine</Filter>
@@ -807,11 +807,11 @@
     <ClInclude Include="Gumps\GumpCustomHouse.h">
       <Filter>Header Files\Gumps</Filter>
     </ClInclude>
-    <ClInclude Include="Game objects\CustomHouseObjects.h">
-      <Filter>Header Files\Game objects</Filter>
+    <ClInclude Include="GameObjects\CustomHouseObjects.h">
+      <Filter>Header Files\GameObjects</Filter>
     </ClInclude>
-    <ClInclude Include="Game objects\CustomHouseMultiObject.h">
-      <Filter>Header Files\Game objects</Filter>
+    <ClInclude Include="GameObjects\CustomHouseMultiObject.h">
+      <Filter>Header Files\GameObjects</Filter>
     </ClInclude>
     <ClInclude Include="Managers\CustomHousesManager.h">
       <Filter>Header Files\Managers</Filter>
@@ -1004,8 +1004,8 @@
     <ClCompile Include="PressedObject.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Screen stages\BaseScreen.cpp">
-      <Filter>Source Files\Screen stages</Filter>
+    <ClCompile Include="ScreenStages\BaseScreen.cpp">
+      <Filter>Source Files\ScreenStages</Filter>
     </ClCompile>
     <ClCompile Include="Managers\CreateCharacterManager.cpp">
       <Filter>Source Files\Managers</Filter>
@@ -1064,8 +1064,8 @@
     <ClCompile Include="GUI\GUIHTMLGump.cpp">
       <Filter>Source Files\GUI</Filter>
     </ClCompile>
-    <ClCompile Include="Screen stages\MainScreen.cpp">
-      <Filter>Source Files\Screen stages</Filter>
+    <ClCompile Include="ScreenStages\MainScreen.cpp">
+      <Filter>Source Files\ScreenStages</Filter>
     </ClCompile>
     <ClCompile Include="OrionApplication.cpp">
       <Filter>Source Files</Filter>
@@ -1073,14 +1073,14 @@
     <ClCompile Include="Network\Packets.cpp">
       <Filter>Source Files\Network</Filter>
     </ClCompile>
-    <ClCompile Include="Screen stages\ConnectionScreen.cpp">
-      <Filter>Source Files\Screen stages</Filter>
+    <ClCompile Include="ScreenStages\ConnectionScreen.cpp">
+      <Filter>Source Files\ScreenStages</Filter>
     </ClCompile>
-    <ClCompile Include="Screen stages\ServerScreen.cpp">
-      <Filter>Source Files\Screen stages</Filter>
+    <ClCompile Include="ScreenStages\ServerScreen.cpp">
+      <Filter>Source Files\ScreenStages</Filter>
     </ClCompile>
-    <ClCompile Include="Screen stages\CharacterListScreen.cpp">
-      <Filter>Source Files\Screen stages</Filter>
+    <ClCompile Include="ScreenStages\CharacterListScreen.cpp">
+      <Filter>Source Files\ScreenStages</Filter>
     </ClCompile>
     <ClCompile Include="GUI\GUIScissor.cpp">
       <Filter>Source Files\GUI</Filter>
@@ -1097,8 +1097,8 @@
     <ClCompile Include="GUI\GUIHTMLResizepic.cpp">
       <Filter>Source Files\GUI</Filter>
     </ClCompile>
-    <ClCompile Include="Screen stages\SelectProfessionScreen.cpp">
-      <Filter>Source Files\Screen stages</Filter>
+    <ClCompile Include="ScreenStages\SelectProfessionScreen.cpp">
+      <Filter>Source Files\ScreenStages</Filter>
     </ClCompile>
     <ClCompile Include="Gumps\GumpScreenMain.cpp">
       <Filter>Source Files\Gumps</Filter>
@@ -1115,8 +1115,8 @@
     <ClCompile Include="Gumps\GumpScreenSelectProfession.cpp">
       <Filter>Source Files\Gumps</Filter>
     </ClCompile>
-    <ClCompile Include="Screen stages\CreateCharacterScreen.cpp">
-      <Filter>Source Files\Screen stages</Filter>
+    <ClCompile Include="ScreenStages\CreateCharacterScreen.cpp">
+      <Filter>Source Files\ScreenStages</Filter>
     </ClCompile>
     <ClCompile Include="Gumps\GumpScreenCreateCharacter.cpp">
       <Filter>Source Files\Gumps</Filter>
@@ -1127,8 +1127,8 @@
     <ClCompile Include="GUI\GUIHitBox.cpp">
       <Filter>Source Files\GUI</Filter>
     </ClCompile>
-    <ClCompile Include="Screen stages\SelectTownScreen.cpp">
-      <Filter>Source Files\Screen stages</Filter>
+    <ClCompile Include="ScreenStages\SelectTownScreen.cpp">
+      <Filter>Source Files\ScreenStages</Filter>
     </ClCompile>
     <ClCompile Include="Gumps\GumpScreenSelectTown.cpp">
       <Filter>Source Files\Gumps</Filter>
@@ -1142,20 +1142,20 @@
     <ClCompile Include="GLEngine\GLVector.cpp">
       <Filter>Source Files\GLEngine</Filter>
     </ClCompile>
-    <ClCompile Include="Game objects\MapObject.cpp">
-      <Filter>Source Files\Game objects</Filter>
+    <ClCompile Include="GameObjects\MapObject.cpp">
+      <Filter>Source Files\GameObjects</Filter>
     </ClCompile>
-    <ClCompile Include="Game objects\LandObject.cpp">
-      <Filter>Source Files\Game objects</Filter>
+    <ClCompile Include="GameObjects\LandObject.cpp">
+      <Filter>Source Files\GameObjects</Filter>
     </ClCompile>
-    <ClCompile Include="Game objects\RenderStaticObject.cpp">
-      <Filter>Source Files\Game objects</Filter>
+    <ClCompile Include="GameObjects\RenderStaticObject.cpp">
+      <Filter>Source Files\GameObjects</Filter>
     </ClCompile>
-    <ClCompile Include="Game objects\StaticObject.cpp">
-      <Filter>Source Files\Game objects</Filter>
+    <ClCompile Include="GameObjects\StaticObject.cpp">
+      <Filter>Source Files\GameObjects</Filter>
     </ClCompile>
-    <ClCompile Include="Game objects\MultiObject.cpp">
-      <Filter>Source Files\Game objects</Filter>
+    <ClCompile Include="GameObjects\MultiObject.cpp">
+      <Filter>Source Files\GameObjects</Filter>
     </ClCompile>
     <ClCompile Include="Multi.cpp">
       <Filter>Source Files</Filter>
@@ -1193,35 +1193,35 @@
     <ClCompile Include="WeatherEffeect.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Game objects\GameObject.cpp">
-      <Filter>Source Files\Game objects</Filter>
+    <ClCompile Include="GameObjects\GameObject.cpp">
+      <Filter>Source Files\GameObjects</Filter>
     </ClCompile>
-    <ClCompile Include="Game objects\GameEffect.cpp">
-      <Filter>Source Files\Game objects</Filter>
+    <ClCompile Include="GameObjects\GameEffect.cpp">
+      <Filter>Source Files\GameObjects</Filter>
     </ClCompile>
-    <ClCompile Include="Game objects\GameEffectMoving.cpp">
-      <Filter>Source Files\Game objects</Filter>
+    <ClCompile Include="GameObjects\GameEffectMoving.cpp">
+      <Filter>Source Files\GameObjects</Filter>
     </ClCompile>
-    <ClCompile Include="Game objects\GameEffectDrag.cpp">
-      <Filter>Source Files\Game objects</Filter>
+    <ClCompile Include="GameObjects\GameEffectDrag.cpp">
+      <Filter>Source Files\GameObjects</Filter>
     </ClCompile>
     <ClCompile Include="Managers\EffectManager.cpp">
       <Filter>Source Files\Managers</Filter>
     </ClCompile>
-    <ClCompile Include="Game objects\GameItem.cpp">
-      <Filter>Source Files\Game objects</Filter>
+    <ClCompile Include="GameObjects\GameItem.cpp">
+      <Filter>Source Files\GameObjects</Filter>
     </ClCompile>
-    <ClCompile Include="Game objects\GameCharacter.cpp">
-      <Filter>Source Files\Game objects</Filter>
+    <ClCompile Include="GameObjects\GameCharacter.cpp">
+      <Filter>Source Files\GameObjects</Filter>
     </ClCompile>
-    <ClCompile Include="Game objects\GamePlayer.cpp">
-      <Filter>Source Files\Game objects</Filter>
+    <ClCompile Include="GameObjects\GamePlayer.cpp">
+      <Filter>Source Files\GameObjects</Filter>
     </ClCompile>
-    <ClCompile Include="Game objects\GameWorld.cpp">
-      <Filter>Source Files\Game objects</Filter>
+    <ClCompile Include="GameObjects\GameWorld.cpp">
+      <Filter>Source Files\GameObjects</Filter>
     </ClCompile>
-    <ClCompile Include="Game objects\ObjectOnCursor.cpp">
-      <Filter>Source Files\Game objects</Filter>
+    <ClCompile Include="GameObjects\ObjectOnCursor.cpp">
+      <Filter>Source Files\GameObjects</Filter>
     </ClCompile>
     <ClCompile Include="Party.cpp">
       <Filter>Source Files</Filter>
@@ -1229,11 +1229,11 @@
     <ClCompile Include="PartyObject.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Screen stages\GameScreen.cpp">
-      <Filter>Source Files\Screen stages</Filter>
+    <ClCompile Include="ScreenStages\GameScreen.cpp">
+      <Filter>Source Files\ScreenStages</Filter>
     </ClCompile>
-    <ClCompile Include="Screen stages\GameBlockedScreen.cpp">
-      <Filter>Source Files\Screen stages</Filter>
+    <ClCompile Include="ScreenStages\GameBlockedScreen.cpp">
+      <Filter>Source Files\ScreenStages</Filter>
     </ClCompile>
     <ClCompile Include="Managers\GumpManager.cpp">
       <Filter>Source Files\Managers</Filter>
@@ -1247,8 +1247,8 @@
     <ClCompile Include="Gumps\GumpScreenGame.cpp">
       <Filter>Source Files\Gumps</Filter>
     </ClCompile>
-    <ClCompile Include="Game objects\MapBlock.cpp">
-      <Filter>Source Files\Game objects</Filter>
+    <ClCompile Include="GameObjects\MapBlock.cpp">
+      <Filter>Source Files\GameObjects</Filter>
     </ClCompile>
     <ClCompile Include="TextEngine\EntryText.cpp">
       <Filter>Source Files\TextEngine</Filter>
@@ -1523,11 +1523,11 @@
     <ClCompile Include="Gumps\GumpCustomHouse.cpp">
       <Filter>Source Files\Gumps</Filter>
     </ClCompile>
-    <ClCompile Include="Game objects\CustomHouseObjects.cpp">
-      <Filter>Source Files\Game objects</Filter>
+    <ClCompile Include="GameObjects\CustomHouseObjects.cpp">
+      <Filter>Source Files\GameObjects</Filter>
     </ClCompile>
-    <ClCompile Include="Game objects\CustomHouseMultiObject.cpp">
-      <Filter>Source Files\Game objects</Filter>
+    <ClCompile Include="GameObjects\CustomHouseMultiObject.cpp">
+      <Filter>Source Files\GameObjects</Filter>
     </ClCompile>
     <ClCompile Include="Managers\CustomHousesManager.cpp">
       <Filter>Source Files\Managers</Filter>
