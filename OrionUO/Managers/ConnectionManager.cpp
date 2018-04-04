@@ -104,7 +104,7 @@ void CConnectionManager::Init()
 		if (LPHOSTENT lphost = gethostbyname(hostName))
 		{
 			WISP_DATASTREAM::CDataWritter stream;
-			stream.WriteUInt32BE(((LPIN_ADDR)lphost->h_addr)->s_addr);
+			stream.WriteUInt32LE(((LPIN_ADDR)lphost->h_addr)->s_addr);
 			UCHAR_LIST &data = stream.Data();
 
 			memcpy(&m_Seed[0], &data[0], 4);
@@ -133,6 +133,7 @@ void CConnectionManager::Init(puchar gameSeed)
 }
 //----------------------------------------------------------------------------------
 void CConnectionManager::SendIP(CSocket &socket, puchar seed)
+
 {
 	WISPFUN_DEBUG("c139_f10");
 	g_PluginManager.WindowProc(g_OrionWindow.Handle, UOMSG_IP_SEND, (WPARAM)seed, 4);
