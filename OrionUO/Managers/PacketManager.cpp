@@ -275,7 +275,7 @@ CPacketInfo CPacketManager::m_Packets[0x100] =
 	/*0xF3*/ RMSGH(ORION_SAVE_PACKET, "Update Item (SA)", 0x18, UpdateItemSA),
 	/*0xF4*/ UMSG(ORION_SAVE_PACKET, PACKET_VARIABLE_SIZE),
 	/*0xF5*/ RMSGH(ORION_IGNORE_PACKET, "Display New Map", 0x15, DisplayMap),
-	/*0xF6*/ RMSG(ORION_SAVE_PACKET, "Boat moving", PACKET_VARIABLE_SIZE, BoatMoving),
+	/*0xF6*/ RMSGH(ORION_SAVE_PACKET, "Boat moving", PACKET_VARIABLE_SIZE, BoatMoving),
 	/*0xF7*/ RMSGH(ORION_SAVE_PACKET, "Packets (0xF3) list", PACKET_VARIABLE_SIZE, PacketsList),
 	/*0xF8*/ SMSG(ORION_SAVE_PACKET, "Character Creation (7.0.16.0)", 0x6a),
 	/*0xF9*/ UMSG(ORION_SAVE_PACKET, PACKET_VARIABLE_SIZE),
@@ -5934,6 +5934,7 @@ PACKET_HANDLER(BoatMoving)
 	ushort boatY = ReadUInt16BE();
 	ushort boatZ = ReadUInt16BE();
 	ushort boatObjectsCount = ReadUInt16BE();
+
 
 	for (ushort i = 0; i < boatObjectsCount; i++)
 	{
