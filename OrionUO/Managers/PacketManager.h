@@ -192,6 +192,7 @@ protected:
 	HANDLER_PACKET(PacketsList);
 	HANDLER_PACKET(MovePlayer);
 	HANDLER_PACKET(Pathfinding);
+	HANDLER_PACKET(BoatMoving);
 
 //Не обработаны
 /*
