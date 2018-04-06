@@ -24,12 +24,14 @@ typedef struct PLUGIN_INFO
 #pragma pack (pop)
 //----------------------------------------------------------------------------------
 typedef void __cdecl PLUGIN_INIT_TYPE_OLD(STRING_LIST&, STRING_LIST&, UINT_LIST&);
-typedef PLUGIN_INFO* __cdecl PLUGIN_INIT_TYPE_NEW(size_t&);
+typedef void __cdecl PLUGIN_INIT_TYPE_NEW(PLUGIN_INFO*);
+typedef size_t __cdecl PLUGIN_GET_COUNT_FUNC();
 //----------------------------------------------------------------------------------
 COrion g_Orion;
 PLUGIN_CLIENT_INTERFACE g_PluginClientInterface = { 0 };
 PLUGIN_INIT_TYPE_OLD *g_PluginInitOld = NULL;
 PLUGIN_INIT_TYPE_NEW *g_PluginInitNew = NULL;
+PLUGIN_GET_COUNT_FUNC *g_PluginGetCount = NULL;
 //----------------------------------------------------------------------------------
 COrion::COrion()
 {
@@ -1030,6 +1032,8 @@ void COrion::LoadClientConfig()
 			return;
 		}
 
+		g_PluginGetCount = (PLUGIN_GET_COUNT_FUNC*)GetProcAddress(orionDll, "GetPluginsCount");
+
 		WISP_DATASTREAM::CDataReader file(&realData[0], realSize);
 
 		uchar version = file.ReadInt8();
@@ -1455,8 +1459,10 @@ void COrion::LoadPluginConfig()
 		g_PluginInitOld(libName, functions, flags);
 	else
 	{
-		size_t pluginsInfoCount = 0;
-		PLUGIN_INFO *pluginsInfo = g_PluginInitNew(pluginsInfoCount);
+		size_t pluginsInfoCount = g_PluginGetCount();
+
+		PLUGIN_INFO *pluginsInfo = new PLUGIN_INFO[pluginsInfoCount];
+		g_PluginInitNew(pluginsInfo);
 
 		IFOR(i, 0, pluginsInfoCount)
 		{
@@ -1464,6 +1470,8 @@ void COrion::LoadPluginConfig()
 			functions.push_back(pluginsInfo[i].FunctionName);
 			flags.push_back((uint)pluginsInfo[i].Flags);
 		}
+
+		delete[] pluginsInfo;
 	}
 
 	IFOR(i, 0, (int)libName.size())
