@@ -1,4 +1,4 @@
-п»ї// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 /***********************************************************************************
 **
@@ -12,11 +12,24 @@
 
 #include "stdafx.h"
 //----------------------------------------------------------------------------------
-typedef void __cdecl PLUGIN_INIT_TYPE(STRING_LIST&, STRING_LIST&, UINT_LIST&);
+#pragma pack (push,1)
+
+typedef struct PLUGIN_INFO
+{
+	char FileName[MAX_PATH];
+	char FunctionName[100];
+	unsigned __int64 Flags;
+} *PPLUGIN_INFO;
+
+#pragma pack (pop)
+//----------------------------------------------------------------------------------
+typedef void __cdecl PLUGIN_INIT_TYPE_OLD(STRING_LIST&, STRING_LIST&, UINT_LIST&);
+typedef PLUGIN_INFO* __cdecl PLUGIN_INIT_TYPE_NEW(size_t&);
 //----------------------------------------------------------------------------------
 COrion g_Orion;
 PLUGIN_CLIENT_INTERFACE g_PluginClientInterface = { 0 };
-PLUGIN_INIT_TYPE *g_PluginInit = NULL;
+PLUGIN_INIT_TYPE_OLD *g_PluginInitOld = NULL;
+PLUGIN_INIT_TYPE_NEW *g_PluginInitNew = NULL;
 //----------------------------------------------------------------------------------
 COrion::COrion()
 {
@@ -245,6 +258,7 @@ bool COrion::Install()
 
 	LOG("Load client config.\n");
 	LoadClientConfig();
+	LOG("Client config loaded!\n");
 
 	if (g_PacketManager.ClientVersion >= CV_305D)
 	{
@@ -977,33 +991,46 @@ void COrion::LoadClientConfig()
 		return;
 	}
 
-	typedef void __cdecl installFunc(uchar*, const int&, UCHAR_LIST*);
+	typedef void __cdecl installFuncOld(uchar*, const int&, UCHAR_LIST*);
+	typedef void __cdecl installFuncNew(uchar*, size_t, uchar*, size_t&);
 
-	installFunc *install = (installFunc*)GetProcAddress(orionDll, "Install");
+	installFuncOld *installOld = (installFuncOld*)GetProcAddress(orionDll, "Install");
+	installFuncNew *installNew = (installFuncNew*)GetProcAddress(orionDll, "InstallNew");
 
-	if (install == NULL)
+	if (installNew == NULL)
 	{
-		g_OrionWindow.ShowMessage("Install function in Orion.dll not found!", "Error!");
-		ExitProcess(0);
-		return;
+		if (installOld == NULL)
+		{
+			g_OrionWindow.ShowMessage("Install of InstallNew function in Orion.dll not found!", "Error!");
+			ExitProcess(0);
+			return;
+		}
 	}
+	else
+		installOld = NULL;
 
 	WISP_FILE::CMappedFile config;
 
 	if (config.Load(g_App.UOFilesPath("Client.cuo")) || config.Load(g_App.ExeFilePath("Client.cuo")))
 	{
-		UCHAR_LIST realData;
-		install(config.Start, (int)config.Size, &realData);
+		UCHAR_LIST realData(config.Size, 0);
+		size_t realSize = 0;
+
+		if (installOld != NULL)
+		{
+			installOld(config.Start, (int)config.Size, &realData);			realSize = realData.size();		}		else
+			installNew(config.Start, config.Size, &realData[0], realSize);
+
 		config.Unload();
 
-		if (!realData.size())
+		if (!realSize)
 		{
 			g_OrionWindow.ShowMessage("Corrupted config data!", "Error!");
 			ExitProcess(0);
 			return;
 		}
 
-		WISP_DATASTREAM::CDataReader file(&realData[0], realData.size());
+		WISP_DATASTREAM::CDataReader file(&realData[0], realSize);
 
 		uchar version = file.ReadInt8();
 		uchar dllVersion = file.ReadInt8();
@@ -1032,13 +1059,21 @@ void COrion::LoadClientConfig()
 		g_NetworkAction = (NETWORK_ACTION_TYPE*)file.ReadUInt32LE();
 		if (dllVersion == 0xFE)
 			g_NetworkPostAction = (NETWORK_POST_ACTION_TYPE*)file.ReadUInt32LE();
-		g_PluginInit = (PLUGIN_INIT_TYPE*)file.ReadUInt32LE();
+
+		if (installOld != NULL)
+			g_PluginInitOld = (PLUGIN_INIT_TYPE_OLD*)file.ReadUInt32LE();
+		else
+			g_PluginInitNew = (PLUGIN_INIT_TYPE_NEW*)file.ReadUInt32LE();
 #else
 		g_NetworkInit = (NETWORK_INIT_TYPE*)file.ReadUInt64LE();
 		g_NetworkAction = (NETWORK_ACTION_TYPE*)file.ReadUInt64LE();
 		if (dllVersion == 0xFE)
 			g_NetworkPostAction = (NETWORK_POST_ACTION_TYPE*)file.ReadUInt64LE();
-		g_PluginInit = (PLUGIN_INIT_TYPE*)file.ReadUInt64LE();
+
+		if (installOld != NULL)
+			g_PluginInitOld = (PLUGIN_INIT_TYPE_OLD*)file.ReadUInt64LE();
+		else
+			g_PluginInitNew = (PLUGIN_INIT_TYPE_NEW*)file.ReadUInt64LE();
 #endif
 
 		int mapsCount = MAX_MAPS_COUNT;
@@ -1416,7 +1451,20 @@ void COrion::LoadPluginConfig()
 	STRING_LIST functions;
 	UINT_LIST flags;
 
-	g_PluginInit(libName, functions, flags);
+	if (g_PluginInitOld != NULL)
+		g_PluginInitOld(libName, functions, flags);
+	else
+	{
+		size_t pluginsInfoCount = 0;
+		PLUGIN_INFO *pluginsInfo = g_PluginInitNew(pluginsInfoCount);
+
+		IFOR(i, 0, pluginsInfoCount)
+		{
+			libName.push_back(pluginsInfo[i].FileName);
+			functions.push_back(pluginsInfo[i].FunctionName);
+			flags.push_back((uint)pluginsInfo[i].Flags);
+		}
+	}
 
 	IFOR(i, 0, (int)libName.size())
 		LoadPlugin(g_App.ExeFilePath(libName[i].c_str()), functions[i], flags[i]);
@@ -1507,7 +1555,7 @@ void COrion::LoadLocalConfig(const uint &serial)
 	{
 		if (!g_MacroManager.Load(g_App.UOFilesPath("\\macros_debug.cuo"), g_App.UOFilesPath("\\macros.txt")))
 		{
-			//РЎРѕР·РґР°С‚СЊ СЃС‚Р°РЅРґР°СЂС‚РЅС‹Рµ РјР°РєСЂРѕСЃС‹
+			//Создать стандартные макросы
 		}
 	}
 
@@ -2276,7 +2324,7 @@ int COrion::ValueInt(const VALUE_KEY_INT &key, int value)
 			if (value == -1)
 				value = g_ConfigManager.DisableNewTargetSystem;
 			else
-				g_ConfigManager.DisableNewTargetSystem = (value == 0); //РРјРµРЅРЅРѕ == 0!!! Рў.Рє. РІ РїР»Р°РіРёРЅРµ СЌС‚Рѕ Target System enable/disable
+				g_ConfigManager.DisableNewTargetSystem = (value == 0); //Именно == 0!!! Т.к. в плагине это Target System enable/disable
 
 			break;
 		}
@@ -5712,7 +5760,7 @@ void COrion::ChangeWarmode(uchar status)
 		newstatus = status;
 	}
 
-	//38, 39 Рё 40 СЌС‚Рѕ РёРЅРґРµРєСЃС‹ Р±РѕРµРІРѕР№ РјСѓР·С‹РєРё.
+	//38, 39 и 40 это индексы боевой музыки.
 	if (newstatus == 1 && g_ConfigManager.Music)
 		PlayMusic(rand() % 3 + 38, true);
 	else if (newstatus == 0)
