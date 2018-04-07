@@ -3169,7 +3169,10 @@ void CAnimationManager::ReadFramesPixelData(CTextureAnimationDirection &directio
 	Move(sizeof(ushort[256])); //Palette
 	puchar dataStart = m_Ptr;
 
-	int frameCount = ReadUInt32LE();
+	uint frameCount = ReadUInt32LE();
+	//safety check if reading goes wrong
+	if (frameCount > 100) return;
+
 	direction.FrameCount = frameCount;
 
 	puint frameOffset = (puint)m_Ptr;
