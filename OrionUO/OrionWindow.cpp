@@ -309,7 +309,9 @@ void COrionWindow::OnActivate()
 void COrionWindow::OnDeactivate()
 {
 	WISPFUN_DEBUG("c195_f18");
-	g_Orion.PauseSound();
+	if (!g_ConfigManager.BackgroundSound) //Nico
+		g_Orion.PauseSound(); //Nico
+	
 	if (g_ConfigManager.ReduceFPSUnactiveWindow)
 		SetRenderTimerDelay(g_FrameDelay[0]);
 

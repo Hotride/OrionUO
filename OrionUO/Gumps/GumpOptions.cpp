@@ -241,6 +241,11 @@ void CGumpOptions::InitToolTip()
 				g_ToolTip.Set(L"On/off combat music in war mode");
 				break;
 			}
+			case ID_GO_P1_BACKGROUND_SOUND:	//Nico
+			{
+				g_ToolTip.Set(L"On/off sound while game is in background");
+				break;
+			}
 			case ID_GO_P1_SOUND_VOLUME:
 			{
 				g_ToolTip.Set(L"Sound effects volume value");
@@ -862,8 +867,6 @@ void CGumpOptions::DrawPage1()
 	m_SliderMusic = (CGUISlider*)Add(new CGUISlider(ID_GO_P1_MUSIC_VOLUME, 0x00D8, 0x00D8, 0x00D8, 0x00D5, true, false, 64, 194, 90, 0, 255, g_OptionsConfig.MusicVolume));
 	m_SliderMusic->SetTextParameters(true, STP_RIGHT, 0, g_OptionsTextColor, true);
 
-
-
 	checkbox = (CGUICheckbox*)Add(new CGUICheckbox(ID_GO_P1_PLAY_FOOTSTEP_SOUNDS, 0x00D2, 0x00D3, 0x00D2, 64, 212));
 	checkbox->Checked = g_OptionsConfig.FootstepsSound;
 	checkbox->SetTextParameters(0, L"Play footstep sounds", g_OptionsTextColor);
@@ -871,6 +874,11 @@ void CGumpOptions::DrawPage1()
 	checkbox = (CGUICheckbox*)Add(new CGUICheckbox(ID_GO_P1_PLAY_COMBAT_MUSIC, 0x00D2, 0x00D3, 0x00D2, 64, 232));
 	checkbox->Checked = g_OptionsConfig.CombatMusic;
 	checkbox->SetTextParameters(0, L"Play combat music", g_OptionsTextColor);
+
+	checkbox = (CGUICheckbox*)Add(new CGUICheckbox(ID_GO_P1_BACKGROUND_SOUND, 0x00D2, 0x00D3, 0x00D2, 64, 252)); //Nico
+	checkbox->Checked = g_OptionsConfig.BackgroundSound; //Nico
+	checkbox->SetTextParameters(0, L"Play sounds in background", g_OptionsTextColor); //Nico
+
 }
 //----------------------------------------------------------------------------
 void CGumpOptions::DrawPage2()
@@ -2424,7 +2432,8 @@ void CGumpOptions::GUMP_CHECKBOX_EVENT_C
 				g_OptionsConfig.FootstepsSound = state;
 			else if (serial == ID_GO_P1_PLAY_COMBAT_MUSIC) //Play combat music
 				g_OptionsConfig.CombatMusic = state;
-
+			else if (serial == ID_GO_P1_BACKGROUND_SOUND) //Play sounds in background
+				g_OptionsConfig.BackgroundSound = state;
 			break;
 		}
 		case 2: //Orion's configuration
@@ -3048,6 +3057,8 @@ void CGumpOptions::ApplyPageChanges()
 
 			g_ConfigManager.FootstepsSound = g_OptionsConfig.FootstepsSound;
 			g_ConfigManager.CombatMusic = g_OptionsConfig.CombatMusic;
+
+			g_ConfigManager.BackgroundSound = g_OptionsConfig.BackgroundSound; //Nico
 
 			break;
 		}
