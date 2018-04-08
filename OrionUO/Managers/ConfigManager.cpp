@@ -71,6 +71,7 @@ void CConfigManager::DefaultPage1()
 	m_CombatMusic = true;
 	m_SoundVolume = 255;
 	m_MusicVolume = 255;
+	m_BackgroundSound = true; //Nico
 }
 //---------------------------------------------------------------------------
 void CConfigManager::DefaultPage2()
@@ -745,6 +746,7 @@ bool CConfigManager::LoadBin(string path)
 			m_CombatMusic = file.ReadUInt8();
 			m_SoundVolume = file.ReadUInt8();
 			m_MusicVolume = file.ReadUInt8();
+			m_BackgroundSound = file.ReadUInt8(); //Nico
 		}
 		
 		file.Ptr = next;
@@ -1237,6 +1239,7 @@ int CConfigManager::GetConfigKeyCode(const string &key)
 		"MusicVolume",
 		"FootstepsSound",
 		"CombatMusic",
+		"BackgroundSound",
 		"ClientFPS",
 		"UseScaling",
 		"RemoveTextWithBlending",
@@ -1410,6 +1413,9 @@ bool CConfigManager::Load(const string &path)
 				case CMKC_COMBAT_MUSIC:
 					m_CombatMusic = ToBool(strings[1]);
 					break;
+				case CMKC_BACKGROUND_SOUND: //Nico
+					m_BackgroundSound = ToBool(strings[1]); //Nico
+					break; //Nico
 
 				//Page 2
 				case CMKC_CLIENT_FPS:
@@ -1852,6 +1858,7 @@ void CConfigManager::Save(const string &path)
 		writter.WriteInt("MusicVolume", m_MusicVolume);
 		writter.WriteBool("FootstepsSound", m_FootstepsSound);
 		writter.WriteBool("CombatMusic", m_CombatMusic);
+		writter.WriteBool("BackgroundSound", m_BackgroundSound); //Nico
 
 		//Page 2
 		writter.WriteInt("ClientFPS", m_ClientFPS);

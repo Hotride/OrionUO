@@ -19,6 +19,7 @@ class CConfigManager
 	SETGET(bool, CombatMusic, true);
 	SETGETE(uchar, SoundVolume, 255);
 	SETGETE(uchar, MusicVolume, 255);
+	SETGET(bool, BackgroundSound, false); //Nico
 
 	SETGETE(uchar, ClientFPS, 32);
 	SETGETE(bool, UseScaling, false);
@@ -188,6 +189,7 @@ public:
 		CMKC_MUSIC_VOLUME,
 		CMKC_FOOTSTEPS_SOUND,
 		CMKC_COMBAT_MUSIC,
+		CMKC_BACKGROUND_SOUND,
 		CMKC_CLIENT_FPS,
 		CMKC_USE_SCALING,
 		CMKC_REMOVE_TEXT_WITH_BLENDING,

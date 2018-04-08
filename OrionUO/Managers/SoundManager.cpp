@@ -209,9 +209,9 @@ HSTREAM CSoundManager::LoadSoundEffect(CIndexSound &is)
 void CSoundManager::PlaySoundEffect(HSTREAM hStream, float volume)
 {
 	WISPFUN_DEBUG("c156_f8");
-	if (hStream == 0 || GetForegroundWindow() != g_OrionWindow.Handle)
+	if (hStream == 0 || (GetForegroundWindow() != g_OrionWindow.Handle && !g_ConfigManager.BackgroundSound))
 		return;
-
+	
 	BASS_ChannelSetAttribute(hStream, BASS_ATTRIB_VOL, volume);
 
 	if (!BASS_ChannelPlay(hStream, false))
