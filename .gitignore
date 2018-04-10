@@ -36,6 +36,7 @@
 /Release
 /Debug
 /x64
+/build/
 /OrionUO/Debug
 /OrionUO/Release
 /OrionUO/OA
@@ -55,3 +56,5 @@
 !/test_bin64/*.pdb
 !/test_bin64/*.sf2
 !/WikiData/RU/*.txt
+!/CMakeLists.txt
+!/OrionUO/CMakeLists.txt

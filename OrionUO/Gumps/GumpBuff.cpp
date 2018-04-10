@@ -162,7 +162,7 @@ void CGumpBuff::InitToolTip()
 					g_ToolTip.Reset();
 
 					wchar_t buf[512] = { 0 };
-					wsprintf(buf, L"%s\nTimeLeft: %i seconds.", buff->Text.c_str(), (buff->Timer - g_Ticks) / 1000);
+					swprintf(buf, sizeof(buf), L"%s\nTimeLeft: %i seconds.", buff->Text.c_str(), (buff->Timer - g_Ticks) / 1000); // FIXME: check windows
 
 					g_ToolTip.Set(buf);
 

@@ -1,0 +1,50 @@
+# Find FreeImage includes and library
+#
+# This module defines
+#  FREEIMAGE_INCLUDE_DIRS
+#  FREEIMAGE_LIBRARIES, the libraries to link against to use FreeImage.
+#  FREEIMAGE_LIBRARY_DIRS, the location of the libraries
+#  FREEIMAGE_FOUND, If false, do not try to use FreeImage
+#
+# Copyright © 2007, Matt Williams
+#
+# Redistribution and use is allowed according to the terms of the BSD license.
+# For details see the accompanying COPYING-CMAKE-SCRIPTS file.
+
+SET(FREEIMAGE_INCLUDE_SEARCH_DIRS
+	${FREEIMAGE_LIBRARY_SEARCH_DIRS}
+	${CMAKE_LIBRARY_PATH}
+	/usr/include
+	/usr/local/include
+	/opt/include
+	/opt/freeimage/include
+)
+
+SET(FREEIMAGE_LIBRARY_SEARCH_DIRS
+	${FREEIMAGE_LIBRARY_SEARCH_DIRS}
+	${CMAKE_LIBRARY_PATH}
+	/usr/lib
+	/usr/local/lib
+	/opt/lib
+	/opt/freeimage/lib
+)
+
+FIND_PATH(FREEIMAGE_INCLUDE_DIRS FreeImage.h ${FREEIMAGE_INCLUDE_SEARCH_DIRS})
+FIND_LIBRARY(FREEIMAGE_LIBRARIES freeimage PATHS ${FREEIMAGE_LIBRARY_SEARCH_DIRS})
+
+#Do some preparation
+SEPARATE_ARGUMENTS(FREEIMAGE_INCLUDE_DIRS)
+SEPARATE_ARGUMENTS(FREEIMAGE_LIBRARIES)
+
+MARK_AS_ADVANCED(FREEIMAGE_INCLUDE_DIRS FREEIMAGE_LIBRARIES FREEIMAGE_LIBRARY_DIRS)
+
+IF (FREEIMAGE_INCLUDE_DIRS AND FREEIMAGE_LIBRARIES)
+	SET(FREEIMAGE_FOUND TRUE)
+ENDIF (FREEIMAGE_INCLUDE_DIRS AND FREEIMAGE_LIBRARIES)
+
+IF (NOT FREEIMAGE_FOUND)
+	IF (FREEIMAGE_FIND_REQUIRED)
+		MESSAGE(FATAL_ERROR "Could not find FreeImage")
+	ENDIF (FREEIMAGE_FIND_REQUIRED)
+ENDIF (NOT FREEIMAGE_FOUND)
+
