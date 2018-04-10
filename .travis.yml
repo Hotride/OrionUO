@@ -24,8 +24,7 @@ script:
     - export CC=/usr/bin/clang
     - export CXX=/usr/bin/clang++
     - clang -v && clang++ -v && cmake --version
-    - git --version
-    - cd build && cmake .. && make -j 8
+    - mkdir build && cd build && cmake .. && make -j 8
     - ./OrionUO/OrionUO
 notifications:
   webhooks:
