@@ -95,7 +95,7 @@ private:
 
 	EQUIP_CONV_BODY_MAP m_EquipConv;
 
-	CEquipConvData *m_EquipConvItem{ false };
+	CEquipConvData *m_EquipConvItem{ nullptr };
 
 	//!Упорядоченный список слоев для корректного порядка прорисовки для всех направлений персонажа
 	static const int USED_LAYER_COUNT = 23;

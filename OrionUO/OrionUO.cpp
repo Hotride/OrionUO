@@ -1792,6 +1792,7 @@ int COrion::Send(puchar buf, int size)
 
 	if (type.save)
 	{
+#if !defined(ORION_LINUX) // FIXME: localtime_s (use C++ if possible)
 		time_t rawtime;
 		struct tm timeinfo;
 		char buffer[80];
@@ -1800,6 +1801,7 @@ int COrion::Send(puchar buf, int size)
 		localtime_s(&timeinfo, &rawtime);
 		strftime(buffer, sizeof(buffer), "%d-%m-%Y %H:%M:%S", &timeinfo);
 		LOG("--- ^(%d) s(+%d => %d) %s Client:: %s\n", ticks - g_LastPacketTime, size, g_TotalSendSize, buffer, type.Name);
+#endif
 
 		if (*buf == 0x80 || *buf == 0x91)
 		{

@@ -675,7 +675,7 @@ bool CFileManager::LoadUOPFile(CUopMappedFile &file, const char *fileName)
 	return true;
 }
 //----------------------------------------------------------------------------------
-bool CFileManager::TryOpenFileStream(std::fstream &fileStream, std::string &filePath)
+bool CFileManager::TryOpenFileStream(std::fstream &fileStream, std::string filePath)
 {
 	LOG("Trying to open file stream for %s\n", filePath);
 	if(!FileExists(filePath))

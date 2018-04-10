@@ -567,6 +567,7 @@ void CPacketManager::OnPacket()
 
 	if (info.save)
 	{
+#if !defined(ORION_LINUX) // FIXME: localtime_s (use C++ if possible)
 		time_t rawtime;
 		struct tm timeinfo;
 		char buffer[80];
@@ -575,6 +576,9 @@ void CPacketManager::OnPacket()
 		localtime_s(&timeinfo, &rawtime);
 		strftime(buffer, sizeof(buffer), "%d-%m-%Y %H:%M:%S", &timeinfo);
 		LOG("--- ^(%d) r(+%d => %d) %s Server:: %s\n", ticks - g_LastPacketTime, Size, g_TotalRecvSize, buffer, info.Name);
+#else
+		LOG("--- ^(%d) r(+%d => %d) Server:: %s\n", ticks - g_LastPacketTime, Size, g_TotalRecvSize, info.Name);
+#endif
 		LOG_DUMP(Start, (int)Size);
 	}
 
@@ -678,7 +682,11 @@ PACKET_HANDLER(RelayServer)
 	in_addr addr;
 	puint paddr = (puint)Ptr;
 	Move(4);
+#if !defined(ORION_LINUX)
 	addr.S_un.S_addr = *paddr;
+#else
+	addr.s_addr = *paddr;
+#endif
 	char relayIP[30] = { 0 };
 	memcpy(&relayIP[0], inet_ntoa(addr), 29);
 	int relayPort = ReadUInt16BE();

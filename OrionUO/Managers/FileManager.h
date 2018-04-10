@@ -128,7 +128,7 @@ private:
 	void ReadTask();
 	static bool FileExists(const std::string& filename);
 
-	static bool TryOpenFileStream(std::fstream &fileStream, std::string &filePath);
+	static bool TryOpenFileStream(std::fstream &fileStream, std::string filePath);
 
 	bool LoadUOPFile(CUopMappedFile &file, const char *fileName);
 };

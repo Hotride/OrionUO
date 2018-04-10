@@ -4,7 +4,9 @@
 
 #define _CRT_SECURE_NO_WARNINGS
 
+#if !defined(ORION_LINUX)
 #include <windows.h>
+#endif
 #include <stdio.h>
 
 #define _USE_MATH_DEFINES

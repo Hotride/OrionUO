@@ -11,6 +11,9 @@
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
 //----------------------------------------------------------------------------------
+const uint CGumpContainer::ID_GC_LOCK_MOVING = 0xFFFFFFFE;
+const uint CGumpContainer::ID_GC_MINIMIZE = 0xFFFFFFFF;
+//----------------------------------------------------------------------------------
 CGumpContainer::CGumpContainer(uint serial, uint id, short x, short y)
 : CGump(GT_CONTAINER, serial, x, y), IsGameBoard(id == 0x091A || id == 0x092E)
 {
