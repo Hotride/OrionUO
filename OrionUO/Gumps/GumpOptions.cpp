@@ -241,7 +241,7 @@ void CGumpOptions::InitToolTip()
 				g_ToolTip.Set(L"On/off combat music in war mode");
 				break;
 			}
-			case ID_GO_P1_BACKGROUND_SOUND:	//Nico
+			case ID_GO_P1_BACKGROUND_SOUND:
 			{
 				g_ToolTip.Set(L"On/off sound while game is in background");
 				break;
@@ -875,9 +875,9 @@ void CGumpOptions::DrawPage1()
 	checkbox->Checked = g_OptionsConfig.CombatMusic;
 	checkbox->SetTextParameters(0, L"Play combat music", g_OptionsTextColor);
 
-	checkbox = (CGUICheckbox*)Add(new CGUICheckbox(ID_GO_P1_BACKGROUND_SOUND, 0x00D2, 0x00D3, 0x00D2, 64, 252)); //Nico
-	checkbox->Checked = g_OptionsConfig.BackgroundSound; //Nico
-	checkbox->SetTextParameters(0, L"Play sounds in background", g_OptionsTextColor); //Nico
+	checkbox = (CGUICheckbox*)Add(new CGUICheckbox(ID_GO_P1_BACKGROUND_SOUND, 0x00D2, 0x00D3, 0x00D2, 64, 252));
+	checkbox->Checked = g_OptionsConfig.BackgroundSound;
+	checkbox->SetTextParameters(0, L"Play sounds in background", g_OptionsTextColor);
 
 }
 //----------------------------------------------------------------------------
@@ -3058,7 +3058,7 @@ void CGumpOptions::ApplyPageChanges()
 			g_ConfigManager.FootstepsSound = g_OptionsConfig.FootstepsSound;
 			g_ConfigManager.CombatMusic = g_OptionsConfig.CombatMusic;
 
-			g_ConfigManager.BackgroundSound = g_OptionsConfig.BackgroundSound; //Nico
+			g_ConfigManager.BackgroundSound = g_OptionsConfig.BackgroundSound;
 
 			break;
 		}

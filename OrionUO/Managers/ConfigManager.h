@@ -19,7 +19,7 @@ class CConfigManager
 	SETGET(bool, CombatMusic, true);
 	SETGETE(uchar, SoundVolume, 255);
 	SETGETE(uchar, MusicVolume, 255);
-	SETGET(bool, BackgroundSound, false); //Nico
+	SETGET(bool, BackgroundSound, false);
 
 	SETGETE(uchar, ClientFPS, 32);
 	SETGETE(bool, UseScaling, false);
