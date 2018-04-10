@@ -8,12 +8,16 @@ addons:
   apt:
     sources:
       - sourceline: "ppa:george-edison55/cmake-3.x"
+      - llvm-toolchain-trusty-6.0
       - ubuntu-toolchain-r-test
     packages:
       - cmake
       - cmake-data
-      - clang-6
-      - clang++-6
+      - clang-6.0
+      - clang++-6.0
+      - g++-7
+      - gcc-7
+      - clang-format-6.0
       - libglu1-mesa-dev
       - xorg-dev
 script:
