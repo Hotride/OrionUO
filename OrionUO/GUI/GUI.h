@@ -26,7 +26,7 @@
 #include "GUIColoredPolygone.h"
 #include "GUIComboBox.h"
 #include "GUIText.h"
-#include "GUIComboBoxText.h"
+#include "GUIComboboxText.h" // FIXME: in disk filename is lowercase
 #include "GUIDataBox.h"
 #include "GUIExternalTexture.h"
 #include "GUIGenericText.h"

@@ -1,8 +1,10 @@
 ﻿//----------------------------------------------------------------------------------
 #ifndef WISPCONNECTION_H
 #define WISPCONNECTION_H
+#if !defined(ORION_LINUX) // FIXME: define on windows only
 #include <winsock.h>
 #pragma comment(lib, "wsock32.lib")
+#endif
 //----------------------------------------------------------------------------------
 namespace WISP_NETWORK
 {

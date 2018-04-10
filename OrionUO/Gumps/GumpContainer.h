@@ -30,8 +30,8 @@ public:
 	CGumpContainer(uint serial, uint id, short x, short y);
 	virtual ~CGumpContainer();
 
-	static const uint ID_GC_LOCK_MOVING = 0xFFFFFFFE;
-	static const uint ID_GC_MINIMIZE = 0xFFFFFFFF;
+	static const uint ID_GC_LOCK_MOVING;
+	static const uint ID_GC_MINIMIZE;
 
 	CGUIGumppic *m_BodyGump{ NULL };
 	

@@ -7,8 +7,8 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#ifndef GLOBALS_H
-#define GLOBALS_H
+#pragma once
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 //!Глобальные состояния нажатия дополнительных клавишь
 extern bool g_AltPressed;
@@ -31,8 +31,8 @@ extern bool g_Asmut;
 #include "OrionApplication.h"
 #include "GLEngine/GLFrameBuffer.h"
 #include "GLEngine/GLTexture.h"
-#include <gl/gl.h>
-#include <gl/glu.h>
+#include <GL/gl.h>
+#include <GL/glu.h>
 #include "EnumList.h"
 #include "DefinitionMacro.h"
 #include "Constants.h"
@@ -297,6 +297,4 @@ inline bool IsRoof(const __int64 &flags) { return (flags & 0x10000000); }
 inline bool IsDoor(const __int64 &flags) { return (flags & 0x20000000); }
 inline bool IsStairBack(const __int64 &flags) { return (flags & 0x40000000); }
 inline bool IsStairRight(const __int64 &flags) { return (flags & 0x80000000); }
-//----------------------------------------------------------------------------------
-#endif
 //----------------------------------------------------------------------------------

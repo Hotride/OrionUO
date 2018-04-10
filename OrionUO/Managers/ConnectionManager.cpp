@@ -104,11 +104,16 @@ void CConnectionManager::Init()
 		if (LPHOSTENT lphost = gethostbyname(hostName))
 		{
 			WISP_DATASTREAM::CDataWritter stream;
-			stream.WriteUInt32LE(((LPIN_ADDR)lphost->h_addr)->s_addr);
-			UCHAR_LIST &data = stream.Data();
-
-			memcpy(&m_Seed[0], &data[0], 4);
-			g_NetworkInit(true, &data[0]);
+#if defined(ORION_LINUX)
+			auto addr_list = (struct in_addr *)lphost->h_addr_list; // FIXME: just got it to compile
+			auto addr = lphost->h_addr_list[0];
+			stream.WriteUInt32BE(inet_aton(addr, addr_list));
+#else
+			stream.WriteUInt32BE(((LPIN_ADDR)lphost->h_addr)->s_addr);
+#endif
+			const auto data = stream.DataPtr(); // TODO: check me
+			memcpy(&m_Seed[0], data, 4);
+			g_NetworkInit(true, data);
 		}
 	}
 

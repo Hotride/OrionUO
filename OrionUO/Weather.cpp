@@ -199,7 +199,7 @@ void CWeather::Draw(const int &x, const int &y)
 				if (windChanged)
 				{
 					// вычисление угла скорости в градусах
-					effect->SetSpeedAngle(rad2degf(std::atan2f(effect->SpeedX, effect->SpeedY)));
+					effect->SetSpeedAngle(rad2degf(atan2f(effect->SpeedX, effect->SpeedY)));
 					// числинное значение скорости
 					effect->SetSpeedMagnitude(sqrtf(powf(effect->SpeedX, 2) + powf(effect->SpeedY, 2)));
 				}

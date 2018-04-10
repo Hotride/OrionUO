@@ -35,7 +35,6 @@ void CFastWalkStack::AddValue(const uint &value)
 uint CFastWalkStack::GetValue()
 {
 	WISPFUN_DEBUG("c176_f3");
-	int index = 0;
 
 	IFOR(i, 0, 5)
 	{

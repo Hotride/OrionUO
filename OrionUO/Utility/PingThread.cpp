@@ -115,9 +115,11 @@ int CPingThread::CalculatePing()
 				::sendto(socket, (LPSTR)&request, sizeof(ECHOREQUEST), 0, (LPSOCKADDR)&destAddress, sizeof(SOCKADDR_IN));
 
 				timeval tomeoutInfo;
-				fd_set readfds;
+				fd_set readfds = {};
+#if !defined(ORION_LINUX)
 				readfds.fd_count = 1;
 				readfds.fd_array[0] = socket;
+#endif
 				tomeoutInfo.tv_sec = 1;
 				tomeoutInfo.tv_usec = 0;
 
