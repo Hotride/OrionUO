@@ -53,7 +53,7 @@ private:
 	static const int ID_GO_P1_PLAY_COMBAT_MUSIC = 103;
 	static const int ID_GO_P1_SOUND_VOLUME = 104;
 	static const int ID_GO_P1_MUSIC_VOLUME = 105;
-	static const int ID_GO_P1_BACKGROUND_SOUND = 106; //Nico
+	static const int ID_GO_P1_BACKGROUND_SOUND = 106;
 	
 	static const int ID_GO_P2_CLIENT_FPS = 200;
 	static const int ID_GO_P2_REDUCE_FPS_UNACTIVE_WINDOW = 201;
