@@ -27,6 +27,7 @@ addons:
       - libsdl2-image-dev
       - libsdl2-mixer-dev
       - libfreeimage-dev
+      - libglew-dev
 script:
     - export CC=/usr/bin/clang
     - export CXX=/usr/bin/clang++
