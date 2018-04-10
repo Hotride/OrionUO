@@ -23,11 +23,11 @@ set(LIBS)
 # CMake Customizations
 include(cotire)
 include(CheckAndAddFlag)
-include(CheckCCompilerFlag)
 include(CompileDefinitions)
+include(Compiler)
+include(CheckCCompilerFlag)
 include(CCache)
 include(Revision)
-include(Compiler)
 
 if(NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE "Release" CACHE STRING
