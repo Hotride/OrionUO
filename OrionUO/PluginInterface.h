@@ -7,10 +7,13 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#ifndef PLUGININTERFACE_H
-#define PLUGININTERFACE_H
+#pragma once
 //----------------------------------------------------------------------------------
+#if defined(ORION_LINUX)
+#include "stdafx.h"
+#else
 #include <Windows.h>
+#endif
 //----------------------------------------------------------------------------------
 typedef LRESULT WINDOW_PROC(HWND, UINT, WPARAM, LPARAM);
 typedef bool __cdecl PACKET_PROC(unsigned char *, const int&);
@@ -88,6 +91,4 @@ typedef struct PLUGIN_INTERFACE
 	WORLD_MAP_DRAW_PROC *OnWorldMapDraw;
 } *PPLUGIN_INTERFACE;
 #pragma pack (pop)
-//----------------------------------------------------------------------------------
-#endif
 //----------------------------------------------------------------------------------

@@ -12,6 +12,7 @@
 // so we need not to check the version (because we only support _MSC_VER >= 1100)!
 #pragma once
 
+#if defined(ORION_WINDOWS)
 #include <windows.h>
 
 // special defines for VC5/6 (if no actual PSDK is installed):
@@ -190,3 +191,14 @@ do { \
 	RtlCaptureContext(&c); \
 } while (0);
 #endif
+
+#else  // ORION_WINDOWS
+
+// TODO: Implement backtrace support
+
+struct StackWalker
+{
+	virtual void OnOutput(const char *) {}
+};
+
+#endif // ORION_WINDOWS

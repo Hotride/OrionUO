@@ -6,29 +6,38 @@
 **
 ************************************************************************************
 */
-//----------------------------------------------------------------------------------
-#ifndef stdafxH
-#define stdafxH
-//----------------------------------------------------------------------------------
-#define _CRT_SECURE_NO_WARNINGS
-#define _CRT_NON_CONFORMING_SWPRINTFS
-//----------------------------------------------------------------------------------
+#pragma once
+
+#include <math.h>
+#include <stdio.h>
+#include <stdarg.h>
+#include <sys/stat.h>
+#include <string.h>
+#include <wchar.h>
+
 #include <thread>
 #include <mutex>
 #include <condition_variable>
 #include <unordered_map>
+#include <locale>
+#include <sstream>
+#include <istream>
+#include <fstream>
+#include <iostream>
+#include <functional>
+#include <cassert>
+
+#if defined(ORION_WINDOWS)
+#define _CRT_SECURE_NO_WARNINGS
+#define _CRT_NON_CONFORMING_SWPRINTFS
+
+#include <time.h>
+#include <process.h>
 #include <Shlwapi.h>
 #include <windows.h>
 #include <windowsx.h>
 #include <Mmsystem.h>
-#include <time.h>
-#include <process.h>
-#include <stdarg.h>
-#include <locale>
-#include <sstream>
-#include <fstream>
-#include <sys/stat.h>
-#include <functional>
+#include <tchar.h>
 
 #include "Dependencies/include/glew.h"
 #include "Dependencies/include/wglew.h"
@@ -41,6 +50,7 @@
 #pragma comment(lib, "Shlwapi.lib")
 #pragma comment(lib, "opengl32.lib")
 #pragma comment(lib, "Glu32.lib")
+
 //----------------------------------------------------------------------------------
 #if defined(_M_IX86)
 #pragma comment(lib, "Dependencies/lib/Win32/glew32.lib")
@@ -59,7 +69,15 @@
 #pragma comment(lib, "Dependencies/lib/x64/zdll.lib")
 #endif
 //----------------------------------------------------------------------------------
+
 #include "targetver.h"
+#include "Resource.h"
+
+#else
+
+#include "Stubs.h"
+
+#endif
 
 #include "Wisp/WispDefinitions.h"
 #include "Wisp/WispGlobal.h"
@@ -127,7 +145,6 @@ class CGump;
 #include "QuestArrow.h"
 #include "RenderObject.h"
 #include "RenderWorldObject.h"
-#include "Resource.h"
 #include "ScreenshotBuilder.h"
 #include "ServerList.h"
 #include "ShaderData.h"
@@ -274,7 +291,3 @@ class CGump;
 #include "ScreenStages/SelectProfessionScreen.h"
 #include "ScreenStages/SelectTownScreen.h"
 #include "ScreenStages/ServerScreen.h"
-
-//----------------------------------------------------------------------------------
-#endif
-//----------------------------------------------------------------------------------

@@ -1,6 +1,28 @@
+dist: trusty
+sudo: require
 language: cpp
-os:
-- windows
+compiler: clang
+os: 
+    - linux
+addons:
+  apt:
+    sources:
+      - sourceline: "ppa:george-edison55/cmake-3.x"
+      - ubuntu-toolchain-r-test
+    packages:
+      - cmake
+      - cmake-data
+      - clang-6
+      - clang++-6
+      - libglu1-mesa-dev
+      - xorg-dev
+script:
+    - export CC=/usr/bin/clang
+    - export CXX=/usr/bin/clang++
+    - clang -v && clang++ -v && cmake --version
+    - git --version
+    - cd build && cmake .. && make -j 8
+    - ./OrionUO/OrionUO
 notifications:
   webhooks:
     urls:
