@@ -66,11 +66,12 @@ void CConfigManager::DefaultPage1()
 {
 	WISPFUN_DEBUG("c138_f3");
 	m_Sound = true;
-	m_Music = false;
+	m_Music = true;
 	m_FootstepsSound = true;
 	m_CombatMusic = true;
 	m_SoundVolume = 255;
 	m_MusicVolume = 255;
+	m_BackgroundSound = false;
 }
 //---------------------------------------------------------------------------
 void CConfigManager::DefaultPage2()
@@ -745,6 +746,7 @@ bool CConfigManager::LoadBin(string path)
 			m_CombatMusic = file.ReadUInt8();
 			m_SoundVolume = file.ReadUInt8();
 			m_MusicVolume = file.ReadUInt8();
+			m_BackgroundSound = file.ReadUInt8();
 		}
 		
 		file.Ptr = next;
@@ -1237,6 +1239,7 @@ int CConfigManager::GetConfigKeyCode(const string &key)
 		"MusicVolume",
 		"FootstepsSound",
 		"CombatMusic",
+		"BackgroundSound",
 		"ClientFPS",
 		"UseScaling",
 		"RemoveTextWithBlending",
@@ -1409,6 +1412,9 @@ bool CConfigManager::Load(const string &path)
 					break;
 				case CMKC_COMBAT_MUSIC:
 					m_CombatMusic = ToBool(strings[1]);
+					break;
+				case CMKC_BACKGROUND_SOUND:
+					m_BackgroundSound = ToBool(strings[1]);
 					break;
 
 				//Page 2
@@ -1852,6 +1858,7 @@ void CConfigManager::Save(const string &path)
 		writter.WriteInt("MusicVolume", m_MusicVolume);
 		writter.WriteBool("FootstepsSound", m_FootstepsSound);
 		writter.WriteBool("CombatMusic", m_CombatMusic);
+		writter.WriteBool("BackgroundSound", m_BackgroundSound);
 
 		//Page 2
 		writter.WriteInt("ClientFPS", m_ClientFPS);

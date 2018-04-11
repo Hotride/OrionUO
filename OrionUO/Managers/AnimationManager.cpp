@@ -970,9 +970,6 @@ void CAnimationManager::InitIndexReplaces(puint verdata)
 						direction.BaseSize = direction.PatchedSize;
 						direction.Address = direction.BaseAddress;
 						direction.Size = direction.BaseSize;
-						direction.PatchedAddress = 0;
-						direction.PatchedSize = 0;
-						direction.FileIndex = 0;
 					}
 				}
 			}
@@ -3169,7 +3166,7 @@ void CAnimationManager::ReadFramesPixelData(CTextureAnimationDirection &directio
 	Move(sizeof(ushort[256])); //Palette
 	puchar dataStart = m_Ptr;
 
-	int frameCount = ReadUInt32LE();
+	uint frameCount = ReadUInt32LE();
 	direction.FrameCount = frameCount;
 
 	puint frameOffset = (puint)m_Ptr;
