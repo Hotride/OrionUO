@@ -8,7 +8,7 @@
 */
 #pragma once
 
-#include <math.h>
+#include <cmath>
 #include <stdio.h>
 #include <stdarg.h>
 #include <sys/stat.h>
@@ -24,6 +24,7 @@
 #include <istream>
 #include <fstream>
 #include <iostream>
+#include <algorithm>
 #include <functional>
 #include <cassert>
 
