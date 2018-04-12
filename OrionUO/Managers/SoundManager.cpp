@@ -190,7 +190,10 @@ HSTREAM CSoundManager::LoadSoundEffect(CIndexSound &is)
 {
 	WISPFUN_DEBUG("c156_f7");
 	if (is.m_WaveFile.empty())
-		is.m_WaveFile.swap(CreateWaveFile(is));
+	{
+		auto wav = CreateWaveFile(is);
+		is.m_WaveFile.swap(wav);
+	}
 
 	size_t waveFileSize = is.DataSize - sizeof(SOUND_BLOCK) +sizeof(WaveHeader);	
 	

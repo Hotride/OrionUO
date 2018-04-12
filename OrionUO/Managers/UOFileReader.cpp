@@ -404,10 +404,10 @@ CGLTexture *UOFileReader::ReadArt(ushort id, CIndexObject &io, bool run)
 				{
 					if (pixels[pos++])
 					{
-						minX = min(minX, x);
-						maxX = max(maxX, x);
-						minY = min(minY, y);
-						maxY = max(maxY, y);
+						minX = min(minX, int(x));
+						maxX = max(maxX, int(x));
+						minY = min(minY, int(y));
+						maxY = max(maxY, int(y));
 					}
 				}
 			}

@@ -2251,7 +2251,7 @@ PACKET_HANDLER(UpdateSkills)
 				if (change)
 				{
 					char str[128] = { 0 };
-					sprintf_s(str, "Your skill in %s has %s by %.1f%%.  It is now %.1f%%.", skill->Name.c_str(), ((change < 0) ? "decreased" : "increased"), abs(change), skill->BaseValue + change);
+					sprintf_s(str, "Your skill in %s has %s by %.1f%%.  It is now %.1f%%.", skill->Name.c_str(), ((change < 0) ? "decreased" : "increased"), std::abs(change), skill->BaseValue + change);
 					//else if (change > 0) sprintf(str, "Your skill in %s has increased by %.1f%%.  It is now %.1f%%.", UO->m_Skills[id].m_Name.c_str(), change, obj->GetSkillBaseValue(id) + change);
 					g_Orion.CreateTextMessage(TT_SYSTEM, 0, 3, 0x58, str);
 				}
