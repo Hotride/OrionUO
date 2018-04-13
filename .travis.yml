@@ -4,19 +4,19 @@ language: cpp
 compiler: clang
 os: 
     - linux
+env:
+  - CXX_COMPILER=/usr/bin/clang++-6.0 CC_COMPILER=/usr/bin/clang-6.0
+  #- CXX_COMPILER=gcc++-7 CC_COMPILELR=gcc-7
 addons:
   apt:
     sources:
-      - sourceline: "ppa:george-edison55/cmake-3.x"
       - llvm-toolchain-trusty-6.0
       - ubuntu-toolchain-r-test
     packages:
-      - cmake
-      - cmake-data
       - clang-6.0
       - clang++-6.0
-      - g++-7
-      - gcc-7
+      #- g++-7
+      #- gcc-7
       - cppcheck
       - clang-format-6.0
       - libglu1-mesa-dev
@@ -29,11 +29,12 @@ addons:
       - libfreeimage-dev
       - libglew-dev
 script:
-    - export CC=/usr/bin/clang
-    - export CXX=/usr/bin/clang++
+    - export CC=${CC_COMPILER}
+    - export CXX=${CXX_COMPILER}
     - clang -v && clang++ -v && cmake --version
     - mkdir build && cd build && cmake .. && make -j 8
-    - ./OrionUO/OrionUO
+    - file ./OrionUO/OrionUO
+    #- ./OrionUO/OrionUO
 notifications:
   webhooks:
     urls:
