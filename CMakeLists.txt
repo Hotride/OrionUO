@@ -40,12 +40,45 @@ endif()
 #include(CheckLib)
 include(CheckCXXSourceRuns)
 
+if(ORION_WINDOWS)
+	if(NOT "${CMAKE_GENERATOR}" MATCHES "(Win64|IA64)")
+		set(_WIN_TARGET "Win32")
+	else()
+		set(_WIN_TARGET "x64")
+	endif()
+
+	set(DEP_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/OrionUO/Dependencies/include")
+	set(DEP_LIB_DIR "${CMAKE_SOURCE_DIR}/OrionUO/Dependencies/lib/${_WIN_TARGET}/")
+
+	set(ZLIB_INCLUDE_DIRS "${DEP_INCLUDE_DIR}")
+	set(ZLIB_LIBRARIES "${DEP_LIB_DIR}zlib.lib")
+
+	set(FREEIMAGE_INCLUDE_DIR "${DEP_INCLUDE_DIR}")
+	set(FREEIMAGE_LIBRARIES "${DEP_LIB_DIR}freeimage.lib")
+
+	#set(OPENGL_INCLUDE_DIR "${DEP_INCLUDE_DIR}")
+	#set(OPENGL_LIBRARIES "${DEP_LIB_DIR}")
+
+	set(GLEW_INCLUDE_DIR "${DEP_INCLUDE_DIR}")
+	set(GLEW_LIBRARIES "${DEP_LIB_DIR}glew32.lib")
+
+	set(SDL2_INCLUDE_DIRS "${DEP_INCLUDE_DIR}")
+	set(SDL2_LIBRARIES "${DEP_LIB_DIR}sdl2.lib" "${DEP_LIB_DIR}sdl2main.lib")
+
+	#set(SDL2_IMAGE_INCLUDE_DIRS "${DEP_INCLUDE_DIR}")
+	#set(SDL2_IMAGE_LIBRARIES "${DEP_LIB_DIR}")
+
+	# temporary hijacking to use other libs
+	set(SDL2_LIBRARIES ${SDL2_LIBRARIES} "${DEP_LIB_DIR}bass.lib" "${DEP_LIB_DIR}bassmidi.lib" "${DEP_LIB_DIR}psapi.lib")
+else()
+	find_package(ZLIB REQUIRED)
+	find_package(SDL2 REQUIRED)
+	#find_package(SDL2_image REQUIRED)
+	find_package(FreeImage REQUIRED)
+	find_package(GLEW REQUIRED)
+endif()
+
 find_package(OpenGL REQUIRED)
-find_package(ZLIB REQUIRED)
-find_package(SDL2 REQUIRED)
-#find_package(SDL2_image REQUIRED)
-find_package(FreeImage REQUIRED)
-find_package(GLEW REQUIRED)
 
 include_directories(${OPENGL_INCLUDE_DIR})
 include_directories(${ZLIB_INCLUDE_DIRS})

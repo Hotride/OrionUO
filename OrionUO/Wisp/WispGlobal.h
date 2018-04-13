@@ -2,9 +2,10 @@
 #ifndef WISPGLOBAL_H
 #define WISPGLOBAL_H
 
-#define _CRT_SECURE_NO_WARNINGS
-
 #if !defined(ORION_LINUX)
+#if !defined(_CRT_SECURE_NO_WARNINGS)
+#define _CRT_SECURE_NO_WARNINGS
+#endif
 #include <windows.h>
 #endif
 #include <stdio.h>

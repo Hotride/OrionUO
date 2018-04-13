@@ -219,7 +219,7 @@ public:
 
 	virtual int GetPacketSize(const UCHAR_LIST &packet, int &offsetToSize);
 
-	CPacketInfo GetInfo(uchar buf) const { return m_Packets[buf]; }
+	CPacketInfo& GetInfo(uchar buf) const { return m_Packets[buf]; }
 
 	void SendMegaClilocRequests();
 

@@ -1,4 +1,7 @@
 #include "Stubs.h"
+
+#if !defined(ORION_WINDOWS)
+
 #include <cassert>
 #include <cwctype>
 
@@ -165,3 +168,5 @@ wchar_t* _wcsupr(wchar_t* s)
 
     return s;
 }
+
+#endif
