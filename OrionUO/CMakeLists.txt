@@ -33,8 +33,6 @@ endif()
 add_definitions(-D__STDC_LIMIT_MACROS)
 add_definitions(-D__STDC_CONSTANT_MACROS)
 
-add_custom_target(PCH COMMAND "$CXX -cc1 \"${pch_hdr}\" -emit-pch -o \"${pch}\"")
-
 set(wisp_src
   Wisp/WispApplication.cpp        
   Wisp/WispConnection.cpp  
@@ -52,7 +50,6 @@ set(wisp_src
   Wisp/WispTextFileParser.cpp  
   Wisp/WispThreadedTimer.cpp
 )
-add_library(wisp ${wisp_src})
 
 set(gameobjects_src
   GameObjects/CustomHouseMultiObject.cpp  
@@ -73,8 +70,8 @@ set(gameobjects_src
   GameObjects/MapBlock.cpp    
   GameObjects/ObjectOnCursor.cpp
 )
-add_library(gameobjects ${gameobjects_src})
 
+# WGLEW_ARB_render_texture
 set(glengine_src
   GLEngine/GLEngine.cpp
   GLEngine/GLFrameBuffer.cpp
@@ -85,7 +82,6 @@ set(glengine_src
   GLEngine/GLTexture.cpp
   GLEngine/GLVector.cpp
 )
-add_library(glengine ${glengine_src}) # WGLEW_ARB_render_texture
 
 set(gui_src
   GUI/BaseGUI.cpp
@@ -141,7 +137,6 @@ set(gui_src
   GUI/GUIVirtireGump.cpp
   GUI/GUIWorldMapTexture.cpp
 )
-add_library(gui ${gui_src})
 
 set(gumps_src
   Gumps/GumpAbility.cpp
@@ -197,7 +192,6 @@ set(gumps_src
   Gumps/GumpTip.cpp
   Gumps/GumpWorldMap.cpp
 )
-add_library(gumps ${gumps_src})
 
 set(managers_src
   Managers/AnimationManager.cpp
@@ -229,7 +223,6 @@ set(managers_src
   Managers/SpeechManager.cpp
   Managers/UOFileReader.cpp
 )
-add_library(managers ${managers_src})
 
 set(network_src
   Network/Connection.cpp
@@ -237,7 +230,6 @@ set(network_src
   Network/PluginPackets.cpp
   Network/UOHuffman.cpp
 )
-add_library(network ${network_src})
 
 set(screenstages_src
   ScreenStages/BaseScreen.cpp
@@ -251,7 +243,6 @@ set(screenstages_src
   ScreenStages/SelectTownScreen.cpp
   ScreenStages/ServerScreen.cpp
 )
-add_library(screenstages ${screenstages_src})
 
 set(textengine_src
   TextEngine/EntryText.cpp
@@ -262,13 +253,11 @@ set(textengine_src
   TextEngine/TextData.cpp
   TextEngine/TextRenderer.cpp
 )
-add_library(textengine ${textengine_src})
 
 set(utility_src
   Utility/AutoResetEvent.cpp
   Utility/PingThread.cpp
 )
-add_library(utility ${utility_src})
 
 set(walker_src
   Walker/FastWalk.cpp
@@ -277,7 +266,6 @@ set(walker_src
   Walker/WalkData.cpp
   Walker/Walker.cpp
 )
-add_library(walker ${walker_src})
 
 set(orion_src
   BaseQueue.cpp
@@ -328,15 +316,6 @@ if(ORION_WINDOWS)
   )
 endif()
 
-add_executable(OrionUO ${orion_src})
-#add_executable(OrionUO ${orion_src} ${gameobjects_src} ${glengine_src} ${gui_src} ${gumps_src} ${managers_src} ${network_src} ${screenstages_src} ${textengine_src} ${utility_src} ${walker_src})
-
-
-if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
-  #target_link_libraries(wisp PUBLIC dl rt)
-  add_definitions(-DNULL=nullptr)
-endif()
-
 include_directories("${PROJECT_SOURCE_DIR}/OrionUO/GameObjects")
 include_directories("${PROJECT_SOURCE_DIR}/OrionUO/GLEngine")
 include_directories("${PROJECT_SOURCE_DIR}/OrionUO/GUI")
@@ -350,8 +329,46 @@ include_directories("${PROJECT_SOURCE_DIR}/OrionUO/Walker")
 include_directories("${PROJECT_SOURCE_DIR}/OrionUO/Wisp")
 include_directories("${PROJECT_SOURCE_DIR}/OrionUO/")
 
-target_link_libraries(screenstages PRIVATE gumps)
-target_link_libraries(gumps PRIVATE managers)
-target_link_libraries(OrionUO PUBLIC managers network gumps screenstages gameobjects glengine gui textengine utility walker wisp)
-#${SDL2_IMAGE_LIBRARIES}
-target_link_libraries(OrionUO PUBLIC ${SDL2_LIBRARIES} ${ZLIB_LIBRARIES} ${OPENGL_LIBRARIES} ${FREEIMAGE_LIBRARIES} ${GLEW_LIBRARIES} ${THREAD})
+if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+  #target_link_libraries(wisp PUBLIC dl rt)
+  add_definitions(-DNULL=nullptr)
+endif()
+
+macro(orion_library TARGET SRCS)
+  add_library(${TARGET} ${SRCS})
+  set_target_properties(${TARGET} PROPERTIES COTIRE_CXX_PREFIX_HEADER_INIT "stdafx.h")
+  cotire(${TARGET})
+endmacro()
+
+
+if(ORION_BUILD_MODULES)
+  orion_library(wisp "${wisp_src}")
+  orion_library(gameobjects "${gameobjects_src}")
+  orion_library(glengine "${glengine_src}")
+  orion_library(gui "${gui_src}")
+  orion_library(gumps "${gumps_src}")
+  orion_library(managers "${managers_src}")
+  orion_library(network "${network_src}")
+  orion_library(screenstages "${screenstages_src}")
+  orion_library(textengine "${textengine_src}")
+  orion_library(utility "${utility_src}")
+  orion_library(walker "${walker_src}")
+
+  add_executable(OrionUO ${orion_src})
+  target_link_libraries(screenstages PRIVATE gumps)
+  target_link_libraries(gumps PRIVATE managers)
+  target_link_libraries(OrionUO PUBLIC managers network gumps screenstages gameobjects glengine gui textengine utility walker wisp)
+else()
+  set(SRCS ${orion_src} ${gameobjects_src} ${glengine_src} ${gui_src} ${gumps_src} ${managers_src} ${network_src} ${screenstages_src} ${textengine_src} ${utility_src} ${walker_src} ${wisp_src})
+  source_group(TREE "${PROJECT_SOURCE_DIR}/OrionUO/" FILES ${SRCS})
+  add_executable(OrionUO ${SRCS})
+endif()
+
+target_link_libraries(OrionUO PUBLIC ${SDL2_LIBRARIES} ${SDL2_IMAGE_LIBRARIES} ${ZLIB_LIBRARIES} ${OPENGL_LIBRARIES} ${FREEIMAGE_LIBRARIES} ${GLEW_LIBRARIES} ${THREAD})
+
+set_target_properties(OrionUO PROPERTIES COTIRE_CXX_PREFIX_HEADER_INIT "stdafx.h")
+cotire(OrionUO)
+if(ORION_WINDOWS)
+  set_target_properties(OrionUO PROPERTIES LINK_FLAGS "/SUBSYSTEM:WINDOWS")
+  set_target_properties(OrionUO_unity PROPERTIES LINK_FLAGS "/SUBSYSTEM:WINDOWS")
+endif()

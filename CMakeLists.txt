@@ -8,7 +8,7 @@ project(OrionUO)
 # Custom Build Options
 #
 option(ENABLE_LTO "Enables Link Time Optimization" OFF)
-
+option(ORION_BUILD_MODULES "Enables Modular Project Structure" OFF)
 
 list(APPEND CMAKE_MODULE_PATH
   ${CMAKE_SOURCE_DIR}/CMake
@@ -21,6 +21,7 @@ set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 set(LIBS)
 
 # CMake Customizations
+include(cotire)
 include(CheckAndAddFlag)
 include(CheckCCompilerFlag)
 include(CompileDefinitions)
