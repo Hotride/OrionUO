@@ -588,7 +588,7 @@ void CConfigManager::SetPingTimer(const uchar &val)
 {
 	WISPFUN_DEBUG("c138_f26");
 
-	m_PingTimer = max(min(val, 120), 10);
+	m_PingTimer = max(min(val, uchar(120)), uchar(10));
 	g_PingTimer = 0;
 }
 //---------------------------------------------------------------------------

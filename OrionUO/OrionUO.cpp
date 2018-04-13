@@ -1020,7 +1020,10 @@ void COrion::LoadClientConfig()
 
 		if (installOld != NULL)
 		{
-			installOld(config.Start, (int)config.Size, &realData);			realSize = realData.size();		}		else
+			installOld(config.Start, (int)config.Size, &realData);
+			realSize = realData.size();
+		}
+		else
 			installNew(config.Start, config.Size, &realData[0], realSize);
 
 		config.Unload();

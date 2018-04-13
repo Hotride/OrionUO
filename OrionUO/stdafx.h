@@ -14,6 +14,7 @@
 #include <sys/stat.h>
 #include <string.h>
 #include <wchar.h>
+#include <algorithm>
 
 #include <thread>
 #include <mutex>
@@ -28,12 +29,19 @@
 #include <cassert>
 
 #if defined(ORION_WINDOWS)
+
+#if !defined(_CRT_SECURE_NO_WARNINGS)
 #define _CRT_SECURE_NO_WARNINGS
+#endif
+
+#if !defined(_CRT_NON_CONFORMING_SWPRINTFS)
 #define _CRT_NON_CONFORMING_SWPRINTFS
+#endif
 
 #include <time.h>
 #include <process.h>
 #include <Shlwapi.h>
+#include <Shellapi.h>
 #include <windows.h>
 #include <windowsx.h>
 #include <Mmsystem.h>
@@ -52,6 +60,7 @@
 #pragma comment(lib, "Glu32.lib")
 
 //----------------------------------------------------------------------------------
+#if !defined(ORION_CMAKE)
 #if defined(_M_IX86)
 #pragma comment(lib, "Dependencies/lib/Win32/glew32.lib")
 #pragma comment(lib, "Dependencies/lib/Win32/bass.lib")
@@ -68,7 +77,10 @@
 #pragma comment(lib, "Dependencies/lib/x64/Psapi.lib")
 #pragma comment(lib, "Dependencies/lib/x64/zdll.lib")
 #endif
+#endif
 //----------------------------------------------------------------------------------
+
+using namespace std;
 
 #include "targetver.h"
 #include "Resource.h"

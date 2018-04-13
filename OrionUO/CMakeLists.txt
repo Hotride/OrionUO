@@ -25,6 +25,7 @@ else()
     set(CMAKE_CXX_EXTENSIONS OFF)
   endif()
   check_and_add_flag(THREADS -pthread)
+  set(THREAD "-pthread")
 endif()
 
 # These aren't actually needed for C11/C++11
@@ -294,7 +295,7 @@ set(orion_src
   Multi.cpp
   MultiMap.cpp
   OrionApplication.cpp
-  OrionUO.cpp   # FIXME: localtime_s c11
+  OrionUO.cpp                 # FIXME: localtime_s c11
   OrionWindow.cpp
   Party.cpp
   PartyObject.cpp
@@ -316,12 +317,17 @@ set(orion_src
   Weather.cpp
   WeatherEffeect.cpp
 
-  Stubs.cpp # FIXME: temporary stubbed stuff
+  Stubs.cpp                     # FIXME: temporary stubbed stuff
+)
 
-  #VMQuery.cpp # FIXME: windows only, rap, coredump
-  #StackWalker.cpp # FIXME: windows only, wrap, use backtrace
-  #ExceptionFilter.cpp # FIXME: exception handler, wrap, use signals
+if(ORION_WINDOWS)
+  set(orion_src ${orion_src}
+    VMQuery.cpp                 # FIXME: windows only, rap, coredump
+    StackWalker.cpp             # FIXME: windows only, wrap, use backtrace
+    ExceptionFilter.cpp         # FIXME: exception handler, wrap, use signals
   )
+endif()
+
 add_executable(OrionUO ${orion_src})
 #add_executable(OrionUO ${orion_src} ${gameobjects_src} ${glengine_src} ${gui_src} ${gumps_src} ${managers_src} ${network_src} ${screenstages_src} ${textengine_src} ${utility_src} ${walker_src})
 
@@ -348,4 +354,4 @@ target_link_libraries(screenstages PRIVATE gumps)
 target_link_libraries(gumps PRIVATE managers)
 target_link_libraries(OrionUO PUBLIC managers network gumps screenstages gameobjects glengine gui textengine utility walker wisp)
 #${SDL2_IMAGE_LIBRARIES}
-target_link_libraries(OrionUO PUBLIC ${SDL2_LIBRARIES} ${ZLIB_LIBRARIES} ${OPENGL_LIBRARIES} ${FREEIMAGE_LIBRARIES} ${GLEW_LIBRARIES} -pthread)
+target_link_libraries(OrionUO PUBLIC ${SDL2_LIBRARIES} ${ZLIB_LIBRARIES} ${OPENGL_LIBRARIES} ${FREEIMAGE_LIBRARIES} ${GLEW_LIBRARIES} ${THREAD})

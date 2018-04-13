@@ -1,5 +1,7 @@
 #pragma once
 
+#if !defined(ORION_WINDOWS)
+
 #include <netdb.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
@@ -595,3 +597,5 @@ char* _strlwr(char* s);
 char* _strupr(char* s);
 wchar_t* _wcslwr(wchar_t* s);
 wchar_t* _wcsupr(wchar_t* s);
+
+#endif
