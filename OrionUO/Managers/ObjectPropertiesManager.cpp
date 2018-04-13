@@ -16,22 +16,22 @@ CObjectPropertiesManager g_ObjectPropertiesManager;
 //----------------------------------CObjectProperty---------------------------------
 //----------------------------------------------------------------------------------
 CObjectProperty::CObjectProperty(const uint &serial, const uint &revision, const wstring &name, const wstring &data)
-: m_Serial(serial), m_Revision(revision), m_Name(name), m_Data(data)
+: Serial(serial), Revision(revision), Name(name), Data(data)
 {
 }
 //----------------------------------------------------------------------------------
 bool CObjectProperty::Empty()
 {
-	return (!m_Name.length() && !m_Data.length());
+	return (!Name.length() && !Data.length());
 }
 //----------------------------------------------------------------------------------
 wstring CObjectProperty::CreateTextData(const bool &extended)
 {
-	CGameObject *obj = g_World->FindWorldObject(m_Serial);
+	CGameObject *obj = g_World->FindWorldObject(Serial);
 	bool coloredStartFont = false;
 	wstring result = L"";
 
-	if (m_Name.length())
+	if (Name.length())
 	{
 		if (obj != NULL)
 		{
@@ -74,14 +74,14 @@ wstring CObjectProperty::CreateTextData(const bool &extended)
 			}
 		}
 
-		result += m_Name;
+		result += Name;
 
 		if (coloredStartFont)
 			result += L"<basefont color=\"#FFFFFFFF\">";
 	}
 
-	if (m_Data.length())
-		result += L"\n" + m_Data;
+	if (Data.length())
+		result += L"\n" + Data;
 	else if (extended)
 	{
 		if (result.length())
@@ -172,11 +172,11 @@ void CObjectPropertiesManager::Display(const uint &serial)
 	if (object != m_Object)
 	{
 		m_Object = object;
-		m_Timer = g_Ticks + g_ConfigManager.ToolTipsDelay;
+		Timer = g_Ticks + g_ConfigManager.ToolTipsDelay;
 	}
 
 	if (!condition)
-		condition = !(m_Timer > g_Ticks);
+		condition = !(Timer > g_Ticks);
 
 	if (condition && gump->Object != m_Object)
 	{

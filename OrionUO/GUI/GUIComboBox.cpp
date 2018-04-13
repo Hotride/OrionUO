@@ -12,22 +12,22 @@
 #include "stdafx.h"
 //----------------------------------------------------------------------------------
 CGUIComboBox::CGUIComboBox(const uint &serial, const ushort &graphic, const bool &compositeBackground, const ushort &openGraphic, const int &x, const int &y, const int &width, const int &showItemsCount, const bool &showMaximizedCenter)
-: CBaseGUI(GOT_COMBOBOX, serial, graphic, 0, x, y), m_OpenGraphic(openGraphic),
-m_CompositeBackground(compositeBackground), m_ShowItemsCount(showItemsCount),
-m_Width(width), m_ShowMaximizedCenter(showMaximizedCenter), m_OpenedWidth(width)
+: CBaseGUI(GOT_COMBOBOX, serial, graphic, 0, x, y), OpenGraphic(openGraphic),
+CompositeBackground(compositeBackground), m_ShowItemsCount(showItemsCount),
+Width(width), ShowMaximizedCenter(showMaximizedCenter), OpenedWidth(width)
 {
 	WISPFUN_DEBUG("c49_f1");
-	m_MoveOnDrag = false;
+	MoveOnDrag = false;
 	m_ArrowX = 0;
 	m_OffsetY = 0;
 	m_StepY = 0;
-	m_MinimizedArrowX = m_Width - 16;
-	m_WorkWidth = m_Width - 6;
+	m_MinimizedArrowX = Width - 16;
+	m_WorkWidth = Width - 6;
 	m_WorkHeight = m_ShowItemsCount * 15;
 
-	if (m_CompositeBackground)
+	if (CompositeBackground)
 	{
-		CGLTexture *th = g_Orion.ExecuteGump(m_OpenGraphic);
+		CGLTexture *th = g_Orion.ExecuteGump(OpenGraphic);
 
 		if (th != NULL)
 		{
@@ -35,7 +35,7 @@ m_Width(width), m_ShowMaximizedCenter(showMaximizedCenter), m_OpenedWidth(width)
 			m_OffsetY = th->Height;
 		}
 
-		th = g_Orion.ExecuteGump(m_OpenGraphic + 1);
+		th = g_Orion.ExecuteGump(OpenGraphic + 1);
 
 		if (th != NULL)
 		{
@@ -43,9 +43,9 @@ m_Width(width), m_ShowMaximizedCenter(showMaximizedCenter), m_OpenedWidth(width)
 			m_WorkWidth = th->Width - 12;
 		}
 
-		th = g_Orion.ExecuteGump(m_Graphic);
+		th = g_Orion.ExecuteGump(Graphic);
 
-		if (th != NULL && !m_Width)
+		if (th != NULL && !Width)
 			m_MinimizedArrowX = th->Width - 16;
 	}
 }
@@ -53,19 +53,19 @@ m_Width(width), m_ShowMaximizedCenter(showMaximizedCenter), m_OpenedWidth(width)
 CGUIComboBox::~CGUIComboBox()
 {
 	WISPFUN_DEBUG("c49_f2");
-	if (m_Text != NULL)
+	if (Text != NULL)
 	{
-		delete m_Text;
-		m_Text = NULL;
+		delete Text;
+		Text = NULL;
 	}
 }
 //----------------------------------------------------------------------------------
 void CGUIComboBox::RecalculateWidth()
 {
 	WISPFUN_DEBUG("c49_f3");
-	if (!m_CompositeBackground)
+	if (!CompositeBackground)
 	{
-		m_OpenedWidth = 0;
+		OpenedWidth = 0;
 
 		QFOR(item, m_Items, CBaseGUI*)
 		{
@@ -73,17 +73,17 @@ void CGUIComboBox::RecalculateWidth()
 			{
 				CGUIText *text = (CGUIText*)item;
 
-				if (m_OpenedWidth < text->m_Texture.Width)
-					m_OpenedWidth = text->m_Texture.Width;
+				if (OpenedWidth < text->m_Texture.Width)
+					OpenedWidth = text->m_Texture.Width;
 			}
 		}
 
-		m_OpenedWidth += 8;
+		OpenedWidth += 8;
 
-		if (m_OpenedWidth < m_Width)
-			m_OpenedWidth = m_Width;
+		if (OpenedWidth < Width)
+			OpenedWidth = Width;
 
-		m_WorkWidth = m_OpenedWidth - 6;
+		m_WorkWidth = OpenedWidth - 6;
 	}
 }
 //----------------------------------------------------------------------------------
@@ -104,17 +104,17 @@ WISP_GEOMETRY::CSize CGUIComboBox::GetSize()
 void CGUIComboBox::PrepareTextures()
 {
 	WISPFUN_DEBUG("c49_f6");
-	if (m_CompositeBackground)
+	if (CompositeBackground)
 	{
-		g_Orion.ExecuteGump(m_Graphic);
+		g_Orion.ExecuteGump(Graphic);
 		g_Orion.ExecuteGump(0x0985);
 		g_Orion.ExecuteGump(0x0983);
-		g_Orion.ExecuteGumpPart(m_OpenGraphic, 5);
+		g_Orion.ExecuteGumpPart(OpenGraphic, 5);
 	}
 	else
 	{
-		g_Orion.ExecuteResizepic(m_Graphic);
-		g_Orion.ExecuteResizepic(m_OpenGraphic);
+		g_Orion.ExecuteResizepic(Graphic);
+		g_Orion.ExecuteResizepic(OpenGraphic);
 		g_Orion.ExecuteGump(0x00FC);
 	}
 }
@@ -130,7 +130,7 @@ CBaseGUI *CGUIComboBox::SkipToStart()
 	{
 		if (item->Type == GOT_TEXT)
 		{
-			if (index == m_StartIndex)
+			if (index == StartIndex)
 			{
 				start = (CBaseGUI*)item;
 				break;
@@ -146,18 +146,18 @@ CBaseGUI *CGUIComboBox::SkipToStart()
 void CGUIComboBox::Draw(const bool &checktrans)
 {
 	WISPFUN_DEBUG("c49_f8");
-	if (m_Text != NULL)
-		m_Text->m_Texture.Draw(m_X + m_Text->X, m_Y + m_Text->Y + m_TextOffsetY, checktrans);
+	if (Text != NULL)
+		Text->m_Texture.Draw(m_X + Text->X, m_Y + Text->Y + TextOffsetY, checktrans);
 
 	if (g_PressedObject.LeftObject == this) //maximized
 	{
 		int currentX = m_X + 3;
 		int currentY = m_Y + 3;
 
-		if (m_ShowMaximizedCenter)
+		if (ShowMaximizedCenter)
 			currentY -= m_WorkHeight / 2;
 
-		if (m_CompositeBackground)
+		if (CompositeBackground)
 		{
 			int bodyY = m_Y + m_OffsetY;
 			int bodyStep = m_StepY;
@@ -166,30 +166,30 @@ void CGUIComboBox::Draw(const bool &checktrans)
 			currentY = bodyY + 1;
 			int posY = m_Y;
 
-			if (m_ShowMaximizedCenter)
+			if (ShowMaximizedCenter)
 			{
 				currentY -= m_WorkHeight / 2;
 				posY -= m_WorkHeight / 2;
 				bodyY -= m_WorkHeight / 2;
 			}
 
-			g_Orion.DrawGump(m_OpenGraphic, 0, m_X, posY);
+			g_Orion.DrawGump(OpenGraphic, 0, m_X, posY);
 			g_Orion.DrawGump(0x0983, 0, m_X + m_ArrowX, posY + 2);
 
 			int graphicOffset = 0;
 
 			IFOR(i, 0, m_ShowItemsCount)
 			{
-				g_Orion.DrawGump(m_OpenGraphic + 1 + graphicOffset, 0, m_X + 5, bodyY);
+				g_Orion.DrawGump(OpenGraphic + 1 + graphicOffset, 0, m_X + 5, bodyY);
 				graphicOffset = (graphicOffset + 1) % 3;
 				bodyY += bodyStep;
 			}
 
-			g_Orion.DrawGump(m_OpenGraphic + 4, 0, m_X, bodyY);
+			g_Orion.DrawGump(OpenGraphic + 4, 0, m_X, bodyY);
 			g_Orion.DrawGump(0x0985, 0, m_X + m_ArrowX, bodyY);
 		}
 		else
-			g_Orion.DrawResizepicGump(m_OpenGraphic, m_X, m_Y, m_OpenedWidth, m_WorkHeight + 6);
+			g_Orion.DrawResizepicGump(OpenGraphic, m_X, m_Y, OpenedWidth, m_WorkHeight + 6);
 
 		if (!g_ConfigManager.UseGLListsForInterface)
 			g_GL.PushScissor(currentX, currentY, m_WorkWidth, m_WorkHeight);
@@ -212,7 +212,7 @@ void CGUIComboBox::Draw(const bool &checktrans)
 
 				CGUIText *text = (CGUIText*)item;
 
-				text->m_Texture.Draw(currentX, currentY + m_TextOffsetY);
+				text->m_Texture.Draw(currentX, currentY + TextOffsetY);
 				currentY += 15;
 
 				count++;
@@ -233,7 +233,7 @@ void CGUIComboBox::Draw(const bool &checktrans)
 		{
 			if (item->Type == GOT_TEXT)
 			{
-				if (index == m_SelectedIndex)
+				if (index == SelectedIndex)
 				{
 					selected = (CGUIText*)item;
 					break;
@@ -243,12 +243,12 @@ void CGUIComboBox::Draw(const bool &checktrans)
 			}
 		}
 
-		if (m_CompositeBackground)
+		if (CompositeBackground)
 		{
-			if (m_Width)
-				g_Orion.DrawGump(m_Graphic, 0, m_X, m_Y, m_Width, 0);
+			if (Width)
+				g_Orion.DrawGump(Graphic, 0, m_X, m_Y, Width, 0);
 			else
-				g_Orion.DrawGump(m_Graphic, 0, m_X, m_Y);
+				g_Orion.DrawGump(Graphic, 0, m_X, m_Y);
 
 			if (selected != NULL)
 			{
@@ -257,7 +257,7 @@ void CGUIComboBox::Draw(const bool &checktrans)
 				else
 					g_GL.PushScissor((int)g_GumpTranslate.X + m_X + 6, g_OrionWindow.Size.Height - ((int)g_GumpTranslate.Y + m_Y) - 20, m_MinimizedArrowX, 20);
 
-				selected->m_Texture.Draw(m_X + 6, m_Y + 6 + m_TextOffsetY);
+				selected->m_Texture.Draw(m_X + 6, m_Y + 6 + TextOffsetY);
 				g_GL.PopScissor();
 			}
 
@@ -265,16 +265,16 @@ void CGUIComboBox::Draw(const bool &checktrans)
 		}
 		else
 		{
-			g_Orion.DrawResizepicGump(m_Graphic, m_X, m_Y, m_Width, 20);
+			g_Orion.DrawResizepicGump(Graphic, m_X, m_Y, Width, 20);
 
 			if (selected != NULL)
 			{
 				if (!g_ConfigManager.UseGLListsForInterface)
-					g_GL.PushScissor(m_X + 3, m_Y, m_Width - 6, 20);
+					g_GL.PushScissor(m_X + 3, m_Y, Width - 6, 20);
 				else
-					g_GL.PushScissor((int)g_GumpTranslate.X + m_X + 3, g_OrionWindow.Size.Height - ((int)g_GumpTranslate.Y + m_Y) - 20, m_Width - 6, 20);
+					g_GL.PushScissor((int)g_GumpTranslate.X + m_X + 3, g_OrionWindow.Size.Height - ((int)g_GumpTranslate.Y + m_Y) - 20, Width - 6, 20);
 
-				selected->m_Texture.Draw(m_X + 3, m_Y + 4 + m_TextOffsetY);
+				selected->m_Texture.Draw(m_X + 3, m_Y + 4 + TextOffsetY);
 				g_GL.PopScissor();
 			}
 
@@ -286,7 +286,7 @@ void CGUIComboBox::Draw(const bool &checktrans)
 bool CGUIComboBox::Select()
 {
 	WISPFUN_DEBUG("c49_f9");
-	m_ListingDirection = 0;
+	ListingDirection = 0;
 	bool select = false;
 
 	if (g_PressedObject.LeftObject == this) //maximized
@@ -294,13 +294,13 @@ bool CGUIComboBox::Select()
 		int currentX = m_X + 3;
 		int currentY = m_Y + 3;
 
-		if (m_CompositeBackground)
+		if (CompositeBackground)
 		{
 			currentY = m_Y + m_OffsetY + 1;
 			currentX = m_X + 12;
 		}
 
-		if (m_ShowMaximizedCenter)
+		if (ShowMaximizedCenter)
 			currentY -= m_WorkHeight / 2;
 
 		select = g_Orion.PolygonePixelsInXY(currentX, currentY, m_WorkWidth, m_WorkHeight);
@@ -308,22 +308,22 @@ bool CGUIComboBox::Select()
 		if (!select)
 		{
 			if (g_MouseManager.Position.Y < currentY)
-				m_ListingDirection = 1;
+				ListingDirection = 1;
 			else if (g_MouseManager.Position.Y > currentY + m_WorkHeight)
-				m_ListingDirection = 2;
+				ListingDirection = 2;
 		}
 	}
 	else
 	{
-		if (m_CompositeBackground)
+		if (CompositeBackground)
 		{
-			if (m_Width)
-				select = g_Orion.GumpPixelsInXY(m_Graphic, m_X, m_Y, m_Width, 0);
+			if (Width)
+				select = g_Orion.GumpPixelsInXY(Graphic, m_X, m_Y, Width, 0);
 			else
-				select = g_Orion.GumpPixelsInXY(m_Graphic, m_X, m_Y);
+				select = g_Orion.GumpPixelsInXY(Graphic, m_X, m_Y);
 		}
 		else
-			select = g_Orion.ResizepicPixelsInXY(m_Graphic, m_X, m_Y, m_Width, 20);
+			select = g_Orion.ResizepicPixelsInXY(Graphic, m_X, m_Y, Width, 20);
 	}
 
 	return select;
@@ -339,13 +339,13 @@ CBaseGUI *CGUIComboBox::SelectedItem()
 		int currentX = m_X + 3;
 		int currentY = m_Y + 3;
 
-		if (m_CompositeBackground)
+		if (CompositeBackground)
 		{
 			currentY = m_Y + m_OffsetY + 1;
 			currentX = m_X + 12;
 		}
 
-		if (m_ShowMaximizedCenter)
+		if (ShowMaximizedCenter)
 			currentY -= m_WorkHeight / 2;
 
 		CBaseGUI *start = SkipToStart();
@@ -390,7 +390,7 @@ int CGUIComboBox::IsSelectedItem()
 			{
 				if (g_SelectedObject.Object == item)
 				{
-					select = m_StartIndex + count;
+					select = StartIndex + count;
 					break;
 				}
 

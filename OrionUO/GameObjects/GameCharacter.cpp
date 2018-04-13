@@ -12,11 +12,11 @@
 #include "stdafx.h"
 //----------------------------------------------------------------------------------
 CGameCharacter::CGameCharacter(const uint &serial)
-: CGameObject(serial), m_Hits(0), m_MaxHits(0), m_LastStepSoundTime(GetTickCount()),
-m_TimeToRandomFidget(GetTickCount() + RANDOM_FIDGET_ANIMATION_DELAY)
+: CGameObject(serial), Hits(0), MaxHits(0), LastStepSoundTime(GetTickCount()),
+TimeToRandomFidget(GetTickCount() + RANDOM_FIDGET_ANIMATION_DELAY)
 {
-	m_NPC = true;
-	m_NoDrawTile = false;
+	NPC = true;
+	NoDrawTile = false;
 	WISPFUN_DEBUG("c15_f1");
 
 	bool wantStatusRequest = (g_GumpManager.UpdateContent(serial, 0, GT_STATUSBAR) != NULL) || (g_GumpManager.UpdateContent(serial, 0, GT_TARGET_SYSTEM) != NULL) || g_ConfigManager.DrawStatusState || (serial == g_LastTargetObject) || (serial == g_LastAttackObject);
@@ -24,11 +24,11 @@ m_TimeToRandomFidget(GetTickCount() + RANDOM_FIDGET_ANIMATION_DELAY)
 	if (!g_ConfigManager.DisableNewTargetSystem && g_NewTargetSystem.Serial == serial && g_GumpManager.UpdateContent(serial, 0, GT_TARGET_SYSTEM) == NULL)
 	{
 		wantStatusRequest = true;
-		g_GumpManager.AddGump(new CGumpTargetSystem(m_Serial, g_NewTargetSystem.GumpX, g_NewTargetSystem.GumpY));
+		g_GumpManager.AddGump(new CGumpTargetSystem(Serial, g_NewTargetSystem.GumpX, g_NewTargetSystem.GumpY));
 	}
 
 	if (wantStatusRequest)
-		CPacketStatusRequest(m_Serial).Send();
+		CPacketStatusRequest(Serial).Send();
 }
 //----------------------------------------------------------------------------------
 CGameCharacter::~CGameCharacter()
@@ -39,7 +39,7 @@ CGameCharacter::~CGameCharacter()
 
 	m_HitsTexture.Clear();
 
-	uint serial = m_Serial & 0x3FFFFFFF;
+	uint serial = Serial & 0x3FFFFFFF;
 
 	if (g_ConfigManager.RemoveStatusbarsWithoutObjects)
 		g_GumpManager.CloseGump(serial, 0, GT_STATUSBAR);
@@ -80,8 +80,8 @@ void CGameCharacter::UpdateTextCoordinates()
 	ANIMATION_DIMENSIONS dims = g_AnimationManager.GetAnimationDimensions(this, 0);
 	int offset = 0;
 
-	int x = m_DrawX + m_OffsetX;
-	int y = m_DrawY + (m_OffsetY - m_OffsetZ) - ((dims.Height + dims.CenterY) + 8);
+	int x = DrawX + OffsetX;
+	int y = DrawY + (OffsetY - OffsetZ) - ((dims.Height + dims.CenterY) + 8);
 
 	if (g_ConfigManager.DrawStatusState == DCSS_ABOVE)
 		y -= 14;
@@ -98,9 +98,9 @@ void CGameCharacter::UpdateTextCoordinates()
 void CGameCharacter::UpdateHitsTexture(const uchar &hits)
 {
 	WISPFUN_DEBUG("c15_f3");
-	if (m_HitsPercent != hits || m_HitsTexture.Empty())
+	if (HitsPercent != hits || m_HitsTexture.Empty())
 	{
-		m_HitsPercent = hits;
+		HitsPercent = hits;
 
 		char hitsText[10] = { 0 };
 		sprintf_s(hitsText, "[%i%%]", hits);
@@ -126,7 +126,7 @@ int CGameCharacter::IsSitting()
 {
 	WISPFUN_DEBUG("c15_f4");
 	int result = 0;
-	ushort testGraphic = m_Graphic;
+	ushort testGraphic = Graphic;
 	bool human = (((testGraphic >= 0x0190) && (testGraphic <= 0x0193)) || (testGraphic == 0x03DB) || (testGraphic == 0x03DF) || (testGraphic == 0x03E2));
 
 	if (human && FindLayer(OL_MOUNT) == NULL && !TestStepNoChangeDirection(GetAnimationGroup()))
@@ -282,7 +282,7 @@ int CGameCharacter::IsSitting()
 void CGameCharacter::Draw(const int &x, const int &y)
 {
 	WISPFUN_DEBUG("c15_f5");
-	if (m_TimeToRandomFidget < g_Ticks)
+	if (TimeToRandomFidget < g_Ticks)
 		SetRandomFidgetAnimation();
 
 #if UO_DEBUG_INFO!=0
@@ -292,7 +292,7 @@ void CGameCharacter::Draw(const int &x, const int &y)
 	uint lastSBsel = g_StatusbarUnderMouse;
 
 	if (!IsPlayer() && g_Player->Warmode && g_SelectedObject.Object == this)
-		g_StatusbarUnderMouse = m_Serial;
+		g_StatusbarUnderMouse = Serial;
 
 	g_AnimationManager.DrawCharacter(this, x, y); //Draw character
 
@@ -317,44 +317,44 @@ void CGameCharacter::OnGraphicChange(int direction)
 {
 	WISPFUN_DEBUG("c15_f7");
 	//!Обновления пола и расы в зависимости от индекса картинки персонажа
-	switch (m_Graphic)
+	switch (Graphic)
 	{
 		case 0x0190:
 		case 0x0192:
 		{
-			m_Female = false;
-			m_Race = RT_HUMAN;
+			Female = false;
+			Race = RT_HUMAN;
 			break;
 		}
 		case 0x0191:
 		case 0x0193:
 		{
-			m_Female = true;
-			m_Race = RT_HUMAN;
+			Female = true;
+			Race = RT_HUMAN;
 			break;
 		}
 		case 0x025D:
 		{
-			m_Female = false;
-			m_Race = RT_ELF;
+			Female = false;
+			Race = RT_ELF;
 			break;
 		}
 		case 0x025E:
 		{
-			m_Female = true;
-			m_Race = RT_ELF;
+			Female = true;
+			Race = RT_ELF;
 			break;
 		}
 		case 0x029A:
 		{
-			m_Female = false;
-			m_Race = RT_GARGOYLE;
+			Female = false;
+			Race = RT_GARGOYLE;
 		    break;
 		}
 		case 0x029B:
 		{
-			m_Female = true;
-			m_Race = RT_GARGOYLE;
+			Female = true;
+			Race = RT_GARGOYLE;
 			break;
 		}
 		default:
@@ -363,10 +363,10 @@ void CGameCharacter::OnGraphicChange(int direction)
 
 	if (direction == 1000)
 	{
-		g_GumpManager.UpdateContent(m_Serial, 0, GT_PAPERDOLL);
+		g_GumpManager.UpdateContent(Serial, 0, GT_PAPERDOLL);
 
-		if ((g_GumpManager.UpdateContent(m_Serial, 0, GT_STATUSBAR) != NULL || g_GumpManager.UpdateContent(m_Serial, 0, GT_TARGET_SYSTEM) != NULL) && m_MaxHits == 0)
-			CPacketStatusRequest(m_Serial).Send();
+		if ((g_GumpManager.UpdateContent(Serial, 0, GT_STATUSBAR) != NULL || g_GumpManager.UpdateContent(Serial, 0, GT_TARGET_SYSTEM) != NULL) && MaxHits == 0)
+			CPacketStatusRequest(Serial).Send();
 	}
 }
 //----------------------------------------------------------------------------------
@@ -383,17 +383,17 @@ void CGameCharacter::OnGraphicChange(int direction)
 void CGameCharacter::SetAnimation(const uchar &id, const uchar &interval, const uchar &frameCount, const uchar &repeatCount, const bool &repeat, const bool &frameDirection)
 {
 	WISPFUN_DEBUG("c15_f10");
-	m_AnimationGroup = id;
-	m_AnimIndex = 0;
-	m_AnimationInterval = interval;
-	m_AnimationFrameCount = frameCount;
-	m_AnimationRepeatMode = repeatCount;
-	m_AnimationRepeat = repeat;
-	m_AnimationDirection = frameDirection;
-	m_AnimationFromServer = false;
+	AnimationGroup = id;
+	AnimIndex = 0;
+	AnimationInterval = interval;
+	AnimationFrameCount = frameCount;
+	AnimationRepeatMode = repeatCount;
+	AnimationRepeat = repeat;
+	AnimationDirection = frameDirection;
+	AnimationFromServer = false;
 
-	m_LastAnimationChangeTime = g_Ticks;
-	m_TimeToRandomFidget = g_Ticks + RANDOM_FIDGET_ANIMATION_DELAY;
+	LastAnimationChangeTime = g_Ticks;
+	TimeToRandomFidget = g_Ticks + RANDOM_FIDGET_ANIMATION_DELAY;
 }
 //----------------------------------------------------------------------------------
 /*!
@@ -404,14 +404,14 @@ void CGameCharacter::SetAnimation(const uchar &id, const uchar &interval, const 
 void CGameCharacter::ResetAnimationGroup(const uchar &val)
 {
 	WISPFUN_DEBUG("c15_f11");
-	m_AnimationFrameCount = 0;
-	m_AnimationInterval = 0;
-	m_AnimationRepeat = false;
-	m_AnimationRepeatMode = 0;
-	m_AnimationDirection = false;
-	m_AnimationFromServer = false;
+	AnimationFrameCount = 0;
+	AnimationInterval = 0;
+	AnimationRepeat = false;
+	AnimationRepeatMode = 0;
+	AnimationDirection = false;
+	AnimationFromServer = false;
 
-	m_AnimationGroup = val;
+	AnimationGroup = val;
 }
 //----------------------------------------------------------------------------------
 /*!
@@ -421,17 +421,17 @@ void CGameCharacter::ResetAnimationGroup(const uchar &val)
 void CGameCharacter::SetRandomFidgetAnimation()
 {
 	WISPFUN_DEBUG("c15_f12");
-	m_TimeToRandomFidget = g_Ticks + RANDOM_FIDGET_ANIMATION_DELAY;
+	TimeToRandomFidget = g_Ticks + RANDOM_FIDGET_ANIMATION_DELAY;
 
 	if (FindLayer(OL_MOUNT) == NULL)
 	{
-		m_AnimIndex = 0;
-		m_AnimationFrameCount = 0;
-		m_AnimationInterval = 1;
-		m_AnimationRepeatMode = 1;
-		m_AnimationDirection = true;
-		m_AnimationRepeat = false;
-		m_AnimationFromServer = true;
+		AnimIndex = 0;
+		AnimationFrameCount = 0;
+		AnimationInterval = 1;
+		AnimationRepeatMode = 1;
+		AnimationDirection = true;
+		AnimationRepeat = false;
+		AnimationFromServer = true;
 
 		ANIMATION_GROUPS groupIndex = g_AnimationManager.GetGroupIndex(GetMountAnimation());
 
@@ -442,7 +442,7 @@ void CGameCharacter::SetRandomFidgetAnimation()
 			{ PAG_FIDGET_1, PAG_FIDGET_2, PAG_FIDGET_3 }
 		};
 
-		m_AnimationGroup = fidgetAnimTable[groupIndex - 1][RandomInt(3)];
+		AnimationGroup = fidgetAnimTable[groupIndex - 1][RandomInt(3)];
 	}
 }
 //----------------------------------------------------------------------------------
@@ -613,9 +613,9 @@ uchar CGameCharacter::GetAnimationGroup(ushort checkGraphic)
 		graphic = GetMountAnimation();
 
 	ANIMATION_GROUPS groupIndex = g_AnimationManager.GetGroupIndex(graphic);
-	uchar result = m_AnimationGroup;
+	uchar result = AnimationGroup;
 
-	if (result != 0xFF && !(m_Serial & 0x80000000) && (!m_AnimationFromServer || checkGraphic))
+	if (result != 0xFF && !(Serial & 0x80000000) && (!AnimationFromServer || checkGraphic))
 	{
 		GetAnimationGroup(groupIndex, result);
 
@@ -624,7 +624,7 @@ uchar CGameCharacter::GetAnimationGroup(ushort checkGraphic)
 	}
 
 	bool isWalking = Walking();
-	bool isRun = (m_Direction & 0x80);
+	bool isRun = (Direction & 0x80);
 
 	if (!m_Steps.empty())
 	{
@@ -641,10 +641,10 @@ uchar CGameCharacter::GetAnimationGroup(ushort checkGraphic)
 			else
 				result = (uchar)LAG_WALK;
 		}
-		else if (m_AnimationGroup == 0xFF)
+		else if (AnimationGroup == 0xFF)
 		{
 			result = (uchar)LAG_STAND;
-			m_AnimIndex = 0;
+			AnimIndex = 0;
 		}
 	}
 	else if (groupIndex == AG_HIGHT)
@@ -659,10 +659,10 @@ uchar CGameCharacter::GetAnimationGroup(ushort checkGraphic)
 					result = (uchar)HAG_FLY;
 			}
 		}
-		else if (m_AnimationGroup == 0xFF)
+		else if (AnimationGroup == 0xFF)
 		{
 			result = (uchar)HAG_STAND;
-			m_AnimIndex = 0;
+			AnimIndex = 0;
 		}
 
 		//!Глюченный дельфин на всех клиентах
@@ -708,7 +708,7 @@ uchar CGameCharacter::GetAnimationGroup(ushort checkGraphic)
 					result = (uchar)PAG_WALK_UNARMED;
 			}
 		}
-		else if (m_AnimationGroup == 0xFF)
+		else if (AnimationGroup == 0xFF)
 		{
 			if (FindLayer(OL_MOUNT) != NULL)
 				result = (uchar)PAG_ONMOUNT_STAND;
@@ -724,7 +724,7 @@ uchar CGameCharacter::GetAnimationGroup(ushort checkGraphic)
 			else
 				result = (uchar)PAG_STAND;
 
-			m_AnimIndex = 0;
+			AnimIndex = 0;
 		}
 		//62 gg flying walk
 		//63 gg flying run
@@ -734,7 +734,7 @@ uchar CGameCharacter::GetAnimationGroup(ushort checkGraphic)
 		//67 same as 60/61
 		//68 gg flying taking dmg
 		
-		if (m_Race == RT_GARGOYLE)
+		if (Race == RT_GARGOYLE)
 		{
 			if (Flying())
 			{
@@ -792,7 +792,7 @@ void CGameCharacter::ProcessGargoyleAnims(int &animGroup)
 	if (animGroup == 64 || animGroup == 65)
 	{
 		animGroup = InWarMode() == true ? 65 : 64;
-		m_AnimationGroup = animGroup;
+		AnimationGroup = animGroup;
 	}
 }
 //----------------------------------------------------------------------------------
@@ -803,7 +803,7 @@ void CGameCharacter::ProcessGargoyleAnims(int &animGroup)
 ushort CGameCharacter::GetMountAnimation()
 {
 	WISPFUN_DEBUG("c15_f17");
-	ushort graphic = m_Graphic;
+	ushort graphic = Graphic;
 
 	switch (graphic)
 	{
@@ -830,7 +830,7 @@ ushort CGameCharacter::GetMountAnimation()
 void CGameCharacter::UpdateAnimationInfo(BYTE &dir, const bool &canChange)
 {
 	WISPFUN_DEBUG("c15_f18");
-	dir = m_Direction & 7;
+	dir = Direction & 7;
 
 	if (!m_Steps.empty())
 	{
@@ -847,12 +847,12 @@ void CGameCharacter::UpdateAnimationInfo(BYTE &dir, const bool &canChange)
 
 		if (canChange)
 		{
-			if (m_AnimationFromServer)
+			if (AnimationFromServer)
 				SetAnimation(0xFF);
 
 			int maxDelay = g_PathFinder.GetWalkSpeed(run, FindLayer(OL_MOUNT) != NULL) - 15;
 
-			int delay = (int)g_Ticks - (int)m_LastStepTime;
+			int delay = (int)g_Ticks - (int)LastStepTime;
 			bool removeStep = (delay >= maxDelay);
 			bool directionChange = false;
 
@@ -860,7 +860,7 @@ void CGameCharacter::UpdateAnimationInfo(BYTE &dir, const bool &canChange)
 			{
 				bool badStep = false;
 
-				if (!m_OffsetX && !m_OffsetY)
+				if (!OffsetX && !OffsetY)
 				{
 					int absX = abs(m_X - wd.X);
 					int absY = abs(m_Y - wd.Y);
@@ -886,12 +886,12 @@ void CGameCharacter::UpdateAnimationInfo(BYTE &dir, const bool &canChange)
 
 					float x = delay / g_AnimCharactersDelayValue;
 					float y = x;
-					m_OffsetZ = (char)(((wd.Z - m_Z) * x) * (4.0f / steps));
+					OffsetZ = (char)(((wd.Z - m_Z) * x) * (4.0f / steps));
 
 					wd.GetOffset(x, y, steps);
 
-					m_OffsetX = (char)x;
-					m_OffsetY = (char)y;
+					OffsetX = (char)x;
+					OffsetY = (char)y;
 				}
 			}
 			else
@@ -911,7 +911,7 @@ void CGameCharacter::UpdateAnimationInfo(BYTE &dir, const bool &canChange)
 						g_PluginManager.WindowProc(g_OrionWindow.Handle, UOMSG_UPDATE_PLAYER_XYZ, (WPARAM)&xyzData, 0);
 					}
 
-					if (m_Direction != wd.Direction)
+					if (Direction != wd.Direction)
 						g_PluginManager.WindowProc(g_OrionWindow.Handle, UOMSG_UPDATE_PLAYER_DIR, (WPARAM)wd.Direction, 0);
 
 					if (m_Z - wd.Z >= 22)
@@ -950,15 +950,15 @@ void CGameCharacter::UpdateAnimationInfo(BYTE &dir, const bool &canChange)
 
 				UpdateRealDrawCoordinates();
 
-				m_Direction = wd.Direction;
+				Direction = wd.Direction;
 
-				m_OffsetX = 0;
-				m_OffsetY = 0;
-				m_OffsetZ = 0;
+				OffsetX = 0;
+				OffsetY = 0;
+				OffsetZ = 0;
 
 				m_Steps.pop_front();
 
-				m_TimeToRandomFidget = g_Ticks + RANDOM_FIDGET_ANIMATION_DELAY;
+				TimeToRandomFidget = g_Ticks + RANDOM_FIDGET_ANIMATION_DELAY;
 
 				if (directionChange)
 				{
@@ -971,15 +971,15 @@ void CGameCharacter::UpdateAnimationInfo(BYTE &dir, const bool &canChange)
 					g_MapManager.AddRender(this);
 				}
 
-				m_LastStepTime = g_Ticks;
+				LastStepTime = g_Ticks;
 			}
 		}
 	}
 	else
 	{
-		m_OffsetX = 0;
-		m_OffsetY = 0;
-		m_OffsetZ = 0;
+		OffsetX = 0;
+		OffsetY = 0;
+		OffsetZ = 0;
 	}
 }
 //----------------------------------------------------------------------------------

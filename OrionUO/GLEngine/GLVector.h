@@ -13,13 +13,13 @@
 //Класс вектора нормали
 class CVector
 {
-	SETGET(double, X, 0.0);
-	SETGET(double, Y, 0.0);
-	SETGET(double, Z, 0.0);
-
 public:
+	double X = 0.0;
+	double Y = 0.0;
+	double Z = 0.0;
+
 	CVector(const double &x = 0, const double &y = 0, const double &z = 0);
-	~CVector() {}
+	~CVector() {};
 
 	//Копирование векторов
 	void Link(const CVector &v);

@@ -16,7 +16,7 @@ CMacroObject *g_MacroPointer = NULL;
 //-----------------------------------CMacroObject-----------------------------------
 //----------------------------------------------------------------------------------
 CMacroObject::CMacroObject(const MACRO_CODE &code, const MACRO_SUB_CODE &subCode)
-: CBaseQueueItem(), m_Code(code), m_SubCode(subCode)
+: CBaseQueueItem(), Code(code), SubCode(subCode)
 {
 	WISPFUN_DEBUG("c190_f1");
 	switch (code)
@@ -40,10 +40,10 @@ CMacroObject::CMacroObject(const MACRO_CODE &code, const MACRO_SUB_CODE &subCode
 				int count = 0;
 				int offset = 0;
 				CMacro::GetBoundByCode(code, count, offset);
-				m_SubCode = (MACRO_SUB_CODE)offset;
+				SubCode = (MACRO_SUB_CODE)offset;
 			}
 
-			m_HasSubMenu = 1;
+			HasSubMenu = 1;
 
 			break;
 		}
@@ -56,13 +56,13 @@ CMacroObject::CMacroObject(const MACRO_CODE &code, const MACRO_SUB_CODE &subCode
 		case MC_SET_UPDATE_RANGE:
 		case MC_MODIFY_UPDATE_RANGE:
 		{
-			m_HasSubMenu = 2;
+			HasSubMenu = 2;
 
 			break;
 		}
 		default:
 		{
-			m_HasSubMenu = 0;
+			HasSubMenu = 0;
 
 			break;
 		}
@@ -76,7 +76,7 @@ CMacroObject::~CMacroObject()
 //----------------------------------CMacroObjectString------------------------------
 //----------------------------------------------------------------------------------
 CMacroObjectString::CMacroObjectString(const MACRO_CODE &code, const MACRO_SUB_CODE &subCode, const string &str)
-: CMacroObject(code, subCode), m_String(str)
+: CMacroObject(code, subCode), String(str)
 {
 }
 //----------------------------------------------------------------------------------
@@ -87,7 +87,7 @@ CMacroObjectString::~CMacroObjectString()
 //----------------------------------------CMacro------------------------------------
 //----------------------------------------------------------------------------------
 CMacro::CMacro(const ushort &key, const bool &alt, const bool &ctrl, const bool &shift)
-: CBaseQueueItem(), m_Key(key), m_Alt(alt), m_Ctrl(ctrl), m_Shift(shift)
+: CBaseQueueItem(), Key(key), Alt(alt), Ctrl(ctrl), Shift(shift)
 {
 }
 //----------------------------------------------------------------------------------
@@ -252,15 +252,15 @@ void CMacro::Save(WISP_FILE::CBinaryFileWritter &writter)
 
 	writter.WriteUInt16LE(size);
 
-	ushort key = m_Key;
+	ushort key = Key;
 
-	if (m_Alt)
+	if (Alt)
 		key += MODKEY_ALT;
 
-	if (m_Ctrl)
+	if (Ctrl)
 		key += MODKEY_CTRL;
 
-	if (m_Shift)
+	if (Shift)
 		key += MODKEY_SHIFT;
 
 	writter.WriteUInt16LE(key);
@@ -297,7 +297,7 @@ void CMacro::Save(WISP_FILE::CBinaryFileWritter &writter)
 CMacro *CMacro::GetCopy()
 {
 	WISPFUN_DEBUG("c191_f6");
-	CMacro *macro = new CMacro(m_Key, m_Alt, m_Ctrl, m_Shift);
+	CMacro *macro = new CMacro(Key, Alt, Ctrl, Shift);
 	MACRO_CODE oldCode = MC_NONE;
 
 	QFOR(obj, m_Items, CMacroObject*)

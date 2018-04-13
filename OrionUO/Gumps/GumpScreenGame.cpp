@@ -15,8 +15,8 @@ CGumpScreenGame::CGumpScreenGame()
 : CGump(GT_NONE, 0, 0, 0)
 {
 	WISPFUN_DEBUG("c115_f1");
-	m_NoMove = true;
-	m_NoClose = true;
+	NoMove = true;
+	NoClose = true;
 
 	Add(new CGUIButton(ID_GS_RESIZE, 0x0837, 0x0837, 0x0838, 0, 0));
 	Add(new CGUIGumppic(0x0E14, 0, 0));

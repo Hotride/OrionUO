@@ -15,14 +15,15 @@ class CGump;
 //!Класс для работы с полем для ввода текста
 class CEntryText
 {
-	SETGET(int, MaxLength, 0);
-	SETGET(int, Width, 0);
-	SETGET(int, MaxWidth, 0);
-	SETGET(bool, Changed, true);
-	SETGET(ushort, Color, 0);
-	SETGET(int, DrawOffset, 0);
-	SETGET(WISP_GEOMETRY::CPoint2Di, CaretPos, WISP_GEOMETRY::CPoint2Di());
-	SETGET(bool, NumberOnly, false);
+public:
+	int MaxLength = 0;
+	int Width = 0;
+	int MaxWidth = 0;
+	bool Changed = true;
+	ushort Color = 0;
+	int DrawOffset = 0;
+	WISP_GEOMETRY::CPoint2Di CaretPos = WISP_GEOMETRY::CPoint2Di();
+	bool NumberOnly = false;
 
 protected:
 	//!Позиция каретки в строке
@@ -32,7 +33,7 @@ protected:
 	string m_CText = string{ "" };
 
 	//!Unicode строка
-	wstring m_Text = wstring{ L"" };
+	wstring Text = wstring{ L"" };
 
 
 public:
@@ -78,7 +79,7 @@ public:
 	void SetPos(int val, CGump *gump = NULL);
 
 	//Unicode данные строки
-	const wchar_t *Data() const {return m_Text.c_str();}
+	const wchar_t *Data() const {return Text.c_str();}
 
 	//ASCII данные стоки
 	const char *c_str();
@@ -101,7 +102,7 @@ public:
 
 	int Pos() const {return m_Position;}
 
-	size_t Length() const { return m_Text.length(); }
+	size_t Length() const { return Text.length(); }
 
 	//Вычислить ASCII строку по ширине
 	string CheckMaxWidthA(uchar font, string str);

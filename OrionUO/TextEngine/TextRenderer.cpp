@@ -79,7 +79,7 @@ bool CTextRenderer::InRect(CTextData *text, CRenderWorldObject *rwo)
 	{
 		if (it->InRect(rect))
 		{
-			if (rwo == NULL || rwo->TextCanBeTransparent(it->m_Text))
+			if (rwo == NULL || rwo->TextCanBeTransparent(it->Text))
 			{
 				result = true;
 				break;

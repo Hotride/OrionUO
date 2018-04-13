@@ -12,7 +12,7 @@
 //----------------------------------------------------------------------------------
 class CGumpContainer : public CGump
 {
-	SETGET(bool, IsGameBoard, false);
+	bool IsGameBoard = false;
 
 private:
 	uint m_CorpseEyesTicks{ 0 };

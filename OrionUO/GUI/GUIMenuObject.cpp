@@ -12,10 +12,10 @@
 #include "stdafx.h"
 //----------------------------------------------------------------------------------
 CGUIMenuObject::CGUIMenuObject(const uint &serial, const ushort &graphic, const ushort &color, const int &x, const int &y, const string &text)
-: CGUITilepic(graphic, color, x, y), m_Text(text)
+: CGUITilepic(graphic, color, x, y), Text(text)
 {
-	m_Serial = serial;
-	m_MoveOnDrag = true;
+	Serial = serial;
+	MoveOnDrag = true;
 }
 //----------------------------------------------------------------------------------
 CGUIMenuObject::~CGUIMenuObject()
@@ -28,7 +28,7 @@ bool CGUIMenuObject::Select()
 	int x = g_MouseManager.Position.X - m_X;
 	int y = g_MouseManager.Position.Y - m_Y;
 
-	WISP_GEOMETRY::CSize size = g_Orion.GetStaticArtDimension(m_Graphic);
+	WISP_GEOMETRY::CSize size = g_Orion.GetStaticArtDimension(Graphic);
 
 	return (x >= 0 && y >= 0 && x < size.Width && y < size.Height);
 }
@@ -40,9 +40,9 @@ void CGUIMenuObject::OnMouseEnter()
 	{
 		CGumpMenu *menu = (CGumpMenu*)g_SelectedObject.Gump;
 
-		if (menu->Text != m_Text)
+		if (menu->Text != Text)
 		{
-			menu->Text = m_Text;
+			menu->Text = Text;
 			menu->TextChanged = true;
 		}
 	}
@@ -55,7 +55,7 @@ void CGUIMenuObject::OnMouseExit()
 	{
 		CGumpMenu *menu = (CGumpMenu*)g_LastSelectedObject.Gump;
 
-		if (menu->Text == m_Text)
+		if (menu->Text == Text)
 		{
 			menu->Text = "";
 			menu->TextChanged = true;

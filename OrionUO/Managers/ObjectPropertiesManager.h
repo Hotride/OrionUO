@@ -12,12 +12,12 @@
 //----------------------------------------------------------------------------------
 class CObjectProperty
 {
-	SETGET(uint, Serial, 0);
-	SETGET(uint, Revision, 0);
-	SETGET(wstring, Name, L"");
-	SETGET(wstring, Data, L"");
-
 public:
+	uint Serial = 0;
+	uint Revision = 0;
+	wstring Name = L"";
+	wstring Data = L"";
+
 	CObjectProperty() {}
 	CObjectProperty(const uint &serial, const uint &revision, const wstring &name, const wstring &data);
 
@@ -30,7 +30,7 @@ typedef map<uint, CObjectProperty> OBJECT_PROPERTIES_MAP;
 //----------------------------------------------------------------------------------
 class CObjectPropertiesManager
 {
-	SETGET(uint, Timer, 0);
+	uint Timer = 0;
 
 private:
 	OBJECT_PROPERTIES_MAP m_Map;

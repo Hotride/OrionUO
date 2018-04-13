@@ -25,13 +25,13 @@ CGUIText::~CGUIText()
 void CGUIText::CreateTextureA(const uchar &font, const string &str, int width, const TEXT_ALIGN_TYPE &align, const ushort &flags)
 {
 	WISPFUN_DEBUG("c78_f2");
-	g_FontManager.GenerateA(font, m_Texture, str, m_Color, width, align, flags);
+	g_FontManager.GenerateA(font, m_Texture, str, Color, width, align, flags);
 }
 //----------------------------------------------------------------------------------
 void CGUIText::CreateTextureW(const uchar &font, const wstring &str, const uchar &cell, int width, const TEXT_ALIGN_TYPE &align, const ushort &flags)
 {
 	WISPFUN_DEBUG("c78_f3");
-	g_FontManager.GenerateW(font, m_Texture, str, m_Color, cell, width, align, flags);
+	g_FontManager.GenerateW(font, m_Texture, str, Color, cell, width, align, flags);
 }
 //----------------------------------------------------------------------------------
 void CGUIText::Draw(const bool &checktrans)

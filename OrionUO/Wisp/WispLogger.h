@@ -27,7 +27,8 @@ namespace WISP_LOGGER
 //----------------------------------------------------------------------------------
 class CLogger
 {
-	SETGET(string, FileName, "");
+public:
+	string FileName = "";
 
 protected:
 	FILE *m_File{ NULL };

@@ -52,10 +52,10 @@ void CGLTexture::Draw(const int &x, const int &y, int width, int height, const b
 	if (Texture != 0)
 	{
 		if (!width)
-			width = m_Width;
+			width = Width;
 
 		if (!height)
-			height = m_Height;
+			height = Height;
 
 		if (checktrans)
 		{
@@ -111,8 +111,8 @@ void CGLTexture::DrawTransparent(const int &x, const int &y, const bool &stencil
 void CGLTexture::Clear()
 {
 	WISPFUN_DEBUG("c36_f6");
-	m_Width = 0;
-	m_Height = 0;
+	Width = 0;
+	Height = 0;
 	m_HitMap.clear();
 
 	if (Texture != 0)
@@ -121,16 +121,16 @@ void CGLTexture::Clear()
 		Texture = 0;
 	}
 
-	if (m_VertexBuffer != 0)
+	if (VertexBuffer != 0)
 	{
-		glDeleteBuffers(1, &m_VertexBuffer);
-		m_VertexBuffer = 0;
+		glDeleteBuffers(1, &VertexBuffer);
+		VertexBuffer = 0;
 	}
 
-	if (m_MirroredVertexBuffer != 0)
+	if (MirroredVertexBuffer != 0)
 	{
-		glDeleteBuffers(1, &m_MirroredVertexBuffer);
-		m_MirroredVertexBuffer = 0;
+		glDeleteBuffers(1, &MirroredVertexBuffer);
+		MirroredVertexBuffer = 0;
 	}
 }
 //----------------------------------------------------------------------------------
@@ -139,12 +139,12 @@ bool CGLTexture::Select(int x, int y, const bool &pixelCheck)
 	x = g_MouseManager.Position.X - x;
 	y = g_MouseManager.Position.Y - y;
 
-	if (x >= 0 && y >= 0 && x < m_Width && y < m_Height)
+	if (x >= 0 && y >= 0 && x < Width && y < Height)
 	{
 		if (!pixelCheck)
 			return true;
 
-		int pos = (y * m_Width) + x;
+		int pos = (y * Width) + x;
 
 		if (pos < (int)m_HitMap.size())
 			return (m_HitMap[pos] != 0);

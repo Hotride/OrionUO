@@ -7,9 +7,10 @@ namespace WISP_WINDOW
 //----------------------------------------------------------------------------------
 class CWindow
 {
-	SETGET(HWND, Handle, 0);
+public:
+	HWND Handle = 0;
 	SETGETE(WISP_GEOMETRY::CSize, Size, WISP_GEOMETRY::CSize());
-	SETGET(bool, NoResize, false);
+	bool NoResize = false;
 	SETGETE(WISP_GEOMETRY::CSize, MinSize, WISP_GEOMETRY::CSize(100, 100));
 	SETGETE(WISP_GEOMETRY::CSize, MaxSize, WISP_GEOMETRY::CSize(GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN)));
 
@@ -31,20 +32,20 @@ public:
 
 	LRESULT OnWindowProc(HWND &hWnd, UINT &message, WPARAM &wParam, LPARAM &lParam);
 
-	void Update() { ::UpdateWindow(m_Handle); }
+	void Update() { ::UpdateWindow(Handle); }
 
-	bool IsActive() { return (::GetForegroundWindow() == m_Handle); }
+	bool IsActive() { return (::GetForegroundWindow() == Handle); }
 
 	void ShowCursor(const bool &show = true) { ::ShowCursor(show ? TRUE : FALSE); }
-	void ShowWindow(bool show) { ::ShowWindow(m_Handle, show ? TRUE : FALSE); }
+	void ShowWindow(bool show) { ::ShowWindow(Handle, show ? TRUE : FALSE); }
 
-	bool Zoomed() { return (::IsZoomed(m_Handle) != FALSE); }
+	bool Zoomed() { return (::IsZoomed(Handle) != FALSE); }
 
-	void SetTitle(const string &text) { ::SetWindowTextA(m_Handle, text.c_str()); }
-	void SetTitle(const wstring &text) { ::SetWindowTextW(m_Handle, text.c_str()); }
+	void SetTitle(const string &text) { ::SetWindowTextA(Handle, text.c_str()); }
+	void SetTitle(const wstring &text) { ::SetWindowTextW(Handle, text.c_str()); }
 
-	void CreateTimer(uint id, int delay) { ::SetTimer(m_Handle, id, delay, NULL); }
-	void RemoveTimer(uint id) { ::KillTimer(m_Handle, id); }
+	void CreateTimer(uint id, int delay) { ::SetTimer(Handle, id, delay, NULL); }
+	void RemoveTimer(uint id) { ::KillTimer(Handle, id); }
 
 	void CreateThreadedTimer(uint id, const int &delay, const bool &oneShot = false, const bool &waitForProcessMessage = true, const bool &synchronizedDelay = false);
 	void RemoveThreadedTimer(uint id);
@@ -71,7 +72,7 @@ protected:
 	virtual void OnCharPress(const WPARAM &wParam, const LPARAM &lParam) {}
 	virtual void OnKeyDown(const WPARAM &wParam, const LPARAM &lParam) {}
 	virtual void OnKeyUp(const WPARAM &wParam, const LPARAM &lParam) {}
-	virtual HRESULT OnRepaint(const WPARAM &wParam, const LPARAM &lParam) { return (HRESULT)DefWindowProc(m_Handle, WM_NCPAINT, wParam, lParam); }
+	virtual HRESULT OnRepaint(const WPARAM &wParam, const LPARAM &lParam) { return (HRESULT)DefWindowProc(Handle, WM_NCPAINT, wParam, lParam); }
 	virtual void OnShow(const bool &show) {}
 	virtual void OnSetText(const LPARAM &lParam) {}
 	virtual void OnTimer(uint id) {}

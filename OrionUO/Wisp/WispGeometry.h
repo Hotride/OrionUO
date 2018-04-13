@@ -9,25 +9,25 @@ class CPoint3Df;
 //----------------------------------------------------------------------------------
 class CSize
 {
-	SETGET(int, Width, 0);
-	SETGET(int, Height, 0);
-
 public:
+	int Width = 0;
+	int Height = 0;
+
 	CSize();
 	CSize(const int &width, const int &height);
 	CSize(const CSize &size);
 
 	virtual ~CSize() {}
 
-	virtual void Reset() { m_Width = 0; m_Height = 0; }
+	virtual void Reset() { Width = 0; Height = 0; }
 };
 //----------------------------------------------------------------------------------
 class CPoint2Di
 {
-	SETGET(int, X, 0);
-	SETGET(int, Y, 0);
-
 public:
+	int X = 0;
+	int Y = 0;
+
 	CPoint2Di();
 	CPoint2Di(const int &x, const int &y);
 	CPoint2Di(const float &x, const float &y);
@@ -36,15 +36,15 @@ public:
 
 	virtual ~CPoint2Di() {}
 
-	virtual void Reset() { m_X = 0; m_Y = 0; }
+	virtual void Reset() { X = 0; Y = 0; }
 };
 //----------------------------------------------------------------------------------
 class CRect
 {
-	SETGET(CPoint2Di, Position, CPoint2Di());
-	SETGET(CSize, Size, CSize());
-
 public:
+	CPoint2Di Position = CPoint2Di();
+	CSize Size = CSize();
+
 	CRect();
 	CRect(const int &x, const int &y, const int &width, const int &height);
 	CRect(const int &x, const int &y, const CSize &size);
@@ -53,14 +53,14 @@ public:
 
 	virtual ~CRect() {}
 
-	virtual void Reset() { m_Position.Reset(); m_Size.Reset(); }
+	virtual void Reset() { Position.Reset(); Size.Reset(); }
 };
 //----------------------------------------------------------------------------------
 class CPoint3Di : public CPoint2Di
 {
-	SETGET(int, Z, 0);
-
 public:
+	int Z = 0;
+
 	CPoint3Di();
 	CPoint3Di(const int &x, const int &y, const int &z);
 	CPoint3Di(const float &x, const float &y, const float &z);
@@ -71,15 +71,15 @@ public:
 
 	virtual ~CPoint3Di() {}
 
-	virtual void Reset() { CPoint2Di::Reset(); m_Z = 0; }
+	virtual void Reset() { CPoint2Di::Reset(); Z = 0; }
 };
 //----------------------------------------------------------------------------------
 class CPoint2Df
 {
-	SETGET(float, X, 0.0f);
-	SETGET(float, Y, 0.0f);
-
 public:
+	float X = 0.0f;
+	float Y = 0.0f;
+
 	CPoint2Df();
 	CPoint2Df(const int &x, const int &y);
 	CPoint2Df(const float &x, const float &y);
@@ -88,14 +88,14 @@ public:
 
 	virtual ~CPoint2Df() {}
 
-	virtual void Reset() { m_X = 0.0f; m_Y = 0.0f; }
+	virtual void Reset() { X = 0.0f; Y = 0.0f; }
 };
 //----------------------------------------------------------------------------------
 class CPoint3Df : public CPoint2Df
 {
-	SETGET(float, Z, 0.0f);
-
 public:
+	float Z = 0.0f;
+
 	CPoint3Df();
 	CPoint3Df(const int &x, const int &y, const int &z);
 	CPoint3Df(const float &x, const float &y, const float &z);
@@ -106,7 +106,7 @@ public:
 
 	virtual ~CPoint3Df() {}
 
-	virtual void Reset() { CPoint2Df::Reset(); m_Z = 0.0f; }
+	virtual void Reset() { CPoint2Df::Reset(); Z = 0.0f; }
 };
 //----------------------------------------------------------------------------------
 }; //namespace

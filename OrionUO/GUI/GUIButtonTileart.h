@@ -15,16 +15,16 @@
 class CGUIButtonTileart : public CGUIButton
 {
 	//!ИД картинки статики
-	SETGET(ushort, TileGraphic, 0);
+	ushort TileGraphic = 0;
 
 	//!Цвет картинки статики
-	SETGET(ushort, TileColor, 0);
+	ushort TileColor = 0;
 
 	//!Координата по оси X для отображения статики
-	SETGET(int, TileX, 0);
+	int TileX = 0;
 
 	//!Координата по оси Y для отображения статики
-	SETGET(int, TileY, 0);
+	int TileY = 0;
 
 public:
 	CGUIButtonTileart(const uint &serial, const ushort &graphic, const ushort &graphicSelected, const ushort &graphicPressed, const int &x, const int &y, const ushort &tileGraphic, const ushort &tileColor, const int &tileX, const int &tileY);

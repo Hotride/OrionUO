@@ -12,7 +12,7 @@
 //----------------------------------------------------------------------------------
 class CGUIBulletinBoardObject : public CBaseGUI
 {
-	SETGET(wstring, Text, L"");
+	wstring Text = L"";
 
 private:
 	CGLTextTexture m_Texture;

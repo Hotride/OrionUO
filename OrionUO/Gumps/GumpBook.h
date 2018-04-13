@@ -12,9 +12,10 @@
 //----------------------------------------------------------------------------------
 class CGumpBook : public CGump
 {
-	SETGET(bool, Writable, false);
-	SETGET(short, PageCount, 0);
-	SETGET(bool, Unicode, false);
+public:
+	bool Writable = false;
+	short PageCount = 0;
+	bool Unicode = false;
 
 private:
 	static const int ID_GB_TEXT_AREA_AUTHOR = 1;

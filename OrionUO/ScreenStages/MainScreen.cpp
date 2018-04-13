@@ -61,7 +61,7 @@ void CMainScreen::Init()
 	g_PersonalLightLevel = 0;
 
 	g_ScreenEffectManager.UseSunrise();
-	m_SmoothScreenAction = 0;
+	SmoothScreenAction = 0;
 
 	m_Gump.PrepareTextures();
 }
@@ -75,7 +75,7 @@ void CMainScreen::ProcessSmoothAction(uchar action)
 {
 	WISPFUN_DEBUG("c165_f4");
 	if (action == 0xFF)
-		action = m_SmoothScreenAction;
+		action = SmoothScreenAction;
 
 	if (action == ID_SMOOTH_MS_CONNECT)
 		g_Orion.Connect();
@@ -240,10 +240,8 @@ void CMainScreen::LoadCustomPath()
 			{
 				case MSCC_CUSTOM_PATH:
 				{
-					string pathA = strings[1];
-					wstring pathW = ToWString(pathA);
-					g_App.SetUOFilesPathA(pathA);
-					g_App.SetUOFilesPathW(pathW);
+					g_App.UOFilesPathA = strings[1];
+					g_App.UOFilesPathW = ToWString(strings[1]);
 				}
 			}
 		}
@@ -281,7 +279,7 @@ void CMainScreen::LoadGlobalConfig()
 				}
 				case MSCC_ACTPWD:
 				{
-					string password = file.GetRawLine();
+					string password = file.RawLine;
 					size_t pos = password.find_first_of("=");
 					password = password.substr(pos + 1, password.length() - (pos + 1));
 

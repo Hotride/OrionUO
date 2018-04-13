@@ -28,7 +28,7 @@ void CGUIChecktrans::Draw(const bool &checktrans)
 	glStencilFunc(GL_ALWAYS, 1, 1);
 	glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
 
-	g_GL.DrawPolygone(m_X, m_Y, m_Width, m_Height);
+	g_GL.DrawPolygone(m_X, m_Y, Width, Height);
 
 	glColorMask(true, true, true, true);
 

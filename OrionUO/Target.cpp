@@ -33,20 +33,20 @@ void CTarget::Reset()
 		m_Multi = NULL;
 	}
 
-	m_Type = 0;
-	m_CursorType = 0;
-	m_CursorID = 0;
-	m_Targeting = false;
-	m_MultiGraphic = 0;
+	Type = 0;
+	CursorType = 0;
+	CursorID = 0;
+	Targeting = false;
+	MultiGraphic = 0;
 }
 //----------------------------------------------------------------------------------
 void CTarget::RequestFromCustomHouse()
 {
-	m_Type = 2;
-	m_CursorID = 0;
-	m_CursorType = 0;
-	m_Targeting = true;
-	m_MultiGraphic = 0;
+	Type = 2;
+	CursorID = 0;
+	CursorType = 0;
+	Targeting = true;
+	MultiGraphic = 0;
 
 	if (g_CustomHouseGump != NULL)
 	{
@@ -60,7 +60,7 @@ void CTarget::RequestFromCustomHouse()
 //----------------------------------------------------------------------------------
 void CTarget::SetLastTargetObject(const uint &serial)
 {
-	m_Type = 0;
+	Type = 0;
 	pack32(m_LastData + 7, serial);
 }
 //----------------------------------------------------------------------------------
@@ -71,21 +71,21 @@ void CTarget::SetData(WISP_DATASTREAM::CDataReader &reader)
 	memcpy(&m_Data[0], reader.Start, reader.Size);
 
 	//И устанавливаем соответствующие значения
-	m_Type = reader.ReadUInt8();
-	m_CursorID = reader.ReadUInt32BE();
-	m_CursorType = reader.ReadUInt8();
-	m_Targeting = (m_CursorType < 3);
-	m_MultiGraphic = 0;
+	Type = reader.ReadUInt8();
+	CursorID = reader.ReadUInt32BE();
+	CursorType = reader.ReadUInt8();
+	Targeting = (CursorType < 3);
+	MultiGraphic = 0;
 }
 //----------------------------------------------------------------------------------
 void CTarget::SetMultiData(WISP_DATASTREAM::CDataReader &reader)
 {
 	WISPFUN_DEBUG("c209_f3");
 	//Устанавливаем соответствующие значения
-	m_Type = 1;
-	m_CursorType = 0;
-	m_Targeting = true;
-	m_CursorID = reader.ReadUInt32BE(1);
+	Type = 1;
+	CursorType = 0;
+	Targeting = true;
+	CursorID = reader.ReadUInt32BE(1);
 
 	//Копируем буффер
 	memset(&m_Data[0], 0, 19);
@@ -95,15 +95,15 @@ void CTarget::SetMultiData(WISP_DATASTREAM::CDataReader &reader)
 
 	reader.ResetPtr();
 	reader.Move(18);
-	m_MultiGraphic = reader.ReadUInt16BE() + 1;
-	m_MultiX = reader.ReadUInt16BE();
-	m_MultiY = reader.ReadUInt16BE();
+	MultiGraphic = reader.ReadUInt16BE() + 1;
+	MultiX = reader.ReadUInt16BE();
+	MultiY = reader.ReadUInt16BE();
 }
 //----------------------------------------------------------------------------------
 void CTarget::SendTargetObject(const uint &serial)
 {
 	WISPFUN_DEBUG("c209_f4");
-	if (!m_Targeting)
+	if (!Targeting)
 		return; //Если в клиенте нет таргета - выход
 
 	//Пишем серийник объекта, на который ткнули прицелом, остальное - затираем
@@ -143,7 +143,7 @@ void CTarget::SendTargetObject(const uint &serial)
 void CTarget::SendTargetTile(const ushort &tileID, const short &x, const short &y, char z)
 {
 	WISPFUN_DEBUG("c209_f5");
-	if (!m_Targeting)
+	if (!Targeting)
 		return; //Если в клиенте нет таргета - выход
 
 	m_Data[1] = 1;
@@ -167,7 +167,7 @@ void CTarget::SendTargetTile(const ushort &tileID, const short &x, const short &
 void CTarget::SendCancelTarget()
 {
 	WISPFUN_DEBUG("c209_f6");
-	if (!m_Targeting)
+	if (!Targeting)
 		return; //Если в клиенте нет таргета - выход
 
 	//Уходят только нули
@@ -190,7 +190,7 @@ void CTarget::SendCancelTarget()
 void CTarget::Plugin_SendTargetObject(const uint &serial)
 {
 	WISPFUN_DEBUG("c209_f4");
-	if (!m_Targeting)
+	if (!Targeting)
 		return; //Если в клиенте нет таргета - выход
 
 	//Пишем серийник объекта, на который ткнули прицелом, остальное - затираем
@@ -233,7 +233,7 @@ void CTarget::Plugin_SendTargetObject(const uint &serial)
 void CTarget::Plugin_SendTargetTile(const ushort &tileID, const short &x, const short &y, char z)
 {
 	WISPFUN_DEBUG("c209_f5");
-	if (!m_Targeting)
+	if (!Targeting)
 		return; //Если в клиенте нет таргета - выход
 
 	m_Data[1] = 1;
@@ -257,7 +257,7 @@ void CTarget::Plugin_SendTargetTile(const ushort &tileID, const short &x, const 
 void CTarget::Plugin_SendCancelTarget()
 {
 	WISPFUN_DEBUG("c209_f6");
-	if (!m_Targeting)
+	if (!Targeting)
 		return; //Если в клиенте нет таргета - выход
 
 	//Уходят только нули
@@ -271,15 +271,15 @@ void CTarget::Plugin_SendCancelTarget()
 void CTarget::SendLastTarget()
 {
 	WISPFUN_DEBUG("c209_f7");
-	if (!m_Targeting)
+	if (!Targeting)
 		return; //Если в клиенте нет таргета - выход
 
 	//Восстановим пакет последнего актуального таргета
 	memcpy(m_Data, m_LastData, sizeof(m_Data));
 	m_Data[0] = 0x6C;
-	m_Data[1] = m_Type;
-	m_Data[6] = m_CursorType;
-	pack32(m_Data + 2, m_CursorID);
+	m_Data[1] = Type;
+	m_Data[6] = CursorType;
+	pack32(m_Data + 2, CursorID);
 
 	SendTarget();
 }
@@ -288,13 +288,13 @@ void CTarget::SendTarget()
 {
 	WISPFUN_DEBUG("c209_f8");
 
-	if (m_Type != 2)
+	if (Type != 2)
 		g_Orion.Send(m_Data, sizeof(m_Data));
 
 	//Чистим данные
 	memset(m_Data, 0, sizeof(m_Data));
-	m_Targeting = false;
-	m_MultiGraphic = 0;
+	Targeting = false;
+	MultiGraphic = 0;
 
 	g_MouseManager.CancelDoubleClick = true;
 }
@@ -306,8 +306,8 @@ void CTarget::Plugin_SendTarget()
 
 	//Чистим данные
 	memset(m_Data, 0, sizeof(m_Data));
-	m_Targeting = false;
-	m_MultiGraphic = 0;
+	Targeting = false;
+	MultiGraphic = 0;
 
 	g_MouseManager.CancelDoubleClick = true;
 }
@@ -327,7 +327,7 @@ void CTarget::LoadMulti(const int &offsetX, const int &offsetY, const char &offs
 	WISPFUN_DEBUG("c209_f10");
 	UnloadMulti();
 
-	CIndexMulti &index = g_Orion.m_MultiDataIndex[m_MultiGraphic - 1];
+	CIndexMulti &index = g_Orion.m_MultiDataIndex[MultiGraphic - 1];
 
 	int count = (int)index.Count;
 

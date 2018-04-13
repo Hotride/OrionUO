@@ -20,8 +20,8 @@ CServer::CServer()
 }
 //----------------------------------------------------------------------------------
 CServer::CServer(const ushort &index, const string &name, const uchar &fullPercent, const uchar &timezone, const uint &ip, const bool &selected)
-: m_Index(index), m_Name(name), m_FullPercent(fullPercent), m_Timezone(timezone),
-m_IP(ip), m_Selected(selected)
+: Index(index), Name(name), FullPercent(fullPercent), Timezone(timezone),
+IP(ip), Selected(selected)
 {
 }
 //----------------------------------------------------------------------------------

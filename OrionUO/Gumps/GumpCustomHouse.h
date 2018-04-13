@@ -68,24 +68,25 @@ enum CUSTOM_HOUSE_VALIDATE_CHECK_FLAGS
 //----------------------------------------------------------------------------------
 class CGumpCustomHouse : public CGump
 {
-	SETGET(CUSTOM_HOUSE_GUMP_STATE, State, CHGS_WALL);
-	SETGET(int, Category, -1);
-	SETGET(int, MaxPage, 1);
-	SETGET(ushort, SelectedGraphic, 0);
-	SETGET(int, CurrentFloor, 1);
-	SETGET(int, FloorCount, 4);
-	SETGET(int, RoofZ, 1);
-	SETGET(int, MinHouseZ, -120);
-	SETGET(int, Components, 0);
-	SETGET(int, Fixtures, 0);
-	SETGET(int, MaxComponents, 0);
-	SETGET(int, MaxFixtures, 0);
-	SETGET(bool, Erasing, false);
-	SETGET(bool, SeekTile, false);
-	SETGET(bool, ShowWindow, false);
-	SETGET(bool, CombinedStair, false);
-	SETGET(WISP_GEOMETRY::CPoint2Di, StartPos, WISP_GEOMETRY::CPoint2Di());
-	SETGET(WISP_GEOMETRY::CPoint2Di, EndPos, WISP_GEOMETRY::CPoint2Di());
+public:
+	CUSTOM_HOUSE_GUMP_STATE State = CHGS_WALL;
+	int Category = -1;
+	int MaxPage = 1;
+	ushort SelectedGraphic = 0;
+	int CurrentFloor = 1;
+	int FloorCount = 4;
+	int RoofZ = 1;
+	int MinHouseZ = -120;
+	int Components = 0;
+	int Fixtures = 0;
+	int MaxComponents = 0;
+	int MaxFixtures = 0;
+	bool Erasing = false;
+	bool SeekTile = false;
+	bool ShowWindow = false;
+	bool CombinedStair = false;
+	WISP_GEOMETRY::CPoint2Di StartPos = WISP_GEOMETRY::CPoint2Di();
+	WISP_GEOMETRY::CPoint2Di EndPos = WISP_GEOMETRY::CPoint2Di();
 
 private:
 	vector<CCustomHouseObjectWallCategory> m_Walls;

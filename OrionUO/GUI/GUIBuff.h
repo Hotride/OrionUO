@@ -14,22 +14,22 @@
 //----------------------------------------------------------------------------------
 class CGUIBuff : public CGUIDrawObject
 {
+public:
 	//!Время жизни
-	SETGET(uint, Timer, 0);
+	uint Timer = 0;
 
 	//!Текст баффа для отображения
-	SETGET(wstring, Text, L"");
+	wstring Text = L"";
 
 	//!Таймер всплывающей подсказки
-	SETGET(uint, TooltipTimer, 0);
+	uint TooltipTimer = 0;
 
 	//!Флаг для уменьшения альфа-канала
-	SETGET(bool, DecAlpha, true);
+	bool DecAlpha = true;
 
 	//!Текущее значение альфа-канала
-	SETGET(uchar, Alpha, 0xFF);
+	uchar Alpha = 0xFF;
 
-public:
 	CGUIBuff(const ushort &graphic, const uint &timer, const wstring &text);
 	virtual ~CGUIBuff();
 

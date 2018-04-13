@@ -94,15 +94,16 @@ typedef vector<HTML_DATA_INFO> HTMLINFO_LIST;
 //!Класс менеджера шрифтов
 class CFontsManager
 {
-	SETGET(bool, RecalculateWidthByInfo, false);
-	SETGET(bool, UnusePartialHue, false);
+public:
+	bool RecalculateWidthByInfo = false;
+	bool UnusePartialHue = false;
 
 	//!Количество ASCII ширфтов
-	SETGET(int, FontCount, 0);
+	int FontCount = 0;
 
 private:
 	//!Список ASCII шрифтов
-	FONT_DATA *m_Font{ NULL };
+	FONT_DATA *Font{ NULL };
 
 	//!Список ссылок
 	WEBLINK_MAP m_WebLink;

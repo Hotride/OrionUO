@@ -15,7 +15,8 @@ typedef map<uint, CGameObject*> WORLD_MAP;
 //!Класс игрового мира
 class CGameWorld
 {
-	SETGET(uint, ObjectToRemove, 0);
+public:
+	uint ObjectToRemove = 0;
 
 private:
 	/*!

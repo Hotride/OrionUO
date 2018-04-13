@@ -69,15 +69,16 @@ extern DRAW_TEXTURE_RESIZEPIC_FUNCTION g_GL_DrawResizepic_Ptr;
 //----------------------------------------------------------------------------------
 class CGLEngine
 {
-	SETGET(HDC, DC, 0);
-	SETGET(HGLRC, RC, 0);
-	SETGET(GLuint, OldTexture, 0);
-	SETGET(bool, Drawing, false);
-	SETGET(bool, CanUseFrameBuffer, false);
-	SETGET(bool, CanUseBuffer, false);
-	SETGET(float, SittingCharacterOffset, 8.0f);
-	SETGET(GLuint, PositionBuffer, 0);
-	SETGET(bool, IgnoreHitMap, false);
+public:
+	HDC DC = 0;
+	HGLRC RC = 0;
+	GLuint OldTexture = 0;
+	bool Drawing = false;
+	bool CanUseFrameBuffer = false;
+	bool CanUseBuffer = false;
+	float SittingCharacterOffset = 8.0f;
+	GLuint PositionBuffer = 0;
+	bool IgnoreHitMap = false;
 
 private:
 	bool GLSetupPixelFormat();

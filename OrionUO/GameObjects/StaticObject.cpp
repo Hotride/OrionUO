@@ -15,7 +15,7 @@ CStaticObject::CStaticObject(const uint &serial, const ushort &graphic, const us
 : CRenderStaticObject(ROT_STATIC_OBJECT, serial, graphic, color, x, y, z)
 {
 	WISPFUN_DEBUG("c28_f1");
-	m_OriginalGraphic = graphic;
+	OriginalGraphic = graphic;
 	UpdateGraphicBySeason();
 
 	//if (!color)
@@ -31,27 +31,27 @@ CStaticObject::CStaticObject(const uint &serial, const ushort &graphic, const us
 void CStaticObject::UpdateGraphicBySeason()
 {
 	WISPFUN_DEBUG("c28_f2");
-	//ushort graphic = m_Graphic;
+	//ushort graphic = Graphic;
 
-	m_Graphic = g_Orion.GetSeasonGraphic(m_OriginalGraphic);
+	Graphic = g_Orion.GetSeasonGraphic(OriginalGraphic);
 
-	//if (m_Graphic != graphic)
+	//if (Graphic != graphic)
 	{
-		m_Vegetation = g_Orion.IsVegetation(m_Graphic);
+		Vegetation = g_Orion.IsVegetation(Graphic);
 	}
 
-	m_NoDrawTile = IsNoDrawTile(m_Graphic);
+	NoDrawTile = IsNoDrawTile(Graphic);
 }
 //----------------------------------------------------------------------------------
 void CStaticObject::Draw(const int &x, const int &y)
 {
 	WISPFUN_DEBUG("c28_f3");
-	m_RenderGraphic = m_Graphic;
+	RenderGraphic = Graphic;
 
 	if (g_DeveloperMode == DM_DEBUGGING && g_SelectedObject.Object == this)
-		m_RenderColor = SELECT_STATIC_COLOR;
+		RenderColor = SELECT_STATIC_COLOR;
 	else
-		m_RenderColor = m_Color;
+		RenderColor = Color;
 
 	CRenderStaticObject::Draw(x, y);
 }
@@ -59,7 +59,7 @@ void CStaticObject::Draw(const int &x, const int &y)
 void CStaticObject::Select(const int &x, const int &y)
 {
 	WISPFUN_DEBUG("c28_f4");
-	m_RenderGraphic = m_Graphic;
+	RenderGraphic = Graphic;
 
 	CRenderStaticObject::Select(x, y);
 }

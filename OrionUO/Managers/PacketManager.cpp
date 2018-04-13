@@ -301,12 +301,12 @@ CPacketManager::~CPacketManager()
 bool CPacketManager::AutoLoginNameExists(const string &name)
 {
 	WISPFUN_DEBUG("c150_f1");
-	if (!m_AutoLoginNames.length())
+	if (!AutoLoginNames.length())
 		return false;
 
 	string search = string("|") + name + "|";
 	
-	return (m_AutoLoginNames.find(search) != string::npos);
+	return (AutoLoginNames.find(search) != string::npos);
 }
 //----------------------------------------------------------------------------------
 #define CV_PRINT 0
@@ -561,9 +561,9 @@ void CPacketManager::OnPacket()
 {
 	WISPFUN_DEBUG("c150_f8");
 	uint ticks = g_Ticks;
-	g_TotalRecvSize += (uint)m_Size;
+	g_TotalRecvSize += (uint)Size;
 
-	CPacketInfo &info = m_Packets[*m_Start];
+	CPacketInfo &info = m_Packets[*Start];
 
 	if (info.save)
 	{
@@ -574,22 +574,22 @@ void CPacketManager::OnPacket()
 		time(&rawtime);
 		localtime_s(&timeinfo, &rawtime);
 		strftime(buffer, sizeof(buffer), "%d-%m-%Y %H:%M:%S", &timeinfo);
-		LOG("--- ^(%d) r(+%d => %d) %s Server:: %s\n", ticks - g_LastPacketTime, m_Size, g_TotalRecvSize, buffer, info.Name);
-		LOG_DUMP(m_Start, (int)m_Size);
+		LOG("--- ^(%d) r(+%d => %d) %s Server:: %s\n", ticks - g_LastPacketTime, Size, g_TotalRecvSize, buffer, info.Name);
+		LOG_DUMP(Start, (int)Size);
 	}
 
 	g_LastPacketTime = ticks;
 
 	if (info.Direction != DIR_RECV && info.Direction != DIR_BOTH)
-		LOG("message direction invalid: 0x%02X\n", *m_Start);
-	else if (g_PluginManager.PacketRecv(m_Start, (int)m_Size))
+		LOG("message direction invalid: 0x%02X\n", *Start);
+	else if (g_PluginManager.PacketRecv(Start, (int)Size))
 	{
 		if (info.Handler != 0)
 		{
-			m_Ptr = m_Start + 1;
+			Ptr = Start + 1;
 
 			if (!info.Size)
-				m_Ptr += 2;
+				Ptr += 2;
 
 			(this->*(info.Handler))();
 		}
@@ -630,12 +630,12 @@ void CPacketManager::PluginReceiveHandler(puchar buf, const int &size)
 	SetData(buf, size);
 
 	uint ticks = g_Ticks;
-	g_TotalRecvSize += (uint)m_Size;
+	g_TotalRecvSize += (uint)Size;
 
-	CPacketInfo &info = m_Packets[*m_Start];
+	CPacketInfo &info = m_Packets[*Start];
 
-	LOG("--- ^(%d) r(+%d => %d) Plugin->Client:: %s\n", ticks - g_LastPacketTime, m_Size, g_TotalRecvSize, info.Name);
-	LOG_DUMP(m_Start, (int)m_Size);
+	LOG("--- ^(%d) r(+%d => %d) Plugin->Client:: %s\n", ticks - g_LastPacketTime, Size, g_TotalRecvSize, info.Name);
+	LOG_DUMP(Start, (int)Size);
 
 	g_LastPacketTime = ticks;
 
@@ -643,10 +643,10 @@ void CPacketManager::PluginReceiveHandler(puchar buf, const int &size)
 		LOG("message direction invalid: 0x%02X\n", *buf);
 	else if (info.Handler != 0)
 	{
-		m_Ptr = m_Start + 1;
+		Ptr = Start + 1;
 
 		if (!info.Size)
-			m_Ptr += 2;
+			Ptr += 2;
 
 		(this->*(info.Handler))();
 	}
@@ -676,13 +676,13 @@ PACKET_HANDLER(RelayServer)
 	WISPFUN_DEBUG("c150_f14");
 	memset(&g_SelectedCharName[0], 0, sizeof(g_SelectedCharName));
 	in_addr addr;
-	puint paddr = (puint)m_Ptr;
+	puint paddr = (puint)Ptr;
 	Move(4);
 	addr.S_un.S_addr = *paddr;
 	char relayIP[30] = { 0 };
 	memcpy(&relayIP[0], inet_ntoa(addr), 29);
 	int relayPort = ReadUInt16BE();
-	g_Orion.RelayServer(relayIP, relayPort, m_Ptr);
+	g_Orion.RelayServer(relayIP, relayPort, Ptr);
 	g_PacketLoginComplete = false;
 	g_CurrentMap = 0;
 }
@@ -704,8 +704,8 @@ PACKET_HANDLER(CharacterList)
 
 			city->LocationIndex = ReadUInt8();
 
-			city->SetName(ReadString(32));
-			city->SetArea(ReadString(32));
+			city->Name = ReadString(32);
+			city->Area = ReadString(32);
 
 			city->X = ReadUInt32BE();
 			city->Y = ReadUInt32BE();
@@ -752,7 +752,7 @@ PACKET_HANDLER(ResendCharacterList)
 	g_Orion.InitScreen(GS_CHARACTER);
 
 	int numSlots = ReadInt8();
-	if (*m_Start == 0x86)
+	if (*Start == 0x86)
 		LOG("/======Resend chars===\n");
 	else
 		LOG("/======Chars===\n");
@@ -811,7 +811,7 @@ PACKET_HANDLER(ResendCharacterList)
 			g_Orion.CharacterSelection(autoPos);
 	}
 
-	if (*m_Start == 0x86)
+	if (*Start == 0x86)
 		g_CharacterListScreen.UpdateContent();
 
 	if (!haveCharacter)
@@ -838,7 +838,7 @@ PACKET_HANDLER(EnterWorld)
 {
 	WISPFUN_DEBUG("c150_f19");
 	uint serial = ReadUInt32BE();
-	m_ConfigSerial = serial;
+	ConfigSerial = serial;
 	bool loadConfig = false;
 
 	if (g_World != NULL)
@@ -846,7 +846,7 @@ PACKET_HANDLER(EnterWorld)
 		LOG("Warning!!! Duplicate enter world message\n");
 
 		g_Orion.SaveLocalConfig(g_PacketManager.ConfigSerial);
-		m_ConfigSerial = g_PlayerSerial;
+		ConfigSerial = g_PlayerSerial;
 		g_ConfigLoaded = false;
 		loadConfig = true;
 	}
@@ -889,7 +889,7 @@ PACKET_HANDLER(EnterWorld)
 	g_MapManager.Init();
 	g_MapManager.AddRender(g_Player);
 
-	g_Orion.LoadStartupConfig(m_ConfigSerial);
+	g_Orion.LoadStartupConfig(ConfigSerial);
 
 	g_LastSpellIndex = 1;
 	g_LastSkillIndex = 1;
@@ -1009,7 +1009,7 @@ PACKET_HANDLER(NewHealthbarUpdate)
 	if (g_World == NULL)
 		return;
 
-	if (*m_Start == 0x16 && m_ClientVersion < CV_500A)
+	if (*Start == 0x16 && m_ClientVersion < CV_500A)
 		return;
 
 	uint serial = ReadUInt32BE();
@@ -1330,7 +1330,7 @@ PACKET_HANDLER(UpdateItemSA)
 
 	if (serial != g_PlayerSerial)
 		g_World->UpdateGameObject(serial, graphic, graphicIncrement, count, x, y, z, direction, color, flags, unknown, updateType, unknown2);
-	else if (*m_Start == 0xF7) //из пакета 0xF7 для игрока определенная обработка
+	else if (*Start == 0xF7) //из пакета 0xF7 для игрока определенная обработка
 		g_World->UpdatePlayer(serial, graphic, graphicIncrement, color, flags, x, y, 0/*serverID*/, direction, z);
 }
 //---------------------------------------------------------------------------
@@ -1387,7 +1387,7 @@ PACKET_HANDLER(UpdateObject)
 		g_GumpManager.UpdateContent(serial, 0, GT_PAPERDOLL);
 	}
 
-	if (*m_Start != 0x78)
+	if (*Start != 0x78)
 		Move(6);
 
 	uint itemSerial = ReadUInt32BE();
@@ -2385,9 +2385,9 @@ PACKET_HANDLER(ExtendedCommand)
 				str += L"[Unidentified";
 
 			// -4 потому что последние 4 байта в пакете 0xFFFFFFFF
-			puchar end = m_Start + m_Size - 4;
+			puchar end = Start + Size - 4;
 			uchar count = 0;
-			while (m_Ptr < end)
+			while (Ptr < end)
 			{
 				if (count != 0 || next == 0xFFFFFFFD || next == 0xFFFFFFFC)
 					next = ReadInt32BE();
@@ -2658,7 +2658,7 @@ PACKET_HANDLER(ExtendedCommand)
 				text->Serial = serial;
 				text->Color = (serial == g_PlayerSerial ? 0x0034 : 0x0021);
 				text->Type = TT_OBJECT;
-				text->SetText(std::to_string(damage));
+				text->Text = std::to_string(damage);
 				text->GenerateTexture(0);
 				text->X = text->m_Texture.Width / 2;
 				int height = text->m_Texture.Height;
@@ -2778,9 +2778,9 @@ PACKET_HANDLER(Talk)
 			string name(ReadString(0));
 			string str = "";
 
-			if (m_Size > 44)
+			if (Size > 44)
 			{
-				m_Ptr = m_Start + 44;
+				Ptr = Start + 44;
 				g_ConnectionScreen.ConnectionFailed = true;
 				g_ConnectionScreen.Message = ReadString(0);
 			}
@@ -2815,9 +2815,9 @@ PACKET_HANDLER(Talk)
 
 	string str = "";
 
-	if (m_Size > 44)
+	if (Size > 44)
 	{
-		m_Ptr = m_Start + 44;
+		Ptr = Start + 44;
 		str = ReadString(0);
 	}
 
@@ -2875,11 +2875,11 @@ PACKET_HANDLER(UnicodeTalk)
 
 			string name(ReadString(0));
 
-			if (m_Size > 48)
+			if (Size > 48)
 			{
-				m_Ptr = m_Start + 48;
+				Ptr = Start + 48;
 				g_ConnectionScreen.ConnectionFailed = true;
-				g_ConnectionScreen.Message = ToString(ReadWString((m_Size - 48) / 2));
+				g_ConnectionScreen.Message = ToString(ReadWString((Size - 48) / 2));
 			}
 		}
 
@@ -2910,10 +2910,10 @@ PACKET_HANDLER(UnicodeTalk)
 
 	wstring str = L"";
 
-	if (m_Size > 48)
+	if (Size > 48)
 	{
-		m_Ptr = m_Start + 48;
-		str = ReadWString((m_Size - 48) / 2);
+		Ptr = Start + 48;
+		str = ReadWString((Size - 48) / 2);
 	}
 
 	LOG("%s: %s\n", name.c_str(), ToString(str).c_str());
@@ -2973,25 +2973,25 @@ PACKET_HANDLER(ClientTalk)
 	{
 		bool parse = true;
 
-		if (m_Start[4] == 0x78)
+		if (Start[4] == 0x78)
 		{
-			m_Size = ReadInt16BE(2);
-			m_Start += 4;
+			Size = ReadInt16BE(2);
+			Start += 4;
 		}
-		else if (m_Start[4] == 0x3C)
+		else if (Start[4] == 0x3C)
 		{
-			m_Size = ReadInt16BE(2);
-			m_Start += 4;
+			Size = ReadInt16BE(2);
+			Start += 4;
 		}
-		else if (m_Start[4] == 0x25)
+		else if (Start[4] == 0x25)
 		{
-			m_Size = 0x14;
-			m_Start += 4;
+			Size = 0x14;
+			Start += 4;
 		}
-		else if (m_Start[4] == 0x2E)
+		else if (Start[4] == 0x2E)
 		{
-			m_Size = 0x0F;
-			m_Start += 4;
+			Size = 0x0F;
+			Start += 4;
 		}
 		else
 			parse = false;
@@ -3025,7 +3025,7 @@ PACKET_HANDLER(GraphicEffect)
 
 	if (type > 3)
 	{
-		if (type == 4 && *m_Start == 0x70)
+		if (type == 4 && *Start == 0x70)
 		{
 			Move(8);
 			ushort val = ReadInt16BE();
@@ -3058,13 +3058,13 @@ PACKET_HANDLER(GraphicEffect)
 	uint color = 0;
 	uint renderMode = 0;
 
-	if (*m_Start != 0x70)
+	if (*Start != 0x70)
 	{
 		//0xC0
 		color = ReadUInt32BE();
 		renderMode = ReadUInt32BE() % 7;
 
-		if (*m_Start == 0xC7)
+		if (*Start == 0xC7)
 		{
 			/*
 			0000: c7 03 00 13 82 2f 00 00 00 00 37 6a 05 d6 06 47 : ...../....7j...G
@@ -3299,11 +3299,11 @@ PACKET_HANDLER(CorpseEquipment)
 
 	uint cserial = ReadUInt32BE();
 
-	puchar end = m_Start + m_Size;
+	puchar end = Start + Size;
 
 	int layer = ReadUInt8();
 
-	while (layer && m_Ptr < end)
+	while (layer && Ptr < end)
 	{
 		uint serial = ReadUInt32BE();
 
@@ -3323,7 +3323,7 @@ PACKET_HANDLER(ASCIIPrompt)
 		return;
 
 	g_ConsolePrompt = PT_ASCII;
-	memcpy(&g_LastASCIIPrompt[0], &m_Start[0], 11);
+	memcpy(&g_LastASCIIPrompt[0], &Start[0], 11);
 }
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(UnicodePrompt)
@@ -3333,7 +3333,7 @@ PACKET_HANDLER(UnicodePrompt)
 		return;
 
 	g_ConsolePrompt = PT_UNICODE;
-	memcpy(&g_LastUnicodePrompt[0], &m_Start[0], 11);
+	memcpy(&g_LastUnicodePrompt[0], &Start[0], 11);
 }
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(CharacterAnimation)
@@ -3531,16 +3531,16 @@ PACKET_HANDLER(DisplayClilocString)
 
 	uchar flags = 0;
 
-	if (*m_Start == 0xCC)
+	if (*Start == 0xCC)
 		flags = ReadUInt8();
 
 	string name = ReadString(30).c_str();
 
 	wstring affix = L"";
-	if (*m_Start == 0xCC)
+	if (*Start == 0xCC)
 		affix = DecodeUTF8(ReadString()).c_str();
 
-	wstring message = g_ClilocManager.ParseArgumentsToClilocString(cliloc, false, (wchar_t*)m_Ptr).c_str();
+	wstring message = g_ClilocManager.ParseArgumentsToClilocString(cliloc, false, (wchar_t*)Ptr).c_str();
 	message += affix;
 
 	CGameObject *obj = g_World->FindWorldObject(serial);
@@ -3591,11 +3591,11 @@ PACKET_HANDLER(MegaCliloc)
 	Move(2);
 	uint clilocRevision = ReadUInt32BE();
 
-	puchar end = m_Start + m_Size;
+	puchar end = Start + Size;
 
 	WSTRING_LIST list;
 
-	while (m_Ptr < end)
+	while (Ptr < end)
 	{
 		uint cliloc = ReadUInt32BE();
 
@@ -3743,7 +3743,7 @@ PACKET_HANDLER(Damage)
 		text->Serial = serial;
 		text->Color = (serial == g_PlayerSerial ? 0x0034 : 0x0021);
 		text->Type = TT_OBJECT;
-		text->SetText(std::to_string(damage));
+		text->Text = std::to_string(damage);
 		text->GenerateTexture(0);
 		text->X = text->m_Texture.Width / 2;
 		int height = text->m_Texture.Height;
@@ -3975,7 +3975,7 @@ PACKET_HANDLER(SecureTrading)
 				obj->Clear();
 		}
 
-		if (hasName && *m_Ptr)
+		if (hasName && *Ptr)
 			gump->Text = ReadString(0);
 
 		g_GumpManager.AddGump(gump);
@@ -4039,7 +4039,7 @@ PACKET_HANDLER(OpenMenu)
 
 	uchar count = ReadUInt8();
 
-	if (unpack16(m_Ptr)) //menu
+	if (unpack16(Ptr)) //menu
 	{
 		CGumpMenu *gump = new CGumpMenu(serial, id, 0, 0);
 
@@ -4707,7 +4707,7 @@ PACKET_HANDLER(OpenCompressedGump)
 
 		return;
 	}
-	else if ((int)(28 + cLen) > m_Size)
+	else if ((int)(28 + cLen) > Size)
 	{
 		LOG("Server Sends bad Compressed Gumpdata!\n");
 
@@ -4718,7 +4718,7 @@ PACKET_HANDLER(OpenCompressedGump)
 	UCHAR_LIST decLayoutData(dLen);
 	LOG("Gump layout:\n\tSenderID=0x%08X\n\tGumpID=0x%08X\n\tCLen=%d\n\tDLen=%d\nDecompressing layout gump data...\n", senderID, gumpID, cLen, dLen);
 
-	int z_err = uncompress(&decLayoutData[0], &dLen, m_Ptr, cLen);
+	int z_err = uncompress(&decLayoutData[0], &dLen, Ptr, cLen);
 
 	if (z_err != Z_OK)
 	{
@@ -4746,7 +4746,7 @@ PACKET_HANDLER(OpenCompressedGump)
 
 		LOG("Decompressing text gump data...\n");
 
-		z_err = uncompress(&gumpDecText[0], &dTLen, m_Ptr, cTLen);
+		z_err = uncompress(&gumpDecText[0], &dTLen, Ptr, cTLen);
 
 		if (z_err != Z_OK)
 		{
@@ -4779,9 +4779,9 @@ PACKET_HANDLER(OpenCompressedGump)
 
 	LOG("Gump decompressed! newsize=%d\n", newsize);
 
-	m_Size = newsize;
-	m_Start = newbuf;
-	m_End = m_Start + m_Size;
+	Size = newsize;
+	Start = newbuf;
+	End = Start + Size;
 
 	OnPacket();
 }
@@ -4823,11 +4823,11 @@ PACKET_HANDLER(DisplayMap)
 
 	CGumpMap *gump = new CGumpMap(serial, gumpid, startX, startY, endX, endY, width, height);
 
-	if (*m_Start == 0xF5 || m_ClientVersion >= CV_308Z) //308z или выше?
+	if (*Start == 0xF5 || m_ClientVersion >= CV_308Z) //308z или выше?
 	{
 		ushort facet = 0;
 
-		if (*m_Start == 0xF5)
+		if (*Start == 0xF5)
 			facet = ReadUInt16BE();
 
 		g_MultiMap.LoadFacet(gump, gump->m_Texture, facet);
@@ -5435,7 +5435,7 @@ PACKET_HANDLER(CustomHouse)
 			continue;
 
 		UCHAR_LIST decompressedBytes(dLen);
-		int z_err = uncompress(&decompressedBytes[0], &dLen, m_Ptr, cLen);
+		int z_err = uncompress(&decompressedBytes[0], &dLen, Ptr, cLen);
 
 		if (z_err != Z_OK)
 		{

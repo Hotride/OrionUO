@@ -27,14 +27,14 @@ CGumpRacialAbility::~CGumpRacialAbility()
 void CGumpRacialAbility::InitToolTip()
 {
 	WISPFUN_DEBUG("c111_f2");
-	g_ToolTip.Set(g_ClilocManager.Cliloc(g_Language)->GetW(1112198 + (m_Serial - 0x5DD0), true), 200);
+	g_ToolTip.Set(g_ClilocManager.Cliloc(g_Language)->GetW(1112198 + (Serial - 0x5DD0), true), 200);
 }
 //----------------------------------------------------------------------------------
 void CGumpRacialAbility::GUMP_BUTTON_EVENT_C
 {
 	WISPFUN_DEBUG("c111_f3");
 	if (serial == ID_GS_LOCK_MOVING)
-		m_LockMoving = !m_LockMoving;
+		LockMoving = !LockMoving;
 }
 //----------------------------------------------------------------------------------
 void CGumpRacialAbility::OnAbilityUse(const ushort &index)
@@ -57,7 +57,7 @@ void CGumpRacialAbility::OnAbilityUse(const ushort &index)
 bool CGumpRacialAbility::OnLeftMouseButtonDoubleClick()
 {
 	WISPFUN_DEBUG("c111_f5");
-	OnAbilityUse((ushort)m_Serial);
+	OnAbilityUse((ushort)Serial);
 
 	return true;
 }

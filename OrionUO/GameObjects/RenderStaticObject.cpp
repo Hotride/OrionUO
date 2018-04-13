@@ -18,20 +18,20 @@ CRenderStaticObject::CRenderStaticObject(const RENDER_OBJECT_TYPE &renderType, c
 	m_TiledataPtr = &g_Orion.m_StaticData[graphic];
 
 	if (m_TiledataPtr->Height > 5)
-		m_CanBeTransparent = 1;
+		CanBeTransparent = 1;
 	else if (IsRoof() || (IsSurface() && IsBackground()) || IsWall())
-		m_CanBeTransparent = 1;
+		CanBeTransparent = 1;
 	else if (m_TiledataPtr->Height == 5 && IsSurface() && !IsBackground())
-		m_CanBeTransparent = 1;
+		CanBeTransparent = 1;
 	else
-		m_CanBeTransparent = 0;
+		CanBeTransparent = 0;
 
 	if (renderType == ROT_GAME_OBJECT)
 	{
 		m_TextControl = new CTextContainer(5);
 
 		if (IsSurface() || (IsBackground() && IsUnknown2()))
-			m_CanBeTransparent |= 0x10;
+			CanBeTransparent |= 0x10;
 	}
 	else
 	{
@@ -44,7 +44,7 @@ CRenderStaticObject::CRenderStaticObject(const RENDER_OBJECT_TYPE &renderType, c
 		m_TextControl = new CTextContainer(1);
 
 		if (IsSurface() || (IsBackground() && IsUnknown2()) || IsRoof())
-			m_CanBeTransparent |= 0x10;
+			CanBeTransparent |= 0x10;
 	}
 }
 //---------------------------------------------------------------------------
@@ -79,7 +79,7 @@ void CRenderStaticObject::UpdateTextCoordinates()
 	}
 	else
 	{
-		int y = m_DrawY - (m_TiledataPtr->Height + 20);
+		int y = DrawY - (m_TiledataPtr->Height + 20);
 
 		for (CTextData *item = (CTextData*)m_TextControl->Last(); item != NULL; item = (CTextData*)item->m_Prev)
 		{
@@ -90,7 +90,7 @@ void CRenderStaticObject::UpdateTextCoordinates()
 
 			offset += text.m_Texture.Height;
 
-			text.RealDrawX = m_DrawX - (text.m_Texture.Width / 2);
+			text.RealDrawX = DrawX - (text.m_Texture.Width / 2);
 			text.RealDrawY = y - offset;
 		}
 	}
@@ -185,9 +185,9 @@ void CRenderStaticObject::Draw(const int &x, const int &y)
 	}
 
 	if (g_UseCircleTrans)
-		g_Orion.DrawStaticArtAnimatedTransparent(m_RenderGraphic, m_RenderColor, x, y);
+		g_Orion.DrawStaticArtAnimatedTransparent(RenderGraphic, RenderColor, x, y);
 	else
-		g_Orion.DrawStaticArtAnimated(m_RenderGraphic, m_RenderColor, x, y);
+		g_Orion.DrawStaticArtAnimated(RenderGraphic, RenderColor, x, y);
 
 	if (useAlpha)
 	{
@@ -208,7 +208,7 @@ void CRenderStaticObject::Select(const int &x, const int &y)
 			return;
 	}
 
-	if (!g_UseCircleTrans && g_Orion.StaticPixelsInXYAnimated(m_RenderGraphic, x, y))
+	if (!g_UseCircleTrans && g_Orion.StaticPixelsInXYAnimated(RenderGraphic, x, y))
 		g_SelectedObject.Init(this);
 }
 //---------------------------------------------------------------------------
@@ -219,7 +219,7 @@ void CRenderStaticObject::AddText(CTextData *msg)
 	{
 		msg->Owner = this;
 		m_TextControl->Add(msg);
-		m_Changed = true;
+		Changed = true;
 
 		g_Orion.AddJournalMessage(msg, "You see: ");
 	}
@@ -249,7 +249,7 @@ bool CRenderStaticObject::TranparentTest(const int &playerZPlus5)
 
 	if (m_Z <= playerZPlus5 - m_TiledataPtr->Height)
 		result = false;
-	else if (playerZPlus5 < m_Z && !(m_CanBeTransparent & 0xF))
+	else if (playerZPlus5 < m_Z && !(CanBeTransparent & 0xF))
 		result = false;
 
 	return result;
@@ -262,7 +262,7 @@ bool CRenderStaticObject::CheckDrawFoliage()
 		if (g_Season < ST_WINTER)
 		{
 			if (g_ConfigManager.DrawStumps)
-				return g_Orion.InTileFilter(m_Graphic);
+				return g_Orion.InTileFilter(Graphic);
 
 			return true;
 		}
@@ -275,8 +275,8 @@ bool CRenderStaticObject::CheckDrawFoliage()
 //---------------------------------------------------------------------------
 bool CRenderStaticObject::CheckDrawVegetation()
 {
-	if (g_ConfigManager.NoVegetation && m_Vegetation)
-		return g_Orion.InTileFilter(m_Graphic);
+	if (g_ConfigManager.NoVegetation && Vegetation)
+		return g_Orion.InTileFilter(Graphic);
 
 	return true;
 }

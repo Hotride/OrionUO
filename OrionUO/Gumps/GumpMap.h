@@ -13,12 +13,12 @@
 class CGumpMap : public CGump
 {
 	SETGETE(int, PlotState, 0);
-	SETGET(int, StartX, 0);
-	SETGET(int, StartY, 0);
-	SETGET(int, EndX, 0);
-	SETGET(int, EndY, 0);
-	SETGET(int, Width, 0);
-	SETGET(int, Height, 0);
+	int StartX = 0;
+	int StartY = 0;
+	int EndX = 0;
+	int EndY = 0;
+	int Width = 0;
+	int Height = 0;
 
 private:
 	static const int ID_GM_PLOT_COURSE = 1;

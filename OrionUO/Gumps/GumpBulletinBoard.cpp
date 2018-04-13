@@ -69,7 +69,7 @@ CGumpBulletinBoard::CGumpBulletinBoard(uint serial, short x, short y, string nam
 CGumpBulletinBoard::~CGumpBulletinBoard()
 {
 	WISPFUN_DEBUG("c89_f2");
-	g_GumpManager.CloseGump(0xFFFFFFFF, m_Serial, GT_BULLETIN_BOARD_ITEM);
+	g_GumpManager.CloseGump(0xFFFFFFFF, Serial, GT_BULLETIN_BOARD_ITEM);
 }
 //----------------------------------------------------------------------------------
 void CGumpBulletinBoard::GUMP_BUTTON_EVENT_C
@@ -77,7 +77,7 @@ void CGumpBulletinBoard::GUMP_BUTTON_EVENT_C
 	WISPFUN_DEBUG("c89_f3");
 	if (serial == ID_GBB_POST_MESSAGE)
 	{
-		CGumpBulletinBoardItem *gump = new CGumpBulletinBoardItem(0, 0, 0, 0, m_Serial, ToWString(g_Player->Name), L"", L"Date/Time", L"");
+		CGumpBulletinBoardItem *gump = new CGumpBulletinBoardItem(0, 0, 0, 0, Serial, ToWString(g_Player->Name), L"", L"Date/Time", L"");
 
 		g_GumpManager.AddGump(gump);
 	}
@@ -94,7 +94,7 @@ bool CGumpBulletinBoard::OnLeftMouseButtonDoubleClick()
 
 		if (gui->Type == GOT_BB_OBJECT)
 		{
-			CPacketBulletinBoardRequestMessage(m_Serial, gui->Serial).Send();
+			CPacketBulletinBoardRequestMessage(Serial, gui->Serial).Send();
 
 			result = true;
 		}

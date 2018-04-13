@@ -68,8 +68,8 @@ void CContainerRect::Calculate(ushort gumpID)
 		//!Если выключено смещение - открываем гамп в правом верхнем углу клиента
 		if (!g_ConfigManager.OffsetInterfaceWindows)
 		{
-			m_X = m_DefaultX;
-			m_Y = m_DefaultY;
+			X = DefaultX;
+			Y = DefaultY;
 		}
 		else //!Или вычисляем смещение и открываем в результируемых координатах
 		{
@@ -79,26 +79,26 @@ void CContainerRect::Calculate(ushort gumpID)
 			IFOR(i, 0, 4 && !passed)
 			{
 				//!Пора изменять смещение по оси Y и обнулять по оси X
-				if (m_X + tex->Width + CONTAINERS_RECT_STEP > g_OrionWindow.Size.Width)
+				if (X + tex->Width + CONTAINERS_RECT_STEP > g_OrionWindow.Size.Width)
 				{
-					m_X = CONTAINERS_RECT_DEFAULT_POS;
+					X = CONTAINERS_RECT_DEFAULT_POS;
 
 					//!Если смещение по оси Y достигло максимума - выставим стандартное значение
-					if (m_Y + tex->Height + CONTAINERS_RECT_LINESTEP > g_OrionWindow.Size.Height)
-						m_Y = CONTAINERS_RECT_DEFAULT_POS;
+					if (Y + tex->Height + CONTAINERS_RECT_LINESTEP > g_OrionWindow.Size.Height)
+						Y = CONTAINERS_RECT_DEFAULT_POS;
 					else
-						m_Y += CONTAINERS_RECT_LINESTEP;
+						Y += CONTAINERS_RECT_LINESTEP;
 				}
 				//!Пора изменять смещение по оси X и обнулять по оси Y
-				else if (m_Y + tex->Height + CONTAINERS_RECT_STEP > g_OrionWindow.Size.Height)
+				else if (Y + tex->Height + CONTAINERS_RECT_STEP > g_OrionWindow.Size.Height)
 				{
 					//!Если смещение по оси X достигло максимума - выставим стандартное значение
-					if (m_X + tex->Width + CONTAINERS_RECT_LINESTEP > g_OrionWindow.Size.Width)
-						m_X = CONTAINERS_RECT_DEFAULT_POS;
+					if (X + tex->Width + CONTAINERS_RECT_LINESTEP > g_OrionWindow.Size.Width)
+						X = CONTAINERS_RECT_DEFAULT_POS;
 					else
-						m_X += CONTAINERS_RECT_LINESTEP;
+						X += CONTAINERS_RECT_LINESTEP;
 
-					m_Y = CONTAINERS_RECT_DEFAULT_POS;
+					Y = CONTAINERS_RECT_DEFAULT_POS;
 				}
 				else //!Все отлично, пропускаем дальше
 					passed = (int)i + 1;
@@ -108,8 +108,8 @@ void CContainerRect::Calculate(ushort gumpID)
 				MakeDefault();
 			else if (passed == 1) //!Прошло с 1 раза, можно изменить смещение
 			{
-				m_X += CONTAINERS_RECT_STEP;
-				m_Y += CONTAINERS_RECT_STEP;
+				X += CONTAINERS_RECT_STEP;
+				Y += CONTAINERS_RECT_STEP;
 			}
 		}
 	}

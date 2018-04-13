@@ -13,12 +13,13 @@
 //Класс обобщенного объекта группы статики
 class CRenderStaticObject : public CMapObject
 {
-	SETGET(char, FoliageTransparentIndex, -1);
-	SETGET(char, CanBeTransparent, 0);
-	SETGET(bool, Vegetation, false);
+public:
+	char FoliageTransparentIndex = -1;
+	char CanBeTransparent = 0;
+	bool Vegetation = false;
 
-	SETGET(ushort, RenderGraphic, 0);
-	SETGET(ushort, RenderColor, 0);
+	ushort RenderGraphic = 0;
+	ushort RenderColor = 0;
 
 protected:
 	//Указатель на структуру данных тайлдаты

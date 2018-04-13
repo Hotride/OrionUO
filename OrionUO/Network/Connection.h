@@ -13,13 +13,14 @@
 //!Класс менеджера подключения к серверу
 class CSocket : public WISP_NETWORK::CConnection
 {
-	SETGET(bool, GameSocket, false);
-	SETGET(bool, UseProxy, false);
-	SETGET(string, ProxyAddress, "");
-	SETGET(int, ProxyPort, 0);
-	SETGET(bool, ProxySocks5, false);
-	SETGET(string, ProxyAccount, "");
-	SETGET(string, ProxyPassword, "");
+public:
+	bool GameSocket = false;
+	bool UseProxy = false;
+	string ProxyAddress = "";
+	int ProxyPort = 0;
+	bool ProxySocks5 = false;
+	string ProxyAccount = "";
+	string ProxyPassword = "";
 
 private:
 	CDecompressingCopier m_Decompressor;

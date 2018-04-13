@@ -24,7 +24,7 @@ void CGLTextTexture::Clear()
 {
 	WISPFUN_DEBUG("c35_f1");
 	CGLTexture::Clear();
-	m_LinesCount = 0;
+	LinesCount = 0;
 }
 //----------------------------------------------------------------------------------
 void CGLTextTexture::Draw(const int &x, const int &y, const bool &checktrans)

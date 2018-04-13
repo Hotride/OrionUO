@@ -47,7 +47,7 @@ UCHAR_LIST CUopMappedFile::GetData(const CUopBlockHeader &block)
 
 	if (compressedSize && compressedSize != decompressedSize)
 	{
-		int z_err = uncompress(&result[0], &decompressedSize, m_Ptr, compressedSize);
+		int z_err = uncompress(&result[0], &decompressedSize, Ptr, compressedSize);
 
 		if (z_err != Z_OK)
 		{
@@ -56,7 +56,7 @@ UCHAR_LIST CUopMappedFile::GetData(const CUopBlockHeader &block)
 		}
 	}
 	else
-		memcpy(&result[0], &m_Ptr[0], decompressedSize);
+		memcpy(&result[0], &Ptr[0], decompressedSize);
 
 	return result;
 }
@@ -153,11 +153,11 @@ bool CFileManager::Load()
 			s = g_App.UOFilesPath("unifont.mul");
 
 		if (m_UnifontMul[i].Load(s))
-			m_UnicodeFontsCount++;
+			UnicodeFontsCount++;
 	}
 
-	if (m_UseVerdata && !m_VerdataMul.Load(g_App.UOFilesPath("verdata.mul")))
-		m_UseVerdata = false;
+	if (UseVerdata && !m_VerdataMul.Load(g_App.UOFilesPath("verdata.mul")))
+		UseVerdata = false;
 
 	return true;
 }
@@ -283,11 +283,11 @@ bool CFileManager::LoadWithUOP()
 			s = g_App.UOFilesPath("unifont.mul");
 
 		if (m_UnifontMul[i].Load(s))
-			m_UnicodeFontsCount++;
+			UnicodeFontsCount++;
 	}
 
-	if (m_UseVerdata && !m_VerdataMul.Load(g_App.UOFilesPath("verdata.mul")))
-		m_UseVerdata = false;
+	if (UseVerdata && !m_VerdataMul.Load(g_App.UOFilesPath("verdata.mul")))
+		UseVerdata = false;
 
 	return true;
 }

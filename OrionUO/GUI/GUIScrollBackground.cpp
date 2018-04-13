@@ -12,12 +12,12 @@
 #include "stdafx.h"
 //----------------------------------------------------------------------------------
 CGUIScrollBackground::CGUIScrollBackground(const uint &serial, const ushort &graphic, const int &x, const int &y, const int &height)
-: CBaseGUI(GOT_SCROLLBACKGROUND, serial, graphic, 0, x, y), m_Height(height)
+: CBaseGUI(GOT_SCROLLBACKGROUND, serial, graphic, 0, x, y), Height(height)
 {
 	WISPFUN_DEBUG("c71_f1");
-	m_OffsetX = 0;
-	m_BottomOffsetX = 0;
-	m_Width = 0;
+	OffsetX = 0;
+	BottomOffsetX = 0;
+	Width = 0;
 	int width = 0;
 
 	CGLTexture *th[4] = { NULL };
@@ -25,7 +25,7 @@ CGUIScrollBackground::CGUIScrollBackground(const uint &serial, const ushort &gra
 
 	IFOR(i, 0, 4)
 	{
-		th[i] = g_Orion.ExecuteGump(m_Graphic + (int)i);
+		th[i] = g_Orion.ExecuteGump(Graphic + (int)i);
 
 		if (th[i] != NULL)
 		{
@@ -38,13 +38,13 @@ CGUIScrollBackground::CGUIScrollBackground(const uint &serial, const ushort &gra
 
 	if (isValid)
 	{
-		m_OffsetX = (width - th[1]->Width) / 2;
+		OffsetX = (width - th[1]->Width) / 2;
 		int offset = th[0]->Width - th[3]->Width;
-		m_BottomOffsetX = (offset / 2) + (offset / 4);
-		m_Width = width; // m_OffsetX + th[3]->Width;
+		BottomOffsetX = (offset / 2) + (offset / 4);
+		Width = width; // m_OffsetX + th[3]->Width;
 	}
 
-	UpdateHeight(m_Height);
+	UpdateHeight(Height);
 }
 //----------------------------------------------------------------------------------
 CGUIScrollBackground::~CGUIScrollBackground()
@@ -54,25 +54,25 @@ CGUIScrollBackground::~CGUIScrollBackground()
 void CGUIScrollBackground::UpdateHeight(const int &height)
 {
 	WISPFUN_DEBUG("c71_f2");
-	m_Height = height;
+	Height = height;
 
 	CGLTexture *th[4] = { NULL };
 
 	IFOR(i, 0, 4)
 	{
-		th[i] = g_Orion.ExecuteGump(m_Graphic + (int)i);
+		th[i] = g_Orion.ExecuteGump(Graphic + (int)i);
 
 		if (th[i] == NULL)
 			return;
 	}
 
-	m_WorkSpace = WISP_GEOMETRY::CRect(m_OffsetX + 10, th[0]->Height, th[1]->Width - 20, m_Height - (th[0]->Height + th[3]->Height));
+	WorkSpace = WISP_GEOMETRY::CRect(OffsetX + 10, th[0]->Height, th[1]->Width - 20, Height - (th[0]->Height + th[3]->Height));
 }
 //----------------------------------------------------------------------------------
 void CGUIScrollBackground::PrepareTextures()
 {
 	WISPFUN_DEBUG("c71_f3");
-	g_Orion.ExecuteGumpPart(m_Graphic, 4);
+	g_Orion.ExecuteGumpPart(Graphic, 4);
 }
 //----------------------------------------------------------------------------------
 void CGUIScrollBackground::Draw(const bool &checktrans)
@@ -82,7 +82,7 @@ void CGUIScrollBackground::Draw(const bool &checktrans)
 
 	IFOR(i, 0, 4)
 	{
-		th[i] = g_Orion.ExecuteGump(m_Graphic + (int)i);
+		th[i] = g_Orion.ExecuteGump(Graphic + (int)i);
 
 		if (th[i] == NULL)
 			return;
@@ -91,9 +91,9 @@ void CGUIScrollBackground::Draw(const bool &checktrans)
 	th[0]->Draw(m_X, m_Y, checktrans); //Top scroll
 
 	int currentY = th[0]->Height;
-	int height = m_Height - th[3]->Height;
+	int height = Height - th[3]->Height;
 
-	int bodyX = m_X + m_OffsetX;
+	int bodyX = m_X + OffsetX;
 
 	bool exit = false;
 
@@ -118,7 +118,7 @@ void CGUIScrollBackground::Draw(const bool &checktrans)
 		}
 	}
 
-	th[3]->Draw(m_X + m_BottomOffsetX, m_Y + m_Height - th[3]->Height, checktrans); //Bottom scroll
+	th[3]->Draw(m_X + BottomOffsetX, m_Y + Height - th[3]->Height, checktrans); //Bottom scroll
 }
 //----------------------------------------------------------------------------------
 bool CGUIScrollBackground::Select()
@@ -127,10 +127,10 @@ bool CGUIScrollBackground::Select()
 	int x = g_MouseManager.Position.X - m_X;
 	int y = g_MouseManager.Position.Y - m_Y;
 
-	if (!(x >= 0 && y >= 0 && x < m_Width && y < m_Height))
+	if (!(x >= 0 && y >= 0 && x < Width && y < Height))
 		return false;
 
-	if (m_CheckPolygone)
+	if (CheckPolygone)
 		return true;
 
 	bool select = false;
@@ -139,7 +139,7 @@ bool CGUIScrollBackground::Select()
 
 	IFOR(i, 0, 4)
 	{
-		th[i] = g_Orion.ExecuteGump(m_Graphic + (int)i);
+		th[i] = g_Orion.ExecuteGump(Graphic + (int)i);
 
 		if (th[i] == NULL)
 			return false;
@@ -147,12 +147,12 @@ bool CGUIScrollBackground::Select()
 
 	y = m_Y;
 
-	select = g_Orion.GumpPixelsInXY(m_Graphic, m_X, y) || g_Orion.GumpPixelsInXY(m_Graphic + 3, m_X + m_BottomOffsetX, y + m_Height - th[3]->Height); //Top/Bottom scrolls
+	select = g_Orion.GumpPixelsInXY(Graphic, m_X, y) || g_Orion.GumpPixelsInXY(Graphic + 3, m_X + BottomOffsetX, y + Height - th[3]->Height); //Top/Bottom scrolls
 
-	x = m_X + m_OffsetX;
+	x = m_X + OffsetX;
 
 	int currentY = th[0]->Height;
-	int height = m_Height - th[3]->Height;
+	int height = Height - th[3]->Height;
 
 	while (!select)
 	{
@@ -163,12 +163,12 @@ bool CGUIScrollBackground::Select()
 			if (deltaHeight < th[i]->Height)
 			{
 				if (deltaHeight > 0)
-					select = g_Orion.GumpPixelsInXY(m_Graphic + (int)i, x, y + currentY, 0, deltaHeight);
+					select = g_Orion.GumpPixelsInXY(Graphic + (int)i, x, y + currentY, 0, deltaHeight);
 
 				return select;
 			}
 			else
-				select = g_Orion.GumpPixelsInXY(m_Graphic + (int)i, x, y + currentY);
+				select = g_Orion.GumpPixelsInXY(Graphic + (int)i, x, y + currentY);
 
 			currentY += th[i]->Height;
 		}

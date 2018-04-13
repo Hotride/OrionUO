@@ -13,10 +13,11 @@
 //Класс для работы с блоками карты 8х8
 class CMapBlock : public CBaseQueueItem
 {
-	SETGET(uint, Index, 0);
-	SETGET(uint, LastAccessTime, 0);
-	SETGET(short, X, 0);
-	SETGET(short, Y, 0);
+public:
+	uint Index = 0;
+	uint LastAccessTime = 0;
+	short X = 0;
+	short Y = 0;
 
 private:
 	//Получить Z координату ландшафта

@@ -13,50 +13,50 @@
 //!Структура данных с информацией о доступных координатах дропа предметов в гампы контейнеров
 class CContainerOffsetRect
 {
-	SETGET(int, MinX, 0);
-	SETGET(int, MinY, 0);
-	SETGET(int, MaxX, 0);
-	SETGET(int, MaxY, 0);
-
 public:
+	int MinX = 0;
+	int MinY = 0;
+	int MaxX = 0;
+	int MaxY = 0;
+
 	CContainerOffsetRect() {}
 	CContainerOffsetRect(const int &minX, const int &minY, const int &maxX, const int &maxY)
-		: m_MinX(minX), m_MinY(minY), m_MaxX(maxX), m_MaxY(maxY) {}
+		: MinX(minX), MinY(minY), MaxX(maxX), MaxY(maxY) {}
 	~CContainerOffsetRect() {}
 };
 //----------------------------------------------------------------------------------
 //!Информация о гампе и звуках контейнеров
 class CContainerOffset
 {
+public:
 	//!Индекс картинки гампа
-	SETGET(ushort, Gump, 0);
+	ushort Gump = 0;
 
 	//!Индекс звука открытия (0 - нет звука)
-	SETGET(ushort, OpenSound, 0);
+	ushort OpenSound = 0;
 
 	//!Индекс звука закрытия (0 - нет звука)
-	SETGET(ushort, CloseSound, 0);
+	ushort CloseSound = 0;
 
 	//!Координаты в гампе для дропа
-	SETGET(CContainerOffsetRect, Rect, CContainerOffsetRect());
+	CContainerOffsetRect Rect = CContainerOffsetRect();
 
-public:
 	CContainerOffset() {}
 	CContainerOffset(const ushort &gump, const ushort &openSound, const ushort &closeSound, const CContainerOffsetRect &rect)
-		: m_Gump(gump), m_OpenSound(openSound), m_CloseSound(closeSound), m_Rect(rect) {}
+		: Gump(gump), OpenSound(openSound), CloseSound(closeSound), Rect(rect) {}
 	~CContainerOffset() {}
 };
 //----------------------------------------------------------------------------------
 //!Класс для вычисления смещения открытия гампов контейнеров
 class CContainerRect
 {
-	SETGET(short, DefaultX, 40);
-	SETGET(short, DefaultY, 40);
-
-	SETGET(short, X, 40);
-	SETGET(short, Y, 40);
-
 public:
+	short DefaultX = 40;
+	short DefaultY = 40;
+
+	short X = 40;
+	short Y = 40;
+
 	CContainerRect() {}
 	~CContainerRect() {}
 
@@ -71,7 +71,7 @@ public:
 	Выставим параметры по-умолчанию
 	@return 
 	*/
-	void MakeDefault() { m_X = m_DefaultX; m_Y = m_DefaultY; }
+	void MakeDefault() { X = DefaultX; Y = DefaultY; }
 };
 //----------------------------------------------------------------------------------
 //!Данные о контейнерах

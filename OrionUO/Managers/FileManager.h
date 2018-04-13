@@ -12,24 +12,23 @@
 //----------------------------------------------------------------------------------
 class CUopBlockHeader
 {
-	SETGET(uint64, Offset, 0);
-	//SETGET(uint, HeaderSize, 0);
-	SETGET(uint, CompressedSize, 0);
-	SETGET(uint, DecompressedSize, 0);
-	//SETGET(uint64, Hash, 0);
-	//SETGET(uint, Unknown, 0);
-	//SETGET(ushort, Flags, 0);
-
 public:
+	uint64 Offset = 0;
+	//uint HeaderSize = 0;
+	uint CompressedSize = 0;
+	uint DecompressedSize = 0;
+	//uint64 Hash = 0;
+	//uint Unknown = 0;
+	//ushort Flags = 0;
+
 	CUopBlockHeader() {}
 	CUopBlockHeader(const uint64 &offset, const uint &headerSize, const uint &compresseSize, const uint &decompressedSize, const uint64 &Hash, const uint &unknown, const ushort &flags)
-	: m_Offset(offset), m_CompressedSize(compresseSize), m_DecompressedSize(decompressedSize) {}
+	: Offset(offset), CompressedSize(compresseSize), DecompressedSize(decompressedSize) {}
 	~CUopBlockHeader() {}
 };
 //----------------------------------------------------------------------------------
 class CUopMappedFile : public WISP_FILE::CMappedFile
 {
-private:
 public:
 	std::unordered_map<uint64, CUopBlockHeader> m_Map;
 
@@ -46,11 +45,11 @@ public:
 //----------------------------------------------------------------------------------
 class CFileManager : public WISP_DATASTREAM::CDataReader
 {
-	SETGET(bool, UseVerdata, false);
-	SETGET(bool, UseUOPGumps, false);
-	SETGET(int, UnicodeFontsCount, 0);
-
 public:
+	bool UseVerdata = false;
+	bool UseUOPGumps = false;
+	int UnicodeFontsCount = 0;
+
 	CFileManager();
 	virtual ~CFileManager();
 

@@ -19,11 +19,11 @@ CIntloc::CIntloc(const int &fileIndex, const string &lang)
 : CBaseQueueItem()
 {
 	WISPFUN_DEBUG("c135_f1");
-	m_Loaded = false;
-	m_Language = lang;
-	m_FileIndex = fileIndex;
+	Loaded = false;
+	Language = lang;
+	FileIndex = fileIndex;
 
-	if (m_Language.length())
+	if (Language.length())
 	{
 		if (m_File.Load(g_App.UOFilesPath("intloc%02i.%s", fileIndex, lang.c_str())))
 		{
@@ -56,7 +56,7 @@ CIntloc::CIntloc(const int &fileIndex, const string &lang)
 					break;
 			}
 
-			m_Loaded = (m_Strings.size() != 0);
+			Loaded = (m_Strings.size() != 0);
 		}
 	}
 }

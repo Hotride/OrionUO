@@ -28,9 +28,9 @@ void CUseItemActions::Add(const uint &serial)
 void CUseItemActions::Process()
 {
 	WISPFUN_DEBUG("c186_f2");
-	if (m_Timer <= g_Ticks)
+	if (Timer <= g_Ticks)
 	{
-		m_Timer = g_Ticks + 1000;
+		Timer = g_Ticks + 1000;
 
 		if (m_List.empty())
 			return;

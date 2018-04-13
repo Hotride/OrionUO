@@ -12,27 +12,27 @@
 //----------------------------------------------------------------------------------
 class CBuildObject
 {
-	SETGET(ushort, Graphic, 0);
-	SETGET(char, X, 0);
-	SETGET(char, Y, 0);
-	SETGET(char, Z, 0);
-
 public:
+	ushort Graphic = 0;
+	char X = 0;
+	char Y = 0;
+	char Z = 0;
+
 	CBuildObject() {}
 	CBuildObject(const ushort &graphic, const char &x, const char &y, const char &z)
-		: m_Graphic(graphic), m_X(x), m_Y(y), m_Z(z) {}
+		: Graphic(graphic), X(x), Y(y), Z(z) {}
 	~CBuildObject() {}
 };
 //----------------------------------------------------------------------------------
 class CCustomHouse
 {
-	SETGET(uint, Serial, 0);
-	SETGET(uint, Revision, 0);
-
 public:
+	uint Serial = 0;
+	uint Revision = 0;
+
 	CCustomHouse() {}
 	CCustomHouse(const uint &serial, const uint &revision)
-		: m_Serial(serial), m_Revision(revision) {}
+		: Serial(serial), Revision(revision) {}
 	~CCustomHouse() {}
 
 	vector<CBuildObject> m_Items;

@@ -12,10 +12,10 @@
 #include "stdafx.h"
 //----------------------------------------------------------------------------------
 CGUIBulletinBoardObject::CGUIBulletinBoardObject(const uint &serial, const int &x, const int &y, const wstring &text)
-: CBaseGUI(GOT_BB_OBJECT, serial, 0, 0, x, y), m_Text(text)
+: CBaseGUI(GOT_BB_OBJECT, serial, 0, 0, x, y), Text(text)
 {
 	WISPFUN_DEBUG("c43_f1");
-	m_MoveOnDrag = true;
+	MoveOnDrag = true;
 
 	if (g_PacketManager.ClientVersion >= CV_305D)
 		g_FontManager.GenerateW(1, m_Texture, text, 0);

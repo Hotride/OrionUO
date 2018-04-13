@@ -13,20 +13,21 @@
 //Класс для работы с таргетом
 class CTarget
 {
+public:
 	//Тип объекта прицела
-	SETGET(uchar, Type, 0);
+	uchar Type = 0;
 	//Тип прицела
-	SETGET(uchar, CursorType, 0);
+	uchar CursorType = 0;
 	//Мульти на таргете
-	SETGET(ushort, MultiGraphic, 0);
+	ushort MultiGraphic = 0;
 	//Мульти на таргете X
-	SETGET(ushort, MultiX, 0);
+	ushort MultiX = 0;
 	//Мульти на таргете Y
-	SETGET(ushort, MultiY, 0);
+	ushort MultiY = 0;
 	//Серийник объекта, к которому привязан прицел
-	SETGET(uint, CursorID, 0);
+	uint CursorID = 0;
 	//Флаг состояния прицела
-	SETGET(bool, Targeting, false);
+	bool Targeting = false;
 
 private:
 	//Текущие и последний данные прицела
@@ -52,7 +53,7 @@ public:
 	//Установить данные мульти-таргета
 	void SetMultiData(WISP_DATASTREAM::CDataReader &reader);
 
-	bool IsTargeting() const { return m_Targeting; }
+	bool IsTargeting() const { return Targeting; }
 
 	//Очистить таргет
 	void Reset();

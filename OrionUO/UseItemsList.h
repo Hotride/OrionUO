@@ -12,7 +12,7 @@
 //----------------------------------------------------------------------------------
 class CUseItemActions
 {
-	SETGET(uint, Timer, 0);
+	uint Timer = 0;
 
 private:
 	deque<uint> m_List;

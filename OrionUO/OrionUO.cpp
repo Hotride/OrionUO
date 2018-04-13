@@ -122,8 +122,8 @@ void COrion::ParseCommandLine()
 		{
 			if (str == "login")
 			{
-				m_DefaultLogin = strings[1];
-				m_DefaultPort = atoi(strings[2].c_str());
+				DefaultLogin = strings[1];
+				DefaultPort = atoi(strings[2].c_str());
 			}
 			else if (str == "proxyhost")
 			{
@@ -225,7 +225,7 @@ bool COrion::Install()
 	WISPFUN_DEBUG("c194_f5");
 	LOG("COrion::Install()\n");
 	SetUnhandledExceptionFilter(OrionUnhandledExceptionFilter);
-	string orionVersionStr = g_App.GetFileVersion(&m_OrionVersionNumeric);
+	string orionVersionStr = g_App.GetFileVersion(&OrionVersionNumeric);
 	LOG("Orion version is: %s (build %s)\n", orionVersionStr.c_str(), GetBuildDateTimeStamp().c_str());
 	CRASHLOG("Orion version is: %s (build %s)\n", orionVersionStr.c_str(), GetBuildDateTimeStamp().c_str());
 
@@ -1020,7 +1020,10 @@ void COrion::LoadClientConfig()
 
 		if (installOld != NULL)
 		{
-			installOld(config.Start, (int)config.Size, &realData);			realSize = realData.size();		}		else
+			installOld(config.Start, (int)config.Size, &realData);
+			realSize = realData.size();
+		}
+		else
 			installNew(config.Start, config.Size, &realData[0], realSize);
 
 		config.Unload();
@@ -1056,7 +1059,7 @@ void COrion::LoadClientConfig()
 			g_MaxViewRange = MAX_VIEW_RANGE_OLD;
 
 		int len = file.ReadInt8();
-		m_ClientVersionText = file.ReadString(len);
+		ClientVersionText = file.ReadString(len);
 
 #if defined(_M_IX86)
 		g_NetworkInit = (NETWORK_INIT_TYPE*)file.ReadUInt32LE();
@@ -3152,10 +3155,10 @@ bool COrion::IsVegetation(const ushort &graphic)
 void COrion::LoadLogin(string &login, int &port)
 {
 	WISPFUN_DEBUG("c194_f45");
-	if (m_DefaultPort)
+	if (DefaultPort)
 	{
-		login = m_DefaultLogin;
-		port = m_DefaultPort;
+		login = DefaultLogin;
+		port = DefaultPort;
 
 		return;
 	}
@@ -4188,7 +4191,7 @@ void COrion::IndexReplaces()
 				if (checkIndex < 0)
 					continue;
 
-				if (index < m_TexturesDataCount && checkIndex < m_TexturesDataCount && m_TextureDataIndex[checkIndex].Address != NULL)
+				if (index < TexturesDataCount && checkIndex < TexturesDataCount && m_TextureDataIndex[checkIndex].Address != NULL)
 				{
 					m_TextureDataIndex[index] = m_TextureDataIndex[checkIndex];
 					m_TextureDataIndex[index].Texture = NULL;
@@ -5625,7 +5628,7 @@ void COrion::AddJournalMessage(CTextData *msg, const string &name)
 
 	if (!jmsg->Unicode)
 	{
-		jmsg->SetText(name + jmsg->Text);
+		jmsg->Text = name + jmsg->Text;
 		jmsg->Font = 9;
 	}
 	else
@@ -5633,7 +5636,7 @@ void COrion::AddJournalMessage(CTextData *msg, const string &name)
 		//if (msg->Type == TT_SYSTEM)
 		//	jmsg->Color = 0;
 
-		jmsg->SetUnicodeText(ToWString(name) + jmsg->UnicodeText);
+		jmsg->UnicodeText = ToWString(name) + jmsg->UnicodeText;
 		jmsg->Font = 0;
 	}
 
@@ -5817,7 +5820,7 @@ void COrion::Attack(uint serial)
 			int y = g_ConfigManager.GameWindowY + (g_ConfigManager.GameWindowHeight / 2) - 20;
 
 			CGumpQuestion *newgump = new CGumpQuestion(0, x, y, CGumpQuestion::ID_GQ_STATE_ATTACK_REQUEST);
-			newgump->SetID(serial);
+			newgump->ID = serial;
 
 			g_GumpManager.AddGump(newgump);
 
@@ -6188,7 +6191,7 @@ void COrion::OpenLogOut()
 	g_GumpManager.AddGump(new CGumpQuestion(0, x, y, CGumpQuestion::ID_GQ_STATE_QUIT));
 
 	InitScreen(GS_GAME_BLOCKED);
-	g_GameBlockedScreen.SetCode(3);
+	g_GameBlockedScreen.Code = 3;
 }
 //----------------------------------------------------------------------------------
 void COrion::OpenChat()

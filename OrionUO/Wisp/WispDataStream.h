@@ -7,8 +7,9 @@ namespace WISP_DATASTREAM
 //----------------------------------------------------------------------------------
 class CDataWritter
 {
-	SETGET(bool, AutoResize, true);
-	SETGET(puchar, Ptr, 0);
+public:
+	bool AutoResize = true;
+	puchar Ptr = 0;
 
 protected:
 	UCHAR_LIST m_Data;
@@ -24,7 +25,7 @@ public:
 	size_t Size() { return m_Data.size(); }
 
 	void Resize(const size_t &newSize, const bool &resetPtr = false);
-	void ResetPtr() { m_Ptr = &m_Data[0]; }
+	void ResetPtr() { Ptr = &m_Data[0]; }
 
 	void Move(const intptr_t &offset);
 
@@ -65,23 +66,23 @@ public:
 //----------------------------------------------------------------------------------
 class CDataReader
 {
-	SETGET(puchar, Start, 0);
-	SETGET(size_t, Size, 0);
-	SETGET(puchar, End, 0);
-	SETGET(puchar, Ptr, 0);
-
 public:
+	puchar Start = 0;
+	size_t Size = 0;
+	puchar End = 0;
+	puchar Ptr = 0;
+
 	CDataReader();
 	CDataReader(puchar start, const size_t &size);
 
 	virtual ~CDataReader();
 
 	void SetData(puchar start, const size_t &size, const intptr_t &offset = 0);
-	void ResetPtr() { m_Ptr = m_Start; }
+	void ResetPtr() { Ptr = Start; }
 
-	bool IsEOF() { return m_Ptr >= m_End; }
+	bool IsEOF() { return Ptr >= End; }
 
-	void Move(const intptr_t &offset) { m_Ptr += offset; }
+	void Move(const intptr_t &offset) { Ptr += offset; }
 
 	void ReadDataBE(puchar data, const size_t &size, const intptr_t &offset = 0);
 	void ReadDataLE(puchar data, const size_t &size, const intptr_t &offset = 0);

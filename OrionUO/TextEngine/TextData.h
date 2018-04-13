@@ -13,17 +13,17 @@
 //Класс для хранения информации о текстуре текста
 class CTextData : public CRenderTextObject
 {
-	SETGET(bool, Unicode, false);
-	SETGET(TEXT_TYPE, Type, TT_CLIENT);
-	SETGET(uchar, Font, 0);
-	SETGET(uint, Timer, 0);
-	SETGET(uint, MoveTimer, 0);
-	SETGET(string, Text, "");
-	SETGET(wstring, UnicodeText, L"");
-	SETGET(uchar, Alpha, 0xFF);
+public:
+	bool Unicode = false;
+	TEXT_TYPE Type = TT_CLIENT;
+	uchar Font = 0;
+	uint Timer = 0;
+	uint MoveTimer = 0;
+	string Text = "";
+	wstring UnicodeText = L"";
+	uchar Alpha = 0xFF;
 	SETGETP(CRenderWorldObject*, Owner, NULL);
 
-public:
 	CTextData();
 	CTextData(CTextData *obj);
 	virtual ~CTextData();

@@ -20,13 +20,13 @@ CGumpStatusbar::CGumpStatusbar(uint serial, short x, short y, bool minimized)
 	WISPFUN_DEBUG("c128_f1");
 	if (minimized)
 	{
-		m_Minimized = true;
-		m_MinimizedX = x;
-		m_MinimizedY = y;
+		Minimized = true;
+		MinimizedX = x;
+		MinimizedY = y;
 	}
 
-	if (!g_ConfigManager.DisableNewTargetSystem && m_Serial == g_NewTargetSystem.Serial)
-		g_GumpManager.UpdateGump(m_Serial, 0, GT_TARGET_SYSTEM);
+	if (!g_ConfigManager.DisableNewTargetSystem && Serial == g_NewTargetSystem.Serial)
+		g_GumpManager.UpdateGump(Serial, 0, GT_TARGET_SYSTEM);
 
 	m_Locker.Serial = ID_GSB_LOCK_MOVING;
 }
@@ -34,8 +34,8 @@ CGumpStatusbar::CGumpStatusbar(uint serial, short x, short y, bool minimized)
 CGumpStatusbar::~CGumpStatusbar()
 {
 	WISPFUN_DEBUG("c128_f2");
-	if (g_ConnectionManager.Connected() && g_PacketManager.ClientVersion >= CV_200 && g_World != NULL && g_World->FindWorldObject(m_Serial) != NULL)
-		CPacketCloseStatusbarGump(m_Serial).Send();
+	if (g_ConnectionManager.Connected() && g_PacketManager.ClientVersion >= CV_200 && g_World != NULL && g_World->FindWorldObject(Serial) != NULL)
+		CPacketCloseStatusbarGump(Serial).Send();
 
 	RemoveFromGroup();
 }
@@ -45,7 +45,7 @@ void CGumpStatusbar::InitToolTip()
 	WISPFUN_DEBUG("c128_f3");
 	uint id = g_SelectedObject.Serial;
 
-	//if (m_Minimized && m_Serial == g_PlayerSerial)
+	//if (Minimized && Serial == g_PlayerSerial)
 	//	g_ToolTip.Set(L"Double click to maximize the statusbar gump");
 	if (id && id <= ID_GSB_TEXT_CAST_RECOVERY)
 	{
@@ -119,7 +119,7 @@ CGumpStatusbar *CGumpStatusbar::GetTopStatusbar()
 CGumpStatusbar *CGumpStatusbar::GetNearStatusbar(int &x, int &y)
 {
 	WISPFUN_DEBUG("c128_f5");
-	if (InGroup() || !m_Minimized)
+	if (InGroup() || !Minimized)
 		return NULL;
 
 	//154x59 mini-gump
@@ -250,7 +250,7 @@ CGumpStatusbar *CGumpStatusbar::GetNearStatusbar(int &x, int &y)
 bool CGumpStatusbar::GetStatusbarGroupOffset(int &x, int &y)
 {
 	WISPFUN_DEBUG("c128_f6");
-	if (InGroup() && m_Minimized && g_MouseManager.LeftButtonPressed && g_PressedObject.LeftGump != NULL && (g_PressedObject.LeftObject == NULL || (g_PressedObject.LeftObject->IsGUI() && ((CBaseGUI*)g_PressedObject.LeftObject)->MoveOnDrag)))
+	if (InGroup() && Minimized && g_MouseManager.LeftButtonPressed && g_PressedObject.LeftGump != NULL && (g_PressedObject.LeftObject == NULL || (g_PressedObject.LeftObject->IsGUI() && ((CBaseGUI*)g_PressedObject.LeftObject)->MoveOnDrag)))
 	{
 		CGumpStatusbar *gump = GetTopStatusbar();
 
@@ -330,7 +330,7 @@ void CGumpStatusbar::AddStatusbar(CGumpStatusbar *bar)
 	{
 		m_StatusbarUnlocker->Visible = InGroup();
 
-		m_WantRedraw = true;
+		WantRedraw = true;
 	}
 }
 //----------------------------------------------------------------------------------
@@ -361,7 +361,7 @@ void CGumpStatusbar::RemoveFromGroup()
 	if (m_StatusbarUnlocker != NULL)
 	{
 		m_StatusbarUnlocker->Visible = InGroup();
-		m_WantRedraw = true;
+		WantRedraw = true;
 	}
 }
 //----------------------------------------------------------------------------------
@@ -405,7 +405,7 @@ void CGumpStatusbar::PrepareContent()
 	WISPFUN_DEBUG("c128_f11");
 	if (m_HitsBody != NULL)
 	{
-		CGameCharacter *obj = g_World->FindWorldCharacter(m_Serial);
+		CGameCharacter *obj = g_World->FindWorldCharacter(Serial);
 
 		if (obj == NULL && m_HitsBody->Color != 0x0386)
 		{
@@ -444,9 +444,9 @@ void CGumpStatusbar::UpdateContent()
 	bool useUOPGumps = g_FileManager.UseUOPGumps;
 	CGUIText *text = NULL;
 
-	if (m_Serial == g_PlayerSerial) //Если это статусбар игрока
+	if (Serial == g_PlayerSerial) //Если это статусбар игрока
 	{
-		if (!m_Minimized) //Если это "полная" версия статусбара
+		if (!Minimized) //Если это "полная" версия статусбара
 		{
 			POINT p = { 0, 0 };
 
@@ -914,11 +914,11 @@ void CGumpStatusbar::UpdateContent()
 	}
 	else //Чужой статусбар
 	{
-		if (g_Party.Contains(m_Serial) && !g_ConfigManager.OriginalPartyStatusbar)
+		if (g_Party.Contains(Serial) && !g_ConfigManager.OriginalPartyStatusbar)
 		{
 			IFOR(i, 0, 10)
 			{
-				if (g_Party.Member[i].Serial == m_Serial)
+				if (g_Party.Member[i].Serial == Serial)
 				{
 					CPartyObject &member = g_Party.Member[i];
 					if (member.Character == NULL)
@@ -1019,7 +1019,7 @@ void CGumpStatusbar::UpdateContent()
 			ushort color = 0;
 			ushort hitsColor = 0x0386;
 			ushort textColor = 0x0386;
-			CGameCharacter *obj = g_World->FindWorldCharacter(m_Serial);
+			CGameCharacter *obj = g_World->FindWorldCharacter(Serial);
 			string objName = m_Name;
 			bool canChangeName = false;
 
@@ -1098,7 +1098,7 @@ void CGumpStatusbar::OnLeftMouseButtonDown()
 	//Проверим, может быть есть таргет, который нужно повесить на данного чара
 	if (g_Target.IsTargeting())
 	{
-		g_Target.SendTargetObject(m_Serial);
+		g_Target.SendTargetObject(Serial);
 		g_MouseManager.CancelDoubleClick = true;
 	}
 	else
@@ -1111,25 +1111,25 @@ void CGumpStatusbar::GUMP_BUTTON_EVENT_C
 	if (g_GeneratedMouseDown)
 		return;
 
-	if (serial == ID_GSB_MINIMIZE && m_Serial == g_PlayerSerial)
+	if (serial == ID_GSB_MINIMIZE && Serial == g_PlayerSerial)
 	{
 		//Кнопка минимизации на полной версии гампа
-		m_Minimized = true;
-		m_WantUpdateContent = true;
+		Minimized = true;
+		WantUpdateContent = true;
 	}
 	else if (serial == ID_GSB_LOCK_MOVING)
-		m_LockMoving = !m_LockMoving;
+		LockMoving = !LockMoving;
 	else if (serial == ID_GSB_BUTTON_HEAL_1)
 	{
 		g_Orion.CastSpell(29);
 		g_PartyHelperTimer = g_Ticks + 500;
-		g_PartyHelperTarget = m_Serial;
+		g_PartyHelperTarget = Serial;
 	}
 	else if (serial == ID_GSB_BUTTON_HEAL_2)
 	{
 		g_Orion.CastSpell(11);
 		g_PartyHelperTimer = g_Ticks + 500;
-		g_PartyHelperTarget = m_Serial;
+		g_PartyHelperTarget = Serial;
 	}
 	else if (serial == ID_GSB_BUTTON_REMOVE_FROM_GROUP)
 	{
@@ -1151,21 +1151,21 @@ void CGumpStatusbar::GUMP_BUTTON_EVENT_C
 	else if (serial == ID_GSB_BUFF_LOCKER_STR)
 	{
 		g_Player->LockStr = (g_Player->LockStr + 1) % 3;
-		m_WantUpdateContent = true;
+		WantUpdateContent = true;
 
 		CPacketChangeStatLockStateRequest(0, g_Player->LockStr).Send();
 	}
 	else if (serial == ID_GSB_BUFF_LOCKER_DEX)
 	{
 		g_Player->LockDex = (g_Player->LockDex + 1) % 3;
-		m_WantUpdateContent = true;
+		WantUpdateContent = true;
 
 		CPacketChangeStatLockStateRequest(1, g_Player->LockDex).Send();
 	}
 	else if (serial == ID_GSB_BUFF_LOCKER_INT)
 	{
 		g_Player->LockInt = (g_Player->LockInt + 1) % 3;
-		m_WantUpdateContent = true;
+		WantUpdateContent = true;
 
 		CPacketChangeStatLockStateRequest(2, g_Player->LockInt).Send();
 	}
@@ -1177,10 +1177,10 @@ bool CGumpStatusbar::OnLeftMouseButtonDoubleClick()
 	if (g_GeneratedMouseDown)
 		return false;
 
-	if (!g_PressedObject.LeftSerial && m_Serial == g_PlayerSerial && m_Minimized)
+	if (!g_PressedObject.LeftSerial && Serial == g_PlayerSerial && Minimized)
 	{
 		//Если это статусбар игрока (с полосками) то развернем его до полной версии
-		m_Minimized = false;
+		Minimized = false;
 
 		if (InGroup())
 		{
@@ -1198,23 +1198,23 @@ bool CGumpStatusbar::OnLeftMouseButtonDoubleClick()
 			}
 		}
 
-		m_WantUpdateContent = true;
+		WantUpdateContent = true;
 
 		return true;
 	}
-	else if (m_Serial != g_PlayerSerial)
+	else if (Serial != g_PlayerSerial)
 	{
 		if (g_Player->Warmode)
-			g_Orion.Attack(m_Serial); //Если в вармоде - атакуем
+			g_Orion.Attack(Serial); //Если в вармоде - атакуем
 		else
-			g_Orion.DoubleClick(m_Serial); //Или используем предмет
+			g_Orion.DoubleClick(Serial); //Или используем предмет
 
 		return true;
 	}
-	else if (!m_Minimized)
+	else if (!Minimized)
 	{
 		//По даблклику по полной версии статусбара теперь открывается папердолл
-		g_Orion.PaperdollReq(m_Serial);
+		g_Orion.PaperdollReq(Serial);
 
 		return true;
 	}
@@ -1238,7 +1238,7 @@ void CGumpStatusbar::OnCharPress(const WPARAM &wParam, const LPARAM &lParam)
 		if ((g_EntryPointer->Length() <= 15) && g_FontManager.GetWidthA(1, str) <= 100 && ((wParam >= 'a' && wParam <= 'z') || (wParam >= 'A' && wParam <= 'Z')))
 		{
 			g_EntryPointer->Insert((wchar_t)wParam);
-			m_WantRedraw = true;
+			WantRedraw = true;
 		}
 	}
 }
@@ -1255,7 +1255,7 @@ void CGumpStatusbar::OnKeyDown(const WPARAM &wParam, const LPARAM &lParam)
 				SendRenameRequest();
 			else //Нельзя изменить имя на пустое
 			{
-				CGameObject *obj = g_World->FindWorldObject(m_Serial);
+				CGameObject *obj = g_World->FindWorldObject(Serial);
 
 				if (obj != NULL)
 					g_EntryPointer->SetText(obj->Name);
@@ -1266,7 +1266,7 @@ void CGumpStatusbar::OnKeyDown(const WPARAM &wParam, const LPARAM &lParam)
 			else
 				g_EntryPointer = &g_GameConsole;
 
-			m_WantRedraw = true; //Перерисуем
+			WantRedraw = true; //Перерисуем
 
 			break;
 		}
@@ -1278,7 +1278,7 @@ void CGumpStatusbar::OnKeyDown(const WPARAM &wParam, const LPARAM &lParam)
 		case VK_END:
 		{
 			g_EntryPointer->OnKey(this, wParam);
-			m_WantRedraw = true;
+			WantRedraw = true;
 
 			break;
 		}
@@ -1286,7 +1286,7 @@ void CGumpStatusbar::OnKeyDown(const WPARAM &wParam, const LPARAM &lParam)
 		{
 			//По тыку на Esc можно выйти из редактирования имени существа
 
-			CGameObject *obj = g_World->FindWorldObject(m_Serial);
+			CGameObject *obj = g_World->FindWorldObject(Serial);
 			if (obj != NULL)
 				g_EntryPointer->SetText(obj->Name);
 
@@ -1295,7 +1295,7 @@ void CGumpStatusbar::OnKeyDown(const WPARAM &wParam, const LPARAM &lParam)
 			else
 				g_EntryPointer = &g_GameConsole;
 
-			m_WantRedraw = true; //Перерисуем
+			WantRedraw = true; //Перерисуем
 
 			break;
 		}
@@ -1317,7 +1317,7 @@ void CGumpStatusbar::SendRenameRequest()
 		if (entry->Length()) //Если в поле для ввода текста что-то есть
 		{
 			//Отправляем запрос на изменение имени
-			CPacketRenameRequest(m_Serial, entry->c_str()).Send();
+			CPacketRenameRequest(Serial, entry->c_str()).Send();
 		}
 	}
 }

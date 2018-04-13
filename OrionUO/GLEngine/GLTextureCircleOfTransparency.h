@@ -12,11 +12,11 @@
 //----------------------------------------------------------------------------------
 class CGLTextureCircleOfTransparency : public CGLTexture
 {
-	SETGET(int, Radius, 0);
-	SETGET(int, X, 0);
-	SETGET(int, Y, 0);
-
 public:
+	int Radius = 0;
+	int X = 0;
+	int Y = 0;
+
 	CGLTextureCircleOfTransparency();
 	virtual ~CGLTextureCircleOfTransparency();
 

@@ -12,17 +12,17 @@
 #include "stdafx.h"
 //----------------------------------------------------------------------------------
 CLandObject::CLandObject(const uint &serial, const ushort &graphic, const ushort &color, const short &x, const short &y, const char &z)
-: CMapObject(ROT_LAND_OBJECT, serial, 0, color, x, y, z), m_MinZ(z), m_AverageZ(z)
+: CMapObject(ROT_LAND_OBJECT, serial, 0, color, x, y, z), MinZ(z), AverageZ(z)
 {
 	WISPFUN_DEBUG("c23_f1");
-	m_OriginalGraphic = graphic;
+	OriginalGraphic = graphic;
 	UpdateGraphicBySeason();
 
 	m_DrawTextureColor[3] = 0xFF;
 
 	LAND_TILES &tile = g_Orion.m_LandData[graphic];
 
-	m_IsStretched = (!tile.TexID && ::IsWet(tile.Flags));
+	IsStretched = (!tile.TexID && ::IsWet(tile.Flags));
 
 	memset(&m_Rect, 0, sizeof(RECT));
 	memset(&m_Normals[0], 0, sizeof(m_Normals));
@@ -35,30 +35,30 @@ CLandObject::CLandObject(const uint &serial, const ushort &graphic, const ushort
 CLandObject::~CLandObject()
 {
 	WISPFUN_DEBUG("c23_f2");
-	if (m_PositionBuffer != 0)
+	if (PositionBuffer != 0)
 	{
-		glDeleteBuffers(1, &m_PositionBuffer);
-		m_PositionBuffer = 0;
+		glDeleteBuffers(1, &PositionBuffer);
+		PositionBuffer = 0;
 	}
 
-	if (m_VertexBuffer != 0)
+	if (VertexBuffer != 0)
 	{
-		glDeleteBuffers(1, &m_VertexBuffer);
-		m_VertexBuffer = 0;
+		glDeleteBuffers(1, &VertexBuffer);
+		VertexBuffer = 0;
 	}
 
-	if (m_NormalBuffer != 0)
+	if (NormalBuffer != 0)
 	{
-		glDeleteBuffers(1, &m_NormalBuffer);
-		m_NormalBuffer = 0;
+		glDeleteBuffers(1, &NormalBuffer);
+		NormalBuffer = 0;
 	}
 }
 //---------------------------------------------------------------------------
 void CLandObject::UpdateGraphicBySeason()
 {
 	WISPFUN_DEBUG("c23_f3");
-	m_Graphic = g_Orion.GetLandSeasonGraphic(m_OriginalGraphic);
-	m_NoDrawTile = (m_Graphic == 2);
+	Graphic = g_Orion.GetLandSeasonGraphic(OriginalGraphic);
+	NoDrawTile = (Graphic == 2);
 }
 //---------------------------------------------------------------------------
 int CLandObject::GetDirectionZ(const int &direction)
@@ -93,10 +93,10 @@ int CLandObject::CalculateCurrentAverageZ(const int &direction)
 void CLandObject::UpdateZ(const int &zTop, const int &zRight, const int &zBottom)
 {
 	WISPFUN_DEBUG("c23_f6");
-	if (m_IsStretched)
+	if (IsStretched)
 	{
 		//Сохраним среднее значение Z-координаты
-		m_Serial = ((m_Z + zTop + zRight + zBottom) / 4);
+		Serial = ((m_Z + zTop + zRight + zBottom) / 4);
 
 		//Значения для рендера
 		m_Rect.left = m_Z * 4 + 1;
@@ -110,16 +110,16 @@ void CLandObject::UpdateZ(const int &zTop, const int &zRight, const int &zBottom
 			AverageZ = (zBottom + zTop) >> 1;
 
 		//Минимальная Z-координата из всех
-		m_MinZ = m_Z;
+		MinZ = m_Z;
 
-		if (zTop < m_MinZ)
-			m_MinZ = zTop;
+		if (zTop < MinZ)
+			MinZ = zTop;
 
-		if (zRight < m_MinZ)
-			m_MinZ = zRight;
+		if (zRight < MinZ)
+			MinZ = zRight;
 
-		if (zBottom < m_MinZ)
-			m_MinZ = zBottom;
+		if (zBottom < MinZ)
+			MinZ = zBottom;
 	}
 }
 //---------------------------------------------------------------------------
@@ -137,8 +137,8 @@ void CLandObject::Draw(const int &x, const int &y)
 		g_RenderedObjectsCountInGameWindow++;
 #endif
 
-		if (!m_IsStretched)
-			g_Orion.DrawLandArt(m_Graphic, objColor, x, y);
+		if (!IsStretched)
+			g_Orion.DrawLandArt(Graphic, objColor, x, y);
 		else
 			g_Orion.DrawLandTexture(this, objColor, x, y);
 	}
@@ -149,9 +149,9 @@ void CLandObject::Select(const int &x, const int &y)
 	WISPFUN_DEBUG("c23_f8");
 	if (m_Z <= g_MaxGroundZ)
 	{
-		if (!m_IsStretched)
+		if (!IsStretched)
 		{
-			if (g_Orion.LandPixelsInXY(m_Graphic, x, y))
+			if (g_Orion.LandPixelsInXY(Graphic, x, y))
 				g_SelectedObject.Init(this);
 		}
 		else

@@ -12,8 +12,9 @@
 //----------------------------------------------------------------------------------
 class CGumpMinimap : public CGump
 {
-	SETGET(ushort, LastX, 0);
-	SETGET(ushort, LastY, 0);
+public:
+	ushort LastX = 0;
+	ushort LastY = 0;
 
 private:
 	static const int ID_GMM_LOCK_MOVING = 1;

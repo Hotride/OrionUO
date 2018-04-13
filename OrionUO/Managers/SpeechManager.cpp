@@ -16,18 +16,18 @@ CSpeechManager g_SpeechManager;
 //------------------------------------CSpeechItem-----------------------------------
 //----------------------------------------------------------------------------------
 CSpeechItem::CSpeechItem(const ushort &code, const wstring &data)
-: m_Code(code), m_Data(data)
+: Code(code), Data(data)
 {
-	if (m_Data.length() && m_Data[m_Data.length() - 1] == L'*')
+	if (Data.length() && Data[Data.length() - 1] == L'*')
 	{
-		m_CheckEnd = true;
-		m_Data.resize(m_Data.length() - 1);
+		CheckEnd = true;
+		Data.resize(Data.length() - 1);
 	}
 
-	if (m_Data.length() && m_Data[0] == L'*')
+	if (Data.length() && Data[0] == L'*')
 	{
-		m_CheckStart = true;
-		m_Data.erase(m_Data.begin());
+		CheckStart = true;
+		Data.erase(Data.begin());
 	}
 
 	//LOG(L"[0x%04X]=(cs=%i, ce=%i) %s\n", m_Code, m_CheckStart, m_CheckEnd, m_Data.c_str());

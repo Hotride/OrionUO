@@ -12,8 +12,8 @@
 #include "stdafx.h"
 //----------------------------------------------------------------------------------
 CGUIButton::CGUIButton(const uint &serial, const ushort &graphic, const ushort &graphicSelected, const ushort &graphicPressed, const int &x, const int &y)
-: CGUIDrawObject(GOT_BUTTON, serial, graphic, 0, x, y), m_GraphicSelected(graphicSelected),
-m_GraphicPressed(graphicPressed)
+: CGUIDrawObject(GOT_BUTTON, serial, graphic, 0, x, y), GraphicSelected(graphicSelected),
+GraphicPressed(graphicPressed)
 {
 }
 //----------------------------------------------------------------------------------
@@ -24,20 +24,20 @@ CGUIButton::~CGUIButton()
 void CGUIButton::PrepareTextures()
 {
 	WISPFUN_DEBUG("c44_f1");
-	g_Orion.ExecuteGump(m_Graphic);
-	g_Orion.ExecuteGump(m_GraphicSelected);
-	g_Orion.ExecuteGump(m_GraphicPressed);
+	g_Orion.ExecuteGump(Graphic);
+	g_Orion.ExecuteGump(GraphicSelected);
+	g_Orion.ExecuteGump(GraphicPressed);
 }
 //----------------------------------------------------------------------------------
 ushort CGUIButton::GetDrawGraphic()
 {
 	WISPFUN_DEBUG("c44_f2");
-	ushort graphic = m_Graphic;
+	ushort graphic = Graphic;
 
 	if (g_GumpPressedElement == this)
-		graphic = m_GraphicPressed;
+		graphic = GraphicPressed;
 	else if (g_GumpSelectedElement == this)
-		graphic = m_GraphicSelected;
+		graphic = GraphicSelected;
 
 	return graphic;
 }

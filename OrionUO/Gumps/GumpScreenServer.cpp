@@ -14,8 +14,8 @@
 CGumpScreenServer::CGumpScreenServer()
 : CGump(GT_NONE, 0, 0, 0)
 {
-	m_NoMove = true;
-	m_NoClose = true;
+	NoMove = true;
+	NoClose = true;
 }
 //----------------------------------------------------------------------------------
 CGumpScreenServer::~CGumpScreenServer()

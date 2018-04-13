@@ -13,7 +13,7 @@
 //----------------------------------------------------------------------------------
 CGUIGumppicHightlighted::CGUIGumppicHightlighted(const uint &serial, const ushort &graphic, const ushort &color, const ushort &selectedColor, const int &x, const int &y)
 : CGUIDrawObject(GOT_GUMPPICHIGHTLIGHTED, serial, graphic, color, x, y),
-m_SelectedColor(selectedColor)
+SelectedColor(selectedColor)
 {
 }
 //----------------------------------------------------------------------------------
@@ -29,16 +29,16 @@ void CGUIGumppicHightlighted::SetShaderMode()
 	{
 		glUniform1iARB(g_ShaderDrawMode, SDM_COLORED);
 
-		g_ColorManager.SendColorsToShader(m_SelectedColor);
+		g_ColorManager.SendColorsToShader(SelectedColor);
 	}
-	else if (m_Color != 0)
+	else if (Color != 0)
 	{
-		if (m_PartialHue)
+		if (PartialHue)
 			glUniform1iARB(g_ShaderDrawMode, SDM_PARTIAL_HUE);
 		else
 			glUniform1iARB(g_ShaderDrawMode, SDM_COLORED);
 
-		g_ColorManager.SendColorsToShader(m_Color);
+		g_ColorManager.SendColorsToShader(Color);
 	}
 	else
 		glUniform1iARB(g_ShaderDrawMode, SDM_NO_COLOR);

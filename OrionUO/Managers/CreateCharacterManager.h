@@ -28,13 +28,13 @@ class CCreateCharacterManager
 {
 	SETGETE(bool, Female, false);
 	SETGETE(RACE_TYPE, Race, RT_HUMAN);
-	SETGET(uchar, HairStyle, 1);
-	SETGET(uchar, BeardStyle, 0);
-	SETGET(ushort, SkinTone, 0x03EA);
-	SETGET(ushort, ShirtColor, 0x0084);
-	SETGET(ushort, PantsColor, 0x035F);
-	SETGET(ushort, HairColor, 0x044E);
-	SETGET(ushort, BeardColor, 0x044E);
+	uchar HairStyle = 1;
+	uchar BeardStyle = 0;
+	ushort SkinTone = 0x03EA;
+	ushort ShirtColor = 0x0084;
+	ushort PantsColor = 0x035F;
+	ushort HairColor = 0x044E;
+	ushort BeardColor = 0x044E;
 
 public:
 	static const int HUMAN_MALE_HAIR_COUNT = 10;

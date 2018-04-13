@@ -13,13 +13,13 @@
 //!Moving effect
 class CGameEffectMoving : public CGameEffectDrag
 {
+public:
 	//!Effect's angle
-	SETGET(float, Angle, 0.0f);
+	float Angle = 0.0f;
 
 	//!Offset in the world Z
-	SETGET(int, OffsetZ, 0);
+	int OffsetZ = 0;
 
-public:
 	/*!
 	Constructor
 	@return

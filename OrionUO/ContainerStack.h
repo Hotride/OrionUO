@@ -13,15 +13,15 @@
 //!Класс стека контейнеров, используется для хранения информации при загрузке гапмов контейнеров из конфига при входе в игру
 class CContainerStackItem
 {
-	SETGET(uint, Serial, 0);
-	SETGET(short, X, 0);
-	SETGET(short, Y, 0);
-	SETGET(short, MinimizedX, 0);
-	SETGET(short, MinimizedY, 0);
-	SETGET(bool, Minimized, false);
-	SETGET(bool, LockMoving, false);
-
 public:
+	uint Serial = 0;
+	short X = 0;
+	short Y = 0;
+	short MinimizedX = 0;
+	short MinimizedY = 0;
+	bool Minimized = false;
+	bool LockMoving = false;
+
 	CContainerStackItem(const uint &serial, const short &x, const short &y, const short &minimizedX, const short &minimizedY, const bool &minimized, const bool &lockMoving);
 	~CContainerStackItem() {}
 };

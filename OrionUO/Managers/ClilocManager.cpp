@@ -19,15 +19,15 @@ CCliloc::CCliloc(const string &lang)
 : CBaseQueueItem()
 {
 	WISPFUN_DEBUG("c135_f1");
-	m_Loaded = false;
-	m_Language = lang;
+	Loaded = false;
+	Language = lang;
 
-	if (m_Language.length())
+	if (Language.length())
 	{
 		string path = g_App.UOFilesPath((string("cliloc.") + lang).c_str());
 
 		if (m_File.Load(path))
-			m_Loaded = true;
+			Loaded = true;
 	}
 }
 //----------------------------------------------------------------------------------
@@ -51,7 +51,7 @@ string CCliloc::Load(uint &id)
 	WISPFUN_DEBUG("c135_f3");
 	string result = "";
 
-	if (m_Loaded)
+	if (Loaded)
 	{
 		m_File.ResetPtr();
 		m_File.Move(6);
@@ -132,7 +132,7 @@ wstring CCliloc::Get(const uint &id, const bool &toCamelCase, string result)
 		return CamelCaseTest(toCamelCase, loadStr);
 	if (tmpID == id && !loadStr.length())
 		return L"";
-	if (m_Language != "ENU" && this->Language != "enu")
+	if (Language != "ENU" && this->Language != "enu")
 		return g_ClilocManager.Cliloc("enu")->Get(id, toCamelCase, result);
 	if (!result.length())
 	{

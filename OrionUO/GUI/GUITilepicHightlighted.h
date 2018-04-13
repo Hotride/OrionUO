@@ -15,10 +15,10 @@
 class CGUITilepicHightlighted : public CGUITilepic
 {
 	//!Цвет выбранной компоненты
-	SETGET(ushort, SelectedColor, 0);
+	ushort SelectedColor = 0;
 
 	//!Дублировать картинку при отображении
-	SETGET(bool, DoubleDraw, false);
+	bool DoubleDraw = false;
 
 public:
 	CGUITilepicHightlighted(const uint &serial, const ushort &graphic, const ushort &color, const ushort &selectedColor, const int &x, const int &y, const bool &doubleDraw);

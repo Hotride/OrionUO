@@ -17,7 +17,7 @@ CGumpPropertyIcon::CGumpPropertyIcon(const int &x, const int &y)
 	m_Locker.Serial = ID_GPI_LOCK_MOVING;
 
 	int width = 0;
-	g_ToolTip.CreateTextTexture(m_Texture, m_Text, width, 300);
+	g_ToolTip.CreateTextTexture(m_Texture, Text, width, 300);
 }
 //----------------------------------------------------------------------------------
 CGumpPropertyIcon::~CGumpPropertyIcon()
@@ -30,7 +30,7 @@ void CGumpPropertyIcon::SetText(const wstring &val)
 	int width = 0;
 	g_ToolTip.CreateTextTexture(m_Texture, val, width, (g_ConfigManager.ItemPropertiesMode == OPM_ALWAYS_UP ? 300 : 0));
 	m_Object = NULL;
-	m_WantUpdateContent = true;
+	WantUpdateContent = true;
 }
 //----------------------------------------------------------------------------------
 void CGumpPropertyIcon::PrepareContent()
@@ -39,7 +39,7 @@ void CGumpPropertyIcon::PrepareContent()
 	{
 		m_Object = NULL;
 		g_ObjectPropertiesManager.Reset();
-		m_WantUpdateContent = true;
+		WantUpdateContent = true;
 	}
 }
 //----------------------------------------------------------------------------------
@@ -85,7 +85,7 @@ void CGumpPropertyIcon::GUMP_BUTTON_EVENT_C
 {
 	WISPFUN_DEBUG("c126_f13");
 	if (serial == ID_GPI_LOCK_MOVING)
-		m_LockMoving = !m_LockMoving;
+		LockMoving = !LockMoving;
 	else if (serial == ID_GPI_MINIMIZE)
 		g_ConfigManager.ItemPropertiesMode = OPM_FOLLOW_MOUSE;
 }

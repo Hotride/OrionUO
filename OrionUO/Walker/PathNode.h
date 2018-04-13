@@ -20,20 +20,20 @@ struct PATH_POINT
 //Класс объекта в точке пути
 class CPathObject
 {
+public:
 	//Флаги
-	SETGET(uint, Flags, 0);
+	uint Flags = 0;
 
 	//Координата Z точки
-	SETGET(int, Z, 0);
+	int Z = 0;
 
 	//Координата Z точки (усредненная)
-	SETGET(int, AverageZ, 0);
+	int AverageZ = 0;
 
 	//Высота точки
-	SETGET(int, Height, 0);
+	int Height = 0;
 
-public:
-	CPathObject(const uint &flags, const int &z, const int &averageZ, const int &height, class CRenderWorldObject *object) : m_Flags(flags), m_Z(z), m_AverageZ(averageZ), m_Height(height), m_Object(object) {}
+	CPathObject(const uint &flags, const int &z, const int &averageZ, const int &height, class CRenderWorldObject *object) : Flags(flags), Z(z), AverageZ(averageZ), Height(height), m_Object(object) {}
 	virtual ~CPathObject() {}
 
 	class CRenderWorldObject *m_Object;
@@ -42,16 +42,16 @@ public:
 //Класс объекта в точке пути
 class CPathNode
 {
-	SETGET(int, X, 0);
-	SETGET(int, Y, 0);
-	SETGET(int, Z, 0);
-	SETGET(int, Direction, 0);
-	SETGET(bool, Used, false);
-	SETGET(int, Cost, 0);
-	SETGET(int, DistFromStartCost, 0);
-	SETGET(int, DistFromGoalCost, 0);
-
 public:
+	int X = 0;
+	int Y = 0;
+	int Z = 0;
+	int Direction = 0;
+	bool Used = false;
+	int Cost = 0;
+	int DistFromStartCost = 0;
+	int DistFromGoalCost = 0;
+
 	CPathNode();
 	virtual ~CPathNode();
 

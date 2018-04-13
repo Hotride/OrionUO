@@ -15,8 +15,8 @@ CGumpScreenSelectTown::CGumpScreenSelectTown()
 : CGump(GT_NONE, 0, 0, 0)
 {
 	WISPFUN_DEBUG("c118_f1");
-	m_NoMove = true;
-	m_NoClose = true;
+	NoMove = true;
+	NoClose = true;
 
 	//!Список точек для отображения кнопок городов
 	m_TownButtonText.push_back(WISP_GEOMETRY::CPoint2Di(105, 130));

@@ -39,7 +39,7 @@ void CGameEffect::Draw(const int &x, const int &y)
 
 	ApplyRenderMode();
 
-	if (m_EffectType == EF_MOVING)
+	if (EffectType == EF_MOVING)
 	{
 		CGameEffectMoving *moving = (CGameEffectMoving*)this;
 
@@ -47,18 +47,18 @@ void CGameEffect::Draw(const int &x, const int &y)
 		int drawEffectY = y + moving->OffsetY + moving->OffsetZ;
 
 		if (moving->FixedDirection)
-			g_Orion.DrawStaticArt(objGraphic, m_Color, drawEffectX, drawEffectY);
+			g_Orion.DrawStaticArt(objGraphic, Color, drawEffectX, drawEffectY);
 		else
-			g_Orion.DrawStaticArtRotated(objGraphic, m_Color, drawEffectX, drawEffectY, moving->Angle);
+			g_Orion.DrawStaticArtRotated(objGraphic, Color, drawEffectX, drawEffectY, moving->Angle);
 	}
-	else if (m_EffectType == EF_DRAG)
+	else if (EffectType == EF_DRAG)
 	{
 		CGameEffectDrag *dragEffect = (CGameEffectDrag*)this;
 
-		g_Orion.DrawStaticArt(m_Graphic, m_Color, x - dragEffect->OffsetX, y - dragEffect->OffsetY);
+		g_Orion.DrawStaticArt(Graphic, Color, x - dragEffect->OffsetX, y - dragEffect->OffsetY);
 	}
 	else
-		g_Orion.DrawStaticArt(objGraphic, m_Color, x, y);
+		g_Orion.DrawStaticArt(objGraphic, Color, x, y);
 
 	RemoveRenderMode();
 }
@@ -66,24 +66,24 @@ void CGameEffect::Draw(const int &x, const int &y)
 void CGameEffect::Update(CGameObject *parent)
 {
 	WISPFUN_DEBUG("c16_f2");
-	if (m_EffectType != EF_MOVING)
+	if (EffectType != EF_MOVING)
 	{
-		if (m_Duration < g_Ticks)
+		if (Duration < g_Ticks)
 		{
 			if (parent != NULL)
 				parent->RemoveEffect(this);
 			else
 				g_EffectManager.RemoveEffect(this);
 		}
-		else if (m_LastChangeFrameTime < g_Ticks)
+		else if (LastChangeFrameTime < g_Ticks)
 		{
-			m_LastChangeFrameTime = g_Ticks + m_Speed;
+			LastChangeFrameTime = g_Ticks + Speed;
 
-			if (m_EffectType == EF_LIGHTING)
+			if (EffectType == EF_LIGHTING)
 			{
-				m_AnimIndex++;
+				AnimIndex++;
 
-				if (m_AnimIndex >= 10)
+				if (AnimIndex >= 10)
 				{
 					if (parent != NULL)
 						parent->RemoveEffect(this);
@@ -95,9 +95,9 @@ void CGameEffect::Update(CGameObject *parent)
 				CalculateCurrentGraphic();
 		}
 	}
-	else if (m_LastChangeFrameTime < g_Ticks)
+	else if (LastChangeFrameTime < g_Ticks)
 	{
-		m_LastChangeFrameTime = g_Ticks + m_Speed;
+		LastChangeFrameTime = g_Ticks + Speed;
 
 		CalculateCurrentGraphic();
 	}
@@ -114,20 +114,20 @@ ushort CGameEffect::CalculateCurrentGraphic()
 
 	if (addressAnimData)
 	{
-		uint addr = (m_Graphic * 68) + 4 * ((m_Graphic / 8) + 1);
+		uint addr = (Graphic * 68) + 4 * ((Graphic / 8) + 1);
 		PANIM_DATA pad = (PANIM_DATA)(addressAnimData + addr);
 
-		if (m_AnimIndex < (int)pad->FrameCount)
+		if (AnimIndex < (int)pad->FrameCount)
 		{
-			m_Increment = pad->FrameData[m_AnimIndex];
-			m_AnimIndex++;
+			Increment = pad->FrameData[AnimIndex];
+			AnimIndex++;
 		}
 
-		if (m_AnimIndex >= (int)pad->FrameCount)
-			m_AnimIndex = 0;
+		if (AnimIndex >= (int)pad->FrameCount)
+			AnimIndex = 0;
 	}
 
-	return m_Graphic + m_Increment;
+	return Graphic + Increment;
 }
 //----------------------------------------------------------------------------------
 /*!
@@ -137,7 +137,7 @@ ushort CGameEffect::CalculateCurrentGraphic()
 ushort CGameEffect::GetCurrentGraphic()
 {
 	WISPFUN_DEBUG("c16_f4");
-	return m_Graphic + m_Increment;
+	return Graphic + Increment;
 }
 //----------------------------------------------------------------------------------
 /*!
@@ -147,7 +147,7 @@ ushort CGameEffect::GetCurrentGraphic()
 void CGameEffect::ApplyRenderMode()
 {
 	WISPFUN_DEBUG("c16_f5");
-	switch (m_RenderMode)
+	switch (RenderMode)
 	{
 		case 1: //ok
 		{
@@ -193,7 +193,7 @@ void CGameEffect::ApplyRenderMode()
 void CGameEffect::RemoveRenderMode()
 {
 	WISPFUN_DEBUG("c16_f6");
-	switch (m_RenderMode)
+	switch (RenderMode)
 	{
 		case 1: //ok
 		case 2: //ok

@@ -14,7 +14,7 @@
 CJournal g_Journal(150);
 //----------------------------------------------------------------------------------
 CJournal::CJournal(const int &maxSize)
-: CBaseQueue(), m_MaxSize(maxSize)
+: CBaseQueue(), MaxSize(maxSize)
 {
 }
 //----------------------------------------------------------------------------------
@@ -27,7 +27,7 @@ void CJournal::Clear()
 	WISPFUN_DEBUG("c171_f1");
 	CBaseQueue::Clear();
 
-	m_Size = 0;
+	Size = 0;
 }
 //----------------------------------------------------------------------------------
 void CJournal::Add(CTextData *obj)
@@ -40,7 +40,7 @@ void CJournal::Add(CTextData *obj)
 	if (gump != NULL)
 		gump->AddText(obj);
 
-	if (m_Size >= m_MaxSize)
+	if (Size >= MaxSize)
 	{
 		CTextData *item = (CTextData*)m_Items;
 
@@ -50,6 +50,6 @@ void CJournal::Add(CTextData *obj)
 		Delete(item);
 	}
 	else
-		m_Size++;
+		Size++;
 }
 //----------------------------------------------------------------------------------

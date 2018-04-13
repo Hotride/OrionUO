@@ -23,8 +23,8 @@ CFontsManager::CFontsManager()
 CFontsManager::~CFontsManager()
 {
 	WISPFUN_DEBUG("c143_f2");
-	delete []m_Font;
-	m_FontCount = 0;
+	delete []Font;
+	FontCount = 0;
 	m_WebLink.clear();
 }
 //----------------------------------------------------------------------------------
@@ -41,7 +41,7 @@ bool CFontsManager::LoadFonts()
 	if (!fontFile.Load(g_App.UOFilesPath("fonts.mul")))
 		return false;
 
-	m_FontCount = 0;
+	FontCount = 0;
 
 	while (!fontFile.IsEOF())
 	{
@@ -68,24 +68,24 @@ bool CFontsManager::LoadFonts()
 		if (exit)
 			break;
 
-		m_FontCount++;
+		FontCount++;
 	}
 
-	if (m_FontCount < 1)
+	if (FontCount < 1)
 	{
-		m_Font = NULL;
-		m_FontCount = 0;
+		Font = NULL;
+		FontCount = 0;
 
 		return false;
 	}
 
-	m_Font = new FONT_DATA[m_FontCount];
+	Font = new FONT_DATA[FontCount];
 
 	fontFile.ResetPtr();
 
-	IFOR(i, 0, m_FontCount)
+	IFOR(i, 0, FontCount)
 	{
-		FONT_DATA &fd = m_Font[i];
+		FONT_DATA &fd = Font[i];
 		fd.Header = fontFile.ReadUInt8();
 
 		IFOR(j, 0, 224)
@@ -199,10 +199,10 @@ WISP_GEOMETRY::CPoint2Di CFontsManager::GetCaretPosA(const uchar &font, const st
 	WISPFUN_DEBUG("c143_f7");
 	WISP_GEOMETRY::CPoint2Di p;
 
-	if (font >= m_FontCount || pos < 1 || str.empty())
+	if (font >= FontCount || pos < 1 || str.empty())
 		return p;
 
-	FONT_DATA &fd = m_Font[font];
+	FONT_DATA &fd = Font[font];
 
 	if (!width)
 		width = GetWidthA(font, str);
@@ -266,10 +266,10 @@ WISP_GEOMETRY::CPoint2Di CFontsManager::GetCaretPosA(const uchar &font, const st
 int CFontsManager::CalculateCaretPosA(const uchar &font, const string &str, const int &x, const int &y, int width, const TEXT_ALIGN_TYPE &align, const ushort &flags)
 {
 	WISPFUN_DEBUG("c143_f8");
-	if (font >= m_FontCount || x < 0 || y < 0 || str.empty())
+	if (font >= FontCount || x < 0 || y < 0 || str.empty())
 		return 0;
 
-	FONT_DATA &fd = m_Font[font];
+	FONT_DATA &fd = Font[font];
 
 	if (!width)
 		width = GetWidthA(font, str);
@@ -343,10 +343,10 @@ int CFontsManager::CalculateCaretPosA(const uchar &font, const string &str, cons
 int CFontsManager::GetWidthA(const uchar &font, const string &str)
 {
 	WISPFUN_DEBUG("c143_f9");
-	if (font >= m_FontCount || str.empty())
+	if (font >= FontCount || str.empty())
 		return 0;
 
-	FONT_DATA &fd = m_Font[font];
+	FONT_DATA &fd = Font[font];
 	int textLength = 0;
 
 	for (const char &c : str)
@@ -370,7 +370,7 @@ int CFontsManager::GetWidthA(const uchar &font, const string &str)
 int CFontsManager::GetWidthExA(const uchar &font, const string &str, const int &maxWidth, const TEXT_ALIGN_TYPE &align, const ushort &flags)
 {
 	WISPFUN_DEBUG("c143_f10");
-	if (font >= m_FontCount || str.empty())
+	if (font >= FontCount || str.empty())
 		return 0;
 
 	PMULTILINES_FONT_INFO info = GetInfoA(font, str.c_str(), (int)str.length(), align, flags, maxWidth);
@@ -404,7 +404,7 @@ int CFontsManager::GetWidthExA(const uchar &font, const string &str, const int &
 int CFontsManager::GetHeightA(const uchar &font, const string &str, int width, const TEXT_ALIGN_TYPE &align, const ushort &flags)
 {
 	WISPFUN_DEBUG("c143_f11");
-	if (font >= m_FontCount || str.empty())
+	if (font >= FontCount || str.empty())
 		return 0;
 
 	if (!width)
@@ -460,10 +460,10 @@ int CFontsManager::GetHeightA(PMULTILINES_FONT_INFO info)
 string CFontsManager::GetTextByWidthA(const uchar &font, const string &str, int width, const bool &isCropped)
 {
 	WISPFUN_DEBUG("c143_f13");
-	if (font >= m_FontCount || str.empty())
+	if (font >= FontCount || str.empty())
 		return string("");
 
-	FONT_DATA &fd = m_Font[font];
+	FONT_DATA &fd = Font[font];
 
 	if (isCropped)
 	{
@@ -503,10 +503,10 @@ string CFontsManager::GetTextByWidthA(const uchar &font, const string &str, int 
 PMULTILINES_FONT_INFO CFontsManager::GetInfoA(uchar font, const char *str, int len, TEXT_ALIGN_TYPE align, ushort flags, int width)
 {
 	WISPFUN_DEBUG("c143_f14");
-	if (font >= m_FontCount)
+	if (font >= FontCount)
 		return NULL;
 
-	FONT_DATA &fd = m_Font[font];
+	FONT_DATA &fd = Font[font];
 
 	PMULTILINES_FONT_INFO info = new MULTILINES_FONT_INFO();
 	info->Reset();
@@ -756,14 +756,14 @@ UINT_LIST CFontsManager::GeneratePixelsA(const uchar &font, CGLTextTexture &th, 
 
 	th.Clear();
 
-	if (font >= m_FontCount)
+	if (font >= FontCount)
 		return pData;
 
 	int len = (int)strlen(str);
 	if (!len)
 		return pData;
 
-	FONT_DATA &fd = m_Font[font];
+	FONT_DATA &fd = Font[font];
 
 	if (!width)
 		width = GetWidthA(font, str);
@@ -803,7 +803,7 @@ UINT_LIST CFontsManager::GeneratePixelsA(const uchar &font, CGLTextTexture &th, 
 	int lineOffsY = 0;
 	PMULTILINES_FONT_INFO ptr = info;
 
-	bool partialHue = (font != 5 && font != 8) && !m_UnusePartialHue;
+	bool partialHue = (font != 5 && font != 8) && !UnusePartialHue;
 	int font6OffsetY = (int)(font == 6) * 7;
 
 	while (ptr != NULL)
@@ -2443,7 +2443,7 @@ UINT_LIST CFontsManager::GeneratePixelsW(const uchar &font, CGLTextTexture &th, 
 			return pData;
 	}
 
-	if (!oldWidth && m_RecalculateWidthByInfo)
+	if (!oldWidth && RecalculateWidthByInfo)
 	{
 		PMULTILINES_FONT_INFO ptr = info;
 		width = 0;

@@ -14,7 +14,7 @@
 CGUIShader::CGUIShader(CGLShader *shader, const bool &enabled)
 : CBaseGUI(GOT_SHADER, 0, 0, 0, 0, 0), m_Shader(shader)
 {
-	m_Enabled = enabled;
+	Enabled = enabled;
 }
 //----------------------------------------------------------------------------------
 CGUIShader::~CGUIShader()
@@ -24,7 +24,7 @@ CGUIShader::~CGUIShader()
 void CGUIShader::Draw(const bool &checktrans)
 {
 	WISPFUN_DEBUG("c72_f1");
-	if (m_Enabled && m_Shader != NULL)
+	if (Enabled && m_Shader != NULL)
 		m_Shader->Use();
 	else
 		UnuseShader();

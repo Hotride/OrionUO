@@ -25,7 +25,7 @@ CPathNode::~CPathNode()
 void CPathNode::Reset()
 {
 	m_Parent = NULL;
-	m_Used = false;
-	m_X = m_Y = m_Z = m_Direction = m_Cost = m_DistFromStartCost = m_DistFromGoalCost = 0;
+	Used = false;
+	X = Y = Z = Direction = Cost = DistFromStartCost = DistFromGoalCost = 0;
 }
 //----------------------------------------------------------------------------------

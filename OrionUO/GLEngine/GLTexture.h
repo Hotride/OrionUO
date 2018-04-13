@@ -14,23 +14,23 @@ typedef vector<uchar> HIT_MAP_TYPE;
 //----------------------------------------------------------------------------------
 class CGLTexture
 {
+public:
 	//!Габариты текстуры
-	SETGET(short, Width, 0);
-	SETGET(short, Height, 0);
+	short Width = 0;
+	short Height = 0;
 
-	SETGET(short, ImageOffsetX, 0);
-	SETGET(short, ImageOffsetY, 0);
+	short ImageOffsetX = 0;
+	short ImageOffsetY = 0;
 
-	SETGET(short, ImageWidth, 0);
-	SETGET(short, ImageHeight, 0);
+	short ImageWidth = 0;
+	short ImageHeight = 0;
 
 	//!Буфер вершин
-	SETGET(GLuint, VertexBuffer, 0);
+	GLuint VertexBuffer = 0;
 
 	//!Буфер вершин для зеркального отображения анимации
-	SETGET(GLuint, MirroredVertexBuffer, 0);
+	GLuint MirroredVertexBuffer = 0;
 
-public:
 	CGLTexture();
 	virtual ~CGLTexture();
 

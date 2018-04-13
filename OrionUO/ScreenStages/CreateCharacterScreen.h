@@ -17,7 +17,7 @@ class CCreateCharacterScreen : public CBaseScreen
 
 	//!Выбранный цвет тела/одежды/волосеного покрова
 	SETGETE(int, ColorSelection, 0);
-	SETGET(string, Name, "");
+	string Name = "";
 
 private:
 	CGumpScreenCreateCharacter m_CreateCharacterGump;

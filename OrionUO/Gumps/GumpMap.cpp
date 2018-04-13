@@ -12,17 +12,17 @@
 #include "stdafx.h"
 //----------------------------------------------------------------------------------
 CGumpMap::CGumpMap(uint serial, ushort graphic, int startX, int startY, int endX, int endY, int width, int height)
-: CGump(GT_MAP, serial, 0, 0), m_StartX(startX), m_StartY(startY),
-m_EndX(endX), m_EndY(endY), m_Width(width), m_Height(height)
+: CGump(GT_MAP, serial, 0, 0), StartX(startX), StartY(startY),
+EndX(endX), EndY(endY), Width(width), Height(height)
 {
 	WISPFUN_DEBUG("c99_f1");
-	m_Graphic = graphic;
+	Graphic = graphic;
 
-	Add(new CGUIResizepic(0, 0x1432, 0, 0, m_Width + 44, m_Height + 61)); //Map Gump
+	Add(new CGUIResizepic(0, 0x1432, 0, 0, Width + 44, Height + 61)); //Map Gump
 
-	m_PlotCourse = (CGUIButton*)Add(new CGUIButton(ID_GM_PLOT_COURSE, 0x1398, 0x1398, 0x1398, (m_Width - 100) / 2, 5)); //Plot Course
-	m_StopPlotting = (CGUIButton*)Add(new CGUIButton(ID_GM_STOP_PLOTTING, 0x1399, 0x1399, 0x1399, (m_Width - 70) / 2, 5)); //Stop Plotting
-	m_ClearCourse = (CGUIButton*)Add(new CGUIButton(ID_GM_CLEAR_COURSE, 0x139A, 0x139A, 0x139A, (m_Width - 66) / 2, m_Height + 37)); //Clear Course
+	m_PlotCourse = (CGUIButton*)Add(new CGUIButton(ID_GM_PLOT_COURSE, 0x1398, 0x1398, 0x1398, (Width - 100) / 2, 5)); //Plot Course
+	m_StopPlotting = (CGUIButton*)Add(new CGUIButton(ID_GM_STOP_PLOTTING, 0x1399, 0x1399, 0x1399, (Width - 70) / 2, 5)); //Stop Plotting
+	m_ClearCourse = (CGUIButton*)Add(new CGUIButton(ID_GM_CLEAR_COURSE, 0x139A, 0x139A, 0x139A, (Width - 66) / 2, Height + 37)); //Clear Course
 
 	m_PlotCourse->Visible = (m_PlotState == 0);
 	m_StopPlotting->Visible = (m_PlotState == 1);
@@ -30,7 +30,7 @@ m_EndX(endX), m_EndY(endY), m_Width(width), m_Height(height)
 
 	m_Texture = (CGUIExternalTexture*)Add(new CGUIExternalTexture(new CGLTexture(), true, 24, 31));
 
-	Add(new CGUIGumppic(0x139D, m_Width - 20, m_Height - 20)); //N
+	Add(new CGUIGumppic(0x139D, Width - 20, Height - 20)); //N
 
 	m_DataBox = (CGUIDataBox*)Add(new CGUIDataBox());
 	m_DataBox->Visible = false;
@@ -54,7 +54,7 @@ void CGumpMap::SetPlotState(const int &val)
 	m_StopPlotting->Visible = (val == 1);
 	m_ClearCourse->Visible = (val == 1);
 
-	m_WantRedraw = true;
+	WantRedraw = true;
 }
 //----------------------------------------------------------------------------------
 int CGumpMap::LineUnderMouse(int &x1, int &y1, int x2, int y2)
@@ -158,14 +158,14 @@ void CGumpMap::PrepareContent()
 				int newX = g_MouseManager.Position.X - (m_X + 20);
 				int newY = g_MouseManager.Position.Y - (m_Y + 30);
 
-				m_WantRedraw = (m_PinOnCursor->X != newX || m_PinOnCursor->Y != newY);
+				WantRedraw = (m_PinOnCursor->X != newX || m_PinOnCursor->Y != newY);
 
 				m_PinOnCursor->X = newX;
 				m_PinOnCursor->Y = newY;
 			}
 		}
 
-		m_NoMove = (m_PinOnCursor != NULL);
+		NoMove = (m_PinOnCursor != NULL);
 	}
 }
 //----------------------------------------------------------------------------------
@@ -308,18 +308,18 @@ void CGumpMap::GUMP_BUTTON_EVENT_C
 	WISPFUN_DEBUG("c99_f7");
 	if (serial == ID_GM_PLOT_COURSE || serial == ID_GM_STOP_PLOTTING) //Plot Course /Stop Plotting
 	{
-		CPacketMapMessage(m_Serial, MM_EDIT, m_PlotState).Send();
+		CPacketMapMessage(Serial, MM_EDIT, m_PlotState).Send();
 		PlotState = !m_PlotState;
 
-		m_WantRedraw = true;
+		WantRedraw = true;
 	}
 	else if (serial == ID_GM_CLEAR_COURSE) //Clear Course
 	{
-		CPacketMapMessage(m_Serial, MM_CLEAR).Send();
+		CPacketMapMessage(Serial, MM_CLEAR).Send();
 
 		m_DataBox->Clear();
 
-		m_WantRedraw = true;
+		WantRedraw = true;
 	}
 }
 //----------------------------------------------------------------------------
@@ -369,10 +369,10 @@ void CGumpMap::OnLeftMouseButtonUp()
 							checkX = checkX - (x + 20);
 							checkY = checkY - (y + 29);
 
-							CPacketMapMessage(m_Serial, MM_INSERT, idx + 1, checkX, checkY).Send();
+							CPacketMapMessage(Serial, MM_INSERT, idx + 1, checkX, checkY).Send();
 
 							m_DataBox->Insert(first, new CGUIGumppic(0x139B, checkX, checkY));
-							m_WantRedraw = true;
+							WantRedraw = true;
 						}
 					}
 				}
@@ -382,15 +382,15 @@ void CGumpMap::OnLeftMouseButtonUp()
 				int x = m_X + 24;
 				int y = m_Y + 32;
 
-				if (g_Orion.PolygonePixelsInXY(x, y, m_Width, m_Height))
+				if (g_Orion.PolygonePixelsInXY(x, y, Width, Height))
 				{
 					x = g_MouseManager.Position.X - x - 4;
 					y = g_MouseManager.Position.Y - y - 2;
 
-					CPacketMapMessage(m_Serial, MM_ADD, 0, x, y).Send();
+					CPacketMapMessage(Serial, MM_ADD, 0, x, y).Send();
 
 					m_DataBox->Add(new CGUIGumppic(0x139B, x, y));
-					m_WantRedraw = true;
+					WantRedraw = true;
 				}
 			}
 		}
@@ -403,7 +403,7 @@ void CGumpMap::OnLeftMouseButtonUp()
 
 		int idx = g_PressedObject.LeftSerial - ID_GM_PIN_LIST - 1;
 
-		if (g_Orion.PolygonePixelsInXY(x, y, m_Width, m_Height))
+		if (g_Orion.PolygonePixelsInXY(x, y, Width, Height))
 		{
 			x = g_MouseManager.Position.X - (x - 4);
 			y = g_MouseManager.Position.Y - (y - 2);
@@ -420,7 +420,7 @@ void CGumpMap::OnLeftMouseButtonUp()
 			m_DataBox->Delete(m_PinOnCursor);
 		}
 
-		m_WantRedraw = true;
+		WantRedraw = true;
 		m_PinOnCursor = NULL;
 	}
 }

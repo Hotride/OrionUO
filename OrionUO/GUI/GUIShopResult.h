@@ -14,11 +14,12 @@
 //----------------------------------------------------------------------------------
 class CGUIShopResult : public CBaseGUI
 {
+public:
 	//!Стоимость
-	SETGET(uint, Price, 0);
+	uint Price = 0;
 
 	//!Название
-	SETGET(string, Name, "");
+	string Name = "";
 
 private:
 	//!Текстура названия

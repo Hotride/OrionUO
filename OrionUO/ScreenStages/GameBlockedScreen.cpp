@@ -28,7 +28,7 @@ CGameBlockedScreen::~CGameBlockedScreen()
 */
 void CGameBlockedScreen::Init()
 {
-	m_Code = 0;
+	Code = 0;
 }
 //----------------------------------------------------------------------------------
 /*!

@@ -12,75 +12,75 @@
 #include "stdafx.h"
 //----------------------------------------------------------------------------------
 CVector::CVector(const double &x, const double &y, const double &z)
-: m_X(x), m_Y(y), m_Z(z)
+: X(x), Y(y), Z(z)
 {
 }
 //----------------------------------------------------------------------------------
 void CVector::Link(const CVector &v)
 {
-	m_X = v.X;
-	m_Y = v.Y;
-	m_Z = v.Z;
+	X = v.X;
+	Y = v.Y;
+	Z = v.Z;
 }
 //----------------------------------------------------------------------------------
 void CVector::Link(const double &x, const double &y, const double &z)
 {
-	m_X = x;
-	m_Y = y;
-	m_Z = z;
+	X = x;
+	Y = y;
+	Z = z;
 }
 //----------------------------------------------------------------------------------
 void CVector::Add(const CVector &v)
 {
-	m_X += v.X;
-	m_Y += v.Y;
-	m_Z += v.Z;
+	X += v.X;
+	Y += v.Y;
+	Z += v.Z;
 }
 //----------------------------------------------------------------------------------
 void CVector::Add(const double &x, const double &y, const double &z)
 {
-	m_X += x;
-	m_Y += y;
-	m_Z += z;
+	X += x;
+	Y += y;
+	Z += z;
 }
 //----------------------------------------------------------------------------------
 void CVector::Merge(const CVector &v)
 {
-	double newX = m_Y * v.Z - m_Z * v.Y;
-	double newY = m_Z * v.X - m_X * v.Z;
-	double newZ = m_X * v.Y - m_Y * v.X;
+	double newX = Y * v.Z - Z * v.Y;
+	double newY = Z * v.X - X * v.Z;
+	double newZ = X * v.Y - Y * v.X;
 
-	m_X = newX;
-	m_Y = newY;
-	m_Z = newZ;
+	X = newX;
+	Y = newY;
+	Z = newZ;
 }
 //----------------------------------------------------------------------------------
 void CVector::Merge(const double &x, const double &y, const double &z)
 {
-	double newX = m_Y * z - m_Z * y;
-	double newY = m_Z * x - m_X * z;
-	double newZ = m_X * y - m_Y * x;
+	double newX = Y * z - Z * y;
+	double newY = Z * x - X * z;
+	double newZ = X * y - Y * x;
 
-	m_X = newX;
-	m_Y = newY;
-	m_Z = newZ;
+	X = newX;
+	Y = newY;
+	Z = newZ;
 }
 //----------------------------------------------------------------------------------
 void CVector::Normalize()
 {
 	WISPFUN_DEBUG("c38_f1");
-	if (!m_X && !m_Y && !m_Z)
+	if (!X && !Y && !Z)
 			return;
 
-	double result = m_X * m_X + m_Y * m_Y + m_Z * m_Z;
+	double result = X * X + Y * Y + Z * Z;
 
 	//if (result)
 	{
 		result = sqrtl(result);
 		
-		m_X /= result;
-		m_Y /= result;
-		m_Z /= result;
+		X /= result;
+		Y /= result;
+		Z /= result;
 	}
 }
 //----------------------------------------------------------------------------------

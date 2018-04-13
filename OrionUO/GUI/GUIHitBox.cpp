@@ -14,7 +14,7 @@
 CGUIHitBox::CGUIHitBox(const uint &serial, const int &x, const int &y, const int &width, const int &height, const bool &callOnMouseUp)
 : CGUIPolygonal(GOT_HITBOX, x, y, width, height, callOnMouseUp)
 {
-	m_Serial = serial;
+	Serial = serial;
 }
 //----------------------------------------------------------------------------------
 CGUIHitBox::~CGUIHitBox()

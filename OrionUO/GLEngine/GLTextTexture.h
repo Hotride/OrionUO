@@ -27,9 +27,9 @@ struct WEB_LINK_RECT
 //----------------------------------------------------------------------------------
 class CGLTextTexture : public CGLTexture
 {
-	SETGET(int, LinesCount, 0);
-
 public:
+	int LinesCount = 0;
+
 	CGLTextTexture();
 	virtual ~CGLTextTexture();
 

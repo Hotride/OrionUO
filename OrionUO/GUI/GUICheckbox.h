@@ -14,32 +14,33 @@
 //----------------------------------------------------------------------------------
 class CGUICheckbox : public CGUIDrawObject
 {
+public:
 	//!ИД картинки в нажатом состоянии
-	SETGET(ushort, GraphicChecked, 0);
+	ushort GraphicChecked = 0;
 
 	//!ИД картинки в выбранном состоянии
-	SETGET(ushort, GraphicSelected, 0);
+	ushort GraphicSelected = 0;
 
 	//!ИД картинки в отключенном состоянии
-	SETGET(ushort, GraphicDisabled, 0);
+	ushort GraphicDisabled = 0;
 
 	//!Состояние компоненты
-	SETGET(bool, Checked, false);
+	bool Checked = false;
 
 	//!Позиция текста
-	SETGET(SLIDER_TEXT_POSITION, TextPosition, STP_RIGHT);
+	SLIDER_TEXT_POSITION TextPosition = STP_RIGHT;
 
 	//!Координата текста по оси X
-	SETGET(int, TextX, 0);
+	int TextX = 0;
 
 	//!Координата текста по оси Y
-	SETGET(int, TextY, 0);
+	int TextY = 0;
 
 	//!Стандартное смещение текста
-	SETGET(int, DefaultTextOffset, 2);
+	int DefaultTextOffset = 2;
 
 protected:
-	CGLTextTexture m_Text{ CGLTextTexture() };
+	CGLTextTexture Text{ CGLTextTexture() };
 
 	void UpdateTextPosition();
 

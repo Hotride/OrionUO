@@ -519,7 +519,7 @@ CPacketGumpResponse::CPacketGumpResponse(CGumpGeneric *gump, int code)
 
 	QFOR(item, gump->m_Items, CBaseGUI*)
 	{
-		switch (item->GetType())
+		switch (item->Type)
 		{
 			case GOT_CHECKBOX:
 			case GOT_RADIO:
@@ -1185,10 +1185,10 @@ CPacketBookPageData::CPacketBookPageData(CGumpBook *gump, int page)
 				if (ch == '\n')
 					ch = 0;
 
-				*m_Ptr++ = ch;
+				*Ptr++ = ch;
 			}
 
-			*m_Ptr = 0;
+			*Ptr = 0;
 		}
 	}
 }

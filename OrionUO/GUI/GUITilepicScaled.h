@@ -14,8 +14,8 @@
 //----------------------------------------------------------------------------------
 class CGUITilepicScaled : public CGUITilepic
 {
-	SETGET(int, Width, 0);
-	SETGET(int, Height, 0);
+	int Width = 0;
+	int Height = 0;
 
 public:
 	CGUITilepicScaled(const ushort &graphic, const ushort &color, const int &x, const int &y, const int &width, const int &height);

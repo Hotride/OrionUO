@@ -13,36 +13,36 @@
 //!Game effect class
 class CGameEffect : public CRenderWorldObject
 {
+public:
 	//!Effect type
-	SETGET(EFFECT_TYPE, EffectType, EF_MOVING);
+	EFFECT_TYPE EffectType = EF_MOVING;
 
 	//!Серийник назначения
-	SETGET(uint, DestSerial, 0);
+	uint DestSerial = 0;
 	//!Координата назначения по оси X
-	SETGET(ushort, DestX, 0);
+	ushort DestX = 0;
 	//!Координата назначения по оси Y
-	SETGET(ushort, DestY, 0);
+	ushort DestY = 0;
 	//!Координата назначения по оси Z
-	SETGET(char, DestZ, 0);
+	char DestZ = 0;
 	//!Скорость
-	SETGET(uchar, Speed, 0);
+	uchar Speed = 0;
 	//!Время жизни
-	SETGET(uint, Duration, 0);
+	uint Duration = 0;
 	//!Изменять направление картинки при полете эффекта?
-	SETGET(bool, FixedDirection, false);
+	bool FixedDirection = false;
 	//!Взрывать по достижении цели?
-	SETGET(bool, Explode, false);
+	bool Explode = false;
 	//!Режим отображения эффекта
-	SETGET(uint, RenderMode, 0);
+	uint RenderMode = 0;
 
 	//!Индекс картинки
-	SETGET(int, AnimIndex, 0);
+	int AnimIndex = 0;
 	//!Смещение от базового индекса
-	SETGET(int, Increment, 0);
+	int Increment = 0;
 	//!Последнее время изменения картинки
-	SETGET(uint, LastChangeFrameTime, 0);
+	uint LastChangeFrameTime = 0;
 
-public:
 	CGameEffect();
 	virtual ~CGameEffect();
 

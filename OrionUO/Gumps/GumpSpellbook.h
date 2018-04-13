@@ -25,7 +25,7 @@ struct PALADIN_SPELL_REQURIES
 //----------------------------------------------------------------------------------
 class CGumpSpellbook : public CGump
 {
-	SETGET(SPELLBOOK_TYPE, BookType, ST_MAGE);
+	SPELLBOOK_TYPE BookType = ST_MAGE;
 
 public:
 	static const int SPELLBOOK_1_SPELLS_COUNT = 64;
@@ -73,7 +73,7 @@ private:
 
 	int m_SpellCount{ 0 };
 	uchar m_Spells[MAX_SPELLS_COUNT];
-	int m_PageCount{ 8 };
+	int PageCount{ 8 };
 
 	CGUIGumppic *m_Body{ NULL };
 	CGUIText *m_TithingPointsText{ NULL };

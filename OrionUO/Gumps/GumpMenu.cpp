@@ -14,7 +14,7 @@
 CGumpMenu::CGumpMenu(uint serial, uint id, short x, short y)
 : CGump(GT_MENU, serial, x, y)
 {
-	m_ID = id;
+	ID = id;
 }
 //----------------------------------------------------------------------------------
 CGumpMenu::~CGumpMenu()
@@ -27,24 +27,24 @@ void CGumpMenu::CalculateGumpState()
 	CGump::CalculateGumpState();
 
 	if (g_GumpPressed)
-		m_FrameCreated = false;
+		FrameCreated = false;
 }
 //----------------------------------------------------------------------------------
 void CGumpMenu::PrepareContent()
 {
 	WISPFUN_DEBUG("c100_f2");
-	if (m_TextChanged)
+	if (TextChanged)
 	{
-		m_TextChanged = false;
+		TextChanged = false;
 
 		if (m_TextObject != NULL)
 		{
-			if (m_Text.length())
-				m_TextObject->CreateTextureA(1, m_Text, 200, TS_LEFT, UOFONT_FIXED);
+			if (Text.length())
+				m_TextObject->CreateTextureA(1, Text, 200, TS_LEFT, UOFONT_FIXED);
 			else
 				m_TextObject->m_Texture.Clear();
 
-			m_WantRedraw = true;
+			WantRedraw = true;
 		}
 	}
 }
@@ -69,6 +69,6 @@ void CGumpMenu::SendMenuResponse(int index)
 	CPacketMenuResponse(this, index).Send();
 
 	//Удаляем использованный гамп
-	m_RemoveMark = true;
+	RemoveMark = true;
 }
 //----------------------------------------------------------------------------------

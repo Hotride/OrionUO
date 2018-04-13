@@ -13,10 +13,10 @@
 //Контейнер для текста
 class CTextContainer : public CBaseQueue
 {
-	SETGET(int, MaxSize, 0);
-	SETGET(int, Size, 0);
-
 public:
+	int MaxSize = 0;
+	int Size = 0;
+
 	CTextContainer(const int &maxSize);
 	~CTextContainer();
 

@@ -12,8 +12,8 @@
 #include "stdafx.h"
 //----------------------------------------------------------------------------------
 CGUIGumppicTiled::CGUIGumppicTiled(const ushort &graphic, const int &x, const int &y, const int &width, const int &height)
-: CGUIDrawObject(GOT_GUMPPICTILED, 0, graphic, 0, x, y), m_Width(width),
-m_Height(height)
+: CGUIDrawObject(GOT_GUMPPICTILED, 0, graphic, 0, x, y), Width(width),
+Height(height)
 {
 }
 //----------------------------------------------------------------------------------
@@ -24,13 +24,13 @@ CGUIGumppicTiled::~CGUIGumppicTiled()
 void CGUIGumppicTiled::Draw(const bool &checktrans)
 {
 	WISPFUN_DEBUG("c57_f1");
-	CGLTexture *th = g_Orion.ExecuteGump(m_Graphic);
+	CGLTexture *th = g_Orion.ExecuteGump(Graphic);
 
 	if (th != NULL)
 	{
 		SetShaderMode();
 
-		th->Draw(m_X, m_Y, m_Width, m_Height, checktrans);
+		th->Draw(m_X, m_Y, Width, Height, checktrans);
 	}
 }
 //----------------------------------------------------------------------------------
@@ -40,15 +40,15 @@ bool CGUIGumppicTiled::Select()
 	int x = g_MouseManager.Position.X - m_X;
 	int y = g_MouseManager.Position.Y - m_Y;
 
-	if (x < 0 || y < 0 || (m_Width > 0 && x >= m_Width) || (m_Height > 0 && y >= m_Height))
+	if (x < 0 || y < 0 || (Width > 0 && x >= Width) || (Height > 0 && y >= Height))
 		return false;
 
-	CGLTexture *th = g_Orion.ExecuteGump(m_Graphic);
+	CGLTexture *th = g_Orion.ExecuteGump(Graphic);
 
 	if (th != NULL)
 	{
-		int width = m_Width;
-		int height = m_Height;
+		int width = Width;
+		int height = Height;
 
 		if (width == 0)
 			width = th->Width;
@@ -73,7 +73,7 @@ bool CGUIGumppicTiled::Select()
 
 		if (x >= 0 && y >= 0 && x < th->Width && y < th->Height)
 		{
-			if (m_CheckPolygone)
+			if (CheckPolygone)
 				return true;
 
 			int pos = (y * th->Width) + x;

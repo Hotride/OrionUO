@@ -12,16 +12,16 @@
 //----------------------------------------------------------------------------------
 class CServer
 {
-	SETGET(ushort, Index, 0);
-	SETGET(string, Name, "");
-	SETGET(uchar, FullPercent, 0);
-	SETGET(uchar, Timezone, 0);
-	SETGET(uint, IP, 0);
-	SETGET(bool, Selected, false);
-	SETGET(int, Ping, -1);
-	SETGET(int, PacketsLoss, -1);
-
 public:
+	ushort Index = 0;
+	string Name = "";
+	uchar FullPercent = 0;
+	uchar Timezone = 0;
+	uint IP = 0;
+	bool Selected = false;
+	int Ping = -1;
+	int PacketsLoss = -1;
+
 	CServer();
 	CServer(const ushort &index, const string &name, const uchar &fullPercent, const uchar &timezone, const uint &ip, const bool &selected);
 	~CServer();
@@ -30,8 +30,9 @@ public:
 //Класс для хранения списка серверов
 class CServerList
 {
-	SETGET(string, LastServerName, "");
-	SETGET(uint, LastServerIndex, 0);
+public:
+	string LastServerName = "";
+	uint LastServerIndex = 0;
 
 private:
 	vector<CServer> m_Servers;

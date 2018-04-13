@@ -106,21 +106,21 @@ void CGumpSelectFont::GUMP_RADIO_EVENT_C
 		case SFGS_OPT_TOOLTIP:
 		{
 			g_OptionsConfig.ToolTipsTextFont = realFont;
-			m_RemoveMark = true;
+			RemoveMark = true;
 
 			break;
 		}
 		case SFGS_OPT_CHAT:
 		{
 			g_OptionsConfig.ChatFont = realFont;
-			m_RemoveMark = true;
+			RemoveMark = true;
 
 			break;
 		}
 		case SFGS_OPT_MISCELLANEOUS:
 		{
 			g_OptionsConfig.SpeechFont = realFont;
-			m_RemoveMark = true;
+			RemoveMark = true;
 
 			break;
 		}

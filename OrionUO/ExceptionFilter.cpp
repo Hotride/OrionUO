@@ -217,7 +217,7 @@ LONG __stdcall OrionUnhandledExceptionFilter(struct _EXCEPTION_POINTERS *excepti
 			}
 
 			Wisp::g_WispCrashLogger.Close();
-			string crashlogPath = "\"" + Wisp::g_WispCrashLogger.GetFileName() + "\"";
+			string crashlogPath = "\"" + Wisp::g_WispCrashLogger.FileName + "\"";
 			STARTUPINFOA si;
 			PROCESS_INFORMATION pi;
 			ZeroMemory(&si, sizeof(si));

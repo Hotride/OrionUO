@@ -13,19 +13,19 @@
 //!Moving item effect
 class CGameEffectDrag : public CGameEffect
 {
+public:
 	//!Offset on screen X
-	SETGET(int, OffsetX, 0);
+	int OffsetX = 0;
 
 	//!Offset on screen Y
-	SETGET(int, OffsetY, 0);
+	int OffsetY = 0;
 
 	//!Last move time stamp
-	SETGET(uint, LastMoveTime, 0);
+	uint LastMoveTime = 0;
 
 	//!Delay for moving
-	SETGET(uchar, MoveDelay, 20);
+	uchar MoveDelay = 20;
 
-public:
 	/*!
 	Constructor
 	@return

@@ -14,22 +14,22 @@
 //----------------------------------------------------------------------------------
 class CGUIPolygonal : public CBaseGUI
 {
+public:
 	//!Ширина
-	SETGET(int, Width, 0);
+	int Width = 0;
 
 	//!Высота
-	SETGET(int, Height, 0);
+	int Height = 0;
 
 	//!Вызов события по нажатию левой кнопки мыши или по отпусканию
-	SETGET(bool, CallOnMouseUp, false);
+	bool CallOnMouseUp = false;
 
-public:
 	CGUIPolygonal(const GUMP_OBJECT_TYPE &type, const int &x, const int &y, const int &width, const int &height, const bool &callOnMouseUp = false);
 	virtual ~CGUIPolygonal();
 
 	virtual bool Select();
 
-	virtual WISP_GEOMETRY::CSize GetSize() { return WISP_GEOMETRY::CSize(m_Width, m_Height); }
+	virtual WISP_GEOMETRY::CSize GetSize() { return WISP_GEOMETRY::CSize(Width, Height); }
 };
 //----------------------------------------------------------------------------------
 #endif

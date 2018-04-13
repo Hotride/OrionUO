@@ -32,7 +32,7 @@ void CServerScreen::Init()
 	g_OrionWindow.SetTitle(string("Ultima Online - ") + g_MainScreen.m_Account->c_str());
 
 	g_ScreenEffectManager.UseSunrise();
-	m_SmoothScreenAction = 0;
+	SmoothScreenAction = 0;
 
 	m_Gump.PrepareTextures();
 	m_Gump.WantUpdateContent = true;
@@ -51,7 +51,7 @@ void CServerScreen::OnKeyDown(const WPARAM &wParam, const LPARAM &lParam)
 
 	if (wParam == VK_RETURN)
 	{
-		m_SelectionServerTempValue = g_ServerList.LastServerIndex;
+		SelectionServerTempValue = g_ServerList.LastServerIndex;
 		CreateSmoothAction(ID_SMOOTH_SS_SELECT_SERVER);
 	}
 }
@@ -65,10 +65,10 @@ void CServerScreen::ProcessSmoothAction(uchar action)
 {
 	WISPFUN_DEBUG("c168_f3");
 	if (action == 0xFF)
-		action = m_SmoothScreenAction;
+		action = SmoothScreenAction;
 
 	if (action == ID_SMOOTH_SS_SELECT_SERVER)
-		g_Orion.ServerSelection(m_SelectionServerTempValue);
+		g_Orion.ServerSelection(SelectionServerTempValue);
 	else if (action == ID_SMOOTH_SS_QUIT)
 		g_OrionWindow.Destroy();
 	else if (action == ID_SMOOTH_SS_GO_SCREEN_MAIN)

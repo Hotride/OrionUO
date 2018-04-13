@@ -12,7 +12,7 @@
 #include "stdafx.h"
 //----------------------------------------------------------------------------------
 CGUIBuff::CGUIBuff(const ushort &graphic, const uint &timer, const wstring &text)
-: CGUIDrawObject(GOT_BUFF, 0, graphic, 0, 0, 0), m_Timer(timer), m_Text(text)
+: CGUIDrawObject(GOT_BUFF, 0, graphic, 0, 0, 0), Timer(timer), Text(text)
 {
 }
 //----------------------------------------------------------------------------------
@@ -27,7 +27,7 @@ void CGUIBuff::Draw(const bool &checktrans)
 
 	if (th != NULL)
 	{
-		glColor4ub(0xFF, 0xFF, 0xFF, m_Alpha);
+		glColor4ub(0xFF, 0xFF, 0xFF, Alpha);
 		th->Draw(m_X, m_Y, checktrans);
 	}
 }

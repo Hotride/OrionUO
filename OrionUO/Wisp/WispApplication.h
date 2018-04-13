@@ -7,11 +7,12 @@ namespace WISP_APPLICATION
 //----------------------------------------------------------------------------------
 class CApplication
 {
-	SETGET(HINSTANCE, Hinstance, 0);
-	SETGET(string, ExePathA, "");
-	SETGET(wstring, ExePathW, L"");
-	SETGET(string, UOFilesPathA, "");
-	SETGET(wstring, UOFilesPathW, L"");
+public:
+	HINSTANCE Hinstance = 0;
+	string ExePathA = "";
+	wstring ExePathW = L"";
+	string UOFilesPathA = "";
+	wstring UOFilesPathW = L"";
 
 protected:
 	virtual void OnMainLoop() {}

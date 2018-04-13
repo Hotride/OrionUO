@@ -15,26 +15,26 @@ CObjectOnCursor g_ObjectInHand;
 //----------------------------------------------------------------------------------
 void CObjectOnCursor::Clear()
 {
-	m_Enabled = false;
-	m_Dropped = false;
-	m_Serial = 0;
-	m_Graphic = 0;
-	m_Color = 0;
-	m_Count = 0;
-	m_TotalCount = 0;
-	m_Layer = 0;
-	m_Flags = 0;
-	m_Container = 0;
-	m_IsGameFigure = false;
-	m_TiledataPtr = NULL;
-	m_UpdatedInWorld = false;
+	Enabled = false;
+	Dropped = false;
+	Serial = 0;
+	Graphic = 0;
+	Color = 0;
+	Count = 0;
+	TotalCount = 0;
+	Layer = 0;
+	Flags = 0;
+	Container = 0;
+	IsGameFigure = false;
+	TiledataPtr = NULL;
+	UpdatedInWorld = false;
 }
 //----------------------------------------------------------------------------------
 ushort CObjectOnCursor::GetDrawGraphic(bool &doubleDraw)
 {
 	WISPFUN_DEBUG("c20_f15");
-	int index = CGameObject::IsGold(m_Graphic);
-	ushort result = m_Graphic;
+	int index = CGameObject::IsGold(Graphic);
+	ushort result = Graphic;
 
 	const ushort graphicAssociateTable[3][3] =
 	{
@@ -45,11 +45,11 @@ ushort CObjectOnCursor::GetDrawGraphic(bool &doubleDraw)
 
 	if (index)
 	{
-		int graphicIndex = (int)(m_Count > 1) + (int)(m_Count > 5);
+		int graphicIndex = (int)(Count > 1) + (int)(Count > 5);
 		result = graphicAssociateTable[index - 1][graphicIndex];
 	}
 	else
-		doubleDraw = IsStackable(m_TiledataPtr->Flags) && (m_Count > 1);
+		doubleDraw = IsStackable(m_TiledataPtr->Flags) && (Count > 1);
 
 	return result;
 }

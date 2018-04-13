@@ -14,7 +14,7 @@
 CGumpProperty::CGumpProperty(const wstring &text)
 : CGump(GT_PROPERTY, 0, 0, 0)
 {
-	m_Timer = g_Ticks + 5000;
+	Timer = g_Ticks + 5000;
 
 	int width = 0;
 	g_ToolTip.CreateTextTexture(m_Texture, text, width, 0);
@@ -40,7 +40,7 @@ CGumpProperty::~CGumpProperty()
 //----------------------------------------------------------------------------------
 void CGumpProperty::PrepareContent()
 {
-	if (m_Timer < g_Ticks)
-		m_RemoveMark = true;
+	if (Timer < g_Ticks)
+		RemoveMark = true;
 }
 //----------------------------------------------------------------------------------

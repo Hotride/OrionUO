@@ -27,14 +27,14 @@ CGameEffectMoving::~CGameEffectMoving()
 void CGameEffectMoving::Update(CGameObject *parent)
 {
 	WISPFUN_DEBUG("c18_f1");
-	if (m_LastMoveTime > g_Ticks)
+	if (LastMoveTime > g_Ticks)
 		return;
 
-	m_LastMoveTime = g_Ticks + m_MoveDelay;
+	LastMoveTime = g_Ticks + MoveDelay;
 
 	CGameEffect::Update(parent);
 
-	CGameObject *obj = g_World->FindWorldObject(m_DestSerial);
+	CGameObject *obj = g_World->FindWorldObject(DestSerial);
 
 	if (obj != NULL)
 	{
@@ -42,9 +42,9 @@ void CGameEffectMoving::Update(CGameObject *parent)
 
 		if (obj != NULL)
 		{
-			m_DestX = obj->X;
-			m_DestY = obj->Y;
-			m_DestZ = obj->Z;
+			DestX = obj->X;
+			DestY = obj->Y;
+			DestZ = obj->Z;
 		}
 	}
 
@@ -60,11 +60,11 @@ void CGameEffectMoving::Update(CGameObject *parent)
 	int drawX = screenCenterX + (offsetX - offsetY) * 22;
 	int drawY = screenCenterY + (offsetX + offsetY) * 22;
 
-	int realDrawX = drawX + m_OffsetX;
-	int realDrawY = drawY + m_OffsetY;
+	int realDrawX = drawX + OffsetX;
+	int realDrawY = drawY + OffsetY;
 
-	int offsetDestX = m_DestX - playerX;
-	int offsetDestY = m_DestY - playerY;
+	int offsetDestX = DestX - playerX;
+	int offsetDestY = DestY - playerY;
 
 	int drawDestX = screenCenterX + (offsetDestX - offsetDestY) * 22;
 	int drawDestY = screenCenterY + (offsetDestX + offsetDestY) * 22;
@@ -141,16 +141,16 @@ void CGameEffectMoving::Update(CGameObject *parent)
 	int newX = playerX + newCoordX;
 	int newY = playerY + newCoordY;
 
-	if (newX == m_DestX && newY == m_DestY && m_Z == m_DestZ)
+	if (newX == DestX && newY == DestY && m_Z == DestZ)
 	{
-		if (m_Explode)
+		if (Explode)
 		{
 			EFFECT_TYPE type = EF_STAY_AT_POS;
 
-			if (g_World->FindWorldObject(m_Serial) != NULL)
+			if (g_World->FindWorldObject(Serial) != NULL)
 				type = EF_STAY_AT_SOURCE;
 
-			m_Z = m_DestZ;
+			m_Z = DestZ;
 			g_EffectManager.CreateExplodeEffect(this, type);
 		}
 
@@ -161,17 +161,17 @@ void CGameEffectMoving::Update(CGameObject *parent)
 		int newDrawX = screenCenterX + (newCoordX - newCoordY) * 22;
 		int newDrawY = screenCenterY + (newCoordX + newCoordY) * 22;
 
-		m_Changed = true;
-		m_OffsetX = realDrawX - newDrawX;
-		m_OffsetY = realDrawY - newDrawY;
+		Changed = true;
+		OffsetX = realDrawX - newDrawX;
+		OffsetY = realDrawY - newDrawY;
 
 		bool wantUpdateInRenderList = false;
 
-		int countX = drawDestX - (newDrawX + m_OffsetX);
-		int countY = drawDestY - (newDrawY + m_OffsetY);
+		int countX = drawDestX - (newDrawX + OffsetX);
+		int countY = drawDestY - (newDrawY + OffsetY);
 		//int countY = drawDestY - (newDrawY + m_OffsetY + m_OffsetZ) - (m_DestZ - m_Z) * 4;
 
-		if (m_Z != m_DestZ)
+		if (m_Z != DestZ)
 		{
 			int stepsCountX = countX / (tempXY[x] + 1);
 			int stepsCountY = countY / (tempXY[(x + 1) % 2] + 1);
@@ -184,21 +184,21 @@ void CGameEffectMoving::Update(CGameObject *parent)
 
 			int totalOffsetZ = 0;
 
-			bool incZ = m_Z < m_DestZ;
+			bool incZ = m_Z < DestZ;
 
 			if (incZ)
-				totalOffsetZ = (m_DestZ - m_Z) * 4;
+				totalOffsetZ = (DestZ - m_Z) * 4;
 			else
-				totalOffsetZ = (m_Z - m_DestZ) * 4;
+				totalOffsetZ = (m_Z - DestZ) * 4;
 
 			totalOffsetZ /= stepsCountX;
 
 			if (!totalOffsetZ)
 				totalOffsetZ = 1;
 
-			m_OffsetZ += totalOffsetZ;
+			OffsetZ += totalOffsetZ;
 
-			if (m_OffsetZ >= 4)
+			if (OffsetZ >= 4)
 			{
 				int countZ = 1; // m_OffsetZ / 4;
 
@@ -207,19 +207,19 @@ void CGameEffectMoving::Update(CGameObject *parent)
 				else
 					m_Z -= countZ;
 
-				if (m_Z == m_DestZ)
-					m_OffsetZ = 0;
+				if (m_Z == DestZ)
+					OffsetZ = 0;
 				else
-					m_OffsetZ %= 8;
+					OffsetZ %= 8;
 					//m_OffsetZ -= countZ * 4;
 
 				wantUpdateInRenderList = true;
 			}
 		}
 
-		countY -= m_OffsetZ + (m_DestZ - m_Z) * 4;
+		countY -= OffsetZ + (DestZ - m_Z) * 4;
 
-		m_Angle = 180.0f + (float)(atan2(countY, countX) * 57.295780); //180.0f / M_PI = 57.295780f
+		Angle = 180.0f + (float)(atan2(countY, countX) * 57.295780); //180.0f / M_PI = 57.295780f
 
 		if (m_X != newX || m_Y != newY)
 		{

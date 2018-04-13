@@ -17,7 +17,7 @@ CPlayer::CPlayer(const uint &serial)
 : CGameCharacter(serial)
 {
 	WISPFUN_DEBUG("c21_f1");
-	CPacketSkillsRequest(m_Serial).Send();
+	CPacketSkillsRequest(Serial).Send();
 }
 //---------------------------------------------------------------------------
 CPlayer::~CPlayer()

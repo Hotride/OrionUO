@@ -12,19 +12,19 @@
 //----------------------------------------------------------------------------------
 class CPressedObject
 {
-	SETGET(uint, LeftSerial, 0);
+public:
+	uint LeftSerial = 0;
 	SETGETP(CRenderObject*, LeftObject, NULL);
 	SETGETP(CGump*, LeftGump, NULL);
 
-	SETGET(uint, RightSerial, 0);
+	uint RightSerial = 0;
 	SETGETP(CRenderObject*, RightObject, NULL);
 	SETGETP(CGump*, RightGump, NULL);
 
-	SETGET(uint, MidSerial, 0);
+	uint MidSerial = 0;
 	SETGETP(CRenderObject*, MidObject, NULL);
 	SETGETP(CGump*, MidGump, NULL);
 
-public:
 	CPressedObject();
 	virtual ~CPressedObject();
 

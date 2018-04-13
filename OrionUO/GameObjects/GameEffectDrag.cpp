@@ -27,15 +27,15 @@ CGameEffectDrag::~CGameEffectDrag()
 void CGameEffectDrag::Update(CGameObject *parent)
 {
 	WISPFUN_DEBUG("c17_f1");
-	if (m_LastMoveTime > g_Ticks)
+	if (LastMoveTime > g_Ticks)
 		return;
 
-	m_OffsetX += 8;
-	m_OffsetY += 8;
+	OffsetX += 8;
+	OffsetY += 8;
 
-	m_LastMoveTime = g_Ticks + m_MoveDelay;
+	LastMoveTime = g_Ticks + MoveDelay;
 
-	if (m_Duration < g_Ticks)
+	if (Duration < g_Ticks)
 		g_EffectManager.RemoveEffect(this);
 }
 //----------------------------------------------------------------------------------

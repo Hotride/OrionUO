@@ -38,13 +38,13 @@ struct UOPFrameData
 //----------------------------------------------------------------------------------
 class CEquipConvData
 {
-	SETGET(ushort, Graphic, 0);
-	SETGET(ushort, Gump, 0);
-	SETGET(ushort, Color, 0);
-
 public:
+	ushort Graphic = 0;
+	ushort Gump = 0;
+	ushort Color = 0;
+
 	CEquipConvData(const ushort &graphic, const ushort &gump, const ushort &color)
-		: m_Graphic(graphic), m_Gump(gump), m_Color(color) {}
+		: Graphic(graphic), Gump(gump), Color(color) {}
 	~CEquipConvData() {}
 };
 //----------------------------------------------------------------------------------
@@ -54,16 +54,17 @@ typedef unordered_map<ushort, EQUIP_CONV_DATA_MAP> EQUIP_CONV_BODY_MAP;
 //!Класс менеджера анимаций
 class CAnimationManager : public WISP_DATASTREAM::CDataReader
 {
+public:
 	//!Цвет текущего кадра
-	SETGET(ushort, Color, 0);
+	ushort Color = 0;
 	//!Группа анимаций текущего кадра
-	SETGET(uchar, AnimGroup, 0);
+	uchar AnimGroup = 0;
 	//!Направление текущего кадра
-	SETGET(uchar, Direction, 0);
+	uchar Direction = 0;
 	//!Айдишник текущей анимации
-	SETGET(ushort, AnimID, 0);
+	ushort AnimID = 0;
 	//!Максимальный индекс группы анимаций
-	SETGET(uchar, AnimGroupCount, PAG_ANIMATION_COUNT);
+	uchar AnimGroupCount = PAG_ANIMATION_COUNT;
 
 private:
 	//!Адреса файлов в памяти

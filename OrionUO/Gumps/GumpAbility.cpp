@@ -15,16 +15,16 @@ CGumpAbility::CGumpAbility(const uint &serial, const int &x, const int &y)
 : CGump(GT_ABILITY, serial, x, y)
 {
 	WISPFUN_DEBUG("c85_f1");
-	int index = (m_Serial != 0 ? 1 : 0);
+	int index = (Serial != 0 ? 1 : 0);
 	uchar &ability = g_Ability[index];
 
-	m_Graphic = 0x5200 + (ability & 0x7F) - 1;
+	Graphic = 0x5200 + (ability & 0x7F) - 1;
 
 	m_Locker.Serial = ID_GS_LOCK_MOVING;
 
 	m_Colorizer = (CGUIGlobalColor*)Add(new CGUIGlobalColor((ability & 0x80), 1.0f, 0.25f, 0.5f, 1.0f));
 
-	m_Body = (CGUIGumppic*)Add(new CGUIGumppic(m_Graphic, 0, 0));
+	m_Body = (CGUIGumppic*)Add(new CGUIGumppic(Graphic, 0, 0));
 }
 //----------------------------------------------------------------------------------
 CGumpAbility::~CGumpAbility()
@@ -34,7 +34,7 @@ CGumpAbility::~CGumpAbility()
 void CGumpAbility::InitToolTip()
 {
 	WISPFUN_DEBUG("c85_f2");
-	int index = (m_Serial != 0 ? 1 : 0);
+	int index = (Serial != 0 ? 1 : 0);
 
 	g_ToolTip.Set(g_ClilocManager.Cliloc(g_Language)->GetW(1028838 + (g_Ability[index] & 0x7F) - 1, true), 80);
 }
@@ -44,7 +44,7 @@ void CGumpAbility::UpdateContent()
 	WISPFUN_DEBUG("c85_f3");
 	if (m_Colorizer != NULL && m_Body != NULL)
 	{
-		int index = (m_Serial != 0 ? 1 : 0);
+		int index = (Serial != 0 ? 1 : 0);
 		uchar &ability = g_Ability[index];
 
 		m_Colorizer->Enabled = (ability & 0x80);
@@ -57,7 +57,7 @@ void CGumpAbility::GUMP_BUTTON_EVENT_C
 {
 	WISPFUN_DEBUG("c85_f4");
 	if (serial == ID_GS_LOCK_MOVING)
-		m_LockMoving = !m_LockMoving;
+		LockMoving = !LockMoving;
 }
 //----------------------------------------------------------------------------------
 void CGumpAbility::OnAbilityUse(const int &index)
@@ -84,7 +84,7 @@ void CGumpAbility::OnAbilityUse(const int &index)
 bool CGumpAbility::OnLeftMouseButtonDoubleClick()
 {
 	WISPFUN_DEBUG("c85_f6");
-	OnAbilityUse(m_Serial != 0 ? 1 : 0);
+	OnAbilityUse(Serial != 0 ? 1 : 0);
 
 	return true;
 }

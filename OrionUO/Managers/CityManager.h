@@ -13,10 +13,10 @@
 //!Класс с данными о городе
 class CCity
 {
-	SETGET(string, Name, "");
-	SETGET(wstring, Description, L"");
-
 public:
+	string Name = "";
+	wstring Description = L"";
+
 	CCity(const string &name, const wstring &description);
 	virtual ~CCity();
 };

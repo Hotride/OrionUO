@@ -104,13 +104,14 @@ struct OBJECT_HITS_INFO
 //----------------------------------------------------------------------------------
 class CGameScreen : public CBaseScreen
 {
+public:
 	//!Использовать ли освещение при перерисовке текущего кадра
-	SETGET(bool, UseLight, false);
+	bool UseLight = false;
 	//!Флаг, определяющий инициализацию списка рендера
-	SETGET(bool, RenderListInitalized, false);
+	bool RenderListInitalized = false;
 	//!Принудительно обновлять позицию отрисовки
-	SETGET(bool, UpdateDrawPos, false);
-	SETGET(int, RenderIndex, 1);
+	bool UpdateDrawPos = false;
+	int RenderIndex = 1;
 
 private:
 	//!Список объектов для вывода

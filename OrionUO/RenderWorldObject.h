@@ -14,13 +14,13 @@
 class CRenderWorldObject : public CRenderObject
 {
 	SETGETE(char, Z, 0);
-	SETGET(short, PriorityZ, 0);
-	SETGET(RENDER_OBJECT_TYPE, RenderType, ROT_GAME_OBJECT);
+	short PriorityZ = 0;
+	RENDER_OBJECT_TYPE RenderType = ROT_GAME_OBJECT;
 #if UO_RENDER_LIST_SORT == 1
-	SETGET(uchar, CurrentRenderIndex, 0);
-	SETGET(uchar, UseInRender, 0);
+	uchar CurrentRenderIndex = 0;
+	uchar UseInRender = 0;
 #endif
-	SETGET(bool, NoDrawTile, false);
+	bool NoDrawTile = false;
 
 public:
 	CRenderWorldObject(const RENDER_OBJECT_TYPE &renderType, const uint &serial, const ushort &graphic, const ushort &color, const int &x, const int &y, const char &z);

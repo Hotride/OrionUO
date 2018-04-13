@@ -12,7 +12,7 @@
 //----------------------------------------------------------------------------------
 class CGumpProperty : public CGump
 {
-	SETGET(uint, Timer, 0);
+	uint Timer = 0;
 
 private:
 	CGLTextTexture m_Texture;

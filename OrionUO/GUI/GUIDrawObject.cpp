@@ -39,14 +39,14 @@ void CGUIDrawObject::SetShaderMode()
 {
 	WISPFUN_DEBUG("c52_f2");
 
-	if (m_Color != 0)
+	if (Color != 0)
 	{
-		if (m_PartialHue)
+		if (PartialHue)
 			glUniform1iARB(g_ShaderDrawMode, SDM_PARTIAL_HUE);
 		else
 			glUniform1iARB(g_ShaderDrawMode, SDM_COLORED);
 
-		g_ColorManager.SendColorsToShader(m_Color);
+		g_ColorManager.SendColorsToShader(Color);
 	}
 	else
 		glUniform1iARB(g_ShaderDrawMode, SDM_NO_COLOR);
@@ -55,7 +55,7 @@ void CGUIDrawObject::SetShaderMode()
 void CGUIDrawObject::PrepareTextures()
 {
 	WISPFUN_DEBUG("c52_f3");
-	g_Orion.ExecuteGump(m_Graphic);
+	g_Orion.ExecuteGump(Graphic);
 }
 //----------------------------------------------------------------------------------
 void CGUIDrawObject::Draw(const bool &checktrans)
@@ -74,10 +74,10 @@ void CGUIDrawObject::Draw(const bool &checktrans)
 bool CGUIDrawObject::Select()
 {
 	WISPFUN_DEBUG("c52_f5");
-	CGLTexture *th = g_Orion.ExecuteGump(m_Graphic);
+	CGLTexture *th = g_Orion.ExecuteGump(Graphic);
 
 	if (th != NULL)
-		return th->Select(m_X, m_Y, !m_CheckPolygone);
+		return th->Select(m_X, m_Y, !CheckPolygone);
 
 	return false;
 }

@@ -15,8 +15,9 @@ typedef map<uint, string> CLILOC_MAP;
 //!Класс с данными клилок-файла
 class CCliloc : public CBaseQueueItem
 {
-	SETGET(string, Language, "");
-	SETGET(bool, Loaded, false);
+public:
+	string Language = "";
+	bool Loaded = false;
 
 private:
 	//!Системные клилоки (id < 1000000)

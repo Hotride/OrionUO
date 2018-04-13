@@ -50,8 +50,8 @@ typedef struct tagECHOREPLY
 } ECHOREPLY, *PECHOREPLY;
 //----------------------------------------------------------------------------------
 CPingThread::CPingThread(const uint &serverID, const string &serverIP, const int &requestsCount)
-: WISP_THREAD::CThread(), m_ServerID(serverID), m_ServerIP(serverIP),
-m_RequestsCount(requestsCount)
+: WISP_THREAD::CThread(), ServerID(serverID), ServerIP(serverIP),
+RequestsCount(requestsCount)
 {
 	LOG("CPingThread => %s\n", serverIP.c_str());
 	WISPFUN_DEBUG("");
@@ -93,7 +93,7 @@ int CPingThread::CalculatePing()
 
 		if (socket != SOCKET_ERROR)
 		{
-			LPHOSTENT lpHost = gethostbyname(m_ServerIP.c_str());
+			LPHOSTENT lpHost = gethostbyname(ServerIP.c_str());
 
 			if (lpHost != NULL)
 			{
@@ -155,12 +155,12 @@ void CPingThread::OnExecute(uint nowTime)
 {
 	WISPFUN_DEBUG("");
 
-	if (m_ServerIP.empty() || m_RequestsCount < 1)
+	if (ServerIP.empty() || RequestsCount < 1)
 		return;
 
-	PING_INFO_DATA info = { m_ServerID, 9999, 0, 0, 0 };
+	PING_INFO_DATA info = { ServerID, 9999, 0, 0, 0 };
 
-	IFOR(i, 0, m_RequestsCount)
+	IFOR(i, 0, RequestsCount)
 	{
 		int ping = CalculatePing();
 
@@ -178,7 +178,7 @@ void CPingThread::OnExecute(uint nowTime)
 		info.Average += (info.Max - info.Min);
 	}
 
-	info.Average = info.Min + (info.Average / m_RequestsCount);
+	info.Average = info.Min + (info.Average / RequestsCount);
 
 	SendMessage(g_OrionWindow.Handle, MessageID, (WPARAM)&info, 0);
 }

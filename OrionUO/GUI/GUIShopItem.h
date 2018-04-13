@@ -14,20 +14,21 @@
 //----------------------------------------------------------------------------------
 class CGUIShopItem : public CBaseGUI
 {
+public:
 	//!Количество
-	SETGET(uint, Count, 0);
+	uint Count = 0;
 
 	//!Стоимость
-	SETGET(uint, Price, 0);
+	uint Price = 0;
 
 	//!Название товара
-	SETGET(string, Name, "");
+	string Name = "";
 
 	//!Флаг выбора
-	SETGET(bool, Selected, false);
+	bool Selected = false;
 
 	//!Имя создано из клилока
-	SETGET(bool, NameFromCliloc, false);
+	bool NameFromCliloc = false;
 
 private:
 	//!Текстуры для текста

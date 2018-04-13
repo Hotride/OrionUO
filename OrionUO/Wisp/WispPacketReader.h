@@ -7,7 +7,7 @@ namespace WISP_NETWORK
 //----------------------------------------------------------------------------------
 class CPacketReader : public WISP_DATASTREAM::CDataReader
 {
-	SETGET(int, MaxPacketStackSize, 5);
+	int MaxPacketStackSize = 5;
 
 public:
 	CPacketReader();

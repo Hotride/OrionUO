@@ -46,7 +46,7 @@ bool CPathFinder::CreateItemsList(vector<CPathObject> &list, const int &x, const
 	int bx = x % 8;
 	int by = y % 8;
 
-	bool ignoreGameCharacters = (m_IgnoreStaminaCheck || (stepState == PSS_DEAD_OR_GM) || g_Player->IgnoreCharacters() || g_Player->Stam >= g_Player->MaxStam);
+	bool ignoreGameCharacters = (IgnoreStaminaCheck || (stepState == PSS_DEAD_OR_GM) || g_Player->IgnoreCharacters() || g_Player->Stam >= g_Player->MaxStam);
 	bool isGM = (g_Player->Graphic == 0x03DB);
 
 	for (CRenderWorldObject *obj = block->GetRender(bx, by); obj != NULL; obj = obj->m_NextXY)
@@ -487,7 +487,7 @@ int CPathFinder::GetWalkSpeed(const bool &run, const bool &onMount)
 bool CPathFinder::Walk(bool run, uchar direction)
 {
 	WISPFUN_DEBUG("c177_f7");
-	if (m_BlockMoving || g_Walker.WalkingFailed || g_Walker.LastStepRequestTime > g_Ticks || g_Walker.StepsCount >= MAX_STEPS_COUNT || g_Player == NULL || /*!g_Player->Frozen() ||*/ g_DeathScreenTimer || g_GameState != GS_GAME)
+	if (BlockMoving || g_Walker.WalkingFailed || g_Walker.LastStepRequestTime > g_Ticks || g_Walker.StepsCount >= MAX_STEPS_COUNT || g_Player == NULL || /*!g_Player->Frozen() ||*/ g_DeathScreenTimer || g_GameState != GS_GAME)
 		return false;
 
 	if (g_SpeedMode >= CST_CANT_RUN)
@@ -517,7 +517,7 @@ bool CPathFinder::Walk(bool run, uchar direction)
 	char oldZ = z;
 	ushort walkTime = TURN_DELAY;
 
-	if (m_FastRotation)
+	if (FastRotation)
 		walkTime = TURN_DELAY_FAST;
 
 	if ((oldDirection & 7) == (direction & 7)) //Повернуты куда надо
@@ -874,7 +874,7 @@ bool CPathFinder::FindPath(int maxNodes)
 	m_ClosedList[0].DistFromGoalCost = GetGoalDistCost(m_StartPoint, 0);
 	m_ClosedList[0].Cost = m_ClosedList[0].DistFromGoalCost;
 
-	while (m_AutoWalking)
+	while (AutoWalking)
 	{
 		OpenNodes(&m_ClosedList[curNode]);
 
@@ -937,10 +937,10 @@ bool CPathFinder::WalkTo(int x, int y, int z, int distance)
 	m_ActiveClosedNodes = 0;
 	m_PathFindDistance = distance;
 	m_PathSize = 0;
-	m_PathFindidngCanBeCancelled = true;
+	PathFindidngCanBeCancelled = true;
 
 	StopAutoWalk();
-	m_AutoWalking = true;
+	AutoWalking = true;
 
 	if (FindPath(PATHFINDER_MAX_NODES))
 	{
@@ -948,7 +948,7 @@ bool CPathFinder::WalkTo(int x, int y, int z, int distance)
 		ProcessAutowalk();
 	}
 	else
-		m_AutoWalking = false;
+		AutoWalking = false;
 
 	return (m_PathSize != 0);
 }
@@ -956,7 +956,7 @@ bool CPathFinder::WalkTo(int x, int y, int z, int distance)
 void CPathFinder::ProcessAutowalk()
 {
 	WISPFUN_DEBUG("c177_f16");
-	if (m_AutoWalking && g_Player != NULL && !g_DeathScreenTimer && g_Walker.StepsCount < MAX_STEPS_COUNT && g_Walker.LastStepRequestTime <= g_Ticks)
+	if (AutoWalking && g_Player != NULL && !g_DeathScreenTimer && g_Walker.StepsCount < MAX_STEPS_COUNT && g_Walker.LastStepRequestTime <= g_Ticks)
 	{
 		if (m_PointIndex >= 0 && m_PointIndex < m_PathSize)
 		{
@@ -981,7 +981,7 @@ void CPathFinder::ProcessAutowalk()
 void CPathFinder::StopAutoWalk()
 {
 	WISPFUN_DEBUG("c177_f17");
-	m_AutoWalking = false;
+	AutoWalking = false;
 	m_PathSize = 0;
 }
 //----------------------------------------------------------------------------------

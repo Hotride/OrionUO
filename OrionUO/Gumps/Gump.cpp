@@ -20,7 +20,7 @@ CGump::CGump()
 }
 //----------------------------------------------------------------------------------
 CGump::CGump(GUMP_TYPE type, uint serial, int x, int y)
-: CRenderObject(serial, 0, 0, x, y), m_GumpType(type)
+: CRenderObject(serial, 0, 0, x, y), GumpType(type)
 {
 }
 //----------------------------------------------------------------------------------
@@ -28,7 +28,7 @@ CGump::~CGump()
 {
 	WISPFUN_DEBUG("c84_f1");
 	//Если это гамп, блокирующий игровое окно
-	if (m_Blocked)
+	if (Blocked)
 	{
 		//Уменьшаем счетчик блокирующих гампов
 		g_GrayMenuCount--;
@@ -72,56 +72,56 @@ void CGump::FixCoordinates()
 	int maxX = g_OrionWindow.Size.Width - gumpOffsetX;
 	int maxY = g_OrionWindow.Size.Height - gumpOffsetY;
 
-	if (m_Minimized && m_GumpType != GT_MINIMAP)
+	if (Minimized && GumpType != GT_MINIMAP)
 	{
-		if (m_MinimizedX + m_GumpRect.Position.X > maxX)
+		if (MinimizedX + GumpRect.Position.X > maxX)
 		{
-			m_WantRedraw = true;
-			m_MinimizedX = maxX;
+			WantRedraw = true;
+			MinimizedX = maxX;
 		}
 
-		if (m_MinimizedX < m_GumpRect.Position.X && m_MinimizedX + m_GumpRect.Position.X + m_GumpRect.Size.Width - gumpOffsetX < 0)
+		if (MinimizedX < GumpRect.Position.X && MinimizedX + GumpRect.Position.X + GumpRect.Size.Width - gumpOffsetX < 0)
 		{
-			m_WantRedraw = true;
-			m_MinimizedX = gumpOffsetX - (m_GumpRect.Position.X + m_GumpRect.Size.Width);
+			WantRedraw = true;
+			MinimizedX = gumpOffsetX - (GumpRect.Position.X + GumpRect.Size.Width);
 		}
 
-		if (m_MinimizedY + m_GumpRect.Position.Y > maxY)
+		if (MinimizedY + GumpRect.Position.Y > maxY)
 		{
-			m_WantRedraw = true;
-			m_MinimizedY = maxY;
+			WantRedraw = true;
+			MinimizedY = maxY;
 		}
 
-		if (m_MinimizedY < m_GumpRect.Position.Y && m_MinimizedY + m_GumpRect.Position.Y + m_GumpRect.Size.Height - gumpOffsetY < 0)
+		if (MinimizedY < GumpRect.Position.Y && MinimizedY + GumpRect.Position.Y + GumpRect.Size.Height - gumpOffsetY < 0)
 		{
-			m_WantRedraw = true;
-			m_MinimizedY = gumpOffsetY - (m_GumpRect.Position.Y + m_GumpRect.Size.Height);
+			WantRedraw = true;
+			MinimizedY = gumpOffsetY - (GumpRect.Position.Y + GumpRect.Size.Height);
 		}
 	}
 	else
 	{
-		if (m_X + m_GumpRect.Position.X > maxX)
+		if (m_X + GumpRect.Position.X > maxX)
 		{
-			m_WantRedraw = true;
+			WantRedraw = true;
 			m_X = maxX;
 		}
 
-		if (m_X < m_GumpRect.Position.X && m_X + m_GumpRect.Position.X + m_GumpRect.Size.Width - gumpOffsetX < 0)
+		if (m_X < GumpRect.Position.X && m_X + GumpRect.Position.X + GumpRect.Size.Width - gumpOffsetX < 0)
 		{
-			m_WantRedraw = true;
-			m_X = gumpOffsetX - (m_GumpRect.Position.X + m_GumpRect.Size.Width);
+			WantRedraw = true;
+			m_X = gumpOffsetX - (GumpRect.Position.X + GumpRect.Size.Width);
 		}
 
-		if (m_Y + m_GumpRect.Position.Y > maxY)
+		if (m_Y + GumpRect.Position.Y > maxY)
 		{
-			m_WantRedraw = true;
+			WantRedraw = true;
 			m_Y = maxY;
 		}
 
-		if (m_Y < m_GumpRect.Position.Y && m_Y + m_GumpRect.Position.Y + m_GumpRect.Size.Height - gumpOffsetY < 0)
+		if (m_Y < GumpRect.Position.Y && m_Y + GumpRect.Position.Y + GumpRect.Size.Height - gumpOffsetY < 0)
 		{
-			m_WantRedraw = true;
-			m_Y = gumpOffsetY - (m_GumpRect.Position.Y + m_GumpRect.Size.Height);
+			WantRedraw = true;
+			m_Y = gumpOffsetY - (GumpRect.Position.Y + GumpRect.Size.Height);
 		}
 	}
 }
@@ -131,10 +131,10 @@ bool CGump::CanBeMoved()
 	WISPFUN_DEBUG("c84_f2");
 	bool result = true;
 
-	if (m_NoMove)
+	if (NoMove)
 		result = false;
 	else if (g_ConfigManager.LockGumpsMoving)
-		result = !m_LockMoving;
+		result = !LockMoving;
 
 	return result;
 }
@@ -147,7 +147,7 @@ void CGump::DrawLocker()
 {
 	WISPFUN_DEBUG("c84_f3");
 	if (m_Locker.Serial && g_ShowGumpLocker)
-		g_TextureGumpState[m_LockMoving].Draw(m_Locker.X, m_Locker.Y);
+		g_TextureGumpState[LockMoving].Draw(m_Locker.X, m_Locker.Y);
 }
 //---------------------------------------------------------------------------
 bool CGump::SelectLocker()
@@ -189,10 +189,10 @@ void CGump::CalculateGumpState()
 	else
 		g_GumpMovingOffset.Reset();
 
-	if (m_Minimized)
+	if (Minimized)
 	{
-		g_GumpTranslate.X = (float)(m_MinimizedX + g_GumpMovingOffset.X);
-		g_GumpTranslate.Y = (float)(m_MinimizedY + g_GumpMovingOffset.Y);
+		g_GumpTranslate.X = (float)(MinimizedX + g_GumpMovingOffset.X);
+		g_GumpTranslate.Y = (float)(MinimizedY + g_GumpMovingOffset.Y);
 	}
 	else
 	{
@@ -364,7 +364,7 @@ void CGump::DrawItems(CBaseGUI *start, const int &currentPage, const int &draw2P
 				}
 				case GOT_CHECKTRANS:
 				{
-					transparent = ApplyTransparent((CBaseGUI*)item->m_Next, page/*m_Page*/, currentPage, draw2Page);
+					transparent = ApplyTransparent((CBaseGUI*)item->m_Next, page/*Page*/, currentPage, draw2Page);
 						
 					glColor4f(1.0f, 1.0f, 1.0f, alpha[transparent]);
 
@@ -1246,8 +1246,8 @@ void CGump::GenerateFrame(const bool &stop)
 	WISPFUN_DEBUG("c84_f17");
 	if (!g_GL.Drawing)
 	{
-		m_FrameCreated = false;
-		m_WantRedraw = true;
+		FrameCreated = false;
+		WantRedraw = true;
 
 		return;
 	}
@@ -1260,16 +1260,16 @@ void CGump::GenerateFrame(const bool &stop)
 	{
 		glNewList((GLuint)this, GL_COMPILE);
 
-		DrawItems((CBaseGUI*)m_Items, m_Page, m_Draw2Page);
+		DrawItems((CBaseGUI*)m_Items, Page, Draw2Page);
 
 		if (stop)
 			glEndList();
 	}
 	else
-		DrawItems((CBaseGUI*)m_Items, m_Page, m_Draw2Page);
+		DrawItems((CBaseGUI*)m_Items, Page, Draw2Page);
 
-	m_WantRedraw = true;
-	m_FrameCreated = true;
+	WantRedraw = true;
+	FrameCreated = true;
 }
 //----------------------------------------------------------------------------------
 void CGump::Draw()
@@ -1277,22 +1277,22 @@ void CGump::Draw()
 	WISPFUN_DEBUG("c84_f18");
 	CalculateGumpState();
 
-	if (m_WantUpdateContent)
+	if (WantUpdateContent)
 	{
 		UpdateContent();
 		RecalculateSize();
-		m_WantUpdateContent = false;
-		m_FrameCreated = false;
+		WantUpdateContent = false;
+		FrameCreated = false;
 	}
 
-	if (!m_FrameCreated)
+	if (!FrameCreated)
 	{
 		loc_create_frame:
 
 		if (!g_ConfigManager.UseGLListsForInterface)
 		{
-			if (!m_FrameBuffer.Ready(m_GumpRect.Size))
-				m_FrameBuffer.Init(m_GumpRect.Size);
+			if (!m_FrameBuffer.Ready(GumpRect.Size))
+				m_FrameBuffer.Init(GumpRect.Size);
 
 			if (m_FrameBuffer.Use())
 			{
@@ -1300,7 +1300,7 @@ void CGump::Draw()
 				glClear(GL_COLOR_BUFFER_BIT);
 				glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
-				glTranslatef(-(GLfloat)m_GumpRect.Position.X, -(GLfloat)m_GumpRect.Position.Y, 0.0f);
+				glTranslatef(-(GLfloat)GumpRect.Position.X, -(GLfloat)GumpRect.Position.Y, 0.0f);
 
 				GenerateFrame(true);
 
@@ -1311,15 +1311,15 @@ void CGump::Draw()
 					else
 						glColor4f(1.0f, 1.0f, 1.0f, 0.2f);
 
-					g_GL.DrawLine(m_GumpRect.Position.X + 1, m_GumpRect.Position.Y + 1, m_GumpRect.Position.X + m_GumpRect.Size.Width, m_GumpRect.Position.Y + 1);
-					g_GL.DrawLine(m_GumpRect.Position.X + m_GumpRect.Size.Width, m_GumpRect.Position.Y + 1, m_GumpRect.Position.X + m_GumpRect.Size.Width, m_GumpRect.Position.Y + m_GumpRect.Size.Height);
-					g_GL.DrawLine(m_GumpRect.Position.X + m_GumpRect.Size.Width, m_GumpRect.Position.Y + m_GumpRect.Size.Height, m_GumpRect.Position.X + 1, m_GumpRect.Position.Y + m_GumpRect.Size.Height);
-					g_GL.DrawLine(m_GumpRect.Position.X + 1, m_GumpRect.Position.Y + m_GumpRect.Size.Height, m_GumpRect.Position.X + 1, m_GumpRect.Position.Y + 1);
+					g_GL.DrawLine(GumpRect.Position.X + 1, GumpRect.Position.Y + 1, GumpRect.Position.X + GumpRect.Size.Width, GumpRect.Position.Y + 1);
+					g_GL.DrawLine(GumpRect.Position.X + GumpRect.Size.Width, GumpRect.Position.Y + 1, GumpRect.Position.X + GumpRect.Size.Width, GumpRect.Position.Y + GumpRect.Size.Height);
+					g_GL.DrawLine(GumpRect.Position.X + GumpRect.Size.Width, GumpRect.Position.Y + GumpRect.Size.Height, GumpRect.Position.X + 1, GumpRect.Position.Y + GumpRect.Size.Height);
+					g_GL.DrawLine(GumpRect.Position.X + 1, GumpRect.Position.Y + GumpRect.Size.Height, GumpRect.Position.X + 1, GumpRect.Position.Y + 1);
 
 					glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 				}
 
-				glTranslatef((GLfloat)m_GumpRect.Position.X, (GLfloat)m_GumpRect.Position.Y, 0.0f);
+				glTranslatef((GLfloat)GumpRect.Position.X, (GLfloat)GumpRect.Position.Y, 0.0f);
 
 				m_FrameBuffer.Release();
 			}
@@ -1327,9 +1327,9 @@ void CGump::Draw()
 		else
 			GenerateFrame(true);
 	}
-	else if (m_WantRedraw)
+	else if (WantRedraw)
 	{
-		m_WantRedraw = false;
+		WantRedraw = false;
 		goto loc_create_frame;
 	}
 
@@ -1338,8 +1338,8 @@ void CGump::Draw()
 
 	if (!g_ConfigManager.UseGLListsForInterface)
 	{
-		posX += (GLfloat)m_GumpRect.Position.X;
-		posY += (GLfloat)m_GumpRect.Position.Y;
+		posX += (GLfloat)GumpRect.Position.X;
+		posY += (GLfloat)GumpRect.Position.Y;
 	}
 
 	glTranslatef(posX, posY, 0.0f);
@@ -1373,12 +1373,12 @@ CRenderObject *CGump::Select()
 	g_CurrentCheckGump = this;
 	CalculateGumpState();
 
-	if (m_WantUpdateContent)
+	if (WantUpdateContent)
 	{
 		UpdateContent();
 		RecalculateSize();
-		m_WantUpdateContent = false;
-		m_FrameCreated = false;
+		WantUpdateContent = false;
+		FrameCreated = false;
 	}
 
 	WISP_GEOMETRY::CPoint2Di oldPos = g_MouseManager.Position;
@@ -1388,9 +1388,9 @@ CRenderObject *CGump::Select()
 
 	if (SelectLocker())
 		selected = &m_Locker;
-	else if (g_MouseManager.Position.X >= m_GumpRect.Position.X && g_MouseManager.Position.X < m_GumpRect.Position.X + m_GumpRect.Size.Width &&
-		g_MouseManager.Position.Y >= m_GumpRect.Position.Y && g_MouseManager.Position.Y < m_GumpRect.Position.Y + m_GumpRect.Size.Height)
-		selected = SelectItems((CBaseGUI*)m_Items, m_Page, m_Draw2Page);
+	else if (g_MouseManager.Position.X >= GumpRect.Position.X && g_MouseManager.Position.X < GumpRect.Position.X + GumpRect.Size.Width &&
+		g_MouseManager.Position.Y >= GumpRect.Position.Y && g_MouseManager.Position.Y < GumpRect.Position.Y + GumpRect.Size.Height)
+		selected = SelectItems((CBaseGUI*)m_Items, Page, Draw2Page);
 
 	if (selected != NULL)
 	{
@@ -1412,11 +1412,11 @@ void CGump::RecalculateSize()
 	WISP_GEOMETRY::CPoint2Di maxPosition;
 	WISP_GEOMETRY::CPoint2Di offset;
 
-	GetItemsSize(this, (CBaseGUI*)m_Items, minPosition, maxPosition, offset, -1, m_Page, m_Draw2Page);
+	GetItemsSize(this, (CBaseGUI*)m_Items, minPosition, maxPosition, offset, -1, Page, Draw2Page);
 
 	WISP_GEOMETRY::CSize size(maxPosition.X - minPosition.X, maxPosition.Y - minPosition.Y);
 
-	m_GumpRect = WISP_GEOMETRY::CRect(minPosition, size);
+	GumpRect = WISP_GEOMETRY::CRect(minPosition, size);
 }
 //----------------------------------------------------------------------------------
 void CGump::GetItemsSize(CGump *gump, CBaseGUI *start, WISP_GEOMETRY::CPoint2Di &minPosition, WISP_GEOMETRY::CPoint2Di &maxPosition, WISP_GEOMETRY::CPoint2Di &offset, int count, const int &currentPage, const int &draw2Page)
@@ -1510,7 +1510,7 @@ void CGump::OnLeftMouseButtonDown()
 	WISP_GEOMETRY::CPoint2Di oldPos = g_MouseManager.Position;
 	g_MouseManager.Position = WISP_GEOMETRY::CPoint2Di(oldPos.X - m_X, oldPos.Y - m_Y);
 
-	TestItemsLeftMouseDown(this, (CBaseGUI*)m_Items, m_Page, m_Draw2Page);
+	TestItemsLeftMouseDown(this, (CBaseGUI*)m_Items, Page, Draw2Page);
 
 	g_MouseManager.Position = oldPos;
 	g_CurrentCheckGump = NULL;
@@ -1520,7 +1520,7 @@ void CGump::OnLeftMouseButtonUp()
 {
 	WISPFUN_DEBUG("c84_f21");
 	g_CurrentCheckGump = this;
-	TestItemsLeftMouseUp(this, (CBaseGUI*)m_Items, m_Page, m_Draw2Page);
+	TestItemsLeftMouseUp(this, (CBaseGUI*)m_Items, Page, Draw2Page);
 	TestLockerClick();
 	g_CurrentCheckGump = NULL;
 }
@@ -1532,7 +1532,7 @@ void CGump::OnMidMouseButtonScroll(const bool &up)
 	WISP_GEOMETRY::CPoint2Di oldPos = g_MouseManager.Position;
 	g_MouseManager.Position = WISP_GEOMETRY::CPoint2Di(oldPos.X - m_X, oldPos.Y - m_Y);
 
-	TestItemsScrolling(this, (CBaseGUI*)m_Items, up, m_Page, m_Draw2Page);
+	TestItemsScrolling(this, (CBaseGUI*)m_Items, up, Page, Draw2Page);
 
 	g_MouseManager.Position = oldPos;
 	g_CurrentCheckGump = NULL;
@@ -1545,7 +1545,7 @@ void CGump::OnDragging()
 	WISP_GEOMETRY::CPoint2Di oldPos = g_MouseManager.Position;
 	g_MouseManager.Position = WISP_GEOMETRY::CPoint2Di(oldPos.X - m_X, oldPos.Y - m_Y);
 
-	TestItemsDragging(this, (CBaseGUI*)m_Items, m_Page, m_Draw2Page);
+	TestItemsDragging(this, (CBaseGUI*)m_Items, Page, Draw2Page);
 
 	g_MouseManager.Position = oldPos;
 	g_CurrentCheckGump = NULL;

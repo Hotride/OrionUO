@@ -17,7 +17,7 @@ const int g_OptionsPolygoneColorOffset = 12;
 CGumpOptions::CGumpOptions(short x, short y)
 : CGump(GT_OPTIONS, 0, x, y)
 {
-	m_Page = 2;
+	Page = 2;
 }
 //----------------------------------------------------------------------------------
 CGumpOptions::~CGumpOptions()
@@ -35,10 +35,10 @@ void CGumpOptions::CalculateGumpState()
 		{
 			g_GumpMovingOffset.Reset();
 
-			if (m_Minimized)
+			if (Minimized)
 			{
-				g_GumpTranslate.X = (float)m_MinimizedX;
-				g_GumpTranslate.Y = (float)m_MinimizedY;
+				g_GumpTranslate.X = (float)MinimizedX;
+				g_GumpTranslate.Y = (float)MinimizedY;
 			}
 			else
 			{
@@ -47,7 +47,7 @@ void CGumpOptions::CalculateGumpState()
 			}
 		}
 		else
-			m_WantRedraw = true;
+			WantRedraw = true;
 	}
 }
 //----------------------------------------------------------------------------
@@ -57,7 +57,7 @@ void CGumpOptions::PrepareContent()
 	if (m_WantRedrawMacroData)
 	{
 		RedrawMacroData();
-		m_WantRedraw = true;
+		WantRedraw = true;
 	}
 }
 //----------------------------------------------------------------------------
@@ -141,7 +141,7 @@ void CGumpOptions::Init()
 	m_MacroPointer = (CMacro*)g_OptionsMacroManager.m_Items;
 	m_MacroObjectPointer = (CMacroObject*)m_MacroPointer->m_Items;
 
-	m_WantUpdateContent = true;
+	WantUpdateContent = true;
 }
 //---------------------------------------------------------------------------
 void CGumpOptions::InitToolTip()
@@ -1430,7 +1430,7 @@ void CGumpOptions::RedrawMacroData()
 {
 	WISPFUN_DEBUG("c104_f10");
 	m_WantRedrawMacroData = false;
-	m_WantUpdateContent = true;
+	WantUpdateContent = true;
 	m_MacroDataBox->Clear();
 
 	bool alt = false;
@@ -2195,13 +2195,13 @@ void CGumpOptions::GUMP_BUTTON_EVENT_C
 	else if (serial == ID_GO_CANCEL) //Cancel
 	{
 		g_OptionsMacroManager.Clear();
-		m_RemoveMark = true;
+		RemoveMark = true;
 	}
 	else if (serial == ID_GO_APPLY) //Apply
 		ApplyPageChanges();
 	else if (serial == ID_GO_DEFAULT) //Default
 	{
-		switch (m_Page)
+		switch (Page)
 		{
 			case 1:
 			{
@@ -2255,24 +2255,24 @@ void CGumpOptions::GUMP_BUTTON_EVENT_C
 				break;
 		}
 
-		m_WantUpdateContent = true;
+		WantUpdateContent = true;
 	}
 	else if (serial == ID_GO_OKAY) //Okay
 	{
 		/*IFOR(i, 0, 10)
 		{
-			m_Page = i;
+			Page = i;
 			ApplyPageChanges();
 		}*/
 
 		ApplyPageChanges();
 		g_OptionsMacroManager.Clear();
 
-		m_RemoveMark = true;
+		RemoveMark = true;
 	}
 	else
 	{
-		switch (m_Page)
+		switch (Page)
 		{
 			case 1: //Sound and Music
 			{
@@ -2420,7 +2420,7 @@ void CGumpOptions::GUMP_BUTTON_EVENT_C
 void CGumpOptions::GUMP_CHECKBOX_EVENT_C
 {
 	WISPFUN_DEBUG("c104_f19");
-	switch (m_Page)
+	switch (Page)
 	{
 		case 1: //Sound and Music
 		{
@@ -2614,7 +2614,7 @@ void CGumpOptions::GUMP_RADIO_EVENT_C
 	if (!state)
 		return;
 
-	switch (m_Page)
+	switch (Page)
 	{
 		case 1: //Sound and Music
 		{
@@ -2729,7 +2729,7 @@ void CGumpOptions::GUMP_SLIDER_CLICK_EVENT_C
 void CGumpOptions::GUMP_SLIDER_MOVE_EVENT_C
 {
 	WISPFUN_DEBUG("c104_f22");
-	switch (m_Page)
+	switch (Page)
 	{
 		case 1: //Sound and Music
 		{
@@ -2896,7 +2896,7 @@ void CGumpOptions::OnCharPress(const WPARAM &wParam, const LPARAM &lParam)
 			if (val > 2000)
 				g_EntryPointer->Remove(true);
 			else
-				m_WantRedraw = true;
+				WantRedraw = true;
 		}
 	}
 	else if (g_EntryPointer != &m_MacroKey->m_Entry)
@@ -2964,7 +2964,7 @@ void CGumpOptions::OnCharPress(const WPARAM &wParam, const LPARAM &lParam)
 			{
 				g_EntryPointer->Insert((wchar_t)wParam);
 				((CMacroObjectString*)obj)->String = g_EntryPointer->c_str();
-				m_WantRedraw = true;
+				WantRedraw = true;
 			}
 		}
 	}
@@ -2979,7 +2979,7 @@ void CGumpOptions::OnKeyDown(const WPARAM &wParam, const LPARAM &lParam)
 
 		m_MacroKey->m_Entry.SetText(m_HotkeyText[wParam & 0xFF]);
 
-		m_WantRedraw = true;
+		WantRedraw = true;
 	}
 	else
 	{
@@ -2990,7 +2990,7 @@ void CGumpOptions::OnKeyDown(const WPARAM &wParam, const LPARAM &lParam)
 			else
 				g_EntryPointer = &g_GameConsole;
 
-			m_WantRedraw = true;
+			WantRedraw = true;
 		}
 		else
 		{
@@ -3039,7 +3039,7 @@ void CGumpOptions::OnKeyDown(const WPARAM &wParam, const LPARAM &lParam)
 void CGumpOptions::ApplyPageChanges()
 {
 	WISPFUN_DEBUG("c104_f26");
-	switch (m_Page)
+	switch (Page)
 	{
 		case 1: //Sound and Music
 		{		

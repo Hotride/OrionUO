@@ -13,32 +13,33 @@
 //!Класс игрового предмета (или трупа)
 class CGameItem : public CGameObject
 {
+public:
 	//!Слой, в котором расположен объект
-	SETGET(uchar, Layer, 0);
+	uchar Layer = 0;
 	//!Индекс картинки анимации
-	SETGET(ushort, AnimID, 0);
+	ushort AnimID = 0;
 	//!Используемый предметом слой (из tiledata.mul/verdata)
-	SETGET(uchar, UsedLayer, 0);
+	uchar UsedLayer = 0;
 	//!Открыт ли контейнер/спеллбук
-	SETGET(bool, Opened, false);
+	bool Opened = false;
 	//!Выведен ли гамп разделения количества?
-	SETGET(bool, Dragged, false);
+	bool Dragged = false;
 	//!Это прокси-объект мульти
-	SETGET(bool, MultiBody, false);
+	bool MultiBody = false;
 	//!Необходимо обновить мульти-объект
-	SETGET(bool, WantUpdateMulti, true);
+	bool WantUpdateMulti = true;
 	//!Цвет тайла для замены филдов (если 0 - не филд)
-	SETGET(ushort, FieldColor, 0);
+	ushort FieldColor = 0;
 	//!Бонус дистанции для мульти-объекта
-	SETGET(short, MultiDistanceBonus, 0);
+	short MultiDistanceBonus = 0;
 	//!Цена для магазина
-	SETGET(uint, Price, 0);
+	uint Price = 0;
 	//!Имя из клилока (для гампа магазина)
-	SETGET(bool, NameFromCliloc, false);
+	bool NameFromCliloc = false;
 	//!Тайл мульти для отображения
-	SETGET(ushort, MultiTileGraphic, 0);
+	ushort MultiTileGraphic = 0;
 	//!Индекс источника света
-	SETGET(uchar, LightID, 0);
+	uchar LightID = 0;
 
 protected:
 	/*!
@@ -89,7 +90,7 @@ public:
 	Человекоподобный труп ли это?
 	@return 
 	*/
-	bool IsHuman() { return (IsCorpse() && (IN_RANGE(m_Count, 0x0192, 0x0193) || IN_RANGE(m_Count, 0x025F, 0x0260) || IN_RANGE(m_Count, 0x02B6, 0x02B7))); }
+	bool IsHuman() { return (IsCorpse() && (IN_RANGE(Count, 0x0192, 0x0193) || IN_RANGE(Count, 0x025F, 0x0260) || IN_RANGE(Count, 0x02B6, 0x02B7))); }
 
 	/*!
 	Загрузка мульти в текущий объект

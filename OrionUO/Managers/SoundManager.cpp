@@ -258,7 +258,7 @@ void CSoundManager::PlayMidi(int index, bool warmode)
 			m_WarMusic = streamHandle;
 		else
 		{
-			m_CurrentMusicIndex = index;
+			CurrentMusicIndex = index;
 			m_Music = streamHandle;
 		}
 	}
@@ -284,7 +284,7 @@ void CSoundManager::PlayMP3(const string &fileName, int index, bool loop, bool w
 	else
 	{
 		m_Music = streamHandle;
-		m_CurrentMusicIndex = index;
+		CurrentMusicIndex = index;
 	}
 
 }

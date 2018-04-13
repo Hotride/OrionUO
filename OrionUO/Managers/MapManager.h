@@ -12,15 +12,15 @@
 //----------------------------------------------------------------------------------
 class CIndexMap
 {
-	SETGET(size_t, OriginalMapAddress, 0);
-	SETGET(size_t, OriginalStaticAddress, 0);
-	SETGET(uint, OriginalStaticCount, 0);
-
-	SETGET(size_t, MapAddress, 0);
-	SETGET(size_t, StaticAddress, 0);
-	SETGET(uint, StaticCount, 0);
-
 public:
+	size_t OriginalMapAddress = 0;
+	size_t OriginalStaticAddress = 0;
+	uint OriginalStaticCount = 0;
+
+	size_t MapAddress = 0;
+	size_t StaticAddress = 0;
+	uint StaticCount = 0;
+
 	CIndexMap();
 	virtual ~CIndexMap();
 };
@@ -30,9 +30,10 @@ typedef vector<CIndexMap> MAP_INDEX_LIST;
 //!Класс менеджера карт
 class CMapManager : public CBaseQueue
 {
+public:
 	//!Максимальный индекс блока для текущей карты
-	SETGET(uint, MaxBlockIndex, 0);
-	SETGET(int, PatchesCount, 0);
+	uint MaxBlockIndex = 0;
+	int PatchesCount = 0;
 
 protected:
 	//!Вектор ссылок на блоки карты

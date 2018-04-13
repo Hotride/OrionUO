@@ -15,7 +15,7 @@ CCustomHouseMultiObject::CCustomHouseMultiObject(const ushort &graphic, const us
 : CMultiObject(graphic, x, y, z, flags)
 {
 	WISPFUN_DEBUG("");
-	m_Color = color;
+	Color = color;
 }
 //----------------------------------------------------------------------------------
 CCustomHouseMultiObject::~CCustomHouseMultiObject()

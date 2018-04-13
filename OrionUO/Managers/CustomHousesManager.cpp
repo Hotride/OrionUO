@@ -25,7 +25,7 @@ void CCustomHouse::Paste(CGameItem *foundation)
 	for (const CBuildObject &item : m_Items)
 		foundation->AddMulti(item.Graphic, 0, item.X, item.Y, item.Z + z, true);
 
-	if (g_CustomHouseGump != NULL && g_CustomHouseGump->Serial == m_Serial)
+	if (g_CustomHouseGump != NULL && g_CustomHouseGump->Serial == Serial)
 	{
 		g_CustomHouseGump->WantUpdateContent = true;
 		g_CustomHouseGump->GenerateFloorPlace();

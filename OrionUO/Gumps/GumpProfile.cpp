@@ -15,7 +15,7 @@ CGumpProfile::CGumpProfile(uint serial, short x, short y, wstring topText, wstri
 : CGumpBaseScroll(GT_PROFILE, serial, 0x0820, 250, x, y, true)
 {
 	WISPFUN_DEBUG("c108_f1");
-	m_Changed = false;
+	Changed = false;
 	Add(new CGUIPage(1));
 	Add(new CGUIGumppic(0x09D4, 0, 0));
 
@@ -61,8 +61,8 @@ CGumpProfile::CGumpProfile(uint serial, short x, short y, wstring topText, wstri
 CGumpProfile::~CGumpProfile()
 {
 	WISPFUN_DEBUG("c108_f2");
-	if (m_Changed && m_Entry != NULL)
-		CPacketProfileUpdate(m_Serial, m_Entry->m_Entry.Data(), m_Entry->m_Entry.Length()).Send();
+	if (Changed && m_Entry != NULL)
+		CPacketProfileUpdate(Serial, m_Entry->m_Entry.Data(), m_Entry->m_Entry.Length()).Send();
 }
 //----------------------------------------------------------------------------
 void CGumpProfile::RecalculateHeight()
@@ -91,13 +91,13 @@ void CGumpProfile::GUMP_BUTTON_EVENT_C
 	WISPFUN_DEBUG("c108_f4");
 	if (serial == ID_GBS_BUTTON_MINIMIZE)
 	{
-		m_Minimized = true;
-		m_Page = 1;
-		m_WantRedraw = true;
+		Minimized = true;
+		Page = 1;
+		WantRedraw = true;
 	}
-	else if (m_Serial == g_PlayerSerial && serial == ID_GP_APPLY && m_Entry != NULL)
+	else if (Serial == g_PlayerSerial && serial == ID_GP_APPLY && m_Entry != NULL)
 	{
-		m_Changed = true;
+		Changed = true;
 		
 		if (g_EntryPointer == &m_Entry->m_Entry)
 		{
@@ -107,18 +107,18 @@ void CGumpProfile::GUMP_BUTTON_EVENT_C
 				g_EntryPointer = &g_GameConsole;
 		}
 
-		m_WantRedraw = true;
+		WantRedraw = true;
 	}
 }
 //----------------------------------------------------------------------------
 bool CGumpProfile::OnLeftMouseButtonDoubleClick()
 {
 	WISPFUN_DEBUG("c108_f5");
-	if (m_Minimized)
+	if (Minimized)
 	{
-		m_Minimized = false;
-		m_Page = 2;
-		m_WantRedraw = true;
+		Minimized = false;
+		Page = 2;
+		WantRedraw = true;
 
 		return true;
 	}
@@ -133,7 +133,7 @@ void CGumpProfile::OnCharPress(const WPARAM &wParam, const LPARAM &lParam)
 
 	RecalculateHeight();
 
-	m_WantRedraw = true;
+	WantRedraw = true;
 }
 //----------------------------------------------------------------------------
 void CGumpProfile::OnKeyDown(const WPARAM &wParam, const LPARAM &lParam)
@@ -145,13 +145,13 @@ void CGumpProfile::OnKeyDown(const WPARAM &wParam, const LPARAM &lParam)
 
 		RecalculateHeight();
 
-		m_WantRedraw = true;
+		WantRedraw = true;
 	}
 	else
 	{
 		g_EntryPointer->OnKey(this, wParam);
 
-		if (m_WantRedraw)
+		if (WantRedraw)
 			RecalculateHeight();
 	}
 }

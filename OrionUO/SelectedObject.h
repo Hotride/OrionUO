@@ -12,11 +12,11 @@
 //----------------------------------------------------------------------------------
 class CSelectedObject
 {
-	SETGET(uint, Serial, 0);
+public:
+	uint Serial = 0;
 	SETGETP(CRenderObject*, Object, NULL);
 	SETGETP(CGump*, Gump, NULL);
 
-public:
 	CSelectedObject();
 	virtual ~CSelectedObject();
 

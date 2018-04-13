@@ -30,12 +30,12 @@ void CWindow::SetSize(const WISP_GEOMETRY::CSize &size)
 {
 	WISPFUN_DEBUG("c14_f2");
 	RECT pos = { 0, 0, 0, 0 };
-	GetWindowRect(m_Handle, &pos);
+	GetWindowRect(Handle, &pos);
 
 	RECT r = { 0, 0, 0, 0 };
 	r.right = size.Width;
 	r.bottom = size.Height;
-	AdjustWindowRectEx(&r, GetWindowLongA(m_Handle, GWL_STYLE), FALSE, GetWindowLongA(m_Handle, GWL_EXSTYLE));
+	AdjustWindowRectEx(&r, GetWindowLongA(Handle, GWL_STYLE), FALSE, GetWindowLongA(Handle, GWL_EXSTYLE));
 
 	if (r.left < 0)
 		r.right += -r.left;
@@ -43,7 +43,7 @@ void CWindow::SetSize(const WISP_GEOMETRY::CSize &size)
 	if (r.top < 0)
 		r.bottom += -r.top;
 
-	SetWindowPos(m_Handle, HWND_TOP, pos.left, pos.top, r.right, r.bottom, 0);
+	SetWindowPos(Handle, HWND_TOP, pos.left, pos.top, r.right, r.bottom, 0);
 
 	m_Size = size;
 }
@@ -63,12 +63,12 @@ void CWindow::SetMinSize(const WISP_GEOMETRY::CSize &newMinSize)
 			height = newMinSize.Height;
 
 		RECT pos = { 0, 0, 0, 0 };
-		GetWindowRect(m_Handle, &pos);
+		GetWindowRect(Handle, &pos);
 
 		RECT r = { 0, 0, 0, 0 };
 		r.right = width;
 		r.bottom = height;
-		AdjustWindowRectEx(&r, GetWindowLongA(m_Handle, GWL_STYLE), FALSE, GetWindowLongA(m_Handle, GWL_EXSTYLE));
+		AdjustWindowRectEx(&r, GetWindowLongA(Handle, GWL_STYLE), FALSE, GetWindowLongA(Handle, GWL_EXSTYLE));
 
 		if (r.left < 0)
 			r.right += -r.left;
@@ -76,7 +76,7 @@ void CWindow::SetMinSize(const WISP_GEOMETRY::CSize &newMinSize)
 		if (r.top < 0)
 			r.bottom += -r.top;
 
-		SetWindowPos(m_Handle, HWND_TOP, pos.left, pos.top, r.right, r.bottom, 0);
+		SetWindowPos(Handle, HWND_TOP, pos.left, pos.top, r.right, r.bottom, 0);
 	}
 
 	m_MinSize = newMinSize;
@@ -97,12 +97,12 @@ void CWindow::SetMaxSize(const WISP_GEOMETRY::CSize &newMaxSize)
 			height = newMaxSize.Height;
 
 		RECT pos = { 0, 0, 0, 0 };
-		GetWindowRect(m_Handle, &pos);
+		GetWindowRect(Handle, &pos);
 
 		RECT r = { 0, 0, 0, 0 };
 		r.right = width;
 		r.bottom = height;
-		AdjustWindowRectEx(&r, GetWindowLongA(m_Handle, GWL_STYLE), FALSE, GetWindowLongA(m_Handle, GWL_EXSTYLE));
+		AdjustWindowRectEx(&r, GetWindowLongA(Handle, GWL_STYLE), FALSE, GetWindowLongA(Handle, GWL_EXSTYLE));
 
 		if (r.left < 0)
 			r.right += -r.left;
@@ -110,7 +110,7 @@ void CWindow::SetMaxSize(const WISP_GEOMETRY::CSize &newMaxSize)
 		if (r.top < 0)
 			r.bottom += -r.top;
 
-		SetWindowPos(m_Handle, HWND_TOP, pos.left, pos.top, r.right, r.bottom, 0);
+		SetWindowPos(Handle, HWND_TOP, pos.left, pos.top, r.right, r.bottom, 0);
 	}
 
 	m_MaxSize = newMaxSize;
@@ -138,15 +138,15 @@ bool CWindow::Create(HINSTANCE hInstance, const wchar_t *className, const wchar_
 	width += 2 * GetSystemMetrics(SM_CXSIZEFRAME);
 	height += GetSystemMetrics(SM_CYCAPTION) + (GetSystemMetrics(SM_CYFRAME) * 2);
 
-	m_Handle = CreateWindowEx(WS_EX_WINDOWEDGE, className, title, WS_OVERLAPPEDWINDOW, 0, 0, width, height, NULL, NULL, hInstance, NULL);
+	Handle = CreateWindowEx(WS_EX_WINDOWEDGE, className, title, WS_OVERLAPPEDWINDOW, 0, 0, width, height, NULL, NULL, hInstance, NULL);
 
-	if (!m_Handle)
+	if (!Handle)
 		return false;
 
 	RECT r = { 0, 0, 0, 0 };
 	r.right = width;
 	r.bottom = height;
-	AdjustWindowRectEx(&r, GetWindowLongA(m_Handle, GWL_STYLE), FALSE, GetWindowLongA(m_Handle, GWL_EXSTYLE));
+	AdjustWindowRectEx(&r, GetWindowLongA(Handle, GWL_STYLE), FALSE, GetWindowLongA(Handle, GWL_EXSTYLE));
 
 	if (r.left < 0)
 		r.right += -r.left;
@@ -154,18 +154,18 @@ bool CWindow::Create(HINSTANCE hInstance, const wchar_t *className, const wchar_
 	if (r.top < 0)
 		r.bottom += -r.top;
 
-	SetWindowPos(m_Handle, HWND_TOP, 0, 0, r.right, r.bottom, 0);
+	SetWindowPos(Handle, HWND_TOP, 0, 0, r.right, r.bottom, 0);
 
 	srand(unsigned(time(NULL)));
 
-	GetClientRect(m_Handle, &r);
+	GetClientRect(Handle, &r);
 	m_Size.Width = r.right - r.left;
 	m_Size.Height = r.bottom - r.top;
 
 	ShowCursor(showCursor);
 
-	::ShowWindow(m_Handle, FALSE);
-	UpdateWindow(m_Handle);
+	::ShowWindow(Handle, FALSE);
+	UpdateWindow(Handle);
 
 	return OnCreate();
 }
@@ -173,19 +173,19 @@ bool CWindow::Create(HINSTANCE hInstance, const wchar_t *className, const wchar_
 void CWindow::Destroy()
 {
 	WISPFUN_DEBUG("c14_f6");
-	PostMessage(m_Handle, WM_CLOSE, 0, 0);
+	PostMessage(Handle, WM_CLOSE, 0, 0);
 }
 //----------------------------------------------------------------------------------
 void CWindow::ShowMessage(const string &text, const string &title, const uint &buttons)
 {
 	WISPFUN_DEBUG("c14_f7");
-	MessageBoxA(m_Handle, text.c_str(), title.c_str(), buttons);
+	MessageBoxA(Handle, text.c_str(), title.c_str(), buttons);
 }
 //----------------------------------------------------------------------------------
 void CWindow::ShowMessage(const wstring &text, const wstring &title, const uint &buttons)
 {
 	WISPFUN_DEBUG("c14_f8");
-	MessageBoxW(m_Handle, text.c_str(), title.c_str(), buttons);
+	MessageBoxW(Handle, text.c_str(), title.c_str(), buttons);
 }
 //----------------------------------------------------------------------------------
 LRESULT CWindow::OnWindowProc(HWND &hWnd, UINT &message, WPARAM &wParam, LPARAM &lParam)
@@ -202,19 +202,19 @@ LRESULT CWindow::OnWindowProc(HWND &hWnd, UINT &message, WPARAM &wParam, LPARAM 
 		case WM_GETMINMAXINFO:
 		case WM_SIZE:
 		{
-			if (IsIconic(m_Handle))
+			if (IsIconic(Handle))
 				return DefWindowProc(hWnd, message, wParam, lParam);
 
 			if (message == WM_GETMINMAXINFO)
 			{
 				MINMAXINFO *pInfo = (MINMAXINFO*)lParam;
 
-				if (m_NoResize)
+				if (NoResize)
 				{
 					RECT r = { 0, 0, 0, 0 };
 					r.right = m_Size.Width;
 					r.bottom = m_Size.Height;
-					AdjustWindowRectEx(&r, GetWindowLongA(m_Handle, GWL_STYLE), FALSE, GetWindowLongA(m_Handle, GWL_EXSTYLE));
+					AdjustWindowRectEx(&r, GetWindowLongA(Handle, GWL_STYLE), FALSE, GetWindowLongA(Handle, GWL_EXSTYLE));
 
 					if (r.left < 0)
 						r.right -= r.left;
@@ -233,7 +233,7 @@ LRESULT CWindow::OnWindowProc(HWND &hWnd, UINT &message, WPARAM &wParam, LPARAM 
 					RECT r = { 0, 0, 0, 0 };
 					r.right = m_Size.Width;
 					r.bottom = m_Size.Height;
-					AdjustWindowRectEx(&r, GetWindowLongA(m_Handle, GWL_STYLE), FALSE, GetWindowLongA(m_Handle, GWL_EXSTYLE));
+					AdjustWindowRectEx(&r, GetWindowLongA(Handle, GWL_STYLE), FALSE, GetWindowLongA(Handle, GWL_EXSTYLE));
 
 					if (r.left < 0)
 						r.right -= r.left;
@@ -281,7 +281,7 @@ LRESULT CWindow::OnWindowProc(HWND &hWnd, UINT &message, WPARAM &wParam, LPARAM 
 		}
 		case WM_LBUTTONDOWN:
 		{
-			SetCapture(m_Handle);
+			SetCapture(Handle);
 
 			WISP_MOUSE::g_WispMouse->Update();
 			WISP_MOUSE::g_WispMouse->LeftButtonPressed = true;
@@ -325,7 +325,7 @@ LRESULT CWindow::OnWindowProc(HWND &hWnd, UINT &message, WPARAM &wParam, LPARAM 
 		}
 		case WM_RBUTTONDOWN:
 		{
-			SetCapture(m_Handle);
+			SetCapture(Handle);
 
 			WISP_MOUSE::g_WispMouse->Update();
 			WISP_MOUSE::g_WispMouse->RightButtonPressed = true;
@@ -370,7 +370,7 @@ LRESULT CWindow::OnWindowProc(HWND &hWnd, UINT &message, WPARAM &wParam, LPARAM 
 		//Нажатие на колесико мышки
 		case WM_MBUTTONDOWN:
 		{
-			SetCapture(m_Handle);
+			SetCapture(Handle);
 
 			WISP_MOUSE::g_WispMouse->Update();
 			WISP_MOUSE::g_WispMouse->MidButtonPressed = true;
@@ -450,7 +450,7 @@ LRESULT CWindow::OnWindowProc(HWND &hWnd, UINT &message, WPARAM &wParam, LPARAM 
 		}
 		case WM_NCACTIVATE:
 		{
-			HRESULT res = (HRESULT)DefWindowProc(m_Handle, WM_NCACTIVATE, wParam, lParam);
+			HRESULT res = (HRESULT)DefWindowProc(Handle, WM_NCACTIVATE, wParam, lParam);
 
 			if (wParam == 0)
 				OnDeactivate();
@@ -463,7 +463,7 @@ LRESULT CWindow::OnWindowProc(HWND &hWnd, UINT &message, WPARAM &wParam, LPARAM 
 			return OnRepaint(wParam, lParam);
 		case WM_SHOWWINDOW:
 		{
-			HRESULT res = (HRESULT)DefWindowProc(m_Handle, WM_SHOWWINDOW, wParam, lParam);
+			HRESULT res = (HRESULT)DefWindowProc(Handle, WM_SHOWWINDOW, wParam, lParam);
 
 			OnShow(wParam != 0);
 
@@ -471,7 +471,7 @@ LRESULT CWindow::OnWindowProc(HWND &hWnd, UINT &message, WPARAM &wParam, LPARAM 
 		}
 		case WM_SETTEXT:
 		{
-			HRESULT res = (HRESULT)DefWindowProc(m_Handle, WM_SETTEXT, wParam, lParam);
+			HRESULT res = (HRESULT)DefWindowProc(Handle, WM_SETTEXT, wParam, lParam);
 
 			OnSetText(lParam);
 
@@ -516,7 +516,7 @@ void CWindow::CreateThreadedTimer(uint id, const int &delay, const bool &oneShot
 			return;
 	}
 
-	WISP_THREADED_TIMER::CThreadedTimer *timer = new WISP_THREADED_TIMER::CThreadedTimer(id, m_Handle, waitForProcessMessage);
+	WISP_THREADED_TIMER::CThreadedTimer *timer = new WISP_THREADED_TIMER::CThreadedTimer(id, Handle, waitForProcessMessage);
 	m_ThreadedTimersStack.push_back(timer);
 	timer->Run(!oneShot, delay, synchronizedDelay);
 }

@@ -7,12 +7,12 @@ namespace WISP_NETWORK
 {
 //----------------------------------------------------------------------------------
 CPacketMessage::CPacketMessage(const bool &bigEndian)
-: m_BigEndian(bigEndian)
+: BigEndian(bigEndian)
 {
 }
 //----------------------------------------------------------------------------------
 CPacketMessage::CPacketMessage(puchar data, const int &dataSize, const bool &bigEndian)
-: m_BigEndian(bigEndian)
+: BigEndian(bigEndian)
 {
 	WISPFUN_DEBUG("c9_f1");
 	m_Data.resize(dataSize);
@@ -20,7 +20,7 @@ CPacketMessage::CPacketMessage(puchar data, const int &dataSize, const bool &big
 }
 //----------------------------------------------------------------------------------
 CPacketMessage::CPacketMessage(const UCHAR_LIST &data, const bool &bigEndian)
-: m_BigEndian(bigEndian), m_Data(data)
+: BigEndian(bigEndian), m_Data(data)
 {
 	WISPFUN_DEBUG("c9_f2");
 }
@@ -64,7 +64,7 @@ UCHAR_LIST CPacketMessage::Read(class CPacketReader *reader, int &dataOffset)
 
 		puchar data = &m_Data[1];
 
-		if (m_BigEndian)
+		if (BigEndian)
 			wantSize = (data[0] << 8) | data[1];
 		else
 			wantSize = (data[1] << 8) | data[0];

@@ -12,7 +12,7 @@
 #include "stdafx.h"
 //----------------------------------------------------------------------------------
 CMapBlock::CMapBlock(const uint &index)
-: CBaseQueueItem(), m_Index(index), m_LastAccessTime(GetTickCount())
+: CBaseQueueItem(), Index(index), LastAccessTime(GetTickCount())
 {
 	WISPFUN_DEBUG("c24_f1");
 	//Обнуляем блок

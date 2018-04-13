@@ -41,7 +41,7 @@ void CGameScreen::Init()
 	g_OrionWindow.NoResize = false;
 
 	g_ScreenEffectManager.UseSunrise();
-	m_SmoothScreenAction = 0;
+	SmoothScreenAction = 0;
 }
 //----------------------------------------------------------------------------------
 /*!
@@ -53,7 +53,7 @@ void CGameScreen::ProcessSmoothAction(uchar action)
 {
 	WISPFUN_DEBUG("c164_f4");
 	if (action == 0xFF)
-		action = m_SmoothScreenAction;
+		action = SmoothScreenAction;
 
 	if (action == ID_SMOOTH_GS_LOGOUT)
 		g_LogoutAfterClick = true;
@@ -520,21 +520,21 @@ void CGameScreen::CalculateRenderList()
 
 	QFOR(go, g_World->m_Items, CGameObject*)
 	{
-		if (go->UseInRender != m_RenderIndex && (go->NPC || go->IsCorpse()) && go->m_TextControl->m_Items != NULL)
+		if (go->UseInRender != RenderIndex && (go->NPC || go->IsCorpse()) && go->m_TextControl->m_Items != NULL)
 		{
 			go->UpdateDrawCoordinates();
-			go->UseInRender = m_RenderIndex;
+			go->UseInRender = RenderIndex;
 		}
 	}
 
 #if UO_RENDER_LIST_SORT == 1
-	m_RenderIndex++;
+	RenderIndex++;
 
-	if (m_RenderIndex >= 100)
-		m_RenderIndex = 1;
+	if (RenderIndex >= 100)
+		RenderIndex = 1;
 #endif
 
-	m_UpdateDrawPos = false;
+	UpdateDrawPos = false;
 }
 //----------------------------------------------------------------------------------
 void CGameScreen::AddTileToRenderList(CRenderWorldObject *obj, const int &worldX, const int &worldY, const bool &useObjectHandles, const int &maxZ)
@@ -560,11 +560,11 @@ void CGameScreen::AddTileToRenderList(CRenderWorldObject *obj, const int &worldX
 	for (; obj != NULL; obj = obj->m_NextXY)
 	{
 #if UO_RENDER_LIST_SORT == 1
-		if (obj->CurrentRenderIndex == m_RenderIndex || obj->NoDrawTile)
+		if (obj->CurrentRenderIndex == RenderIndex || obj->NoDrawTile)
 			continue;
 #endif
 
-		if ((m_UpdateDrawPos && obj->CurrentRenderIndex != m_RenderIndex) || obj->Changed)
+		if ((UpdateDrawPos && obj->CurrentRenderIndex != RenderIndex) || obj->Changed)
 			obj->UpdateDrawCoordinates();
 
 		obj->UseInRender = 0xFF;
@@ -616,7 +616,7 @@ void CGameScreen::AddTileToRenderList(CRenderWorldObject *obj, const int &worldX
 		if (maxObjectZ > maxZ)
 			break;
 
-		obj->CurrentRenderIndex = m_RenderIndex;
+		obj->CurrentRenderIndex = RenderIndex;
 #endif
 
 		if (obj->IsInternal())
@@ -796,7 +796,7 @@ void CGameScreen::AddTileToRenderList(CRenderWorldObject *obj, const int &worldX
 
 		m_RenderList[m_RenderListCount].Object = obj;
 		m_RenderList[m_RenderListCount].GrayColor = grayColor;
-		obj->UseInRender = m_RenderIndex;
+		obj->UseInRender = RenderIndex;
 
 		if (!grayColor && g_CustomHouseGump != NULL && g_Target.IsTargeting() && obj == g_SelectedObject.Object)
 		{
@@ -1036,17 +1036,17 @@ void CGameScreen::CalculateGameWindowBounds()
 	g_RenderBounds.MinPixelsY = (int)(((g_RenderBounds.GameWindowPosY - drawOffset) * g_GlobalScale) - (newMaxY - maxY)); // -playerZOffset;
 	g_RenderBounds.MaxPixelsY = (int)newMaxY; // + playerZOffset;
 
-	if (m_UpdateDrawPos || oldDrawOffsetX != g_RenderBounds.WindowDrawOffsetX || oldDrawOffsetX != g_RenderBounds.WindowDrawOffsetY)
+	if (UpdateDrawPos || oldDrawOffsetX != g_RenderBounds.WindowDrawOffsetX || oldDrawOffsetX != g_RenderBounds.WindowDrawOffsetY)
 	{
-		m_UpdateDrawPos = true;
-		m_RenderListInitalized = false;
+		UpdateDrawPos = true;
+		RenderListInitalized = false;
 	}
 
 	UpdateMaxDrawZ();
 
-	m_UseLight = (g_PersonalLightLevel < g_LightLevel);
+	UseLight = (g_PersonalLightLevel < g_LightLevel);
 
-	if (m_UseLight && g_GL.CanUseFrameBuffer)
+	if (UseLight && g_GL.CanUseFrameBuffer)
 	{
 		int testWidth = g_RenderBounds.GameWindowWidth;
 		int testHeight = g_RenderBounds.GameWindowHeight;
@@ -1287,7 +1287,7 @@ void CGameScreen::DrawGameWindowLight()
 	WISPFUN_DEBUG("c164_f16");
 	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 
-	if (!m_UseLight)
+	if (!UseLight)
 		return;
 
 	g_LightColorizerShader.Use();
@@ -1507,13 +1507,13 @@ void CGameScreen::PrepareContent()
 void CGameScreen::Render(const bool &mode)
 {
 	WISPFUN_DEBUG("c164_f19");
-	if (!m_RenderListInitalized)
+	if (!RenderListInitalized)
 		CalculateRenderList();
 
 	if (g_DeathScreenTimer < g_Ticks)
 	{
 		if (g_DeathScreenTimer && g_ScreenEffectManager.UseSunrise())
-			m_SmoothScreenAction = 0;
+			SmoothScreenAction = 0;
 
 		g_DeathScreenTimer = 0;
 	}

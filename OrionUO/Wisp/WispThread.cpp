@@ -108,7 +108,7 @@ CThread::~CThread()
 		m_Handle = 0;
 	}
 
-	m_ID = 0;
+	ID = 0;
 }
 //----------------------------------------------------------------------------------
 void CThread::Run(bool cycled, int delay, bool synchronizedDelay)
@@ -121,9 +121,9 @@ void CThread::Run(bool cycled, int delay, bool synchronizedDelay)
 		m_Active = true;
 
 		if (synchronizedDelay)
-			m_Handle = (HANDLE)_beginthreadex(NULL, 0, CThreadLoopSynchronizedDelay, this, 0, &m_ID);
+			m_Handle = (HANDLE)_beginthreadex(NULL, 0, CThreadLoopSynchronizedDelay, this, 0, &ID);
 		else
-			m_Handle = (HANDLE)_beginthreadex(NULL, 0, CThreadLoop, this, 0, &m_ID);
+			m_Handle = (HANDLE)_beginthreadex(NULL, 0, CThreadLoop, this, 0, &ID);
 	}
 }
 //----------------------------------------------------------------------------------

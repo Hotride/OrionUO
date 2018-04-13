@@ -12,11 +12,12 @@
 //----------------------------------------------------------------------------------
 class COrion
 {
-	SETGET(string, ClientVersionText, "2.0.3");
-	SETGET(int, TexturesDataCount, 0);
-	SETGET(string, DefaultLogin, "");
-	SETGET(int, DefaultPort, 0);
-	SETGET(uint, OrionVersionNumeric, 0);
+public:
+	string ClientVersionText = "2.0.3";
+	int TexturesDataCount = 0;
+	string DefaultLogin = "";
+	int DefaultPort = 0;
+	uint OrionVersionNumeric = 0;
 
 private:
 	uint m_CRC_Table[256];

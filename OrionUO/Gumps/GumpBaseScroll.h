@@ -12,11 +12,12 @@
 //----------------------------------------------------------------------------------
 class CGumpBaseScroll : public CGump
 {
-	SETGET(int, Height, 0);
-	SETGET(int, StartResizeHeight, 0);
-	SETGET(int, ScrollerOffsetY, 0);
-	SETGET(int, ScissorOffsetHeight, 0);
-	SETGET(bool, HaveBackgroundLines, false);
+public:
+	int Height = 0;
+	int StartResizeHeight = 0;
+	int ScrollerOffsetY = 0;
+	int ScissorOffsetHeight = 0;
+	bool HaveBackgroundLines = false;
 
 protected:
 	static const int ID_GBS_HTMLGUMP = 0xFFFFFFF0;

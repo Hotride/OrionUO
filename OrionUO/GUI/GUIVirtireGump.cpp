@@ -24,7 +24,7 @@ bool CGUIVirtureGump::Select()
 {
 	bool select = false;
 
-	CGLTexture *th = g_Orion.ExecuteGump(m_Graphic);
+	CGLTexture *th = g_Orion.ExecuteGump(Graphic);
 
 	if (th != NULL)
 	{

@@ -14,12 +14,12 @@
 CSkillsManager g_SkillsManager;
 //----------------------------------------------------------------------------------
 CSkill::CSkill(const bool &haveButton, const string &name)
-: m_Button(haveButton)
+: Button(haveButton)
 {
 	if (name.length())
-		m_Name = name;
+		Name = name;
 	else
-		m_Name = "NoNameSkill";
+		Name = "NoNameSkill";
 
 	//LOG("Skill loaded (button:%i): %s\n", m_Button, m_Name.c_str());
 }
@@ -27,7 +27,7 @@ CSkill::CSkill(const bool &haveButton, const string &name)
 bool CSkillsManager::Load()
 {
 	WISPFUN_DEBUG("c194_f56");
-	if (!g_FileManager.m_SkillsIdx.Size || !g_FileManager.m_SkillsMul.Size || m_Count)
+	if (!g_FileManager.m_SkillsIdx.Size || !g_FileManager.m_SkillsMul.Size || Count)
 		return false;
 
 	WISP_FILE::CMappedFile &idx = g_FileManager.m_SkillsIdx;
@@ -48,11 +48,11 @@ bool CSkillsManager::Load()
 		}
 	}
 
-	LOG("Skills count: %i\n", m_Count);
+	LOG("Skills count: %i\n", Count);
 
-	if (m_Count < 2 || m_Count > 100)
+	if (Count < 2 || Count > 100)
 	{
-		m_Count = 0;
+		Count = 0;
 
 		return false;
 	}
@@ -63,20 +63,20 @@ bool CSkillsManager::Load()
 void CSkillsManager::Add(const CSkill &skill)
 {
 	m_Skills.push_back(skill);
-	m_Count++;
+	Count++;
 }
 //----------------------------------------------------------------------------------
 void CSkillsManager::Clear()
 {
-	m_Count = 0;
-	m_SkillsTotal = 0.0f;
+	Count = 0;
+	SkillsTotal = 0.0f;
 	m_Skills.clear();
 	m_SortedTable.clear();
 }
 //----------------------------------------------------------------------------------
 CSkill *CSkillsManager::Get(const uint &index)
 {
-	if (index < (uint)m_Count)
+	if (index < (uint)Count)
 		return &m_Skills[index];
 
 	return NULL;
@@ -107,15 +107,15 @@ bool CSkillsManager::CompareName(const string &str1, const string &str2)
 //----------------------------------------------------------------------------------
 void CSkillsManager::Sort()
 {
-	m_SortedTable.resize(m_Count, 0xFF);
-	UCHAR_LIST bufTable(m_Count, 0xFF);
+	m_SortedTable.resize(Count, 0xFF);
+	UCHAR_LIST bufTable(Count, 0xFF);
 
 	//Установим первый элемент нулем и количество обработанных навыков - 1
 	int parsed = 1;
 	bufTable[0] = 0;
 
 	//Пройдемся по всем нвыкам (кроме первого)
-	IFOR(i, 1, m_Count)
+	IFOR(i, 1, Count)
 	{
 		//Пройдемся по обработанным
 		IFOR(j, 0, parsed)
@@ -156,7 +156,7 @@ void CSkillsManager::Sort()
 //----------------------------------------------------------------------------------
 int CSkillsManager::GetSortedIndex(const uint &index)
 {
-	if (index < (uint)m_Count)
+	if (index < (uint)Count)
 		return m_SortedTable[index];
 
 	return -1;
@@ -164,9 +164,9 @@ int CSkillsManager::GetSortedIndex(const uint &index)
 //----------------------------------------------------------------------------------
 void CSkillsManager::UpdateSkillsSum()
 {
-	m_SkillsTotal = 0.0f;
+	SkillsTotal = 0.0f;
 
 	for (const CSkill &skill : m_Skills)
-		m_SkillsTotal += skill.Value;
+		SkillsTotal += skill.Value;
 }
 //----------------------------------------------------------------------------------

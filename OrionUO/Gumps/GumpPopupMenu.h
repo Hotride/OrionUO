@@ -12,20 +12,20 @@
 //----------------------------------------------------------------------------------
 class CPopupMenuItemInfo
 {
-	SETGET(uint, Cliloc, 0);
-	SETGET(ushort, Index, 0);
-	SETGET(ushort, Flags, 0);
-	SETGET(ushort, Color, 0);
-	SETGET(ushort, ReplaceColor, 0);
-
 public:
+	uint Cliloc = 0;
+	ushort Index = 0;
+	ushort Flags = 0;
+	ushort Color = 0;
+	ushort ReplaceColor = 0;
+
 	CPopupMenuItemInfo() {}
 };
 //----------------------------------------------------------------------------------
 class CGumpPopupMenu : public CGump
 {
-	SETGET(int, Width, 0);
-	SETGET(int, Height, 0);
+	int Width = 0;
+	int Height = 0;
 
 private:
 	CGUIColoredPolygone *m_Polygone{ NULL };

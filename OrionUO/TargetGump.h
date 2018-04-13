@@ -12,14 +12,14 @@
 //----------------------------------------------------------------------------------
 class CTargetGump
 {
-	SETGET(int, X, 0);
-	SETGET(int, Y, 0);
-	SETGET(int, Hits, 0);
-	SETGET(ushort, Color, 0);
-	SETGET(ushort, HealthColor, 0);
+public:
+	int X = 0;
+	int Y = 0;
+	int Hits = 0;
+	ushort Color = 0;
+	ushort HealthColor = 0;
 	SETGETP(CGameCharacter*, TargetedCharacter, NULL);
 
-public:
 	CTargetGump();
 	~CTargetGump();
 
@@ -28,17 +28,18 @@ public:
 //----------------------------------------------------------------------------------
 class CNewTargetSystem
 {
-	SETGET(uint, Serial, 0);
-	SETGET(int, X, 0);
-	SETGET(int, TopY, 0);
-	SETGET(int, BottomY, 0);
-	SETGET(int, GumpX, 20);
-	SETGET(int, GumpY, 20);
-	SETGET(int, Hits, 0);
-	SETGET(ushort, GumpTop, 0);
-	SETGET(ushort, GumpBottom, 0);
-	SETGET(ushort, ColorGump, 0);
-	SETGET(ushort, HealthColor, 0);
+public:
+	uint Serial = 0;
+	int X = 0;
+	int TopY = 0;
+	int BottomY = 0;
+	int GumpX = 20;
+	int GumpY = 20;
+	int Hits = 0;
+	ushort GumpTop = 0;
+	ushort GumpBottom = 0;
+	ushort ColorGump = 0;
+	ushort HealthColor = 0;
 	SETGETP(CGameCharacter*, TargetedCharacter, NULL);
 
 	CNewTargetSystem();

@@ -19,13 +19,13 @@ CGumpSkills::CGumpSkills(short x, short y, bool minimized, int height)
 
 	if (minimized)
 	{
-		m_Page = 1;
-		m_Minimized = minimized;
-		m_MinimizedX = x;
-		m_MinimizedY = y;
+		Page = 1;
+		Minimized = minimized;
+		MinimizedX = x;
+		MinimizedY = y;
 	}
 	else
-		m_Page = 2;
+		Page = 2;
 
 	Add(new CGUIPage(1));
 	Add(new CGUIGumppic(0x0839, 0, 0));
@@ -42,11 +42,11 @@ CGumpSkills::CGumpSkills(short x, short y, bool minimized, int height)
 	m_CheckboxShowCap->Checked = m_ShowCap;
 
 	Add(new CGUIGumppic(0x082B, 30, 60)); //Top line
-	m_BottomLine = (CGUIGumppic*)Add(new CGUIGumppic(0x082B, 31, m_Height - 48)); //Bottom line
-	m_Comment = (CGUIGumppic*)Add(new CGUIGumppic(0x0836, 30, m_Height - 35));//Skills comment gump
-	m_CreateGroup = (CGUIButton*)Add(new CGUIButton(ID_GS_BUTTON_NEW_GROUP, 0x083A, 0x083A, 0x083A, 60, m_Height - 3)); //New Group gump
+	m_BottomLine = (CGUIGumppic*)Add(new CGUIGumppic(0x082B, 31, Height - 48)); //Bottom line
+	m_Comment = (CGUIGumppic*)Add(new CGUIGumppic(0x0836, 30, Height - 35));//Skills comment gump
+	m_CreateGroup = (CGUIButton*)Add(new CGUIButton(ID_GS_BUTTON_NEW_GROUP, 0x083A, 0x083A, 0x083A, 60, Height - 3)); //New Group gump
 
-	m_SkillSum = (CGUIText*)Add(new CGUIText(0x0065, 235, m_Height - 6));
+	m_SkillSum = (CGUIText*)Add(new CGUIText(0x0065, 235, Height - 6));
 	UpdateSkillsSum();
 
 	//Если игрок присутствует
@@ -60,7 +60,7 @@ CGumpSkills::CGumpSkills(short x, short y, bool minimized, int height)
 			CGUISkillGroup *skillGroup = (CGUISkillGroup*)m_HTMLGump->Add(new CGUISkillGroup(ID_GS_GROUP + currentIndex, ID_GS_GROUP_MINIMIZE + currentIndex, group, 0, currentY));
 			skillGroup->Minimized = true;
 
-			int count = group->GetCount();
+			int count = group->Count;
 
 			IFOR(i, 0, count)
 			{
@@ -91,7 +91,7 @@ void CGumpSkills::InitToolTip()
 	WISPFUN_DEBUG("c125_f2");
 	uint id = g_SelectedObject.Serial;
 
-	if (!m_Minimized)
+	if (!Minimized)
 	{
 		switch (id)
 		{
@@ -146,10 +146,10 @@ void CGumpSkills::UpdateHeight()
 	WISPFUN_DEBUG("c125_f3");
 	CGumpBaseScroll::UpdateHeight();
 
-	m_BottomLine->Y = m_Height - 48; //Bottom line
-	m_Comment->Y = m_Height - 35;//Skills comment gump
-	m_CreateGroup->Y = m_Height - 3; //New Group gump
-	m_SkillSum->Y = m_Height - 6;
+	m_BottomLine->Y = Height - 48; //Bottom line
+	m_Comment->Y = Height - 35;//Skills comment gump
+	m_CreateGroup->Y = Height - 3; //New Group gump
+	m_SkillSum->Y = Height - 6;
 }
 //----------------------------------------------------------------------------------
 void CGumpSkills::UpdateGroupPositions()
@@ -281,10 +281,10 @@ void CGumpSkills::CalculateGumpState()
 	{
 		g_GumpMovingOffset.Reset();
 
-		if (m_Minimized)
+		if (Minimized)
 		{
-			g_GumpTranslate.X = (float)m_MinimizedX;
-			g_GumpTranslate.Y = (float)m_MinimizedY;
+			g_GumpTranslate.X = (float)MinimizedX;
+			g_GumpTranslate.Y = (float)MinimizedY;
 		}
 		else
 		{
@@ -307,12 +307,12 @@ void CGumpSkills::PrepareContent()
 		if (y < testY)
 		{
 			m_HTMLGump->Scroll(false, (SCROLL_LISTING_DELAY / 3));
-			m_WantRedraw = true;
+			WantRedraw = true;
 		}
 		else if (y > testY + m_HTMLGump->Height)
 		{
 			m_HTMLGump->Scroll(true, (SCROLL_LISTING_DELAY / 3));
-			m_WantRedraw = true;
+			WantRedraw = true;
 		}
 		else if (g_PressedObject.LeftObject != NULL && ((CBaseGUI*)g_PressedObject.LeftObject)->Type == GOT_SKILLITEM)
 		{
@@ -370,7 +370,7 @@ void CGumpSkills::PrepareContent()
 					else
 					{
 						CGUISkillGroup *skillInsertElement = (CGUISkillGroup*)groupUnderCursor->m_Items;
-						int itemsCount = groupObject->GetCount();
+						int itemsCount = groupObject->Count;
 
 						IFOR(i, 1, itemsCount)
 						{
@@ -390,7 +390,7 @@ void CGumpSkills::PrepareContent()
 
 					UpdateGroupPositions();
 
-					m_WantRedraw = true;
+					WantRedraw = true;
 				}
 			}
 		}
@@ -464,7 +464,7 @@ void CGumpSkills::UpdateGroupText()
 
 				group->m_Name->Focused = false;
 
-				m_WantRedraw = true;
+				WantRedraw = true;
 			}
 		}
 	}
@@ -511,7 +511,7 @@ void CGumpSkills::OnLeftMouseButtonUp()
 
 	if (g_PressedObject.LeftGump == this && g_PressedObject.LeftSerial >= ID_GS_SKILL && g_PressedObject.LeftSerial < ID_GS_SKILL_STATE)
 	{
-		m_WantRedraw = true;
+		WantRedraw = true;
 
 		if (g_SelectedObject.Gump != this)
 		{
@@ -527,12 +527,12 @@ void CGumpSkills::GUMP_BUTTON_EVENT_C
 	WISPFUN_DEBUG("c125_f17");
 	if (serial == ID_GBS_BUTTON_MINIMIZE) //Сворачиваем гамп
 	{
-		m_Minimized = true;
-		m_Page = 1;
-		m_WantRedraw = true;
+		Minimized = true;
+		Page = 1;
+		WantRedraw = true;
 	}
 	else if (serial == ID_GS_LOCK_MOVING)
-		m_LockMoving = !m_LockMoving;
+		LockMoving = !LockMoving;
 	else if (serial == ID_GS_BUTTON_NEW_GROUP) //Создание новой группы
 	{
 		CSkillGroupObject *group = new CSkillGroupObject();
@@ -656,11 +656,11 @@ void CGumpSkills::GUMP_TEXT_ENTRY_EVENT_C
 bool CGumpSkills::OnLeftMouseButtonDoubleClick()
 {
 	WISPFUN_DEBUG("c125_f20");
-	if (m_Minimized) //При даблклике по мини-гампу - раскрываем его
+	if (Minimized) //При даблклике по мини-гампу - раскрываем его
 	{
-		m_Minimized = false;
-		m_Page = 2;
-		m_WantRedraw = true;
+		Minimized = false;
+		Page = 2;
+		WantRedraw = true;
 
 		return true;
 	}
@@ -678,7 +678,7 @@ void CGumpSkills::OnCharPress(const WPARAM &wParam, const LPARAM &lParam)
 	if (val > 170)
 		g_EntryPointer->Remove(true);
 	else
-		m_WantRedraw = true;
+		WantRedraw = true;
 }
 //----------------------------------------------------------------------------------
 void CGumpSkills::OnKeyDown(const WPARAM &wParam, const LPARAM &lParam)
@@ -712,7 +712,7 @@ void CGumpSkills::OnKeyDown(const WPARAM &wParam, const LPARAM &lParam)
 								first->Clear();
 
 								groupItem = g_SkillGroupManager.m_Groups;
-								int count = groupItem->GetCount();
+								int count = groupItem->Count;
 
 								IFOR(i, 0, count)
 								{
@@ -728,7 +728,7 @@ void CGumpSkills::OnKeyDown(const WPARAM &wParam, const LPARAM &lParam)
 							m_HTMLGump->CalculateDataSize();
 						}
 
-						m_WantRedraw = true;
+						WantRedraw = true;
 
 						break;
 					}
@@ -759,7 +759,7 @@ void CGumpSkills::OnKeyDown(const WPARAM &wParam, const LPARAM &lParam)
 			else
 				g_EntryPointer = &g_GameConsole;
 
-			m_WantRedraw = true;
+			WantRedraw = true;
 
 			break;
 		}

@@ -13,9 +13,10 @@
 //!Класс с данными интлок-файла
 class CIntloc : public CBaseQueueItem
 {
-	SETGET(string, Language, "");
-	SETGET(int, FileIndex, -1);
-	SETGET(bool, Loaded, false);
+public:
+	string Language = "";
+	int FileIndex = -1;
+	bool Loaded = false;
 
 private:
 	WSTRING_LIST m_Strings;

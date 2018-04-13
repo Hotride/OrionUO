@@ -21,28 +21,29 @@ struct DRAW_FRAME_INFORMATION
 //!Класс игрового объекта
 class CGameObject : public CRenderStaticObject
 {
+public:
 	//!Серийник контейнера, содержащего объект (0xFFFFFFFF - объект лежит в мире)
-	SETGET(uint, Container, 0xFFFFFFFF);
+	uint Container = 0xFFFFFFFF;
 	//!Карта объекта
-	SETGET(uchar, MapIndex, 0);
+	uchar MapIndex = 0;
 	//!Количество
-	SETGET(uint, Count, 0);
+	uint Count = 0;
 	//!Флаги от сервера
 	SETGETE(uchar, Flags, 0);
 	//!Имя
 	SETGETE(string, Name, "");
 	//!НПС или предмет
-	SETGET(bool, NPC, false);
+	bool NPC = false;
 	//!На предмет кликнули
-	SETGET(bool, Clicked, false);
+	bool Clicked = false;
 	//!Текущий индекс анимации
-	SETGET(char, AnimIndex, 0);
+	char AnimIndex = 0;
 	//!Префикс You see: в журнале
-	SETGET(string, JournalPrefix, "");
+	string JournalPrefix = "";
 	//!Время последнего изменения анимации
-	SETGET(uint, LastAnimationChangeTime, 0);
-	SETGET(bool, SA_Poisoned, false);
-	SETGET(bool, ClosedObjectHandle, false);
+	uint LastAnimationChangeTime = 0;
+	bool SA_Poisoned = false;
+	bool ClosedObjectHandle = false;
 
 protected:
 	//!Ссылка на список эффектов персонажа
@@ -244,7 +245,7 @@ public:
 	Это труп
 	@return
 	*/
-	bool IsCorpse() { return (m_Graphic == 0x2006); }
+	bool IsCorpse() { return (Graphic == 0x2006); }
 
 	/*!
 	Найти объект в мире, в котором содержится контейнер

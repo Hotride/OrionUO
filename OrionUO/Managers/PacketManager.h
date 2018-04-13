@@ -74,8 +74,8 @@ struct HTMLGumpDataInfo
 class CPacketManager : public WISP_NETWORK::CPacketReader
 {
 	SETGETE(CLIENT_VERSION, ClientVersion, CV_OLD);
-	SETGET(string, AutoLoginNames, "");
-	SETGET(uint, ConfigSerial, 0);
+	string AutoLoginNames = "";
+	uint ConfigSerial = 0;
 
 private:
 	static CPacketInfo m_Packets[0x100];

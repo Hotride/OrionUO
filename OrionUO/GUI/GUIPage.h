@@ -14,10 +14,10 @@
 //----------------------------------------------------------------------------------
 class CGUIPage : public CBaseGUI
 {
-	//!Индекс страницы
-	SETGET(int, Index, 0);
-
 public:
+	//!Индекс страницы
+	int Index = 0;
+
 	CGUIPage(const int &index);
 	virtual ~CGUIPage();
 };

@@ -13,7 +13,7 @@
 //----------------------------------------------------------------------------------
 CGameObject::CGameObject(const uint &serial)
 : CRenderStaticObject(ROT_GAME_OBJECT, serial, 0, 0, 0, 0, 0),
-m_LastAnimationChangeTime(GetTickCount())
+LastAnimationChangeTime(GetTickCount())
 {
 	WISPFUN_DEBUG("c20_f1");
 	memset(&m_FrameInfo, 0, sizeof(DRAW_FRAME_INFORMATION));
@@ -58,8 +58,8 @@ void CGameObject::SetFlags(const uchar &val)
 
 	if (poisoned != Poisoned() || yellowHits != YellowHits())
 	{
-		g_GumpManager.UpdateContent(m_Serial, 0, GT_STATUSBAR);
-		g_GumpManager.UpdateContent(m_Serial, 0, GT_TARGET_SYSTEM);
+		g_GumpManager.UpdateContent(Serial, 0, GT_STATUSBAR);
+		g_GumpManager.UpdateContent(Serial, 0, GT_TARGET_SYSTEM);
 	}
 }
 //----------------------------------------------------------------------------------
@@ -97,21 +97,21 @@ void CGameObject::DrawObjectHandlesTexture()
 	WISPFUN_DEBUG("c20_f5");
 	if (m_TextureObjectHalndes.Texture == NULL)
 	{
-		if (m_NPC || IsCorpse())
+		if (NPC || IsCorpse())
 			GenerateObjectHandlesTexture(ToWString(m_Name));
 		else
 		{
 			wstring name = ToWString(m_Name);
 			if (!name.length())
-				name = g_ClilocManager.Cliloc(g_Language)->GetW(1020000 + m_Graphic, true, g_Orion.m_StaticData[m_Graphic].Name);
+				name = g_ClilocManager.Cliloc(g_Language)->GetW(1020000 + Graphic, true, g_Orion.m_StaticData[Graphic].Name);
 			GenerateObjectHandlesTexture(name);
 		}
 	}
 
-	int x = m_DrawX - g_ObjectHandlesWidthOffset;
-	int y = m_DrawY;
+	int x = DrawX - g_ObjectHandlesWidthOffset;
+	int y = DrawY;
 
-	if (m_NPC)
+	if (NPC)
 	{
 		CGameCharacter *gc = (CGameCharacter*)this;
 
@@ -121,7 +121,7 @@ void CGameObject::DrawObjectHandlesTexture()
 		y += gc->OffsetY - (gc->OffsetZ + dims.Height + dims.CenterY + 8);
 	}
 	else
-		y -= g_Orion.GetStaticArtDimension(m_Graphic).Height;
+		y -= g_Orion.GetStaticArtDimension(Graphic).Height;
 
 	m_TextureObjectHalndes.Draw(x, y);
 }
@@ -137,10 +137,10 @@ void CGameObject::SelectObjectHandlesTexture()
 	WISPFUN_DEBUG("c20_f6");
 	if (m_TextureObjectHalndes.Texture != NULL)
 	{
-		int x = m_DrawX - g_ObjectHandlesWidthOffset;
-		int y = m_DrawY;
+		int x = DrawX - g_ObjectHandlesWidthOffset;
+		int y = DrawY;
 
-		if (m_NPC)
+		if (NPC)
 		{
 			CGameCharacter *gc = (CGameCharacter*)this;
 
@@ -150,7 +150,7 @@ void CGameObject::SelectObjectHandlesTexture()
 			y += gc->OffsetY - (gc->OffsetZ + dims.Height + dims.CenterY + 8);
 		}
 		else
-			y -= g_Orion.GetStaticArtDimension(m_Graphic).Height;
+			y -= g_Orion.GetStaticArtDimension(Graphic).Height;
 
 		x = g_MouseManager.Position.X - x;
 		y = g_MouseManager.Position.Y - y;
@@ -161,7 +161,7 @@ void CGameObject::SelectObjectHandlesTexture()
 		if (g_ObjectHandlesBackgroundPixels[(y * g_ObjectHandlesWidth) + x] != 0)
 		{
 			g_SelectedObject.Init(this);
-			g_SelectedGameObjectHandle = m_Serial;
+			g_SelectedGameObjectHandle = Serial;
 		}
 	}
 }
@@ -204,7 +204,7 @@ void CGameObject::GenerateObjectHandlesTexture(wstring text)
 
 	color = 0;
 
-	if (m_NPC)
+	if (NPC)
 	{
 		if (IsPlayer())
 			color = 0x0386;
@@ -277,8 +277,8 @@ void CGameObject::AddText(CTextData *msg)
 	msg->Owner = this;
 	m_TextControl->Add(msg);
 
-	if (m_Container == 0xFFFFFFFF)
-		m_Changed = true;
+	if (Container == 0xFFFFFFFF)
+		Changed = true;
 	else
 	{
 		UpdateTextCoordinates();
@@ -290,11 +290,11 @@ void CGameObject::AddText(CTextData *msg)
 	{
 		m_Clicked = false;
 
-		if (IsPlayer()) //(m_NPC)
+		if (IsPlayer()) //(NPC)
 			msgname = m_Name + ": ";
 	}*/
 
-	g_Orion.AddJournalMessage(msg, m_JournalPrefix);
+	g_Orion.AddJournalMessage(msg, JournalPrefix);
 }
 //----------------------------------------------------------------------------------
 /*!
@@ -304,7 +304,7 @@ void CGameObject::AddText(CTextData *msg)
 ushort CGameObject::GetMountAnimation()
 {
 	WISPFUN_DEBUG("c20_f9");
-	return m_Graphic; // + UO->GetStaticPointer(m_Graphic)->Increment;
+	return Graphic; // + UO->GetStaticPointer(Graphic)->Increment;
 }
 //----------------------------------------------------------------------------------
 /*!
@@ -381,7 +381,7 @@ bool CGameObject::Poisoned()
 {
 	WISPFUN_DEBUG("c20_f12");
 	if (g_PacketManager.ClientVersion >= CV_7000)
-		return m_SA_Poisoned;
+		return SA_Poisoned;
 	else
 		return (m_Flags & 0x04);
 }
@@ -425,8 +425,8 @@ int CGameObject::IsGold(const ushort &graphic)
 ushort CGameObject::GetDrawGraphic(bool &doubleDraw)
 {
 	WISPFUN_DEBUG("c20_f15");
-	int index = IsGold(m_Graphic);
-	ushort result = m_Graphic;
+	int index = IsGold(Graphic);
+	ushort result = Graphic;
 
 	const ushort graphicAssociateTable[3][3] =
 	{
@@ -437,11 +437,11 @@ ushort CGameObject::GetDrawGraphic(bool &doubleDraw)
 
 	if (index)
 	{
-		int graphicIndex = (int)(m_Count > 1) + (int)(m_Count > 5);
+		int graphicIndex = (int)(Count > 1) + (int)(Count > 5);
 		result = graphicAssociateTable[index - 1][graphicIndex];
 	}
 	else
-		doubleDraw = IsStackable() && (m_Count > 1);
+		doubleDraw = IsStackable() && (Count > 1);
 
 	return result;
 }
@@ -456,7 +456,7 @@ ushort CGameObject::GetDrawGraphic(bool &doubleDraw)
 void CGameObject::DrawEffects(int x, int y)
 {
 	WISPFUN_DEBUG("c20_f16");
-	if (m_NPC)
+	if (NPC)
 	{
 		CGameCharacter *gc = GameCharacterPtr();
 
@@ -565,7 +565,7 @@ void CGameObject::AddObject(CGameObject *obj)
 		m_Next->m_Prev = this;
 		m_Next->m_Next = NULL;
 
-		((CGameObject*)m_Next)->Container = m_Container;
+		((CGameObject*)m_Next)->Container = Container;
 	}
 	else
 	{
@@ -578,7 +578,7 @@ void CGameObject::AddObject(CGameObject *obj)
 		obj->m_Next = NULL;
 		obj->m_Prev = item;
 
-		obj->Container = m_Container;
+		obj->Container = Container;
 	}
 }
 //----------------------------------------------------------------------------------
@@ -621,7 +621,7 @@ void CGameObject::AddItem(CGameObject *obj)
 void CGameObject::Reject(CGameObject *obj)
 {
 	WISPFUN_DEBUG("c20_f22");
-	if (obj->Container != m_Serial)
+	if (obj->Container != Serial)
 		return;
 
 	if (m_Items != NULL)

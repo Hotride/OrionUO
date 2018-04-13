@@ -7,7 +7,8 @@ namespace WISP_FILE
 //----------------------------------------------------------------------------------
 class CTextFileParser
 {
-	SETGET(string, RawLine, "");
+public:
+	string RawLine = "";
 
 private:
 	//Указатель на адрес в памяти, куда загружен файл

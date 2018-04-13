@@ -43,12 +43,12 @@ void CCreateCharacterScreen::Init()
 	WISPFUN_DEBUG("c162_f1");
 	g_CreateCharacterManager.Clear();
 
-	m_Name = "";
+	Name = "";
 	m_StyleSelection = 0;
 	m_ColorSelection = 0;
 
 	g_ScreenEffectManager.UseSunrise();
-	m_SmoothScreenAction = 0;
+	SmoothScreenAction = 0;
 
 	m_Gump.PrepareTextures();
 	m_Gump.WantUpdateContent = true;
@@ -63,7 +63,7 @@ void CCreateCharacterScreen::ProcessSmoothAction(uchar action)
 {
 	WISPFUN_DEBUG("c162_f2");
 	if (action == 0xFF)
-		action = m_SmoothScreenAction;
+		action = SmoothScreenAction;
 
 	if (action == ID_SMOOTH_CCS_QUIT)
 		g_OrionWindow.Destroy();
@@ -116,7 +116,7 @@ void CCreateCharacterScreen::OnCharPress(const WPARAM &wParam, const LPARAM &lPa
 	if (g_EntryPointer->Length() < 20) //add char to text field
 		g_EntryPointer->Insert((wchar_t)wParam);
 
-	m_Name = g_EntryPointer->c_str();
+	Name = g_EntryPointer->c_str();
 	m_Gump.WantRedraw = true;
 }
 //----------------------------------------------------------------------------------
@@ -133,7 +133,7 @@ void CCreateCharacterScreen::OnKeyDown(const WPARAM &wParam, const LPARAM &lPara
 	{
 		g_EntryPointer->OnKey(&m_Gump, wParam);
 
-		m_Name = g_EntryPointer->c_str();
+		Name = g_EntryPointer->c_str();
 		m_Gump.WantRedraw = true;
 	}
 }

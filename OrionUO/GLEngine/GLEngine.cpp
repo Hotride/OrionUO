@@ -32,10 +32,10 @@ CGLEngine::CGLEngine()
 CGLEngine::~CGLEngine()
 {
 	WISPFUN_DEBUG("c29_f1");
-	if (m_PositionBuffer != 0)
+	if (PositionBuffer != 0)
 	{
-		glDeleteBuffers(1, &m_PositionBuffer);
-		m_PositionBuffer = 0;
+		glDeleteBuffers(1, &PositionBuffer);
+		PositionBuffer = 0;
 	}
 
 	Uninstall();
@@ -66,7 +66,7 @@ bool CGLEngine::GLSetupPixelFormat()
 		0 //dwDamageMask
 	};
 
-	int pixelformat = ChoosePixelFormat(m_DC, &pfd);
+	int pixelformat = ChoosePixelFormat(DC, &pfd);
 
 	if (!pixelformat)
 	{
@@ -74,7 +74,7 @@ bool CGLEngine::GLSetupPixelFormat()
 		return false;
 	}
 
-	if (!SetPixelFormat(m_DC, pixelformat, &pfd))
+	if (!SetPixelFormat(DC, pixelformat, &pfd))
 	{
 		MessageBox(NULL, L"SetPixelFormat failed", L"Error", MB_OK);
 		return false;
@@ -86,17 +86,17 @@ bool CGLEngine::GLSetupPixelFormat()
 bool CGLEngine::Install()
 {
 	WISPFUN_DEBUG("c29_f3");
-	m_OldTexture = -1;
+	OldTexture = -1;
 
-	m_DC = ::GetDC(g_OrionWindow.Handle);
+	DC = ::GetDC(g_OrionWindow.Handle);
 	if (!GLSetupPixelFormat())
 		return false;
 
-	m_RC = wglCreateContext(m_DC);
-	if (!m_RC)
+	RC = wglCreateContext(DC);
+	if (!RC)
 		return false;
 
-	if (!wglMakeCurrent(m_DC, m_RC))
+	if (!wglMakeCurrent(DC, RC))
 		return false;
 	
 	int glewInitResult = glewInit();
@@ -104,29 +104,29 @@ bool CGLEngine::Install()
 
 	if (!glewInitResult)
 	{
-		m_CanUseFrameBuffer = (GL_ARB_framebuffer_object &&
+		CanUseFrameBuffer = (GL_ARB_framebuffer_object &&
 			glBindFramebuffer &&
 			glDeleteFramebuffers &&
 			glFramebufferTexture2D &&
 			glGenFramebuffers
 			);
 
-		m_CanUseBuffer = (GL_VERSION_1_5 &&
+		CanUseBuffer = (GL_VERSION_1_5 &&
 			glBindBuffer &&
 			glBufferData &&
 			glDeleteBuffers &&
 			glGenBuffers
 			);
 
-		m_CanUseBuffer = false;
+		CanUseBuffer = false;
 
-		if (m_CanUseBuffer)
+		if (CanUseBuffer)
 		{
-			glGenBuffers(3, &m_PositionBuffer);
+			glGenBuffers(3, &PositionBuffer);
 
 			int positionArray[] = { 0, 1, 1, 1, 0, 0, 1, 0 };
 
-			glBindBuffer(GL_ARRAY_BUFFER, m_PositionBuffer);
+			glBindBuffer(GL_ARRAY_BUFFER, PositionBuffer);
 			glBufferData(GL_ARRAY_BUFFER, sizeof(positionArray), &positionArray[0], GL_STATIC_DRAW);
 
 			g_GL_BindTexture16_Ptr = &CGLEngine::GL2_BindTexture16;
@@ -145,9 +145,9 @@ bool CGLEngine::Install()
 	else
 		return false;
 
-	LOG("g_UseFrameBuffer = %i; m_CanUseBuffer = %i\n", m_CanUseFrameBuffer, m_CanUseBuffer);
+	LOG("g_UseFrameBuffer = %i; CanUseBuffer = %i\n", CanUseFrameBuffer, CanUseBuffer);
 
-	if (!m_CanUseFrameBuffer && g_ShowWarnings)
+	if (!CanUseFrameBuffer && g_ShowWarnings)
 		g_OrionWindow.ShowMessage("Your graphics card does not support Frame Buffers!", "Warning!");
 
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);		// Black Background
@@ -194,13 +194,13 @@ bool CGLEngine::Install()
 void CGLEngine::Uninstall()
 {
 	WISPFUN_DEBUG("c29_f4");
-	m_DC = 0;
+	DC = 0;
 	wglMakeCurrent(NULL, NULL);
 
-	if (m_RC != 0)
+	if (RC != 0)
 	{
-		wglDeleteContext(m_RC);
-		m_RC = 0;
+		wglDeleteContext(RC);
+		RC = 0;
 	}
 }
 //----------------------------------------------------------------------------------
@@ -235,7 +235,7 @@ void CGLEngine::GL1_BindTexture16(CGLTexture &texture, const int &width, const i
 	texture.Height = height;
 	texture.Texture = tex;
 
-	if (m_IgnoreHitMap)
+	if (IgnoreHitMap)
 		return;
 
 	HIT_MAP_TYPE &hitMap = texture.m_HitMap;
@@ -270,7 +270,7 @@ void CGLEngine::GL1_BindTexture32(CGLTexture &texture, const int &width, const i
 	texture.Height = height;
 	texture.Texture = tex;
 
-	if (m_IgnoreHitMap)
+	if (IgnoreHitMap)
 		return;
 
 	HIT_MAP_TYPE &hitMap = texture.m_HitMap;
@@ -324,7 +324,7 @@ void CGLEngine::GL2_BindTexture32(CGLTexture &texture, const int &width, const i
 void CGLEngine::BeginDraw()
 {
 	WISPFUN_DEBUG("c29_f11");
-	m_Drawing = true;
+	Drawing = true;
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 	glLoadIdentity();
@@ -337,7 +337,7 @@ void CGLEngine::BeginDraw()
 	glEnable(GL_ALPHA_TEST);
 	glAlphaFunc(GL_GREATER, 0.0f);
 
-	if (m_CanUseBuffer)
+	if (CanUseBuffer)
 	{
 		glEnableClientState(GL_VERTEX_ARRAY);
 		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
@@ -347,9 +347,9 @@ void CGLEngine::BeginDraw()
 void CGLEngine::EndDraw()
 {
 	WISPFUN_DEBUG("c29_f12");
-	m_Drawing = false;
+	Drawing = false;
 
-	if (m_CanUseBuffer)
+	if (CanUseBuffer)
 	{
 		glDisableClientState(GL_VERTEX_ARRAY);
 		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
@@ -357,7 +357,7 @@ void CGLEngine::EndDraw()
 
 	glDisable(GL_ALPHA_TEST);
 
-	SwapBuffers(m_DC);
+	SwapBuffers(DC);
 }
 //----------------------------------------------------------------------------------
 void CGLEngine::BeginStencil()
@@ -484,9 +484,9 @@ void CGLEngine::ClearScissorList()
 inline void CGLEngine::BindTexture(const GLuint &texture)
 {
 	WISPFUN_DEBUG("c29_f25");
-	if (m_OldTexture != texture)
+	if (OldTexture != texture)
 	{
-		m_OldTexture = texture;
+		OldTexture = texture;
 		glBindTexture(GL_TEXTURE_2D, texture);
 	}
 }
@@ -673,7 +673,7 @@ void CGLEngine::GL1_DrawSitting(const CGLTexture &texture, const int &x, const i
 	float h06 = height * h6mod;
 	float h09 = height * h9mod;
 
-	float widthOffset = (float)(width + m_SittingCharacterOffset);
+	float widthOffset = (float)(width + SittingCharacterOffset);
 	glBegin(GL_TRIANGLE_STRIP);
 
 	if (mirror)
@@ -695,7 +695,7 @@ void CGLEngine::GL1_DrawSitting(const CGLTexture &texture, const int &x, const i
 			}
 
 			glTexCoord2f(0.0f, h6mod); glVertex2f(widthOffset, h06);
-			glTexCoord2f(1.0f, h6mod); glVertex2f(m_SittingCharacterOffset, h06);
+			glTexCoord2f(1.0f, h6mod); glVertex2f(SittingCharacterOffset, h06);
 		}
 
 		if (h9mod)
@@ -703,11 +703,11 @@ void CGLEngine::GL1_DrawSitting(const CGLTexture &texture, const int &x, const i
 			if (!h6mod)
 			{
 				glTexCoord2f(0.0f, 0.0f); glVertex2f(widthOffset, 0);
-				glTexCoord2f(1.0f, 0.0f); glVertex2f(m_SittingCharacterOffset, 0);
+				glTexCoord2f(1.0f, 0.0f); glVertex2f(SittingCharacterOffset, 0);
 			}
 
 			glTexCoord2f(0.0f, 1.0f); glVertex2f(widthOffset, h09);
-			glTexCoord2f(1.0f, 1.0f); glVertex2f(m_SittingCharacterOffset, h09);
+			glTexCoord2f(1.0f, 1.0f); glVertex2f(SittingCharacterOffset, h09);
 
 		}
 	}
@@ -715,9 +715,9 @@ void CGLEngine::GL1_DrawSitting(const CGLTexture &texture, const int &x, const i
 	{
 		if (h3mod)
 		{
-			glTexCoord2f(0.0f, 0.0f); glVertex2f(m_SittingCharacterOffset, 0);
+			glTexCoord2f(0.0f, 0.0f); glVertex2f(SittingCharacterOffset, 0);
 			glTexCoord2f(1.0f, 0.0f); glVertex2f(widthOffset, 0);
-			glTexCoord2f(0.0f, h3mod); glVertex2f(m_SittingCharacterOffset, h03);
+			glTexCoord2f(0.0f, h3mod); glVertex2f(SittingCharacterOffset, h03);
 			glTexCoord2f(1.0f, h3mod); glVertex2f(widthOffset, h03);
 		}
 
@@ -725,8 +725,8 @@ void CGLEngine::GL1_DrawSitting(const CGLTexture &texture, const int &x, const i
 		{
 			if (!h3mod)
 			{
-				glTexCoord2f(0.0f, 0.0f); glVertex2f(m_SittingCharacterOffset, 0);
-				glTexCoord2f(1.0f, 0.0f); glVertex2f(width + m_SittingCharacterOffset, 0);
+				glTexCoord2f(0.0f, 0.0f); glVertex2f(SittingCharacterOffset, 0);
+				glTexCoord2f(1.0f, 0.0f); glVertex2f(width + SittingCharacterOffset, 0);
 			}
 
 			glTexCoord2f(0.0f, h6mod); glVertex2f(0, h06);
@@ -996,7 +996,7 @@ void CGLEngine::GL2_Draw(const CGLTexture &texture, const int &x, const int &y)
 	glBindBuffer(GL_ARRAY_BUFFER, texture.VertexBuffer);
 	glVertexPointer(2, GL_INT, 0, (PVOID)0);
 
-	glBindBuffer(GL_ARRAY_BUFFER, m_PositionBuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, PositionBuffer);
 	glTexCoordPointer(2, GL_INT, 0, (PVOID)0);
 
 	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
@@ -1021,7 +1021,7 @@ void CGLEngine::GL2_DrawRotated(const CGLTexture &texture, const int &x, const i
 	glBindBuffer(GL_ARRAY_BUFFER, texture.VertexBuffer);
 	glVertexPointer(2, GL_INT, 0, (PVOID)0);
 
-	glBindBuffer(GL_ARRAY_BUFFER, m_PositionBuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, PositionBuffer);
 	glTexCoordPointer(2, GL_INT, 0, (PVOID)0);
 
 	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
@@ -1047,7 +1047,7 @@ void CGLEngine::GL2_DrawMirrored(const CGLTexture &texture, const int &x, const 
 
 	glVertexPointer(2, GL_INT, 0, (PVOID)0);
 
-	glBindBuffer(GL_ARRAY_BUFFER, m_PositionBuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, PositionBuffer);
 	glTexCoordPointer(2, GL_INT, 0, (PVOID)0);
 
 	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
@@ -1069,7 +1069,7 @@ void CGLEngine::GL2_DrawSitting(const CGLTexture &texture, const int &x, const i
 	float h06 = height * h6mod;
 	float h09 = height * h9mod;
 
-	float widthOffset = (float)(width + m_SittingCharacterOffset);
+	float widthOffset = (float)(width + SittingCharacterOffset);
 	glBegin(GL_TRIANGLE_STRIP);
 
 	if (mirror)
@@ -1091,7 +1091,7 @@ void CGLEngine::GL2_DrawSitting(const CGLTexture &texture, const int &x, const i
 			}
 
 			glTexCoord2f(0.0f, h6mod); glVertex2f(widthOffset, h06);
-			glTexCoord2f(1.0f, h6mod); glVertex2f(m_SittingCharacterOffset, h06);
+			glTexCoord2f(1.0f, h6mod); glVertex2f(SittingCharacterOffset, h06);
 		}
 
 		if (h9mod)
@@ -1099,11 +1099,11 @@ void CGLEngine::GL2_DrawSitting(const CGLTexture &texture, const int &x, const i
 			if (!h6mod)
 			{
 				glTexCoord2f(0.0f, 0.0f); glVertex2f(widthOffset, 0);
-				glTexCoord2f(1.0f, 0.0f); glVertex2f(m_SittingCharacterOffset, 0);
+				glTexCoord2f(1.0f, 0.0f); glVertex2f(SittingCharacterOffset, 0);
 			}
 
 			glTexCoord2f(0.0f, 1.0f); glVertex2f(widthOffset, h09);
-			glTexCoord2f(1.0f, 1.0f); glVertex2f(m_SittingCharacterOffset, h09);
+			glTexCoord2f(1.0f, 1.0f); glVertex2f(SittingCharacterOffset, h09);
 
 		}
 	}
@@ -1111,9 +1111,9 @@ void CGLEngine::GL2_DrawSitting(const CGLTexture &texture, const int &x, const i
 	{
 		if (h3mod)
 		{
-			glTexCoord2f(0.0f, 0.0f); glVertex2f(m_SittingCharacterOffset, 0);
+			glTexCoord2f(0.0f, 0.0f); glVertex2f(SittingCharacterOffset, 0);
 			glTexCoord2f(1.0f, 0.0f); glVertex2f(widthOffset, 0);
-			glTexCoord2f(0.0f, h3mod); glVertex2f(m_SittingCharacterOffset, h03);
+			glTexCoord2f(0.0f, h3mod); glVertex2f(SittingCharacterOffset, h03);
 			glTexCoord2f(1.0f, h3mod); glVertex2f(widthOffset, h03);
 		}
 
@@ -1121,8 +1121,8 @@ void CGLEngine::GL2_DrawSitting(const CGLTexture &texture, const int &x, const i
 		{
 			if (!h3mod)
 			{
-				glTexCoord2f(0.0f, 0.0f); glVertex2f(m_SittingCharacterOffset, 0);
-				glTexCoord2f(1.0f, 0.0f); glVertex2f(width + m_SittingCharacterOffset, 0);
+				glTexCoord2f(0.0f, 0.0f); glVertex2f(SittingCharacterOffset, 0);
+				glTexCoord2f(1.0f, 0.0f); glVertex2f(width + SittingCharacterOffset, 0);
 			}
 
 			glTexCoord2f(0.0f, h6mod); glVertex2f(0, h06);
@@ -1189,7 +1189,7 @@ void CGLEngine::GL2_DrawShadow(const CGLTexture &texture, const int &x, const in
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glVertexPointer(2, GL_FLOAT, 0, &verticles[0]);
 
-	glBindBuffer(GL_ARRAY_BUFFER, m_PositionBuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, PositionBuffer);
 	glTexCoordPointer(2, GL_INT, 0, (PVOID)0);
 
 	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);

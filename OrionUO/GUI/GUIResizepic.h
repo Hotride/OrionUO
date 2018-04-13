@@ -18,7 +18,7 @@ public:
 	CGUIResizepic(const uint &serial, const ushort &graphic, const int &x, const int &y, const int &width, const int &height);
 	virtual ~CGUIResizepic();
 
-	virtual WISP_GEOMETRY::CSize GetSize() { return WISP_GEOMETRY::CSize(m_Width, m_Height); }
+	virtual WISP_GEOMETRY::CSize GetSize() { return WISP_GEOMETRY::CSize(Width, Height); }
 
 	virtual void PrepareTextures();
 

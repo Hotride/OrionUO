@@ -13,9 +13,9 @@
 //Объект группы
 class CPartyObject
 {
-	SETGET(uint, Serial, 0);
-
 public:
+	uint Serial = 0;
+
 	CPartyObject();
 	~CPartyObject() {}
 	class CGameCharacter *Character{ NULL };

@@ -15,8 +15,8 @@ CGumpScreenSelectProfession::CGumpScreenSelectProfession()
 : CGump(GT_NONE, 0, 0, 0)
 {
 	WISPFUN_DEBUG("c117_f1");
-	m_NoMove = true;
-	m_NoClose = true;
+	NoMove = true;
+	NoClose = true;
 
 	IFOR(i, 0, 3)
 	{

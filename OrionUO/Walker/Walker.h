@@ -12,18 +12,18 @@
 //----------------------------------------------------------------------------------
 class CStepInfo
 {
-	SETGET(uchar, Direction, 0);
-	SETGET(uchar, OldDirection, 0);
-	SETGET(uchar, Sequence, 0);
-	SETGET(bool, Accepted, false);
-	SETGET(bool, Running, false);
-	SETGET(bool, NoRotation, false);
-	SETGET(uint, Timer, 0);
-	SETGET(ushort, X, 0);
-	SETGET(ushort, Y, 0);
-	SETGET(uchar, Z, 0);
-
 public:
+	uchar Direction = 0;
+	uchar OldDirection = 0;
+	uchar Sequence = 0;
+	bool Accepted = false;
+	bool Running = false;
+	bool NoRotation = false;
+	uint Timer = 0;
+	ushort X = 0;
+	ushort Y = 0;
+	uchar Z = 0;
+
 	CStepInfo() {}
 	~CStepInfo() {}
 };
@@ -31,18 +31,18 @@ public:
 //Класс для обработки шагов игрока
 class CWalker
 {
-	SETGET(uint, LastStepRequestTime, 0);
-	SETGET(int, UnacceptedPacketsCount, 0);
-	SETGET(int, StepsCount, 0);
-	SETGET(uchar, WalkSequence, 0);
-	SETGET(uchar, CurrentWalkSequence, 0);
-	SETGET(bool, ResendPacketSended, false);
-	SETGET(bool, WantChangeCoordinates, false);
-	SETGET(bool, WalkingFailed, false);
-	SETGET(ushort, CurrentPlayerZ, 0);
-	SETGET(ushort, NewPlayerZ, 0);
-
 public:
+	uint LastStepRequestTime = 0;
+	int UnacceptedPacketsCount = 0;
+	int StepsCount = 0;
+	uchar WalkSequence = 0;
+	uchar CurrentWalkSequence = 0;
+	bool ResendPacketSended = false;
+	bool WantChangeCoordinates = false;
+	bool WalkingFailed = false;
+	ushort CurrentPlayerZ = 0;
+	ushort NewPlayerZ = 0;
+
 	CWalker();
 	~CWalker() {}
 

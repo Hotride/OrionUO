@@ -12,9 +12,9 @@
 #include "stdafx.h"
 //----------------------------------------------------------------------------------
 CGUITextEntry::CGUITextEntry(const uint &serial, const ushort &color, const ushort &colorSelected, const ushort &colorFocused, const int &x, const int &y, const int &maxWidth, const bool &unicode, const uchar &font, const TEXT_ALIGN_TYPE &align, const ushort &textFlags, const int &maxLength)
-: CBaseGUI(GOT_TEXTENTRY, serial, 0, color, x, y), m_ColorSelected(colorSelected),
-m_ColorFocused(colorFocused), m_Unicode(unicode), m_Font(font), m_Align(align),
-m_TextFlags(textFlags), m_Entry(maxLength, maxWidth, maxWidth)
+: CBaseGUI(GOT_TEXTENTRY, serial, 0, color, x, y), ColorSelected(colorSelected),
+ColorFocused(colorFocused), Unicode(unicode), Font(font), Align(align),
+TextFlags(textFlags), m_Entry(maxLength, maxWidth, maxWidth)
 {
 }
 //----------------------------------------------------------------------------------
@@ -39,40 +39,40 @@ WISP_GEOMETRY::CSize CGUITextEntry::GetSize()
 void CGUITextEntry::SetGlobalColor(const bool &use, const uint &color, const uint &selected, const uint &focused)
 {
 	WISPFUN_DEBUG("c79_f4");
-	m_UseGlobalColor = use;
+	UseGlobalColor = use;
 
 	if (use)
 	{
-		m_GlobalColorR = GetRValue(color);
-		m_GlobalColorG = GetGValue(color);
-		m_GlobalColorB = GetBValue(color);
-		m_GlobalColorA = color >> 24;
+		GlobalColorR = GetRValue(color);
+		GlobalColorG = GetGValue(color);
+		GlobalColorB = GetBValue(color);
+		GlobalColorA = color >> 24;
 
-		if (!m_GlobalColorA)
-			m_GlobalColorA = 0xFF;
+		if (!GlobalColorA)
+			GlobalColorA = 0xFF;
 
-		m_GlobalColorSelectedR = GetRValue(selected);
-		m_GlobalColorSelectedG = GetGValue(selected);
-		m_GlobalColorSelectedB = GetBValue(selected);
-		m_GlobalColorSelectedA = selected >> 24;
+		GlobalColorSelectedR = GetRValue(selected);
+		GlobalColorSelectedG = GetGValue(selected);
+		GlobalColorSelectedB = GetBValue(selected);
+		GlobalColorSelectedA = selected >> 24;
 
-		if (!m_GlobalColorSelectedA)
-			m_GlobalColorSelectedA = 0xFF;
+		if (!GlobalColorSelectedA)
+			GlobalColorSelectedA = 0xFF;
 
-		m_GlobalColorFocusedR = GetRValue(focused);
-		m_GlobalColorFocusedG = GetGValue(focused);
-		m_GlobalColorFocusedB = GetBValue(focused);
-		m_GlobalColorFocusedA = focused >> 24;
+		GlobalColorFocusedR = GetRValue(focused);
+		GlobalColorFocusedG = GetGValue(focused);
+		GlobalColorFocusedB = GetBValue(focused);
+		GlobalColorFocusedA = focused >> 24;
 
-		if (!m_GlobalColorFocusedA)
-			m_GlobalColorFocusedA = 0xFF;
+		if (!GlobalColorFocusedA)
+			GlobalColorFocusedA = 0xFF;
 	}
 }
 //----------------------------------------------------------------------------------
 void CGUITextEntry::OnClick(CGump *gump, const int &x, const int &y)
 {
 	WISPFUN_DEBUG("c79_f5");
-	m_Entry.OnClick(gump, m_Font, m_Unicode, x, y, m_Align, m_TextFlags);
+	m_Entry.OnClick(gump, Font, Unicode, x, y, Align, TextFlags);
 }
 //----------------------------------------------------------------------------------
 void CGUITextEntry::OnMouseEnter()
@@ -92,51 +92,51 @@ void CGUITextEntry::OnMouseExit()
 void CGUITextEntry::PrepareTextures()
 {
 	WISPFUN_DEBUG("c79_f8");
-	ushort color = m_Color;
+	ushort color = Color;
 
-	if (!m_UseGlobalColor)
+	if (!UseGlobalColor)
 	{
-		if (m_Focused || &m_Entry == g_EntryPointer)
-			color = m_ColorFocused;
-		else if (g_GumpSelectedElement == this || (m_CheckOnSerial && g_CurrentCheckGump != NULL && g_CurrentCheckGump == g_SelectedObject.Gump && m_Serial == g_SelectedObject.Serial && g_SelectedObject.Object != NULL && g_SelectedObject.Object->IsGUI()))
-			color = m_ColorSelected;
+		if (Focused || &m_Entry == g_EntryPointer)
+			color = ColorFocused;
+		else if (g_GumpSelectedElement == this || (CheckOnSerial && g_CurrentCheckGump != NULL && g_CurrentCheckGump == g_SelectedObject.Gump && Serial == g_SelectedObject.Serial && g_SelectedObject.Object != NULL && g_SelectedObject.Object->IsGUI()))
+			color = ColorSelected;
 	}
 
-	if (color && m_Unicode)
+	if (color && Unicode)
 		color++;
 
-	if (m_Unicode)
-		m_Entry.PrepareToDrawW(m_Font, color, m_Align, m_TextFlags);
+	if (Unicode)
+		m_Entry.PrepareToDrawW(Font, color, Align, TextFlags);
 	else
-		m_Entry.PrepareToDrawA(m_Font, color, m_Align, m_TextFlags);
+		m_Entry.PrepareToDrawA(Font, color, Align, TextFlags);
 }
 //----------------------------------------------------------------------------------
 void CGUITextEntry::Draw(const bool &checktrans)
 {
 	WISPFUN_DEBUG("c79_f9");
 	int y = m_Y;
-	ushort color = m_Color;
+	ushort color = Color;
 
-	if (m_Focused || &m_Entry == g_EntryPointer)
+	if (Focused || &m_Entry == g_EntryPointer)
 	{
-		if (m_UseGlobalColor)
-			glColor4ub(m_GlobalColorFocusedR, m_GlobalColorFocusedG, m_GlobalColorFocusedB, m_GlobalColorFocusedA);
+		if (UseGlobalColor)
+			glColor4ub(GlobalColorFocusedR, GlobalColorFocusedG, GlobalColorFocusedB, GlobalColorFocusedA);
 		else
-			color = m_ColorFocused;
+			color = ColorFocused;
 
-		y += m_FocusedOffsetY;
+		y += FocusedOffsetY;
 	}
-	else if (g_GumpSelectedElement == this || (m_CheckOnSerial && g_CurrentCheckGump != NULL && g_CurrentCheckGump == g_SelectedObject.Gump && m_Serial == g_SelectedObject.Serial && g_SelectedObject.Object != NULL && g_SelectedObject.Object->IsGUI()))
+	else if (g_GumpSelectedElement == this || (CheckOnSerial && g_CurrentCheckGump != NULL && g_CurrentCheckGump == g_SelectedObject.Gump && Serial == g_SelectedObject.Serial && g_SelectedObject.Object != NULL && g_SelectedObject.Object->IsGUI()))
 	{
-		if (m_UseGlobalColor)
-			glColor4ub(m_GlobalColorSelectedR, m_GlobalColorSelectedG, m_GlobalColorSelectedB, m_GlobalColorSelectedA);
+		if (UseGlobalColor)
+			glColor4ub(GlobalColorSelectedR, GlobalColorSelectedG, GlobalColorSelectedB, GlobalColorSelectedA);
 		else
-			color = m_ColorSelected;
+			color = ColorSelected;
 	}
-	else if (m_UseGlobalColor)
-		glColor4ub(m_GlobalColorR, m_GlobalColorG, m_GlobalColorB, m_GlobalColorA);
+	else if (UseGlobalColor)
+		glColor4ub(GlobalColorR, GlobalColorG, GlobalColorB, GlobalColorA);
 
-	if (color && m_Unicode)
+	if (color && Unicode)
 		color++;
 
 	if (checktrans)
@@ -144,31 +144,31 @@ void CGUITextEntry::Draw(const bool &checktrans)
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-		if (m_Unicode)
-			m_Entry.DrawW(m_Font, color, m_X, y, m_Align, m_TextFlags);
+		if (Unicode)
+			m_Entry.DrawW(Font, color, m_X, y, Align, TextFlags);
 		else
-			m_Entry.DrawA(m_Font, color, m_X, y, m_Align, m_TextFlags);
+			m_Entry.DrawA(Font, color, m_X, y, Align, TextFlags);
 
 		glDisable(GL_BLEND);
 
 		glEnable(GL_STENCIL_TEST);
 
-		if (m_Unicode)
-			m_Entry.DrawW(m_Font, color, m_X, y, m_Align, m_TextFlags);
+		if (Unicode)
+			m_Entry.DrawW(Font, color, m_X, y, Align, TextFlags);
 		else
-			m_Entry.DrawA(m_Font, color, m_X, y, m_Align, m_TextFlags);
+			m_Entry.DrawA(Font, color, m_X, y, Align, TextFlags);
 
 		glDisable(GL_STENCIL_TEST);
 	}
 	else
 	{
-		if (m_Unicode)
-			m_Entry.DrawW(m_Font, color, m_X, y, m_Align, m_TextFlags);
+		if (Unicode)
+			m_Entry.DrawW(Font, color, m_X, y, Align, TextFlags);
 		else
-			m_Entry.DrawA(m_Font, color, m_X, y, m_Align, m_TextFlags);
+			m_Entry.DrawA(Font, color, m_X, y, Align, TextFlags);
 	}
 
-	if (m_UseGlobalColor)
+	if (UseGlobalColor)
 		glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 }
 //----------------------------------------------------------------------------------

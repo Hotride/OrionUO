@@ -37,7 +37,7 @@ void CConnectionScreen::Init()
 	m_Type = CST_LOGIN;
 
 	g_ScreenEffectManager.UseSunrise();
-	m_SmoothScreenAction = 0;
+	SmoothScreenAction = 0;
 
 	m_Gump.PrepareTextures();
 	m_Gump.WantUpdateContent = true;
@@ -88,7 +88,7 @@ void CConnectionScreen::ProcessSmoothAction(uchar action)
 {
 	WISPFUN_DEBUG("c161_f2");
 	if (action == 0xFF)
-		action = m_SmoothScreenAction;
+		action = SmoothScreenAction;
 
 	if (action == ID_SMOOTH_CS_GO_SCREEN_MAIN)
 		g_Orion.InitScreen(GS_MAIN);

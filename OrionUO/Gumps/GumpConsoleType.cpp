@@ -17,8 +17,8 @@ CGumpConsoleType::CGumpConsoleType(bool minimized, bool showFullText)
 : CGump(GT_CONSOLE_TYPE, 0, 0, 0), m_ShowFullText(showFullText)
 {
 	WISPFUN_DEBUG("c92_f1");
-	m_Minimized = minimized;
-	m_NoMove = true;
+	Minimized = minimized;
+	NoMove = true;
 	g_GumpConsoleType = this;
 }
 //----------------------------------------------------------------------------------
@@ -38,7 +38,7 @@ void CGumpConsoleType::SetShowFullText(const bool &val)
 {
 	WISPFUN_DEBUG("c92_f4");
 	m_ShowFullText = val;
-	m_WantUpdateContent = true;
+	WantUpdateContent = true;
 }
 //----------------------------------------------------------------------------------
 bool CGumpConsoleType::ConsoleIsEmpty()
@@ -182,7 +182,7 @@ void CGumpConsoleType::UpdateContent()
 	CGUIText *obj = (CGUIText*)Add(new CGUIText(0, 14, 0));
 	obj->CreateTextureA(3, "Default entry text mode:");
 
-	if (m_Minimized)
+	if (Minimized)
 		Add(new CGUIButton(ID_GCT_MINIMIZE, 0x0985, 0x0986, 0x0986, 0, 6));
 	else
 	{
@@ -265,13 +265,13 @@ void CGumpConsoleType::GUMP_BUTTON_EVENT_C
 	WISPFUN_DEBUG("c92_f11");
 	if (serial == ID_GCT_MINIMIZE)
 	{
-		m_Minimized = !m_Minimized;
-		m_WantUpdateContent = true;
+		Minimized = !Minimized;
+		WantUpdateContent = true;
 	}
 	else if (serial == ID_GCT_SHOW_FULL_TEXT)
 	{
 		m_ShowFullText = !m_ShowFullText;
-		m_WantUpdateContent = true;
+		WantUpdateContent = true;
 	}
 }
 //----------------------------------------------------------------------------------
@@ -281,7 +281,7 @@ void CGumpConsoleType::GUMP_CHECKBOX_EVENT_C
 	if (serial == ID_GCT_SHOW_FULL_TEXT && m_ShowFullText != state)
 	{
 		m_ShowFullText = state;
-		m_WantUpdateContent = true;
+		WantUpdateContent = true;
 	}
 }
 //----------------------------------------------------------------------------------
@@ -303,6 +303,6 @@ void CGumpConsoleType::GUMP_TEXT_ENTRY_EVENT_C
 
 	SetConsolePrefix();
 
-	m_WantRedraw = true;
+	WantRedraw = true;
 }
 //----------------------------------------------------------------------------------

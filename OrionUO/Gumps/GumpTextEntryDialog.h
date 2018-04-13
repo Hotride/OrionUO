@@ -12,16 +12,17 @@
 //----------------------------------------------------------------------------------
 class CGumpTextEntryDialog : public CGump
 {
-	SETGET(uchar, Variant, 0);
-	SETGET(uchar, ParentID, 0);
-	SETGET(uchar, ButtonID, 0);
+public:
+	uchar Variant = 0;
+	uchar ParentID = 0;
+	uchar ButtonID = 0;
 
 private:
 	static const int ID_GTED_BUTTON_OKAY = 1;
 	static const int ID_GTED_BUTTON_CANCEL = 2;
 	static const int ID_GTED_TEXT_FIELD = 3;
 
-	string m_Text = string("");
+	string Text = string("");
 	string m_Description = string("");
 	int m_MaxLength{ 0 };
 

@@ -13,14 +13,14 @@
 //Класс для работы с тултипами
 class CToolTip
 {
-	SETGET(uint, Timer, 0);
-	SETGET(wstring, Data, L"");
-	SETGET(uint, ClilocID, 0);
-	SETGET(int, MaxWidth, 0);
-	SETGET(WISP_GEOMETRY::CPoint2Di, Position, WISP_GEOMETRY::CPoint2Di());
-	SETGET(bool, Use, false);
-
 public:
+	uint Timer = 0;
+	wstring Data = L"";
+	uint ClilocID = 0;
+	int MaxWidth = 0;
+	WISP_GEOMETRY::CPoint2Di Position = WISP_GEOMETRY::CPoint2Di();
+	bool Use = false;
+
 	CToolTip();
 	~CToolTip();
 

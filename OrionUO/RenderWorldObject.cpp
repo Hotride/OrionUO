@@ -14,7 +14,7 @@
 //---------------------------------RenderWorldObject--------------------------------
 //----------------------------------------------------------------------------------
 CRenderWorldObject::CRenderWorldObject(const RENDER_OBJECT_TYPE &renderType, const uint &serial, const ushort &graphic, const ushort &color, const int &x, const int &y, const char &z)
-: CRenderObject(serial, graphic, color, x, y), m_RenderType(renderType), m_Z(z)
+: CRenderObject(serial, graphic, color, x, y), RenderType(renderType), m_Z(z)
 {
 	WISPFUN_DEBUG("c202_f1");
 	m_DrawTextureColor[0] = 0xFF;
@@ -113,16 +113,16 @@ void CRenderWorldObject::SetZ(const char &val)
 //----------------------------------------------------------------------------------
 void CRenderWorldObject::UpdateRealDrawCoordinates()
 {
-	m_RealDrawX = (m_X - m_Y) * 22;
-	m_RealDrawY = (m_X + m_Y) * 22 - (m_Z * 4);
-	m_Changed = true;
+	RealDrawX = (m_X - m_Y) * 22;
+	RealDrawY = (m_X + m_Y) * 22 - (m_Z * 4);
+	Changed = true;
 }
 //----------------------------------------------------------------------------------
 void CRenderWorldObject::UpdateDrawCoordinates()
 {
-	m_DrawX = m_RealDrawX - g_RenderBounds.WindowDrawOffsetX;
-	m_DrawY = m_RealDrawY - g_RenderBounds.WindowDrawOffsetY;
-	m_Changed = false;
+	DrawX = RealDrawX - g_RenderBounds.WindowDrawOffsetX;
+	DrawY = RealDrawY - g_RenderBounds.WindowDrawOffsetY;
+	Changed = false;
 	UpdateTextCoordinates();
 	FixTextCoordinates();
 }

@@ -14,8 +14,8 @@
 CGumpScreenCreateCharacter::CGumpScreenCreateCharacter()
 : CGump(GT_NONE, 0, 0, 0)
 {
-	m_NoMove = true;
-	m_NoClose = true;
+	NoMove = true;
+	NoClose = true;
 }
 //----------------------------------------------------------------------------------
 CGumpScreenCreateCharacter::~CGumpScreenCreateCharacter()
@@ -419,31 +419,31 @@ void CGumpScreenCreateCharacter::GUMP_BUTTON_EVENT_C
 	else if (serial == ID_CCS_FEMALE_BUTTON)
 	{
 		g_CreateCharacterManager.Female = true;
-		m_WantUpdateContent = true;
+		WantUpdateContent = true;
 		g_CreateCharacterScreen.ColorSelection = 0;
 	}
 	else if (serial == ID_CCS_MALE_BUTTON)
 	{
 		g_CreateCharacterManager.Female = false;
-		m_WantUpdateContent = true;
+		WantUpdateContent = true;
 		g_CreateCharacterScreen.ColorSelection = 0;
 	}
 	else if (serial == ID_CCS_HUMAN_RACE_BUTTON)
 	{
 		g_CreateCharacterManager.Race = RT_HUMAN;
-		m_WantUpdateContent = true;
+		WantUpdateContent = true;
 		g_CreateCharacterScreen.ColorSelection = 0;
 	}
 	else if (serial == ID_CCS_ELF_RACE_BUTTON)
 	{
 		g_CreateCharacterManager.Race = RT_ELF;
-		m_WantUpdateContent = true;
+		WantUpdateContent = true;
 		g_CreateCharacterScreen.ColorSelection = 0;
 	}
 	else if (serial == ID_CCS_GARGOYLE_RACE_BUTTON)
 	{
 		g_CreateCharacterManager.Race = RT_GARGOYLE;
-		m_WantUpdateContent = true;
+		WantUpdateContent = true;
 		g_CreateCharacterScreen.ColorSelection = 0;
 	}
 }
@@ -464,7 +464,7 @@ void CGumpScreenCreateCharacter::GUMP_RADIO_EVENT_C
 		else if (serial == ID_CCS_GARGOYLE_RACE_BUTTON)
 			g_CreateCharacterManager.Race = RT_GARGOYLE;
 
-		m_WantUpdateContent = true;
+		WantUpdateContent = true;
 		g_CreateCharacterScreen.ColorSelection = 0;
 	}
 }
@@ -485,7 +485,7 @@ void CGumpScreenCreateCharacter::GUMP_TEXT_ENTRY_EVENT_C
 		else if (!g_CreateCharacterManager.Female && serial == ID_CCS_FACIAL_HAIR_COLOR)
 			g_CreateCharacterScreen.ColorSelection = CCSID_FACIAL_HAIR_COLOR;
 
-		m_WantUpdateContent = true;
+		WantUpdateContent = true;
 	}
 	else
 	{
@@ -529,7 +529,7 @@ void CGumpScreenCreateCharacter::GUMP_TEXT_ENTRY_EVENT_C
 			}
 
 			g_CreateCharacterScreen.ColorSelection = 0;
-			m_WantUpdateContent = true;
+			WantUpdateContent = true;
 		}
 	}
 }
@@ -546,7 +546,7 @@ void CGumpScreenCreateCharacter::GUMP_COMBOBOX_SELECTION_EVENT_C
 			if (index < g_CreateCharacterManager.GetCurrentFacialHairCount())
 				g_CreateCharacterManager.BeardStyle = (uchar)index;
 
-			m_WantUpdateContent = true;
+			WantUpdateContent = true;
 		}
 		else
 		{
@@ -555,7 +555,7 @@ void CGumpScreenCreateCharacter::GUMP_COMBOBOX_SELECTION_EVENT_C
 			if (index < g_CreateCharacterManager.GetCurrentHairCount())
 				g_CreateCharacterManager.HairStyle = index;
 
-			m_WantUpdateContent = true;
+			WantUpdateContent = true;
 		}
 	}
 }

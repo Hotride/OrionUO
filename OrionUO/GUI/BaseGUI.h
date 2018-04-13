@@ -14,35 +14,35 @@
 //----------------------------------------------------------------------------------
 class CBaseGUI : public CRenderObject
 {
+public:
 	//!Тип компоненты
-	SETGET(GUMP_OBJECT_TYPE, Type, GOT_NONE);
+	GUMP_OBJECT_TYPE Type = GOT_NONE;
 
 	//!Возможность перемещения гампа, если компонента зажата
-	SETGET(bool, MoveOnDrag, false);
+	bool MoveOnDrag = false;
 
 	//!Флаг использования PartialHue
-	SETGET(bool, PartialHue, false);
+	bool PartialHue = false;
 
 	//!Метод использования функции выбора
-	//!			true - проверяет нахождение курсора мышки в пределах полигона (для CGUIPolygonal и компонент с шириной и высотой, либо берет габариты картинки исходного состояния m_Graphic)
+	//!			true - проверяет нахождение курсора мышки в пределах полигона (для CGUIPolygonal и компонент с шириной и высотой, либо берет габариты картинки исходного состояния Graphic)
 	//!			false - стандартная функция проверки пикселей
-	SETGET(bool, CheckPolygone, false);
+	bool CheckPolygone = false;
 
 	//!Включение выключение обработки компоненты (компонента отображается)
-	SETGET(bool, Enabled, true);
+	bool Enabled = true;
 
 	//!Показать/скрыть компоненту и ее обработку
-	SETGET(bool, Visible, true);
+	bool Visible = true;
 
 	//!Флаг, отвечающий только за выбор компоненты, без ее отображения в гампе
-	SETGET(bool, SelectOnly, false);
+	bool SelectOnly = false;
 
 	//!Флаг, отвечающий только за отрисовку компоненты, без ее выбора
-	SETGET(bool, DrawOnly, false);
+	bool DrawOnly = false;
 
-	SETGET(uint, ClilocID, 0);
+	uint ClilocID = 0;
 
-public:
 	CBaseGUI(const GUMP_OBJECT_TYPE &type, const uint &serial, const ushort &graphic, const ushort &color, const int &x, const int &y);
 	virtual ~CBaseGUI();
 
@@ -53,7 +53,7 @@ public:
 	virtual void SetShaderMode() { }
 
 	//!Получить ИД картинки для отображения
-	virtual ushort GetDrawGraphic() { return m_Graphic; }
+	virtual ushort GetDrawGraphic() { return Graphic; }
 
 	//!Отрисовать компоненту
 	//!		checktrans - использовать трафарет +прозрачность

@@ -13,11 +13,12 @@
 //!Класс менеджера макросов
 class CMacroManager : public CBaseQueue
 {
+public:
 	//!Ожидание таргета от бинтов
-	SETGET(bool, WaitingBandageTarget, false);
+	bool WaitingBandageTarget = false;
 	//!Время ожидания таргета
-	SETGET(uint, WaitForTargetTimer, 0);
-	SETGET(bool, SendNotificationToPlugin, false);
+	uint WaitForTargetTimer = 0;
+	bool SendNotificationToPlugin = false;
 
 private:
 	//!Время следующего выполнения

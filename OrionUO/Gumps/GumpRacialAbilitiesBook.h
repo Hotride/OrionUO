@@ -17,10 +17,10 @@ iconStartGraphic = 0x5200;
 //----------------------------------------------------------------------------------
 class CGumpRacialAbilitiesBook : public CGump
 {
-	SETGET(int, DictionaryPagesCount, 2);
-	SETGET(int, AbilityCount, 4);
-	SETGET(int, PagesCount, 6);
-	SETGET(int, TooltipOffset, 1112198);
+	int DictionaryPagesCount = 2;
+	int AbilityCount = 4;
+	int PagesCount = 6;
+	int TooltipOffset = 1112198;
 
 private:
 	static const int ID_GRAB_BUTTON_PREV = 1;

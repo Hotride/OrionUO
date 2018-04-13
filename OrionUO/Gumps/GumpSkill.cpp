@@ -20,11 +20,11 @@ CGumpSkill::CGumpSkill(const uint &serial, const int &x, const int &y)
 	CGUIResizepic *resizepic = (CGUIResizepic*)Add(new CGUIResizepic(0, 0x24EA, 0, 0, 140, 20));
 	resizepic->DrawOnly = true;
 
-	if (m_Serial < (uint)g_SkillsManager.Count)
+	if (Serial < (uint)g_SkillsManager.Count)
 	{
 		CGUIText *text = (CGUIText*)Add(new CGUIText(0x0481, 10, 5));
 
-		CSkill *skill = g_SkillsManager.Get(m_Serial);
+		CSkill *skill = g_SkillsManager.Get(Serial);
 
 		if (skill != NULL)
 			text->CreateTextureW(1, ToWString(skill->Name), 30, 120, TS_CENTER);
@@ -41,7 +41,7 @@ void CGumpSkill::GUMP_BUTTON_EVENT_C
 {
 	WISPFUN_DEBUG("c124_f2");
 	if (serial == ID_GS_LOCK_MOVING)
-		m_LockMoving = !m_LockMoving;
+		LockMoving = !LockMoving;
 }
 //----------------------------------------------------------------------------------
 void CGumpSkill::OnLeftMouseButtonUp()
@@ -49,16 +49,16 @@ void CGumpSkill::OnLeftMouseButtonUp()
 	WISPFUN_DEBUG("c124_f3");
 	CGump::OnLeftMouseButtonUp();
 
-	if (g_SelectedObject.Serial != ID_GS_LOCK_MOVING && m_Serial < (uint)g_SkillsManager.Count)
+	if (g_SelectedObject.Serial != ID_GS_LOCK_MOVING && Serial < (uint)g_SkillsManager.Count)
 	{
-		CSkill *skill = g_SkillsManager.Get(m_Serial);
+		CSkill *skill = g_SkillsManager.Get(Serial);
 
 		if (skill != NULL && skill->Button)
 		{
 			WISP_GEOMETRY::CPoint2Di offset = g_MouseManager.LeftDroppedOffset();
 
 			if (!offset.X && !offset.Y)
-				g_Orion.UseSkill(m_Serial);
+				g_Orion.UseSkill(Serial);
 		}
 	}
 }

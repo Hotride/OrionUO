@@ -12,9 +12,9 @@
 //----------------------------------------------------------------------------------
 class CGumpCombatBook : public CGump
 {
-	SETGET(int, DictionaryPagesCount, 6);
-	SETGET(int, AbilityCount, MAX_ABILITIES_COUNT);
-	SETGET(int, PagesCount, 37);
+	int DictionaryPagesCount = 6;
+	int AbilityCount = MAX_ABILITIES_COUNT;
+	int PagesCount = 37;
 
 private:
 	static const int ID_GCB_BUTTON_PREV = 1;

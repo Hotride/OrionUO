@@ -31,12 +31,13 @@ enum PATH_OBJECT_FLAGS
 //Класс для поиска пути и теста шага на точку
 class CPathFinder
 {
+public:
 	//Автоматической передвижение (не сложными махинациями с мышкой)
-	SETGET(bool, AutoWalking, false);
-	SETGET(bool, PathFindidngCanBeCancelled, false);
-	SETGET(bool, BlockMoving, false);
-	SETGET(bool, FastRotation, false);
-	SETGET(bool, IgnoreStaminaCheck, false);
+	bool AutoWalking = false;
+	bool PathFindidngCanBeCancelled = false;
+	bool BlockMoving = false;
+	bool FastRotation = false;
+	bool IgnoreStaminaCheck = false;
 
 protected:
 	//Вычисление новой Z координаты

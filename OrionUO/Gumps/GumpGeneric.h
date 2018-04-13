@@ -12,9 +12,9 @@
 //----------------------------------------------------------------------------------
 class CGumpGeneric : public CGump
 {
-	SETGET(uint, MasterGump, 0);
-
 public:
+	uint MasterGump = 0;
+
 	CGumpGeneric(uint serial, short x, short y, uint id);
 	virtual ~CGumpGeneric();
 

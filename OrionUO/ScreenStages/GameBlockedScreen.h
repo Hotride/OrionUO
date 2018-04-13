@@ -12,12 +12,12 @@
 //----------------------------------------------------------------------------------
 class CGameBlockedScreen : public CBaseScreen
 {
+public:
 	//!Код блокировки
-	SETGET(uchar, Code, 0);
+	uchar Code = 0;
 
 	CGump m_GameBlockedScreenGump;
 
-public:
 	CGameBlockedScreen();
 	~CGameBlockedScreen();
 

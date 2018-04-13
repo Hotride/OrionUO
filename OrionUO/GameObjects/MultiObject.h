@@ -13,16 +13,16 @@
 //Multi component object
 class CMultiObject : public CRenderStaticObject
 {
+public:
 	//!This object is temp object on mouse (when you placing a house)
-	SETGET(bool, OnTarget, false);
+	bool OnTarget = false;
 
 	//!Original object's graphic
-	SETGET(ushort, OriginalGraphic, 0);
+	ushort OriginalGraphic = 0;
 
 	//!Object's state for custom houses buildings
-	SETGET(int, State, 0);
+	int State = 0;
 
-public:
 	/*!
 	Constructor
 	@param [__in] graphic Multi object's graphic

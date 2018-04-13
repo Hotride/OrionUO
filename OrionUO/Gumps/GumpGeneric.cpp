@@ -14,8 +14,8 @@
 CGumpGeneric::CGumpGeneric(uint serial, short x, short y, uint id)
 : CGump(GT_GENERIC, serial, x, y)
 {
-	m_Page = 1;
-	m_ID = id;
+	Page = 1;
+	ID = id;
 }
 //----------------------------------------------------------------------------------
 CGumpGeneric::~CGumpGeneric()
@@ -136,7 +136,7 @@ void CGumpGeneric::SendGumpResponse(int index)
 	CPacketGumpResponse(this, index).Send();
 
 	//Удаляем использованный гамп
-	m_RemoveMark = true;
+	RemoveMark = true;
 }
 //----------------------------------------------------------------------------------
 void CGumpGeneric::GUMP_BUTTON_EVENT_C
@@ -163,7 +163,7 @@ bool CGumpGeneric::OnLeftMouseButtonDoubleClick()
 		CPacketVirtureGumpResponse(this, g_PressedObject.LeftSerial).Send();
 
 		//Удаляем использованный гамп
-		m_RemoveMark = true;
+		RemoveMark = true;
 
 		return true;
 	}
@@ -175,7 +175,7 @@ void CGumpGeneric::OnCharPress(const WPARAM &wParam, const LPARAM &lParam)
 {
 	WISPFUN_DEBUG("c96_f6");
 	g_EntryPointer->Insert((wchar_t)wParam);
-	m_WantRedraw = true;
+	WantRedraw = true;
 }
 //----------------------------------------------------------------------------------
 void CGumpGeneric::OnKeyDown(const WPARAM &wParam, const LPARAM &lParam)
@@ -188,7 +188,7 @@ void CGumpGeneric::OnKeyDown(const WPARAM &wParam, const LPARAM &lParam)
 		else
 			g_EntryPointer = &g_GameConsole;
 
-		m_WantRedraw = true;
+		WantRedraw = true;
 	}
 	else
 		g_EntryPointer->OnKey(this, wParam);

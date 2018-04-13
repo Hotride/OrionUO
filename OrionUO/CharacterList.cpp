@@ -30,10 +30,10 @@ void CCharacterList::Clear()
 	IFOR(i, 0, 7)
 		m_Name[i] = "";
 
-	m_Selected = 0;
-	m_OnePerson = false;
-	m_Have6Slot = false;
-	m_Have7Slot = false;
+	Selected = 0;
+	OnePerson = false;
+	Have6Slot = false;
+	Have7Slot = false;
 }
 //----------------------------------------------------------------------------------
 /*!
@@ -46,7 +46,7 @@ void CCharacterList::SetName(intptr_t pos, const string &name)
 {
 	WISPFUN_DEBUG("c182_f3");
 	//!При корректной позиции записываем имя
-	if (pos >= 0 && pos < m_Count)
+	if (pos >= 0 && pos < Count)
 		m_Name[pos] = name;
 }
 //----------------------------------------------------------------------------------
@@ -61,7 +61,7 @@ string CCharacterList::GetName(intptr_t pos) const
 	string result = "";
 
 	//!При корректной позиции возвращаем имя
-	if (pos >= 0 && pos < m_Count)
+	if (pos >= 0 && pos < Count)
 		result = m_Name[pos];
 
 	return result;
@@ -77,8 +77,8 @@ string CCharacterList::GetSelectedName() const
 	string result = "";
 
 	//!При корректной позиции возвращаем имя
-	if (m_Selected >= 0 && m_Selected < m_Count)
-		result = m_Name[m_Selected];
+	if (Selected >= 0 && Selected < Count)
+		result = m_Name[Selected];
 
 	return result;
 }

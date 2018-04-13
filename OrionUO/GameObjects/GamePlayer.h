@@ -13,49 +13,49 @@
 //!Класс игрока
 class CPlayer: public CGameCharacter
 {
-	SETGET(short, Str, 0);
-	SETGET(short, Int, 0);
-	SETGET(short, Dex, 0);
-	SETGET(uchar, LockStr, 0);
-	SETGET(uchar, LockInt, 0);
-	SETGET(uchar, LockDex, 0);
-	SETGET(ushort, MaxWeight, 0);
-	SETGET(ushort, Weight, 0);
-	SETGET(short, Armor, 0);
-	SETGET(uint, Gold, 0);
-	SETGET(bool, Warmode, 0);
-	SETGET(ushort, StatsCap, 0);
-	SETGET(uchar, Followers, 0);
-	SETGET(uchar, MaxFollowers, 5);
-	SETGET(short, FireResistance, 0);
-	SETGET(short, ColdResistance, 0);
-	SETGET(short, PoisonResistance, 0);
-	SETGET(short, EnergyResistance, 0);
-	SETGET(short, MaxPhysicalResistance, 0);
-	SETGET(short, MaxFireResistance, 0);
-	SETGET(short, MaxColdResistance, 0);
-	SETGET(short, MaxPoisonResistance, 0);
-	SETGET(short, MaxEnergyResistance, 0);
-	SETGET(short, Luck, 0);
-	SETGET(short, MinDamage, 0);
-	SETGET(short, MaxDamage, 0);
-	SETGET(uint, TithingPoints, 0);
-	SETGET(short, DefenceChance, 0);
-	SETGET(short, MaxDefenceChance, 0);
-	SETGET(short, AttackChance, 0);
-	SETGET(short, WeaponSpeed, 0);
-	SETGET(short, WeaponDamage, 0);
-	SETGET(short, LowerRegCost, 0);
-	SETGET(short, SpellDamage, 0);
-	SETGET(short, CastRecovery, 0);
-	SETGET(short, CastSpeed, 0);
-	SETGET(short, LowerManaCost, 0);
-
-	SETGET(short, OldX, 0);
-	SETGET(short, OldY, 0);
-	SETGET(char, OldZ, 0);
-
 public:
+	short Str = 0;
+	short Int = 0;
+	short Dex = 0;
+	uchar LockStr = 0;
+	uchar LockInt = 0;
+	uchar LockDex = 0;
+	ushort MaxWeight = 0;
+	ushort Weight = 0;
+	short Armor = 0;
+	uint Gold = 0;
+	bool Warmode = 0;
+	ushort StatsCap = 0;
+	uchar Followers = 0;
+	uchar MaxFollowers = 5;
+	short FireResistance = 0;
+	short ColdResistance = 0;
+	short PoisonResistance = 0;
+	short EnergyResistance = 0;
+	short MaxPhysicalResistance = 0;
+	short MaxFireResistance = 0;
+	short MaxColdResistance = 0;
+	short MaxPoisonResistance = 0;
+	short MaxEnergyResistance = 0;
+	short Luck = 0;
+	short MinDamage = 0;
+	short MaxDamage = 0;
+	uint TithingPoints = 0;
+	short DefenceChance = 0;
+	short MaxDefenceChance = 0;
+	short AttackChance = 0;
+	short WeaponSpeed = 0;
+	short WeaponDamage = 0;
+	short LowerRegCost = 0;
+	short SpellDamage = 0;
+	short CastRecovery = 0;
+	short CastSpeed = 0;
+	short LowerManaCost = 0;
+
+	short OldX = 0;
+	short OldY = 0;
+	char OldZ = 0;
+
 	/*!
 	Constructor
 	@param [__in] serial Player's serial
@@ -94,7 +94,7 @@ public:
 	Player walking state
 	@return true if player if walking
 	*/
-	virtual bool Walking() { return (m_LastStepTime > (uint)(g_Ticks - PLAYER_WALKING_DELAY)); }
+	virtual bool Walking() { return (LastStepTime > (uint)(g_Ticks - PLAYER_WALKING_DELAY)); }
 
 	/*!
 	No iterate animation frames

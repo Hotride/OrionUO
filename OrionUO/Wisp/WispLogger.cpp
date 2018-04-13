@@ -38,7 +38,7 @@ void CLogger::Init(const string &filePath)
 	if (this == &g_WispLogger)
 		LOG("Log opened.\n");
 
-	m_FileName = filePath;
+	FileName = filePath;
 }
 //----------------------------------------------------------------------------------
 void CLogger::Init(const wstring &filePath)
@@ -51,7 +51,7 @@ void CLogger::Init(const wstring &filePath)
 	if (this == &g_WispLogger)
 		LOG("Log opened.\n");
 
-	m_FileName = ToString(filePath);
+	FileName = ToString(filePath);
 }
 //----------------------------------------------------------------------------------
 void CLogger::Print(const char *format, ...)

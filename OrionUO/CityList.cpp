@@ -32,7 +32,7 @@ void CCityItem::InitCity()
 {
 	WISPFUN_DEBUG("c183_f1");
 	//!Линкуем город
-	m_City = g_CityManager.GetCity(m_Name);
+	m_City = g_CityManager.GetCity(Name);
 }
 //----------------------------------------------------------------------------------
 //-------------------------------------CCityItemNew---------------------------------

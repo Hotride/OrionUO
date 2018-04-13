@@ -12,7 +12,7 @@
 //----------------------------------------------------------------------------------
 class COrionWindow : public WISP_WINDOW::CWindow
 {
-	//SETGET(int, RenderTimerDelay, FRAME_DELAY_ACTIVE_WINDOW);
+	//int RenderTimerDelay = FRAME_DELAY_ACTIVE_WINDOW;
 
 public:
 	COrionWindow();

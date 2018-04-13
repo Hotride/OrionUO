@@ -20,7 +20,7 @@ void CWalkData::GetOffset(float &x, float &y, float &steps)
 	int checkX = 22;
 	int checkY = 22;
 
-	switch (m_Direction & 7)
+	switch (Direction & 7)
 	{
 		case 0: //W
 		{

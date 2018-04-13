@@ -270,14 +270,14 @@ void CTextFileParser::SaveRawLine()
 
 	if (size > 0)
 	{
-		m_RawLine.resize(size, 0);
-		memcpy(&m_RawLine[0], &m_Ptr[0], size);
+		RawLine.resize(size, 0);
+		memcpy(&RawLine[0], &m_Ptr[0], size);
 
-		while (m_RawLine.length() && (m_RawLine[size - 1] == '\r' || m_RawLine[size - 1] == '\n'))
-			m_RawLine.resize(m_RawLine.length() - 1);
+		while (RawLine.length() && (RawLine[size - 1] == '\r' || RawLine[size - 1] == '\n'))
+			RawLine.resize(RawLine.length() - 1);
 	}
 	else
-		m_RawLine = "";
+		RawLine = "";
 }
 //----------------------------------------------------------------------------------
 //Прочитать токены из файла

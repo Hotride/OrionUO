@@ -12,10 +12,10 @@
 #include "stdafx.h"
 //----------------------------------------------------------------------------------
 CGUISkillItem::CGUISkillItem(const uint &serial, const uint &useSerial, const uint &statusSerial, const int &index, const int &x, const int &y)
-: CBaseGUI(GOT_SKILLITEM, serial, 0, 0, x, y), m_Index(index)
+: CBaseGUI(GOT_SKILLITEM, serial, 0, 0, x, y), Index(index)
 {
 	WISPFUN_DEBUG("c76_f1");
-	CSkill *skill = g_SkillsManager.Get(m_Index);
+	CSkill *skill = g_SkillsManager.Get(Index);
 
 	if (skill != NULL)
 	{
@@ -74,7 +74,7 @@ ushort CGUISkillItem::GetStatusButtonGraphic()
 void CGUISkillItem::CreateValueText(const bool &showReal, const bool &showCap)
 {
 	WISPFUN_DEBUG("c76_f5");
-	CSkill *skill = g_SkillsManager.Get(m_Index);
+	CSkill *skill = g_SkillsManager.Get(Index);
 
 	if (skill != NULL)
 	{

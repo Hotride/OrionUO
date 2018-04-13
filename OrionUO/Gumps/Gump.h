@@ -41,25 +41,26 @@ class CBaseGUI;
 //!Базовый класс гампов
 class CGump : public CRenderObject
 {
-	SETGET(GUMP_TYPE, GumpType, GT_NONE);
-	SETGET(uint, ID, 0);
-	SETGET(int, MinimizedX, 0);
-	SETGET(int, MinimizedY, 0);
-	SETGET(bool, NoMove, false);
-	SETGET(bool, NoClose, false);
-	SETGET(bool, Minimized, false);
-	SETGET(bool, FrameCreated, false);
-	SETGET(bool, WantRedraw, false);
-	SETGET(bool, WantUpdateContent, true);
-	SETGET(bool, Blocked, false);
-	SETGET(bool, LockMoving, false);
-	SETGET(int, Page, 0);
-	SETGET(int, Draw2Page, 0);
-	SETGET(bool, Transparent, false);
-	SETGET(bool, RemoveMark, false);
-	SETGET(bool, NoProcess, false);
-	SETGET(bool, Visible, true);
-	SETGET(WISP_GEOMETRY::CRect, GumpRect, WISP_GEOMETRY::CRect());
+public:
+	GUMP_TYPE GumpType = GT_NONE;
+	uint ID = 0;
+	int MinimizedX = 0;
+	int MinimizedY = 0;
+	bool NoMove = false;
+	bool NoClose = false;
+	bool Minimized = false;
+	bool FrameCreated = false;
+	bool WantRedraw = false;
+	bool WantUpdateContent = true;
+	bool Blocked = false;
+	bool LockMoving = false;
+	int Page = 0;
+	int Draw2Page = 0;
+	bool Transparent = false;
+	bool RemoveMark = false;
+	bool NoProcess = false;
+	bool Visible = true;
+	WISP_GEOMETRY::CRect GumpRect = WISP_GEOMETRY::CRect();
 
 protected:
 	CGUIButton m_Locker{ CGUIButton(0, 0, 0, 0, 0, 0) };

@@ -14,8 +14,9 @@
 //----------------------------------------------------------------------------------
 class CGUISkillItem : public CBaseGUI
 {
+public:
 	//!Индекс навыка
-	SETGET(int, Index, 0);
+	int Index = 0;
 
 	//!Статус навыка
 	SETGETE(uchar, Status, 0);

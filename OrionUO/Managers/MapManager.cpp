@@ -37,7 +37,7 @@ CMapManager::~CMapManager()
 		m_Blocks = NULL;
 	}
 
-	m_MaxBlockIndex = 0;
+	MaxBlockIndex = 0;
 }
 //----------------------------------------------------------------------------------
 void CMapManager::CreateBlocksTable()
@@ -194,18 +194,18 @@ void CMapManager::ApplyPatches(WISP_DATASTREAM::CDataReader &stream)
 	WISPFUN_DEBUG("c146_f6");
 	ResetPatchesInBlockTable();
 
-	m_PatchesCount = stream.ReadUInt32BE();
+	PatchesCount = stream.ReadUInt32BE();
 
-	if (m_PatchesCount < 0)
-		m_PatchesCount = 0;
+	if (PatchesCount < 0)
+		PatchesCount = 0;
 
-	if (m_PatchesCount > MAX_MAPS_COUNT)
-		m_PatchesCount = MAX_MAPS_COUNT;
+	if (PatchesCount > MAX_MAPS_COUNT)
+		PatchesCount = MAX_MAPS_COUNT;
 
 	memset(&m_MapPatchCount[0], 0, sizeof(m_MapPatchCount));
 	memset(&m_StaticPatchCount[0], 0, sizeof(m_StaticPatchCount));
 
-	IFOR(i, 0, m_PatchesCount)
+	IFOR(i, 0, PatchesCount)
 	{
 		if (g_FileManager.m_MapMul[i].Start == NULL)
 		{
@@ -470,7 +470,7 @@ void CMapManager::GetMapZ(const int &x, const int &y, int &groundZ, int &staticZ
 	int blockY = y / 8;
 	uint index = (blockX * g_MapBlockSize[g_CurrentMap].Height) + blockY;
 
-	if (index < m_MaxBlockIndex)
+	if (index < MaxBlockIndex)
 	{
 		CMapBlock *block = GetBlock(index);
 
@@ -567,11 +567,11 @@ void CMapManager::Init(const bool &delayed)
 			m_Blocks = NULL;
 		}
 
-		m_MaxBlockIndex = g_MapBlockSize[map].Width * g_MapBlockSize[map].Height;
-		m_Blocks = new CMapBlock*[m_MaxBlockIndex];
-		memset(&m_Blocks[0], 0, sizeof(CMapBlock*) * m_MaxBlockIndex);
+		MaxBlockIndex = g_MapBlockSize[map].Width * g_MapBlockSize[map].Height;
+		m_Blocks = new CMapBlock*[MaxBlockIndex];
+		memset(&m_Blocks[0], 0, sizeof(CMapBlock*) * MaxBlockIndex);
 		ClearBlockAccess();
-		m_PatchesCount = 0;
+		PatchesCount = 0;
 		memset(&m_MapPatchCount[0], 0, sizeof(m_MapPatchCount));
 		memset(&m_StaticPatchCount[0], 0, sizeof(m_StaticPatchCount));
 	}
@@ -606,7 +606,7 @@ void CMapManager::Init(const bool &delayed)
 		{
 			uint realIndex = index + j;
 
-			if (realIndex < m_MaxBlockIndex)
+			if (realIndex < MaxBlockIndex)
 			{
 				CMapBlock *block = GetBlock(realIndex);
 
@@ -712,7 +712,7 @@ void CMapManager::AddRender(CRenderWorldObject *item)
 	
 	uint index = (x * g_MapBlockSize[g_CurrentMap].Height) + y;
 	
-	if (index < m_MaxBlockIndex)
+	if (index < MaxBlockIndex)
 	{
 		CMapBlock *block = GetBlock(index);
 
@@ -741,7 +741,7 @@ CMapBlock *CMapManager::GetBlock(const uint &index)
 	WISPFUN_DEBUG("c146_f18");
 	CMapBlock *block = NULL;
 
-	if (index < m_MaxBlockIndex)
+	if (index < MaxBlockIndex)
 	{
 		block = m_Blocks[index];
 

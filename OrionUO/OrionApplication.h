@@ -12,8 +12,9 @@
 //----------------------------------------------------------------------------------
 class COrionApplication : public WISP_APPLICATION::CApplication
 {
-	SETGET(uint, NextRenderTime, 0);
-	SETGET(uint, NextUpdateTime, 0);
+public:
+	uint NextRenderTime = 0;
+	uint NextUpdateTime = 0;
 
 protected:
 	virtual void OnMainLoop();

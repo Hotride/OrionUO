@@ -12,9 +12,9 @@
 #include "stdafx.h"
 //----------------------------------------------------------------------------------
 CGumpSecureTrading::CGumpSecureTrading(uint serial, short x, short y, uint id, uint id2)
-: CGump(GT_TRADE, serial, x, y), m_ID2(id2)
+: CGump(GT_TRADE, serial, x, y), ID2(id2)
 {
-	m_ID = id;
+	ID = id;
 }
 //----------------------------------------------------------------------------------
 CGumpSecureTrading::~CGumpSecureTrading()
@@ -35,7 +35,7 @@ void CGumpSecureTrading::CalculateGumpState()
 	}
 
 	if (g_GumpTranslate.X || g_GumpTranslate.Y)
-		m_WantRedraw = true;
+		WantRedraw = true;
 }
 //----------------------------------------------------------------------------------
 void CGumpSecureTrading::PrepareContent()
@@ -43,14 +43,14 @@ void CGumpSecureTrading::PrepareContent()
 	WISPFUN_DEBUG("c120_f3");
 	if (m_MyCheck != NULL)
 	{
-		if (m_StateMy)
+		if (StateMy)
 		{
 			if (m_MyCheck->Graphic != 0x0869)
 			{
 				m_MyCheck->Graphic = 0x0869;
 				m_MyCheck->GraphicSelected = 0x086A;
 				m_MyCheck->GraphicPressed = 0x086A;
-				m_WantRedraw = true;
+				WantRedraw = true;
 			}
 		}
 		else if (m_MyCheck->Graphic != 0x0867)
@@ -58,35 +58,35 @@ void CGumpSecureTrading::PrepareContent()
 			m_MyCheck->Graphic = 0x0867;
 			m_MyCheck->GraphicSelected = 0x0868;
 			m_MyCheck->GraphicPressed = 0x0868;
-			m_WantRedraw = true;
+			WantRedraw = true;
 		}
 	}
 
 	if (m_OpponentCheck != NULL)
 	{
-		if (m_StateOpponent)
+		if (StateOpponent)
 		{
 			if (m_OpponentCheck->Graphic != 0x0869)
 			{
 				m_OpponentCheck->Graphic = 0x0869;
-				m_WantRedraw = true;
+				WantRedraw = true;
 			}
 		}
 		else if (m_OpponentCheck->Graphic != 0x0867)
 		{
 			m_OpponentCheck->Graphic = 0x0867;
-			m_WantRedraw = true;
+			WantRedraw = true;
 		}
 	}
 
 	if (m_TextRenderer.CalculatePositions(false))
-		m_WantRedraw = true;
+		WantRedraw = true;
 }
 //----------------------------------------------------------------------------------
 void CGumpSecureTrading::UpdateContent()
 {
 	WISPFUN_DEBUG("c120_f4");
-	CGameObject *selobj = g_World->FindWorldObject(m_Serial);
+	CGameObject *selobj = g_World->FindWorldObject(Serial);
 
 	if (selobj == NULL)
 		return; //Объект, к которому привязан гамп - исчез
@@ -102,7 +102,7 @@ void CGumpSecureTrading::UpdateContent()
 			Add(new CGUIColoredPolygone(0, 0, 192, 70, 110, 60, 0xFF000001));
 		}
 
-		if (m_StateMy)
+		if (StateMy)
 			m_MyCheck = (CGUIButton*)Add(new CGUIButton(ID_GST_CHECKBOX, 0x0869, 0x086A, 0x086A, 52, 29));
 		else
 			m_MyCheck = (CGUIButton*)Add(new CGUIButton(ID_GST_CHECKBOX, 0x0867, 0x0868, 0x0868, 52, 29));
@@ -110,15 +110,15 @@ void CGumpSecureTrading::UpdateContent()
 		CGUIText *text = (CGUIText*)Add(new CGUIText(0x0386, 84, 40));
 		text->CreateTextureA(1, g_Player->Name);
 
-		if (m_StateOpponent)
+		if (StateOpponent)
 			m_OpponentCheck = (CGUIGumppic*)Add(new CGUIGumppic(0x0869, 266, 160));
 		else
 			m_OpponentCheck = (CGUIGumppic*)Add(new CGUIGumppic(0x0867, 266, 160));
 
-		int fontWidth = 260 - g_FontManager.GetWidthA(1, m_Text);
+		int fontWidth = 260 - g_FontManager.GetWidthA(1, Text);
 
 		text = (CGUIText*)Add(new CGUIText(0x0386, fontWidth, 170));
-		text->CreateTextureA(1, m_Text);
+		text->CreateTextureA(1, Text);
 
 		Add(new CGUIShader(&g_ColorizerShader, true));
 
@@ -139,7 +139,7 @@ void CGumpSecureTrading::UpdateContent()
 	}
 
 	//Отрисовка нашего товара (при наличии товара)
-	CGameObject *container = g_World->FindWorldObject(m_ID);
+	CGameObject *container = g_World->FindWorldObject(ID);
 
 	if (container != NULL && container->m_Items != NULL)
 	{
@@ -160,7 +160,7 @@ void CGumpSecureTrading::UpdateContent()
 	}
 
 	//Отрисовка нашего опонента (при наличии товара)
-	container = g_World->FindWorldObject(m_ID2);
+	container = g_World->FindWorldObject(ID2);
 	if (container != NULL && container->m_Items != NULL)
 	{
 		QFOR(item, container->m_Items, CGameItem*)
@@ -183,13 +183,13 @@ void CGumpSecureTrading::UpdateContent()
 void CGumpSecureTrading::Draw()
 {
 	WISPFUN_DEBUG("c120_f5");
-	CGameObject *selobj = g_World->FindWorldObject(m_Serial);
+	CGameObject *selobj = g_World->FindWorldObject(Serial);
 
 	if (selobj == NULL)
 		return; //Объект, к которому привязан гамп - исчез
 	
 	if (g_GumpPressed)
-		m_WantRedraw = true;
+		WantRedraw = true;
 
 	CGump::Draw();
 
@@ -207,7 +207,7 @@ void CGumpSecureTrading::Draw()
 CRenderObject *CGumpSecureTrading::Select()
 {
 	WISPFUN_DEBUG("c120_f6");
-	CGameObject *selobj = g_World->FindWorldObject(m_Serial);
+	CGameObject *selobj = g_World->FindWorldObject(Serial);
 
 	if (selobj == NULL)
 		return NULL; //Объект, к которому привязан гамп - исчез
@@ -229,7 +229,7 @@ void CGumpSecureTrading::GUMP_BUTTON_EVENT_C
 	WISPFUN_DEBUG("c120_f7");
 	if (serial == ID_GST_CHECKBOX) //Изменение состояния чекбокса
 	{
-		m_StateMy = !m_StateMy;
+		StateMy = !StateMy;
 
 		SendTradingResponse(2);
 	}
@@ -262,7 +262,7 @@ void CGumpSecureTrading::OnLeftMouseButtonUp()
 
 		if (g_Orion.PolygonePixelsInXY(x + 45, y + 70, 110, 80))
 		{
-			//if (GetTopObjDistance(g_Player, g_World->FindWorldObject(m_ID2)) <= DRAG_ITEMS_DISTANCE)
+			//if (GetTopObjDistance(g_Player, g_World->FindWorldObject(ID2)) <= DRAG_ITEMS_DISTANCE)
 			{
 				x = g_MouseManager.Position.X - x - 45;
 				y = g_MouseManager.Position.Y - y - 70;
@@ -290,7 +290,7 @@ void CGumpSecureTrading::OnLeftMouseButtonUp()
 				if (y < 0)
 					y = 0;
 
-				g_Orion.DropItem(m_ID, x, y, 0);
+				g_Orion.DropItem(ID, x, y, 0);
 				g_MouseManager.CancelDoubleClick = true;
 			}
 			//else
@@ -311,6 +311,6 @@ void CGumpSecureTrading::SendTradingResponse(int code)
 	CPacketTradeResponse(this, code).Send();
 
 	if (code == 1) //Закрываем окно
-		m_RemoveMark = true;
+		RemoveMark = true;
 }
 //----------------------------------------------------------------------------------

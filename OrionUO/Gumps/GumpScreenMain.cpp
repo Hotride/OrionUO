@@ -14,8 +14,8 @@
 CGumpScreenMain::CGumpScreenMain()
 : CGump(GT_NONE, 0, 0, 0)
 {
-	m_NoMove = true;
-	m_NoClose = true;
+	NoMove = true;
+	NoClose = true;
 }
 //----------------------------------------------------------------------------------
 CGumpScreenMain::~CGumpScreenMain()
@@ -39,7 +39,7 @@ void CGumpScreenMain::PrepareContent()
 
 		lastArrowTick = g_Ticks + 500;
 
-		m_WantRedraw = true;
+		WantRedraw = true;
 	}
 }
 //----------------------------------------------------------------------------------

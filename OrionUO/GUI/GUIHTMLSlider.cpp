@@ -31,10 +31,10 @@ void CGUIHTMLSlider::CalculateOffset()
 		WISP_GEOMETRY::CPoint2Di currentOffset = m_HTMLGump->CurrentOffset;
 		WISP_GEOMETRY::CPoint2Di availableOffset = m_HTMLGump->AvailableOffset;
 
-		if (m_Vertical)
-			currentOffset.Y = (int)((availableOffset.Y * m_Percents) / 100.0f);
+		if (Vertical)
+			currentOffset.Y = (int)((availableOffset.Y * Percents) / 100.0f);
 		else
-			currentOffset.X = (int)((availableOffset.X * m_Percents) / 100.0f);
+			currentOffset.X = (int)((availableOffset.X * Percents) / 100.0f);
 
 		m_HTMLGump->CurrentOffset = currentOffset;
 	}

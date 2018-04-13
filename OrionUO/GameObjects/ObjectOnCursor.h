@@ -13,40 +13,40 @@
 //!Класс объекта на курсоре
 class CObjectOnCursor
 {
+public:
 	//!Активен
-	SETGET(bool, Enabled, false);
+	bool Enabled = false;
 	//!Сброшен
-	SETGET(bool, Dropped, false);
+	bool Dropped = false;
 	//!Серийник объекта
-	SETGET(uint, Serial, 0);
+	uint Serial = 0;
 	//!Индекс картинки
-	SETGET(ushort, Graphic, 0);
+	ushort Graphic = 0;
 	//!Цвет
-	SETGET(ushort, Color, 0);
+	ushort Color = 0;
 	//!Количество для перемещения
-	SETGET(ushort, Count, 0);
+	ushort Count = 0;
 	//!Количество ранее в стеке
-	SETGET(ushort, TotalCount, 0);
+	ushort TotalCount = 0;
 	//!Слой
-	SETGET(uchar, Layer, 0);
+	uchar Layer = 0;
 	//!Флаги
-	SETGET(uchar, Flags, 0);
+	uchar Flags = 0;
 	//!Контейнер
-	SETGET(uint, Container, 0);
+	uint Container = 0;
 	//!Координата X
-	SETGET(ushort, X, 0);
+	ushort X = 0;
 	//!Координата Y
-	SETGET(ushort, Y, 0);
+	ushort Y = 0;
 	//!Координата Z
-	SETGET(char, Z, 0);
+	char Z = 0;
 	//!Это игровая фигура
-	SETGET(bool, IsGameFigure, false);
+	bool IsGameFigure = false;
 	//!Указатель на тайлдату для объекта
 	SETGETP(STATIC_TILES*, TiledataPtr, NULL);
 	//!Обновлен ли предмет в мире
-	SETGET(bool, UpdatedInWorld, false);
+	bool UpdatedInWorld = false;
 
-public:
 	CObjectOnCursor() {}
 	virtual ~CObjectOnCursor() {}
 

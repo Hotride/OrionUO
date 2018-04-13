@@ -13,26 +13,27 @@
 //Класс ландшафта
 class CLandObject : public CMapObject
 {
+public:
 	//Минимальная Z координата
-	SETGET(char, MinZ, 0);
+	char MinZ = 0;
 
 	//Средняя Z координата
-	SETGET(char, AverageZ, 0);
+	char AverageZ = 0;
 
 	//Флаг отображения (true - картинка из texmaps, false - из art.mul)
-	SETGET(bool, IsStretched, false);
+	bool IsStretched = false;
 
 	//Оригинальный индекс картинки
-	SETGET(ushort, OriginalGraphic, 0);
+	ushort OriginalGraphic = 0;
 
 	//!Буфер текстурных координат
-	SETGET(GLuint, PositionBuffer, 0);
+	GLuint PositionBuffer = 0;
 
 	//!Буфер вершин
-	SETGET(GLuint, VertexBuffer, 0);
+	GLuint VertexBuffer = 0;
 
 	//!Буфер нормалей
-	SETGET(GLuint, NormalBuffer, 0);
+	GLuint NormalBuffer = 0;
 
 private:
 	int GetDirectionZ(const int &direction);

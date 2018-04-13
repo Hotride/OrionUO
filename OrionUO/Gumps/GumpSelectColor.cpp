@@ -85,7 +85,7 @@ void CGumpSelectColor::GUMP_BUTTON_EVENT_C
 	else if (serial >= ID_GSC_COLORS)
 	{
 		m_SelectedIndex = serial;
-		m_WantRedraw = true;
+		WantRedraw = true;
 
 		QFOR(item, m_DataBox->m_Items, CBaseGUI*)
 			((CGUIColoredPolygone*)item)->Focused = (item->Serial == m_SelectedIndex);
@@ -104,7 +104,7 @@ void CGumpSelectColor::GUMP_SLIDER_MOVE_EVENT_C
 	if (m_Slider != NULL && m_ColorRef != m_Slider->Value)
 	{
 		m_ColorRef = m_Slider->Value;
-		m_WantUpdateContent = true;
+		WantUpdateContent = true;
 	}
 }
 //----------------------------------------------------------------------------------
@@ -116,6 +116,6 @@ void CGumpSelectColor::OnSelectColor(const ushort &color)
 	if (gump != NULL)
 		gump->UpdateColor(m_State, color);
 
-	m_RemoveMark = true;
+	RemoveMark = true;
 }
 //----------------------------------------------------------------------------------

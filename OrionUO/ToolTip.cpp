@@ -67,24 +67,24 @@ void CToolTip::Set(const wstring &str, const int &maxWidth)
 	if (!str.length())
 		return;
 
-	m_Use = !(m_Timer > g_Ticks);
+	Use = !(Timer > g_Ticks);
 
 	CRenderObject *object = g_SelectedObject.Object;
 
 	if (object == m_Object || object == NULL) //Уже забиндено или нет объекта для бинда
 		return;
 
-	m_Timer = g_Ticks + g_ConfigManager.ToolTipsDelay;
+	Timer = g_Ticks + g_ConfigManager.ToolTipsDelay;
 	m_Object = object;
-	m_Use = false;
-	m_Data = str;
-	m_ClilocID = 0;
-	m_MaxWidth = maxWidth;
+	Use = false;
+	Data = str;
+	ClilocID = 0;
+	MaxWidth = maxWidth;
 
-	m_Position.X = 0;
-	m_Position.Y = 0;
+	Position.X = 0;
+	Position.Y = 0;
 
-	CreateTextTexture(Texture, m_Data, m_MaxWidth, 0);
+	CreateTextTexture(Texture, Data, MaxWidth, 0);
 }
 //----------------------------------------------------------------------------------
 void CToolTip::Set(const uint &clilocID, const string &str, const int &maxWidth, const bool &toCamelCase)
@@ -92,22 +92,22 @@ void CToolTip::Set(const uint &clilocID, const string &str, const int &maxWidth,
 	WISPFUN_DEBUG("c213_f4");
 	Set(g_ClilocManager.Cliloc(g_Language)->GetW(clilocID, toCamelCase, str), maxWidth);
 
-	m_ClilocID = clilocID;
+	ClilocID = clilocID;
 }
 //----------------------------------------------------------------------------------
 void CToolTip::Draw(const int &cursorWidth, const int &cursorHeight)
 {
 	WISPFUN_DEBUG("c213_f5");
-	if (!m_Use /*|| !g_ConfigManager.UseToolTips*/)
+	if (!Use /*|| !g_ConfigManager.UseToolTips*/)
 		return;
 
 	if (Texture.Empty())
-		CreateTextTexture(Texture, m_Data, m_MaxWidth, 0);
+		CreateTextTexture(Texture, Data, MaxWidth, 0);
 
 	if (!Texture.Empty())
 	{
-		int x = m_Position.X;
-		int y = m_Position.Y;
+		int x = Position.X;
+		int y = Position.Y;
 
 		if (!x)
 			x = g_MouseManager.Position.X - (Texture.Width + 8);
@@ -117,13 +117,13 @@ void CToolTip::Draw(const int &cursorWidth, const int &cursorHeight)
 
 		if (y < 0)
 		{
-			y = m_Position.Y;
+			y = Position.Y;
 			//y = g_MouseManager.Position.Y + cursorHeight;
 		}
 		
 		if (x < 0)
 		{
-			x = m_Position.X;
+			x = Position.X;
 			//x = g_MouseManager.Position.X + cursorWidth;
 		}
 		
@@ -141,6 +141,6 @@ void CToolTip::Draw(const int &cursorWidth, const int &cursorHeight)
 		g_GL_Draw(Texture, x + 6, y + 4);
 	}
 
-	m_Use = false;
+	Use = false;
 }
 //----------------------------------------------------------------------------------

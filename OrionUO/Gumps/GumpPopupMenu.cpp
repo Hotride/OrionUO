@@ -17,9 +17,9 @@ CGumpPopupMenu::CGumpPopupMenu(uint serial, short x, short y)
 : CGump(GT_POPUP_MENU, serial, x, y)
 {
 	WISPFUN_DEBUG("c107_f1");
-	m_NoMove = true;
+	NoMove = true;
 	g_PopupMenu = this;
-	m_Page = 1;
+	Page = 1;
 
 	m_Polygone = (CGUIColoredPolygone*)Add(new CGUIColoredPolygone(0, 0, 0, 0, 0, 0, 0xFFFFFFFE));
 	m_Polygone->DrawOnly = true;
@@ -156,7 +156,7 @@ void CGumpPopupMenu::PrepareContent()
 
 		if (!m_Polygone->Visible || m_Polygone->Y != box->Y)
 		{
-			m_WantRedraw = true;
+			WantRedraw = true;
 
 			m_Polygone->X = box->X;
 			m_Polygone->Y = box->Y;
@@ -167,7 +167,7 @@ void CGumpPopupMenu::PrepareContent()
 	}
 	else if (m_Polygone->Visible)
 	{
-		m_WantRedraw = true;
+		WantRedraw = true;
 
 		m_Polygone->Visible = false;
 	}
@@ -178,7 +178,7 @@ void CGumpPopupMenu::GUMP_BUTTON_EVENT_C
 	WISPFUN_DEBUG("c107_f4");
 	if (serial == ID_GPM_MAXIMIZE)
 	{
-		m_Page = 2;
+		Page = 2;
 		CGUIResizepic *resizepic = NULL;
 		int width = 0;
 		int height = 20;
@@ -212,14 +212,14 @@ void CGumpPopupMenu::GUMP_BUTTON_EVENT_C
 			resizepic->Height = height;
 		}
 
-		m_WantRedraw = true;
+		WantRedraw = true;
 		m_Polygone->Visible = false;
 	}
 	else
 	{
-		CPacketPopupMenuSelection(m_Serial, serial - 1).Send();
+		CPacketPopupMenuSelection(Serial, serial - 1).Send();
 
-		m_RemoveMark = true;
+		RemoveMark = true;
 	}
 }
 //----------------------------------------------------------------------------------

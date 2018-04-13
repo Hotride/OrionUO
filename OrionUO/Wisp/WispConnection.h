@@ -9,18 +9,18 @@ namespace WISP_NETWORK
 //----------------------------------------------------------------------------------
 class CConnection
 {
-protected:
+public:
 	SOCKET m_Socket;
 
-	SETGET(int, DataReady, 0);
-	SETGET(bool, Connected, 0);
-	SETGET(int, Port, 0);
+	int DataReady = 0;
+	int Port = 0;
 
-	SETGET(int, Af, 0);
-	SETGET(int, Type, 0);
-	SETGET(int, Protocol, 0);
+	int Af = 0;
+	int Type = 0;
+	int Protocol = 0;
 
-public:
+	bool Connected = 0;
+
 	CConnection(int af = AF_INET, int type = SOCK_STREAM, int protocol = IPPROTO_IP);
 	virtual ~CConnection();
 

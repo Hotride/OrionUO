@@ -12,16 +12,17 @@
 //----------------------------------------------------------------------------------
 class CGumpWorldMap : public CGump
 {
-	SETGET(int, Width, MIN_WORLD_MAP_WIDTH);
-	SETGET(int, Height, MIN_WORLD_MAP_HEIGHT);
+public:
+	int Width = MIN_WORLD_MAP_WIDTH;
+	int Height = MIN_WORLD_MAP_HEIGHT;
 	SETGETE(int, Scale, 2);
 	SETGETE(int, Map, 0);
 	SETGETE(bool, LinkWithPlayer, true);
-	SETGET(int, OffsetX, 0);
-	SETGET(int, OffsetY, 0);
-	SETGET(bool, Called, false);
-	SETGET(int, CurrentOffsetX, 0);
-	SETGET(int, CurrentOffsetY, 0);
+	int OffsetX = 0;
+	int OffsetY = 0;
+	bool Called = false;
+	int CurrentOffsetX = 0;
+	int CurrentOffsetY = 0;
 
 private:
 	static const int ID_GWM_MINIMIZE = 1;
@@ -50,7 +51,7 @@ private:
 	CGUIButton *m_Minimizer{ NULL };
 	CGUIResizepic *m_Background{ NULL };
 	CGUIResizeButton *m_Resizer{ NULL };
-	CGUIText *m_Text{ NULL };
+	CGUIText *Text{ NULL };
 	CGUICheckbox *m_Checkbox{ NULL };
 	CGUIScissor *m_Scissor{ NULL };
 	CGUIWorldMapTexture *m_MapData{ NULL };
@@ -66,7 +67,7 @@ public:
 
 	void UpdateSize();
 
-	virtual bool CanBeDisplayed() { return m_Called; }
+	virtual bool CanBeDisplayed() { return Called; }
 
 	virtual void GenerateFrame(const bool &stop);
 

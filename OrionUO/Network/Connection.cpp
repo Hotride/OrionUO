@@ -12,7 +12,7 @@
 #include "stdafx.h"
 //----------------------------------------------------------------------------------
 CSocket::CSocket(bool gameSocket)
-: WISP_NETWORK::CConnection(), m_GameSocket(gameSocket)
+: WISP_NETWORK::CConnection(), GameSocket(gameSocket)
 {
 }
 //----------------------------------------------------------------------------------
@@ -25,16 +25,16 @@ bool CSocket::Connect(const string &address, const int &port)
 	WISPFUN_DEBUG("c158_f1");
 	LOG("Connecting...%s:%i\n", address.c_str(), port);
 
-	if (m_UseProxy)
+	if (UseProxy)
 	{
-		if (m_Connected)
+		if (Connected)
 			return false;
-		LOG("Connecting using proxy %s:%d\n", m_ProxyAddress.c_str(), m_ProxyPort);
-		if (!CConnection::Connect(m_ProxyAddress, m_ProxyPort))
+		LOG("Connecting using proxy %s:%d\n", ProxyAddress.c_str(), ProxyPort);
+		if (!CConnection::Connect(ProxyAddress, ProxyPort))
 		{
 			LOG("Can't connect to proxy\n");
 			m_Socket = INVALID_SOCKET;
-			m_Connected = false;
+			Connected = false;
 			LOG("Connecting...%s:%i\n", address.c_str(), port);
 			return WISP_NETWORK::CConnection::Connect(address, port);
 		}
@@ -59,12 +59,12 @@ bool CSocket::Connect(const string &address, const int &port)
 			LOG("Unknowm server address\n");
 			closesocket(m_Socket);
 			m_Socket = INVALID_SOCKET;
-			m_Connected = false;
+			Connected = false;
 			LOG("Connecting...%s:%i\n", address.c_str(), port);
 			return WISP_NETWORK::CConnection::Connect(address, port);
 		}
 
-		if (m_ProxySocks5)
+		if (ProxySocks5)
 		{
 			LOG("Proxy Server Version 5 Selected\n");
 			char str[255] = { 0 };
@@ -79,7 +79,7 @@ bool CSocket::Connect(const string &address, const int &port)
 				LOG("Proxy Server Version Missmatch\n");
 				closesocket(m_Socket);
 				m_Socket = INVALID_SOCKET;
-				m_Connected = false;
+				Connected = false;
 				LOG("Connecting...%s:%i\n", address.c_str(), port);
 				return WISP_NETWORK::CConnection::Connect(address, port);
 			}
@@ -90,12 +90,12 @@ bool CSocket::Connect(const string &address, const int &port)
 					if (str[1] == 2)
 					{
 						LOG("Proxy wants Username/Password\n");
-						int totalSize = 3 + (int)m_ProxyAccount.length() + (int)m_ProxyPassword.length();
+						int totalSize = 3 + (int)ProxyAccount.length() + (int)ProxyPassword.length();
 						vector<char> buffer(totalSize, 0);
-						sprintf(&buffer[0], "  %s %s", m_ProxyAccount.c_str(), m_ProxyPassword.c_str());
+						sprintf(&buffer[0], "  %s %s", ProxyAccount.c_str(), ProxyPassword.c_str());
 						buffer[0] = 1;
-						buffer[1] = (char)m_ProxyAccount.length();
-						buffer[2 + (int)m_ProxyAccount.length()] = (char)m_ProxyPassword.length();
+						buffer[1] = (char)ProxyAccount.length();
+						buffer[2 + (int)ProxyAccount.length()] = (char)ProxyPassword.length();
 						::send(m_Socket, &buffer[0], totalSize, 0);
 						::recv(m_Socket, str, 255, 0);
 						if (str[1] != 0)
@@ -103,7 +103,7 @@ bool CSocket::Connect(const string &address, const int &port)
 							LOG("Wrong Username/Password\n");
 							closesocket(m_Socket);
 							m_Socket = INVALID_SOCKET;
-							m_Connected = false;
+							Connected = false;
 							LOG("Connecting...%s:%i\n", address.c_str(), port);
 							return WISP_NETWORK::CConnection::Connect(address, port);
 						}
@@ -154,7 +154,7 @@ bool CSocket::Connect(const string &address, const int &port)
 
 						closesocket(m_Socket);
 						m_Socket = INVALID_SOCKET;
-						m_Connected = false;
+						Connected = false;
 						LOG("Connecting...%s:%i\n", address.c_str(), port);
 						return WISP_NETWORK::CConnection::Connect(address, port);
 					}
@@ -165,7 +165,7 @@ bool CSocket::Connect(const string &address, const int &port)
 					LOG("No acceptable methods\n");
 					closesocket(m_Socket);
 					m_Socket = INVALID_SOCKET;
-					m_Connected = false;
+					Connected = false;
 					LOG("Connecting...%s:%i\n", address.c_str(), port);
 					return WISP_NETWORK::CConnection::Connect(address, port);
 				}
@@ -189,8 +189,8 @@ bool CSocket::Connect(const string &address, const int &port)
 					LOG("Trying  SOCKS5\n");
 					closesocket(m_Socket);
 					m_Socket = INVALID_SOCKET;
-					m_Connected = false;
-					m_ProxySocks5 = true;
+					Connected = false;
+					ProxySocks5 = true;
 					return Connect(address, port);
 				}
 				switch (str[1])
@@ -213,7 +213,7 @@ bool CSocket::Connect(const string &address, const int &port)
 				}
 				closesocket(m_Socket);
 				m_Socket = INVALID_SOCKET;
-				m_Connected = false;
+				Connected = false;
 				LOG("Connecting...%s:%i\n", address.c_str(), port);
 				return WISP_NETWORK::CConnection::Connect(address, port);
 			}
@@ -229,7 +229,7 @@ bool CSocket::Connect(const string &address, const int &port)
 UCHAR_LIST CSocket::Decompression(UCHAR_LIST data)
 {
 	WISPFUN_DEBUG("c158_f2");
-	if (m_GameSocket)
+	if (GameSocket)
 	{
 		intptr_t inSize = (intptr_t)data.size();
 

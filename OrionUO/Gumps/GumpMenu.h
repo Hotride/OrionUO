@@ -12,8 +12,9 @@
 //----------------------------------------------------------------------------------
 class CGumpMenu : public CGump
 {
-	SETGET(string, Text, "");
-	SETGET(bool, TextChanged, false);
+public:
+	string Text = "";
+	bool TextChanged = false;
 
 protected:
 	virtual void CalculateGumpState();

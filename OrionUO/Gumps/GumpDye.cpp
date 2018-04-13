@@ -14,9 +14,9 @@
 CGumpDye::CGumpDye(uint serial, short x, short y, ushort graphic)
 : CGumpSelectColor(serial, x, y, SCGS_OPT_TOOLTIP_TEXT)
 {
-	m_NoClose = true;
-	m_GumpType = GT_DYE;
-	m_Graphic = graphic;
+	NoClose = true;
+	GumpType = GT_DYE;
+	Graphic = graphic;
 }
 //----------------------------------------------------------------------------------
 CGumpDye::~CGumpDye()
@@ -67,8 +67,8 @@ void CGumpDye::UpdateContent()
 void CGumpDye::OnSelectColor(const ushort &color)
 {
 	WISPFUN_DEBUG("c95_f3");
-	CPacketDyeDataResponse(m_Serial, m_Graphic, color + 1).Send();
-	m_RemoveMark = true;
+	CPacketDyeDataResponse(Serial, Graphic, color + 1).Send();
+	RemoveMark = true;
 }
 //----------------------------------------------------------------------------------
 void CGumpDye::GUMP_BUTTON_EVENT_C

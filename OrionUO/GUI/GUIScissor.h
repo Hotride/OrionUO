@@ -15,10 +15,10 @@
 class CGUIScissor : public CGUIPolygonal
 {
 	//!Координата компоненты по оси X контейнера, в котором находится элемент, относительно начала гампа
-	SETGET(int, BaseX, 0);
+	int BaseX = 0;
 
 	//!Координата компоненты по оси Y контейнера, в котором находится элемент, относительно начала гампа
-	SETGET(int, BaseY, 0);
+	int BaseY = 0;
 
 	//!Гамп-родитель
 	SETGETP(CGump*, GumpParent, NULL);
