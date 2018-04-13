@@ -8,7 +8,7 @@ project(OrionUO)
 # Custom Build Options
 #
 option(ENABLE_LTO "Enables Link Time Optimization" OFF)
-
+option(ORION_BUILD_MODULES "Enables Modular Project Structure" OFF)
 
 list(APPEND CMAKE_MODULE_PATH
   ${CMAKE_SOURCE_DIR}/CMake
@@ -21,6 +21,7 @@ set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 set(LIBS)
 
 # CMake Customizations
+include(cotire)
 include(CheckAndAddFlag)
 include(CheckCCompilerFlag)
 include(CompileDefinitions)
@@ -65,15 +66,15 @@ if(ORION_WINDOWS)
 	set(SDL2_INCLUDE_DIRS "${DEP_INCLUDE_DIR}")
 	set(SDL2_LIBRARIES "${DEP_LIB_DIR}sdl2.lib" "${DEP_LIB_DIR}sdl2main.lib")
 
-	#set(SDL2_IMAGE_INCLUDE_DIRS "${DEP_INCLUDE_DIR}")
-	#set(SDL2_IMAGE_LIBRARIES "${DEP_LIB_DIR}")
+	set(SDL2_IMAGE_INCLUDE_DIRS "${DEP_INCLUDE_DIR}")
+	set(SDL2_IMAGE_LIBRARIES "${DEP_LIB_DIR}")
 
 	# temporary hijacking to use other libs
 	set(SDL2_LIBRARIES ${SDL2_LIBRARIES} "${DEP_LIB_DIR}bass.lib" "${DEP_LIB_DIR}bassmidi.lib" "${DEP_LIB_DIR}psapi.lib")
 else()
 	find_package(ZLIB REQUIRED)
 	find_package(SDL2 REQUIRED)
-	#find_package(SDL2_image REQUIRED)
+	find_package(SDL2_image REQUIRED)
 	find_package(FreeImage REQUIRED)
 	find_package(GLEW REQUIRED)
 endif()
@@ -83,7 +84,7 @@ find_package(OpenGL REQUIRED)
 include_directories(${OPENGL_INCLUDE_DIR})
 include_directories(${ZLIB_INCLUDE_DIRS})
 include_directories(${SDL2_INCLUDE_DIRS})
-#include_directories(${SDL2_IMAGE_INCLUDE_DIRS})
+include_directories(${SDL2_IMAGE_INCLUDE_DIR})
 include_directories(${FREEIMAGE_INCLUDE_DIR})
 include_directories(${GLEW_INCLUDE_DIR})
 #
