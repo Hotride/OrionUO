@@ -166,7 +166,7 @@ bool CSpeechManager::LoadSpeech()
 		}
 	}
 
-	LOG(L"m_SpeechEntries.size()=%i\n", m_SpeechEntries.size());
+	LOG("m_SpeechEntries.size()=%i\n", m_SpeechEntries.size());
 
 	m_Loaded = true;
 	return true;

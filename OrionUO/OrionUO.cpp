@@ -279,7 +279,7 @@ bool COrion::Install()
 	if (!g_FileManager.Load())
 	{
 		string tmp = string("Error loading file:\n") + WISP_FILE::g_WispMappedFileError;
-		LOG(tmp.c_str());
+		LOG("%s", tmp.c_str());
 		g_OrionWindow.ShowMessage(tmp.c_str(), "Error loading file!");
 
 		return false;
