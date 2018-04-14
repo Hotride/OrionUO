@@ -34,7 +34,7 @@ script:
     - export CXX=${CXX_COMPILER}
     - clang -v && clang++ -v && cmake --version
     - mkdir build && cd build && cmake -G Ninja .. && time ninja OrionUO_unity -j 8
-    - file ./OrionUO/OrionUO
+    - file ./OrionUO/unity/OrionUO
     #- ./OrionUO/OrionUO
 notifications:
   webhooks:
