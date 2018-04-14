@@ -13,6 +13,7 @@ addons:
       - llvm-toolchain-trusty-6.0
       - ubuntu-toolchain-r-test
     packages:
+      - ninja-build
       - clang-6.0
       - clang++-6.0
       #- g++-7
@@ -32,7 +33,7 @@ script:
     - export CC=${CC_COMPILER}
     - export CXX=${CXX_COMPILER}
     - clang -v && clang++ -v && cmake --version
-    - mkdir build && cd build && cmake .. && make -j 8
+    - mkdir build && cd build && cmake -G Ninja .. && time ninja OrionUO_unity -j 8
     - file ./OrionUO/OrionUO
     #- ./OrionUO/OrionUO
 notifications:
