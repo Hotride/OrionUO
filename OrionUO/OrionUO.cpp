@@ -279,7 +279,7 @@ bool COrion::Install()
 	if (!g_FileManager.Load())
 	{
 		string tmp = string("Error loading file:\n") + WISP_FILE::g_WispMappedFileError;
-		LOG(tmp.c_str());
+		LOG("%s", tmp.c_str());
 		g_OrionWindow.ShowMessage(tmp.c_str(), "Error loading file!");
 
 		return false;
@@ -1566,7 +1566,7 @@ void COrion::LoadLocalConfig(const uint &serial)
 	{
 		if (!g_MacroManager.Load(g_App.UOFilesPath("\\macros_debug.cuo"), g_App.UOFilesPath("\\macros.txt")))
 		{
-			//Создать стандартные макросы
+			//пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 		}
 	}
 
@@ -2337,7 +2337,7 @@ int COrion::ValueInt(const VALUE_KEY_INT &key, int value)
 			if (value == -1)
 				value = g_ConfigManager.DisableNewTargetSystem;
 			else
-				g_ConfigManager.DisableNewTargetSystem = (value == 0); //Именно == 0!!! Т.к. в плагине это Target System enable/disable
+				g_ConfigManager.DisableNewTargetSystem = (value == 0); //пїЅпїЅпїЅпїЅпїЅпїЅ == 0!!! пїЅ.пїЅ. пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ Target System enable/disable
 
 			break;
 		}
@@ -5773,7 +5773,7 @@ void COrion::ChangeWarmode(uchar status)
 		newstatus = status;
 	}
 
-	//38, 39 и 40 это индексы боевой музыки.
+	//38, 39 пїЅ 40 пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ.
 	if (newstatus == 1 && g_ConfigManager.Music)
 		PlayMusic(rand() % 3 + 38, true);
 	else if (newstatus == 0)
