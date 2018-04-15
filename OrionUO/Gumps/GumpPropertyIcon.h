@@ -17,8 +17,7 @@ protected:
 public:
     wstring GetText() { return m_Text; };
     void SetText(const wstring& val);
-	SETGETP(CRenderObject*, Object, NULL);
-
+	CRenderObject* Object = NULL;
 private:
 	static const int ID_GPI_LOCK_MOVING = 1;
 	static const int ID_GPI_MINIMIZE = 2;

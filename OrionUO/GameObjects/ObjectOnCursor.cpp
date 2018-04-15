@@ -49,7 +49,7 @@ ushort CObjectOnCursor::GetDrawGraphic(bool &doubleDraw)
 		result = graphicAssociateTable[index - 1][graphicIndex];
 	}
 	else
-		doubleDraw = IsStackable(m_TiledataPtr->Flags) && (Count > 1);
+		doubleDraw = IsStackable(TiledataPtr->Flags) && (Count > 1);
 
 	return result;
 }

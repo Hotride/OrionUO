@@ -19,9 +19,7 @@ public:
 	ushort Y = 0;
 	bool Enabled = false;
 	uint Page = 0;
-	SETGETP(CRenderObject*, Object, NULL);
-	SETGETP(CGump*, Gump, NULL);
-
+	CRenderObject* Object = NULL;	CGump* Gump = NULL;
 	CClickObject() {}
 	~CClickObject() {}
 

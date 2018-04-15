@@ -22,8 +22,7 @@ public:
 	string Text = "";
 	wstring UnicodeText = L"";
 	uchar Alpha = 0xFF;
-	SETGETP(CRenderWorldObject*, Owner, NULL);
-
+	CRenderWorldObject* Owner = NULL;
 	CTextData();
 	CTextData(CTextData *obj);
 	virtual ~CTextData();

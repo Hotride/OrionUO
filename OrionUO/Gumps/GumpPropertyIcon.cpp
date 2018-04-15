@@ -29,15 +29,15 @@ void CGumpPropertyIcon::SetText(const wstring &val)
 	m_Text = val;
 	int width = 0;
 	g_ToolTip.CreateTextTexture(m_Texture, val, width, (g_ConfigManager.GetItemPropertiesMode() == OPM_ALWAYS_UP ? 300 : 0));
-	m_Object = NULL;
+	Object = NULL;
 	WantUpdateContent = true;
 }
 //----------------------------------------------------------------------------------
 void CGumpPropertyIcon::PrepareContent()
 {
-	if (g_ConfigManager.GetItemPropertiesMode() == OPM_AT_ICON && m_Object != NULL && m_Object != g_SelectedObject.Object)
+	if (g_ConfigManager.GetItemPropertiesMode() == OPM_AT_ICON && Object != NULL && Object != g_SelectedObject.Object)
 	{
-		m_Object = NULL;
+		Object = NULL;
 		g_ObjectPropertiesManager.Reset();
 		WantUpdateContent = true;
 	}
@@ -51,7 +51,7 @@ void CGumpPropertyIcon::UpdateContent()
 
 	if (mode == OPM_AT_ICON)
 	{
-		if (m_Object == NULL)
+		if (Object == NULL)
 			Add(new CGUIGumppic(0x00E3, 0, 0));
 		else
 		{

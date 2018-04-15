@@ -18,8 +18,7 @@ public:
 	int Hits = 0;
 	ushort Color = 0;
 	ushort HealthColor = 0;
-	SETGETP(CGameCharacter*, TargetedCharacter, NULL);
-
+	CGameCharacter* TargetedCharacter = NULL;
 	CTargetGump();
 	~CTargetGump();
 
@@ -40,8 +39,7 @@ public:
 	ushort GumpBottom = 0;
 	ushort ColorGump = 0;
 	ushort HealthColor = 0;
-	SETGETP(CGameCharacter*, TargetedCharacter, NULL);
-
+	CGameCharacter* TargetedCharacter = NULL;
 	CNewTargetSystem();
 	~CNewTargetSystem();
 

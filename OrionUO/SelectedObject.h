@@ -14,9 +14,7 @@ class CSelectedObject
 {
 public:
 	uint Serial = 0;
-	SETGETP(CRenderObject*, Object, NULL);
-	SETGETP(CGump*, Gump, NULL);
-
+	CRenderObject* Object = NULL;	CGump* Gump = NULL;
 	CSelectedObject();
 	virtual ~CSelectedObject();
 

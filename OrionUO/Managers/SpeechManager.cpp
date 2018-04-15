@@ -66,14 +66,14 @@ bool CSpeechManager::LoadSpeech()
 	{
 		if (m_LangCodes[i].Abbreviature == g_Language)
 		{
-			m_CurrentLanguage = &m_LangCodes[i];
+			CurrentLanguage = &m_LangCodes[i];
 			break;
 		}
 	}
 
-	if (m_CurrentLanguage == NULL)
+	if (CurrentLanguage == NULL)
 	{
-		m_CurrentLanguage = &m_LangCodes[0];
+		CurrentLanguage = &m_LangCodes[0];
 		g_Language = m_LangCodes[0].Abbreviature;
 	}
 

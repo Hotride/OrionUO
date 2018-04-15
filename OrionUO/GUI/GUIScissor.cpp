@@ -31,10 +31,10 @@ void CGUIScissor::Draw(const bool &checktrans)
 			int x = m_X;
 			int y = m_Y;
 
-			if (m_GumpParent != NULL)
+			if (GumpParent != NULL)
 			{
-				x -= m_GumpParent->GumpRect.Position.X;
-				y -= m_GumpParent->GumpRect.Position.Y;
+				x -= GumpParent->GumpRect.Position.X;
+				y -= GumpParent->GumpRect.Position.Y;
 			}
 
 			g_GL.PushScissor(BaseX + x, BaseY + y, Width, Height);

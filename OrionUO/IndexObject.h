@@ -20,8 +20,7 @@ public:
 	ushort ID = 0;
 	ushort Color = 0;
 	uint LastAccessTime = 0;
-	SETGETP(CUopBlockHeader*, UopBlock, NULL);
-
+	CUopBlockHeader* UopBlock = NULL;
 	CIndexObject();
 	virtual ~CIndexObject();
 	virtual void ReadIndexFile(const size_t &address, PBASE_IDX_BLOCK ptr, const ushort id);
