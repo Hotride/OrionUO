@@ -11,7 +11,7 @@
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
 //----------------------------------------------------------------------------------
-CGUIAlphaBlending::CGUIAlphaBlending(const bool &enabled, const float &alpha)
+CGUIAlphaBlending::CGUIAlphaBlending(bool enabled, float alpha)
 : CGUIBlending(enabled, GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA), Alpha(alpha)
 {
 }
@@ -20,7 +20,7 @@ CGUIAlphaBlending::~CGUIAlphaBlending()
 {
 }
 //----------------------------------------------------------------------------------
-void CGUIAlphaBlending::Draw(const bool &checktrans)
+void CGUIAlphaBlending::Draw(bool checktrans)
 {
 	WISPFUN_DEBUG("c40_f1");
 	CGUIBlending::Draw(checktrans);

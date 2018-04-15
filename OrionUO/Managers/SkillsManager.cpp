@@ -13,7 +13,7 @@
 //----------------------------------------------------------------------------------
 CSkillsManager g_SkillsManager;
 //----------------------------------------------------------------------------------
-CSkill::CSkill(const bool &haveButton, const string &name)
+CSkill::CSkill(bool haveButton, const string &name)
 : Button(haveButton)
 {
 	if (name.length())
@@ -74,7 +74,7 @@ void CSkillsManager::Clear()
 	m_SortedTable.clear();
 }
 //----------------------------------------------------------------------------------
-CSkill *CSkillsManager::Get(const uint &index)
+CSkill *CSkillsManager::Get(int index)
 {
 	if (index < (uint)Count)
 		return &m_Skills[index];
@@ -154,7 +154,7 @@ void CSkillsManager::Sort()
 		m_SortedTable[i] = bufTable[j];
 }
 //----------------------------------------------------------------------------------
-int CSkillsManager::GetSortedIndex(const uint &index)
+int CSkillsManager::GetSortedIndex(int index)
 {
 	if (index < (uint)Count)
 		return m_SortedTable[index];

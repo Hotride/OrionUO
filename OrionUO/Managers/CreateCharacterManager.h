@@ -30,12 +30,12 @@ protected:
     bool m_Female = false;
 public:
     bool GetFemale() { return m_Female; };
-    void SetFemale(const bool& val);
+    void SetFemale(bool val);
 protected:
     RACE_TYPE m_Race = RT_HUMAN;
 public:
     RACE_TYPE GetRace() { return m_Race; };
-    void SetRace(const RACE_TYPE& val);
+    void SetRace(RACE_TYPE val);
 	uchar HairStyle = 1;
 	uchar BeardStyle = 0;
 	ushort SkinTone = 0x03EA;
@@ -122,14 +122,14 @@ public:
 	@param [__in] pos Индекс волос
 	@return Структура с данными о волосах
 	*/
-	CC_HAIR_STYLE GetHair(const uchar &pos) const;
+	CC_HAIR_STYLE GetHair(uchar pos) const;
 
 	/*!
 	Получить стиль бороды
 	@param [__in] pos Индекс бороды
 	@return Структура с данными о бороде
 	*/
-	CC_HAIR_STYLE GetBeard(const uchar &pos) const;
+	CC_HAIR_STYLE GetBeard(uchar pos) const;
 
 };
 //----------------------------------------------------------------------------------

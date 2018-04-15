@@ -22,7 +22,7 @@ public:
 	uchar Flags = 0;
 
 	CWalkData() {}
-	CWalkData(const short &x, const short &y, const char &z, const uchar &direction, const ushort &graphic, const uchar &flags)
+	CWalkData(short x, short y, char z, uchar direction, ushort graphic, uchar flags)
 		: X(x), Y(y), Z(z), Direction(direction), Graphic(graphic), Flags(flags) {}
 	~CWalkData() {}
 

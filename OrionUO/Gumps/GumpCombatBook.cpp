@@ -11,7 +11,7 @@
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
 //----------------------------------------------------------------------------------
-CGumpCombatBook::CGumpCombatBook(const int &x, const int &y)
+CGumpCombatBook::CGumpCombatBook(int x, int y)
 : CGump(GT_COMBAT_BOOK, 0, x, y)
 {
 	WISPFUN_DEBUG("c91_f1");
@@ -35,7 +35,7 @@ CGumpCombatBook::~CGumpCombatBook()
 {
 }
 //----------------------------------------------------------------------------------
-USHORT_LIST CGumpCombatBook::GetItemsList(const uchar &index)
+USHORT_LIST CGumpCombatBook::GetItemsList(uchar index)
 {
 	WISPFUN_DEBUG("c91_f2");
 	USHORT_LIST list;

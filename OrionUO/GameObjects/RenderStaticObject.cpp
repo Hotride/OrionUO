@@ -11,7 +11,7 @@
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
 //----------------------------------------------------------------------------------
-CRenderStaticObject::CRenderStaticObject(const RENDER_OBJECT_TYPE &renderType, const uint &serial, const ushort &graphic, const ushort &color, const short &x, const short &y, const char &z)
+CRenderStaticObject::CRenderStaticObject(RENDER_OBJECT_TYPE renderType, int serial, ushort graphic, ushort color, short x, short y, char z)
 : CMapObject(renderType, serial, graphic, color, x, y, z)
 {
 	WISPFUN_DEBUG("c27_f1");
@@ -139,7 +139,7 @@ void CRenderStaticObject::FixTextCoordinates()
 	}
 }
 //---------------------------------------------------------------------------
-bool CRenderStaticObject::IsNoDrawTile(const ushort &graphic)
+bool CRenderStaticObject::IsNoDrawTile(ushort graphic)
 {
 	switch (graphic)
 	{
@@ -168,7 +168,7 @@ bool CRenderStaticObject::IsNoDrawTile(const ushort &graphic)
 	return true;
 }
 //----------------------------------------------------------------------------------
-void CRenderStaticObject::Draw(const int &x, const int &y)
+void CRenderStaticObject::Draw(int x, int y)
 {
 	WISPFUN_DEBUG("c27_f3");
 #if UO_DEBUG_INFO!=0
@@ -199,7 +199,7 @@ void CRenderStaticObject::Draw(const int &x, const int &y)
 		g_GameScreen.AddLight(this, this, x, y);
 }
 //----------------------------------------------------------------------------------
-void CRenderStaticObject::Select(const int &x, const int &y)
+void CRenderStaticObject::Select(int x, int y)
 {
 	WISPFUN_DEBUG("c27_f4");
 	if (m_DrawTextureColor[3] != 0xFF)
@@ -242,7 +242,7 @@ bool CRenderStaticObject::TextCanBeTransparent(CRenderTextObject *text)
 	return result;
 }
 //---------------------------------------------------------------------------
-bool CRenderStaticObject::TranparentTest(const int &playerZPlus5)
+bool CRenderStaticObject::TranparentTest(int playerZPlus5)
 {
 	WISPFUN_DEBUG("c27_f9");
 	bool result = true;

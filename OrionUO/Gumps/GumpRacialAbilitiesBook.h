@@ -35,10 +35,10 @@ private:
 
 	void GetSummaryBookInfo(int &abilityOnPage, ushort &iconStartGraphic);
 
-	string GetAbilityName(const int &offset, bool &passive);
+	string GetAbilityName(int offset, bool &passive);
 
 public:
-	CGumpRacialAbilitiesBook(const int &x, const int &y);
+	CGumpRacialAbilitiesBook(int x, int y);
 	virtual ~CGumpRacialAbilitiesBook();
 
 	virtual void DelayedClick(CRenderObject *obj);

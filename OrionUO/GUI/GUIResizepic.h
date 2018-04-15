@@ -15,14 +15,14 @@
 class CGUIResizepic : public CGUIPolygonal
 {
 public:
-	CGUIResizepic(const uint &serial, const ushort &graphic, const int &x, const int &y, const int &width, const int &height);
+	CGUIResizepic(int serial, ushort graphic, int x, int y, int width, int height);
 	virtual ~CGUIResizepic();
 
 	virtual WISP_GEOMETRY::CSize GetSize() { return WISP_GEOMETRY::CSize(Width, Height); }
 
 	virtual void PrepareTextures();
 
-	virtual void Draw(const bool &checktrans = false);
+	virtual void Draw(bool checktrans = false);
 	virtual bool Select();
 };
 //----------------------------------------------------------------------------------

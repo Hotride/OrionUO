@@ -21,7 +21,7 @@ CGLTexture::~CGLTexture()
 	Clear();
 }
 //----------------------------------------------------------------------------------
-void CGLTexture::Draw(const int &x, const int &y, const bool &checktrans)
+void CGLTexture::Draw(int x, int y, bool checktrans)
 {
 	WISPFUN_DEBUG("c36_f2");
 	if (Texture != 0)
@@ -46,7 +46,7 @@ void CGLTexture::Draw(const int &x, const int &y, const bool &checktrans)
 	}
 }
 //----------------------------------------------------------------------------------
-void CGLTexture::Draw(const int &x, const int &y, int width, int height, const bool &checktrans)
+void CGLTexture::Draw(int x, int y, int width, int height, bool checktrans)
 {
 	WISPFUN_DEBUG("c36_f3");
 	if (Texture != 0)
@@ -77,14 +77,14 @@ void CGLTexture::Draw(const int &x, const int &y, int width, int height, const b
 	}
 }
 //----------------------------------------------------------------------------------
-void CGLTexture::DrawRotated(const int &x, const int &y, const float &angle)
+void CGLTexture::DrawRotated(int x, int y, float angle)
 {
 	WISPFUN_DEBUG("c36_f4");
 	if (Texture != 0)
 		g_GL_DrawRotated(*this, x, y, angle);
 }
 //----------------------------------------------------------------------------------
-void CGLTexture::DrawTransparent(const int &x, const int &y, const bool &stencil)
+void CGLTexture::DrawTransparent(int x, int y, bool stencil)
 {
 	WISPFUN_DEBUG("c36_f5");
 	if (Texture != 0)
@@ -134,7 +134,7 @@ void CGLTexture::Clear()
 	}
 }
 //----------------------------------------------------------------------------------
-bool CGLTexture::Select(int x, int y, const bool &pixelCheck)
+bool CGLTexture::Select(int x, int y, bool pixelCheck)
 {
 	x = g_MouseManager.Position.X - x;
 	y = g_MouseManager.Position.Y - y;

@@ -72,7 +72,7 @@ public:
 
 	void AddCity(CCityItem *city) { m_CityList.push_back(city); }
 
-	CCityItem *GetCity(const uint &index);
+	CCityItem *GetCity(int index);
 
 	void Clear();
 };

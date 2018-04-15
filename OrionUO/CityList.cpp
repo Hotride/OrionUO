@@ -63,7 +63,7 @@ CCityList::~CCityList()
 @param [__in] index Индекс города
 @return
 */
-CCityItem *CCityList::GetCity(const uint &index)
+CCityItem *CCityList::GetCity(int index)
 {
 	WISPFUN_DEBUG("c184_f2");
 

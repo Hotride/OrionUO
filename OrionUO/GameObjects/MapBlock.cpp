@@ -11,7 +11,7 @@
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
 //----------------------------------------------------------------------------------
-CMapBlock::CMapBlock(const uint &index)
+CMapBlock::CMapBlock(int index)
 : CBaseQueueItem(), Index(index), LastAccessTime(GetTickCount())
 {
 	WISPFUN_DEBUG("c24_f1");
@@ -72,7 +72,7 @@ bool CMapBlock::HasNoExternalData()
 	return true;
 }
 //----------------------------------------------------------------------------------
-ushort CMapBlock::GetRadarColor(const int &x, const int &y)
+ushort CMapBlock::GetRadarColor(int x, int y)
 {
 	WISPFUN_DEBUG("c24_f4");
 	CRenderWorldObject *obj = Block[x][y];
@@ -254,7 +254,7 @@ void CMapBlock::CreateLandTextureRect()
 	}
 }
 //----------------------------------------------------------------------------------
-bool CMapBlock::TestStretched(const int &x, const int &y, const char &z, const int &map, const bool &recurse)
+bool CMapBlock::TestStretched(int x, int y, char z, int map, bool recurse)
 {
 	WISPFUN_DEBUG("c24_f6");
 	bool result = false;
@@ -277,7 +277,7 @@ bool CMapBlock::TestStretched(const int &x, const int &y, const char &z, const i
 	return result;
 }
 //----------------------------------------------------------------------------------
-char CMapBlock::GetLandZ(const int &x, const int &y, const int &map)
+char CMapBlock::GetLandZ(int x, int y, int map)
 {
 	WISPFUN_DEBUG("c24_f7");
 
@@ -296,7 +296,7 @@ char CMapBlock::GetLandZ(const int &x, const int &y, const int &map)
 	return ((PMAP_BLOCK)blockIndex->MapAddress)->Cells[mY * 8 + mX].Z;
 }
 //----------------------------------------------------------------------------------
-CLandObject *CMapBlock::GetLand(const int &x, const int &y)
+CLandObject *CMapBlock::GetLand(int x, int y)
 {
 	WISPFUN_DEBUG("c24_f8");
 	CMapObject *obj = Block[x][y];
@@ -314,7 +314,7 @@ CLandObject *CMapBlock::GetLand(const int &x, const int &y)
 	return (CLandObject*)obj;
 }
 //----------------------------------------------------------------------------------
-void CMapBlock::AddRender(CRenderWorldObject *item, const int &x, const int &y)
+void CMapBlock::AddRender(CRenderWorldObject *item, int x, int y)
 {
 	WISPFUN_DEBUG("c24_f10");
 	item->RemoveRender();
@@ -403,7 +403,7 @@ void CMapBlock::AddRender(CRenderWorldObject *item, const int &x, const int &y)
 	}
 }
 //----------------------------------------------------------------------------------
-CRenderWorldObject *CMapBlock::GetRender(const int &x, const int &y)
+CRenderWorldObject *CMapBlock::GetRender(int x, int y)
 {
 	WISPFUN_DEBUG("c24_f11");
 	CRenderWorldObject *obj = Block[x][y];
@@ -415,7 +415,7 @@ CRenderWorldObject *CMapBlock::GetRender(const int &x, const int &y)
 	return obj;
 }
 //----------------------------------------------------------------------------------
-CMapObject *CMapBlock::AddObject(CMapObject *obj, const int &x, const int &y)
+CMapObject *CMapBlock::AddObject(CMapObject *obj, int x, int y)
 {
 	WISPFUN_DEBUG("c24_f12");
 	if (Block[x][y] != NULL)

@@ -30,7 +30,7 @@ void CToolTip::Reset()
 	m_Object = NULL;
 }
 //----------------------------------------------------------------------------------
-void CToolTip::CreateTextTexture(CGLTextTexture &texture, const wstring &str, int &width, const int &minWidth)
+void CToolTip::CreateTextTexture(CGLTextTexture &texture, const wstring &str, int &width, int minWidth)
 {
 	g_FontManager.SetUseHTML(true);
 	g_FontManager.RecalculateWidthByInfo = true;
@@ -61,7 +61,7 @@ void CToolTip::CreateTextTexture(CGLTextTexture &texture, const wstring &str, in
 	g_FontManager.SetUseHTML(false);
 }
 //----------------------------------------------------------------------------------
-void CToolTip::Set(const wstring &str, const int &maxWidth)
+void CToolTip::Set(const wstring &str, int maxWidth)
 {
 	WISPFUN_DEBUG("c213_f3");
 	if (!str.length())
@@ -87,7 +87,7 @@ void CToolTip::Set(const wstring &str, const int &maxWidth)
 	CreateTextTexture(Texture, Data, MaxWidth, 0);
 }
 //----------------------------------------------------------------------------------
-void CToolTip::Set(const uint &clilocID, const string &str, const int &maxWidth, const bool &toCamelCase)
+void CToolTip::Set(int clilocID, const string &str, int maxWidth, bool toCamelCase)
 {
 	WISPFUN_DEBUG("c213_f4");
 	Set(g_ClilocManager.Cliloc(g_Language)->GetW(clilocID, toCamelCase, str), maxWidth);
@@ -95,7 +95,7 @@ void CToolTip::Set(const uint &clilocID, const string &str, const int &maxWidth,
 	ClilocID = clilocID;
 }
 //----------------------------------------------------------------------------------
-void CToolTip::Draw(const int &cursorWidth, const int &cursorHeight)
+void CToolTip::Draw(int cursorWidth, int cursorHeight)
 {
 	WISPFUN_DEBUG("c213_f5");
 	if (!Use /*|| !g_ConfigManager.UseToolTips*/)

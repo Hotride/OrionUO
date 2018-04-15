@@ -16,7 +16,7 @@ protected:
     bool m_Opened = true;
 public:
     bool GetOpened() { return m_Opened; };
-    void SetOpened(const bool& val);
+    void SetOpened(bool val);
 
 private:
 	static const int ID_GMB_MINIMIZE = 1;

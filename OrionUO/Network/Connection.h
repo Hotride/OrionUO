@@ -29,7 +29,7 @@ public:
 	CSocket(bool gameSocket);
 	~CSocket();
 
-	virtual bool Connect(const string &address, const int &port);
+	virtual bool Connect(const string &address, int port);
 
 	virtual UCHAR_LIST Decompression(UCHAR_LIST data);
 };

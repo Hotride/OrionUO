@@ -11,7 +11,7 @@
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
 //----------------------------------------------------------------------------------
-CGUITilepicHightlighted::CGUITilepicHightlighted(const uint &serial, const ushort &graphic, const ushort &color, const ushort &selectedColor, const int &x, const int &y, const bool &doubleDraw)
+CGUITilepicHightlighted::CGUITilepicHightlighted(int serial, ushort graphic, ushort color, ushort selectedColor, int x, int y, bool doubleDraw)
 : CGUITilepic(graphic, color, x, y), SelectedColor(selectedColor),
 DoubleDraw(doubleDraw)
 {
@@ -46,7 +46,7 @@ void CGUITilepicHightlighted::SetShaderMode()
 		glUniform1iARB(g_ShaderDrawMode, SDM_NO_COLOR);
 }
 //----------------------------------------------------------------------------------
-void CGUITilepicHightlighted::Draw(const bool &checktrans)
+void CGUITilepicHightlighted::Draw(bool checktrans)
 {
 	WISPFUN_DEBUG("c81_f2");
 	CGLTexture *th = g_Orion.ExecuteStaticArt(Graphic);

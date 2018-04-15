@@ -11,7 +11,7 @@
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
 //----------------------------------------------------------------------------------
-CGUIGlobalColor::CGUIGlobalColor(const bool &enabled, const GLfloat &r, const GLfloat &g, const GLfloat &b, const GLfloat &a)
+CGUIGlobalColor::CGUIGlobalColor(bool enabled, GLfloat r, GLfloat g, GLfloat b, GLfloat a)
 : CBaseGUI(GOT_GLOBAL_COLOR, 0, 0, 0, 0, 0), R(r), G(g), B(b), A(a)
 {
 	Enabled = enabled;
@@ -21,7 +21,7 @@ CGUIGlobalColor::~CGUIGlobalColor()
 {
 }
 //----------------------------------------------------------------------------------
-void CGUIGlobalColor::Draw(const bool &checktrans)
+void CGUIGlobalColor::Draw(bool checktrans)
 {
 	WISPFUN_DEBUG("c55_f1");
 	if (Enabled)

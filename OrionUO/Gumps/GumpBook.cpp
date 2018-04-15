@@ -129,7 +129,7 @@ void CGumpBook::PrepareContent()
 	}*/
 }
 //----------------------------------------------------------------------------------
-CGUITextEntry *CGumpBook::GetEntry(const int &page)
+CGUITextEntry *CGumpBook::GetEntry(int page)
 {
 	WISPFUN_DEBUG("c87_f3");
 	int currentPage = -1;
@@ -145,7 +145,7 @@ CGUITextEntry *CGumpBook::GetEntry(const int &page)
 	return NULL;
 }
 //----------------------------------------------------------------------------------
-void CGumpBook::SetPageData(const int &page, const wstring &data)
+void CGumpBook::SetPageData(int page, const wstring &data)
 {
 	WISPFUN_DEBUG("c87_f4");
 	CGUITextEntry *entry = GetEntry(page);
@@ -267,7 +267,7 @@ bool CGumpBook::OnLeftMouseButtonDoubleClick()
 	return false;
 }
 //----------------------------------------------------------------------------------
-void CGumpBook::InsertInContent(const WPARAM &wparam, const bool &isCharPress)
+void CGumpBook::InsertInContent(const WPARAM &wparam, bool isCharPress)
 {
 	WISPFUN_DEBUG("c87_f9");
 	int page = Page;

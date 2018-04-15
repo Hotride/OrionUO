@@ -13,7 +13,7 @@
 //----------------------------------------------------------------------------------
 CTextContainer g_SystemChat(30);
 //----------------------------------------------------------------------------------
-CTextContainer::CTextContainer(const int &maxSize)
+CTextContainer::CTextContainer(int maxSize)
 : MaxSize(maxSize)
 {
 }
@@ -49,7 +49,7 @@ void CTextContainer::Delete(CTextData *obj)
 	Size--;
 }
 //----------------------------------------------------------------------------------
-void CTextContainer::DrawSystemChat(const int &x, const int &y, const int &height)
+void CTextContainer::DrawSystemChat(int x, int y, int height)
 {
 	WISPFUN_DEBUG("c173_f4");
 	int offset = (y + height) - 41;

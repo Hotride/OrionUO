@@ -17,14 +17,14 @@ protected:
     int m_StyleSelection = 0;
 public:
     int GetStyleSelection() { return m_StyleSelection; };
-    void SetStyleSelection(const int& val);
+    void SetStyleSelection(int val);
 
 	//!Выбранный цвет тела/одежды/волосеного покрова
 protected:
     int m_ColorSelection = 0;
 public:
     int GetColorSelection() { return m_ColorSelection; };
-    void SetColorSelection(const int& val);
+    void SetColorSelection(int val);
 	string Name = "";
 
 private:

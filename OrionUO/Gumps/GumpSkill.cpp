@@ -11,7 +11,7 @@
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
 //----------------------------------------------------------------------------------
-CGumpSkill::CGumpSkill(const uint &serial, const int &x, const int &y)
+CGumpSkill::CGumpSkill(int serial, int x, int y)
 : CGump(GT_SKILL, serial, x, y)
 {
 	WISPFUN_DEBUG("c124_f1");

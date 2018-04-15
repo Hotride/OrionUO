@@ -11,7 +11,7 @@
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
 //----------------------------------------------------------------------------------
-CGUIScrollBackground::CGUIScrollBackground(const uint &serial, const ushort &graphic, const int &x, const int &y, const int &height)
+CGUIScrollBackground::CGUIScrollBackground(int serial, ushort graphic, int x, int y, int height)
 : CBaseGUI(GOT_SCROLLBACKGROUND, serial, graphic, 0, x, y), Height(height)
 {
 	WISPFUN_DEBUG("c71_f1");
@@ -51,7 +51,7 @@ CGUIScrollBackground::~CGUIScrollBackground()
 {
 }
 //----------------------------------------------------------------------------------
-void CGUIScrollBackground::UpdateHeight(const int &height)
+void CGUIScrollBackground::UpdateHeight(int height)
 {
 	WISPFUN_DEBUG("c71_f2");
 	Height = height;
@@ -75,7 +75,7 @@ void CGUIScrollBackground::PrepareTextures()
 	g_Orion.ExecuteGumpPart(Graphic, 4);
 }
 //----------------------------------------------------------------------------------
-void CGUIScrollBackground::Draw(const bool &checktrans)
+void CGUIScrollBackground::Draw(bool checktrans)
 {
 	WISPFUN_DEBUG("c71_f4");
 	CGLTexture *th[4] = { NULL };

@@ -43,7 +43,7 @@ public:
 
 	uint ClilocID = 0;
 
-	CBaseGUI(const GUMP_OBJECT_TYPE &type, const uint &serial, const ushort &graphic, const ushort &color, const int &x, const int &y);
+	CBaseGUI(GUMP_OBJECT_TYPE type, int serial, ushort graphic, ushort color, int x, int y);
 	virtual ~CBaseGUI();
 
 	//!Выявление поля g_EntryPointer в данной компоненте
@@ -57,7 +57,7 @@ public:
 
 	//!Отрисовать компоненту
 	//!		checktrans - использовать трафарет +прозрачность
-	virtual void Draw(const bool &checktrans = false) {}
+	virtual void Draw(bool checktrans = false) {}
 
 	//!Проверить компоненту на возможность выбора
 	virtual bool Select() { return false; }

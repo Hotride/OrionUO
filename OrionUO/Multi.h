@@ -21,7 +21,7 @@ public:
 	short MaxX = 0;
 	short MaxY = 0;
 
-	CMulti(const short &x, const short &y);
+	CMulti(short x, short y);
 	virtual ~CMulti();
 };
 //----------------------------------------------------------------------------------

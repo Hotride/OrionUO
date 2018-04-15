@@ -32,7 +32,7 @@ CConnectionManager::~CConnectionManager()
 		m_GameSocket.Disconnect();
 }
 //----------------------------------------------------------------------------------
-void CConnectionManager::SetUseProxy(const bool &val)
+void CConnectionManager::SetUseProxy(bool val)
 {
 	WISPFUN_DEBUG("c139_f2");
 	m_UseProxy = val;
@@ -48,7 +48,7 @@ void CConnectionManager::SetProxyAddress(const string &val)
 	m_GameSocket.ProxyAddress = val;
 }
 //----------------------------------------------------------------------------------
-void CConnectionManager::SetProxyPort(const int &val)
+void CConnectionManager::SetProxyPort(int val)
 {
 	WISPFUN_DEBUG("c139_f4");
 	m_ProxyPort = val;
@@ -56,7 +56,7 @@ void CConnectionManager::SetProxyPort(const int &val)
 	m_GameSocket.ProxyPort = val;
 }
 //----------------------------------------------------------------------------------
-void CConnectionManager::SetProxySocks5(const bool &val)
+void CConnectionManager::SetProxySocks5(bool val)
 {
 	WISPFUN_DEBUG("c139_f5");
 	m_ProxySocks5 = val;

@@ -27,7 +27,7 @@ public:
 	//!Флаг обработки зажатого состояния кнопки каждую итерацию рендера
 	bool ProcessPressedState = false;
 
-	CGUIButton(const uint &serial, const ushort &graphic, const ushort &graphicSelected, const ushort &graphicPressed, const int &x, const int &y);
+	CGUIButton(int serial, ushort graphic, ushort graphicSelected, ushort graphicPressed, int x, int y);
 	virtual ~CGUIButton();
 
 	virtual void PrepareTextures();

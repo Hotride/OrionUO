@@ -33,7 +33,7 @@ protected:
     uchar m_Flags = 0;
 public:
     uchar GetFlags() { return m_Flags; };
-    void SetFlags(const uchar& val);
+    void SetFlags(uchar val);
 	//!Имя
 protected:
     string m_Name = "";
@@ -61,7 +61,7 @@ protected:
 	CGLTexture m_TextureObjectHalndes{ CGLTexture() };
 
 public:
-	CGameObject(const uint &serial = 0);
+	CGameObject(int serial = 0);
 	virtual ~CGameObject();
 
 	//!Информация о ФБ объекта (для Animation Manager)
@@ -112,7 +112,7 @@ public:
 	@param [__in] playerZ Координата Z игрока
 	@return Может ли быть прозрачным
 	*/
-	virtual bool TranparentTest(const int &playerZ) { return false; }
+	virtual bool TranparentTest(int playerZ) { return false; }
 
 	/*!
 	Отрисовать эффект
@@ -234,7 +234,7 @@ public:
 	Золото ли это
 	@return Индекс в таблице золота
 	*/
-	static int IsGold(const ushort &graphic);
+	static int IsGold(ushort graphic);
 
 	/*!
 	Получить индекс картинки для рисования
@@ -261,7 +261,7 @@ public:
 	*/
 	CGameObject *GetTopObject();
 
-	CGameItem *FindLayer(const int &layer);
+	CGameItem *FindLayer(int layer);
 
 	virtual CGameItem *FindSecureTradeBox() { return NULL; }
 };

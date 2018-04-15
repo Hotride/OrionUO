@@ -19,7 +19,7 @@ public:
 	bool Running = false;
 
 	CCorpse() {}
-	CCorpse(const uint &corpseSerial, const uint &objectSerial, const uchar &direction, const bool &running)
+	CCorpse(int corpseSerial, int objectSerial, uchar direction, bool running)
 		: CorpseSerial(corpseSerial), ObjectSerial(objectSerial), Direction(direction), Running(running) {}
 	~CCorpse() {}
 };
@@ -36,11 +36,11 @@ public:
 
 	void Add(const CCorpse &corpse);
 
-	void Remove(const uint &corpseSerial, const uint &objectSerial);
+	void Remove(int corpseSerial, int objectSerial);
 
-	bool InList(const uint &corpseSerial, const uint &objectSerial);
+	bool InList(int corpseSerial, int objectSerial);
 
-	CGameObject *GetCorpseObject(const uint &serial);
+	CGameObject *GetCorpseObject(int serial);
 
 	void Clear() { m_List.clear(); }
 };

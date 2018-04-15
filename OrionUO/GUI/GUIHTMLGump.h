@@ -37,7 +37,7 @@ private:
 	void CalculateDataSize(CBaseGUI *item, int &startX, int &startY, int &endX, int &endY);
 
 public:
-	CGUIHTMLGump(const uint &serial, const ushort &graphic, const int &x, const int &y, const int &width, const int &height, const bool &haveBackground, const bool &haveScrollbar);
+	CGUIHTMLGump(int serial, ushort graphic, int x, int y, int width, int height, bool haveBackground, bool haveScrollbar);
 	virtual ~CGUIHTMLGump();
 
 	//!Ссылки на компоненты
@@ -54,7 +54,7 @@ public:
 	void Initalize(bool menu = false);
 
 	//!Обновление высота гампа
-	void UpdateHeight(const int &height);
+	void UpdateHeight(int height);
 
 	//!Сброс смещений
 	void ResetDataOffset();
@@ -69,7 +69,7 @@ public:
 	virtual bool Select();
 
 	//!Функция прокрутки
-	virtual void Scroll(const bool &up, const uint &delay);
+	virtual void Scroll(bool up, int delay);
 
 	virtual bool IsHTMLGump() { return true; }
 };

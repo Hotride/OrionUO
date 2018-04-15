@@ -12,7 +12,7 @@ CDataWritter::CDataWritter()
 {
 }
 //----------------------------------------------------------------------------------
-CDataWritter::CDataWritter(const size_t &size, const bool &autoResize)
+CDataWritter::CDataWritter(const size_t &size, bool autoResize)
 : AutoResize(autoResize)
 {
 	WISPFUN_DEBUG("c4_f1");
@@ -27,7 +27,7 @@ CDataWritter::~CDataWritter()
 	Ptr = NULL;
 }
 //----------------------------------------------------------------------------------
-void CDataWritter::Resize(const size_t &newSize, const bool &resetPtr)
+void CDataWritter::Resize(const size_t &newSize, bool resetPtr)
 {
 	WISPFUN_DEBUG("c4_f3");
 	m_Data.resize(newSize, 0);
@@ -86,7 +86,7 @@ void CDataWritter::WriteDataLE(const puchar data, const size_t &size, const intp
 	}
 }
 //----------------------------------------------------------------------------------
-void CDataWritter::WriteString(const string &val, size_t length, const bool &nullTerminated, const intptr_t &offset)
+void CDataWritter::WriteString(const string &val, size_t length, bool nullTerminated, const intptr_t &offset)
 {
 	WISPFUN_DEBUG("c4_f7");
 	if (!length)
@@ -107,7 +107,7 @@ void CDataWritter::WriteString(const string &val, size_t length, const bool &nul
 	}
 }
 //----------------------------------------------------------------------------------
-void CDataWritter::WriteWString(const wstring &val, size_t length, const bool &bigEndian, const bool &nullTerminated, const intptr_t &offset)
+void CDataWritter::WriteWString(const wstring &val, size_t length, bool bigEndian, bool nullTerminated, const intptr_t &offset)
 {
 	WISPFUN_DEBUG("c4_f8");
 	if (!length)
@@ -248,7 +248,7 @@ string CDataReader::ReadString(size_t size, const intptr_t &offset)
 	return result.c_str();
 }
 //----------------------------------------------------------------------------------
-wstring CDataReader::ReadWString(size_t size, const bool &bigEndian, const intptr_t &offset)
+wstring CDataReader::ReadWString(size_t size, bool bigEndian, const intptr_t &offset)
 {
 	WISPFUN_DEBUG("c5_f7");
 	puchar ptr = Ptr + offset;

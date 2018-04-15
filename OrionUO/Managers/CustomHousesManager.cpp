@@ -51,7 +51,7 @@ void CustomHousesManager::Clear()
 	}
 }
 //----------------------------------------------------------------------------------
-CCustomHouse *CustomHousesManager::Get(const uint &serial)
+CCustomHouse *CustomHousesManager::Get(int serial)
 {
 	WISPFUN_DEBUG("");
 	for (unordered_map<uint, CCustomHouse*>::iterator i = m_Items.begin(); i != m_Items.end(); ++i)

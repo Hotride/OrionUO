@@ -2001,7 +2001,7 @@ void CGumpOptions::DrawPage10()
 	Add(new CGUIGumppic(0x00EA, 576, 309));
 }
 //----------------------------------------------------------------------------
-void CGumpOptions::UpdateColor(const SELECT_COLOR_GUMP_STATE &state, const ushort &color)
+void CGumpOptions::UpdateColor(const SELECT_COLOR_GUMP_STATE &state, ushort color)
 {
 	WISPFUN_DEBUG("c104_f17");
 	switch (state)

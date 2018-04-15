@@ -218,7 +218,7 @@ void CGLEngine::UpdateRect()
 	g_GumpManager.RedrawAll();
 }
 //----------------------------------------------------------------------------------
-void CGLEngine::GL1_BindTexture16(CGLTexture &texture, const int &width, const int &height, pushort pixels)
+void CGLEngine::GL1_BindTexture16(CGLTexture &texture, int width, int height, pushort pixels)
 {
 	WISPFUN_DEBUG("c29_f6");
 	GLuint tex = 0;
@@ -252,7 +252,7 @@ void CGLEngine::GL1_BindTexture16(CGLTexture &texture, const int &width, const i
 	}
 }
 //----------------------------------------------------------------------------------
-void CGLEngine::GL1_BindTexture32(CGLTexture &texture, const int &width, const int &height, puint pixels)
+void CGLEngine::GL1_BindTexture32(CGLTexture &texture, int width, int height, puint pixels)
 {
 	WISPFUN_DEBUG("c29_f7");
 	GLuint tex = 0;
@@ -287,7 +287,7 @@ void CGLEngine::GL1_BindTexture32(CGLTexture &texture, const int &width, const i
 	}
 }
 //----------------------------------------------------------------------------------
-void CGLEngine::GL2_CreateArrays(CGLTexture &texture, const int &width, const int &height)
+void CGLEngine::GL2_CreateArrays(CGLTexture &texture, int width, int height)
 {
 	WISPFUN_DEBUG("c29_f8");
 	GLuint vbo[2] = { 0 };
@@ -307,14 +307,14 @@ void CGLEngine::GL2_CreateArrays(CGLTexture &texture, const int &width, const in
 	texture.MirroredVertexBuffer = vbo[1];
 }
 //----------------------------------------------------------------------------------
-void CGLEngine::GL2_BindTexture16(CGLTexture &texture, const int &width, const int &height, pushort pixels)
+void CGLEngine::GL2_BindTexture16(CGLTexture &texture, int width, int height, pushort pixels)
 {
 	WISPFUN_DEBUG("c29_f9");
 	GL1_BindTexture16(texture, width, height, pixels);
 	GL2_CreateArrays(texture, width, height);
 }
 //----------------------------------------------------------------------------------
-void CGLEngine::GL2_BindTexture32(CGLTexture &texture, const int &width, const int &height, puint pixels)
+void CGLEngine::GL2_BindTexture32(CGLTexture &texture, int width, int height, puint pixels)
 {
 	WISPFUN_DEBUG("c29_f10");
 	GL1_BindTexture32(texture, width, height, pixels);
@@ -382,7 +382,7 @@ void CGLEngine::EndStencil()
 	glDisable(GL_STENCIL_TEST);
 }
 //----------------------------------------------------------------------------------
-void CGLEngine::ViewPortScaled(const int &x, const int &y, const int &width, const int &height)
+void CGLEngine::ViewPortScaled(int x, int y, int width, int height)
 {
 	WISPFUN_DEBUG("c29_f15");
 	glViewport(x, g_OrionWindow.GetSize().Height - y - height, width, height);
@@ -404,7 +404,7 @@ void CGLEngine::ViewPortScaled(const int &x, const int &y, const int &width, con
 	glMatrixMode(GL_MODELVIEW);
 }
 //----------------------------------------------------------------------------------
-void CGLEngine::ViewPort(const int &x, const int &y, const int &width, const int &height)
+void CGLEngine::ViewPort(int x, int y, int width, int height)
 {
 	WISPFUN_DEBUG("c29_f16");
 	glViewport(x, g_OrionWindow.GetSize().Height - y - height, width, height);
@@ -424,19 +424,19 @@ void CGLEngine::RestorePort()
 	glMatrixMode(GL_MODELVIEW);
 }
 //----------------------------------------------------------------------------------
-void CGLEngine::PushScissor(const int &x, const int &y, const int &width, const int &height)
+void CGLEngine::PushScissor(int x, int y, int width, int height)
 {
 	WISPFUN_DEBUG("c29_f18");
 	PushScissor(WISP_GEOMETRY::CRect(x, y, width, height));
 }
 //----------------------------------------------------------------------------------
-void CGLEngine::PushScissor(const WISP_GEOMETRY::CPoint2Di &position, const int &width, const int &height)
+void CGLEngine::PushScissor(const WISP_GEOMETRY::CPoint2Di &position, int width, int height)
 {
 	WISPFUN_DEBUG("c29_f19");
 	PushScissor(WISP_GEOMETRY::CRect(position, width, height));
 }
 //----------------------------------------------------------------------------------
-void CGLEngine::PushScissor(const int &x, const int &y, const WISP_GEOMETRY::CSize &size)
+void CGLEngine::PushScissor(int x, int y, const WISP_GEOMETRY::CSize &size)
 {
 	WISPFUN_DEBUG("c29_f20");
 	PushScissor(WISP_GEOMETRY::CRect(x, y, size));
@@ -481,7 +481,7 @@ void CGLEngine::ClearScissorList()
 	glDisable(GL_SCISSOR_TEST);
 }
 //----------------------------------------------------------------------------------
-inline void CGLEngine::BindTexture(const GLuint &texture)
+inline void CGLEngine::BindTexture(GLuint texture)
 {
 	WISPFUN_DEBUG("c29_f25");
 	if (OldTexture != texture)
@@ -491,7 +491,7 @@ inline void CGLEngine::BindTexture(const GLuint &texture)
 	}
 }
 //----------------------------------------------------------------------------------
-void CGLEngine::DrawLine(const int &x, const int &y, const int &targetX, const int &targetY)
+void CGLEngine::DrawLine(int x, int y, int targetX, int targetY)
 {
 	WISPFUN_DEBUG("c29_f26");
 	glDisable(GL_TEXTURE_2D);
@@ -504,7 +504,7 @@ void CGLEngine::DrawLine(const int &x, const int &y, const int &targetX, const i
 	glEnable(GL_TEXTURE_2D);
 }
 //----------------------------------------------------------------------------------
-void CGLEngine::DrawPolygone(const int &x, const int &y, const int &width, const int &height)
+void CGLEngine::DrawPolygone(int x, int y, int width, int height)
 {
 	WISPFUN_DEBUG("c29_f27");
 	glDisable(GL_TEXTURE_2D);
@@ -523,7 +523,7 @@ void CGLEngine::DrawPolygone(const int &x, const int &y, const int &width, const
 	glEnable(GL_TEXTURE_2D);
 }
 //----------------------------------------------------------------------------------
-void CGLEngine::DrawCircle(const float &x, const float &y, const float &radius, const int &gradientMode)
+void CGLEngine::DrawCircle(float x, float y, float radius, int gradientMode)
 {
 	WISPFUN_DEBUG("c29_f28");
 	glDisable(GL_TEXTURE_2D);
@@ -552,7 +552,7 @@ void CGLEngine::DrawCircle(const float &x, const float &y, const float &radius, 
 	glEnable(GL_TEXTURE_2D);
 }
 //----------------------------------------------------------------------------------
-void CGLEngine::GL1_DrawLandTexture(const CGLTexture &texture, const int &x, const int &y, CLandObject *land)
+void CGLEngine::GL1_DrawLandTexture(const CGLTexture &texture, int x, int y, CLandObject *land)
 {
 	WISPFUN_DEBUG("c29_f29");
 	BindTexture(texture.Texture);
@@ -582,7 +582,7 @@ void CGLEngine::GL1_DrawLandTexture(const CGLTexture &texture, const int &x, con
 	glTranslatef(-translateX, -translateY, 0.0f);
 }
 //----------------------------------------------------------------------------------
-void CGLEngine::GL1_Draw(const CGLTexture &texture, const int &x, const int &y)
+void CGLEngine::GL1_Draw(const CGLTexture &texture, int x, int y)
 {
 	WISPFUN_DEBUG("c29_f30");
 	BindTexture(texture.Texture);
@@ -602,7 +602,7 @@ void CGLEngine::GL1_Draw(const CGLTexture &texture, const int &x, const int &y)
 	glTranslatef((GLfloat)-x, (GLfloat)-y, 0.0f);
 }
 //----------------------------------------------------------------------------------
-void CGLEngine::GL1_DrawRotated(const CGLTexture &texture, const int &x, const int &y, const float &angle)
+void CGLEngine::GL1_DrawRotated(const CGLTexture &texture, int x, int y, float angle)
 {
 	WISPFUN_DEBUG("c29_f31");
 	BindTexture(texture.Texture);
@@ -627,7 +627,7 @@ void CGLEngine::GL1_DrawRotated(const CGLTexture &texture, const int &x, const i
 	glTranslatef((GLfloat)-x, -translateY, 0.0f);
 }
 //----------------------------------------------------------------------------------
-void CGLEngine::GL1_DrawMirrored(const CGLTexture &texture, const int &x, const int &y, const bool &mirror)
+void CGLEngine::GL1_DrawMirrored(const CGLTexture &texture, int x, int y, bool mirror)
 {
 	WISPFUN_DEBUG("c29_f32");
 	BindTexture(texture.Texture);
@@ -659,7 +659,7 @@ void CGLEngine::GL1_DrawMirrored(const CGLTexture &texture, const int &x, const 
 	glTranslatef((GLfloat)-x, (GLfloat)-y, 0.0f);
 }
 //----------------------------------------------------------------------------------
-void CGLEngine::GL1_DrawSitting(const CGLTexture &texture, const int &x, const int &y, const bool &mirror, const float &h3mod, const float &h6mod, const float &h9mod)
+void CGLEngine::GL1_DrawSitting(const CGLTexture &texture, int x, int y, bool mirror, float h3mod, float h6mod, float h9mod)
 {
 	WISPFUN_DEBUG("c29_f33");
 	BindTexture(texture.Texture);
@@ -752,7 +752,7 @@ void CGLEngine::GL1_DrawSitting(const CGLTexture &texture, const int &x, const i
 	glTranslatef((GLfloat)-x, (GLfloat)-y, 0.0f);
 }
 //----------------------------------------------------------------------------------
-void CGLEngine::GL1_DrawShadow(const CGLTexture &texture, const int &x, const int &y, const bool &mirror)
+void CGLEngine::GL1_DrawShadow(const CGLTexture &texture, int x, int y, bool mirror)
 {
 	WISPFUN_DEBUG("c29_f34");
 	BindTexture(texture.Texture);
@@ -788,7 +788,7 @@ void CGLEngine::GL1_DrawShadow(const CGLTexture &texture, const int &x, const in
 	glTranslatef((GLfloat)-x, -translateY, 0.0f);
 }
 //----------------------------------------------------------------------------------
-void CGLEngine::GL1_DrawStretched(const CGLTexture &texture, const int &x, const int &y, const int &drawWidth, const int &drawHeight)
+void CGLEngine::GL1_DrawStretched(const CGLTexture &texture, int x, int y, int drawWidth, int drawHeight)
 {
 	WISPFUN_DEBUG("c29_f35");
 	BindTexture(texture.Texture);
@@ -811,7 +811,7 @@ void CGLEngine::GL1_DrawStretched(const CGLTexture &texture, const int &x, const
 	glTranslatef((GLfloat)-x, (GLfloat)-y, 0.0f);
 }
 //----------------------------------------------------------------------------------
-void CGLEngine::GL1_DrawResizepic(CGLTexture **th, const int &x, const int &y, const int &width, const int &height)
+void CGLEngine::GL1_DrawResizepic(CGLTexture **th, int x, int y, int width, int height)
 {
 	WISPFUN_DEBUG("c29_f36");
 
@@ -955,7 +955,7 @@ void CGLEngine::GL1_DrawResizepic(CGLTexture **th, const int &x, const int &y, c
 
 
 //----------------------------------------------------------------------------------
-void CGLEngine::GL2_DrawLandTexture(const CGLTexture &texture, const int &x, const int &y, CLandObject *land)
+void CGLEngine::GL2_DrawLandTexture(const CGLTexture &texture, int x, int y, CLandObject *land)
 {
 	WISPFUN_DEBUG("c29_f37");
 	BindTexture(texture.Texture);
@@ -983,7 +983,7 @@ void CGLEngine::GL2_DrawLandTexture(const CGLTexture &texture, const int &x, con
 	glTranslatef(-translateX, -translateY, 0.0f);
 }
 //----------------------------------------------------------------------------------
-void CGLEngine::GL2_Draw(const CGLTexture &texture, const int &x, const int &y)
+void CGLEngine::GL2_Draw(const CGLTexture &texture, int x, int y)
 {
 	WISPFUN_DEBUG("c29_f38");
 	BindTexture(texture.Texture);
@@ -1004,7 +1004,7 @@ void CGLEngine::GL2_Draw(const CGLTexture &texture, const int &x, const int &y)
 	glTranslatef((GLfloat)-x, (GLfloat)-y, 0.0f);
 }
 //----------------------------------------------------------------------------------
-void CGLEngine::GL2_DrawRotated(const CGLTexture &texture, const int &x, const int &y, const float &angle)
+void CGLEngine::GL2_DrawRotated(const CGLTexture &texture, int x, int y, float angle)
 {
 	WISPFUN_DEBUG("c29_f39");
 	BindTexture(texture.Texture);
@@ -1030,7 +1030,7 @@ void CGLEngine::GL2_DrawRotated(const CGLTexture &texture, const int &x, const i
 	glTranslatef((GLfloat)-x, -translateY, 0.0f);
 }
 //----------------------------------------------------------------------------------
-void CGLEngine::GL2_DrawMirrored(const CGLTexture &texture, const int &x, const int &y, const bool &mirror)
+void CGLEngine::GL2_DrawMirrored(const CGLTexture &texture, int x, int y, bool mirror)
 {
 	WISPFUN_DEBUG("c29_f40");
 	BindTexture(texture.Texture);
@@ -1055,7 +1055,7 @@ void CGLEngine::GL2_DrawMirrored(const CGLTexture &texture, const int &x, const 
 	glTranslatef((GLfloat)-x, (GLfloat)-y, 0.0f);
 }
 //----------------------------------------------------------------------------------
-void CGLEngine::GL2_DrawSitting(const CGLTexture &texture, const int &x, const int &y, const bool &mirror, const float &h3mod, const float &h6mod, const float &h9mod)
+void CGLEngine::GL2_DrawSitting(const CGLTexture &texture, int x, int y, bool mirror, float h3mod, float h6mod, float h9mod)
 {
 	WISPFUN_DEBUG("c29_f41");
 	BindTexture(texture.Texture);
@@ -1148,7 +1148,7 @@ void CGLEngine::GL2_DrawSitting(const CGLTexture &texture, const int &x, const i
 	glTranslatef((GLfloat)-x, (GLfloat)-y, 0.0f);
 }
 //----------------------------------------------------------------------------------
-void CGLEngine::GL2_DrawShadow(const CGLTexture &texture, const int &x, const int &y, const bool &mirror)
+void CGLEngine::GL2_DrawShadow(const CGLTexture &texture, int x, int y, bool mirror)
 {
 	WISPFUN_DEBUG("c29_f42");
 	BindTexture(texture.Texture);
@@ -1197,7 +1197,7 @@ void CGLEngine::GL2_DrawShadow(const CGLTexture &texture, const int &x, const in
 	glTranslatef((GLfloat)-x, -translateY, 0.0f);
 }
 //----------------------------------------------------------------------------------
-void CGLEngine::GL2_DrawStretched(const CGLTexture &texture, const int &x, const int &y, const int &drawWidth, const int &drawHeight)
+void CGLEngine::GL2_DrawStretched(const CGLTexture &texture, int x, int y, int drawWidth, int drawHeight)
 {
 	WISPFUN_DEBUG("c29_f43");
 	BindTexture(texture.Texture);
@@ -1220,7 +1220,7 @@ void CGLEngine::GL2_DrawStretched(const CGLTexture &texture, const int &x, const
 	glTranslatef((GLfloat)-x, (GLfloat)-y, 0.0f);
 }
 //----------------------------------------------------------------------------------
-void CGLEngine::GL2_DrawResizepic(CGLTexture **th, const int &x, const int &y, const int &width, const int &height)
+void CGLEngine::GL2_DrawResizepic(CGLTexture **th, int x, int y, int width, int height)
 {
 	WISPFUN_DEBUG("c29_f44");
 	IFOR(i, 0, 9)

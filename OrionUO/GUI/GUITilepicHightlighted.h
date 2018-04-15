@@ -21,12 +21,12 @@ class CGUITilepicHightlighted : public CGUITilepic
 	bool DoubleDraw = false;
 
 public:
-	CGUITilepicHightlighted(const uint &serial, const ushort &graphic, const ushort &color, const ushort &selectedColor, const int &x, const int &y, const bool &doubleDraw);
+	CGUITilepicHightlighted(int serial, ushort graphic, ushort color, ushort selectedColor, int x, int y, bool doubleDraw);
 	virtual ~CGUITilepicHightlighted();
 
 	virtual void SetShaderMode();
 
-	virtual void Draw(const bool &checktrans = false);
+	virtual void Draw(bool checktrans = false);
 	virtual bool Select();
 
 	virtual void OnMouseEnter();

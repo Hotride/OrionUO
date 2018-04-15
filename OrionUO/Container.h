@@ -20,7 +20,7 @@ public:
 	int MaxY = 0;
 
 	CContainerOffsetRect() {}
-	CContainerOffsetRect(const int &minX, const int &minY, const int &maxX, const int &maxY)
+	CContainerOffsetRect(int minX, int minY, int maxX, int maxY)
 		: MinX(minX), MinY(minY), MaxX(maxX), MaxY(maxY) {}
 	~CContainerOffsetRect() {}
 };
@@ -42,7 +42,7 @@ public:
 	CContainerOffsetRect Rect = CContainerOffsetRect();
 
 	CContainerOffset() {}
-	CContainerOffset(const ushort &gump, const ushort &openSound, const ushort &closeSound, const CContainerOffsetRect &rect)
+	CContainerOffset(ushort gump, ushort openSound, ushort closeSound, const CContainerOffsetRect &rect)
 		: Gump(gump), OpenSound(openSound), CloseSound(closeSound), Rect(rect) {}
 	~CContainerOffset() {}
 };

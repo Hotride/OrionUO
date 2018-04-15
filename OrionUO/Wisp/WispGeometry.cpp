@@ -10,7 +10,7 @@ CSize::CSize()
 {
 }
 //----------------------------------------------------------------------------------
-CSize::CSize(const int &width, const int &height)
+CSize::CSize(int width, int height)
 : Width(width), Height(height)
 {
 }
@@ -24,12 +24,12 @@ CPoint2Di::CPoint2Di()
 {
 }
 //----------------------------------------------------------------------------------
-CPoint2Di::CPoint2Di(const int &x, const int &y)
+CPoint2Di::CPoint2Di(int x, int y)
 : X(x), Y(y)
 {
 }
 //----------------------------------------------------------------------------------
-CPoint2Di::CPoint2Di(const float &x, const float &y)
+CPoint2Di::CPoint2Di(float x, float y)
 : X((int)x), Y((int)y)
 {
 }
@@ -48,17 +48,17 @@ CRect::CRect()
 {
 }
 //----------------------------------------------------------------------------------
-CRect::CRect(const int &x, const int &y, const int &width, const int &height)
+CRect::CRect(int x, int y, int width, int height)
 : Position(x, y), Size(width, height)
 {
 }
 //----------------------------------------------------------------------------------
-CRect::CRect(const int &x, const int &y, const CSize &size)
+CRect::CRect(int x, int y, const CSize &size)
 : Position(x, y), Size(size)
 {
 }
 //----------------------------------------------------------------------------------
-CRect::CRect(const CPoint2Di &position, const int &width, const int &height)
+CRect::CRect(const CPoint2Di &position, int width, int height)
 : Position(position), Size(width, height)
 {
 }
@@ -73,12 +73,12 @@ CPoint3Di::CPoint3Di()
 {
 }
 //----------------------------------------------------------------------------------
-CPoint3Di::CPoint3Di(const int &x, const int &y, const int &z)
+CPoint3Di::CPoint3Di(int x, int y, int z)
 : CPoint2Di(x, y), Z(z)
 {
 }
 //----------------------------------------------------------------------------------
-CPoint3Di::CPoint3Di(const float &x, const float &y, const float &z)
+CPoint3Di::CPoint3Di(float x, float y, float z)
 : CPoint2Di(x, y), Z((int)z)
 {
 }
@@ -107,12 +107,12 @@ CPoint2Df::CPoint2Df()
 {
 }
 //----------------------------------------------------------------------------------
-CPoint2Df::CPoint2Df(const int &x, const int &y)
+CPoint2Df::CPoint2Df(int x, int y)
 : X((float)x), Y((float)y)
 {
 }
 //----------------------------------------------------------------------------------
-CPoint2Df::CPoint2Df(const float &x, const float &y)
+CPoint2Df::CPoint2Df(float x, float y)
 : X(x), Y(y)
 {
 }
@@ -132,12 +132,12 @@ CPoint3Df::CPoint3Df()
 {
 }
 //----------------------------------------------------------------------------------
-CPoint3Df::CPoint3Df(const int &x, const int &y, const int &z)
+CPoint3Df::CPoint3Df(int x, int y, int z)
 : CPoint2Df(x, y), Z((float)z)
 {
 }
 //----------------------------------------------------------------------------------
-CPoint3Df::CPoint3Df(const float &x, const float &y, const float &z)
+CPoint3Df::CPoint3Df(float x, float y, float z)
 : CPoint2Df(x, y), Z(z)
 {
 }

@@ -56,11 +56,11 @@ public:
 	CProfession();
 	virtual ~CProfession();
 
-	void SetSkillIndex(const int &index, const uchar &val) { if (index >= 0 && index < 4) m_SkillIndex[index] = val; }
-	void SetSkillValue(const int &index, const uchar &val) { if (index >= 0 && index < 4) m_SkillValue[index] = val; }
+	void SetSkillIndex(int index, uchar val) { if (index >= 0 && index < 4) m_SkillIndex[index] = val; }
+	void SetSkillValue(int index, uchar val) { if (index >= 0 && index < 4) m_SkillValue[index] = val; }
 
-	uchar GetSkillIndex(const int &index) const { if (index >= 0 && index < 4) return m_SkillIndex[index]; else return 0xFF; }
-	uchar GetSkillValue(const int &index) const { if (index >= 0 && index < 4) return m_SkillValue[index]; else return 0xFF; }
+	uchar GetSkillIndex(int index) const { if (index >= 0 && index < 4) return m_SkillIndex[index]; else return 0xFF; }
+	uchar GetSkillValue(int index) const { if (index >= 0 && index < 4) return m_SkillValue[index]; else return 0xFF; }
 };
 //----------------------------------------------------------------------------------
 #endif

@@ -32,7 +32,7 @@ public:
 	@param [__in] flags Multi object flags
 	@return
 	*/
-	CMultiObject(const ushort &graphic, const short &x, const short &y, const char &z, const uint &flags);
+	CMultiObject(ushort graphic, short x, short y, char z, int flags);
 
 	/*!
 	Destructor
@@ -52,7 +52,7 @@ public:
 	@param [__in] y Coordinate Y on screen
 	@return
 	*/
-	virtual void Draw(const int &x, const int &y);
+	virtual void Draw(int x, int y);
 
 	/*!
 	Select object in the world
@@ -60,7 +60,7 @@ public:
 	@param [__in] y Coordinate Y on screen
 	@return
 	*/
-	virtual void Select(const int &x, const int &y);
+	virtual void Select(int x, int y);
 
 	/*!
 	Check on multi component object

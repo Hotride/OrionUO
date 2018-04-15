@@ -31,10 +31,10 @@ private:
 	CGUIButton *m_NextPage{ NULL };
 
 public:
-	CGumpCombatBook(const int &x, const int &y);
+	CGumpCombatBook(int x, int y);
 	virtual ~CGumpCombatBook();
 
-	static USHORT_LIST GetItemsList(const uchar &index);
+	static USHORT_LIST GetItemsList(uchar index);
 
 	virtual void DelayedClick(CRenderObject *obj);
 

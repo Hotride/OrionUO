@@ -18,10 +18,10 @@ public:
 	//!Значение для установки альфа-канала
 	float Alpha = 0.0f;
 
-	CGUIAlphaBlending(const bool &enabled, const float &alpha);
+	CGUIAlphaBlending(bool enabled, float alpha);
 	virtual ~CGUIAlphaBlending();
 
-	virtual void Draw(const bool &checktrans = false);
+	virtual void Draw(bool checktrans = false);
 };
 //----------------------------------------------------------------------------------
 #endif

@@ -21,7 +21,7 @@ CParty::~CParty()
 {
 }
 //----------------------------------------------------------------------------------
-bool CParty::Contains(const uint &serial)
+bool CParty::Contains(int serial)
 {
 	WISPFUN_DEBUG("c196_f1");
 	bool result = false;

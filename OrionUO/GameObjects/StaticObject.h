@@ -17,16 +17,16 @@ class CStaticObject : public CRenderStaticObject
 	ushort OriginalGraphic = 0;
 
 public:
-	CStaticObject(const uint &serial, const ushort &graphic, const ushort &color, const short &x, const short &y, const char &z);
+	CStaticObject(int serial, ushort graphic, ushort color, short x, short y, char z);
 	virtual ~CStaticObject() {}
 
 	virtual void UpdateGraphicBySeason();
 
 	//Отрисовать объект
-	virtual void Draw(const int &x, const int &y);
+	virtual void Draw(int x, int y);
 
 	//Выбрать объект
-	virtual void Select(const int &x, const int &y);
+	virtual void Select(int x, int y);
 
 	//Это объект статики
 	bool IsStaticObject() {return true;}

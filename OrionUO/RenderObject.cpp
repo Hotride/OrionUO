@@ -11,7 +11,7 @@
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
 //----------------------------------------------------------------------------------
-CRenderObject::CRenderObject(const uint &serial, const ushort &graphic, const ushort &color, const short &x, const short &y)
+CRenderObject::CRenderObject(int serial, ushort graphic, ushort color, short x, short y)
 : CBaseQueueItem(), Serial(serial), Graphic(graphic), Color(color), m_X(x), m_Y(y)
 {
 	UpdateRealDrawCoordinates();
@@ -26,13 +26,13 @@ CRenderObject::~CRenderObject()
 	g_PressedObject.Clear(this);
 }
 //----------------------------------------------------------------------------------
-void CRenderObject::SetX(const int &val)
+void CRenderObject::SetX(int val)
 {
 	m_X = val;
 	UpdateRealDrawCoordinates();
 }
 //----------------------------------------------------------------------------------
-void CRenderObject::SetY(const int &val)
+void CRenderObject::SetY(int val)
 {
 	m_Y = val;
 	UpdateRealDrawCoordinates();

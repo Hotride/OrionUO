@@ -176,13 +176,13 @@ void CWindow::Destroy()
 	PostMessage(Handle, WM_CLOSE, 0, 0);
 }
 //----------------------------------------------------------------------------------
-void CWindow::ShowMessage(const string &text, const string &title, const uint &buttons)
+void CWindow::ShowMessage(const string &text, const string &title, int buttons)
 {
 	WISPFUN_DEBUG("c14_f7");
 	MessageBoxA(Handle, text.c_str(), title.c_str(), buttons);
 }
 //----------------------------------------------------------------------------------
-void CWindow::ShowMessage(const wstring &text, const wstring &title, const uint &buttons)
+void CWindow::ShowMessage(const wstring &text, const wstring &title, int buttons)
 {
 	WISPFUN_DEBUG("c14_f8");
 	MessageBoxW(Handle, text.c_str(), title.c_str(), buttons);
@@ -507,7 +507,7 @@ LRESULT CWindow::OnWindowProc(HWND &hWnd, UINT &message, WPARAM &wParam, LPARAM 
 	return DefWindowProc(hWnd, message, wParam, lParam);
 }
 //----------------------------------------------------------------------------------
-void CWindow::CreateThreadedTimer(uint id, const int &delay, const bool &oneShot, const bool &waitForProcessMessage, const bool &synchronizedDelay)
+void CWindow::CreateThreadedTimer(uint id, int delay, bool oneShot, bool waitForProcessMessage, bool synchronizedDelay)
 {
 	WISPFUN_DEBUG("c14_f10");
 	for (deque<WISP_THREADED_TIMER::CThreadedTimer*>::iterator i = m_ThreadedTimersStack.begin(); i != m_ThreadedTimersStack.end(); ++i)

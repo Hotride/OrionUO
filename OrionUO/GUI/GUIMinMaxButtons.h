@@ -74,7 +74,7 @@ private:
 	int m_ScrollMode{ 0 };
 
 public:
-	CGUIMinMaxButtons(const uint &serial, const ushort &graphic, const int &x, const int &y, const int &minValue, const int &maxValue, const int &value);
+	CGUIMinMaxButtons(int serial, ushort graphic, int x, int y, int minValue, int maxValue, int value);
 	virtual ~CGUIMinMaxButtons();
 
 	virtual bool IsPressedOuthit() { return true; }
@@ -82,7 +82,7 @@ public:
 	virtual WISP_GEOMETRY::CSize GetSize() { return WISP_GEOMETRY::CSize(36, 18); }
 
 	//Прокрутка
-	virtual void Scroll(const uint &delay);
+	virtual void Scroll(int delay);
 
 	//Нажатие
 	virtual void OnClick();
@@ -91,11 +91,11 @@ public:
 	void UpdateText();
 
 	//!Установить параметры текста
-	void SetTextParameters(const bool &haveText, const SLIDER_TEXT_POSITION &textPosition, const uchar &font, const ushort &color, const bool &unicode, const int &textWidth = 0, const TEXT_ALIGN_TYPE &align = TS_LEFT, const ushort &textFlags = 0);
+	void SetTextParameters(bool haveText, SLIDER_TEXT_POSITION textPosition, uchar font, ushort color, bool unicode, int textWidth = 0, TEXT_ALIGN_TYPE align = TS_LEFT, ushort textFlags = 0);
 
 	virtual void PrepareTextures();
 
-	virtual void Draw(const bool &checktrans = false);
+	virtual void Draw(bool checktrans = false);
 	virtual bool Select();
 };
 //----------------------------------------------------------------------------------

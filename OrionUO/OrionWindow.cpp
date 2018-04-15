@@ -54,7 +54,7 @@ COrionWindow::~COrionWindow()
 {
 }
 //----------------------------------------------------------------------------------
-void COrionWindow::SetRenderTimerDelay(const int &delay)
+void COrionWindow::SetRenderTimerDelay(int delay)
 {
 	WISPFUN_DEBUG("c195_f1");
 	WISP_THREADED_TIMER::CThreadedTimer *timer = GetThreadedTimer(RENDER_TIMER_ID);
@@ -268,7 +268,7 @@ bool COrionWindow::OnMidMouseButtonDoubleClick()
 	return false;
 }
 //----------------------------------------------------------------------------------
-void COrionWindow::OnMidMouseButtonScroll(const bool &up)
+void COrionWindow::OnMidMouseButtonScroll(bool up)
 {
 	WISPFUN_DEBUG("c195_f15");
 	if (g_PluginManager.WindowProc(Handle, WM_MOUSEWHEEL, (up ? 0 : 0x11110000), 0))
@@ -282,7 +282,7 @@ void COrionWindow::OnMidMouseButtonScroll(const bool &up)
 	}
 }
 //----------------------------------------------------------------------------------
-void COrionWindow::OnXMouseButton(const bool &up)
+void COrionWindow::OnXMouseButton(bool up)
 {
 	WISPFUN_DEBUG("c195_f15");
 	if (g_PluginManager.WindowProc(Handle, WM_XBUTTONDOWN, (up ? 0 : 0x11110000), 0))
@@ -370,7 +370,7 @@ HRESULT COrionWindow::OnRepaint(const WPARAM &wParam, const LPARAM &lParam)
 	return (HRESULT)DefWindowProc(Handle, WM_NCPAINT, wParam, lParam);
 }
 //----------------------------------------------------------------------------------
-void COrionWindow::OnShow(const bool &show)
+void COrionWindow::OnShow(bool show)
 {
 	WISPFUN_DEBUG("c195_f23");
 	if (!g_PluginManager.Empty())
@@ -414,7 +414,7 @@ void COrionWindow::OnThreadedTimer(uint nowTime, WISP_THREADED_TIMER::CThreadedT
 	}
 }
 //----------------------------------------------------------------------------------
-LRESULT COrionWindow::OnUserMessages(const UINT &message, const WPARAM &wParam, const LPARAM &lParam)
+LRESULT COrionWindow::OnUserMessages(int message, const WPARAM &wParam, const LPARAM &lParam)
 {
 	WISPFUN_DEBUG("c195_f27");
 	switch (message)

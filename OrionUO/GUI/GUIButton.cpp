@@ -11,7 +11,7 @@
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
 //----------------------------------------------------------------------------------
-CGUIButton::CGUIButton(const uint &serial, const ushort &graphic, const ushort &graphicSelected, const ushort &graphicPressed, const int &x, const int &y)
+CGUIButton::CGUIButton(int serial, ushort graphic, ushort graphicSelected, ushort graphicPressed, int x, int y)
 : CGUIDrawObject(GOT_BUTTON, serial, graphic, 0, x, y), GraphicSelected(graphicSelected),
 GraphicPressed(graphicPressed)
 {

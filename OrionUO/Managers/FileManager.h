@@ -22,7 +22,7 @@ public:
 	//ushort Flags = 0;
 
 	CUopBlockHeader() {}
-	CUopBlockHeader(const uint64 &offset, const uint &headerSize, const uint &compresseSize, const uint &decompressedSize, const uint64 &Hash, const uint &unknown, const ushort &flags)
+	CUopBlockHeader(uint64 offset, int headerSize, int compresseSize, int decompressedSize, uint64 Hash, int unknown, ushort flags)
 	: Offset(offset), CompressedSize(compresseSize), DecompressedSize(decompressedSize) {}
 	~CUopBlockHeader() {}
 };
@@ -36,9 +36,9 @@ public:
 	CUopMappedFile();
 	virtual ~CUopMappedFile();
 
-	void Add(const uint64 &hash, const CUopBlockHeader &item);
+	void Add(uint64 hash, const CUopBlockHeader &item);
 
-	CUopBlockHeader *GetBlock(const uint64 &hash);
+	CUopBlockHeader *GetBlock(uint64 hash);
 
 	UCHAR_LIST GetData(const CUopBlockHeader &block);
 };

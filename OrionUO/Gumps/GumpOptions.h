@@ -256,7 +256,7 @@ public:
 	CGumpOptions(short x, short y);
 	virtual ~CGumpOptions();
 
-	void UpdateColor(const SELECT_COLOR_GUMP_STATE &state, const ushort &color);
+	void UpdateColor(const SELECT_COLOR_GUMP_STATE &state, ushort color);
 
 	CGUITextEntry *m_GameWindowWidth{ NULL };
 	CGUITextEntry *m_GameWindowHeight{ NULL };

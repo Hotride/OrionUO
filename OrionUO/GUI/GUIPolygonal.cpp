@@ -11,7 +11,7 @@
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
 //----------------------------------------------------------------------------------
-CGUIPolygonal::CGUIPolygonal(const GUMP_OBJECT_TYPE &type, const int &x, const int &y, const int &width, const int &height, const bool &callOnMouseUp)
+CGUIPolygonal::CGUIPolygonal(GUMP_OBJECT_TYPE type, int x, int y, int width, int height, bool callOnMouseUp)
 : CBaseGUI(type, 0, 0, 0, x, y), Width(width), Height(height),
 CallOnMouseUp(callOnMouseUp)
 {

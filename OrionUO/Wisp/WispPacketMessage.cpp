@@ -6,12 +6,12 @@
 namespace WISP_NETWORK
 {
 //----------------------------------------------------------------------------------
-CPacketMessage::CPacketMessage(const bool &bigEndian)
+CPacketMessage::CPacketMessage(bool bigEndian)
 : BigEndian(bigEndian)
 {
 }
 //----------------------------------------------------------------------------------
-CPacketMessage::CPacketMessage(puchar data, const int &dataSize, const bool &bigEndian)
+CPacketMessage::CPacketMessage(puchar data, int dataSize, bool bigEndian)
 : BigEndian(bigEndian)
 {
 	WISPFUN_DEBUG("c9_f1");
@@ -19,7 +19,7 @@ CPacketMessage::CPacketMessage(puchar data, const int &dataSize, const bool &big
 	memcpy(&m_Data[0], &data[0], dataSize);
 }
 //----------------------------------------------------------------------------------
-CPacketMessage::CPacketMessage(const UCHAR_LIST &data, const bool &bigEndian)
+CPacketMessage::CPacketMessage(const UCHAR_LIST &data, bool bigEndian)
 : BigEndian(bigEndian), m_Data(data)
 {
 	WISPFUN_DEBUG("c9_f2");
@@ -31,7 +31,7 @@ CPacketMessage::~CPacketMessage()
 	m_Data.clear();
 }
 //----------------------------------------------------------------------------------
-void CPacketMessage::Append(puchar data, const int &dataSize)
+void CPacketMessage::Append(puchar data, int dataSize)
 {
 	WISPFUN_DEBUG("c9_f4");
 	UCHAR_LIST buf(dataSize);

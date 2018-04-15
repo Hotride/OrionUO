@@ -11,7 +11,7 @@
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
 //----------------------------------------------------------------------------------
-CGUIColoredPolygone::CGUIColoredPolygone(const uint &serial, const ushort &color, const int &x, const int &y, const int &width, const int &height, const uint &polygoneColor)
+CGUIColoredPolygone::CGUIColoredPolygone(int serial, ushort color, int x, int y, int width, int height, int polygoneColor)
 : CGUIPolygonal(GOT_COLOREDPOLYGONE, x, y, width, height)
 {
 	WISPFUN_DEBUG("c48_f1");
@@ -23,7 +23,7 @@ CGUIColoredPolygone::~CGUIColoredPolygone()
 {
 }
 //----------------------------------------------------------------------------------
-void CGUIColoredPolygone::UpdateColor(const ushort &color, const uint &polygoneColor)
+void CGUIColoredPolygone::UpdateColor(ushort color, int polygoneColor)
 {
 	WISPFUN_DEBUG("c48_f2");
 	Color = color;
@@ -37,7 +37,7 @@ void CGUIColoredPolygone::UpdateColor(const ushort &color, const uint &polygoneC
 		ColorA = 0xFF;
 }
 //----------------------------------------------------------------------------------
-void CGUIColoredPolygone::Draw(const bool &checktrans)
+void CGUIColoredPolygone::Draw(bool checktrans)
 {
 	WISPFUN_DEBUG("c48_f3");
 	glColor4ub(ColorR, ColorG, ColorB, ColorA);

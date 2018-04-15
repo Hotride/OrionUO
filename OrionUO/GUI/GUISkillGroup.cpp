@@ -11,7 +11,7 @@
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
 //----------------------------------------------------------------------------------
-CGUISkillGroup::CGUISkillGroup(const uint &serial, const uint &minimizeSerial, CSkillGroupObject *group, const int &x, const int &y)
+CGUISkillGroup::CGUISkillGroup(int serial, int minimizeSerial, CSkillGroupObject *group, int x, int y)
 : CBaseGUI(GOT_SKILLGROUP, serial, 0, 0, x, y)
 {
 	WISPFUN_DEBUG("c75_f1");
@@ -30,7 +30,7 @@ CGUISkillGroup::~CGUISkillGroup()
 	RELEASE_POINTER(m_Name);
 }
 //----------------------------------------------------------------------------------
-void CGUISkillGroup::SetMinimized(const bool &val)
+void CGUISkillGroup::SetMinimized(bool val)
 {
 	WISPFUN_DEBUG("c75_f3");
 	m_Minimized = val;
@@ -111,7 +111,7 @@ WISP_GEOMETRY::CSize CGUISkillGroup::GetSize()
 	return size;
 }
 //----------------------------------------------------------------------------------
-void CGUISkillGroup::Draw(const bool &checktrans)
+void CGUISkillGroup::Draw(bool checktrans)
 {
 	WISPFUN_DEBUG("c75_f9");
 	glTranslatef((GLfloat)m_X, (GLfloat)m_Y, 0.0f);

@@ -17,7 +17,7 @@ protected:
     int m_SkillSelection = 0;
 public:
     int GetSkillSelection() { return m_SkillSelection; };
-    void SetSkillSelection(const int& val);
+    void SetSkillSelection(int val);
 
 private:
 	CGumpScreenSelectProfession m_SelectProfessionGump;

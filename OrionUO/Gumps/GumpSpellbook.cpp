@@ -114,7 +114,7 @@ void CGumpSpellbook::InitStaticData()
 	m_SpellName1[63][0] = g_ClilocManager.Cliloc(g_Language)->GetA(1028383, false, "Water Elemental");
 }
 //----------------------------------------------------------------------------------
-void CGumpSpellbook::UpdateGraphic(const ushort &parentGraphic)
+void CGumpSpellbook::UpdateGraphic(ushort parentGraphic)
 {
 	WISPFUN_DEBUG("c127_f1");
 	SPELLBOOK_TYPE bookType = BookType;
@@ -481,7 +481,7 @@ void CGumpSpellbook::GetSummaryBookInfo(int &maxSpellsCount, int &dictionaryPage
 		dictionaryPagesCount++;
 }
 //----------------------------------------------------------------------------
-string CGumpSpellbook::GetSpellName(const int &offset, string &abbreviature, string &reagents)
+string CGumpSpellbook::GetSpellName(int offset, string &abbreviature, string &reagents)
 {
 	WISPFUN_DEBUG("c127_f6");
 	switch (BookType)
@@ -514,7 +514,7 @@ string CGumpSpellbook::GetSpellName(const int &offset, string &abbreviature, str
 	return "";
 }
 //----------------------------------------------------------------------------
-string CGumpSpellbook::GetSpellRequries(const int &offset, int &y)
+string CGumpSpellbook::GetSpellRequries(int offset, int &y)
 {
 	WISPFUN_DEBUG("c127_f7");
 	char buf[100] = { 0 };

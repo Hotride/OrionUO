@@ -28,7 +28,7 @@ public:
 
 	int Process();
 	void Draw();
-	bool Use(const SCREEN_EFFECT_MODE &mode, const SCREEN_EFFECT_TYPE &type = SET_TO_BLACK, const bool &ignoreEnabled = false);
+	bool Use(const SCREEN_EFFECT_MODE &mode, const SCREEN_EFFECT_TYPE &type = SET_TO_BLACK, bool ignoreEnabled = false);
 	bool UseSunrise();
 	bool UseSunset();
 };

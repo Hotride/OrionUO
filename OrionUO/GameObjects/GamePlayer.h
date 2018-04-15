@@ -61,7 +61,7 @@ public:
 	@param [__in] serial Player's serial
 	@return
 	*/
-	CPlayer(const uint &serial);
+	CPlayer(int serial);
 
 	/*!
 	Destructor

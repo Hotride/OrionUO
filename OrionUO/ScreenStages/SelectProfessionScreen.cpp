@@ -22,7 +22,7 @@ CSelectProfessionScreen::~CSelectProfessionScreen()
 {
 }
 //----------------------------------------------------------------------------------
-void CSelectProfessionScreen::SetSkillSelection(const int &val)
+void CSelectProfessionScreen::SetSkillSelection(int val)
 {
 	m_SkillSelection = val;
 	m_Gump.WantUpdateContent = true;

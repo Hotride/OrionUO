@@ -33,7 +33,7 @@ public:
 	@param [__in] mode true - отрисовка, false - выбор
 	@return При выборе объектов - идентификатор выбранного объекта
 	*/
-	virtual void Render(const bool &mode);
+	virtual void Render(bool mode);
 
 
 

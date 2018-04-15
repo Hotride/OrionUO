@@ -50,9 +50,9 @@ public:
 
 	void Reset();
 
-	void DenyWalk(const uchar &sequence, const int &x, const int &y, const char &z);
+	void DenyWalk(uchar sequence, int x, int y, char z);
 
-	void ConfirmWalk(const uchar &sequence);
+	void ConfirmWalk(uchar sequence);
 };
 //----------------------------------------------------------------------------------
 extern CWalker g_Walker;

@@ -253,7 +253,7 @@ void CGameScreen::UpdateMaxDrawZ()
 @param [__in] z Координата Z дерева
 @return 
 */
-void CGameScreen::ApplyTransparentFoliageToUnion(const ushort &graphic, const int &x, const int &y, const int &z)
+void CGameScreen::ApplyTransparentFoliageToUnion(ushort graphic, int x, int y, int z)
 {
 	WISPFUN_DEBUG("c164_f7");
 	int bx = x / 8;
@@ -537,7 +537,7 @@ void CGameScreen::CalculateRenderList()
 	UpdateDrawPos = false;
 }
 //----------------------------------------------------------------------------------
-void CGameScreen::AddTileToRenderList(CRenderWorldObject *obj, const int &worldX, const int &worldY, const bool &useObjectHandles, const int &maxZ)
+void CGameScreen::AddTileToRenderList(CRenderWorldObject *obj, int worldX, int worldY, bool useObjectHandles, int maxZ)
 {
 	WISPFUN_DEBUG("c164_f11");
 	ushort grayColor = 0;
@@ -823,7 +823,7 @@ void CGameScreen::AddTileToRenderList(CRenderWorldObject *obj, const int &worldX
 	}
 }
 //----------------------------------------------------------------------------------
-void CGameScreen::AddOffsetCharacterTileToRenderList(CGameObject *obj, const bool &useObjectHandles)
+void CGameScreen::AddOffsetCharacterTileToRenderList(CGameObject *obj, bool useObjectHandles)
 {
 	WISPFUN_DEBUG("c164_f12");
 	int characterX = obj->GetX();
@@ -1070,7 +1070,7 @@ void CGameScreen::CalculateGameWindowBounds()
 @param [__in] y Экранная координата Y
 @return 
 */
-void CGameScreen::AddLight(CRenderWorldObject *rwo, CRenderWorldObject *lightObject, const int &x, const int &y)
+void CGameScreen::AddLight(CRenderWorldObject *rwo, CRenderWorldObject *lightObject, int x, int y)
 {
 	WISPFUN_DEBUG("c164_f14");
 
@@ -1141,7 +1141,7 @@ void CGameScreen::AddLight(CRenderWorldObject *rwo, CRenderWorldObject *lightObj
 @param [__in] mode true - отрисовка, false - выбор
 @return 
 */
-void CGameScreen::DrawGameWindow(const bool &mode)
+void CGameScreen::DrawGameWindow(bool mode)
 {
 	WISPFUN_DEBUG("c164_f15");
 	int playerZPlus5 = g_RenderBounds.PlayerZ + 5;
@@ -1364,7 +1364,7 @@ void CGameScreen::DrawGameWindowLight()
 @param [__in] mode true - отрисовка, false - выбор
 @return 
 */
-void CGameScreen::DrawGameWindowText(const bool &mode)
+void CGameScreen::DrawGameWindowText(bool mode)
 {
 	WISPFUN_DEBUG("c164_f17");
 	if (mode)
@@ -1504,7 +1504,7 @@ void CGameScreen::PrepareContent()
 @param [__in] mode true - отрисовка, false - выбор
 @return При выборе объектов - идентификатор выбранного объекта
 */
-void CGameScreen::Render(const bool &mode)
+void CGameScreen::Render(bool mode)
 {
 	WISPFUN_DEBUG("c164_f19");
 	if (!RenderListInitalized)
@@ -2238,7 +2238,7 @@ bool CGameScreen::OnRightMouseButtonDoubleClick()
 @param [__in] state Состояние колесика
 @return 
 */
-void CGameScreen::OnMidMouseButtonScroll(const bool &up)
+void CGameScreen::OnMidMouseButtonScroll(bool up)
 {
 	WISPFUN_DEBUG("c164_f26");
 	if (g_SelectedObject.Gump != NULL)

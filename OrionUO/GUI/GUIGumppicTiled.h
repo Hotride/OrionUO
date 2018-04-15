@@ -21,12 +21,12 @@ class CGUIGumppicTiled : public CGUIDrawObject
 	int Height = 0;
 
 public:
-	CGUIGumppicTiled(const ushort &graphic, const int &x, const int &y, const int &width, const int &height);
+	CGUIGumppicTiled(ushort graphic, int x, int y, int width, int height);
 	virtual ~CGUIGumppicTiled();
 
 	virtual WISP_GEOMETRY::CSize GetSize() { return WISP_GEOMETRY::CSize(Width, Height); }
 
-	virtual void Draw(const bool &checktrans = false);
+	virtual void Draw(bool checktrans = false);
 	virtual bool Select();
 };
 //----------------------------------------------------------------------------------

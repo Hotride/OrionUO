@@ -16,7 +16,7 @@ protected:
     int m_PlotState = 0;
 public:
     int GetPlotState() { return m_PlotState; };
-    void SetPlotState(const int& val);
+    void SetPlotState(int val);
 	int StartX = 0;
 	int StartY = 0;
 	int EndX = 0;
@@ -53,7 +53,7 @@ public:
 
 	virtual void PrepareContent();
 
-	virtual void GenerateFrame(const bool &stop);
+	virtual void GenerateFrame(bool stop);
 
 	virtual CRenderObject *Select();
 

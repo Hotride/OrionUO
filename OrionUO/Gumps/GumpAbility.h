@@ -19,10 +19,10 @@ private:
 	CGUIGlobalColor *m_Colorizer{ NULL };
 
 public:
-	CGumpAbility(const uint &serial, const int &x, const int &y);
+	CGumpAbility(int serial, int x, int y);
 	virtual ~CGumpAbility();
 
-	static void OnAbilityUse(const int &index);
+	static void OnAbilityUse(int index);
 
 	virtual void UpdateContent();
 

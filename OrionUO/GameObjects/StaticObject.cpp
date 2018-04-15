@@ -11,7 +11,7 @@
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
 //----------------------------------------------------------------------------------
-CStaticObject::CStaticObject(const uint &serial, const ushort &graphic, const ushort &color, const short &x, const short &y, const char &z)
+CStaticObject::CStaticObject(int serial, ushort graphic, ushort color, short x, short y, char z)
 : CRenderStaticObject(ROT_STATIC_OBJECT, serial, graphic, color, x, y, z)
 {
 	WISPFUN_DEBUG("c28_f1");
@@ -43,7 +43,7 @@ void CStaticObject::UpdateGraphicBySeason()
 	NoDrawTile = IsNoDrawTile(Graphic);
 }
 //----------------------------------------------------------------------------------
-void CStaticObject::Draw(const int &x, const int &y)
+void CStaticObject::Draw(int x, int y)
 {
 	WISPFUN_DEBUG("c28_f3");
 	RenderGraphic = Graphic;
@@ -56,7 +56,7 @@ void CStaticObject::Draw(const int &x, const int &y)
 	CRenderStaticObject::Draw(x, y);
 }
 //----------------------------------------------------------------------------------
-void CStaticObject::Select(const int &x, const int &y)
+void CStaticObject::Select(int x, int y)
 {
 	WISPFUN_DEBUG("c28_f4");
 	RenderGraphic = Graphic;

@@ -11,7 +11,7 @@
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
 //----------------------------------------------------------------------------------
-CGUITextEntry::CGUITextEntry(const uint &serial, const ushort &color, const ushort &colorSelected, const ushort &colorFocused, const int &x, const int &y, const int &maxWidth, const bool &unicode, const uchar &font, const TEXT_ALIGN_TYPE &align, const ushort &textFlags, const int &maxLength)
+CGUITextEntry::CGUITextEntry(int serial, ushort color, ushort colorSelected, ushort colorFocused, int x, int y, int maxWidth, bool unicode, uchar font, TEXT_ALIGN_TYPE align, ushort textFlags, int maxLength)
 : CBaseGUI(GOT_TEXTENTRY, serial, 0, color, x, y), ColorSelected(colorSelected),
 ColorFocused(colorFocused), Unicode(unicode), Font(font), Align(align),
 TextFlags(textFlags), m_Entry(maxLength, maxWidth, maxWidth)
@@ -36,7 +36,7 @@ WISP_GEOMETRY::CSize CGUITextEntry::GetSize()
 	return WISP_GEOMETRY::CSize(m_Entry.m_Texture.Width, m_Entry.m_Texture.Height);
 }
 //----------------------------------------------------------------------------------
-void CGUITextEntry::SetGlobalColor(const bool &use, const uint &color, const uint &selected, const uint &focused)
+void CGUITextEntry::SetGlobalColor(bool use, int color, int selected, int focused)
 {
 	WISPFUN_DEBUG("c79_f4");
 	UseGlobalColor = use;
@@ -69,7 +69,7 @@ void CGUITextEntry::SetGlobalColor(const bool &use, const uint &color, const uin
 	}
 }
 //----------------------------------------------------------------------------------
-void CGUITextEntry::OnClick(CGump *gump, const int &x, const int &y)
+void CGUITextEntry::OnClick(CGump *gump, int x, int y)
 {
 	WISPFUN_DEBUG("c79_f5");
 	m_Entry.OnClick(gump, Font, Unicode, x, y, Align, TextFlags);
@@ -111,7 +111,7 @@ void CGUITextEntry::PrepareTextures()
 		m_Entry.PrepareToDrawA(Font, color, Align, TextFlags);
 }
 //----------------------------------------------------------------------------------
-void CGUITextEntry::Draw(const bool &checktrans)
+void CGUITextEntry::Draw(bool checktrans)
 {
 	WISPFUN_DEBUG("c79_f9");
 	int y = m_Y;

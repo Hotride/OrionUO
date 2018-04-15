@@ -11,7 +11,7 @@
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
 //----------------------------------------------------------------------------------
-CGUIMinMaxButtons::CGUIMinMaxButtons(const uint &serial, const ushort &graphic, const int &x, const int &y, const int &minValue, const int &maxValue, const int &value)
+CGUIMinMaxButtons::CGUIMinMaxButtons(int serial, ushort graphic, int x, int y, int minValue, int maxValue, int value)
 : CBaseGUI(GOT_MINMAXBUTTONS, serial, graphic, 0, x, y), MinValue(minValue),
 MaxValue(maxValue), Value(value)
 {
@@ -118,7 +118,7 @@ void CGUIMinMaxButtons::UpdateText()
 	}
 }
 //----------------------------------------------------------------------------------
-void CGUIMinMaxButtons::Scroll(const uint &delay)
+void CGUIMinMaxButtons::Scroll(int delay)
 {
 	WISPFUN_DEBUG("c67_f3");
 	if (LastScrollTime < g_Ticks && m_ScrollMode)
@@ -160,7 +160,7 @@ void CGUIMinMaxButtons::OnClick()
 	ScrollStep = BaseScrollStep;
 }
 //----------------------------------------------------------------------------------
-void CGUIMinMaxButtons::SetTextParameters(const bool &haveText, const SLIDER_TEXT_POSITION &textPosition, const uchar &font, const ushort &color, const bool &unicode, const int &textWidth, const TEXT_ALIGN_TYPE &align, const ushort &textFlags)
+void CGUIMinMaxButtons::SetTextParameters(bool haveText, SLIDER_TEXT_POSITION textPosition, uchar font, ushort color, bool unicode, int textWidth, TEXT_ALIGN_TYPE align, ushort textFlags)
 {
 	WISPFUN_DEBUG("c67_f5");
 	HaveText = haveText;
@@ -182,7 +182,7 @@ void CGUIMinMaxButtons::PrepareTextures()
 	g_Orion.ExecuteGump(Graphic + 1);
 }
 //----------------------------------------------------------------------------------
-void CGUIMinMaxButtons::Draw(const bool &checktrans)
+void CGUIMinMaxButtons::Draw(bool checktrans)
 {
 	WISPFUN_DEBUG("c67_f7");
 	glUniform1iARB(g_ShaderDrawMode, SDM_NO_COLOR);

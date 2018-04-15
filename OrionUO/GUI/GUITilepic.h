@@ -15,14 +15,14 @@
 class CGUITilepic : public CGUIDrawObject
 {
 public:
-	CGUITilepic(const ushort &graphic, const ushort &color, const int &x, const int &y);
+	CGUITilepic(ushort graphic, ushort color, int x, int y);
 	virtual ~CGUITilepic();
 
 	virtual WISP_GEOMETRY::CSize GetSize();
 
 	virtual void PrepareTextures();
 
-	virtual void Draw(const bool &checktrans = false);
+	virtual void Draw(bool checktrans = false);
 	virtual bool Select();
 };
 //----------------------------------------------------------------------------------

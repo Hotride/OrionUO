@@ -30,17 +30,17 @@ public:
 	//!Рабочая область
 	WISP_GEOMETRY::CRect WorkSpace = WISP_GEOMETRY::CRect();
 
-	CGUIScrollBackground(const uint &serial, const ushort &graphic, const int &x, const int &y, const int &height);
+	CGUIScrollBackground(int serial, ushort graphic, int x, int y, int height);
 	virtual ~CGUIScrollBackground();
 
 	//!Обновить высоту
-	void UpdateHeight(const int &height);
+	void UpdateHeight(int height);
 
 	virtual WISP_GEOMETRY::CSize GetSize() { return WISP_GEOMETRY::CSize(Width, Height); }
 
 	virtual void PrepareTextures();
 
-	virtual void Draw(const bool &checktrans = false);
+	virtual void Draw(bool checktrans = false);
 	virtual bool Select();
 };
 //----------------------------------------------------------------------------------

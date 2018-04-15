@@ -116,7 +116,7 @@ public:
 	@param [__in] graphic Graphic to search
 	@return index if it found or -1 if not found
 	*/
-	int Contains(const ushort &graphic) const;
+	int Contains(ushort graphic) const;
 
 	//!Maximum number of graphics count
 	static const int GRAPHICS_COUNT = 8;
@@ -227,7 +227,7 @@ public:
 	@param [__in] graphic Graphic to search
 	@return index if it found or -1 if not found
 	*/
-	int Contains(const ushort &graphic) const;
+	int Contains(ushort graphic) const;
 
 	//!Maximum number of graphics count
 	static const int GRAPHICS_COUNT = 16;
@@ -298,7 +298,7 @@ public:
 	@param [__in] graphic Graphic to search
 	@return index if it found or -1 if not found
 	*/
-	int Contains(const ushort &graphic) const;
+	int Contains(ushort graphic) const;
 
 	//!Maximum number of graphics count
 	static const int GRAPHICS_COUNT = 8;
@@ -375,7 +375,7 @@ public:
 	@param [__in] graphic Graphic to search
 	@return index if it found or -1 if not found
 	*/
-	int Contains(const ushort &graphic) const;
+	int Contains(ushort graphic) const;
 
 	//!Maximum number of graphics count
 	static const int GRAPHICS_COUNT = 8;
@@ -472,7 +472,7 @@ public:
 	@param [__in] graphic Graphic to search
 	@return index if it found or -1 if not found
 	*/
-	int Contains(const ushort &graphic) const;
+	int Contains(ushort graphic) const;
 
 	//!Maximum number of graphics count
 	static const int GRAPHICS_COUNT = 9;
@@ -567,7 +567,7 @@ public:
 	@param [__in] graphic Graphic to search
 	@return index if it found or -1 if not found
 	*/
-	int Contains(const ushort &graphic) const;
+	int Contains(ushort graphic) const;
 
 	//!Maximum number of graphics count
 	static const int GRAPHICS_COUNT = 16;
@@ -645,7 +645,7 @@ public:
 	@param [__in] graphic Graphic to search
 	@return index if it found or -1 if not found
 	*/
-	int Contains(const ushort &graphic) const;
+	int Contains(ushort graphic) const;
 
 	//!Maximum number of graphics count
 	static const int GRAPHICS_COUNT = 16;
@@ -751,7 +751,7 @@ public:
 	@param [__in] graphic Graphic to search
 	@return index if it found or -1 if not found
 	*/
-	int Contains(const ushort &graphic) const;
+	int Contains(ushort graphic) const;
 
 	//!Maximum number of graphics count
 	static const int GRAPHICS_COUNT = 1;

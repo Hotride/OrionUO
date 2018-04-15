@@ -22,7 +22,7 @@ public:
 	bool Minimized = false;
 	bool LockMoving = false;
 
-	CContainerStackItem(const uint &serial, const short &x, const short &y, const short &minimizedX, const short &minimizedY, const bool &minimized, const bool &lockMoving);
+	CContainerStackItem(int serial, short x, short y, short minimizedX, short minimizedY, bool minimized, bool lockMoving);
 	~CContainerStackItem() {}
 };
 //----------------------------------------------------------------------------------

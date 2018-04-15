@@ -19,7 +19,7 @@ public:
 	char Z = 0;
 
 	CBuildObject() {}
-	CBuildObject(const ushort &graphic, const char &x, const char &y, const char &z)
+	CBuildObject(ushort graphic, char x, char y, char z)
 		: Graphic(graphic), X(x), Y(y), Z(z) {}
 	~CBuildObject() {}
 };
@@ -31,7 +31,7 @@ public:
 	uint Revision = 0;
 
 	CCustomHouse() {}
-	CCustomHouse(const uint &serial, const uint &revision)
+	CCustomHouse(int serial, int revision)
 		: Serial(serial), Revision(revision) {}
 	~CCustomHouse() {}
 
@@ -50,7 +50,7 @@ public:
 
 	void Clear();
 
-	CCustomHouse *Get(const uint &serial);
+	CCustomHouse *Get(int serial);
 
 	void Add(CCustomHouse* house);
 

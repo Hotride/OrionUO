@@ -86,7 +86,7 @@ CMacroObjectString::~CMacroObjectString()
 //----------------------------------------------------------------------------------
 //----------------------------------------CMacro------------------------------------
 //----------------------------------------------------------------------------------
-CMacro::CMacro(const ushort &key, const bool &alt, const bool &ctrl, const bool &shift)
+CMacro::CMacro(ushort key, bool alt, bool ctrl, bool shift)
 : CBaseQueueItem(), Key(key), Alt(alt), Ctrl(ctrl), Shift(shift)
 {
 }

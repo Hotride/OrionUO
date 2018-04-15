@@ -11,7 +11,7 @@
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
 //----------------------------------------------------------------------------------
-CGameObject::CGameObject(const uint &serial)
+CGameObject::CGameObject(int serial)
 : CRenderStaticObject(ROT_GAME_OBJECT, serial, 0, 0, 0, 0, 0),
 LastAnimationChangeTime(GetTickCount())
 {
@@ -48,7 +48,7 @@ CGameObject::~CGameObject()
 #endif //UO_DEBUG_INFO!=0
 }
 //----------------------------------------------------------------------------------
-void CGameObject::SetFlags(const uchar &val)
+void CGameObject::SetFlags(uchar val)
 {
 	WISPFUN_DEBUG("c20_f3");
 	bool poisoned = Poisoned();
@@ -399,7 +399,7 @@ bool CGameObject::Flying()
 Золото ли это
 @return Индекс в таблице золота
 */
-int CGameObject::IsGold(const ushort &graphic)
+int CGameObject::IsGold(ushort graphic)
 {
 	WISPFUN_DEBUG("c20_f14");
 	switch (graphic)
@@ -673,7 +673,7 @@ CGameObject *CGameObject::GetTopObject()
 	return obj;
 }
 //----------------------------------------------------------------------------------
-CGameItem *CGameObject::FindLayer(const int &layer)
+CGameItem *CGameObject::FindLayer(int layer)
 {
 	WISPFUN_DEBUG("c20_f24");
 	QFOR(obj, m_Items, CGameItem*)

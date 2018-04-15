@@ -11,7 +11,7 @@
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
 //----------------------------------------------------------------------------------
-CGumpBulletinBoardItem::CGumpBulletinBoardItem(const uint &serial, const int &x, const int &y, const uchar &variant, const uint &id, const wstring &poster, const wstring &subject, const wstring &dataTime, const wstring &data)
+CGumpBulletinBoardItem::CGumpBulletinBoardItem(int serial, int x, int y, uchar variant, int id, const wstring &poster, const wstring &subject, const wstring &dataTime, const wstring &data)
 : CGumpBaseScroll(GT_BULLETIN_BOARD_ITEM, serial, 0x0820, 250, x, y, false, 70),
 m_Variant(variant)
 {

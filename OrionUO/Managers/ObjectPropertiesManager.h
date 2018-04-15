@@ -19,11 +19,11 @@ public:
 	wstring Data = L"";
 
 	CObjectProperty() {}
-	CObjectProperty(const uint &serial, const uint &revision, const wstring &name, const wstring &data);
+	CObjectProperty(int serial, int revision, const wstring &name, const wstring &data);
 
 	bool Empty();
 
-	wstring CreateTextData(const bool &extended);
+	wstring CreateTextData(bool extended);
 };
 //----------------------------------------------------------------------------------
 typedef map<uint, CObjectProperty> OBJECT_PROPERTIES_MAP;
@@ -42,13 +42,13 @@ public:
 
 	void Reset();
 
-	bool RevisionCheck(const uint &serial, const uint &revision);
+	bool RevisionCheck(int serial, int revision);
 
-	void OnItemClicked(const uint &serial);
+	void OnItemClicked(int serial);
 
-	void Display(const uint &serial);
+	void Display(int serial);
 
-	void Add(const uint &serial, const CObjectProperty &objectProperty);
+	void Add(int serial, const CObjectProperty &objectProperty);
 };
 //----------------------------------------------------------------------------------
 extern CObjectPropertiesManager g_ObjectPropertiesManager;

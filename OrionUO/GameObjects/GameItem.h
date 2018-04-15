@@ -50,7 +50,7 @@ protected:
 	void AddMultiObject(CMultiObject *obj);
 
 public:
-	CGameItem(const uint &serial = 0);
+	CGameItem(int serial = 0);
 	virtual ~CGameItem();
 
 	void CalculateFieldColor();
@@ -59,13 +59,13 @@ public:
 
 	void ClearMultiItems();
 
-	virtual void Draw(const int &x, const int &y);
+	virtual void Draw(int x, int y);
 
-	virtual void Select(const int &x, const int &y);
+	virtual void Select(int x, int y);
 
-	void ClearCustomHouseMultis(const uint &state);
+	void ClearCustomHouseMultis(int state);
 
-	CMultiObject *AddMulti(const ushort &graphic, const ushort &color, const char &x, const char &y, const char &z, const bool &isCustomHouseMulti);
+	CMultiObject *AddMulti(ushort graphic, ushort color, char x, char y, char z, bool isCustomHouseMulti);
 
 	/*!
 	Событие изменения картинки объекта
@@ -96,7 +96,7 @@ public:
 	Загрузка мульти в текущий объект
 	@return 
 	*/
-	void LoadMulti(const bool &dropAlpha);
+	void LoadMulti(bool dropAlpha);
 
 	/*!
 	Получение объекта мульти в заданных координатах
@@ -104,7 +104,7 @@ public:
 	@param [__in] y Координата Y
 	@return Ссылка на мульти или NULL
 	*/
-	CMulti *GetMultiAtXY(const short &x, const short &y);
+	CMulti *GetMultiAtXY(short x, short y);
 
 	/*!
 	Найти объект внутри (рекурсивно) по типу с учетом (и без) цвета
@@ -112,7 +112,7 @@ public:
 	@param [__in_opt] color Цвет предмета
 	@return Ссылка на найденный объект или NULL
 	*/
-	CGameItem *FindItem(const ushort &graphic, const ushort &color = 0xFFFF);
+	CGameItem *FindItem(ushort graphic, ushort color = 0xFFFF);
 };
 //----------------------------------------------------------------------------------
 #endif

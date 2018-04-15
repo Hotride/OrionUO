@@ -137,7 +137,7 @@ void CBaseQueue::Delete(CBaseQueueItem *item)
 @param [__in] index Индекс элемента
 @return
 */
-void CBaseQueue::Delete(const int &index)
+void CBaseQueue::Delete(int index)
 {
 	WISPFUN_DEBUG("c181_f5");
 	//Получим элемент с указанным индексом и удалим его (если есть)
@@ -324,7 +324,7 @@ void CBaseQueue::MoveToBack(CBaseQueueItem *item)
 @param [__in] up Вверх или вниз по очереди
 @return true в случае успешного перемещения
 */
-bool CBaseQueue::Move(CBaseQueueItem *item, const bool &up)
+bool CBaseQueue::Move(CBaseQueueItem *item, bool up)
 {
 	WISPFUN_DEBUG("c181_f13");
 	//Немедленно запишем результат (и исходные данные для первой проверки) в переменную

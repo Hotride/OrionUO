@@ -58,7 +58,7 @@ void CTarget::RequestFromCustomHouse()
 	}
 }
 //----------------------------------------------------------------------------------
-void CTarget::SetLastTargetObject(const uint &serial)
+void CTarget::SetLastTargetObject(int serial)
 {
 	Type = 0;
 	pack32(m_LastData + 7, serial);
@@ -100,7 +100,7 @@ void CTarget::SetMultiData(WISP_DATASTREAM::CDataReader &reader)
 	MultiY = reader.ReadUInt16BE();
 }
 //----------------------------------------------------------------------------------
-void CTarget::SendTargetObject(const uint &serial)
+void CTarget::SendTargetObject(int serial)
 {
 	WISPFUN_DEBUG("c209_f4");
 	if (!Targeting)
@@ -140,7 +140,7 @@ void CTarget::SendTargetObject(const uint &serial)
 	SendTarget();
 }
 //----------------------------------------------------------------------------------
-void CTarget::SendTargetTile(const ushort &tileID, const short &x, const short &y, char z)
+void CTarget::SendTargetTile(ushort tileID, short x, short y, char z)
 {
 	WISPFUN_DEBUG("c209_f5");
 	if (!Targeting)
@@ -187,7 +187,7 @@ void CTarget::SendCancelTarget()
 	}
 }
 //----------------------------------------------------------------------------------
-void CTarget::Plugin_SendTargetObject(const uint &serial)
+void CTarget::Plugin_SendTargetObject(int serial)
 {
 	WISPFUN_DEBUG("c209_f4");
 	if (!Targeting)
@@ -230,7 +230,7 @@ void CTarget::Plugin_SendTargetObject(const uint &serial)
 	Plugin_SendTarget();
 }
 //----------------------------------------------------------------------------------
-void CTarget::Plugin_SendTargetTile(const ushort &tileID, const short &x, const short &y, char z)
+void CTarget::Plugin_SendTargetTile(ushort tileID, short x, short y, char z)
 {
 	WISPFUN_DEBUG("c209_f5");
 	if (!Targeting)
@@ -322,7 +322,7 @@ void CTarget::UnloadMulti()
 	}
 }
 //----------------------------------------------------------------------------------
-void CTarget::LoadMulti(const int &offsetX, const int &offsetY, const char &offsetZ)
+void CTarget::LoadMulti(int offsetX, int offsetY, char offsetZ)
 {
 	WISPFUN_DEBUG("c209_f10");
 	UnloadMulti();
@@ -443,7 +443,7 @@ void CTarget::AddMultiObject(CMultiObject *obj)
 	}
 }
 //----------------------------------------------------------------------------------
-CMulti *CTarget::GetMultiAtXY(const short &x, const short &y)
+CMulti *CTarget::GetMultiAtXY(short x, short y)
 {
 	WISPFUN_DEBUG("c209_f12");
 	CMulti *multi = m_Multi;

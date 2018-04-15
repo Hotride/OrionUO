@@ -30,7 +30,7 @@ public:
 	void ParsePacketData(WISP_DATASTREAM::CDataReader &reader);
 
 	//Содержит ли пати игрока с данным серийником
-	bool Contains(const uint &serial);
+	bool Contains(int serial);
 
 	//Очистить пати
 	void Clear();

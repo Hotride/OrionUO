@@ -11,7 +11,7 @@
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
 //----------------------------------------------------------------------------------
-CGUIBlending::CGUIBlending(const bool &enabled, const GLenum &sFactor, const GLenum &dFactor)
+CGUIBlending::CGUIBlending(bool enabled, GLenum sFactor, GLenum dFactor)
 : CBaseGUI(GOT_BLENDING, 0, 0, 0, 0, 0), SFactor(sFactor), DFactor(dFactor)
 {
 	Enabled = enabled;
@@ -21,7 +21,7 @@ CGUIBlending::~CGUIBlending()
 {
 }
 //----------------------------------------------------------------------------------
-void CGUIBlending::Draw(const bool &checktrans)
+void CGUIBlending::Draw(bool checktrans)
 {
 	WISPFUN_DEBUG("c41_f1");
 	if (Enabled)

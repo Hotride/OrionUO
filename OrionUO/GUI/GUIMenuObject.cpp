@@ -11,7 +11,7 @@
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
 //----------------------------------------------------------------------------------
-CGUIMenuObject::CGUIMenuObject(const uint &serial, const ushort &graphic, const ushort &color, const int &x, const int &y, const string &text)
+CGUIMenuObject::CGUIMenuObject(int serial, ushort graphic, ushort color, int x, int y, const string &text)
 : CGUITilepic(graphic, color, x, y), Text(text)
 {
 	Serial = serial;

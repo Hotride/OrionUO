@@ -20,7 +20,7 @@ private:
 	*/
 	int GetNonpartyStatusbarsCount();
 
-	void SaveDefaultGumpProperties(WISP_FILE::CBinaryFileWritter &writer, CGump *gump, const int &size);
+	void SaveDefaultGumpProperties(WISP_FILE::CBinaryFileWritter &writer, CGump *gump, int size);
 
 public:
 	CGumpManager() : CBaseQueue() {}
@@ -40,7 +40,7 @@ public:
 	@param [__in] Type Тип гампа
 	@return Ссылку на обновленный гамп или NULL
 	*/
-	CGump *UpdateContent(const uint &serial, const uint &id, const GUMP_TYPE &type);
+	CGump *UpdateContent(int serial, int id, const GUMP_TYPE &type);
 
 	/*!
 	Обновить гамп
@@ -49,7 +49,7 @@ public:
 	@param [__in] Type Тип гампа
 	@return Ссылку на обновленный гамп или NULL
 	*/
-	CGump *UpdateGump(const uint &serial, const uint &id, const GUMP_TYPE &type);
+	CGump *UpdateGump(int serial, int id, const GUMP_TYPE &type);
 
 	/*!
 	Найти гамп
@@ -58,7 +58,7 @@ public:
 	@param [__in] Type Тип гампа
 	@return Ссылку на гамп или NULL
 	*/
-	CGump *GetGump(const uint &serial, const uint &id, const GUMP_TYPE &type);
+	CGump *GetGump(int serial, int id, const GUMP_TYPE &type);
 
 	/*!
 	Получить гамп-владелец текущей активной TEntryText
@@ -117,28 +117,28 @@ public:
 	*/
 	void PrepareTextures();
 
-	void Draw(const bool &blocked);
+	void Draw(bool blocked);
 
-	void Select(const bool &blocked);
+	void Select(bool blocked);
 
 	void InitToolTip();
 
 
 
-	void OnLeftMouseButtonDown(const bool &blocked);
-	bool OnLeftMouseButtonUp(const bool &blocked);
-	bool OnLeftMouseButtonDoubleClick(const bool &blocked);
+	void OnLeftMouseButtonDown(bool blocked);
+	bool OnLeftMouseButtonUp(bool blocked);
+	bool OnLeftMouseButtonDoubleClick(bool blocked);
 
-	void OnRightMouseButtonDown(const bool &blocked);
-	void OnRightMouseButtonUp(const bool &blocked);
-	bool OnRightMouseButtonDoubleClick(const bool &blocked) { return false; }
+	void OnRightMouseButtonDown(bool blocked);
+	void OnRightMouseButtonUp(bool blocked);
+	bool OnRightMouseButtonDoubleClick(bool blocked) { return false; }
 
-	void OnMidMouseButtonScroll(const bool &up, const bool &blocked);
+	void OnMidMouseButtonScroll(bool up, bool blocked);
 
-	void OnDragging(const bool &blocked);
+	void OnDragging(bool blocked);
 
-	bool OnCharPress(const WPARAM &wParam, const LPARAM &lParam, const bool &blocked);
-	bool OnKeyDown(const WPARAM &wParam, const LPARAM &lParam, const bool &blocked);
+	bool OnCharPress(const WPARAM &wParam, const LPARAM &lParam, bool blocked);
+	bool OnKeyDown(const WPARAM &wParam, const LPARAM &lParam, bool blocked);
 
 	void Load(const string &path);
 	void Save(const string &path);

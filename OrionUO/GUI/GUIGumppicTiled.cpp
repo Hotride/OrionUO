@@ -11,7 +11,7 @@
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
 //----------------------------------------------------------------------------------
-CGUIGumppicTiled::CGUIGumppicTiled(const ushort &graphic, const int &x, const int &y, const int &width, const int &height)
+CGUIGumppicTiled::CGUIGumppicTiled(ushort graphic, int x, int y, int width, int height)
 : CGUIDrawObject(GOT_GUMPPICTILED, 0, graphic, 0, x, y), Width(width),
 Height(height)
 {
@@ -21,7 +21,7 @@ CGUIGumppicTiled::~CGUIGumppicTiled()
 {
 }
 //----------------------------------------------------------------------------------
-void CGUIGumppicTiled::Draw(const bool &checktrans)
+void CGUIGumppicTiled::Draw(bool checktrans)
 {
 	WISPFUN_DEBUG("c57_f1");
 	CGLTexture *th = g_Orion.ExecuteGump(Graphic);

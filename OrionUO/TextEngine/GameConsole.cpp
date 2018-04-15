@@ -31,7 +31,7 @@ void CGameConsole::Send()
 	Send(Text);
 }
 //----------------------------------------------------------------------------------
-void CGameConsole::Send(wstring text, const ushort &defaultColor)
+void CGameConsole::Send(wstring text, ushort defaultColor)
 {
 	WISPFUN_DEBUG("c170_f2.1");
 	size_t len = text.length();
@@ -341,7 +341,7 @@ void CGameConsole::SaveConsoleMessage()
 	m_PositionChanged = false;
 }
 //----------------------------------------------------------------------------------
-void CGameConsole::ChangeConsoleMessage(const bool &next)
+void CGameConsole::ChangeConsoleMessage(bool next)
 {
 	WISPFUN_DEBUG("c170_f6");
 	if (m_ConsoleStackCount)

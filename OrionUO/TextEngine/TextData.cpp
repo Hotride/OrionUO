@@ -59,7 +59,7 @@ bool CTextData::CanBeDrawedInJournalGump()
 	return result;
 }
 //---------------------------------------------------------------------------
-void CTextData::GenerateTexture(const int &maxWidth, const ushort &flags, const  TEXT_ALIGN_TYPE &align, const uchar &cell, int font)
+void CTextData::GenerateTexture(int maxWidth, ushort flags, TEXT_ALIGN_TYPE align, uchar cell, int font)
 {
 	WISPFUN_DEBUG("c174_f5");
 	if (Unicode)

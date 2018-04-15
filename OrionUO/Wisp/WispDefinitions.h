@@ -64,7 +64,7 @@ typedef __int64 *pint64;
 #if DEBUGGIND_OUTPUT == 1
 void DebugMsg(const char *format, ...);
 void DebugMsg(const wchar_t *format, ...);
-void DebugDump(puchar data, const int &size);
+void DebugDump(puchar data, int size);
 #else
 #define DebugMsg(...)
 #define DebugDump(buf, size)

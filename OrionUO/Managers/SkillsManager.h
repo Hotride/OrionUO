@@ -21,7 +21,7 @@ public:
 	uchar Status = 0;
 
 	CSkill() {}
-	CSkill(const bool &haveButton, const string &name);
+	CSkill(bool haveButton, const string &name);
 	~CSkill() {}
 };
 //----------------------------------------------------------------------------------
@@ -48,11 +48,11 @@ public:
 
 	void Clear();
 
-	CSkill *Get(const uint &index);
+	CSkill *Get(int index);
 
 	void Sort();
 
-	int GetSortedIndex(const uint &index);
+	int GetSortedIndex(int index);
 
 	void UpdateSkillsSum();
 };

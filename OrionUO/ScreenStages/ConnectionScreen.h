@@ -16,27 +16,27 @@ protected:
     bool m_ConnectionFailed = false;
 public:
     bool GetConnectionFailed() { return m_ConnectionFailed; };
-    void SetConnectionFailed(const bool& val);
+    void SetConnectionFailed(bool val);
 protected:
     bool m_Connected = false;
 public:
     bool GetConnected() { return m_Connected; };
-    void SetConnected(const bool& val);
+    void SetConnected(bool val);
 protected:
     bool m_Completed = false;
 public:
     bool GetCompleted() { return m_Completed; };
-    void SetCompleted(const bool& val);
+    void SetCompleted(bool val);
 protected:
     int m_ErrorCode = 0;
 public:
     int GetErrorCode() { return m_ErrorCode; };
-    void SetErrorCode(const int& val);
+    void SetErrorCode(int val);
 protected:
     CONNECTION_SCREEN_TYPE m_Type = CST_LOGIN;
 public:
     CONNECTION_SCREEN_TYPE GetType() { return m_Type; };
-    void SetType(const CONNECTION_SCREEN_TYPE& val);
+    void SetType(CONNECTION_SCREEN_TYPE val);
 protected:
     string m_Text = "";
 public:

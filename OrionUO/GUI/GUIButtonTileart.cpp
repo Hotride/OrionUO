@@ -11,7 +11,7 @@
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
 //----------------------------------------------------------------------------------
-CGUIButtonTileart::CGUIButtonTileart(const uint &serial, const ushort &graphic, const ushort &graphicSelected, const ushort &graphicPressed, const int &x, const int &y, const ushort &tileGraphic, const ushort &tileColor, const int &tileX, const int &tileY)
+CGUIButtonTileart::CGUIButtonTileart(int serial, ushort graphic, ushort graphicSelected, ushort graphicPressed, int x, int y, ushort tileGraphic, ushort tileColor, int tileX, int tileY)
 : CGUIButton(serial, graphic, graphicSelected, graphicPressed, x, y),
 TileGraphic(tileGraphic), TileColor(tileColor), TileX(tileX), TileY(tileY)
 {
@@ -65,7 +65,7 @@ void CGUIButtonTileart::PrepareTextures()
 	g_Orion.ExecuteStaticArt(TileGraphic);
 }
 //----------------------------------------------------------------------------------
-void CGUIButtonTileart::Draw(const bool &checktrans)
+void CGUIButtonTileart::Draw(bool checktrans)
 {
 	WISPFUN_DEBUG("c45_f3");
 	CGUIDrawObject::Draw(checktrans);

@@ -26,12 +26,12 @@ public:
 	//!Смещение по оси Y
 	int OffsetY = 0;
 
-	CGUIWorldMapTexture(const int &x, const int &y);
+	CGUIWorldMapTexture(int x, int y);
 	virtual ~CGUIWorldMapTexture();
 
 	//virtual WISP_GEOMETRY::CSize GetSize() { return WISP_GEOMETRY::CSize(Width, Height); }
 
-	virtual void Draw(const bool &checktrans = false);
+	virtual void Draw(bool checktrans = false);
 	virtual bool Select();
 };
 //----------------------------------------------------------------------------------

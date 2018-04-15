@@ -54,7 +54,7 @@ public:
 	@param [__in] ticks Таймер рендера
 	@return При выборе объектов возвращает выбранный элемент
 	*/
-	virtual void Draw(const int &x, const int &y);
+	virtual void Draw(int x, int y);
 
 	/*!
 	Получить текущий индекс картинки

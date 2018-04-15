@@ -22,7 +22,7 @@ CGumpScreenConnection::~CGumpScreenConnection()
 {
 }
 //----------------------------------------------------------------------------------
-void CGumpScreenConnection::CreateText(const int &x, const int &y, string str, const uchar &font)
+void CGumpScreenConnection::CreateText(int x, int y, string str, uchar font)
 {
 	WISPFUN_DEBUG("c113_f1");
 	if (g_ConnectionScreen.GetText().length())

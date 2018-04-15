@@ -380,7 +380,7 @@ int GetTopObjDistance(CGameObject *current, CGameObject *target)
 	return 100500;
 }
 //---------------------------------------------------------------------------
-const char *GetReagentName(const ushort &id)
+const char *GetReagentName(ushort id)
 {
 	switch (id)
 	{

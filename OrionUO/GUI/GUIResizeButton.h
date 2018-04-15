@@ -15,7 +15,7 @@
 class CGUIResizeButton : public CGUIButton
 {
 public:
-	CGUIResizeButton(const uint &serial, const ushort &graphic, const ushort &graphicSelected, const ushort &graphicPressed, const int &x, const int &y);
+	CGUIResizeButton(int serial, ushort graphic, ushort graphicSelected, ushort graphicPressed, int x, int y);
 	virtual ~CGUIResizeButton();
 
 	virtual bool IsPressedOuthit() { return true; }

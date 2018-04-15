@@ -34,7 +34,7 @@ public:
 	GUMP_SLIDER_CLICK_EVENT_H;
 	GUMP_SLIDER_MOVE_EVENT_H;
 
-	virtual void OnSelectColor(const ushort &color);
+	virtual void OnSelectColor(ushort color);
 };
 //----------------------------------------------------------------------------------
 #endif

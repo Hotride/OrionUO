@@ -11,7 +11,7 @@
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
 //----------------------------------------------------------------------------------
-CMultiObject::CMultiObject(const ushort &graphic, const short &x, const short &y, const char &z, const uint &flags)
+CMultiObject::CMultiObject(ushort graphic, short x, short y, char z, int flags)
 : CRenderStaticObject(ROT_MULTI_OBJECT, 0, graphic, 0, x, y, z), OnTarget(flags == 2)
 {
 	WISPFUN_DEBUG("c25_f1");
@@ -43,7 +43,7 @@ void CMultiObject::UpdateGraphicBySeason()
 	}
 }
 //----------------------------------------------------------------------------------
-void CMultiObject::Draw(const int &x, const int &y)
+void CMultiObject::Draw(int x, int y)
 {
 	WISPFUN_DEBUG("c25_f3");
 
@@ -102,7 +102,7 @@ void CMultiObject::Draw(const int &x, const int &y)
 	}
 }
 //----------------------------------------------------------------------------------
-void CMultiObject::Select(const int &x, const int &y)
+void CMultiObject::Select(int x, int y)
 {
 	WISPFUN_DEBUG("c25_f4");
 	if (!OnTarget)

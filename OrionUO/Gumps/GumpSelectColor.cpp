@@ -108,7 +108,7 @@ void CGumpSelectColor::GUMP_SLIDER_MOVE_EVENT_C
 	}
 }
 //----------------------------------------------------------------------------------
-void CGumpSelectColor::OnSelectColor(const ushort &color)
+void CGumpSelectColor::OnSelectColor(ushort color)
 {
 	WISPFUN_DEBUG("c121_f5");
 	CGumpOptions *gump = (CGumpOptions*)g_GumpManager.UpdateGump(0, 0, GT_OPTIONS);

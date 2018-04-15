@@ -11,7 +11,7 @@
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
 //----------------------------------------------------------------------------------
-CGUIChecktrans::CGUIChecktrans(const int &x, const int &y, const int &width, const int &height)
+CGUIChecktrans::CGUIChecktrans(int x, int y, int width, int height)
 : CGUIPolygonal(GOT_CHECKTRANS, x, y, width, height)
 {
 }
@@ -20,7 +20,7 @@ CGUIChecktrans::~CGUIChecktrans()
 {
 }
 //----------------------------------------------------------------------------------
-void CGUIChecktrans::Draw(const bool &checktrans)
+void CGUIChecktrans::Draw(bool checktrans)
 {
 	WISPFUN_DEBUG("c47_f1");
 	glColorMask(false, false, false, false);

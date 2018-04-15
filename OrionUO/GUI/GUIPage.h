@@ -18,7 +18,7 @@ public:
 	//!Индекс страницы
 	int Index = 0;
 
-	CGUIPage(const int &index);
+	CGUIPage(int index);
 	virtual ~CGUIPage();
 };
 //----------------------------------------------------------------------------------

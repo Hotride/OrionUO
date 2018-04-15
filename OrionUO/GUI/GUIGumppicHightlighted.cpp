@@ -11,7 +11,7 @@
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
 //----------------------------------------------------------------------------------
-CGUIGumppicHightlighted::CGUIGumppicHightlighted(const uint &serial, const ushort &graphic, const ushort &color, const ushort &selectedColor, const int &x, const int &y)
+CGUIGumppicHightlighted::CGUIGumppicHightlighted(int serial, ushort graphic, ushort color, ushort selectedColor, int x, int y)
 : CGUIDrawObject(GOT_GUMPPICHIGHTLIGHTED, serial, graphic, color, x, y),
 SelectedColor(selectedColor)
 {

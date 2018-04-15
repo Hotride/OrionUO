@@ -25,7 +25,7 @@ protected:
     int m_ShowItemsCount = 0;
 public:
     int GetShowItemsCount() { return m_ShowItemsCount; };
-    void SetShowItemsCount(const int& val);
+    void SetShowItemsCount(int val);
 
 	//!Ширина в свернутом состоянии (только для отрисовки Resizepic)
 	int Width = 0;
@@ -77,7 +77,7 @@ private:
 	class CGUIText *Text{ NULL };
 
 public:
-	CGUIComboBox(const uint &serial, const ushort &graphic, const bool &compositeBackground, const ushort &openGraphic, const int &x, const int &y, const int &width, const int &showItemsCount, const bool &showMaximizedCenter);
+	CGUIComboBox(int serial, ushort graphic, bool compositeBackground, ushort openGraphic, int x, int y, int width, int showItemsCount, bool showMaximizedCenter);
 	virtual ~CGUIComboBox();
 
 	//!Установить текст
@@ -90,7 +90,7 @@ public:
 
 	virtual void PrepareTextures();
 
-	virtual void Draw(const bool &checktrans = false);
+	virtual void Draw(bool checktrans = false);
 	virtual bool Select();
 
 	//!Получить ссылку на выбранный элемент списка (или на самого себя)

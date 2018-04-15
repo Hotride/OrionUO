@@ -13,7 +13,7 @@
 //----------------------------------------------------------------------------------
 CImageBounds g_PlayerRect(0, 0, 0, 0);
 //----------------------------------------------------------------------------------
-CImageBounds::CImageBounds(const int &x, const int &y, const int &width, const int &height)
+CImageBounds::CImageBounds(int x, int y, int width, int height)
 : X(x), Y(y), Width(width), Height(height)
 {
 }
@@ -59,7 +59,7 @@ bool CImageBounds::InRect(const CImageBounds &ib)
 	return inRect;
 }
 //----------------------------------------------------------------------------------
-CTextImageBounds::CTextImageBounds(const int &x, const int &y, const int &width, const int &height, CRenderTextObject *text)
+CTextImageBounds::CTextImageBounds(int x, int y, int width, int height, CRenderTextObject *text)
 : CImageBounds(x, y, width, height), Text(text)
 {
 }

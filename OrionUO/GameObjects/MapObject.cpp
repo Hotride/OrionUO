@@ -11,7 +11,7 @@
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
 //----------------------------------------------------------------------------------
-CMapObject::CMapObject(const RENDER_OBJECT_TYPE &type, const uint &serial, const ushort &graphic, const ushort &color, const short &x, const short &y, const char &z)
+CMapObject::CMapObject(RENDER_OBJECT_TYPE type, int serial, ushort graphic, ushort color, short x, short y, char z)
 : CRenderWorldObject(type, serial, graphic, color, x, y, z)
 {
 }

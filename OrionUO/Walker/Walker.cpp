@@ -28,7 +28,7 @@ void CWalker::Reset()
 	LastStepRequestTime = 0;
 }
 //----------------------------------------------------------------------------------
-void CWalker::DenyWalk(const uchar &sequence, const int &x, const int &y, const char &z)
+void CWalker::DenyWalk(uchar sequence, int x, int y, char z)
 {
 	g_Player->m_Steps.clear();
 
@@ -64,7 +64,7 @@ void CWalker::DenyWalk(const uchar &sequence, const int &x, const int &y, const 
 	}
 }
 //----------------------------------------------------------------------------------
-void CWalker::ConfirmWalk(const uchar &sequence)
+void CWalker::ConfirmWalk(uchar sequence)
 {
 	if (UnacceptedPacketsCount)
 		UnacceptedPacketsCount--;

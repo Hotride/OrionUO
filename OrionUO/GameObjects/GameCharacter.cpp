@@ -11,7 +11,7 @@
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
 //----------------------------------------------------------------------------------
-CGameCharacter::CGameCharacter(const uint &serial)
+CGameCharacter::CGameCharacter(int serial)
 : CGameObject(serial), Hits(0), MaxHits(0), LastStepSoundTime(GetTickCount()),
 TimeToRandomFidget(GetTickCount() + RANDOM_FIDGET_ANIMATION_DELAY)
 {
@@ -95,7 +95,7 @@ void CGameCharacter::UpdateTextCoordinates()
 	}
 }
 //----------------------------------------------------------------------------------
-void CGameCharacter::UpdateHitsTexture(const uchar &hits)
+void CGameCharacter::UpdateHitsTexture(uchar hits)
 {
 	WISPFUN_DEBUG("c15_f3");
 	if (HitsPercent != hits || m_HitsTexture.Empty())
@@ -279,7 +279,7 @@ int CGameCharacter::IsSitting()
 @param [__in] ticks Таймер рендера
 @return При выборе объектов возвращает выбранный элемент
 */
-void CGameCharacter::Draw(const int &x, const int &y)
+void CGameCharacter::Draw(int x, int y)
 {
 	WISPFUN_DEBUG("c15_f5");
 	if (TimeToRandomFidget < g_Ticks)
@@ -301,7 +301,7 @@ void CGameCharacter::Draw(const int &x, const int &y)
 	DrawEffects(x, y);
 }
 //----------------------------------------------------------------------------------
-void CGameCharacter::Select(const int &x, const int &y)
+void CGameCharacter::Select(int x, int y)
 {
 	WISPFUN_DEBUG("c15_f6");
 	if (g_AnimationManager.CharacterPixelsInXY(this, x, y))
@@ -380,7 +380,7 @@ void CGameCharacter::OnGraphicChange(int direction)
 @param [__out_opt] frameDirection Направление прокрутки кадров (вперед/назад)
 @return 
 */
-void CGameCharacter::SetAnimation(const uchar &id, const uchar &interval, const uchar &frameCount, const uchar &repeatCount, const bool &repeat, const bool &frameDirection)
+void CGameCharacter::SetAnimation(uchar id, uchar interval, uchar frameCount, uchar repeatCount, bool repeat, bool frameDirection)
 {
 	WISPFUN_DEBUG("c15_f10");
 	AnimationGroup = id;
@@ -401,7 +401,7 @@ void CGameCharacter::SetAnimation(const uchar &id, const uchar &interval, const 
 @param [__in] val Новое значение группы анимации
 @return
 */
-void CGameCharacter::ResetAnimationGroup(const uchar &val)
+void CGameCharacter::ResetAnimationGroup(uchar val)
 {
 	WISPFUN_DEBUG("c15_f11");
 	AnimationFrameCount = 0;
@@ -452,7 +452,7 @@ void CGameCharacter::SetRandomFidgetAnimation()
 @param [__inout] animation Индекс группы анимации
 @return
 */
-void CGameCharacter::GetAnimationGroup(const ANIMATION_GROUPS &group, uchar &animation)
+void CGameCharacter::GetAnimationGroup(ANIMATION_GROUPS group, uchar &animation)
 {
 	WISPFUN_DEBUG("c15_f13");
 	const uchar animAssociateTable[PAG_ANIMATION_COUNT][3] =
@@ -505,7 +505,7 @@ void CGameCharacter::GetAnimationGroup(const ANIMATION_GROUPS &group, uchar &ani
 @param [__inout] animation Индекс анимации в группе
 @return 
 */
-void CGameCharacter::CorrectAnimationGroup(const ushort &graphic, const ANIMATION_GROUPS &group, uchar &animation)
+void CGameCharacter::CorrectAnimationGroup(ushort graphic, ANIMATION_GROUPS group, uchar &animation)
 {
 	WISPFUN_DEBUG("c15_f14");
 	if (group == AG_LOW)
@@ -569,7 +569,7 @@ void CGameCharacter::CorrectAnimationGroup(const ushort &graphic, const ANIMATIO
 @param [__in] group Индекс группы анимации
 @return Можно изменять направление или нет
 */
-bool CGameCharacter::TestStepNoChangeDirection(const uchar &group)
+bool CGameCharacter::TestStepNoChangeDirection(uchar group)
 {
 	WISPFUN_DEBUG("c15_f15");
 	bool result = false;
@@ -827,7 +827,7 @@ ushort CGameCharacter::GetMountAnimation()
 @param [__in] canChange Можно ли изменять состояние стека хотьбы или нет
 @return 
 */
-void CGameCharacter::UpdateAnimationInfo(BYTE &dir, const bool &canChange)
+void CGameCharacter::UpdateAnimationInfo(BYTE &dir, bool canChange)
 {
 	WISPFUN_DEBUG("c15_f18");
 	dir = Direction & 7;

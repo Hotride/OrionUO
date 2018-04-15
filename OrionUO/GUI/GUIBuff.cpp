@@ -11,7 +11,7 @@
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
 //----------------------------------------------------------------------------------
-CGUIBuff::CGUIBuff(const ushort &graphic, const uint &timer, const wstring &text)
+CGUIBuff::CGUIBuff(ushort graphic, int timer, const wstring &text)
 : CGUIDrawObject(GOT_BUFF, 0, graphic, 0, 0, 0), Timer(timer), Text(text)
 {
 }
@@ -20,7 +20,7 @@ CGUIBuff::~CGUIBuff()
 {
 }
 //----------------------------------------------------------------------------------
-void CGUIBuff::Draw(const bool &checktrans)
+void CGUIBuff::Draw(bool checktrans)
 {
 	WISPFUN_DEBUG("c42_f1");
 	CGLTexture *th = g_Orion.ExecuteGump(GetDrawGraphic());

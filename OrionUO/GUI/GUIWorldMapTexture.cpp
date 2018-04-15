@@ -11,7 +11,7 @@
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
 //----------------------------------------------------------------------------------
-CGUIWorldMapTexture::CGUIWorldMapTexture(const int &x, const int &y)
+CGUIWorldMapTexture::CGUIWorldMapTexture(int x, int y)
 : CBaseGUI(GOT_EXTERNALTEXTURE, 0, 0, 0, x, y)
 {
 }
@@ -20,7 +20,7 @@ CGUIWorldMapTexture::~CGUIWorldMapTexture()
 {
 }
 //----------------------------------------------------------------------------------
-void CGUIWorldMapTexture::Draw(const bool &checktrans)
+void CGUIWorldMapTexture::Draw(bool checktrans)
 {
 	WISPFUN_DEBUG("c83_f1");
 	if (g_MapTexture[Index].Texture != 0)

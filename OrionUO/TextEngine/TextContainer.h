@@ -17,7 +17,7 @@ public:
 	int MaxSize = 0;
 	int Size = 0;
 
-	CTextContainer(const int &maxSize);
+	CTextContainer(int maxSize);
 	~CTextContainer();
 
 	//Добавить текст
@@ -30,7 +30,7 @@ public:
 	virtual void Clear();
 
 	//Отрисовать системный чат
-	void DrawSystemChat(const int &x, const int &y, const int &height);
+	void DrawSystemChat(int x, int y, int height);
 };
 //----------------------------------------------------------------------------------
 extern CTextContainer g_SystemChat;

@@ -11,7 +11,7 @@
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
 //----------------------------------------------------------------------------------
-CGUIShopItem::CGUIShopItem(const uint &serial, const ushort &graphic, const ushort &color, const uint &count, const uint &price, const string &name, const int &x, const int &y)
+CGUIShopItem::CGUIShopItem(int serial, ushort graphic, ushort color, int count, int price, const string &name, int x, int y)
 : CBaseGUI(GOT_SHOPITEM, serial, graphic, color, x, y), Count(count), Price(price),
 Name(name)
 {
@@ -123,7 +123,7 @@ void CGUIShopItem::CreateNameText()
 	g_FontManager.GenerateA(9, m_NameText, str, textColor, 90);
 }
 //----------------------------------------------------------------------------------
-void CGUIShopItem::CreateCountText(const int &lostCount)
+void CGUIShopItem::CreateCountText(int lostCount)
 {
 	WISPFUN_DEBUG("c73_f5");
 	ushort textColor = 0x021F;
@@ -197,7 +197,7 @@ void CGUIShopItem::SetShaderMode()
 		glUniform1iARB(g_ShaderDrawMode, SDM_NO_COLOR);
 }
 //----------------------------------------------------------------------------------
-void CGUIShopItem::Draw(const bool &checktrans)
+void CGUIShopItem::Draw(bool checktrans)
 {
 	WISPFUN_DEBUG("c73_f8");
 	CGLTexture *th = NULL;

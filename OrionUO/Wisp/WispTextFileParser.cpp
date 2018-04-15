@@ -392,13 +392,13 @@ void CTextFileWritter::WriteString(const string &key, const string &value)
 		fputs(string(key + "=" + value + "\n").c_str(), m_File);
 }
 //----------------------------------------------------------------------------------
-void CTextFileWritter::WriteInt(const string &key, const int &value)
+void CTextFileWritter::WriteInt(const string &key, int value)
 {
 	if (m_File != NULL)
 		fputs(string(key + "=" + std::to_string(value) + "\n").c_str(), m_File);
 }
 //----------------------------------------------------------------------------------
-void CTextFileWritter::WriteBool(const string &key, const bool &value)
+void CTextFileWritter::WriteBool(const string &key, bool value)
 {
 	if (m_File != NULL)
 		fputs(string(key + "=" + (value ? "yes" : "no") + "\n").c_str(), m_File);

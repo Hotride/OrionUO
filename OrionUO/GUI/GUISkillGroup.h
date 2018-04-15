@@ -19,10 +19,10 @@ protected:
     bool m_Minimized = false;
 public:
     bool GetMinimized() { return m_Minimized; };
-    void SetMinimized(const bool& val);
+    void SetMinimized(bool val);
 
 public:
-	CGUISkillGroup(const uint &serial, const uint &minimizeSerial, class CSkillGroupObject *group, const int &x, const int &y);
+	CGUISkillGroup(int serial, int minimizeSerial, class CSkillGroupObject *group, int x, int y);
 	virtual ~CGUISkillGroup();
 
 	//!Компоненты управления
@@ -37,7 +37,7 @@ public:
 
 	virtual bool EntryPointerHere();
 
-	virtual void Draw(const bool &checktrans = false);
+	virtual void Draw(bool checktrans = false);
 	virtual bool Select();
 
 	//!Получить ссылку на выбранную компоненту или на себя

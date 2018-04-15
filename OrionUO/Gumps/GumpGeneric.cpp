@@ -71,7 +71,7 @@ void CGumpGeneric::InitToolTip()
 	}
 }
 //----------------------------------------------------------------------------------
-void CGumpGeneric::AddText(const int &index, const wstring &text, CBaseGUI *start, const bool &backbroundCanBeColored)
+void CGumpGeneric::AddText(int index, const wstring &text, CBaseGUI *start, bool backbroundCanBeColored)
 {
 	WISPFUN_DEBUG("c96_f1");
 	if (start == NULL)

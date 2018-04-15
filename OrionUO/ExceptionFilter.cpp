@@ -6,7 +6,7 @@
 #include <psapi.h>
 #include <tlhelp32.h>
 //----------------------------------------------------------------------------------
-string GetMemStorageText(const uint &storage)
+string GetMemStorageText(int storage)
 {
 	switch (storage)
 	{
@@ -196,7 +196,7 @@ LONG __stdcall OrionUnhandledExceptionFilter(struct _EXCEPTION_POINTERS *excepti
 
 				UINT_LIST list = COrion::FindPattern(file.Start, (int)file.Size, pattern);
 
-				for (const int &item : list)
+				for (int item : list)
 					CRASHLOG("Address in exe (by EIP): 0x%08X\n", item);
 
 				file.Unload();

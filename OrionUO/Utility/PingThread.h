@@ -31,7 +31,7 @@ private:
 	int CalculatePing();
 
 public:
-	CPingThread(const uint &serverID, const string &serverIP, const int &requestsCount);
+	CPingThread(int serverID, const string &serverIP, int requestsCount);
 	virtual ~CPingThread();
 
 	static const uint MessageID = WM_USER + 401;

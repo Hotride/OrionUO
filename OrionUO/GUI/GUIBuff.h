@@ -30,10 +30,10 @@ public:
 	//!Текущее значение альфа-канала
 	uchar Alpha = 0xFF;
 
-	CGUIBuff(const ushort &graphic, const uint &timer, const wstring &text);
+	CGUIBuff(ushort graphic, int timer, const wstring &text);
 	virtual ~CGUIBuff();
 
-	virtual void Draw(const bool &checktrans = false);
+	virtual void Draw(bool checktrans = false);
 };
 //----------------------------------------------------------------------------------
 #endif

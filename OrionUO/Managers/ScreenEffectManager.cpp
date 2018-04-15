@@ -107,7 +107,7 @@ void CScreenEffectManager::Draw()
 		glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 	}
 }//---------------------------------------------------------------------------
-bool CScreenEffectManager::Use(const SCREEN_EFFECT_MODE &mode, const SCREEN_EFFECT_TYPE &type, const bool &ignoreEnabled)
+bool CScreenEffectManager::Use(const SCREEN_EFFECT_MODE &mode, const SCREEN_EFFECT_TYPE &type, bool ignoreEnabled)
 {
 	WISPFUN_DEBUG("c154_f3");
 	if (Enabled || ignoreEnabled)

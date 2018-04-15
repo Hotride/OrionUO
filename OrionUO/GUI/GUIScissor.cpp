@@ -11,7 +11,7 @@
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
 //----------------------------------------------------------------------------------
-CGUIScissor::CGUIScissor(const bool &enabled, const int &baseX, const int &baseY, const int &x, const int &y, const int &width, const int &height)
+CGUIScissor::CGUIScissor(bool enabled, int baseX, int baseY, int x, int y, int width, int height)
 : CGUIPolygonal(GOT_SCISSOR, x, y, width, height), BaseX(baseX), BaseY(baseY)
 {
 	Enabled = enabled;
@@ -21,7 +21,7 @@ CGUIScissor::~CGUIScissor()
 {
 }
 //----------------------------------------------------------------------------------
-void CGUIScissor::Draw(const bool &checktrans)
+void CGUIScissor::Draw(bool checktrans)
 {
 	WISPFUN_DEBUG("c70_f1");
 	if (Enabled)

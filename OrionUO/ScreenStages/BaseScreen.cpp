@@ -23,7 +23,7 @@ CBaseScreen::CBaseScreen(CGump &gump)
 @param [__in] mode true - отрисовка, false - выбор
 @return При выборе объектов - идентификатор выбранного объекта
 */
-void CBaseScreen::Render(const bool &mode)
+void CBaseScreen::Render(bool mode)
 {
 	WISPFUN_DEBUG("c159_f1");
 	if (mode)

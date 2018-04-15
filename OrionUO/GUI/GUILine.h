@@ -33,10 +33,10 @@ class CGUILine : public CBaseGUI
 	uchar ColorA = 0;
 
 public:
-	CGUILine(const int &x, const int &y, const int &targetX, const int &targetY, const uint &polygoneColor);
+	CGUILine(int x, int y, int targetX, int targetY, int polygoneColor);
 	virtual ~CGUILine();
 
-	virtual void Draw(const bool &checktrans = false);
+	virtual void Draw(bool checktrans = false);
 };
 //----------------------------------------------------------------------------------
 #endif

@@ -11,7 +11,7 @@
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
 //----------------------------------------------------------------------------------
-CGameItem::CGameItem(const uint &serial)
+CGameItem::CGameItem(int serial)
 : CGameObject(serial)
 {
 	NPC = false;
@@ -144,7 +144,7 @@ void CGameItem::CalculateFieldColor()
 		FieldColor = 0x038A;
 }
 //----------------------------------------------------------------------------------
-void CGameItem::Draw(const int &x, const int &y)
+void CGameItem::Draw(int x, int y)
 {
 	WISPFUN_DEBUG("c19_f7");
 	if (Container == 0xFFFFFFFF)
@@ -266,7 +266,7 @@ void CGameItem::Draw(const int &x, const int &y)
 @param [__in] ticks Таймер рендера
 @return При выборе объектов возвращает выбранный элемент
 */
-void CGameItem::Select(const int &x, const int &y)
+void CGameItem::Select(int x, int y)
 {
 	WISPFUN_DEBUG("c19_f8");
 	if (Container == 0xFFFFFFFF)
@@ -571,7 +571,7 @@ ushort CGameItem::GetMountAnimation()
 	return graphic;
 }
 //----------------------------------------------------------------------------------
-void CGameItem::ClearCustomHouseMultis(const uint &state)
+void CGameItem::ClearCustomHouseMultis(int state)
 {
 	CMulti *nextMulti = NULL;
 
@@ -607,7 +607,7 @@ void CGameItem::ClearCustomHouseMultis(const uint &state)
 Добавить мульти в текущий объект
 @return
 */
-CMultiObject *CGameItem::AddMulti(const ushort &graphic, const ushort &color, const char &x, const char &y, const char &z, const bool &isCustomHouseMulti)
+CMultiObject *CGameItem::AddMulti(ushort graphic, ushort color, char x, char y, char z, bool isCustomHouseMulti)
 {
 	CMultiObject *mo = NULL;
 
@@ -626,7 +626,7 @@ CMultiObject *CGameItem::AddMulti(const ushort &graphic, const ushort &color, co
 Загрузка мульти в текущий объект
 @return 
 */
-void CGameItem::LoadMulti(const bool &dropAlpha)
+void CGameItem::LoadMulti(bool dropAlpha)
 {
 	WISPFUN_DEBUG("c19_f10");
 	ClearMultiItems();
@@ -823,7 +823,7 @@ void CGameItem::AddMultiObject(CMultiObject *obj)
 @param [__in] y Координата Y
 @return Ссылка на мульти или NULL
 */
-CMulti *CGameItem::GetMultiAtXY(const short &x, const short &y)
+CMulti *CGameItem::GetMultiAtXY(short x, short y)
 {
 	WISPFUN_DEBUG("c19_f12");
 	QFOR(multi, m_Items, CMulti*)
@@ -841,7 +841,7 @@ CMulti *CGameItem::GetMultiAtXY(const short &x, const short &y)
 @param [__in_opt] color Цвет предмета
 @return Ссылка на найденный объект или NULL
 */
-CGameItem *CGameItem::FindItem(const ushort &graphic, const ushort &color)
+CGameItem *CGameItem::FindItem(ushort graphic, ushort color)
 {
 	WISPFUN_DEBUG("c19_f13");
 	CGameItem *item = NULL;

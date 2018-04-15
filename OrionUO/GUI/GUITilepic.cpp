@@ -11,7 +11,7 @@
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
 //----------------------------------------------------------------------------------
-CGUITilepic::CGUITilepic(const ushort &graphic, const ushort &color, const int &x, const int &y)
+CGUITilepic::CGUITilepic(ushort graphic, ushort color, int x, int y)
 : CGUIDrawObject(GOT_TILEPIC, 0, graphic, color, x, y)
 {
 }
@@ -42,7 +42,7 @@ void CGUITilepic::PrepareTextures()
 	g_Orion.ExecuteStaticArt(Graphic);
 }
 //----------------------------------------------------------------------------------
-void CGUITilepic::Draw(const bool &checktrans)
+void CGUITilepic::Draw(bool checktrans)
 {
 	WISPFUN_DEBUG("c80_f3");
 	CGLTexture *th = g_Orion.ExecuteStaticArt(Graphic);

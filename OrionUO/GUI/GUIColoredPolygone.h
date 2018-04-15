@@ -33,13 +33,13 @@ public:
 	//!Флаг выбора текущей компоненты
 	bool Focused = false;
 
-	CGUIColoredPolygone(const uint &serial, const ushort &color, const int &x, const int &y, const int &width, const int &height, const uint &polygoneColor);
+	CGUIColoredPolygone(int serial, ushort color, int x, int y, int width, int height, int polygoneColor);
 	virtual ~CGUIColoredPolygone();
 
 	//!Обновить цвет
-	void UpdateColor(const ushort &color, const uint &polygoneColor);
+	void UpdateColor(ushort color, int polygoneColor);
 
-	virtual void Draw(const bool &checktrans = false);
+	virtual void Draw(bool checktrans = false);
 
 	virtual void OnMouseEnter();
 	virtual void OnMouseExit();

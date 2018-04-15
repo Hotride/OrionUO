@@ -16,7 +16,7 @@ protected:
 
 public:
 	CDataWritter();
-	CDataWritter(const size_t &size, const bool &autoResize = true);
+	CDataWritter(const size_t &size, bool autoResize = true);
 
 	virtual ~CDataWritter();
 
@@ -24,7 +24,7 @@ public:
 	puchar DataPtr() { return &m_Data[0]; }
 	size_t Size() { return m_Data.size(); }
 
-	void Resize(const size_t &newSize, const bool &resetPtr = false);
+	void Resize(const size_t &newSize, bool resetPtr = false);
 	void ResetPtr() { Ptr = &m_Data[0]; }
 
 	void Move(const intptr_t &offset);
@@ -32,36 +32,36 @@ public:
 	void WriteDataBE(const puchar data, const size_t &size, const intptr_t &offset = 0);
 	void WriteDataLE(const puchar data, const size_t &size, const intptr_t &offset = 0);
 
-	void WriteUInt8(const uchar &val, const intptr_t &offset = 0) { WriteDataBE((puchar)&val, sizeof(uchar), offset); }
+	void WriteUInt8(uchar val, const intptr_t &offset = 0) { WriteDataBE((puchar)&val, sizeof(uchar), offset); }
 
-	void WriteUInt16BE(const ushort &val, const intptr_t &offset = 0) { WriteDataBE((puchar)&val, sizeof(ushort), offset); }
-	void WriteUInt16LE(const ushort &val, const intptr_t &offset = 0) { WriteDataLE((puchar)&val, sizeof(ushort), offset); }
+	void WriteUInt16BE(ushort val, const intptr_t &offset = 0) { WriteDataBE((puchar)&val, sizeof(ushort), offset); }
+	void WriteUInt16LE(ushort val, const intptr_t &offset = 0) { WriteDataLE((puchar)&val, sizeof(ushort), offset); }
 
-	void WriteUInt32BE(const uint &val, const intptr_t &offset = 0) { WriteDataBE((puchar)&val, sizeof(uint), offset); }
-	void WriteUInt32LE(const uint &val, const intptr_t &offset = 0) { WriteDataLE((puchar)&val, sizeof(uint), offset); }
+	void WriteUInt32BE(int val, const intptr_t &offset = 0) { WriteDataBE((puchar)&val, sizeof(uint), offset); }
+	void WriteUInt32LE(int val, const intptr_t &offset = 0) { WriteDataLE((puchar)&val, sizeof(uint), offset); }
 
-	void WriteUInt64BE(const uint64 &val, const intptr_t &offset = 0) { WriteDataBE((puchar)&val, sizeof(uint64), offset); }
-	void WriteUInt64LE(const uint64 &val, const intptr_t &offset = 0) { WriteDataLE((puchar)&val, sizeof(uint64), offset); }
+	void WriteUInt64BE(uint64 val, const intptr_t &offset = 0) { WriteDataBE((puchar)&val, sizeof(uint64), offset); }
+	void WriteUInt64LE(uint64 val, const intptr_t &offset = 0) { WriteDataLE((puchar)&val, sizeof(uint64), offset); }
 
-	void WriteInt8(const char &val, const intptr_t &offset = 0) { WriteDataBE((puchar)&val, sizeof(char), offset); }
+	void WriteInt8(char val, const intptr_t &offset = 0) { WriteDataBE((puchar)&val, sizeof(char), offset); }
 
-	void WriteInt16BE(const short &val, const intptr_t &offset = 0) { WriteDataBE((puchar)&val, sizeof(short), offset); }
-	void WriteInt16LE(const short &val, const intptr_t &offset = 0) { WriteDataLE((puchar)&val, sizeof(short), offset); }
+	void WriteInt16BE(short val, const intptr_t &offset = 0) { WriteDataBE((puchar)&val, sizeof(short), offset); }
+	void WriteInt16LE(short val, const intptr_t &offset = 0) { WriteDataLE((puchar)&val, sizeof(short), offset); }
 
-	void WriteInt32BE(const int &val, const intptr_t &offset = 0) { WriteDataBE((puchar)&val, sizeof(int), offset); }
-	void WriteInt32LE(const int &val, const intptr_t &offset = 0) { WriteDataLE((puchar)&val, sizeof(int), offset); }
+	void WriteInt32BE(int val, const intptr_t &offset = 0) { WriteDataBE((puchar)&val, sizeof(int), offset); }
+	void WriteInt32LE(int val, const intptr_t &offset = 0) { WriteDataLE((puchar)&val, sizeof(int), offset); }
 
 	void WriteInt64BE(const __int64 &val, const intptr_t &offset = 0) { WriteDataBE((puchar)&val, sizeof(__int64), offset); }
 	void WriteInt64LE(const __int64 &val, const intptr_t &offset = 0) { WriteDataLE((puchar)&val, sizeof(__int64), offset); }
 
-	void WriteFloatBE(const float &val, const intptr_t &offset = 0) { WriteDataBE((puchar)&val, sizeof(float), offset); }
-	void WriteFloatLE(const float &val, const intptr_t &offset = 0) { WriteDataLE((puchar)&val, sizeof(float), offset); }
+	void WriteFloatBE(float val, const intptr_t &offset = 0) { WriteDataBE((puchar)&val, sizeof(float), offset); }
+	void WriteFloatLE(float val, const intptr_t &offset = 0) { WriteDataLE((puchar)&val, sizeof(float), offset); }
 
-	void WriteDoubleBE(const double &val, const intptr_t &offset = 0) { WriteDataBE((puchar)&val, sizeof(double), offset); }
-	void WriteDoubleLE(const double &val, const intptr_t &offset = 0) { WriteDataLE((puchar)&val, sizeof(double), offset); }
+	void WriteDoubleBE(double val, const intptr_t &offset = 0) { WriteDataBE((puchar)&val, sizeof(double), offset); }
+	void WriteDoubleLE(double val, const intptr_t &offset = 0) { WriteDataLE((puchar)&val, sizeof(double), offset); }
 
-	void WriteString(const string &val, size_t length = 0, const bool &nullTerminated = true, const intptr_t &offset = 0);
-	void WriteWString(const wstring &val, size_t length = 0, const bool &bigEndian = true, const bool &nullTerminated = true, const intptr_t &offset = 0);
+	void WriteString(const string &val, size_t length = 0, bool nullTerminated = true, const intptr_t &offset = 0);
+	void WriteWString(const wstring &val, size_t length = 0, bool bigEndian = true, bool nullTerminated = true, const intptr_t &offset = 0);
 };
 //----------------------------------------------------------------------------------
 class CDataReader
@@ -116,7 +116,7 @@ public:
 	double ReadDoubleLE(const intptr_t &offset = 0) { double val = 0.0; ReadDataLE((puchar)&val, sizeof(double), offset); return val; }
 
 	string ReadString(size_t size = 0, const intptr_t &offset = 0);
-	wstring ReadWString(size_t size = 0, const bool &bigEndian = true, const intptr_t &offset = 0);
+	wstring ReadWString(size_t size = 0, bool bigEndian = true, const intptr_t &offset = 0);
 };
 //----------------------------------------------------------------------------------
 }; //namespace

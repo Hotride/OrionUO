@@ -33,7 +33,7 @@ public:
 	//Высота точки
 	int Height = 0;
 
-	CPathObject(const uint &flags, const int &z, const int &averageZ, const int &height, class CRenderWorldObject *object) : Flags(flags), Z(z), AverageZ(averageZ), Height(height), m_Object(object) {}
+	CPathObject(int flags, int z, int averageZ, int height, class CRenderWorldObject *object) : Flags(flags), Z(z), AverageZ(averageZ), Height(height), m_Object(object) {}
 	virtual ~CPathObject() {}
 
 	class CRenderWorldObject *m_Object;

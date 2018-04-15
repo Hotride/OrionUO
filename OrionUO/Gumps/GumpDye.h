@@ -23,7 +23,7 @@ public:
 
 	virtual void UpdateContent();
 
-	virtual void OnSelectColor(const ushort &color);
+	virtual void OnSelectColor(ushort color);
 
 	GUMP_BUTTON_EVENT_H;
 	GUMP_SLIDER_CLICK_EVENT_H;

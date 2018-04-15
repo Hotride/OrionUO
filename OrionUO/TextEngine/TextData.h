@@ -35,7 +35,7 @@ public:
 	CGLTextTexture m_Texture;
 
 	//Генерация текстуры текста
-	void GenerateTexture(const int &maxWidth, const ushort &flags = 0, const TEXT_ALIGN_TYPE &align = TS_LEFT, const uchar &cell = 30, int font = -1);
+	void GenerateTexture(int maxWidth, ushort flags = 0, TEXT_ALIGN_TYPE align = TS_LEFT, uchar cell = 30, int font = -1);
 };
 //----------------------------------------------------------------------------------
 #endif

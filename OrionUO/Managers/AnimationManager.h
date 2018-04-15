@@ -43,7 +43,7 @@ public:
 	ushort Gump = 0;
 	ushort Color = 0;
 
-	CEquipConvData(const ushort &graphic, const ushort &gump, const ushort &color)
+	CEquipConvData(ushort graphic, ushort gump, ushort color)
 		: Graphic(graphic), Gump(gump), Color(color) {}
 	~CEquipConvData() {}
 };
@@ -107,21 +107,21 @@ private:
 	deque<CTextureAnimationDirection*> m_UsedAnimList;
 
 	//Проверка пикселей картинки в указанных координатах
-	bool TestPixels(class CGameObject *obj, int x, int y, const bool &mirror, uchar &frameIndex, ushort id = 0x0000);
+	bool TestPixels(class CGameObject *obj, int x, int y, bool mirror, uchar &frameIndex, ushort id = 0x0000);
 
 	//Корректировка направления сидячего персонажа, согласно тому. на чем он сидит
 	void FixSittingDirection(uchar &layerDirection, bool &mirror, int &x, int &y);
 
 	//Обобщенная фукнция рисования
-	void Draw(class CGameObject *obj, int x, int y, const bool &mirror, uchar &frameIndex, int id = 0);
+	void Draw(class CGameObject *obj, int x, int y, bool mirror, uchar &frameIndex, int id = 0);
 
 	void DrawIntoFrameBuffer(class CGameCharacter *obj, int x, int y);
 
 	//!Рисуем слои одетой одежды на чаре, вычисляем исключающие друг-друга слои.
-	bool DrawEquippedLayers(const bool &selection, class CGameObject *obj, const int &drawX, const int &drawY, const bool &mirror, const uchar &layerDir, uchar animIndex, const int &lightOffset);
+	bool DrawEquippedLayers(bool selection, class CGameObject *obj, int drawX, int drawY, bool mirror, uchar layerDir, uchar animIndex, int lightOffset);
 
 	//!Находится-ли данный слой под робой
-	bool IsCovered(const int &layer, class CGameObject *owner);
+	bool IsCovered(int layer, class CGameObject *owner);
 
 	bool m_Transform = false;
 
@@ -136,18 +136,18 @@ private:
 	//Чтение указанных в аргументах данных о кадре.
 	void ReadUOPFrameData(short &imageCenterX, short &imageCenterY, short &imageWidth, short &imageHeight, pushort &palette, UOPFrameData &frameData);
 
-	uchar GetObjectNewAnimationType_0(CGameCharacter *obj, const ushort &action, const uchar &mode);
-	uchar GetObjectNewAnimationType_1_2(CGameCharacter *obj, const ushort &action, const uchar &mode);
-	uchar GetObjectNewAnimationType_3(CGameCharacter *obj, const ushort &action, const uchar &mode);
-	uchar GetObjectNewAnimationType_4(CGameCharacter *obj, const ushort &action, const uchar &mode);
-	uchar GetObjectNewAnimationType_5(CGameCharacter *obj, const ushort &action, const uchar &mode);
-	uchar GetObjectNewAnimationType_6_14(CGameCharacter *obj, const ushort &action, const uchar &mode);
-	uchar GetObjectNewAnimationType_7(CGameCharacter *obj, const ushort &action, const uchar &mode);
-	uchar GetObjectNewAnimationType_8(CGameCharacter *obj, const ushort &action, const uchar &mode);
-	uchar GetObjectNewAnimationType_9_10(CGameCharacter *obj, const ushort &action, const uchar &mode);
-	uchar GetObjectNewAnimationType_11(CGameCharacter *obj, const ushort &action, const uchar &mode);
+	uchar GetObjectNewAnimationType_0(CGameCharacter *obj, ushort action, uchar mode);
+	uchar GetObjectNewAnimationType_1_2(CGameCharacter *obj, ushort action, uchar mode);
+	uchar GetObjectNewAnimationType_3(CGameCharacter *obj, ushort action, uchar mode);
+	uchar GetObjectNewAnimationType_4(CGameCharacter *obj, ushort action, uchar mode);
+	uchar GetObjectNewAnimationType_5(CGameCharacter *obj, ushort action, uchar mode);
+	uchar GetObjectNewAnimationType_6_14(CGameCharacter *obj, ushort action, uchar mode);
+	uchar GetObjectNewAnimationType_7(CGameCharacter *obj, ushort action, uchar mode);
+	uchar GetObjectNewAnimationType_8(CGameCharacter *obj, ushort action, uchar mode);
+	uchar GetObjectNewAnimationType_9_10(CGameCharacter *obj, ushort action, uchar mode);
+	uchar GetObjectNewAnimationType_11(CGameCharacter *obj, ushort action, uchar mode);
 
-	void ReadFrameDimensionData(ANIMATION_DIMENSIONS &result, uchar frameIndex, const bool &isCorpse);
+	void ReadFrameDimensionData(ANIMATION_DIMENSIONS &result, uchar frameIndex, bool isCorpse);
 	void ReadFramesPixelData(CTextureAnimationDirection &direction);
 
 public:
@@ -165,7 +165,7 @@ public:
 	@param [__in] SizeIdx Размер файла с таблицей адресов
 	@return 
 	*/
-	void Init(const int &graphic, const size_t &addressIdx, const size_t &sizeIdx)
+	void Init(int graphic, const size_t &addressIdx, const size_t &sizeIdx)
 	{
 		m_AddressIdx[graphic] = addressIdx;
 		m_SizeIdx[graphic] = sizeIdx;
@@ -249,7 +249,7 @@ public:
 	@param [__in] z Координата Z
 	@return 
 	*/
-	void DrawCorpse(class CGameItem *obj, const int &x, const int &y);
+	void DrawCorpse(class CGameItem *obj, int x, int y);
 
 	/*!
 	Проверить наличие пикселя трупа в указанных координатах
@@ -259,7 +259,7 @@ public:
 	@param [__in] z Координата Z
 	@return 
 	*/
-	bool CorpsePixelsInXY(class CGameItem *obj, const int &x, const int &y);
+	bool CorpsePixelsInXY(class CGameItem *obj, int x, int y);
 
 	/*!
 	Получить индекс группы смерти анимации
@@ -267,14 +267,14 @@ public:
 	@param [__in] second Группа смерти номер 2
 	@return Индекс группы анимации
 	*/
-	uchar GetDieGroupIndex(const ushort &id, const bool &second);
+	uchar GetDieGroupIndex(ushort id, bool second);
 
 	/*!
 	Получить индекс группы по индексу картинки
 	@param [__in] id Индекс картинки
 	@return Группа анимаций
 	*/
-	ANIMATION_GROUPS GetGroupIndex(const ushort &id);
+	ANIMATION_GROUPS GetGroupIndex(ushort id);
 
 	/*!
 	Существует ли анимация в файле
@@ -282,19 +282,19 @@ public:
 	@param [__in] group Группа анимации
 	@return true в случае успеха
 	*/
-	bool AnimationExists(const ushort &graphic, uchar group);
+	bool AnimationExists(ushort graphic, uchar group);
 
-	ANIMATION_DIMENSIONS GetAnimationDimensions(uchar frameIndex, const ushort &id, const uchar &dir, const uchar &animGroup, const bool &isCorpse);
+	ANIMATION_DIMENSIONS GetAnimationDimensions(uchar frameIndex, ushort id, uchar dir, uchar animGroup, bool isCorpse);
 
-	ANIMATION_DIMENSIONS GetAnimationDimensions(class CGameObject *obj, uchar frameIndex = 0xFF, const uchar &defaultDirection = 0, const uchar &defaultGroup = 0);
+	ANIMATION_DIMENSIONS GetAnimationDimensions(class CGameObject *obj, uchar frameIndex = 0xFF, uchar defaultDirection = 0, uchar defaultGroup = 0);
 
-	void CalculateFrameInformation(FRAME_OUTPUT_INFO &info, class CGameObject *obj, const bool &mirror, const uchar &animIndex);
+	void CalculateFrameInformation(FRAME_OUTPUT_INFO &info, class CGameObject *obj, bool mirror, uchar animIndex);
 
-	struct DRAW_FRAME_INFORMATION CollectFrameInformation(class CGameObject *gameObject, const bool &checkLayers = true);
+	struct DRAW_FRAME_INFORMATION CollectFrameInformation(class CGameObject *gameObject, bool checkLayers = true);
 
-	uchar GetReplacedObjectAnimation(CGameCharacter *obj, const ushort &index);
+	uchar GetReplacedObjectAnimation(CGameCharacter *obj, ushort index);
 
-	uchar GetObjectNewAnimation(CGameCharacter *obj, const ushort &type, const ushort &action, const uchar &delay);
+	uchar GetObjectNewAnimation(CGameCharacter *obj, ushort type, ushort action, uchar delay);
  };
 //----------------------------------------------------------------------------------
 //!Ссылка на менеджер анимаций

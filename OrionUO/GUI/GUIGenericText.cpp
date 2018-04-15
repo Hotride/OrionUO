@@ -11,7 +11,7 @@
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
 //----------------------------------------------------------------------------------
-CGUIGenericText::CGUIGenericText(const uint &index, const ushort &color, const int &x, const int &y, const int &maxWidth)
+CGUIGenericText::CGUIGenericText(int index, ushort color, int x, int y, int maxWidth)
 : CGUIText(color, x, y), TextID(index), MaxWidth(maxWidth)
 {
 }

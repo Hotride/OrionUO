@@ -19,7 +19,7 @@ public:
 	CPartyObject();
 	~CPartyObject() {}
 	class CGameCharacter *Character{ NULL };
-	string GetName(const int &index);
+	string GetName(int index);
 };
 //----------------------------------------------------------------------------------
 #endif

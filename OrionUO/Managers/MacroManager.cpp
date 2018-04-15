@@ -323,7 +323,7 @@ void CMacroManager::Save(const string &path)
 @param [__in] shift Зажатый шифт
 @return Ссылку на макрос или NULL
 */
-CMacro *CMacroManager::FindMacro(const ushort &key, const bool &alt, const bool &ctrl, const bool &shift)
+CMacro *CMacroManager::FindMacro(ushort key, bool alt, bool ctrl, bool shift)
 {
 	WISPFUN_DEBUG("c145_f5");
 	CMacro *obj = (CMacro*)m_Items;

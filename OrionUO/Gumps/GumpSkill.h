@@ -16,7 +16,7 @@ private:
 	static const int ID_GS_LOCK_MOVING = 1;
 
 public:
-	CGumpSkill(const uint &serial, const int &x, const int &y);
+	CGumpSkill(int serial, int x, int y);
 	virtual ~CGumpSkill();
 
 	GUMP_BUTTON_EVENT_H;

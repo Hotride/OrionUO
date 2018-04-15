@@ -21,19 +21,19 @@ protected:
     int m_X = 0;
 public:
     int GetX() { return m_X; };
-    void SetX(const int& val);
+    void SetX(int val);
 protected:
     int m_Y = 0;
 public:
     int GetY() { return m_Y; };
-    void SetY(const int& val);
+    void SetY(int val);
 	int RealDrawX = 0;
 	int RealDrawY = 0;
 	int DrawX = 0;
 	int DrawY = 0;
 	bool Changed = true;
 
-	CRenderObject(const uint &serial, const ushort &graphic, const ushort &color, const short &x, const short &y);
+	CRenderObject(int serial, ushort graphic, ushort color, short x, short y);
 	virtual ~CRenderObject();
 
 	//Подготовка текстур

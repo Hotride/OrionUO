@@ -46,7 +46,7 @@ CGumpMap::~CGumpMap()
 	m_Labels.clear();
 }
 //----------------------------------------------------------------------------------
-void CGumpMap::SetPlotState(const int &val)
+void CGumpMap::SetPlotState(int val)
 {
 	WISPFUN_DEBUG("c99_f2");
 	m_PlotState = val;
@@ -169,7 +169,7 @@ void CGumpMap::PrepareContent()
 	}
 }
 //----------------------------------------------------------------------------------
-void CGumpMap::GenerateFrame(const bool &stop)
+void CGumpMap::GenerateFrame(bool stop)
 {
 	WISPFUN_DEBUG("c99_f5");
 

@@ -28,7 +28,7 @@ CGameEffect::~CGameEffect()
 @param [__in] ticks Таймер рендера
 @return При выборе объектов возвращает выбранный элемент
 */
-void CGameEffect::Draw(const int &x, const int &y)
+void CGameEffect::Draw(int x, int y)
 {
 	WISPFUN_DEBUG("c16_f1");
 #if UO_DEBUG_INFO!=0

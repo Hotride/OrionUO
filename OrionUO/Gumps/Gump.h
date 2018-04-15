@@ -12,17 +12,17 @@
 //----------------------------------------------------------------------------------
 class CBaseGUI;
 //----------------------------------------------------------------------------------
-#define GUMP_BUTTON_EVENT_C OnButton(const uint &serial)
-#define GUMP_CHECKBOX_EVENT_C OnCheckbox(const uint &serial, const bool &state)
-#define GUMP_RADIO_EVENT_C OnRadio(const uint &serial, const bool &state)
-#define GUMP_TEXT_ENTRY_EVENT_C OnTextEntry(const uint &serial)
-#define GUMP_SLIDER_CLICK_EVENT_C OnSliderClick(const uint &serial)
-#define GUMP_SLIDER_MOVE_EVENT_C OnSliderMove(const uint &serial)
-#define GUMP_RESIZE_START_EVENT_C OnResizeStart(const uint &serial)
-#define GUMP_RESIZE_EVENT_C OnResize(const uint &serial)
-#define GUMP_RESIZE_END_EVENT_C OnResizeEnd(const uint &serial)
-#define GUMP_DIRECT_HTML_LINK_EVENT_C OnDirectHTMLLink(const ushort &link)
-#define GUMP_COMBOBOX_SELECTION_EVENT_C OnComboboxSelection(const uint &serial)
+#define GUMP_BUTTON_EVENT_C OnButton(int serial)
+#define GUMP_CHECKBOX_EVENT_C OnCheckbox(int serial, bool state)
+#define GUMP_RADIO_EVENT_C OnRadio(int serial, bool state)
+#define GUMP_TEXT_ENTRY_EVENT_C OnTextEntry(int serial)
+#define GUMP_SLIDER_CLICK_EVENT_C OnSliderClick(int serial)
+#define GUMP_SLIDER_MOVE_EVENT_C OnSliderMove(int serial)
+#define GUMP_RESIZE_START_EVENT_C OnResizeStart(int serial)
+#define GUMP_RESIZE_EVENT_C OnResize(int serial)
+#define GUMP_RESIZE_END_EVENT_C OnResizeEnd(int serial)
+#define GUMP_DIRECT_HTML_LINK_EVENT_C OnDirectHTMLLink(ushort link)
+#define GUMP_COMBOBOX_SELECTION_EVENT_C OnComboboxSelection(int serial)
 #define GUMP_SCROLL_BUTTON_EVENT_C OnScrollButton()
 //----------------------------------------------------------------------------------
 #define GUMP_BUTTON_EVENT_H virtual void GUMP_BUTTON_EVENT_C
@@ -80,17 +80,17 @@ public:
 
 	static void ProcessListing();
 
-	static bool ApplyTransparent(CBaseGUI *item, int page, const int &currentPage, const int draw2Page = 0);
+	static bool ApplyTransparent(CBaseGUI *item, int page, int currentPage, const int draw2Page = 0);
 
-	static void DrawItems(CBaseGUI *start, const int &currentPage, const int &draw2Page = 0);
+	static void DrawItems(CBaseGUI *start, int currentPage, int draw2Page = 0);
 
-	static class CRenderObject *SelectItems(CBaseGUI *start, const int &currentPage, const int &draw2Page = 0);
+	static class CRenderObject *SelectItems(CBaseGUI *start, int currentPage, int draw2Page = 0);
 
-	static void GetItemsSize(CGump *gump, CBaseGUI *start, WISP_GEOMETRY::CPoint2Di &minPosition, WISP_GEOMETRY::CPoint2Di &maxPosition, WISP_GEOMETRY::CPoint2Di &offset, int count, const int &currentPage, const int &draw2Page);
-	static void TestItemsLeftMouseDown(CGump *gump, CBaseGUI *start, const int &currentPage, const int &draw2Page = 0, int count = -1);
-	static void TestItemsLeftMouseUp(CGump *gump, CBaseGUI *start, const int &currentPage, const int &draw2Page = 0);
-	static void TestItemsDragging(CGump *gump, CBaseGUI *start, const int &currentPage, const int &draw2Page = 0, int count = -1);
-	static void TestItemsScrolling(CGump *gump, CBaseGUI *start, const bool &up, const int &currentPage, const int &draw2Page = 0);
+	static void GetItemsSize(CGump *gump, CBaseGUI *start, WISP_GEOMETRY::CPoint2Di &minPosition, WISP_GEOMETRY::CPoint2Di &maxPosition, WISP_GEOMETRY::CPoint2Di &offset, int count, int currentPage, int draw2Page);
+	static void TestItemsLeftMouseDown(CGump *gump, CBaseGUI *start, int currentPage, int draw2Page = 0, int count = -1);
+	static void TestItemsLeftMouseUp(CGump *gump, CBaseGUI *start, int currentPage, int draw2Page = 0);
+	static void TestItemsDragging(CGump *gump, CBaseGUI *start, int currentPage, int draw2Page = 0, int count = -1);
+	static void TestItemsScrolling(CGump *gump, CBaseGUI *start, bool up, int currentPage, int draw2Page = 0);
 
 	virtual void DelayedClick(class CRenderObject *obj) {}
 
@@ -102,7 +102,7 @@ public:
 
 	virtual void PrepareTextures();
 
-	virtual void GenerateFrame(const bool &stop);
+	virtual void GenerateFrame(bool stop);
 
 	virtual bool CanBeDisplayed() { return true; }
 
@@ -150,7 +150,7 @@ public:
 	virtual void OnMidMouseButtonDown() {}
 	virtual void OnMidMouseButtonUp() {}
 	virtual bool OnMidMouseButtonDoubleClick() { return false; }
-	virtual void OnMidMouseButtonScroll(const bool &up);
+	virtual void OnMidMouseButtonScroll(bool up);
 	virtual void OnDragging();
 	virtual void OnCharPress(const WPARAM &wParam, const LPARAM &lParam) {}
 	virtual void OnKeyDown(const WPARAM &wParam, const LPARAM &lParam) {}

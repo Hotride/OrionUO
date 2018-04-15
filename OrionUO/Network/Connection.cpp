@@ -20,7 +20,7 @@ CSocket::~CSocket()
 {
 }
 //----------------------------------------------------------------------------------
-bool CSocket::Connect(const string &address, const int &port)
+bool CSocket::Connect(const string &address, int port)
 {
 	WISPFUN_DEBUG("c158_f1");
 	LOG("Connecting...%s:%i\n", address.c_str(), port);

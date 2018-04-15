@@ -21,7 +21,7 @@ CPathFinder::~CPathFinder()
 {
 }
 //----------------------------------------------------------------------------------
-bool CPathFinder::CreateItemsList(vector<CPathObject> &list, const int &x, const int &y, const int &stepState)
+bool CPathFinder::CreateItemsList(vector<CPathObject> &list, int x, int y, int stepState)
 {
 	WISPFUN_DEBUG("c177_f1");
 	int blockX = x / 8;
@@ -175,7 +175,7 @@ bool CPathFinder::CreateItemsList(vector<CPathObject> &list, const int &x, const
 	return !list.empty();
 }
 //----------------------------------------------------------------------------------
-int CPathFinder::CalculateMinMaxZ(int &minZ, int &maxZ, int newX, int newY, const int &currentZ, int newDirection, const int &stepState)
+int CPathFinder::CalculateMinMaxZ(int &minZ, int &maxZ, int newX, int newY, int currentZ, int newDirection, int stepState)
 {
 	WISPFUN_DEBUG("c177_f2");
 	const int offsetX[10] = { 0, 1, 1, 1, 0, -1, -1, -1, 0, 1 };
@@ -234,7 +234,7 @@ int CPathFinder::CalculateMinMaxZ(int &minZ, int &maxZ, int newX, int newY, cons
 	return maxZ;
 }
 //----------------------------------------------------------------------------------
-bool CPathFinder::CalculateNewZ(const int &x, const int &y, char &z, const int &direction)
+bool CPathFinder::CalculateNewZ(int x, int y, char &z, int direction)
 {
 	WISPFUN_DEBUG("c177_f3");
 	int stepState = PSS_NORMAL;
@@ -366,7 +366,7 @@ bool CPathFinder::CalculateNewZ(const int &x, const int &y, char &z, const int &
 	return (resultZ != -128);
 }
 //----------------------------------------------------------------------------------
-void CPathFinder::GetNewXY(const uchar &direction, int &x, int &y)
+void CPathFinder::GetNewXY(uchar direction, int &x, int &y)
 {
 	WISPFUN_DEBUG("c177_f4");
 	switch (direction & 7)
@@ -476,7 +476,7 @@ bool CPathFinder::CanWalk(uchar &direction, int &x, int &y, char &z)
 	return passed;
 }
 //----------------------------------------------------------------------------------
-int CPathFinder::GetWalkSpeed(const bool &run, const bool &onMount)
+int CPathFinder::GetWalkSpeed(bool run, bool onMount)
 {
 	WISPFUN_DEBUG("c177_f6");
 	bool mounted = (onMount || (g_SpeedMode == CST_FAST_UNMOUNT || g_SpeedMode == CST_FAST_UNMOUNT_AND_CANT_RUN) || g_Player->Flying());

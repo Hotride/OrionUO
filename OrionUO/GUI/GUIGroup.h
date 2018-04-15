@@ -18,7 +18,7 @@ public:
 	//!Индекс группы. 0 - эквивалентно EndGroup
 	int Index = 0;
 
-	CGUIGroup(const int &index);
+	CGUIGroup(int index);
 	virtual ~CGUIGroup();
 };
 //----------------------------------------------------------------------------------

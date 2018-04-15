@@ -11,7 +11,7 @@
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
 //----------------------------------------------------------------------------------
-CGUICheckbox::CGUICheckbox(const uint &serial, const ushort &graphic, const ushort &graphicChecked, const ushort &graphicDisabled, const int &x, const int &y)
+CGUICheckbox::CGUICheckbox(int serial, ushort graphic, ushort graphicChecked, ushort graphicDisabled, int x, int y)
 : CGUIDrawObject(GOT_CHECKBOX, serial, graphic, 0, x, y), GraphicChecked(graphicChecked),
 GraphicSelected(graphic), GraphicDisabled(graphicDisabled)
 {
@@ -23,7 +23,7 @@ CGUICheckbox::~CGUICheckbox()
 	Text.Clear();
 }
 //----------------------------------------------------------------------------------
-void CGUICheckbox::SetTextParameters(const uchar &font, const wstring &text, const ushort &color, const SLIDER_TEXT_POSITION &textPosition, const int &textWidth, const TEXT_ALIGN_TYPE &align, const ushort &textFlags)
+void CGUICheckbox::SetTextParameters(uchar font, const wstring &text, ushort color, SLIDER_TEXT_POSITION textPosition, int textWidth, TEXT_ALIGN_TYPE align, ushort textFlags)
 {
 	WISPFUN_DEBUG("c46_f2");
 	TextPosition = textPosition;
@@ -31,7 +31,7 @@ void CGUICheckbox::SetTextParameters(const uchar &font, const wstring &text, con
 	UpdateTextPosition();
 }
 //----------------------------------------------------------------------------------
-void CGUICheckbox::SetTextParameters(const uchar &font, const string &text, const ushort &color, const SLIDER_TEXT_POSITION &textPosition, const int &textWidth, const TEXT_ALIGN_TYPE &align, const ushort &textFlags)
+void CGUICheckbox::SetTextParameters(uchar font, const string &text, ushort color, SLIDER_TEXT_POSITION textPosition, int textWidth, TEXT_ALIGN_TYPE align, ushort textFlags)
 {
 	WISPFUN_DEBUG("c46_f3");
 	TextPosition = textPosition;
@@ -149,7 +149,7 @@ ushort CGUICheckbox::GetDrawGraphic()
 	return graphic;
 }
 //----------------------------------------------------------------------------------
-void CGUICheckbox::Draw(const bool &checktrans)
+void CGUICheckbox::Draw(bool checktrans)
 {
 	WISPFUN_DEBUG("c46_f7");
 	CGUIDrawObject::Draw(checktrans);

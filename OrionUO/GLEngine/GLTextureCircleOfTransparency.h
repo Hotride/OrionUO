@@ -21,13 +21,13 @@ public:
 	virtual ~CGLTextureCircleOfTransparency();
 
 	//Создать текстуру
-	static void CreatePixels(const int &radius, short &width, short &height, UINT_LIST &pixels);
+	static void CreatePixels(int radius, short &width, short &height, UINT_LIST &pixels);
 
 	//Создать текстуру
 	bool Create(int radius);
 
 	//Отрисовать текстуру
-	virtual void Draw(const int &x, const int &y, const bool &checktrans = false);
+	virtual void Draw(int x, int y, bool checktrans = false);
 
 	//Отрисовать текстуру
 	void Redraw();

@@ -14,7 +14,7 @@ public:
 	int Height = 0;
 
 	CSize();
-	CSize(const int &width, const int &height);
+	CSize(int width, int height);
 	CSize(const CSize &size);
 
 	virtual ~CSize() {}
@@ -29,8 +29,8 @@ public:
 	int Y = 0;
 
 	CPoint2Di();
-	CPoint2Di(const int &x, const int &y);
-	CPoint2Di(const float &x, const float &y);
+	CPoint2Di(int x, int y);
+	CPoint2Di(float x, float y);
 	CPoint2Di(const CPoint2Di &point);
 	CPoint2Di(const CPoint2Df &point);
 
@@ -46,9 +46,9 @@ public:
 	CSize Size = CSize();
 
 	CRect();
-	CRect(const int &x, const int &y, const int &width, const int &height);
-	CRect(const int &x, const int &y, const CSize &size);
-	CRect(const CPoint2Di &position, const int &width, const int &height);
+	CRect(int x, int y, int width, int height);
+	CRect(int x, int y, const CSize &size);
+	CRect(const CPoint2Di &position, int width, int height);
 	CRect(const CPoint2Di &position, const CSize &size);
 
 	virtual ~CRect() {}
@@ -62,8 +62,8 @@ public:
 	int Z = 0;
 
 	CPoint3Di();
-	CPoint3Di(const int &x, const int &y, const int &z);
-	CPoint3Di(const float &x, const float &y, const float &z);
+	CPoint3Di(int x, int y, int z);
+	CPoint3Di(float x, float y, float z);
 	CPoint3Di(const CPoint2Di &point);
 	CPoint3Di(const CPoint3Di &point);
 	CPoint3Di(const CPoint2Df &point);
@@ -81,8 +81,8 @@ public:
 	float Y = 0.0f;
 
 	CPoint2Df();
-	CPoint2Df(const int &x, const int &y);
-	CPoint2Df(const float &x, const float &y);
+	CPoint2Df(int x, int y);
+	CPoint2Df(float x, float y);
 	CPoint2Df(const CPoint2Di &point);
 	CPoint2Df(const CPoint2Df &point);
 
@@ -97,8 +97,8 @@ public:
 	float Z = 0.0f;
 
 	CPoint3Df();
-	CPoint3Df(const int &x, const int &y, const int &z);
-	CPoint3Df(const float &x, const float &y, const float &z);
+	CPoint3Df(int x, int y, int z);
+	CPoint3Df(float x, float y, float z);
 	CPoint3Df(const CPoint2Di &point);
 	CPoint3Df(const CPoint3Di &point);
 	CPoint3Df(const CPoint2Df &point);

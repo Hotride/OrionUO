@@ -15,7 +15,7 @@ CSpeechManager g_SpeechManager;
 //----------------------------------------------------------------------------------
 //------------------------------------CSpeechItem-----------------------------------
 //----------------------------------------------------------------------------------
-CSpeechItem::CSpeechItem(const ushort &code, const wstring &data)
+CSpeechItem::CSpeechItem(ushort code, const wstring &data)
 : Code(code), Data(data)
 {
 	if (Data.length() && Data[Data.length() - 1] == L'*')

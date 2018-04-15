@@ -36,7 +36,7 @@ private:
 	*/
 	string Load(uint &id);
 
-	inline wstring CamelCaseTest(const bool &toCamelCase, const string &result);
+	inline wstring CamelCaseTest(bool toCamelCase, const string &result);
 
 public:
 	CCliloc(const string &lang);
@@ -51,9 +51,9 @@ public:
 	@param [__in] result Стандартное сообщение, если клилок не был найден
 	@return Полученный результат, замена или сообщение с ошибкой
 	*/
-	wstring Get(const uint &id, const bool &toCamelCase = false, string result = "");
+	wstring Get(int id, bool toCamelCase = false, string result = "");
 
-	string GetA(const uint &id, const bool &toCamelCase = false, string result = "");
+	string GetA(int id, bool toCamelCase = false, string result = "");
 
 	/*!
 	Получить Unicode строку по id (и загрузить при необходимости)
@@ -61,7 +61,7 @@ public:
 	@param [__in] result Стандартное сообщение, если клилок не был найден
 	@return Полученный результат, замена или сообщение с ошибкой
 	*/
-	wstring GetW(const uint &id, const bool &toCamelCase = false, string result = "");
+	wstring GetW(int id, bool toCamelCase = false, string result = "");
 };
 //----------------------------------------------------------------------------------
 //!Класс менеджера клилоков
@@ -85,7 +85,7 @@ public:
 	*/
 	CCliloc *Cliloc(const string &lang);
 
-	wstring ParseArgumentsToClilocString(const uint &cliloc, const bool &toCamelCase, wstring args);
+	wstring ParseArgumentsToClilocString(int cliloc, bool toCamelCase, wstring args);
 };
 //----------------------------------------------------------------------------------
 //!Ссылка на менеджер клилоков

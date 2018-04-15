@@ -147,88 +147,88 @@ public:
 	~CConfigManager() {}
 
 	bool GetSound() { return m_Sound; };
-	void SetSound(const bool& val);
+	void SetSound(bool val);
 
 	bool GetMusic() { return m_Music; };
-	void SetMusic(const bool& val);
+	void SetMusic(bool val);
 
 	uchar GetSoundVolume() { return m_SoundVolume; };
-	void SetSoundVolume(const uchar& val);
+	void SetSoundVolume(uchar val);
 
 	uchar GetMusicVolume() { return m_MusicVolume; };
-	void SetMusicVolume(const uchar& val);
+	void SetMusicVolume(uchar val);
 
 	uchar GetClientFPS() { return m_ClientFPS; };
-	void SetClientFPS(const uchar& val);
+	void SetClientFPS(uchar val);
 
 	bool GetUseScaling() { return m_UseScaling; };
-	void SetUseScaling(const bool& val);
+	void SetUseScaling(bool val);
 
 	uchar GetDrawStatusState() { return m_DrawStatusState; };
-	void SetDrawStatusState(const uchar& val);
+	void SetDrawStatusState(uchar val);
 
 	bool GetDrawStumps() { return m_DrawStumps; };
-	void SetDrawStumps(const bool& val);
+	void SetDrawStumps(bool val);
 
 	bool GetMarkingCaves() { return m_MarkingCaves; };
-	void SetMarkingCaves(const bool& val);
+	void SetMarkingCaves(bool val);
 
 	bool GetNoVegetation() { return m_NoVegetation; };
-	void SetNoVegetation(const bool& val);
+	void SetNoVegetation(bool val);
 
 	bool GetNoAnimateFields() { return m_NoAnimateFields; };
-	void SetNoAnimateFields(const bool& val);
+	void SetNoAnimateFields(bool val);
 
 	bool GetReduceFPSUnactiveWindow() { return m_ReduceFPSUnactiveWindow; };
-	void SetReduceFPSUnactiveWindow(const bool& val);
+	void SetReduceFPSUnactiveWindow(bool val);
 
 	bool GetConsoleNeedEnter() { return m_ConsoleNeedEnter; };
-	void SetConsoleNeedEnter(const bool& val);
+	void SetConsoleNeedEnter(bool val);
 
 	uchar GetSpellIconAlpha() { return m_SpellIconAlpha; };
-	void SetSpellIconAlpha(const uchar& val);
+	void SetSpellIconAlpha(uchar val);
 
 	bool GetOldStyleStatusbar() { return m_OldStyleStatusbar; };
-	void SetOldStyleStatusbar(const bool& val);
+	void SetOldStyleStatusbar(bool val);
 
 	bool GetOriginalPartyStatusbar() { return m_OriginalPartyStatusbar; };
-	void SetOriginalPartyStatusbar(const bool& val);
+	void SetOriginalPartyStatusbar(bool val);
 
 	bool GetApplyStateColorOnCharacters() { return m_ApplyStateColorOnCharacters; };
-	void SetApplyStateColorOnCharacters(const bool& val);
+	void SetApplyStateColorOnCharacters(bool val);
 
 	bool GetChangeFieldsGraphic() { return m_ChangeFieldsGraphic; };
-	void SetChangeFieldsGraphic(const bool& val);
+	void SetChangeFieldsGraphic(bool val);
 
 	bool GetPaperdollSlots() { return m_PaperdollSlots; };
-	void SetPaperdollSlots(const bool& val);
+	void SetPaperdollSlots(bool val);
 
 	uchar GetDrawAuraState() { return m_DrawAuraState; };
-	void SetDrawAuraState(const uchar& val);
+	void SetDrawAuraState(uchar val);
 
 	bool GetScaleImagesInPaperdollSlots() { return m_ScaleImagesInPaperdollSlots; };
-	void SetScaleImagesInPaperdollSlots(const bool& val);
+	void SetScaleImagesInPaperdollSlots(bool val);
 
 	bool GetUseGlobalMapLayer() { return m_UseGlobalMapLayer; };
-	void SetUseGlobalMapLayer(const bool& val);
+	void SetUseGlobalMapLayer(bool val);
 
 	bool GetNoDrawRoofs() { return m_NoDrawRoofs; };
-	void SetNoDrawRoofs(const bool& val);
+	void SetNoDrawRoofs(bool val);
 
 	bool GetUseGLListsForInterface() { return m_UseGLListsForInterface; };
-	void SetUseGLListsForInterface(const bool& val);
+	void SetUseGLListsForInterface(bool val);
 
 	uchar GetPingTimer() { return m_PingTimer; };
-	void SetPingTimer(const uchar& val);
+	void SetPingTimer(uchar val);
 
 	bool GetItemPropertiesIcon() { return m_ItemPropertiesIcon; };
-	void SetItemPropertiesIcon(const bool& val);
+	void SetItemPropertiesIcon(bool val);
 
 	uchar GetItemPropertiesMode() { return m_ItemPropertiesMode; };
-	void SetItemPropertiesMode(const uchar& val);
+	void SetItemPropertiesMode(uchar val);
 
 	uchar GetCharacterBackpackStyle() { return m_CharacterBackpackStyle; };
-	void SetCharacterBackpackStyle(const uchar& val);
+	void SetCharacterBackpackStyle(uchar val);
 
 	/*!
 	Инициализация

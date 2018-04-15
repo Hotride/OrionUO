@@ -11,7 +11,7 @@
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
 //----------------------------------------------------------------------------------
-CGumpPropertyIcon::CGumpPropertyIcon(const int &x, const int &y)
+CGumpPropertyIcon::CGumpPropertyIcon(int x, int y)
 : CGump(GT_PROPERTY_ICON, 0, x, y)
 {
 	m_Locker.Serial = ID_GPI_LOCK_MOVING;

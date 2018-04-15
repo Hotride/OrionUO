@@ -13,12 +13,12 @@ protected:
 	UCHAR_LIST m_Data;
 
 public:
-	CPacketMessage(const bool &bigEndian = true);
-	CPacketMessage(puchar data, const int &dataSizeconst, const bool &bigEndian = true);
-	CPacketMessage(const UCHAR_LIST &dataconst, const bool &bigEndian = true);
+	CPacketMessage(bool bigEndian = true);
+	CPacketMessage(puchar data, int dataSizeconst, bool bigEndian = true);
+	CPacketMessage(const UCHAR_LIST &dataconst, bool bigEndian = true);
 	virtual ~CPacketMessage();
 
-	void Append(puchar data, const int &dataSize);
+	void Append(puchar data, int dataSize);
 	void Append(const UCHAR_LIST &data);
 
 	void Clear() { m_Data.clear(); }

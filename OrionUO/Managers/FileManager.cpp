@@ -21,12 +21,12 @@ CUopMappedFile::~CUopMappedFile()
 {
 }
 //----------------------------------------------------------------------------------
-void CUopMappedFile::Add(const uint64 &hash, const CUopBlockHeader &item)
+void CUopMappedFile::Add(uint64 hash, const CUopBlockHeader &item)
 {
 	m_Map[hash] = item;
 }
 //----------------------------------------------------------------------------------
-CUopBlockHeader *CUopMappedFile::GetBlock(const uint64 &hash)
+CUopBlockHeader *CUopMappedFile::GetBlock(uint64 hash)
 {
 	std::unordered_map<uint64, CUopBlockHeader>::iterator found = m_Map.find(hash);
 

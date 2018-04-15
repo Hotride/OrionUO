@@ -11,7 +11,7 @@
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
 //----------------------------------------------------------------------------------
-CGumpAbility::CGumpAbility(const uint &serial, const int &x, const int &y)
+CGumpAbility::CGumpAbility(int serial, int x, int y)
 : CGump(GT_ABILITY, serial, x, y)
 {
 	WISPFUN_DEBUG("c85_f1");
@@ -60,7 +60,7 @@ void CGumpAbility::GUMP_BUTTON_EVENT_C
 		LockMoving = !LockMoving;
 }
 //----------------------------------------------------------------------------------
-void CGumpAbility::OnAbilityUse(const int &index)
+void CGumpAbility::OnAbilityUse(int index)
 {
 	WISPFUN_DEBUG("c85_f5");
 	uchar &ability = g_Ability[index];

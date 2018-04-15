@@ -11,7 +11,7 @@
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
 //----------------------------------------------------------------------------------
-CGUIShopResult::CGUIShopResult(CGUIShopItem *shopItem, const int &x, const int &y)
+CGUIShopResult::CGUIShopResult(CGUIShopItem *shopItem, int x, int y)
 : CBaseGUI(GOT_SHOPRESULT, shopItem->Serial, shopItem->Graphic, shopItem->Color, x, y),
 Price(shopItem->Price), Name(shopItem->Name)
 {
@@ -56,7 +56,7 @@ void CGUIShopResult::PrepareTextures()
 	m_MinMaxButtons->PrepareTextures();
 }
 //----------------------------------------------------------------------------------
-void CGUIShopResult::Draw(const bool &checktrans)
+void CGUIShopResult::Draw(bool checktrans)
 {
 	WISPFUN_DEBUG("c74_f5");
 	glTranslatef((GLfloat)m_X, (GLfloat)m_Y, 0.0f);

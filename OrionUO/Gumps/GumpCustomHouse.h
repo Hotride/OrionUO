@@ -163,15 +163,15 @@ private:
 
 	void UpdateMaxPage();
 
-	pair<int, int> ExistsInList(CUSTOM_HOUSE_GUMP_STATE &state, const ushort &graphic);
+	pair<int, int> ExistsInList(CUSTOM_HOUSE_GUMP_STATE &state, ushort graphic);
 
-	bool ValidatePlaceStructure(CGameItem *foundationItem, CMulti *multi, const int &minZ, const int &maxZ, const int &flags);
+	bool ValidatePlaceStructure(CGameItem *foundationItem, CMulti *multi, int minZ, int maxZ, int flags);
 
 protected:
 	virtual void CalculateGumpState();
 
 public:
-	CGumpCustomHouse(const uint &serial, const int &x, const int &y);
+	CGumpCustomHouse(int serial, int x, int y);
 	virtual ~CGumpCustomHouse();
 
 	virtual void UpdateContent();
@@ -180,13 +180,13 @@ public:
 
 	void GenerateFloorPlace();
 
-	void SeekGraphic(const ushort &graphic);
+	void SeekGraphic(ushort graphic);
 
 	bool CanBuildHere(vector<CBuildObject> &list, CRenderWorldObject *place, CUSTOM_HOUSE_BUILD_TYPE &type);
 
-	bool ValidateItemPlace(const RECT &rect, const ushort &graphic, const int &x, const int &y);
+	bool ValidateItemPlace(const RECT &rect, ushort graphic, int x, int y);
 
-	bool ValidateItemPlace(CGameItem *foundationItem, CMultiObject *item, const int &minZ, const int &maxZ, vector<WISP_GEOMETRY::CPoint2Di> &validatedFloors);
+	bool ValidateItemPlace(CGameItem *foundationItem, CMultiObject *item, int minZ, int maxZ, vector<WISP_GEOMETRY::CPoint2Di> &validatedFloors);
 
 	bool CanEraseHere(CRenderWorldObject *place, CUSTOM_HOUSE_BUILD_TYPE &type);
 

@@ -64,7 +64,7 @@ void CGumpDye::UpdateContent()
 		m_Tube->Color = GetCurrentColor();
 }
 //----------------------------------------------------------------------------------
-void CGumpDye::OnSelectColor(const ushort &color)
+void CGumpDye::OnSelectColor(ushort color)
 {
 	WISPFUN_DEBUG("c95_f3");
 	CPacketDyeDataResponse(Serial, Graphic, color + 1).Send();

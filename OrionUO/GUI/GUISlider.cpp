@@ -11,7 +11,7 @@
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
 //----------------------------------------------------------------------------------
-CGUISlider::CGUISlider(const uint &serial, const ushort &graphic, const ushort &graphicSelected, const ushort &graphicPressed, const ushort &backgroundGraphic, const bool &compositeBackground, const bool &vertical, const int &x, const int &y, const int &length, const int &minValue, const int &maxValue, const int &value)
+CGUISlider::CGUISlider(int serial, ushort graphic, ushort graphicSelected, ushort graphicPressed, ushort backgroundGraphic, bool compositeBackground, bool vertical, int x, int y, int length, int minValue, int maxValue, int value)
 : CBaseGUI(GOT_SLIDER, serial, graphic, 0, x, y), GraphicSelected(graphicSelected),
 GraphicPressed(graphicPressed), BackgroundGraphic(backgroundGraphic),
 CompositeBackground(compositeBackground), Vertical(vertical), Length(length),
@@ -163,7 +163,7 @@ WISP_GEOMETRY::CSize CGUISlider::GetSize()
 	return size;
 }
 //----------------------------------------------------------------------------------
-void CGUISlider::OnScroll(const bool &up, const uint &delay)
+void CGUISlider::OnScroll(bool up, int delay)
 {
 	WISPFUN_DEBUG("c77_f5");
 	if (LastScrollTime < g_Ticks)
@@ -185,7 +185,7 @@ void CGUISlider::OnScroll(const bool &up, const uint &delay)
 	}
 }
 //----------------------------------------------------------------------------------
-void CGUISlider::OnClick(const int &x, const int &y)
+void CGUISlider::OnClick(int x, int y)
 {
 	WISPFUN_DEBUG("c77_f6");
 	int lenght = Length;
@@ -232,7 +232,7 @@ void CGUISlider::CalculateOffset()
 		Offset = 0;
 }
 //----------------------------------------------------------------------------------
-void CGUISlider::SetTextParameters(const bool &haveText, const SLIDER_TEXT_POSITION &textPosition, const uchar &font, const ushort &color, const bool &unicode, const int &textWidth, const TEXT_ALIGN_TYPE &align, const ushort &textFlags)
+void CGUISlider::SetTextParameters(bool haveText, SLIDER_TEXT_POSITION textPosition, uchar font, ushort color, bool unicode, int textWidth, TEXT_ALIGN_TYPE align, ushort textFlags)
 {
 	WISPFUN_DEBUG("c77_f8");
 	HaveText = haveText;
@@ -276,7 +276,7 @@ ushort CGUISlider::GetDrawGraphic()
 	return graphic;
 }
 //----------------------------------------------------------------------------------
-void CGUISlider::Draw(const bool &checktrans)
+void CGUISlider::Draw(bool checktrans)
 {
 	WISPFUN_DEBUG("c77_f11");
 	/*Value++;

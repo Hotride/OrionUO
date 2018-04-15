@@ -26,7 +26,7 @@ protected:
 	STATIC_TILES *m_TiledataPtr{ NULL };
 
 public:
-	CRenderStaticObject(const RENDER_OBJECT_TYPE &renderType, const uint &serial, const ushort &graphic, const ushort &color, const short &x, const short &y, const char &z);
+	CRenderStaticObject(RENDER_OBJECT_TYPE renderType, int serial, ushort graphic, ushort color, short x, short y, char z);
 	virtual ~CRenderStaticObject();
 
 	CTextContainer *m_TextControl{ NULL }; //Ссылка на контейнер для текста
@@ -34,19 +34,19 @@ public:
 	virtual void UpdateTextCoordinates();
 	virtual void FixTextCoordinates();
 
-	static bool IsNoDrawTile(const ushort &graphic);
+	static bool IsNoDrawTile(ushort graphic);
 
 	//Отрисовать объект
-	virtual void Draw(const int &x, const int &y);
+	virtual void Draw(int x, int y);
 
 	//Выбрать объект
-	virtual void Select(const int &x, const int &y);
+	virtual void Select(int x, int y);
 
 	//Добавить текст в контейнер
 	virtual void AddText(CTextData *td);
 
 	//Проверка прозрачности (для круга прозрачности)
-	virtual bool TranparentTest(const int &playerZPlus5);
+	virtual bool TranparentTest(int playerZPlus5);
 
 	//Проверка, может ли текст быть прозрачным
 	bool TextCanBeTransparent(CRenderTextObject *text);

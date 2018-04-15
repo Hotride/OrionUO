@@ -574,7 +574,7 @@ void CGumpScreenSelectProfession::GUMP_SLIDER_MOVE_EVENT_C
 		ShuffleSkills(serial - ID_SPS_SKILLS_SPHERE);
 }
 //----------------------------------------------------------------------------------
-void CGumpScreenSelectProfession::ShuffleStats(const int &id, const int &maxSum, const int &maxVal)
+void CGumpScreenSelectProfession::ShuffleStats(int id, int maxSum, int maxVal)
 {
 	WISPFUN_DEBUG("c117_f9");
 	CProfession *profession = (CProfession*)g_ProfessionManager.Selected;
@@ -649,7 +649,7 @@ void CGumpScreenSelectProfession::ShuffleStats(const int &id, const int &maxSum,
 	profession->Int = stats[2];
 }
 //----------------------------------------------------------------------------------
-void CGumpScreenSelectProfession::ShuffleSkills(const int &id)
+void CGumpScreenSelectProfession::ShuffleSkills(int id)
 {
 	WISPFUN_DEBUG("c117_f10");
 	CProfession *profession = (CProfession*)g_ProfessionManager.Selected;

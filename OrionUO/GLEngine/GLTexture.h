@@ -38,14 +38,14 @@ public:
 
 	HIT_MAP_TYPE m_HitMap;
 
-	virtual void Draw(const int &x, const int &y, const bool &checktrans = false);
-	virtual void Draw(const int &x, const int &y, int width, int height, const bool &checktrans = false);
+	virtual void Draw(int x, int y, bool checktrans = false);
+	virtual void Draw(int x, int y, int width, int height, bool checktrans = false);
 
-	virtual void DrawRotated(const int &x, const int &y, const float &angle);
+	virtual void DrawRotated(int x, int y, float angle);
 
-	virtual void DrawTransparent(const int &x, const int &y, const bool &stencil = true);
+	virtual void DrawTransparent(int x, int y, bool stencil = true);
 
-	virtual bool Select(int x, int y, const bool &pixelCheck = true);
+	virtual bool Select(int x, int y, bool pixelCheck = true);
 
 	virtual void Clear();
 };

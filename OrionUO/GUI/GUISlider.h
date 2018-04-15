@@ -92,7 +92,7 @@ private:
 	CGLTextTexture Text{ CGLTextTexture() };
 
 public:
-	CGUISlider(const uint &serial, const ushort &graphic, const ushort &graphicSelected, const ushort &graphicPressed, const ushort &backgroundGraphic, const bool &compositeBackground, const bool &vertical, const int &x, const int &y, const int &lenght, const int &minValue, const int &maxValue, const int &value);
+	CGUISlider(int serial, ushort graphic, ushort graphicSelected, ushort graphicPressed, ushort backgroundGraphic, bool compositeBackground, bool vertical, int x, int y, int lenght, int minValue, int maxValue, int value);
 	virtual ~CGUISlider();
 
 	virtual bool IsPressedOuthit() { return true; }
@@ -100,10 +100,10 @@ public:
 	virtual WISP_GEOMETRY::CSize GetSize();
 
 	//!Скроллинг
-	virtual void OnScroll(const bool &up, const uint &delay);
+	virtual void OnScroll(bool up, int delay);
 
 	//!Нажатие на компоненту
-	virtual void OnClick(const int &x, const int &y);
+	virtual void OnClick(int x, int y);
 
 	//!Обновить текст
 	void UpdateText();
@@ -112,13 +112,13 @@ public:
 	virtual void CalculateOffset();
 
 	//!Установить параметры текста
-	void SetTextParameters(const bool &haveText, const SLIDER_TEXT_POSITION &textPosition, const uchar &font, const ushort &color, const bool &unicode, const int &textWidth = 0, const TEXT_ALIGN_TYPE &align = TS_LEFT, const ushort &textFlags = 0);
+	void SetTextParameters(bool haveText, SLIDER_TEXT_POSITION textPosition, uchar font, ushort color, bool unicode, int textWidth = 0, TEXT_ALIGN_TYPE align = TS_LEFT, ushort textFlags = 0);
 
 	virtual void PrepareTextures();
 
 	virtual ushort GetDrawGraphic();
 
-	virtual void Draw(const bool &checktrans = false);
+	virtual void Draw(bool checktrans = false);
 	virtual bool Select();
 
 	virtual void OnMouseEnter();

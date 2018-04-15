@@ -17,7 +17,7 @@ class CJournal : public CBaseQueue
 	int Size = 0;
 
 public:
-	CJournal(const int &maxSize);
+	CJournal(int maxSize);
 	~CJournal();
 
 	//Добавить сообщение в журнал

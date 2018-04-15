@@ -11,7 +11,7 @@
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
 //----------------------------------------------------------------------------------
-CGUIComboBox::CGUIComboBox(const uint &serial, const ushort &graphic, const bool &compositeBackground, const ushort &openGraphic, const int &x, const int &y, const int &width, const int &showItemsCount, const bool &showMaximizedCenter)
+CGUIComboBox::CGUIComboBox(int serial, ushort graphic, bool compositeBackground, ushort openGraphic, int x, int y, int width, int showItemsCount, bool showMaximizedCenter)
 : CBaseGUI(GOT_COMBOBOX, serial, graphic, 0, x, y), OpenGraphic(openGraphic),
 CompositeBackground(compositeBackground), m_ShowItemsCount(showItemsCount),
 Width(width), ShowMaximizedCenter(showMaximizedCenter), OpenedWidth(width)
@@ -87,7 +87,7 @@ void CGUIComboBox::RecalculateWidth()
 	}
 }
 //----------------------------------------------------------------------------------
-void CGUIComboBox::SetShowItemsCount(const int &val)
+void CGUIComboBox::SetShowItemsCount(int val)
 {
 	WISPFUN_DEBUG("c49_f4");
 	m_WorkHeight = val * 15;
@@ -143,7 +143,7 @@ CBaseGUI *CGUIComboBox::SkipToStart()
 	return start;
 }
 //----------------------------------------------------------------------------------
-void CGUIComboBox::Draw(const bool &checktrans)
+void CGUIComboBox::Draw(bool checktrans)
 {
 	WISPFUN_DEBUG("c49_f8");
 	if (Text != NULL)

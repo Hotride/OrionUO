@@ -107,9 +107,9 @@ public:
 
 	void WriteString(const string &key, const string &value);
 
-	void WriteInt(const string &key, const int &value);
+	void WriteInt(const string &key, int value);
 
-	void WriteBool(const string &key, const bool &value);
+	void WriteBool(const string &key, bool value);
 };
 //----------------------------------------------------------------------------------
 }; //namespace

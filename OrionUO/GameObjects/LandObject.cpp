@@ -11,7 +11,7 @@
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
 //----------------------------------------------------------------------------------
-CLandObject::CLandObject(const uint &serial, const ushort &graphic, const ushort &color, const short &x, const short &y, const char &z)
+CLandObject::CLandObject(int serial, ushort graphic, ushort color, short x, short y, char z)
 : CMapObject(ROT_LAND_OBJECT, serial, 0, color, x, y, z), MinZ(z), AverageZ(z)
 {
 	WISPFUN_DEBUG("c23_f1");
@@ -61,7 +61,7 @@ void CLandObject::UpdateGraphicBySeason()
 	NoDrawTile = (Graphic == 2);
 }
 //---------------------------------------------------------------------------
-int CLandObject::GetDirectionZ(const int &direction)
+int CLandObject::GetDirectionZ(int direction)
 {
 	WISPFUN_DEBUG("c23_f4");
 	switch (direction)
@@ -79,7 +79,7 @@ int CLandObject::GetDirectionZ(const int &direction)
 	return m_Z;
 }
 //---------------------------------------------------------------------------
-int CLandObject::CalculateCurrentAverageZ(const int &direction)
+int CLandObject::CalculateCurrentAverageZ(int direction)
 {
 	WISPFUN_DEBUG("c23_f5");
 	int result = GetDirectionZ(((uchar)(direction >> 1) + 1) & 3);
@@ -90,7 +90,7 @@ int CLandObject::CalculateCurrentAverageZ(const int &direction)
 	return (result + GetDirectionZ(direction >> 1)) >> 1;
 }
 //---------------------------------------------------------------------------
-void CLandObject::UpdateZ(const int &zTop, const int &zRight, const int &zBottom)
+void CLandObject::UpdateZ(int zTop, int zRight, int zBottom)
 {
 	WISPFUN_DEBUG("c23_f6");
 	if (IsStretched)
@@ -123,7 +123,7 @@ void CLandObject::UpdateZ(const int &zTop, const int &zRight, const int &zBottom
 	}
 }
 //---------------------------------------------------------------------------
-void CLandObject::Draw(const int &x, const int &y)
+void CLandObject::Draw(int x, int y)
 {
 	WISPFUN_DEBUG("c23_f7");
 	if (m_Z <= g_MaxGroundZ)
@@ -144,7 +144,7 @@ void CLandObject::Draw(const int &x, const int &y)
 	}
 }
 //---------------------------------------------------------------------------
-void CLandObject::Select(const int &x, const int &y)
+void CLandObject::Select(int x, int y)
 {
 	WISPFUN_DEBUG("c23_f8");
 	if (m_Z <= g_MaxGroundZ)

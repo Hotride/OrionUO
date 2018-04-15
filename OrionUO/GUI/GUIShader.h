@@ -18,10 +18,10 @@ private:
 	CGLShader *m_Shader{ NULL };
 
 public:
-	CGUIShader(CGLShader *shader, const bool &enabled);
+	CGUIShader(CGLShader *shader, bool enabled);
 	virtual ~CGUIShader();
 
-	virtual void Draw(const bool &checktrans = false);
+	virtual void Draw(bool checktrans = false);
 };
 //----------------------------------------------------------------------------------
 #endif

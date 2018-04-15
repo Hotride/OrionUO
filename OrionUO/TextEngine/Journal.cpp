@@ -13,7 +13,7 @@
 //----------------------------------------------------------------------------------
 CJournal g_Journal(150);
 //----------------------------------------------------------------------------------
-CJournal::CJournal(const int &maxSize)
+CJournal::CJournal(int maxSize)
 : CBaseQueue(), MaxSize(maxSize)
 {
 }

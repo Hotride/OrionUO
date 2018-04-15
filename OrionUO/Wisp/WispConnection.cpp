@@ -32,7 +32,7 @@ CConnection::~CConnection()
 	}
 }
 //----------------------------------------------------------------------------------
-bool CConnection::Connect(const string &address, const int &port)
+bool CConnection::Connect(const string &address, int port)
 {
 	WISPFUN_DEBUG("c3_f3");
 	if (Connected)
@@ -115,7 +115,7 @@ bool CConnection::ReadyRead()
 	return (DataReady != 0);
 }
 //----------------------------------------------------------------------------------
-bool CConnection::Read(const int &maxSize)
+bool CConnection::Read(int maxSize)
 {
 	WISPFUN_DEBUG("c3_f6");
 	if (DataReady == SOCKET_ERROR)
@@ -148,7 +148,7 @@ bool CConnection::Read(const int &maxSize)
 	return false;
 }
 //----------------------------------------------------------------------------------
-int CConnection::Send(puchar data, const int &size)
+int CConnection::Send(puchar data, int size)
 {
 	WISPFUN_DEBUG("c3_f7");
 	if (!Connected || m_Socket == INVALID_SOCKET)

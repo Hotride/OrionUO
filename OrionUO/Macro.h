@@ -54,7 +54,7 @@ public:
 	bool Ctrl = false;
 	bool Shift = false;
 
-	CMacro(const ushort &key, const bool &alt, const bool &ctrl, const bool &shift);
+	CMacro(ushort key, bool alt, bool ctrl, bool shift);
 	virtual ~CMacro();
 
 	static const int MACRO_ACTION_NAME_COUNT = 60;

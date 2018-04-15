@@ -21,32 +21,32 @@ public:
 
 private:
 	//Получить Z координату ландшафта
-	char GetLandZ(const int &x, const int &y, const int &map);
+	char GetLandZ(int x, int y, int map);
 
 	//Проверить объект ландшафта на "растягиваемость" при рендере
-	bool TestStretched(const int &x, const int &y, const char &z, const int &map, const bool &recurse);
+	bool TestStretched(int x, int y, char z, int map, bool recurse);
 
 public:
-	CMapBlock(const uint &index);
+	CMapBlock(int index);
 	virtual ~CMapBlock();
 
 	//Данные блока
 	CMapObject *Block[8][8];
 
 	//Добавить объект
-	CMapObject *AddObject(CMapObject *obj, const int &x, const int &y);
+	CMapObject *AddObject(CMapObject *obj, int x, int y);
 
 	//Получить указатель на объект ландшафта
-	CLandObject *GetLand(const int &x, const int &y);
+	CLandObject *GetLand(int x, int y);
 
 	//Добавить объект в очередь рендера
-	void AddRender(CRenderWorldObject *item, const int &x, const int &y);
+	void AddRender(CRenderWorldObject *item, int x, int y);
 
 	//Получить начало очереди рендера
-	CRenderWorldObject *GetRender(const int &x, const int &y);
+	CRenderWorldObject *GetRender(int x, int y);
 
 	//Получить цвет точки для радара
-	ushort GetRadarColor(const int &x, const int &y);
+	ushort GetRadarColor(int x, int y);
 
 	//Сконструировать вершины текстур ландшафта
 	void CreateLandTextureRect();

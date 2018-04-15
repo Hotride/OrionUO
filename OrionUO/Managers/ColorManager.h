@@ -79,21 +79,21 @@ public:
 	@param [__in] c 32-битный цвет
 	@return 16-битный цвет
 	*/
-	ushort Color32To16(const uint &c);
+	ushort Color32To16(int c);
 
 	/*!
 	Конвертирование цвета из 16 бит в 32 бит
 	@param [__in] c 16-битный цвет
 	@return 32-битный цвет
 	*/
-	uint Color16To32(const ushort &c);
+	uint Color16To32(ushort c);
 
 	/*!
 	Перевод в серый
 	@param [__in] c 16-битный цвет
 	@return 16-битный цвет
 	*/
-	ushort ConvertToGray(const ushort &c);
+	ushort ConvertToGray(ushort c);
 
 
 
@@ -103,14 +103,14 @@ public:
 	@param [__in] color Индекс цвета в палитре
 	@return 16-битный цвет
 	*/
-	ushort GetColor16(const ushort &c, ushort color);
+	ushort GetColor16(ushort c, ushort color);
 
 	/*!
 	Получить 16-битный цвет для радара
 	@param [__in] c Исходный 16-битный цвет
 	@return 16-битный цвет
 	*/
-	ushort GetRadarColorData(const uint &c);
+	ushort GetRadarColorData(int c);
 
 	/*!
 	Получить 32-битный цвет без конвертирования входящего цвета
@@ -144,7 +144,7 @@ public:
 	*/
 	uint GetPartialHueColor(ushort &c, ushort color);
 
-	ushort FixColor(const ushort &color, const ushort &defaultColor = 0);
+	ushort FixColor(ushort color, ushort defaultColor = 0);
  };
  //----------------------------------------------------------------------------------
 //!Ссылка на менеджер цветов

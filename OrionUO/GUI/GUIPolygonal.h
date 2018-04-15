@@ -24,7 +24,7 @@ public:
 	//!Вызов события по нажатию левой кнопки мыши или по отпусканию
 	bool CallOnMouseUp = false;
 
-	CGUIPolygonal(const GUMP_OBJECT_TYPE &type, const int &x, const int &y, const int &width, const int &height, const bool &callOnMouseUp = false);
+	CGUIPolygonal(GUMP_OBJECT_TYPE type, int x, int y, int width, int height, bool callOnMouseUp = false);
 	virtual ~CGUIPolygonal();
 
 	virtual bool Select();

@@ -327,7 +327,7 @@ void CMapManager::UpdatePatched()
 		gump->LastX = 0;
 }
 //----------------------------------------------------------------------------------
-CIndexMap *CMapManager::GetIndex(const uint &map, const int &blockX, const int &blockY)
+CIndexMap *CMapManager::GetIndex(int map, int blockX, int blockY)
 {
 	WISPFUN_DEBUG("c146_f8");
 	if (map >= MAX_MAPS_COUNT)
@@ -347,7 +347,7 @@ void CMapManager::ClearBlockAccess()
 	memset(&m_BlockAccessList[0], 0, sizeof(m_BlockAccessList));
 }
 //----------------------------------------------------------------------------------
-char CMapManager::CalculateNearZ(char defaultZ, const int &x, const int &y, const int &z)
+char CMapManager::CalculateNearZ(char defaultZ, int x, int y, int z)
 {
 	int blockX = x / 8;
 	int blockY = y / 8;
@@ -405,7 +405,7 @@ char CMapManager::CalculateNearZ(char defaultZ, const int &x, const int &y, cons
 @param [__out] mb Ссылка на блок
 @return 
 */
-void CMapManager::GetRadarMapBlock(const int &blockX, const int &blockY, RADAR_MAP_BLOCK &mb)
+void CMapManager::GetRadarMapBlock(int blockX, int blockY, RADAR_MAP_BLOCK &mb)
 {
 	WISPFUN_DEBUG("c146_f10");
 	CIndexMap *indexMap = GetIndex(GetActualMap(), blockX, blockY);
@@ -463,7 +463,7 @@ void CMapManager::GetRadarMapBlock(const int &blockX, const int &blockY, RADAR_M
 @param [__out] staticZ Значение Z коррдинаты статики
 @return 
 */
-void CMapManager::GetMapZ(const int &x, const int &y, int &groundZ, int &staticZ)
+void CMapManager::GetMapZ(int x, int y, int &groundZ, int &staticZ)
 {
 	WISPFUN_DEBUG("c146_f11");
 	int blockX = x / 8;
@@ -549,7 +549,7 @@ void CMapManager::ClearUsedBlocks()
 @param [__in_opt] delayed По истечении времени на загрузку выходить из цикла
 @return 
 */
-void CMapManager::Init(const bool &delayed)
+void CMapManager::Init(bool delayed)
 {
 	WISPFUN_DEBUG("c146_f14");
 	if (g_Player == NULL)
@@ -736,7 +736,7 @@ void CMapManager::AddRender(CRenderWorldObject *item)
 @param [__in] index Индекс блока
 @return Ссылка на блок или NULL
 */
-CMapBlock *CMapManager::GetBlock(const uint &index)
+CMapBlock *CMapManager::GetBlock(int index)
 {
 	WISPFUN_DEBUG("c146_f18");
 	CMapBlock *block = NULL;
@@ -757,7 +757,7 @@ CMapBlock *CMapManager::GetBlock(const uint &index)
 @param [__in] index Индекс блока
 @return Ссылка на блок или NULL
 */
-CMapBlock *CMapManager::AddBlock(const uint &index)
+CMapBlock *CMapManager::AddBlock(int index)
 {
 	WISPFUN_DEBUG("c146_f19");
 	CMapBlock *block = (CMapBlock*)Add(new CMapBlock(index));
@@ -772,7 +772,7 @@ CMapBlock *CMapManager::AddBlock(const uint &index)
 @param [__in] index Индекс блока
 @return 
 */
-void CMapManager::DeleteBlock(const uint &index)
+void CMapManager::DeleteBlock(int index)
 {
 	WISPFUN_DEBUG("c146_f20");
 	CMapBlock *block = (CMapBlock*)m_Items;

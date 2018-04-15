@@ -84,7 +84,7 @@ public:
 	//!Смещение текста когда компонента находится в фокусе
 	char FocusedOffsetY = 0;
 
-	CGUITextEntry(const uint &serial, const ushort &color, const ushort &colorSelected, const ushort &colorFocused, const int &x, const int &y, const int &maxWidth = 0, const bool &unicode = true, const uchar &font = 0, const TEXT_ALIGN_TYPE &align = TS_LEFT, const ushort &textFlags = 0, const int &maxLength = 0);
+	CGUITextEntry(int serial, ushort color, ushort colorSelected, ushort colorFocused, int x, int y, int maxWidth = 0, bool unicode = true, uchar font = 0, TEXT_ALIGN_TYPE align = TS_LEFT, ushort textFlags = 0, int maxLength = 0);
 	virtual ~CGUITextEntry();
 
 	//!Объект класса для ввода текста
@@ -97,15 +97,15 @@ public:
 	virtual WISP_GEOMETRY::CSize GetSize();
 
 	//!Установить глобальный OGL цвет перед отрисовкой текста
-	void SetGlobalColor(const bool &use, const uint &color, const uint &selected, const uint &focused);
+	void SetGlobalColor(bool use, int color, int selected, int focused);
 
 	//!Нажатие на компоненту
-	void OnClick(CGump *gump, const int &x, const int &y);
+	void OnClick(CGump *gump, int x, int y);
 
 	virtual void OnMouseEnter();
 	virtual void OnMouseExit();
 
-	virtual void Draw(const bool &checktrans = false);
+	virtual void Draw(bool checktrans = false);
 	virtual bool Select();
 };
 //----------------------------------------------------------------------------------

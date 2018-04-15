@@ -88,9 +88,9 @@ private:
 
 	void GetSummaryBookInfo(int &maxSpellsCount, int &dictionaryPagesCount, int &spellsOnPage, int &spellIndexOffset, ushort &graphic, ushort &minimizedGraphic, ushort &iconStartGraphic);
 
-	string GetSpellName(const int &offset, string &abbreviature, string &reagents);
+	string GetSpellName(int offset, string &abbreviature, string &reagents);
 
-	string GetSpellRequries(const int &offset, int &y);
+	string GetSpellRequries(int offset, int &y);
 
 public:
 	CGumpSpellbook(uint serial, int x, int y);
@@ -98,7 +98,7 @@ public:
 
 	static void InitStaticData();
 
-	void UpdateGraphic(const ushort &parentGraphic);
+	void UpdateGraphic(ushort parentGraphic);
 
 	virtual void DelayedClick(CRenderObject *obj);
 

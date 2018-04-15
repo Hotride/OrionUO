@@ -11,7 +11,7 @@
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
 //----------------------------------------------------------------------------------
-CGUIHTMLSlider::CGUIHTMLSlider(CGUIHTMLGump *htmlGump, const uint &serial, const ushort &graphic, const ushort &graphicSelected, const ushort &graphicPressed, const ushort &backgroundGraphic, const bool &compositeBackground, const bool &vertical, const int &x, const int &y, const int &lenght, const int &minValue, const int &maxValue, const int &value)
+CGUIHTMLSlider::CGUIHTMLSlider(CGUIHTMLGump *htmlGump, int serial, ushort graphic, ushort graphicSelected, ushort graphicPressed, ushort backgroundGraphic, bool compositeBackground, bool vertical, int x, int y, int lenght, int minValue, int maxValue, int value)
 : CGUISlider(serial, graphic, graphicSelected, graphicPressed, backgroundGraphic, compositeBackground, vertical, x, y, lenght, minValue, maxValue, value),
 m_HTMLGump(htmlGump)
 {

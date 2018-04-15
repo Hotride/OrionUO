@@ -11,7 +11,7 @@
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
 //----------------------------------------------------------------------------------
-CGUISkillItem::CGUISkillItem(const uint &serial, const uint &useSerial, const uint &statusSerial, const int &index, const int &x, const int &y)
+CGUISkillItem::CGUISkillItem(int serial, int useSerial, int statusSerial, int index, int x, int y)
 : CBaseGUI(GOT_SKILLITEM, serial, 0, 0, x, y), Index(index)
 {
 	WISPFUN_DEBUG("c76_f1");
@@ -46,7 +46,7 @@ CGUISkillItem::~CGUISkillItem()
 	RELEASE_POINTER(m_ButtonStatus);
 }
 //----------------------------------------------------------------------------------
-void CGUISkillItem::SetStatus(const uchar &val)
+void CGUISkillItem::SetStatus(uchar val)
 {
 	WISPFUN_DEBUG("c76_f3");
 	m_Status = val;
@@ -71,7 +71,7 @@ ushort CGUISkillItem::GetStatusButtonGraphic()
 	return graphic;
 }
 //----------------------------------------------------------------------------------
-void CGUISkillItem::CreateValueText(const bool &showReal, const bool &showCap)
+void CGUISkillItem::CreateValueText(bool showReal, bool showCap)
 {
 	WISPFUN_DEBUG("c76_f5");
 	CSkill *skill = g_SkillsManager.Get(Index);
@@ -117,7 +117,7 @@ CBaseGUI *CGUISkillItem::SelectedItem()
 	return selected;
 }
 //----------------------------------------------------------------------------------
-void CGUISkillItem::Draw(const bool &checktrans)
+void CGUISkillItem::Draw(bool checktrans)
 {
 	WISPFUN_DEBUG("c76_f8");
 	glTranslatef((GLfloat)m_X, (GLfloat)m_Y, 0.0f);

@@ -27,10 +27,10 @@ class CGUIGlobalColor : public CBaseGUI
 	GLfloat A = 0.0f;
 
 public:
-	CGUIGlobalColor(const bool &enabled, const GLfloat &r, const GLfloat &g, const GLfloat &b, const GLfloat &a);
+	CGUIGlobalColor(bool enabled, GLfloat r, GLfloat g, GLfloat b, GLfloat a);
 	virtual ~CGUIGlobalColor();
 
-	virtual void Draw(const bool &checktrans = false);
+	virtual void Draw(bool checktrans = false);
 };
 //----------------------------------------------------------------------------------
 #endif

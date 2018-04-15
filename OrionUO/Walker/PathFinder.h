@@ -41,13 +41,13 @@ public:
 
 protected:
 	//Вычисление новой Z координаты
-	bool CalculateNewZ(const int &x, const int &y, char &z, const int &direction);
+	bool CalculateNewZ(int x, int y, char &z, int direction);
 
 	//Вычисление минимальной и максимальной Z координат
-	int CalculateMinMaxZ(int &minZ, int &maxZ, int newX, int newY, const int &currentZ, int newDirection, const int &stepState);
+	int CalculateMinMaxZ(int &minZ, int &maxZ, int newX, int newY, int currentZ, int newDirection, int stepState);
 
 	//Создание списка предметов, участвующих в поиске в указанных координатах
-	bool CreateItemsList(vector<CPathObject> &list, const int &x, const int &y, const int &stepState);
+	bool CreateItemsList(vector<CPathObject> &list, int x, int y, int stepState);
 
 	WISP_GEOMETRY::CPoint2Di m_StartPoint{ WISP_GEOMETRY::CPoint2Di() };
 	WISP_GEOMETRY::CPoint2Di m_EndPoint{ WISP_GEOMETRY::CPoint2Di() };
@@ -91,7 +91,7 @@ public:
 	virtual ~CPathFinder();
 
 	//Вычисление новых XY координат
-	void GetNewXY(const uchar &direction, int &x, int &y);
+	void GetNewXY(uchar direction, int &x, int &y);
 
 	//Проверка на возможность сделать шаг в указанные координаты
 	bool CanWalk(uchar &direction, int &x, int &y, char &z);
@@ -108,7 +108,7 @@ public:
 	//Остановить автоматическую ходилку
 	void StopAutoWalk();
 
-	int GetWalkSpeed(const bool &run, const bool &onMount);
+	int GetWalkSpeed(bool run, bool onMount);
 };
 //----------------------------------------------------------------------------------
 extern CPathFinder g_PathFinder;

@@ -76,7 +76,7 @@ void CWeather::Generate()
 	}
 }
 //---------------------------------------------------------------------------
-void CWeather::Draw(const int &x, const int &y)
+void CWeather::Draw(int x, int y)
 {    
 	WISPFUN_DEBUG("c214_f3");
 	bool removeEffects = false;

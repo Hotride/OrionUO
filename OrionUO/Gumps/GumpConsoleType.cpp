@@ -34,7 +34,7 @@ bool CGumpConsoleType::CanBeDisplayed()
 	return g_ConfigManager.ShowDefaultConsoleEntryMode;
 }
 //----------------------------------------------------------------------------------
-void CGumpConsoleType::SetShowFullText(const bool &val)
+void CGumpConsoleType::SetShowFullText(bool val)
 {
 	WISPFUN_DEBUG("c92_f4");
 	m_ShowFullText = val;

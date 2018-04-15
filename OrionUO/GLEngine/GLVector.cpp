@@ -11,7 +11,7 @@
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
 //----------------------------------------------------------------------------------
-CVector::CVector(const double &x, const double &y, const double &z)
+CVector::CVector(double x, double y, double z)
 : X(x), Y(y), Z(z)
 {
 }
@@ -23,7 +23,7 @@ void CVector::Link(const CVector &v)
 	Z = v.Z;
 }
 //----------------------------------------------------------------------------------
-void CVector::Link(const double &x, const double &y, const double &z)
+void CVector::Link(double x, double y, double z)
 {
 	X = x;
 	Y = y;
@@ -37,7 +37,7 @@ void CVector::Add(const CVector &v)
 	Z += v.Z;
 }
 //----------------------------------------------------------------------------------
-void CVector::Add(const double &x, const double &y, const double &z)
+void CVector::Add(double x, double y, double z)
 {
 	X += x;
 	Y += y;
@@ -55,7 +55,7 @@ void CVector::Merge(const CVector &v)
 	Z = newZ;
 }
 //----------------------------------------------------------------------------------
-void CVector::Merge(const double &x, const double &y, const double &z)
+void CVector::Merge(double x, double y, double z)
 {
 	double newX = Y * z - Z * y;
 	double newY = Z * x - X * z;

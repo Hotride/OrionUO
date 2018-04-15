@@ -28,7 +28,7 @@ public:
 	string Country = "";
 
 	CLangCode() {}
-	CLangCode(const string &abbreviature, const int &code, const string &language, const string &country)
+	CLangCode(const string &abbreviature, int code, const string &language, const string &country)
 		: Abbreviature(abbreviature), Code(code), Language(language), Country(country) {}
 	virtual ~CLangCode() {}
 };
@@ -46,7 +46,7 @@ public:
 	bool CheckEnd = false;
 
 	CSpeechItem() {}
-	CSpeechItem(const ushort &code, const wstring &data);
+	CSpeechItem(ushort code, const wstring &data);
 	virtual ~CSpeechItem() {}
 };
 //----------------------------------------------------------------------------------

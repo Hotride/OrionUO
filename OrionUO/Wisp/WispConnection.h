@@ -26,16 +26,16 @@ public:
 
 	class CPacketMessage *m_MessageParser;
 
-	virtual bool Connect(const string &address, const int &port);
+	virtual bool Connect(const string &address, int port);
 	void Disconnect();
 
 	bool ReadyRead();
 
 	virtual UCHAR_LIST Decompression(UCHAR_LIST data) { return data; }
 
-	bool Read(const int &maxSize = 0x1000);
+	bool Read(int maxSize = 0x1000);
 
-	int Send(puchar data, const int &size);
+	int Send(puchar data, int size);
 	int Send(const UCHAR_LIST &data);
 };
 //----------------------------------------------------------------------------------

@@ -103,7 +103,7 @@ protected:
 	@param [__inout] animation Animation index
 	@return 
 	*/
-	void CorrectAnimationGroup(const ushort &graphic, const ANIMATION_GROUPS &group, uchar &animation);
+	void CorrectAnimationGroup(ushort graphic, ANIMATION_GROUPS group, uchar &animation);
 
 	/*!
 	Bonded pets status dead/alive
@@ -116,7 +116,7 @@ public:
 	@param [__in] serial Character's serial
 	@return
 	*/
-	CGameCharacter(const uint &serial);
+	CGameCharacter(int serial);
 
 	/*!
 	Destructor
@@ -144,7 +144,7 @@ public:
 	@param [__in] hits Current hitpoints
 	@return
 	*/
-	void UpdateHitsTexture(const uchar &hits);
+	void UpdateHitsTexture(uchar hits);
 
 	/*!
 	Process gargoyle animations
@@ -169,7 +169,7 @@ public:
 	@param [__in] y Place on screen coordinate Y
 	@return
 	*/
-	virtual void Draw(const int &x, const int &y);
+	virtual void Draw(int x, int y);
 
 	/*!
 	Select character in the world
@@ -177,7 +177,7 @@ public:
 	@param [__in] y Place on screen coordinate Y
 	@return
 	*/
-	virtual void Select(const int &x, const int &y);
+	virtual void Select(int x, int y);
 
 	/*!
 	Update graphic event
@@ -191,7 +191,7 @@ public:
 	@param [__in] val New animation group index
 	@return
 	*/
-	void ResetAnimationGroup(const uchar &val);
+	void ResetAnimationGroup(uchar val);
 
 	/*!
 	Reset animation group index to random fidget
@@ -209,7 +209,7 @@ public:
 	@param [__in_opt] frameDirection Frame direction (forwarf/backward)
 	@return
 	*/
-	void SetAnimation(const uchar &id, const uchar &interval = 0, const uchar &frameCount = 0, const uchar &repeatCount = 0, const bool &repeat = false, const bool &frameDirection = false);
+	void SetAnimation(uchar id, uchar interval = 0, uchar frameCount = 0, uchar repeatCount = 0, bool repeat = false, bool frameDirection = false);
 
 	/*!
 	Get mount animation index
@@ -230,7 +230,7 @@ public:
 	@param [__out] animation Animation index
 	@return
 	*/
-	void GetAnimationGroup(const ANIMATION_GROUPS &group, uchar &animation);
+	void GetAnimationGroup(ANIMATION_GROUPS group, uchar &animation);
 
 	/*!
 	Staying character state
@@ -243,7 +243,7 @@ public:
 	@param [__in] group Animation group
 	@return true if direction can be changed
 	*/
-	bool TestStepNoChangeDirection(const uchar &group);
+	bool TestStepNoChangeDirection(uchar group);
 
 	/*!
 	Character walking state
@@ -263,7 +263,7 @@ public:
 	@param [__in_opt] canChange Can change private fields/stacks
 	@return
 	*/
-	void UpdateAnimationInfo(uchar &dir, const bool &canChange = false);
+	void UpdateAnimationInfo(uchar &dir, bool canChange = false);
 
 	/*!
 	Check on humanoid

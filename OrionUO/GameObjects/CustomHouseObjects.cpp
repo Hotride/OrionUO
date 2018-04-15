@@ -59,7 +59,7 @@ bool CCustomHouseObjectWall::Parse(const char *text)
 	return result;
 }
 //----------------------------------------------------------------------------------
-int CCustomHouseObjectWall::Contains(const ushort &graphic) const
+int CCustomHouseObjectWall::Contains(ushort graphic) const
 {
 	IFOR(i, 0, GRAPHICS_COUNT)
 	{
@@ -100,7 +100,7 @@ bool CCustomHouseObjectFloor::Parse(const char *text)
 	return result;
 }
 //----------------------------------------------------------------------------------
-int CCustomHouseObjectFloor::Contains(const ushort &graphic) const
+int CCustomHouseObjectFloor::Contains(ushort graphic) const
 {
 	IFOR(i, 0, GRAPHICS_COUNT)
 	{
@@ -133,7 +133,7 @@ bool CCustomHouseObjectDoor::Parse(const char *text)
 	return result;
 }
 //----------------------------------------------------------------------------------
-int CCustomHouseObjectDoor::Contains(const ushort &graphic) const
+int CCustomHouseObjectDoor::Contains(ushort graphic) const
 {
 	IFOR(i, 0, GRAPHICS_COUNT)
 	{
@@ -166,7 +166,7 @@ bool CCustomHouseObjectMisc::Parse(const char *text)
 	return result;
 }
 //----------------------------------------------------------------------------------
-int CCustomHouseObjectMisc::Contains(const ushort &graphic) const
+int CCustomHouseObjectMisc::Contains(ushort graphic) const
 {
 	IFOR(i, 0, GRAPHICS_COUNT)
 	{
@@ -200,7 +200,7 @@ bool CCustomHouseObjectStair::Parse(const char *text)
 	return result;
 }
 //----------------------------------------------------------------------------------
-int CCustomHouseObjectStair::Contains(const ushort &graphic) const
+int CCustomHouseObjectStair::Contains(ushort graphic) const
 {
 	IFOR(i, 0, GRAPHICS_COUNT)
 	{
@@ -241,7 +241,7 @@ bool CCustomHouseObjectTeleport::Parse(const char *text)
 	return result;
 }
 //----------------------------------------------------------------------------------
-int CCustomHouseObjectTeleport::Contains(const ushort &graphic) const
+int CCustomHouseObjectTeleport::Contains(ushort graphic) const
 {
 	IFOR(i, 0, GRAPHICS_COUNT)
 	{
@@ -282,7 +282,7 @@ bool CCustomHouseObjectRoof::Parse(const char *text)
 	return result;
 }
 //----------------------------------------------------------------------------------
-int CCustomHouseObjectRoof::Contains(const ushort &graphic) const
+int CCustomHouseObjectRoof::Contains(ushort graphic) const
 {
 	IFOR(i, 0, GRAPHICS_COUNT)
 	{
@@ -308,7 +308,7 @@ bool CCustomHouseObjectPlaceInfo::Parse(const char *text)
 	return result;
 }
 //----------------------------------------------------------------------------------
-int CCustomHouseObjectPlaceInfo::Contains(const ushort &graphic) const
+int CCustomHouseObjectPlaceInfo::Contains(ushort graphic) const
 {
 	IFOR(i, 0, GRAPHICS_COUNT)
 	{

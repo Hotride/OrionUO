@@ -92,7 +92,7 @@ void CGumpBuff::UpdateBuffIcons()
 	}
 }
 //----------------------------------------------------------------------------------
-void CGumpBuff::AddBuff(const ushort &id, const ushort &timer, const wstring &text)
+void CGumpBuff::AddBuff(ushort id, ushort timer, const wstring &text)
 {
 	WISPFUN_DEBUG("c88_f4");
 	DWORD ticks = 0xFFFFFFFF;
@@ -123,7 +123,7 @@ void CGumpBuff::AddBuff(const ushort &id, const ushort &timer, const wstring &te
 	WantUpdateContent = true;
 }
 //----------------------------------------------------------------------------------
-void CGumpBuff::DeleteBuff(const ushort &id)
+void CGumpBuff::DeleteBuff(ushort id)
 {
 	WISPFUN_DEBUG("c88_f5");
 	QFOR(item, m_Items, CBaseGUI*)

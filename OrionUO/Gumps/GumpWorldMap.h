@@ -19,17 +19,17 @@ protected:
     int m_Scale = 2;
 public:
     int GetScale() { return m_Scale; };
-    void SetScale(const int& val);
+    void SetScale(int val);
 protected:
     int m_Map = 0;
 public:
     int GetMap() { return m_Map; };
-    void SetMap(const int& val);
+    void SetMap(int val);
 protected:
     bool m_LinkWithPlayer = true;
 public:
     bool GetLinkWithPlayer() { return m_LinkWithPlayer; };
-    void SetLinkWithPlayer(const bool& val);
+    void SetLinkWithPlayer(bool val);
 	int OffsetX = 0;
 	int OffsetY = 0;
 	bool Called = false;
@@ -56,7 +56,7 @@ private:
 	void GetScaledDimensions(int &width, int &height, int &playerX, int &playerY);
 	void GetCurrentCenter(int &x, int &y, int &mouseX, int &mouseY);
 	void ScaleOffsets(int newScale, int mouseX, int mouseY);
-	void LoadMap(const int &map);
+	void LoadMap(int map);
 
 	int GetCurrentMap();
 
@@ -81,7 +81,7 @@ public:
 
 	virtual bool CanBeDisplayed() { return Called; }
 
-	virtual void GenerateFrame(const bool &stop);
+	virtual void GenerateFrame(bool stop);
 
 	virtual void PrepareContent();
 
@@ -95,7 +95,7 @@ public:
 	virtual void OnLeftMouseButtonDown();
 	virtual void OnLeftMouseButtonUp();
 	virtual bool OnLeftMouseButtonDoubleClick();
-	virtual void OnMidMouseButtonScroll(const bool &up);
+	virtual void OnMidMouseButtonScroll(bool up);
 };
 //----------------------------------------------------------------------------------
 #endif

@@ -23,7 +23,7 @@ public:
 	int PacketsLoss = -1;
 
 	CServer();
-	CServer(const ushort &index, const string &name, const uchar &fullPercent, const uchar &timezone, const uint &ip, const bool &selected);
+	CServer(ushort index, const string &name, uchar fullPercent, uchar timezone, int ip, bool selected);
 	~CServer();
 };
 //----------------------------------------------------------------------------------
@@ -41,7 +41,7 @@ public:
 	CServerList();
 	~CServerList();
 
-	CServer *GetServer(const uint &index);
+	CServer *GetServer(int index);
 	CServer *GetSelectedServer();
 	int ServersCount() { return (int)m_Servers.size(); }
 

@@ -21,7 +21,7 @@ public:
 	//!Максимальная ширина (для CroppedText)
 	int MaxWidth = 0;
 
-	CGUIGenericText(const uint &index, const ushort &color, const int &x, const int &y, const int &maxWidth = 0);
+	CGUIGenericText(int index, ushort color, int x, int y, int maxWidth = 0);
 	virtual ~CGUIGenericText();
 
 	void CreateTexture(const wstring &str);

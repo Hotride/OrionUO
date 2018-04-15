@@ -25,7 +25,7 @@ protected:
     bool m_UseProxy = false;
 public:
     bool GetUseProxy() { return m_UseProxy; };
-    void SetUseProxy(const bool& val);
+    void SetUseProxy(bool val);
 protected:
     string m_ProxyAddress = "";
 public:
@@ -35,12 +35,12 @@ protected:
     int m_ProxyPort = 0;
 public:
     int GetProxyPort() { return m_ProxyPort; };
-    void SetProxyPort(const int& val);
+    void SetProxyPort(int val);
 protected:
     bool m_ProxySocks5 = false;
 public:
     bool GetProxySocks5() { return m_ProxySocks5; };
-    void SetProxySocks5(const bool& val);
+    void SetProxySocks5(bool val);
 protected:
     string m_ProxyAccount = "";
 public:

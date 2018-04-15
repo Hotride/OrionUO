@@ -43,7 +43,7 @@ private:
 	void LoadClientConfig();
 	void LoadAutoLoginNames();
 
-	void LoadTiledata(const int &landSize, const int &staticsSize);
+	void LoadTiledata(int landSize, int staticsSize);
 
 	void LoadIndexFiles();
 
@@ -54,7 +54,7 @@ private:
 	void InitStaticAnimList();
 
 	//Вычисление цвета света
-	ushort CalculateLightColor(const ushort &id);
+	ushort CalculateLightColor(ushort id);
 
 	//Обработка списка анимированных предметов
 	void ProcessStaticAnimList();
@@ -79,7 +79,7 @@ private:
 	void ClearUnusedTextures();
 
 	void ReadMulIndexFile(size_t indexMaxCount, std::function<CIndexObject*(int index)> getIdxObj, const size_t &address, PBASE_IDX_BLOCK ptr, std::function<PBASE_IDX_BLOCK()> getNewPtrValue);
-	void ReadUOPIndexFile(size_t indexMaxCount, std::function<CIndexObject*(int index)> getIdxObj, const char *uopFileName, const int &padding, const char *extesion, CUopMappedFile &uopFile, int startIndex = 0);
+	void ReadUOPIndexFile(size_t indexMaxCount, std::function<CIndexObject*(int index)> getIdxObj, const char *uopFileName, int padding, const char *extesion, CUopMappedFile &uopFile, int startIndex = 0);
 
 	void GetCurrentLocale();
 
@@ -87,11 +87,11 @@ private:
 
 	void CheckStaticTileFilterFiles();
 
-	string DecodeArgumentString(const char *text, const int &length);
+	string DecodeArgumentString(const char *text, int length);
 
 	void ParseCommandLine();
 
-	void LoadPlugin(const string &libpath, const string &function, const uint &flags);
+	void LoadPlugin(const string &libpath, const string &function, int flags);
 
 	void LoadContaierOffsets();
 
@@ -107,30 +107,30 @@ public:
 	//Данные из тайлдаты по статике
 	vector<STATIC_TILES> m_StaticData;
 
-	static UINT_LIST FindPattern(puchar ptr, const int &size, const UCHAR_LIST &pattern);
+	static UINT_LIST FindPattern(puchar ptr, int size, const UCHAR_LIST &pattern);
 
 	bool Install();
 	void Uninstall();
 
 	//Инициализация экрана
-	void InitScreen(const GAME_STATE &state);
+	void InitScreen(GAME_STATE state);
 
 	//Обработка кликов мышки по истечении таймера ожидания даблклика
 	void ProcessDelayedClicks();
 
-	void Process(const bool &rendering = false);
+	void Process(bool rendering = false);
 
 	//Загрузка стартового конфига
-	void LoadStartupConfig(const uint &serial);
+	void LoadStartupConfig(int serial);
 
 	//Загрузка плагинов
 	void LoadPluginConfig();
 
 	//Загрузка конфига персонажа
-	void LoadLocalConfig(const uint &serial);
+	void LoadLocalConfig(int serial);
 
 	//Сохранение конфига персонажа
-	void SaveLocalConfig(const uint &serial);
+	void SaveLocalConfig(int serial);
 
 	CIndexObjectLand m_LandDataIndex[MAX_LAND_DATA_INDEX_COUNT];
 	CIndexObjectStatic m_StaticDataIndex[MAX_STATIC_DATA_INDEX_COUNT];
@@ -145,7 +145,7 @@ public:
 
 	vector<std::pair<ushort, ushort>> m_IgnoreInFilterTiles;
 
-	bool InTileFilter(const ushort &graphic);
+	bool InTileFilter(ushort graphic);
 
 	static string FixServerName(string name);
 
@@ -158,7 +158,7 @@ public:
 	void Disconnect();
 
 	//Отправить пакет на сервер
-	int Send(puchar buf, const int &size);
+	int Send(puchar buf, int size);
 
 	//Отправить пакет на сервер
 	int Send(const UCHAR_LIST &buf) { return Send((puchar)&buf[0], (int)buf.size()); }
@@ -173,13 +173,13 @@ public:
 	void CharacterSelection(int pos);
 
 	//Подтверждение о завершении логина (приходит от сервера)
-	void LoginComplete(const bool &reload);
+	void LoginComplete(bool reload);
 
 	//!Изменить сезон
-	void ChangeSeason(const SEASON_TYPE &season, const int &music);
+	void ChangeSeason(const SEASON_TYPE &season, int music);
 
 	ushort GetLandSeasonGraphic(ushort graphic);
-	ushort GetSeasonGraphic(const ushort &graphic);
+	ushort GetSeasonGraphic(ushort graphic);
 	ushort GetSpringGraphic(ushort graphic);
 	ushort GetSummerGraphic(ushort graphic);
 	ushort GetFallGraphic(ushort graphic);
@@ -193,46 +193,46 @@ public:
 
 	void ClearTreesTextures();
 
-	bool IsTreeTile(const ushort &graphic, int &index);
+	bool IsTreeTile(ushort graphic, int &index);
 
 	void ClearCaveTextures();
 
-	bool IsCaveTile(const ushort &graphic);
+	bool IsCaveTile(ushort graphic);
 
-	bool IsVegetation(const ushort &graphic);
+	bool IsVegetation(ushort graphic);
 
 
 
 	//Получить флаги ландшафта
-	uint64 GetLandFlags(const ushort &id);
+	uint64 GetLandFlags(ushort id);
 
 	//Получить флаги статики
-	uint64 GetStaticFlags(const ushort &id);
+	uint64 GetStaticFlags(ushort id);
 
 	//Получить цвет света
-	ushort GetLightColor(const ushort &id) { return m_StaticDataIndex[id].LightColor; }
+	ushort GetLightColor(ushort id) { return m_StaticDataIndex[id].LightColor; }
 
 
 
 	//Получить габариты картинки статики
-	WISP_GEOMETRY::CSize GetStaticArtDimension(const ushort &id);
+	WISP_GEOMETRY::CSize GetStaticArtDimension(ushort id);
 
 	//Получить габариты картинки гампа
-	WISP_GEOMETRY::CSize GetGumpDimension(const ushort &id);
+	WISP_GEOMETRY::CSize GetGumpDimension(ushort id);
 
 
 
 	//Загрузка текстуры гампа
-	CGLTexture *ExecuteGump(const ushort &id);
+	CGLTexture *ExecuteGump(ushort id);
 
 	//Загрузка текстуры ландшафта из art.mul
-	CGLTexture *ExecuteLandArt(const ushort &id);
+	CGLTexture *ExecuteLandArt(ushort id);
 
 	//Загрузка текстуры статики
-	CGLTexture *ExecuteStaticArt(const ushort &id);
+	CGLTexture *ExecuteStaticArt(ushort id);
 
 	//Загрузка текстуры анимированной статики
-	CGLTexture *ExecuteStaticArtAnimated(const ushort &id);
+	CGLTexture *ExecuteStaticArtAnimated(ushort id);
 
 	//Загрузка текстуры ландшафта (из texmaps.mul)
 	CGLTexture *ExecuteTexture(ushort id);
@@ -243,51 +243,51 @@ public:
 
 
 	//Загрузка элементов гампов
-	bool ExecuteGumpPart(const ushort &id, const int &count);
+	bool ExecuteGumpPart(ushort id, int count);
 
 	//Загрузка элементов фона гампа
-	bool ExecuteResizepic(const ushort &id) { return ExecuteGumpPart(id, 9); }
+	bool ExecuteResizepic(ushort id) { return ExecuteGumpPart(id, 9); }
 
 	//Загрузка элементов кнопки гампа
-	bool ExecuteButton(const ushort &id) { return ExecuteGumpPart(id, 3); }
+	bool ExecuteButton(ushort id) { return ExecuteGumpPart(id, 3); }
 
 
 
 	//Нарисовать гамп
-	void DrawGump(const ushort &id, const ushort &color, const int &x, const int &y, const bool &partialHue = false);
+	void DrawGump(ushort id, ushort color, int x, int y, bool partialHue = false);
 
 	//Нарисовать замощенный гамп
-	void DrawGump(const ushort &id, const ushort &color, const int &x, const int &y, const int &width, const int &height, const bool &partialHue = false);
+	void DrawGump(ushort id, ushort color, int x, int y, int width, int height, bool partialHue = false);
 
 	//Нарисовать фон гампа
-	void DrawResizepicGump(const ushort &id, const int &x, const int &y, const int &width, const int &height);
+	void DrawResizepicGump(ushort id, int x, int y, int width, int height);
 
 	//Нарисовать ландшафт (из texmaps.mul)
-	void DrawLandTexture(class CLandObject *land, ushort color, const int &x, const int &y);
+	void DrawLandTexture(class CLandObject *land, ushort color, int x, int y);
 
 	//Нарисовать ландшафт (из art.mul)
-	void DrawLandArt(const ushort &id, ushort color, const int &x, const int &y);
+	void DrawLandArt(ushort id, ushort color, int x, int y);
 
 	//Нарисовать статику
-	void DrawStaticArt(const ushort &id, ushort color, const int &x, const int &y, const bool &selection = false);
+	void DrawStaticArt(ushort id, ushort color, int x, int y, bool selection = false);
 
 	//Нарисовать анимированную статику
-	void DrawStaticArtAnimated(const ushort &id, const ushort &color, const int &x, const int &y, const bool &selection = false);
+	void DrawStaticArtAnimated(ushort id, ushort color, int x, int y, bool selection = false);
 
 	//Нарисовать повернутую статику
-	void DrawStaticArtRotated(const ushort &id, ushort color, const int &x, const int &y, const float &angle);
+	void DrawStaticArtRotated(ushort id, ushort color, int x, int y, float angle);
 
 	//Нарисовать повернутую анимированную статику
-	void DrawStaticArtAnimatedRotated(const ushort &id, const ushort &color, const int &x, const int &y, const float &angle);
+	void DrawStaticArtAnimatedRotated(ushort id, ushort color, int x, int y, float angle);
 
 	//Нарисовать прозрачную статику
-	void DrawStaticArtTransparent(const ushort &id, ushort color, int x, int y, const bool &selection = false);
+	void DrawStaticArtTransparent(ushort id, ushort color, int x, int y, bool selection = false);
 
 	//Нарисовать прозрачную анимированную статику
-	void DrawStaticArtAnimatedTransparent(const ushort &id, const ushort &color, const int &x, const int &y, const bool &selection = false);
+	void DrawStaticArtAnimatedTransparent(ushort id, ushort color, int x, int y, bool selection = false);
 
 	//Нарисовать статику в контейнере
-	void DrawStaticArtInContainer(const ushort &id, ushort color, int x, int y, const bool &selection = false, const bool &onMouse = false);
+	void DrawStaticArtInContainer(ushort id, ushort color, int x, int y, bool selection = false, bool onMouse = false);
 
 	//Нарисовать свет
 	void DrawLight(struct LIGHT_DATA &light);
@@ -295,28 +295,28 @@ public:
 
 
 	//Проверка прямоугольника под курсором мышки
-	bool PolygonePixelsInXY(int x, int y, const int &width, const int &height);
+	bool PolygonePixelsInXY(int x, int y, int width, int height);
 
 	//Проверка гампа под курсором мышки
-	bool GumpPixelsInXY(const ushort &id, int x, int y);
+	bool GumpPixelsInXY(ushort id, int x, int y);
 
 	//Проверка замощенного гампа под курсором мышки
-	bool GumpPixelsInXY(const ushort &id, int x, int y, int width, int height);
+	bool GumpPixelsInXY(ushort id, int x, int y, int width, int height);
 
 	//Проверка фона под курсором мышки
-	bool ResizepicPixelsInXY(const ushort &id, int x, int y, const int &width, const int &height);
+	bool ResizepicPixelsInXY(ushort id, int x, int y, int width, int height);
 
 	//Проверка статики под курсором мышки
-	bool StaticPixelsInXY(const ushort &id, const int &x, const int &y);
+	bool StaticPixelsInXY(ushort id, int x, int y);
 
 	//Проверка анимированной статики под курсором мышки
-	bool StaticPixelsInXYAnimated(const ushort &id, const int &x, const int &y);
+	bool StaticPixelsInXYAnimated(ushort id, int x, int y);
 
 	//Проверка статики в контейнере под курсором мышки
-	bool StaticPixelsInXYInContainer(const ushort &id, const int &x, const int &y);
+	bool StaticPixelsInXYInContainer(ushort id, int x, int y);
 
 	//Проверка ландшафта (из art.mul) под курсором мышки
-	bool LandPixelsInXY(const ushort &id, int x, int y);
+	bool LandPixelsInXY(ushort id, int x, int y);
 
 	//Проверка растянутого ландшафта (из texmaps.mul) под курсором мышки
 	bool LandTexturePixelsInXY(int x, int  y, RECT &r);
@@ -330,10 +330,10 @@ public:
 	void CreateUnicodeTextMessageF(uchar font, ushort color, const char *format, ...);
 
 	//Создать текстовое сообщение (ASCII)
-	void CreateTextMessage(const TEXT_TYPE &type, const uint &serial, const uchar &font, const ushort &color, const string &text);
+	void CreateTextMessage(const TEXT_TYPE &type, int serial, uchar font, ushort color, const string &text);
 
 	//Создать текстовое сообщение (Unicode)
-	void CreateUnicodeTextMessage(const TEXT_TYPE &type, const uint &serial, const uchar &font, const ushort &color, const wstring &text);
+	void CreateUnicodeTextMessage(const TEXT_TYPE &type, int serial, uchar font, ushort color, const wstring &text);
 
 	//Добавить сообщение в систем чат
 	void AddSystemMessage(class CTextData *msg);
@@ -349,10 +349,10 @@ public:
 
 
 	//Поднять предмет
-	void PickupItem(class CGameItem *obj, int count = 0, const bool &isGameFigure = false);
+	void PickupItem(class CGameItem *obj, int count = 0, bool isGameFigure = false);
 
 	//Бросить предмет
-	void DropItem(const uint &container, const ushort &x, const ushort &y, const char &z);
+	void DropItem(int container, ushort x, ushort y, char z);
 
 	//Одеть предмет
 	void EquipItem(uint container = 0);
@@ -412,13 +412,13 @@ public:
 	void PauseSound();
 
 	//Проиграть музыку mp3 либо midi
-	void PlayMusic(const int &index, const bool &warmode = false);
+	void PlayMusic(int index, bool warmode = false);
 
 	//Проиграть звуковой эффект
-	void PlaySoundEffect(const ushort &index, float volume = -1);
+	void PlaySoundEffect(ushort index, float volume = -1);
 
 	//Удалить неиспользуемые звуковые эффекты
-	void AdjustSoundEffects(const uint &ticks, const float &volume = -1);
+	void AdjustSoundEffects(int ticks, float volume = -1);
 
 
 
@@ -449,7 +449,7 @@ public:
 	void OpenStatus(uint serial);
 
 	//Открыть или переместить гамп статуса
-	void DisplayStatusbarGump(const uint &serial, const int &x, const int &y);
+	void DisplayStatusbarGump(int serial, int x, int y);
 
 	//Открыть гамп мини-карты
 	void OpenMinimap();

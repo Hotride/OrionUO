@@ -115,7 +115,7 @@ int CGumpWorldMap::GetCurrentMap()
 	return map;
 }
 //----------------------------------------------------------------------------------
-void CGumpWorldMap::SetLinkWithPlayer(const bool &val)
+void CGumpWorldMap::SetLinkWithPlayer(bool val)
 {
 	WISPFUN_DEBUG("c132_f3");
 	m_LinkWithPlayer = val;
@@ -124,7 +124,7 @@ void CGumpWorldMap::SetLinkWithPlayer(const bool &val)
 	WantRedraw = true;
 }
 //----------------------------------------------------------------------------------
-void CGumpWorldMap::SetScale(const int &val)
+void CGumpWorldMap::SetScale(int val)
 {
 	WISPFUN_DEBUG("c132_f4");
 	m_Scale = val;
@@ -132,7 +132,7 @@ void CGumpWorldMap::SetScale(const int &val)
 	WantRedraw = true;
 }
 //----------------------------------------------------------------------------------
-void CGumpWorldMap::SetMap(const int &val)
+void CGumpWorldMap::SetMap(int val)
 {
 	WISPFUN_DEBUG("c132_f5");
 	m_Map = val;
@@ -281,7 +281,7 @@ void CGumpWorldMap::FixOffsets(int &offsetX, int &offsetY, int &width, int &heig
 		offsetY = 0;
 }
 //----------------------------------------------------------------------------------
-void CGumpWorldMap::LoadMap(const int &map)
+void CGumpWorldMap::LoadMap(int map)
 {
 	WISPFUN_DEBUG("c132_f11");
 
@@ -476,7 +476,7 @@ void CGumpWorldMap::LoadMap(const int &map)
 	}
 }
 //----------------------------------------------------------------------------------
-void CGumpWorldMap::GenerateFrame(const bool &stop)
+void CGumpWorldMap::GenerateFrame(bool stop)
 {
 	WISPFUN_DEBUG("c132_f12");
 	CGump::GenerateFrame(false);
@@ -705,7 +705,7 @@ bool CGumpWorldMap::OnLeftMouseButtonDoubleClick()
 	return result;
 }
 //----------------------------------------------------------------------------------
-void CGumpWorldMap::OnMidMouseButtonScroll(const bool &up)
+void CGumpWorldMap::OnMidMouseButtonScroll(bool up)
 {
 	WISPFUN_DEBUG("c132_f20");
 	//Если доступно для изменения масштаба

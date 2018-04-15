@@ -39,8 +39,8 @@ public:
 	virtual ~CPluginManager() {}
 
 	LRESULT WindowProc(HWND hWnd, UINT msg, WPARAM wparam, LPARAM lparam);
-	bool PacketRecv(puchar buf, const int &size);
-	bool PacketSend(puchar buf, const int &size);
+	bool PacketRecv(puchar buf, int size);
+	bool PacketSend(puchar buf, int size);
 	void Disconnect();
 	void WorldDraw();
 	void SceneDraw();

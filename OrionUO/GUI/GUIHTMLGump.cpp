@@ -11,7 +11,7 @@
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
 //----------------------------------------------------------------------------------
-CGUIHTMLGump::CGUIHTMLGump(const uint &serial, const ushort &graphic, const int &x, const int &y, const int &width, const int &height, const bool &haveBackground, const bool &haveScrollbar)
+CGUIHTMLGump::CGUIHTMLGump(int serial, ushort graphic, int x, int y, int width, int height, bool haveBackground, bool haveScrollbar)
 : CGUIPolygonal(GOT_HTMLGUMP, x, y, width, height), HaveBackground(haveBackground),
 HaveScrollbar(haveScrollbar), DataSize(), DataOffset(), CurrentOffset(), AvailableOffset()
 {
@@ -113,7 +113,7 @@ void CGUIHTMLGump::Initalize(bool menu)
 	}
 }
 //----------------------------------------------------------------------------------
-void CGUIHTMLGump::UpdateHeight(const int &height)
+void CGUIHTMLGump::UpdateHeight(int height)
 {
 	WISPFUN_DEBUG("c60_f4");
 	Height = height;
@@ -260,7 +260,7 @@ bool CGUIHTMLGump::Select()
 	return selected;
 }
 //----------------------------------------------------------------------------------
-void CGUIHTMLGump::Scroll(const bool &up, const uint &delay)
+void CGUIHTMLGump::Scroll(bool up, int delay)
 {
 	WISPFUN_DEBUG("c60_f10");
 	if (m_Slider != NULL)

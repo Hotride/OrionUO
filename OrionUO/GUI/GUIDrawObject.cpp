@@ -11,7 +11,7 @@
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
 //----------------------------------------------------------------------------------
-CGUIDrawObject::CGUIDrawObject(const GUMP_OBJECT_TYPE &type, const uint &serial, const ushort &graphic, const ushort &color, const int &x, const int &y)
+CGUIDrawObject::CGUIDrawObject(GUMP_OBJECT_TYPE type, int serial, ushort graphic, ushort color, int x, int y)
 : CBaseGUI(type, serial, graphic, color, x, y)
 {
 }
@@ -58,7 +58,7 @@ void CGUIDrawObject::PrepareTextures()
 	g_Orion.ExecuteGump(Graphic);
 }
 //----------------------------------------------------------------------------------
-void CGUIDrawObject::Draw(const bool &checktrans)
+void CGUIDrawObject::Draw(bool checktrans)
 {
 	WISPFUN_DEBUG("c52_f4");
 	CGLTexture *th = g_Orion.ExecuteGump(GetDrawGraphic());

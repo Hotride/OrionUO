@@ -11,7 +11,7 @@
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
 //----------------------------------------------------------------------------------
-CGUIGroup::CGUIGroup(const int &index)
+CGUIGroup::CGUIGroup(int index)
 : CBaseGUI(GOT_GROUP, 0, 0, 0, 0, 0), Index(index)
 {
 }

@@ -24,7 +24,7 @@ public:
 	@param [__in] flags Multi component flags
 	@return
 	*/
-	CCustomHouseMultiObject(const ushort &graphic, const ushort &color, const short &x, const short &y, const char &z, const uint &flags);
+	CCustomHouseMultiObject(ushort graphic, ushort color, short x, short y, char z, int flags);
 
 	/*!
 	Destructor

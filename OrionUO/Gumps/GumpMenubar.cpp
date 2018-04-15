@@ -76,7 +76,7 @@ CGumpMenubar::~CGumpMenubar()
 {
 }
 //---------------------------------------------------------------------------
-void CGumpMenubar::SetOpened(const bool &val)
+void CGumpMenubar::SetOpened(bool val)
 {
 	WISPFUN_DEBUG("c101_f2");
 	m_Opened = val;

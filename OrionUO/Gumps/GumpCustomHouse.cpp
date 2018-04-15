@@ -108,7 +108,7 @@ void ParseCustomHouseObjectFile(vector<T> &list, const string &path)
 	}
 }
 //----------------------------------------------------------------------------------
-CGumpCustomHouse::CGumpCustomHouse(const uint &serial, const int &x, const int &y)
+CGumpCustomHouse::CGumpCustomHouse(int serial, int x, int y)
 : CGump(GT_CUSTOM_HOUSE, serial, x, y)
 {
 	WISPFUN_DEBUG("");
@@ -486,7 +486,7 @@ void CGumpCustomHouse::DrawWallSection()
 
 			IFOR(i, 0, 8)
 			{
-				const ushort &graphic = (ShowWindow ? item.m_WindowGraphics[i] : item.m_Graphics[i]);
+				ushort graphic = (ShowWindow ? item.m_WindowGraphics[i] : item.m_Graphics[i]);
 				
 				if (graphic)
 				{
@@ -531,7 +531,7 @@ void CGumpCustomHouse::DrawDoorSection()
 
 		IFOR(i, 0, 8)
 		{
-			const ushort &graphic = item.m_Graphics[i];
+			ushort graphic = item.m_Graphics[i];
 
 			if (graphic)
 			{
@@ -659,7 +659,7 @@ void CGumpCustomHouse::DrawFloorSection()
 		{
 			IFOR(i, 0, 8)
 			{
-				const ushort &graphic = item.m_Graphics[index];
+				ushort graphic = item.m_Graphics[index];
 
 				if (graphic)
 				{
@@ -707,7 +707,7 @@ void CGumpCustomHouse::DrawStairSection()
 
 			IFOR(i, start, end)
 			{
-				const ushort &graphic = item.m_Graphics[i];
+				ushort graphic = item.m_Graphics[i];
 
 				if (graphic)
 				{
@@ -792,7 +792,7 @@ void CGumpCustomHouse::DrawRoofSection()
 			{
 				IFOR(i, 0, 8)
 				{
-					const ushort &graphic = item.m_Graphics[index];
+					ushort graphic = item.m_Graphics[index];
 
 					if (graphic)
 					{
@@ -891,7 +891,7 @@ void CGumpCustomHouse::DrawMiscSection()
 
 			IFOR(i, 0, 8)
 			{
-				const ushort &graphic = item.m_Graphics[i];
+				ushort graphic = item.m_Graphics[i];
 
 				if (graphic)
 				{
@@ -964,7 +964,7 @@ void CGumpCustomHouse::DrawMenuSection()
 }
 //----------------------------------------------------------------------------------
 template<class T, class A>
-pair<int, int> SeekGraphicInCustomHouseObjectListWithCategory(const vector<A> &list, const ushort &graphic)
+pair<int, int> SeekGraphicInCustomHouseObjectListWithCategory(const vector<A> &list, ushort graphic)
 {
 	IFOR(i, 0, (int)list.size())
 	{
@@ -983,7 +983,7 @@ pair<int, int> SeekGraphicInCustomHouseObjectListWithCategory(const vector<A> &l
 }
 //----------------------------------------------------------------------------------
 template<class T>
-pair<int, int> SeekGraphicInCustomHouseObjectList(const vector<T> &list, const ushort &graphic)
+pair<int, int> SeekGraphicInCustomHouseObjectList(const vector<T> &list, ushort graphic)
 {
 	IFOR(i, 0, (int)list.size())
 	{
@@ -996,7 +996,7 @@ pair<int, int> SeekGraphicInCustomHouseObjectList(const vector<T> &list, const u
 	return pair<int, int>(-1, -1);
 }
 //----------------------------------------------------------------------------------
-pair<int, int> CGumpCustomHouse::ExistsInList(CUSTOM_HOUSE_GUMP_STATE &state, const ushort &graphic)
+pair<int, int> CGumpCustomHouse::ExistsInList(CUSTOM_HOUSE_GUMP_STATE &state, ushort graphic)
 {
 	pair<int, int> result = SeekGraphicInCustomHouseObjectListWithCategory<CCustomHouseObjectWall, CCustomHouseObjectWallCategory>(m_Walls, graphic);
 
@@ -1266,7 +1266,7 @@ void CGumpCustomHouse::UpdateMaxPage()
 	}
 }
 //----------------------------------------------------------------------------------
-void CGumpCustomHouse::SeekGraphic(const ushort &graphic)
+void CGumpCustomHouse::SeekGraphic(ushort graphic)
 {
 	CUSTOM_HOUSE_GUMP_STATE state;
 	pair<int, int> result = ExistsInList(state, graphic);
@@ -1485,7 +1485,7 @@ bool CGumpCustomHouse::CanBuildHere(vector<CBuildObject> &list, CRenderWorldObje
 	return true;
 }
 //----------------------------------------------------------------------------------
-bool CGumpCustomHouse::ValidateItemPlace(const RECT &rect, const ushort &graphic, const int &x, const int &y)
+bool CGumpCustomHouse::ValidateItemPlace(const RECT &rect, ushort graphic, int x, int y)
 {
 	POINT pos = { x, y };
 
@@ -1509,7 +1509,7 @@ bool CGumpCustomHouse::ValidateItemPlace(const RECT &rect, const ushort &graphic
 	return true;
 }
 //----------------------------------------------------------------------------------
-bool CGumpCustomHouse::ValidatePlaceStructure(CGameItem *foundationItem, CMulti *multi, const int &minZ, const int &maxZ, const int &flags)
+bool CGumpCustomHouse::ValidatePlaceStructure(CGameItem *foundationItem, CMulti *multi, int minZ, int maxZ, int flags)
 {
 	if (multi == NULL)
 		return false;
@@ -1587,7 +1587,7 @@ bool CGumpCustomHouse::ValidatePlaceStructure(CGameItem *foundationItem, CMulti 
 	return false;
 }
 //----------------------------------------------------------------------------------
-bool CGumpCustomHouse::ValidateItemPlace(CGameItem *foundationItem, CMultiObject *item, const int &minZ, const int &maxZ, vector<WISP_GEOMETRY::CPoint2Di> &validatedFloors)
+bool CGumpCustomHouse::ValidateItemPlace(CGameItem *foundationItem, CMultiObject *item, int minZ, int maxZ, vector<WISP_GEOMETRY::CPoint2Di> &validatedFloors)
 {
 	if (item == NULL || !item->IsCustomHouseMulti())
 		return true;

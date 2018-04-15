@@ -11,7 +11,7 @@
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
 //----------------------------------------------------------------------------------
-CGUIExternalTexture::CGUIExternalTexture(CGLTexture *texture, const bool &deleteTextureOnDestroy, const int &x, const int &y, const int &drawWidth, const int &drawHeight)
+CGUIExternalTexture::CGUIExternalTexture(CGLTexture *texture, bool deleteTextureOnDestroy, int x, int y, int drawWidth, int drawHeight)
 : CBaseGUI(GOT_EXTERNALTEXTURE, 0, 0, 0, x, y), m_Texture(texture),
 DeleteTextureOnDestroy(deleteTextureOnDestroy), DrawWidth(drawWidth), DrawHeight(drawHeight)
 {
@@ -64,7 +64,7 @@ void CGUIExternalTexture::SetShaderMode()
 		glUniform1iARB(g_ShaderDrawMode, SDM_NO_COLOR);
 }
 //----------------------------------------------------------------------------------
-void CGUIExternalTexture::Draw(const bool &checktrans)
+void CGUIExternalTexture::Draw(bool checktrans)
 {
 	WISPFUN_DEBUG("c53_f3");
 	if (m_Texture != NULL)

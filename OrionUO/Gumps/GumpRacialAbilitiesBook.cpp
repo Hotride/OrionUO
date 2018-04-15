@@ -11,7 +11,7 @@
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
 //----------------------------------------------------------------------------------
-CGumpRacialAbilitiesBook::CGumpRacialAbilitiesBook(const int &x, const int &y)
+CGumpRacialAbilitiesBook::CGumpRacialAbilitiesBook(int x, int y)
 : CGump(GT_RACIAL_ABILITIES_BOOK, 0, x, y)
 {
 	Draw2Page = true;
@@ -91,7 +91,7 @@ void CGumpRacialAbilitiesBook::GetSummaryBookInfo(int &abilityOnPage, ushort &ic
 	}
 }
 //----------------------------------------------------------------------------
-string CGumpRacialAbilitiesBook::GetAbilityName(const int &offset, bool &passive)
+string CGumpRacialAbilitiesBook::GetAbilityName(int offset, bool &passive)
 {
 	WISPFUN_DEBUG("c110_f4");
 	string result = "";

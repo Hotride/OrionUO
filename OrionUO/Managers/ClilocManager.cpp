@@ -88,7 +88,7 @@ string CCliloc::Load(uint &id)
 	return result;
 }
 //----------------------------------------------------------------------------------
-wstring CCliloc::CamelCaseTest(const bool &toCamelCase, const string &result)
+wstring CCliloc::CamelCaseTest(bool toCamelCase, const string &result)
 {
 	if (toCamelCase)
 		return ToCamelCaseW(DecodeUTF8(result));
@@ -102,7 +102,7 @@ wstring CCliloc::CamelCaseTest(const bool &toCamelCase, const string &result)
 @param [__in] result Стандартное сообщение, если клилок не был найден
 @return Полученный результат, замена или сообщение с ошибкой
 */
-wstring CCliloc::Get(const uint &id, const bool &toCamelCase, string result)
+wstring CCliloc::Get(int id, bool toCamelCase, string result)
 {
 	WISPFUN_DEBUG("c135_f4");
 	if (id >= 3000000)
@@ -146,7 +146,7 @@ wstring CCliloc::Get(const uint &id, const bool &toCamelCase, string result)
 	return CamelCaseTest(toCamelCase, result);
 }
 //----------------------------------------------------------------------------------
-string CCliloc::GetA(const uint &id, const bool &toCamelCase, string result)
+string CCliloc::GetA(int id, bool toCamelCase, string result)
 {
 	WISPFUN_DEBUG("c135_f4_1");
 	return ToString(Get(id, toCamelCase, result));
@@ -158,7 +158,7 @@ string CCliloc::GetA(const uint &id, const bool &toCamelCase, string result)
 @param [__in] result Стандартное сообщение, если клилок не был найден
 @return Полученный результат, замена или сообщение с ошибкой
 */
-wstring CCliloc::GetW(const uint &id, const bool &toCamelCase, string result)
+wstring CCliloc::GetW(int id, bool toCamelCase, string result)
 {
 	WISPFUN_DEBUG("c135_f5");
 	return Get(id, toCamelCase, result);
@@ -228,7 +228,7 @@ CCliloc *CClilocManager::Cliloc(const string &lang)
 	return obj;
 }
 //----------------------------------------------------------------------------------
-wstring CClilocManager::ParseArgumentsToClilocString(const uint &cliloc, const bool &toCamelCase, wstring args)
+wstring CClilocManager::ParseArgumentsToClilocString(int cliloc, bool toCamelCase, wstring args)
 {
 	WISPFUN_DEBUG("c136_f2");
 	while (args.length() && args[0] == L'\t')

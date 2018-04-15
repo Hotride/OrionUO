@@ -317,7 +317,7 @@ bool CPacketManager::AutoLoginNameExists(const string &name)
 	#define CVPRINT(s)
 #endif //CV_PRINT!=0
 //----------------------------------------------------------------------------------
-void CPacketManager::SetClientVersion(const CLIENT_VERSION &newClientVersion)
+void CPacketManager::SetClientVersion(CLIENT_VERSION newClientVersion)
 {
 	WISPFUN_DEBUG("c150_f2");
 	m_ClientVersion = newClientVersion;
@@ -523,7 +523,7 @@ void CPacketManager::SendMegaClilocRequests()
 		}
 		else
 		{
-			for (const uint &i : m_MegaClilocRequests)
+			for (int i : m_MegaClilocRequests)
 				CPacketMegaClilocRequestOld(i).Send();
 
 			m_MegaClilocRequests.clear();
@@ -531,10 +531,10 @@ void CPacketManager::SendMegaClilocRequests()
 	}
 }
 //----------------------------------------------------------------------------------
-void CPacketManager::AddMegaClilocRequest(const uint &serial)
+void CPacketManager::AddMegaClilocRequest(int serial)
 {
 	WISPFUN_DEBUG("c150_f6");
-	for (const uint &item : m_MegaClilocRequests)
+	for (int item : m_MegaClilocRequests)
 	{
 		if (item == serial)
 			return;
@@ -596,7 +596,7 @@ void CPacketManager::OnPacket()
 	}
 }
 //----------------------------------------------------------------------------------
-void CPacketManager::SavePluginReceivePacket(puchar buf, const int &size)
+void CPacketManager::SavePluginReceivePacket(puchar buf, int size)
 {
 	WISPFUN_DEBUG("c150_f9");
 	UCHAR_LIST packet(size);
@@ -624,7 +624,7 @@ void CPacketManager::ProcessPluginPackets()
 	LeaveCriticalSection(&m_CSPluginNetwork);
 }
 //----------------------------------------------------------------------------------
-void CPacketManager::PluginReceiveHandler(puchar buf, const int &size)
+void CPacketManager::PluginReceiveHandler(puchar buf, int size)
 {
 	WISPFUN_DEBUG("c150_f11");
 	SetData(buf, size);

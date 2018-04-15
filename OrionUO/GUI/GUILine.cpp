@@ -11,7 +11,7 @@
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
 //----------------------------------------------------------------------------------
-CGUILine::CGUILine(const int &startX, const int &startY, const int &targetX, const int &targetY, const uint &polygoneColor)
+CGUILine::CGUILine(int startX, int startY, int targetX, int targetY, int polygoneColor)
 : CBaseGUI(GOT_LINE, 0, 0, 0, startX, startY), TargetX(targetX), TargetY(targetY)
 {
 	WISPFUN_DEBUG("c65_f1");
@@ -28,7 +28,7 @@ CGUILine::~CGUILine()
 {
 }
 //----------------------------------------------------------------------------------
-void CGUILine::Draw(const bool &checktrans)
+void CGUILine::Draw(bool checktrans)
 {
 	WISPFUN_DEBUG("c65_f2");
 	glColor4ub(ColorR, ColorG, ColorB, ColorA);

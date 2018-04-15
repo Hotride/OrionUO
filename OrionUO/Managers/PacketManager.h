@@ -77,7 +77,7 @@ protected:
     CLIENT_VERSION m_ClientVersion = CV_OLD;
 public:
     CLIENT_VERSION GetClientVersion() { return m_ClientVersion; };
-    void SetClientVersion(const CLIENT_VERSION& val);
+    void SetClientVersion(CLIENT_VERSION val);
 	string AutoLoginNames = "";
 	uint ConfigSerial = 0;
 
@@ -219,17 +219,17 @@ public:
 
 	virtual int GetPacketSize(const UCHAR_LIST &packet, int &offsetToSize);
 
-	CPacketInfo GetInfo(const uchar &buf) const { return m_Packets[buf]; }
+	CPacketInfo GetInfo(uchar buf) const { return m_Packets[buf]; }
 
 	void SendMegaClilocRequests();
 
-	void AddMegaClilocRequest(const uint &serial);
+	void AddMegaClilocRequest(int serial);
 
-	void SavePluginReceivePacket(puchar buf, const int &size);
+	void SavePluginReceivePacket(puchar buf, int size);
 
 	void ProcessPluginPackets();
 
-	void PluginReceiveHandler(puchar buf, const int &size);
+	void PluginReceiveHandler(puchar buf, int size);
 
 	void SetCachedGumpCoords(uint id, int x, int y);
 };

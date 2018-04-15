@@ -18,7 +18,7 @@ public:
 	//!Индекс страницы для перемещения (если используется, по фукнционалу CGUIButton)
 	int ToPage = -1;
 
-	CGUIHitBox(const uint &serial, const int &x, const int &y, const int &width, const int &height, const bool &callOnMouseUp = false);
+	CGUIHitBox(int serial, int x, int y, int width, int height, bool callOnMouseUp = false);
 	virtual ~CGUIHitBox();
 
 	virtual void OnMouseEnter();

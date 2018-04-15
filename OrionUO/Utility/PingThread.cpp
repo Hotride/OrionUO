@@ -49,7 +49,7 @@ typedef struct tagECHOREPLY
 	char cFiller[256];
 } ECHOREPLY, *PECHOREPLY;
 //----------------------------------------------------------------------------------
-CPingThread::CPingThread(const uint &serverID, const string &serverIP, const int &requestsCount)
+CPingThread::CPingThread(int serverID, const string &serverIP, int requestsCount)
 : WISP_THREAD::CThread(), ServerID(serverID), ServerIP(serverIP),
 RequestsCount(requestsCount)
 {

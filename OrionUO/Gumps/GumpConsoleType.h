@@ -16,7 +16,7 @@ protected:
     bool m_ShowFullText = false;
 public:
     bool GetShowFullText() { return m_ShowFullText; };
-    void SetShowFullText(const bool& val);
+    void SetShowFullText(bool val);
 
 protected:
 	int m_SelectedType{ 0 };

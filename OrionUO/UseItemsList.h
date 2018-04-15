@@ -21,7 +21,7 @@ public:
 	CUseItemActions() {}
 	~CUseItemActions() {}
 
-	void Add(const uint &serial);
+	void Add(int serial);
 
 	void Clear() { m_List.clear(); }
 

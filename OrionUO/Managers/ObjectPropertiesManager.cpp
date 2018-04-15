@@ -15,7 +15,7 @@ CObjectPropertiesManager g_ObjectPropertiesManager;
 //----------------------------------------------------------------------------------
 //----------------------------------CObjectProperty---------------------------------
 //----------------------------------------------------------------------------------
-CObjectProperty::CObjectProperty(const uint &serial, const uint &revision, const wstring &name, const wstring &data)
+CObjectProperty::CObjectProperty(int serial, int revision, const wstring &name, const wstring &data)
 : Serial(serial), Revision(revision), Name(name), Data(data)
 {
 }
@@ -25,7 +25,7 @@ bool CObjectProperty::Empty()
 	return (!Name.length() && !Data.length());
 }
 //----------------------------------------------------------------------------------
-wstring CObjectProperty::CreateTextData(const bool &extended)
+wstring CObjectProperty::CreateTextData(bool extended)
 {
 	CGameObject *obj = g_World->FindWorldObject(Serial);
 	bool coloredStartFont = false;
@@ -106,7 +106,7 @@ void CObjectPropertiesManager::Reset()
 	g_ToolTip.Reset();
 }
 //----------------------------------------------------------------------------------
-bool CObjectPropertiesManager::RevisionCheck(const uint &serial, const uint &revision)
+bool CObjectPropertiesManager::RevisionCheck(int serial, int revision)
 {
 	OBJECT_PROPERTIES_MAP::iterator it = m_Map.find(serial);
 
@@ -116,7 +116,7 @@ bool CObjectPropertiesManager::RevisionCheck(const uint &serial, const uint &rev
 	return (it->second.Revision == revision);
 }
 //----------------------------------------------------------------------------------
-void CObjectPropertiesManager::OnItemClicked(const uint &serial)
+void CObjectPropertiesManager::OnItemClicked(int serial)
 {
 	if (!g_ConfigManager.GetItemPropertiesIcon() || !g_TooltipsEnabled || g_ConfigManager.GetItemPropertiesMode() != OPM_SINGLE_CLICK)
 		return;
@@ -130,7 +130,7 @@ void CObjectPropertiesManager::OnItemClicked(const uint &serial)
 	g_GumpManager.AddGump(new CGumpProperty(it->second.CreateTextData(true)));
 }
 //----------------------------------------------------------------------------------
-void CObjectPropertiesManager::Display(const uint &serial)
+void CObjectPropertiesManager::Display(int serial)
 {
 	OBJECT_PROPERTIES_MAP::iterator it = m_Map.find(serial);
 
@@ -185,7 +185,7 @@ void CObjectPropertiesManager::Display(const uint &serial)
 	}
 }
 //----------------------------------------------------------------------------------
-void CObjectPropertiesManager::Add(const uint &serial, const CObjectProperty &objectProperty)
+void CObjectPropertiesManager::Add(int serial, const CObjectProperty &objectProperty)
 {
 	m_Map[serial] = objectProperty;
 }

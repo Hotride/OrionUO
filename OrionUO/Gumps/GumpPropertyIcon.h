@@ -25,7 +25,7 @@ private:
 	CGLTextTexture m_Texture;
 
 public:
-	CGumpPropertyIcon(const int &x, const int &y);
+	CGumpPropertyIcon(int x, int y);
 	virtual ~CGumpPropertyIcon();
 
 	virtual void PrepareContent();

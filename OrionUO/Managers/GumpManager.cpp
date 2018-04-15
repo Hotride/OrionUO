@@ -249,7 +249,7 @@ CGump *CGumpManager::GumpExists(uint gumpID)
 @param [__in] Type Тип гампа
 @return Ссылку на обновленный гамп или NULL
 */
-CGump *CGumpManager::UpdateContent(const uint &serial, const uint &id, const GUMP_TYPE &type)
+CGump *CGumpManager::UpdateContent(int serial, int id, const GUMP_TYPE &type)
 {
 	WISPFUN_DEBUG("c144_f5");
 	CGump *gump = GetGump(serial, id, type);
@@ -267,7 +267,7 @@ CGump *CGumpManager::UpdateContent(const uint &serial, const uint &id, const GUM
 @param [__in] Type Тип гампа
 @return Ссылку на обновленный гамп или NULL
 */
-CGump *CGumpManager::UpdateGump(const uint &serial, const uint &id, const GUMP_TYPE &type)
+CGump *CGumpManager::UpdateGump(int serial, int id, const GUMP_TYPE &type)
 {
 	WISPFUN_DEBUG("c144_f6");
 	CGump *gump = GetGump(serial, id, type);
@@ -285,7 +285,7 @@ CGump *CGumpManager::UpdateGump(const uint &serial, const uint &id, const GUMP_T
 @param [__in] Type Тип гампа
 @return Ссылку на гамп или NULL
 */
-CGump *CGumpManager::GetGump(const uint &serial, const uint &id, const GUMP_TYPE &type)
+CGump *CGumpManager::GetGump(int serial, int id, const GUMP_TYPE &type)
 {
 	WISPFUN_DEBUG("c144_f7");
 	CGump *gump = (CGump*)m_Items;
@@ -513,7 +513,7 @@ void CGumpManager::PrepareTextures()
 	g_CurrentCheckGump = NULL;
 }
 //----------------------------------------------------------------------------------
-void CGumpManager::Draw(const bool &blocked)
+void CGumpManager::Draw(bool blocked)
 {
 	WISPFUN_DEBUG("c144_f15");
 	CGump *gump = (CGump*)m_Items;
@@ -542,7 +542,7 @@ void CGumpManager::Draw(const bool &blocked)
 		menuBarGump->Draw();
 }
 //----------------------------------------------------------------------------------
-void CGumpManager::Select(const bool &blocked)
+void CGumpManager::Select(bool blocked)
 {
 	WISPFUN_DEBUG("c144_f16");
 	CGump *gump = (CGump*)m_Items;
@@ -601,7 +601,7 @@ void CGumpManager::RedrawAll()
 @param [__in] blocked Состояние экрана
 @return 
 */
-void CGumpManager::OnLeftMouseButtonDown(const bool &blocked)
+void CGumpManager::OnLeftMouseButtonDown(bool blocked)
 {
 	WISPFUN_DEBUG("c144_f19");
 	if (g_SelectedObject.Object != NULL && g_SelectedObject.Object->IsText())
@@ -632,7 +632,7 @@ void CGumpManager::OnLeftMouseButtonDown(const bool &blocked)
 @param [__in] blocked Состояние экрана
 @return 
 */
-bool CGumpManager::OnLeftMouseButtonUp(const bool &blocked)
+bool CGumpManager::OnLeftMouseButtonUp(bool blocked)
 {
 	WISPFUN_DEBUG("c144_f20");
 	if (g_SelectedObject.Object != NULL && g_SelectedObject.Object->IsText())
@@ -778,7 +778,7 @@ bool CGumpManager::OnLeftMouseButtonUp(const bool &blocked)
 @param [__in] blocked Состояние экрана
 @return true при успешной обработке
 */
-bool CGumpManager::OnLeftMouseButtonDoubleClick(const bool &blocked)
+bool CGumpManager::OnLeftMouseButtonDoubleClick(bool blocked)
 {
 	WISPFUN_DEBUG("c144_f21");
 	bool result = false;
@@ -808,7 +808,7 @@ bool CGumpManager::OnLeftMouseButtonDoubleClick(const bool &blocked)
 @param [__in] blocked Состояние экрана
 @return 
 */
-void CGumpManager::OnRightMouseButtonDown(const bool &blocked)
+void CGumpManager::OnRightMouseButtonDown(bool blocked)
 {
 	WISPFUN_DEBUG("c144_f22");
 	if (g_SelectedObject.Object != NULL && g_SelectedObject.Object->IsText())
@@ -839,7 +839,7 @@ void CGumpManager::OnRightMouseButtonDown(const bool &blocked)
 @param [__in] blocked Состояние экрана
 @return 
 */
-void CGumpManager::OnRightMouseButtonUp(const bool &blocked)
+void CGumpManager::OnRightMouseButtonUp(bool blocked)
 {
 	WISPFUN_DEBUG("c144_f23");
 	if (g_SelectedObject.Object != NULL && g_SelectedObject.Object->IsText())
@@ -1006,7 +1006,7 @@ void CGumpManager::OnRightMouseButtonUp(const bool &blocked)
 @param [__in] blocked Состояние экрана
 @return 
 */
-void CGumpManager::OnMidMouseButtonScroll(const bool &up, const bool &blocked)
+void CGumpManager::OnMidMouseButtonScroll(bool up, bool blocked)
 {
 	WISPFUN_DEBUG("c144_f24");
 	QFOR(gump, m_Items, CGump*)
@@ -1020,7 +1020,7 @@ void CGumpManager::OnMidMouseButtonScroll(const bool &up, const bool &blocked)
 	}
 }
 //----------------------------------------------------------------------------------
-void CGumpManager::OnDragging(const bool &blocked)
+void CGumpManager::OnDragging(bool blocked)
 {
 	WISPFUN_DEBUG("c144_f25");
 	QFOR(gump, m_Items, CGump*)
@@ -1041,7 +1041,7 @@ void CGumpManager::OnDragging(const bool &blocked)
 @param [__in] blocked Состояние экрана
 @return true при успешной обработке
 */
-bool CGumpManager::OnCharPress(const WPARAM &wParam, const LPARAM &lParam, const bool &blocked)
+bool CGumpManager::OnCharPress(const WPARAM &wParam, const LPARAM &lParam, bool blocked)
 {
 	WISPFUN_DEBUG("c144_f26");
 	CGump *gump = GetTextEntryOwner();
@@ -1078,7 +1078,7 @@ bool CGumpManager::OnCharPress(const WPARAM &wParam, const LPARAM &lParam, const
 @param [__in] blocked Состояние экрана
 @return true при успешной обработке
 */
-bool CGumpManager::OnKeyDown(const WPARAM &wParam, const LPARAM &lParam, const bool &blocked)
+bool CGumpManager::OnKeyDown(const WPARAM &wParam, const LPARAM &lParam, bool blocked)
 {
 	WISPFUN_DEBUG("c144_f27");
 	bool result = false;
@@ -1490,7 +1490,7 @@ void CGumpManager::Load(const string &path)
 	AddGump(new CGumpConsoleType(minimizedConsoleType, showFullTextConsoleType));
 }
 //----------------------------------------------------------------------------------
-void CGumpManager::SaveDefaultGumpProperties(WISP_FILE::CBinaryFileWritter &writer, CGump *gump, const int &size)
+void CGumpManager::SaveDefaultGumpProperties(WISP_FILE::CBinaryFileWritter &writer, CGump *gump, int size)
 {
 	WISPFUN_DEBUG("c144_f29");
 	writer.WriteInt8(size);

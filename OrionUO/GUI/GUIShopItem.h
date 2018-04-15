@@ -45,7 +45,7 @@ private:
 	int m_MaxOffset{ 0 };
 
 public:
-	CGUIShopItem(const uint &serial, const ushort &graphic, const ushort &color, const uint &count, const uint &price, const string &name, const int &x, const int &y);
+	CGUIShopItem(int serial, ushort graphic, ushort color, int count, int price, const string &name, int x, int y);
 	virtual ~CGUIShopItem();
 
 	//!Нажатие на компоненту
@@ -57,7 +57,7 @@ public:
 	void UpdateOffsets();
 
 	//!Создать текстуру количества
-	void CreateCountText(const int &lostCount);
+	void CreateCountText(int lostCount);
 
 	virtual WISP_GEOMETRY::CSize GetSize() { return WISP_GEOMETRY::CSize(200, m_MaxOffset + 20); }
 
@@ -65,7 +65,7 @@ public:
 
 	virtual void SetShaderMode();
 
-	virtual void Draw(const bool &checktrans = false);
+	virtual void Draw(bool checktrans = false);
 	virtual bool Select();
 };
 //----------------------------------------------------------------------------------

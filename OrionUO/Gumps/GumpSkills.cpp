@@ -178,7 +178,7 @@ void CGumpSkills::UpdateGroupPositions()
 	}
 }
 //----------------------------------------------------------------------------------
-CGUISkillGroup *CGumpSkills::GetSkillGroup(const int &index)
+CGUISkillGroup *CGumpSkills::GetSkillGroup(int index)
 {
 	WISPFUN_DEBUG("c125_f5");
 	int currentIndex = 0;
@@ -197,7 +197,7 @@ CGUISkillGroup *CGumpSkills::GetSkillGroup(const int &index)
 	return NULL;
 }
 //----------------------------------------------------------------------------------
-CGUISkillItem *CGumpSkills::GetSkill(const int &index)
+CGUISkillItem *CGumpSkills::GetSkill(int index)
 {
 	WISPFUN_DEBUG("c125_f6");
 	QFOR(group, m_HTMLGump->m_Items, CBaseGUI*)
@@ -215,7 +215,7 @@ CGUISkillItem *CGumpSkills::GetSkill(const int &index)
 	return NULL;
 }
 //----------------------------------------------------------------------------------
-void CGumpSkills::UpdateSkillValue(const int &index)
+void CGumpSkills::UpdateSkillValue(int index)
 {
 	WISPFUN_DEBUG("c125_f7");
 	QFOR(group, m_HTMLGump->m_Items, CBaseGUI*)

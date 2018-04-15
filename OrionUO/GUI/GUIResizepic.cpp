@@ -11,7 +11,7 @@
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
 //----------------------------------------------------------------------------------
-CGUIResizepic::CGUIResizepic(const uint &serial, const ushort &graphic, const int &x, const int &y, const int &width, const int &height)
+CGUIResizepic::CGUIResizepic(int serial, ushort graphic, int x, int y, int width, int height)
 : CGUIPolygonal(GOT_RESIZEPIC, x, y, width, height)
 {
 	Serial = serial;
@@ -28,7 +28,7 @@ void CGUIResizepic::PrepareTextures()
 	g_Orion.ExecuteResizepic(Graphic);
 }
 //----------------------------------------------------------------------------------
-void CGUIResizepic::Draw(const bool &checktrans)
+void CGUIResizepic::Draw(bool checktrans)
 {
 	WISPFUN_DEBUG("c69_f2");
 	CGLTexture *th[9] = { NULL };

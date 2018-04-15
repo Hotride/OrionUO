@@ -102,7 +102,7 @@ LRESULT CPluginManager::WindowProc(HWND hWnd, UINT msg, WPARAM wparam, LPARAM lp
 	return result;
 }
 //----------------------------------------------------------------------------------
-bool CPluginManager::PacketRecv(puchar buf, const int &size)
+bool CPluginManager::PacketRecv(puchar buf, int size)
 {
 	WISPFUN_DEBUG("c152_f2");
 	bool result = true;
@@ -121,7 +121,7 @@ bool CPluginManager::PacketRecv(puchar buf, const int &size)
 	return result;
 }
 //----------------------------------------------------------------------------------
-bool CPluginManager::PacketSend(puchar buf, const int &size)
+bool CPluginManager::PacketSend(puchar buf, int size)
 {
 	WISPFUN_DEBUG("c152_f3");
 	bool result = true;

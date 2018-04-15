@@ -15,7 +15,7 @@ CPartyObject::CPartyObject()
 {
 }
 //----------------------------------------------------------------------------------
-string CPartyObject::GetName(const int &index)
+string CPartyObject::GetName(int index)
 {
 	WISPFUN_DEBUG("c197_f1");
 	if (Serial)

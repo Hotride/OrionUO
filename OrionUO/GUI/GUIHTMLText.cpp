@@ -11,7 +11,7 @@
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
 //----------------------------------------------------------------------------------
-CGUIHTMLText::CGUIHTMLText(const uint &index, const uchar &font, const ushort &color, const int &x, const int &y, const int &width, const TEXT_ALIGN_TYPE &align, const ushort &textFlags, const uint &htmlStartColor)
+CGUIHTMLText::CGUIHTMLText(int index, uchar font, ushort color, int x, int y, int width, TEXT_ALIGN_TYPE align, ushort textFlags, int htmlStartColor)
 : CBaseGUI(GOT_HTMLTEXT, 0, 0, color, x, y), TextID(index), HTMLStartColor(htmlStartColor),
 Text(L""), Font(font), Align(align), TextFlags(textFlags), Width(width)
 {
@@ -23,7 +23,7 @@ CGUIHTMLText::~CGUIHTMLText()
 	m_Texture.Clear();
 }
 //----------------------------------------------------------------------------------
-void CGUIHTMLText::CreateTexture(const bool &backgroundCanBeColored)
+void CGUIHTMLText::CreateTexture(bool backgroundCanBeColored)
 {
 	WISPFUN_DEBUG("c64_f2");
 	g_FontManager.SetUseHTML(true, HTMLStartColor, backgroundCanBeColored);
@@ -33,7 +33,7 @@ void CGUIHTMLText::CreateTexture(const bool &backgroundCanBeColored)
 	g_FontManager.SetUseHTML(false);
 }
 //----------------------------------------------------------------------------------
-void CGUIHTMLText::Draw(const bool &checktrans)
+void CGUIHTMLText::Draw(bool checktrans)
 {
 	WISPFUN_DEBUG("c64_f3");
 	m_Texture.Draw(m_X, m_Y, checktrans);

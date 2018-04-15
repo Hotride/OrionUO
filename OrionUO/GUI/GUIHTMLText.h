@@ -36,7 +36,7 @@ public:
 	//!Ширина текста
 	int Width = 0;
 
-	CGUIHTMLText(const uint &index, const uchar &font, const ushort &color, const int &x, const int &y, const int &width = 0, const TEXT_ALIGN_TYPE &align = TS_LEFT, const ushort &textFlags = 0, const uint &htmlStartColor = 0xFFFFFFFF);
+	CGUIHTMLText(int index, uchar font, ushort color, int x, int y, int width = 0, TEXT_ALIGN_TYPE align = TS_LEFT, ushort textFlags = 0, int htmlStartColor = 0xFFFFFFFF);
 	virtual ~CGUIHTMLText();
 
 	//!Текстура текста
@@ -45,9 +45,9 @@ public:
 	virtual WISP_GEOMETRY::CSize GetSize() { return WISP_GEOMETRY::CSize(m_Texture.Width, m_Texture.Height); }
 
 	//!Создать текстуру текста
-	void CreateTexture(const bool &backgroundCanBeColored);
+	void CreateTexture(bool backgroundCanBeColored);
 
-	virtual void Draw(const bool &checktrans = false);
+	virtual void Draw(bool checktrans = false);
 	virtual bool Select();
 };
 //----------------------------------------------------------------------------------

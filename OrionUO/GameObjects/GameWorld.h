@@ -24,7 +24,7 @@ private:
 	@param [__in] serial Серийник игрока
 	@return 
 	*/
-	void CreatePlayer(const uint &serial);
+	void CreatePlayer(int serial);
 
 	/*!
 	Удалить игрока
@@ -33,7 +33,7 @@ private:
 	void RemovePlayer();
 
 public:
-	CGameWorld(const uint &serial);
+	CGameWorld(int serial);
 	~CGameWorld();
 
 	//!Предметы в памяти
@@ -53,51 +53,51 @@ public:
 	Обработка звуков перемещения
 	@return
 	*/
-	void ProcessSound(const uint &ticks, CGameCharacter *gc);
+	void ProcessSound(int ticks, CGameCharacter *gc);
 
 	/*!
 	Установить текущего чара с указанным серийником как основного
 	@param [__in] serial Серийник нового игрока
 	@return 
 	*/
-	void SetPlayer(const uint &serial);
+	void SetPlayer(int serial);
 
 	/*!
 	Создать (или взять, если уже существует) игровой предмет
 	@param [__in] serial Серийник предмета
 	@return Ссылка на предмет
 	*/
-	CGameItem *GetWorldItem(const uint &serial);
+	CGameItem *GetWorldItem(int serial);
 
 	/*!
 	Создать (или взять, если уже существует) игрового персонажа
 	@param [__in] serial Серийник персонажа
 	@return Ссылка на персонажа
 	*/
-	CGameCharacter *GetWorldCharacter(const uint &serial);
+	CGameCharacter *GetWorldCharacter(int serial);
 
 	/*!
 	Найти игровой объект в памяти
 	@param [__in] serial Серийник объекта
 	@return Ссылка на объект или NULL
 	*/
-	CGameObject *FindWorldObject(const uint &serial);
+	CGameObject *FindWorldObject(int serial);
 
 	/*!
 	Найти игровой предмет в памяти
 	@param [__in] serial Серийник предмета
 	@return Ссылка на предмет или NULL
 	*/
-	CGameItem *FindWorldItem(const uint &serial);
+	CGameItem *FindWorldItem(int serial);
 
 	/*!
 	Найти игрового персонажа в памяти
 	@param [__in] serial Серийник персонажа
 	@return Ссылка а персонажа или NULL
 	*/
-	CGameCharacter *FindWorldCharacter(const uint &serial);
+	CGameCharacter *FindWorldCharacter(int serial);
 
-	void ReplaceObject(CGameObject *obj, const uint &newSerial);
+	void ReplaceObject(CGameObject *obj, int newSerial);
 
 	/*!
 	Удалить объект из памяти
@@ -126,7 +126,7 @@ public:
 	@param [__in] containerSerial Серийник контейнера
 	@return 
 	*/
-	void PutContainer(CGameObject *obj, const uint &containerSerial)
+	void PutContainer(CGameObject *obj, int containerSerial)
 	{
 		CGameObject *cnt = FindWorldObject(containerSerial);
 		if (cnt != NULL)
@@ -148,7 +148,7 @@ public:
 	@param [__in] layer Слой, в который одеть предмет
 	@return 
 	*/
-	void PutEquipment(CGameItem *obj, const uint &containerSerial, const int &layer)
+	void PutEquipment(CGameItem *obj, int containerSerial, int layer)
 	{
 		CGameObject *cnt = FindWorldObject(containerSerial);
 		if (cnt != NULL)
@@ -162,7 +162,7 @@ public:
 	@param [__in] layer Слой, в который одеть предмет
 	@return 
 	*/
-	void PutEquipment(CGameItem *obj, CGameObject *container, const int &layer)
+	void PutEquipment(CGameItem *obj, CGameObject *container, int layer)
 	{
 		PutContainer(obj, container);
 		obj->Layer = layer;
@@ -191,15 +191,15 @@ public:
 	@param [__in] scanMode Режим поиска
 	@return Ссылка на найденный объект или NULL
 	*/
-	CGameObject *SearchWorldObject(const uint &serialStart, const int &scanDistance, const SCAN_TYPE_OBJECT &scanType, const SCAN_MODE_OBJECT &scanMode);
+	CGameObject *SearchWorldObject(int serialStart, int scanDistance, SCAN_TYPE_OBJECT scanType, SCAN_MODE_OBJECT scanMode);
 
-	void UpdateContainedItem(const uint &serial, const ushort &graphic, const uchar &graphicIncrement, ushort count, const int &x, const int &y, const uint &containerSerial, const ushort &color);
+	void UpdateContainedItem(int serial, ushort graphic, uchar graphicIncrement, ushort count, int x, int y, int containerSerial, ushort color);
 
-	void UpdateItemInContainer(CGameObject *obj, CGameObject *container, const int &x, const int &y);
+	void UpdateItemInContainer(CGameObject *obj, CGameObject *container, int x, int y);
 
-	void UpdateGameObject(const uint &serial, ushort graphic, const uchar &graphicIncrement, int count, const int &x, const int &y, const char &z, const uchar &direction, const ushort &color, const uchar &flags, const int &a11, const UPDATE_GAME_OBJECT_TYPE &updateType, const ushort &a13);
+	void UpdateGameObject(int serial, ushort graphic, uchar graphicIncrement, int count, int x, int y, char z, uchar direction, ushort color, uchar flags, int a11, UPDATE_GAME_OBJECT_TYPE updateType, ushort a13);
 
-	void UpdatePlayer(const uint &serial, const ushort &graphic, const uchar &graphicIncrement, const ushort &color, const uchar &flags, const int &x, const int &y, const ushort &serverID, const uchar &direction, const char &z);
+	void UpdatePlayer(int serial, ushort graphic, uchar graphicIncrement, ushort color, uchar flags, int x, int y, ushort serverID, uchar direction, char z);
  };
 //---------------------------------------------------------------------------
 //!Указатель на мир

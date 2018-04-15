@@ -13,7 +13,7 @@
 //----------------------------------------------------------------------------------
 //---------------------------------RenderWorldObject--------------------------------
 //----------------------------------------------------------------------------------
-CRenderWorldObject::CRenderWorldObject(const RENDER_OBJECT_TYPE &renderType, const uint &serial, const ushort &graphic, const ushort &color, const int &x, const int &y, const char &z)
+CRenderWorldObject::CRenderWorldObject(RENDER_OBJECT_TYPE renderType, int serial, ushort graphic, ushort color, int x, int y, char z)
 : CRenderObject(serial, graphic, color, x, y), RenderType(renderType), m_Z(z)
 {
 	WISPFUN_DEBUG("c202_f1");
@@ -31,7 +31,7 @@ CRenderWorldObject::~CRenderWorldObject()
 	RemoveRender();
 }
 //----------------------------------------------------------------------------------
-bool CRenderWorldObject::ProcessAlpha(const int &maxAlpha)
+bool CRenderWorldObject::ProcessAlpha(int maxAlpha)
 {
 	WISPFUN_DEBUG("c202_f3");
 	if (!g_ConfigManager.RemoveOrCreateObjectsWithBlending)
@@ -105,7 +105,7 @@ CLandObject *CRenderWorldObject::GetLand()
 	return NULL;
 }
 //----------------------------------------------------------------------------------
-void CRenderWorldObject::SetZ(const char &val)
+void CRenderWorldObject::SetZ(char val)
 {
 	m_Z = val;
 	UpdateRealDrawCoordinates();

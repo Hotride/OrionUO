@@ -46,7 +46,7 @@ public:
 	void Generate();
 
 	//Отрисовать погодные эффекты
-	void Draw(const int &x, const int &y);
+	void Draw(int x, int y);
 };
 //----------------------------------------------------------------------------------
 extern CWeather g_Weather;

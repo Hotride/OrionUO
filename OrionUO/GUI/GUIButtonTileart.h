@@ -27,14 +27,14 @@ class CGUIButtonTileart : public CGUIButton
 	int TileY = 0;
 
 public:
-	CGUIButtonTileart(const uint &serial, const ushort &graphic, const ushort &graphicSelected, const ushort &graphicPressed, const int &x, const int &y, const ushort &tileGraphic, const ushort &tileColor, const int &tileX, const int &tileY);
+	CGUIButtonTileart(int serial, ushort graphic, ushort graphicSelected, ushort graphicPressed, int x, int y, ushort tileGraphic, ushort tileColor, int tileX, int tileY);
 	virtual ~CGUIButtonTileart();
 
 	virtual WISP_GEOMETRY::CSize GetSize();
 
 	virtual void PrepareTextures();
 
-	virtual void Draw(const bool &checktrans = false);
+	virtual void Draw(bool checktrans = false);
 	virtual bool Select();
 };
 //----------------------------------------------------------------------------------

@@ -11,7 +11,7 @@
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
 //----------------------------------------------------------------------------------
-CGumpRacialAbility::CGumpRacialAbility(const uint &serial, const int &x, const int &y)
+CGumpRacialAbility::CGumpRacialAbility(int serial, int x, int y)
 : CGump(GT_RACIAL_ABILITY, serial, x, y)
 {
 	WISPFUN_DEBUG("c111_f1");
@@ -37,7 +37,7 @@ void CGumpRacialAbility::GUMP_BUTTON_EVENT_C
 		LockMoving = !LockMoving;
 }
 //----------------------------------------------------------------------------------
-void CGumpRacialAbility::OnAbilityUse(const ushort &index)
+void CGumpRacialAbility::OnAbilityUse(ushort index)
 {
 	WISPFUN_DEBUG("c111_f4");
 	switch (index)

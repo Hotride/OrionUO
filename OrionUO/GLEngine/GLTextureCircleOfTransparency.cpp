@@ -24,7 +24,7 @@ CGLTextureCircleOfTransparency::~CGLTextureCircleOfTransparency()
 	Clear();
 }
 //---------------------------------------------------------------------------
-void CGLTextureCircleOfTransparency::CreatePixels(const int &radius, short &width, short &height, UINT_LIST &pixels)
+void CGLTextureCircleOfTransparency::CreatePixels(int radius, short &width, short &height, UINT_LIST &pixels)
 {
 	WISPFUN_DEBUG("c37_f2");
 	int fixRadius = radius + 1;
@@ -80,7 +80,7 @@ bool CGLTextureCircleOfTransparency::Create(int radius)
 	return true;
 }
 //---------------------------------------------------------------------------
-void CGLTextureCircleOfTransparency::Draw(const int &x, const int &y, const bool &checktrans)
+void CGLTextureCircleOfTransparency::Draw(int x, int y, bool checktrans)
 {
 	WISPFUN_DEBUG("c37_f4");
 	if (Texture != 0)

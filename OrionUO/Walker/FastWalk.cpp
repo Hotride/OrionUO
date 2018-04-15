@@ -11,14 +11,14 @@
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
 //----------------------------------------------------------------------------------
-void CFastWalkStack::SetValue(const int &index, const uint &value)
+void CFastWalkStack::SetValue(int index, int value)
 {
 	WISPFUN_DEBUG("c176_f1");
 	if (index >= 0 && index < 5)
 		m_Keys[index] = value;
 }
 //----------------------------------------------------------------------------------
-void CFastWalkStack::AddValue(const uint &value)
+void CFastWalkStack::AddValue(int value)
 {
 	WISPFUN_DEBUG("c176_f2");
 
