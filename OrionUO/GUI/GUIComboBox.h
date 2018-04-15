@@ -21,7 +21,11 @@ class CGUIComboBox : public CBaseGUI
 	bool CompositeBackground = false;
 
 	//!Количество отображаемых строк в открытом списке
-	SETGETE(int, ShowItemsCount, 0);
+protected:
+    int m_ShowItemsCount = 0;
+public:
+    int GetShowItemsCount() { return m_ShowItemsCount; };
+    void SetShowItemsCount(const int& val);
 
 	//!Ширина в свернутом состоянии (только для отрисовки Resizepic)
 	int Width = 0;

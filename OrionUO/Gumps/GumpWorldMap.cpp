@@ -55,9 +55,9 @@ CGumpWorldMap::CGumpWorldMap(short x, short y)
 	//Link with player checkbox settings
 	Text = (CGUIText*)Add(new CGUIText(0x03B2, 0, 0));
 	Text->CreateTextureA(3, "Link with player");
-	Text->X = Width - Text->m_Texture.Width;
+	Text->SetX(Width - Text->m_Texture.Width);
 
-	m_Checkbox = (CGUICheckbox*)Add(new CGUICheckbox(ID_GWM_LINK_WITH_PLAYER, 0x00D2, 0x00D3, 0x00D2, Text->X - 26, 2));
+	m_Checkbox = (CGUICheckbox*)Add(new CGUICheckbox(ID_GWM_LINK_WITH_PLAYER, 0x00D2, 0x00D3, 0x00D2, Text->GetX() - 26, 2));
 	m_Checkbox->Checked = m_LinkWithPlayer;
 	
 	m_Scissor = (CGUIScissor*)Add(new CGUIScissor(true, 0, 0, 8, 32, Width - 16, Height - 16));
@@ -73,8 +73,8 @@ CGumpWorldMap::CGumpWorldMap(short x, short y)
 
 	int width = 0;
 	int height = 0;
-	int playerX = g_Player->X;
-	int playerY = g_Player->Y;
+	int playerX = g_Player->GetX();
+	int playerY = g_Player->GetY();
 
 	GetScaledDimensions(width, height, playerX, playerY);
 
@@ -486,8 +486,8 @@ void CGumpWorldMap::GenerateFrame(const bool &stop)
 	{
 		int width = 0;
 		int height = 0;
-		int playerX = g_Player->X;
-		int playerY = g_Player->Y;
+		int playerX = g_Player->GetX();
+		int playerY = g_Player->GetY();
 
 		GetScaledDimensions(width, height, playerX, playerY);
 
@@ -502,7 +502,7 @@ void CGumpWorldMap::GenerateFrame(const bool &stop)
 		g_GL.PopScissor();
 	}
 
-	if (g_ConfigManager.UseGLListsForInterface)
+	if (g_ConfigManager.GetUseGLListsForInterface())
 		glEndList();
 }
 //g_PluginManager.WorldMapDraw();
@@ -524,8 +524,8 @@ void CGumpWorldMap::PrepareContent()
 
 	if (g_Player != NULL)
 	{
-		playerX = g_Player->X;
-		playerY = g_Player->Y;
+		playerX = g_Player->GetX();
+		playerY = g_Player->GetY();
 	}
 
 	GetScaledDimensions(mapWidth, mapHeight, playerX, playerY);
@@ -679,8 +679,8 @@ void CGumpWorldMap::GUMP_COMBOBOX_SELECTION_EVENT_C
 
 	int width = 0;
 	int height = 0;
-	int playerX = g_Player->X;
-	int playerY = g_Player->Y;
+	int playerX = g_Player->GetX();
+	int playerY = g_Player->GetY();
 
 	GetScaledDimensions(width, height, playerX, playerY);
 
@@ -729,8 +729,8 @@ void CGumpWorldMap::OnMidMouseButtonScroll(const bool &up)
 
 			int width = 0;
 			int height = 0;
-			int playerX = g_Player->X;
-			int playerY = g_Player->Y;
+			int playerX = g_Player->GetX();
+			int playerY = g_Player->GetY();
 
 			GetScaledDimensions(width, height, playerX, playerY);
 
@@ -760,13 +760,13 @@ void CGumpWorldMap::UpdateSize()
 	if (Width >= bw)
 		Width = bw;
 
-	m_Minimizer->X = (Width / 2) - 10;
+	m_Minimizer->SetX((Width / 2) - 10);
 	m_Background->Width = Width;
 	m_Background->Height = Height;
-	m_Resizer->X = Width - 8;
-	m_Resizer->Y = Height + 13;
-	Text->X = Width - Text->m_Texture.Width;
-	m_Checkbox->X = Text->X - 26;
+	m_Resizer->SetX(Width - 8);
+	m_Resizer->SetY(Height + 13);
+	Text->SetX(Width - Text->m_Texture.Width);
+	m_Checkbox->SetX(Text->GetX() - 26);
 	m_Scissor->Width = Width - 16;
 	m_Scissor->Height = Height - 16;
 	WantRedraw = true;

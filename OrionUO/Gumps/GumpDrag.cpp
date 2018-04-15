@@ -112,7 +112,7 @@ void CGumpDrag::OnKeyDown(const WPARAM &wParam, const LPARAM &lParam)
 			{
 				OnOkayPressed();
 
-				if (g_ConfigManager.ConsoleNeedEnter)
+				if (g_ConfigManager.GetConsoleNeedEnter())
 					g_EntryPointer = NULL;
 				else
 					g_EntryPointer = &g_GameConsole;

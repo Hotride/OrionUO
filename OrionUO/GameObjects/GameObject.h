@@ -29,9 +29,17 @@ public:
 	//!Количество
 	uint Count = 0;
 	//!Флаги от сервера
-	SETGETE(uchar, Flags, 0);
+protected:
+    uchar m_Flags = 0;
+public:
+    uchar GetFlags() { return m_Flags; };
+    void SetFlags(const uchar& val);
 	//!Имя
-	SETGETE(string, Name, "");
+protected:
+    string m_Name = "";
+public:
+    string GetName() { return m_Name; };
+    void SetName(const string& val);
 	//!НПС или предмет
 	bool NPC = false;
 	//!На предмет кликнули

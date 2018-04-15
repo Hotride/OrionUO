@@ -23,7 +23,7 @@ string CPartyObject::GetName(const int &index)
 		if (Character == NULL)
 			Character = g_World->FindWorldCharacter(Serial);
 		if (Character != NULL)
-			return Character->Name;
+			return Character->GetName();
 	}
 
 	char buf[10] = {0};

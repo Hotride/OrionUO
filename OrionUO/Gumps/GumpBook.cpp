@@ -181,7 +181,7 @@ void CGumpBook::ChangePage(int newPage, bool playSound)
 
 	if (EntryPointerHere())
 	{
-		if (g_ConfigManager.ConsoleNeedEnter)
+		if (g_ConfigManager.GetConsoleNeedEnter())
 			g_EntryPointer = NULL;
 		else
 			g_EntryPointer = &g_GameConsole;

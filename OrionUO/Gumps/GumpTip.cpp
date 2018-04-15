@@ -54,9 +54,9 @@ void CGumpTip::UpdateHeight()
 
 	if (!Updates)
 	{
-		m_ButtonPrevGump->Y = Height;
-		//m_ButtonRemoveGump->Y = Height + 34;
-		m_ButtonNextGump->Y = Height;
+		m_ButtonPrevGump->SetY(Height);
+		//m_ButtonRemoveGump->SetY(Height + 34);
+		m_ButtonNextGump->SetY(Height);
 	}
 }
 //----------------------------------------------------------------------------------

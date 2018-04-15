@@ -312,7 +312,7 @@ void COrionWindow::OnDeactivate()
 	if (!g_ConfigManager.BackgroundSound)
 		g_Orion.PauseSound();
 	
-	if (g_ConfigManager.ReduceFPSUnactiveWindow)
+	if (g_ConfigManager.GetReduceFPSUnactiveWindow())
 		SetRenderTimerDelay(g_FrameDelay[0]);
 
 	if (!g_PluginManager.Empty())

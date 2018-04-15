@@ -13,7 +13,11 @@
 //Класс для работы с объектами рендера
 class CRenderWorldObject : public CRenderObject
 {
-	SETGETE(char, Z, 0);
+protected:
+    char m_Z = 0;
+public:
+    char GetZ() { return m_Z; };
+    void SetZ(const char& val);
 	short PriorityZ = 0;
 	RENDER_OBJECT_TYPE RenderType = ROT_GAME_OBJECT;
 #if UO_RENDER_LIST_SORT == 1

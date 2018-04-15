@@ -41,15 +41,15 @@ void CEffectManager::AddEffect(CGameEffect *effect)
 
 					if (obj != NULL)
 					{
-						effect->DestX = obj->X;
-						effect->DestY = obj->Y;
-						effect->DestZ = obj->Z;
+						effect->DestX = obj->GetX();
+						effect->DestY = obj->GetY();
+						effect->DestZ = obj->GetZ();
 					}
 				}
 
 				CGameEffectMoving *moving = (CGameEffectMoving*)effect;
 
-				if (moving->X == moving->DestX && moving->Y == moving->DestY && moving->Z == moving->DestZ)
+				if (moving->GetX() == moving->DestX && moving->GetY() == moving->DestY && moving->GetZ() == moving->DestZ)
 				{
 					if (moving->Explode)
 					{
@@ -135,9 +135,9 @@ void CEffectManager::CreateExplodeEffect(CGameEffect *effect, const EFFECT_TYPE 
 
 	newEffect->EffectType = type;
 	newEffect->Serial = effect->DestSerial;
-	newEffect->X = effect->DestX;
-	newEffect->Y = effect->DestY;
-	newEffect->Z = effect->DestZ;
+	newEffect->SetX(effect->DestX);
+	newEffect->SetY(effect->DestY);
+	newEffect->SetZ(effect->DestZ);
 	newEffect->Graphic = 0x36CB;
 	newEffect->Speed = 50;
 	newEffect->Duration = g_Ticks + 400;

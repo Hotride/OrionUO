@@ -324,15 +324,15 @@ void CGumpBuff::UpdateContent()
 
 	//Selection zone
 	gui = (CBaseGUI*)gui->m_Next;
-	gui->X = startGump.X;
-	gui->Y = startGump.Y;
+	gui->SetX(startGump.X);
+	gui->SetY(startGump.Y);
 	((CGUIPolygonal*)gui)->Width = endGump.Width;
 	((CGUIPolygonal*)gui)->Height = endGump.Height;
 
 	//Crystall ball
 	gui = (CBaseGUI*)gui->m_Next;
-	gui->X = ballCoordinates.X;
-	gui->Y = ballCoordinates.Y;
+	gui->SetX(ballCoordinates.X);
+	gui->SetY(ballCoordinates.Y);
 
 	gui = NULL;
 
@@ -349,8 +349,8 @@ void CGumpBuff::UpdateContent()
 		CGUIBuff *buff = (CGUIBuff*)item;
 
 		WISP_GEOMETRY::CSize gumpDim = g_Orion.GetGumpDimension(buff->Graphic);
-		buff->X = startCoordinates.X;
-		buff->Y = startCoordinates.Y;
+		buff->SetX(startCoordinates.X);
+		buff->SetY(startCoordinates.Y);
 
 		if (useX)
 		{

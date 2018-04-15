@@ -71,14 +71,14 @@ CGumpPaperdoll::CGumpPaperdoll(uint serial, short x, short y, bool minimized)
 		Add(new CGUIButton(ID_GP_BUTTON_OPTIONS, 0x07D6, 0x07D8, 0x07D7, 185, 71));
 		Add(new CGUIButton(ID_GP_BUTTON_LOGOUT, 0x07D9, 0x07DB, 0x07DA, 185, 98));
 
-		if (g_PacketManager.ClientVersion >= CV_500A)
+		if (g_PacketManager.GetClientVersion() >= CV_500A)
 			Add(new CGUIButton(ID_GP_BUTTON_JOURNAL_OR_QUESTS, 0x57B5, 0x57B6, 0x57B7, 185, 125));
 		else
 			Add(new CGUIButton(ID_GP_BUTTON_JOURNAL_OR_QUESTS, 0x07DC, 0x07DE, 0x07DD, 185, 125));
 
 		Add(new CGUIButton(ID_GP_BUTTON_SKILLS, 0x07DF, 0x07E1, 0x07E0, 185, 152));
 
-		if (g_PacketManager.ClientVersion >= CV_500A)
+		if (g_PacketManager.GetClientVersion() >= CV_500A)
 			Add(new CGUIButton(ID_GP_BUTTON_CHAT_OR_GUILD, 0x57B2, 0x57B3, 0x57B4, 185, 179));
 		else
 		{
@@ -104,7 +104,7 @@ CGumpPaperdoll::CGumpPaperdoll(uint serial, short x, short y, bool minimized)
 		{
 			Add(new CGUIButton(ID_GP_COMBAT_BOOK, 0x2B34, 0x2B34, 0x2B34, 156, 200));
 
-			if (g_PacketManager.ClientVersion >= CV_7000)
+			if (g_PacketManager.GetClientVersion() >= CV_7000)
 			{
 				Add(new CGUIButton(ID_GP_RACIAL_ABILITIES_BOOK, 0x2B28, 0x2B28, 0x2B28, 23, 200));
 				profileX += SCROLLS_STEP;
@@ -185,7 +185,7 @@ void CGumpPaperdoll::InitToolTip()
 			}
 			case ID_GP_BUTTON_JOURNAL_OR_QUESTS:
 			{
-				if (g_PacketManager.ClientVersion >= CV_500A)
+				if (g_PacketManager.GetClientVersion() >= CV_500A)
 					g_ToolTip.Set(L"Open the quests gump");
 				else
 					g_ToolTip.Set(L"Open the journal gump");
@@ -199,7 +199,7 @@ void CGumpPaperdoll::InitToolTip()
 			}
 			case ID_GP_BUTTON_CHAT_OR_GUILD:
 			{
-				if (g_PacketManager.ClientVersion >= CV_500A)
+				if (g_PacketManager.GetClientVersion() >= CV_500A)
 					g_ToolTip.Set(L"Open the guild gump");
 				else
 					g_ToolTip.Set(L"Open the chat gump");
@@ -271,8 +271,8 @@ void CGumpPaperdoll::DelayedClick(CRenderObject *obj)
 		td->Color = 0x038F;
 		td->Timer = g_Ticks;
 		td->Type = TT_CLIENT;
-		td->X = g_MouseManager.Position.X - m_X;
-		td->Y = g_MouseManager.Position.Y - m_Y;
+		td->SetX(g_MouseManager.Position.X - m_X);
+		td->SetY(g_MouseManager.Position.Y - m_Y);
 
 		string text = "Party Manifest";
 
@@ -438,7 +438,7 @@ void CGumpPaperdoll::UpdateContent()
 
 	//if (obj->IsHuman())
 	{
-		bool useSlots = g_ConfigManager.PaperdollSlots;
+		bool useSlots = g_ConfigManager.GetPaperdollSlots();
 
 		static const int maxPaperdollSlots = 6;
 		CGameItem *slotObjects[maxPaperdollSlots] = { 0 };
@@ -547,7 +547,7 @@ void CGumpPaperdoll::UpdateContent()
 		{
 			int yPtr = 75;
 
-			bool scaleImages = g_ConfigManager.ScaleImagesInPaperdollSlots;
+			bool scaleImages = g_ConfigManager.GetScaleImagesInPaperdollSlots();
 
 			IFOR(i, 0, maxPaperdollSlots)
 			{
@@ -661,7 +661,7 @@ void CGumpPaperdoll::UpdateContent()
 
 		if (obj->IsPlayer())
 		{
-			switch (g_ConfigManager.CharacterBackpackStyle)
+			switch (g_ConfigManager.GetCharacterBackpackStyle())
 			{
 				case CBS_SUEDE:
 					backpackGraphic = 0x777B;
@@ -778,7 +778,7 @@ void CGumpPaperdoll::GUMP_BUTTON_EVENT_C
 		}
 		case ID_GP_BUTTON_JOURNAL_OR_QUESTS: //Paperdoll button Journal
 		{
-			if (g_PacketManager.ClientVersion >= CV_500A)
+			if (g_PacketManager.GetClientVersion() >= CV_500A)
 				CPacketQuestMenuRequest().Send();
 			else
 				g_Orion.OpenJournal();
@@ -791,7 +791,7 @@ void CGumpPaperdoll::GUMP_BUTTON_EVENT_C
 		}
 		case ID_GP_BUTTON_CHAT_OR_GUILD: //Paperdoll button Chat
 		{
-			if (g_PacketManager.ClientVersion >= CV_500A)
+			if (g_PacketManager.GetClientVersion() >= CV_500A)
 				CPacketGuildMenuRequest().Send();
 			else
 				g_Orion.OpenChat();
@@ -924,8 +924,8 @@ void CGumpPaperdoll::OnLeftMouseButtonUp()
 				{
 					g_ClickObject.Init(equipment);
 					g_ClickObject.Timer = g_Ticks + g_MouseManager.DoubleClickDelay;
-					g_ClickObject.X = g_MouseManager.Position.X - X;
-					g_ClickObject.Y = g_MouseManager.Position.Y - Y;
+					g_ClickObject.X = g_MouseManager.Position.X - m_X;
+					g_ClickObject.Y = g_MouseManager.Position.Y - m_Y;
 				}
 			}
 		}

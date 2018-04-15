@@ -124,7 +124,7 @@ void CGameItem::CalculateFieldColor()
 	WISPFUN_DEBUG("c19_f5");
 	FieldColor = 0;
 
-	if (!g_ConfigManager.ChangeFieldsGraphic)
+	if (!g_ConfigManager.GetChangeFieldsGraphic())
 		return;
 
 	//fire field
@@ -594,7 +594,7 @@ void CGameItem::ClearCustomHouseMultis(const uint &state)
 				if (!state || item->State & state)
 					multi->Delete(item);
 			}
-			else if (item->Z == checkZ)
+			else if (item->GetZ() == checkZ)
 				item->State = item->State | CHMOF_FLOOR | CHMOF_IGNORE_IN_RENDER;
 		}
 
@@ -612,9 +612,9 @@ CMultiObject *CGameItem::AddMulti(const ushort &graphic, const ushort &color, co
 	CMultiObject *mo = NULL;
 
 	if (isCustomHouseMulti)
-		mo = new CCustomHouseMultiObject(graphic, color, X + x, Y + y, z, 1);
+		mo = new CCustomHouseMultiObject(graphic, color, GetX() + x, GetY() + y, z, 1);
 	else
-		mo = new CMultiObject(graphic, X + x, Y + y, z, 1);
+		mo = new CMultiObject(graphic, GetX() + x, GetY() + y, z, 1);
 
 	g_MapManager.AddRender(mo);
 	AddMultiObject(mo);
@@ -700,7 +700,7 @@ void CGameItem::LoadMulti(const bool &dropAlpha)
 	{
 		int itemOffset = sizeof(MULTI_BLOCK);
 
-		if (g_PacketManager.ClientVersion >= CV_7090)
+		if (g_PacketManager.GetClientVersion() >= CV_7090)
 			itemOffset = sizeof(MULTI_BLOCK_NEW);
 
 		IFOR(j, 0, count)
@@ -760,7 +760,7 @@ void CGameItem::AddMultiObject(CMultiObject *obj)
 	WISPFUN_DEBUG("c19_f11");
 	if (m_Items == NULL)
 	{
-		m_Items = new CMulti(obj->X, obj->Y);
+		m_Items = new CMulti(obj->GetX(), obj->GetY());
 		m_Items->m_Next = NULL;
 		m_Items->m_Items = obj;
 		obj->m_Next = NULL;
@@ -768,13 +768,13 @@ void CGameItem::AddMultiObject(CMultiObject *obj)
 	}
 	else
 	{
-		CMulti *multi = GetMultiAtXY(obj->X, obj->Y);
+		CMulti *multi = GetMultiAtXY(obj->GetX(), obj->GetY());
 
 		if (multi != NULL)
 		{
 			QFOR(multiobj, multi->m_Items, CMultiObject*)
 			{
-				if (obj->Z < multiobj->Z)
+				if (obj->GetZ() < multiobj->GetZ())
 				{
 					if (multiobj->m_Prev == NULL)
 						multi->Insert(multiobj->m_Prev, obj);
@@ -798,7 +798,7 @@ void CGameItem::AddMultiObject(CMultiObject *obj)
 		}
 		else
 		{
-			CMulti *newmulti = new CMulti(obj->X, obj->Y);
+			CMulti *newmulti = new CMulti(obj->GetX(), obj->GetY());
 			newmulti->m_Next = NULL;
 			newmulti->m_Items = obj;
 			obj->m_Next = NULL;

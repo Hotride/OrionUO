@@ -787,7 +787,7 @@ MACRO_RETURN_CODE CMacroManager::Process(CMacroObject *macro)
 						break;
 				}
 
-				if (g_PacketManager.ClientVersion >= CV_500A)
+				if (g_PacketManager.GetClientVersion() >= CV_500A)
 					CPacketUnicodeSpeechRequest(ToWString(mos->String).c_str(), st, 3, g_ConfigManager.SpeechColor, (puchar)g_Language.c_str()).Send();
 				else
 					CPacketASCIISpeechRequest(mos->String.c_str(), st, 3, g_ConfigManager.SpeechColor).Send();
@@ -1186,7 +1186,7 @@ MACRO_RETURN_CODE CMacroManager::Process(CMacroObject *macro)
 		case MC_BANDAGE_TARGET:
 		{
 			//На самом деле с 5.0.4a
-			if (g_PacketManager.ClientVersion < CV_5020)
+			if (g_PacketManager.GetClientVersion() < CV_5020)
 			{
 				if (WaitingBandageTarget)
 				{

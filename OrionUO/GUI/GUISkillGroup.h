@@ -15,7 +15,11 @@
 class CGUISkillGroup : public CBaseGUI
 {
 	//!Свернута или развернута группа
-	SETGETE(bool, Minimized, false);
+protected:
+    bool m_Minimized = false;
+public:
+    bool GetMinimized() { return m_Minimized; };
+    void SetMinimized(const bool& val);
 
 public:
 	CGUISkillGroup(const uint &serial, const uint &minimizeSerial, class CSkillGroupObject *group, const int &x, const int &y);

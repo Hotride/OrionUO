@@ -43,7 +43,7 @@ void CGumpNotify::OnKeyDown(const WPARAM &wParam, const LPARAM &lParam)
 	WISPFUN_DEBUG("c103_f3");
 	if (wParam == VK_RETURN)
 	{
-		if (g_ConfigManager.ConsoleNeedEnter)
+		if (g_ConfigManager.GetConsoleNeedEnter())
 			g_EntryPointer = NULL;
 		else
 			g_EntryPointer = &g_GameConsole;

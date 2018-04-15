@@ -68,7 +68,7 @@ CGumpProfile::~CGumpProfile()
 void CGumpProfile::RecalculateHeight()
 {
 	WISPFUN_DEBUG("c108_f3");
-	int offsetY = m_Entry->Y;
+	int offsetY = m_Entry->GetY();
 	m_Entry->m_Entry.CreateTextureW(0, m_Entry->m_Entry.Data(), 0, 210, TS_LEFT, 0);
 
 	if (m_Entry->m_Entry.m_Texture.Height > 14)
@@ -78,10 +78,10 @@ void CGumpProfile::RecalculateHeight()
 
 	offsetY += m_HitBox->Height + 3;
 
-	m_BottomData[0]->Y = offsetY;
-	m_BottomData[1]->Y = offsetY + 9;
-	m_BottomData[2]->Y = offsetY;
-	m_BottomData[3]->Y = offsetY + 26;
+	m_BottomData[0]->SetY(offsetY);
+	m_BottomData[1]->SetY(offsetY + 9);
+	m_BottomData[2]->SetY(offsetY);
+	m_BottomData[3]->SetY(offsetY + 26);
 
 	m_HTMLGump->CalculateDataSize();
 }
@@ -101,7 +101,7 @@ void CGumpProfile::GUMP_BUTTON_EVENT_C
 		
 		if (g_EntryPointer == &m_Entry->m_Entry)
 		{
-			if (g_ConfigManager.ConsoleNeedEnter)
+			if (g_ConfigManager.GetConsoleNeedEnter())
 				g_EntryPointer = NULL;
 			else
 				g_EntryPointer = &g_GameConsole;

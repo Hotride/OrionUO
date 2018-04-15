@@ -164,7 +164,7 @@ bool CConnectionManager::Connect(const string &address, int port, puchar gameSee
 			g_LastPacketTime = g_Ticks;
 			g_LastSendTime = g_LastPacketTime;
 
-			if (g_PacketManager.ClientVersion < CV_6060)
+			if (g_PacketManager.GetClientVersion() < CV_6060)
 				SendIP(m_LoginSocket, m_Seed);
 			else //В новых клиентах изменилось приветствие логин сокета
 			{
@@ -266,7 +266,7 @@ void CConnectionManager::Recv()
 				LOG("Failed to Recv()...Disconnecting...\n");
 
 				g_Orion.InitScreen(GS_MAIN_CONNECT);
-				g_ConnectionScreen.Type = CST_CONLOST;
+				g_ConnectionScreen.SetType(CST_CONLOST);
 			}
 			return; //На сокете в данный момент пусто
 		}
@@ -289,7 +289,7 @@ void CConnectionManager::Recv()
 				else
 				{
 					g_Orion.InitScreen(GS_MAIN_CONNECT);
-					g_ConnectionScreen.Type = CST_CONLOST;
+					g_ConnectionScreen.SetType(CST_CONLOST);
 				}
 			}
 

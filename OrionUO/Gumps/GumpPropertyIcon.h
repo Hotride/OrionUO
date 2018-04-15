@@ -12,7 +12,11 @@
 //----------------------------------------------------------------------------------
 class CGumpPropertyIcon : public CGump
 {
-	SETGETE(wstring, Text, L"No Data");
+protected:
+    wstring m_Text = L"No Data";
+public:
+    wstring GetText() { return m_Text; };
+    void SetText(const wstring& val);
 	SETGETP(CRenderObject*, Object, NULL);
 
 private:

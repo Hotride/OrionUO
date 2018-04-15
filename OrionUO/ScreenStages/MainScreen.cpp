@@ -37,7 +37,7 @@ void CMainScreen::Init()
 	g_ConfigLoaded = false;
 	g_GlobalScale = 1.0;
 
-	g_OrionWindow.Size = WISP_GEOMETRY::CSize(640, 480);
+	g_OrionWindow.SetSize(WISP_GEOMETRY::CSize(640, 480));
 	g_OrionWindow.NoResize = true;
 	g_OrionWindow.SetTitle("Ultima Online");
 	g_GL.UpdateRect();

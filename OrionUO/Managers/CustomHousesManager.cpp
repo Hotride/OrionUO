@@ -20,7 +20,7 @@ void CCustomHouse::Paste(CGameItem *foundation)
 		return;
 
 	foundation->ClearCustomHouseMultis(0);
-	int z = foundation->Z;
+	int z = foundation->GetZ();
 
 	for (const CBuildObject &item : m_Items)
 		foundation->AddMulti(item.Graphic, 0, item.X, item.Y, item.Z + z, true);

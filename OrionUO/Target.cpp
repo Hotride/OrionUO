@@ -114,10 +114,10 @@ void CTarget::SendTargetObject(const uint &serial)
 
 	if (obj != NULL)
 	{
-		pack16(m_Data + 11, obj->X);
-		pack16(m_Data + 13, obj->Y);
+		pack16(m_Data + 11, obj->GetX());
+		pack16(m_Data + 13, obj->GetY());
 		m_Data[15] = 0xFF;
-		m_Data[16] = obj->Z;
+		m_Data[16] = obj->GetZ();
 		pack16(m_Data + 17, obj->Graphic);
 	}
 	else
@@ -201,10 +201,10 @@ void CTarget::Plugin_SendTargetObject(const uint &serial)
 
 	if (obj != NULL)
 	{
-		pack16(m_Data + 11, obj->X);
-		pack16(m_Data + 13, obj->Y);
+		pack16(m_Data + 11, obj->GetX());
+		pack16(m_Data + 13, obj->GetY());
 		m_Data[15] = 0xFF;
-		m_Data[16] = obj->Z;
+		m_Data[16] = obj->GetZ();
 		pack16(m_Data + 17, obj->Graphic);
 	}
 	else
@@ -362,7 +362,7 @@ void CTarget::LoadMulti(const int &offsetX, const int &offsetY, const char &offs
 	{
 		int itemOffset = sizeof(MULTI_BLOCK);
 
-		if (g_PacketManager.ClientVersion >= CV_7090)
+		if (g_PacketManager.GetClientVersion() >= CV_7090)
 			itemOffset = sizeof(MULTI_BLOCK_NEW);
 
 		IFOR(j, 0, count)
@@ -381,7 +381,7 @@ void CTarget::AddMultiObject(CMultiObject *obj)
 	WISPFUN_DEBUG("c209_f11");
 	if (m_Multi == NULL)
 	{
-		m_Multi = new CMulti(obj->X, obj->Y);
+		m_Multi = new CMulti(obj->GetX(), obj->GetY());
 		m_Multi->m_Next = NULL;
 		m_Multi->m_Prev = NULL;
 		m_Multi->m_Items = obj;
@@ -390,13 +390,13 @@ void CTarget::AddMultiObject(CMultiObject *obj)
 	}
 	else
 	{
-		CMulti *multi = GetMultiAtXY(obj->X, obj->Y);
+		CMulti *multi = GetMultiAtXY(obj->GetX(), obj->GetY());
 
 		if (multi != NULL)
 		{
 			QFOR(multiobj, multi->m_Items, CMultiObject*)
 			{
-				if (obj->Z < multiobj->Z)
+				if (obj->GetZ() < multiobj->GetZ())
 				{
 					if (multiobj->m_Prev == NULL)
 						multi->Insert(multiobj->m_Prev, obj);
@@ -420,7 +420,7 @@ void CTarget::AddMultiObject(CMultiObject *obj)
 		}
 		else
 		{
-			CMulti *newmulti = new CMulti(obj->X, obj->Y);
+			CMulti *newmulti = new CMulti(obj->GetX(), obj->GetY());
 			newmulti->m_Next = NULL;
 			newmulti->m_Items = obj;
 			obj->m_Next = NULL;

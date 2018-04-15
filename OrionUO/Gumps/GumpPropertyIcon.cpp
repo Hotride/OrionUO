@@ -17,7 +17,7 @@ CGumpPropertyIcon::CGumpPropertyIcon(const int &x, const int &y)
 	m_Locker.Serial = ID_GPI_LOCK_MOVING;
 
 	int width = 0;
-	g_ToolTip.CreateTextTexture(m_Texture, Text, width, 300);
+	g_ToolTip.CreateTextTexture(m_Texture, m_Text, width, 300);
 }
 //----------------------------------------------------------------------------------
 CGumpPropertyIcon::~CGumpPropertyIcon()
@@ -28,14 +28,14 @@ void CGumpPropertyIcon::SetText(const wstring &val)
 {
 	m_Text = val;
 	int width = 0;
-	g_ToolTip.CreateTextTexture(m_Texture, val, width, (g_ConfigManager.ItemPropertiesMode == OPM_ALWAYS_UP ? 300 : 0));
+	g_ToolTip.CreateTextTexture(m_Texture, val, width, (g_ConfigManager.GetItemPropertiesMode() == OPM_ALWAYS_UP ? 300 : 0));
 	m_Object = NULL;
 	WantUpdateContent = true;
 }
 //----------------------------------------------------------------------------------
 void CGumpPropertyIcon::PrepareContent()
 {
-	if (g_ConfigManager.ItemPropertiesMode == OPM_AT_ICON && m_Object != NULL && m_Object != g_SelectedObject.Object)
+	if (g_ConfigManager.GetItemPropertiesMode() == OPM_AT_ICON && m_Object != NULL && m_Object != g_SelectedObject.Object)
 	{
 		m_Object = NULL;
 		g_ObjectPropertiesManager.Reset();
@@ -47,7 +47,7 @@ void CGumpPropertyIcon::UpdateContent()
 {
 	Clear();
 
-	uchar mode = g_ConfigManager.ItemPropertiesMode;
+	uchar mode = g_ConfigManager.GetItemPropertiesMode();
 
 	if (mode == OPM_AT_ICON)
 	{
@@ -87,19 +87,19 @@ void CGumpPropertyIcon::GUMP_BUTTON_EVENT_C
 	if (serial == ID_GPI_LOCK_MOVING)
 		LockMoving = !LockMoving;
 	else if (serial == ID_GPI_MINIMIZE)
-		g_ConfigManager.ItemPropertiesMode = OPM_FOLLOW_MOUSE;
+		g_ConfigManager.SetItemPropertiesMode(OPM_FOLLOW_MOUSE);
 }
 //----------------------------------------------------------------------------------
 bool CGumpPropertyIcon::OnLeftMouseButtonDoubleClick()
 {
 	WISPFUN_DEBUG("c126_f14");
 	
-	uchar mode = g_ConfigManager.ItemPropertiesMode + 1;
+	uchar mode = g_ConfigManager.GetItemPropertiesMode() + 1;
 
 	if (mode > OPM_SINGLE_CLICK)
 		mode = OPM_AT_ICON;
 
-	g_ConfigManager.ItemPropertiesMode = mode;
+	g_ConfigManager.SetItemPropertiesMode(mode);
 
 	return true;
 }

@@ -15,9 +15,21 @@ class CGumpWorldMap : public CGump
 public:
 	int Width = MIN_WORLD_MAP_WIDTH;
 	int Height = MIN_WORLD_MAP_HEIGHT;
-	SETGETE(int, Scale, 2);
-	SETGETE(int, Map, 0);
-	SETGETE(bool, LinkWithPlayer, true);
+protected:
+    int m_Scale = 2;
+public:
+    int GetScale() { return m_Scale; };
+    void SetScale(const int& val);
+protected:
+    int m_Map = 0;
+public:
+    int GetMap() { return m_Map; };
+    void SetMap(const int& val);
+protected:
+    bool m_LinkWithPlayer = true;
+public:
+    bool GetLinkWithPlayer() { return m_LinkWithPlayer; };
+    void SetLinkWithPlayer(const bool& val);
 	int OffsetX = 0;
 	int OffsetY = 0;
 	bool Called = false;

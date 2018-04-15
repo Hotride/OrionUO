@@ -375,7 +375,7 @@ char CMapManager::CalculateNearZ(char defaultZ, const int &x, const int &y, cons
 			else if (((CGameObject*)item)->NPC)
 				continue;
 
-			if (!item->IsRoof() || abs(z - item->Z) > 6)
+			if (!item->IsRoof() || abs(z - item->GetZ()) > 6)
 				continue;
 
 			break;
@@ -384,7 +384,7 @@ char CMapManager::CalculateNearZ(char defaultZ, const int &x, const int &y, cons
 		if (item == NULL)
 			return defaultZ;
 
-		char tileZ = item->Z;
+		char tileZ = item->GetZ();
 
 		if (tileZ < defaultZ)
 			defaultZ = tileZ;
@@ -439,7 +439,7 @@ void CMapManager::GetRadarMapBlock(const int &blockX, const int &blockY, RADAR_M
 			{
 				RADAR_MAP_CELLS &outCell = mb.Cells[sb->X][sb->Y];
 
-				//int pos = (sb->Y * 8) + sb->X;
+				//int pos = (sb->GetY() * 8) + sb->GetX();
 				//if (pos > 64) continue;
 
 				if (outCell.Z <= sb->Z)
@@ -487,9 +487,9 @@ void CMapManager::GetMapZ(const int &x, const int &y, int &groundZ, int &staticZ
 		while (item != NULL)
 		{
 			if (item->IsLandObject())
-				groundZ = item->Z;
-			else if (staticZ < item->Z)
-				staticZ = item->Z;
+				groundZ = item->GetZ();
+			else if (staticZ < item->GetZ())
+				staticZ = item->GetZ();
 
 			item = (CMapObject*)item->m_Next;
 		}
@@ -578,10 +578,10 @@ void CMapManager::Init(const bool &delayed)
 	
 	const int XY_Offset = 30; //70;
 
-	int minBlockX = (g_Player->X - XY_Offset) / 8 - 1;
-	int minBlockY = (g_Player->Y - XY_Offset) / 8 - 1;
-	int maxBlockX = ((g_Player->X + XY_Offset) / 8) + 1;
-	int maxBlockY = ((g_Player->Y + XY_Offset) / 8) + 1;
+	int minBlockX = (g_Player->GetX() - XY_Offset) / 8 - 1;
+	int minBlockY = (g_Player->GetY() - XY_Offset) / 8 - 1;
+	int maxBlockX = ((g_Player->GetX() + XY_Offset) / 8) + 1;
+	int maxBlockY = ((g_Player->GetY() + XY_Offset) / 8) + 1;
 
 	if (minBlockX < 0)
 		minBlockX = 0;
@@ -704,8 +704,8 @@ int CMapManager::GetActualMap()
 void CMapManager::AddRender(CRenderWorldObject *item)
 {
 	WISPFUN_DEBUG("c146_f17");
-	int itemX = item->X;
-	int itemY = item->Y;
+	int itemX = item->GetX();
+	int itemY = item->GetY();
 
 	int x = itemX / 8;
 	int y = itemY / 8;

@@ -12,7 +12,11 @@
 //----------------------------------------------------------------------------------
 class CGumpConsoleType : public CGump
 {
-	SETGETE(bool, ShowFullText, false);
+protected:
+    bool m_ShowFullText = false;
+public:
+    bool GetShowFullText() { return m_ShowFullText; };
+    void SetShowFullText(const bool& val);
 
 protected:
 	int m_SelectedType{ 0 };

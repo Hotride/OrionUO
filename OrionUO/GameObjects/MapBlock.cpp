@@ -119,9 +119,9 @@ void CMapBlock::CreateLandTextureRect()
 
 			if (obj != NULL)
 			{
-				int tileX = obj->X;
-				int tileY = obj->Y;
-				char tileZ1 = obj->Z;
+				int tileX = obj->GetX();
+				int tileY = obj->GetY();
+				char tileZ1 = obj->GetZ();
 
 				CGLTexture *th = g_Orion.ExecuteTexture(obj->Graphic);
 
@@ -319,7 +319,7 @@ void CMapBlock::AddRender(CRenderWorldObject *item, const int &x, const int &y)
 	WISPFUN_DEBUG("c24_f10");
 	item->RemoveRender();
 
-	int priorityZ = item->Z;
+	int priorityZ = item->GetZ();
 
 	if (item->IsLandObject())
 	{
@@ -424,7 +424,7 @@ CMapObject *CMapBlock::AddObject(CMapObject *obj, const int &x, const int &y)
 
 		while (item != NULL)
 		{
-			if (!item->IsLandObject() && item->Z > obj->Z)
+			if (!item->IsLandObject() && item->GetZ() > obj->GetZ())
 			{
 				if (item->m_Prev != NULL)
 				{

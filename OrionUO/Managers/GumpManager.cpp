@@ -61,15 +61,15 @@ void CGumpManager::AddGump(CGump *obj)
 					{
 						if (gumpType == GT_DRAG || gumpType == GT_ABILITY || gumpType == GT_RACIAL_ABILITY)
 						{
-							gump->X = obj->X;
-							gump->Y = obj->Y;
+							gump->SetX(obj->GetX());
+							gump->SetY(obj->GetY());
 						}
 						else if (gumpType == GT_STATUSBAR)
 						{
 							CGumpStatusbar *sb = (CGumpStatusbar*)gump;
 
-							int gx = obj->X;
-							int gy = obj->Y;
+							int gx = obj->GetX();
+							int gy = obj->GetY();
 						
 							if (obj->Minimized)
 							{
@@ -87,22 +87,22 @@ void CGumpManager::AddGump(CGump *obj)
 							}
 							else
 							{
-								gump->X = gx;
-								gump->Y = gy;
+								gump->SetX(gx);
+								gump->SetY(gy);
 							}
 						}
 						else if (gumpType == GT_SPELL)
 						{
 							CGumpSpell *spell = (CGumpSpell*)gump;
 
-							int gx = obj->X;
-							int gy = obj->Y;
+							int gx = obj->GetX();
+							int gy = obj->GetY();
 
 							if (spell->InGroup())
-								spell->UpdateGroup(-(gump->X - gx), -(gump->Y - gy));
+								spell->UpdateGroup(-(gump->GetX() - gx), -(gump->GetY() - gy));
 
-							gump->X = gx;
-							gump->Y = gy;
+							gump->SetX(gx);
+							gump->SetY(gy);
 						}
 					}
 
@@ -196,7 +196,7 @@ void CGumpManager::AddGump(CGump *obj)
 			}
 			case GT_WORLD_MAP:
 			{
-				if (g_ConfigManager.UseGlobalMapLayer)
+				if (g_ConfigManager.GetUseGlobalMapLayer())
 					MoveToFront(obj);
 
 				break;
@@ -668,8 +668,8 @@ bool CGumpManager::OnLeftMouseButtonUp(const bool &blocked)
 					if (!gump->Minimized)
 					{
 						sb->RemoveFromGroup();
-						gump->X = gump->X + offset.X;
-						gump->Y = gump->Y + offset.Y;
+						gump->SetX(gump->GetX() + offset.X);
+						gump->SetY(gump->GetY() + offset.Y);
 
 						gump->FixCoordinates();
 					}
@@ -703,8 +703,8 @@ bool CGumpManager::OnLeftMouseButtonUp(const bool &blocked)
 				{
 					CGumpSpell *spell = (CGumpSpell*)gump;
 
-					gump->X = gump->X + offset.X;
-					gump->Y = gump->Y + offset.Y;
+					gump->SetX(gump->GetX() + offset.X);
+					gump->SetY(gump->GetY() + offset.Y);
 
 					gump->FixCoordinates();
 
@@ -719,8 +719,8 @@ bool CGumpManager::OnLeftMouseButtonUp(const bool &blocked)
 
 						if (nearSpell != NULL)
 						{
-							gump->X = testX;
-							gump->Y = testY;
+							gump->SetX(testX);
+							gump->SetY(testY);
 
 							nearSpell->AddSpell(spell);
 						}
@@ -735,8 +735,8 @@ bool CGumpManager::OnLeftMouseButtonUp(const bool &blocked)
 				}
 				else
 				{
-					gump->X = gump->X + offset.X;
-					gump->Y = gump->Y + offset.Y;
+					gump->SetX(gump->GetX() + offset.X);
+					gump->SetY(gump->GetY() + offset.Y);
 
 					gump->FixCoordinates();
 				}
@@ -754,7 +754,7 @@ bool CGumpManager::OnLeftMouseButtonUp(const bool &blocked)
 			else
 				gump->OnLeftMouseButtonUp();
 
-			if (gump->GumpType == GT_WORLD_MAP && g_ConfigManager.UseGlobalMapLayer)
+			if (gump->GumpType == GT_WORLD_MAP && g_ConfigManager.GetUseGlobalMapLayer())
 				MoveToFront(gump);
 
 			RemoveMarked();
@@ -881,16 +881,16 @@ void CGumpManager::OnRightMouseButtonUp(const bool &blocked)
 				}
 				case GT_MENUBAR:
 				{
-					gump->X = 0;
-					gump->Y = 0;
+					gump->SetX(0);
+					gump->SetY(0);
 					gump->FrameCreated = false;
 
 					break;
 				}
 				case GT_BUFF:
 				{
-					//gump->X = g_GameWindowPosX;
-					//gump->Y = g_GameWindowPosY + g_GameWindowHeight;
+					//gump->SetX(g_GameWindowPosX);
+					//gump->SetY(g_GameWindowPosY + g_GameWindowHeight);
 					gump->FrameCreated = false;
 					g_ConfigManager.ToggleBufficonWindow = false;
 
@@ -904,8 +904,8 @@ void CGumpManager::OnRightMouseButtonUp(const bool &blocked)
 				}
 				case GT_PROPERTY_ICON:
 				{
-					if (g_ConfigManager.ItemPropertiesMode == OPM_ALWAYS_UP)
-						g_ConfigManager.ItemPropertiesMode = OPM_FOLLOW_MOUSE;
+					if (g_ConfigManager.GetItemPropertiesMode() == OPM_ALWAYS_UP)
+						g_ConfigManager.SetItemPropertiesMode(OPM_FOLLOW_MOUSE);
 
 					break;
 				}
@@ -1254,7 +1254,7 @@ void CGumpManager::Load(const string &path)
 					{
 						menubarFound = true;
 						gump = new CGumpMenubar(gumpX, gumpY);
-						((CGumpMenubar*)gump)->Opened = gumpMinimized;
+						((CGumpMenubar*)gump)->SetOpened(gumpMinimized);
 					}
 
 					break;
@@ -1422,7 +1422,7 @@ void CGumpManager::Load(const string &path)
 		if (!g_ConfigManager.DisableMenubar && !g_ConfigManager.GameWindowX && !g_ConfigManager.GameWindowY)
 			g_ConfigManager.GameWindowY = 40;
 
-		WISP_GEOMETRY::CSize windowSize = g_OrionWindow.Size;
+		WISP_GEOMETRY::CSize windowSize = g_OrionWindow.GetSize();
 
 		int x = g_ConfigManager.GameWindowX + g_ConfigManager.GameWindowWidth;
 		int y = g_ConfigManager.GameWindowY;
@@ -1464,13 +1464,13 @@ void CGumpManager::Load(const string &path)
 	if (!g_ConfigManager.DisableMenubar && !menubarFound)
 	{
 		CGumpMenubar *mbg = new CGumpMenubar(0, 0);
-		mbg->Opened = true;
+		mbg->SetOpened(true);
 		AddGump(mbg);
 	}
 
 	if (!bufficonWindowFound)
 	{
-		WISP_GEOMETRY::CSize windowSize = g_OrionWindow.Size;
+		WISP_GEOMETRY::CSize windowSize = g_OrionWindow.GetSize();
 
 		int x = g_ConfigManager.GameWindowX + (int)(g_ConfigManager.GameWindowWidth * 0.7f);
 		int y = g_ConfigManager.GameWindowY + g_ConfigManager.GameWindowHeight;
@@ -1495,11 +1495,11 @@ void CGumpManager::SaveDefaultGumpProperties(WISP_FILE::CBinaryFileWritter &writ
 	WISPFUN_DEBUG("c144_f29");
 	writer.WriteInt8(size);
 	writer.WriteInt8(gump->GumpType);
-	writer.WriteUInt16LE(gump->X);
-	writer.WriteUInt16LE(gump->Y);
+	writer.WriteUInt16LE(gump->GetX());
+	writer.WriteUInt16LE(gump->GetY());
 
 	if (gump->GumpType == GT_MENUBAR)
-		writer.WriteInt8(((CGumpMenubar*)gump)->Opened);
+		writer.WriteInt8(((CGumpMenubar*)gump)->GetOpened());
 	else //buff
 		writer.WriteInt8(gump->Minimized);
 
@@ -1561,9 +1561,9 @@ void CGumpManager::Save(const string &path)
 				{
 					CGumpWorldMap *wmg = (CGumpWorldMap*)gump;
 					
-					writter.WriteUInt8(wmg->Map);
-					writter.WriteUInt8(wmg->Scale);
-					writter.WriteUInt8(wmg->LinkWithPlayer);
+					writter.WriteUInt8(wmg->GetMap());
+					writter.WriteUInt8(wmg->GetScale());
+					writter.WriteUInt8(wmg->GetLinkWithPlayer());
 
 					writter.WriteInt16LE(wmg->Width);
 					writter.WriteInt16LE(wmg->Height);
@@ -1639,7 +1639,7 @@ void CGumpManager::Save(const string &path)
 			{
 				SaveDefaultGumpProperties(writter, gump, 13);
 
-				writter.WriteUInt8(((CGumpConsoleType*)gump)->ShowFullText);
+				writter.WriteUInt8(((CGumpConsoleType*)gump)->GetShowFullText());
 
 				writter.WriteBuffer();
 				count++;

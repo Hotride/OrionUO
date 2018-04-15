@@ -63,7 +63,7 @@ void CSelectProfessionScreen::ProcessSmoothAction(uchar action)
 	else if (action == ID_SMOOTH_SPS_GO_SCREEN_GAME_CONNECT)
 	{
 		g_Orion.InitScreen(GS_GAME_CONNECT);
-		g_ConnectionScreen.Type = CST_SELECT_PROFESSOIN;
+		g_ConnectionScreen.SetType(CST_SELECT_PROFESSOIN);
 	}
 	else if (action == ID_SMOOTH_SPS_GO_SCREEN_CREATE)
 		g_Orion.InitScreen(GS_CREATE);

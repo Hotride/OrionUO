@@ -846,25 +846,25 @@ void CGumpOptions::DrawPage1()
 	text->CreateTextureW(0, L"These settings affect the sound and music you will hear while playing Ultima Online.", 30, 500);
 
 	CGUICheckbox *checkbox = (CGUICheckbox*)Add(new CGUICheckbox(ID_GO_P1_SOUND_ON_OFF, 0x00D2, 0x00D3, 0x00D2, 64, 90));
-	checkbox->Checked = g_OptionsConfig.Sound;
+	checkbox->Checked = g_OptionsConfig.GetSound();
 	checkbox->SetTextParameters(0, L"Sound on/off", g_OptionsTextColor);
 
 	text = (CGUIText*)Add(new CGUIText(g_OptionsTextColor, 64, 112));
 	text->CreateTextureW(0, L"Sound volume");
 
-	m_SliderSound = (CGUISlider*)Add(new CGUISlider(ID_GO_P1_SOUND_VOLUME, 0x00D8, 0x00D8, 0x00D8, 0x00D5, true, false, 64, 133, 90, 0, 255, g_OptionsConfig.SoundVolume));
+	m_SliderSound = (CGUISlider*)Add(new CGUISlider(ID_GO_P1_SOUND_VOLUME, 0x00D8, 0x00D8, 0x00D8, 0x00D5, true, false, 64, 133, 90, 0, 255, g_OptionsConfig.GetSoundVolume()));
 	m_SliderSound->SetTextParameters(true, STP_RIGHT, 0, g_OptionsTextColor, true);
 
 
 
 	checkbox = (CGUICheckbox*)Add(new CGUICheckbox(ID_GO_P1_MUSIC_ON_OFF, 0x00D2, 0x00D3, 0x00D2, 64, 151));
-	checkbox->Checked = g_OptionsConfig.Music;
+	checkbox->Checked = g_OptionsConfig.GetMusic();
 	checkbox->SetTextParameters(0, L"Music on/off", g_OptionsTextColor);
 
 	text = (CGUIText*)Add(new CGUIText(g_OptionsTextColor, 64, 173));
 	text->CreateTextureW(0, L"Music volume");
 
-	m_SliderMusic = (CGUISlider*)Add(new CGUISlider(ID_GO_P1_MUSIC_VOLUME, 0x00D8, 0x00D8, 0x00D8, 0x00D5, true, false, 64, 194, 90, 0, 255, g_OptionsConfig.MusicVolume));
+	m_SliderMusic = (CGUISlider*)Add(new CGUISlider(ID_GO_P1_MUSIC_VOLUME, 0x00D8, 0x00D8, 0x00D8, 0x00D5, true, false, 64, 194, 90, 0, 255, g_OptionsConfig.GetMusicVolume()));
 	m_SliderMusic->SetTextParameters(true, STP_RIGHT, 0, g_OptionsTextColor, true);
 
 	checkbox = (CGUICheckbox*)Add(new CGUICheckbox(ID_GO_P1_PLAY_FOOTSTEP_SOUNDS, 0x00D2, 0x00D3, 0x00D2, 64, 212));
@@ -916,12 +916,12 @@ void CGumpOptions::DrawPage2()
 	text = (CGUIText*)html->Add(new CGUIText(g_OptionsTextColor, 0, 0));
 	text->CreateTextureW(0, L"FPS rate:");
 
-	m_SliderClientFPS = (CGUISlider*)html->Add(new CGUISlider(ID_GO_P2_CLIENT_FPS, 0x00D8, 0x00D8, 0x00D8, 0x00D5, true, false, 0, 21, 90, MIN_FPS_LIMIT, MAX_FPS_LIMIT, g_OptionsConfig.ClientFPS));
+	m_SliderClientFPS = (CGUISlider*)html->Add(new CGUISlider(ID_GO_P2_CLIENT_FPS, 0x00D8, 0x00D8, 0x00D8, 0x00D5, true, false, 0, 21, 90, MIN_FPS_LIMIT, MAX_FPS_LIMIT, g_OptionsConfig.GetClientFPS()));
 	m_SliderClientFPS->SetTextParameters(true, STP_RIGHT, 0, g_OptionsTextColor, true);
 
 
 	CGUICheckbox *checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P2_REDUCE_FPS_UNACTIVE_WINDOW, 0x00D2, 0x00D3, 0x00D2, 140, 16));
-	checkbox->Checked = g_OptionsConfig.ReduceFPSUnactiveWindow;
+	checkbox->Checked = g_OptionsConfig.GetReduceFPSUnactiveWindow();
 	checkbox->SetTextParameters(0, L"Reduce FPS when UO window is unactive", g_OptionsTextColor);
 
 	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P2_CHARACTERS_ANIMATION_DELAY, 0x00D2, 0x00D3, 0x00D2, 0, 40));
@@ -933,7 +933,7 @@ void CGumpOptions::DrawPage2()
 	checkbox->SetTextParameters(0, L"Standard items animation delay", g_OptionsTextColor);
 
 	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P2_ENABLE_SCALING, 0x00D2, 0x00D3, 0x00D2, 0, 80));
-	checkbox->Checked = g_OptionsConfig.UseScaling;
+	checkbox->Checked = g_OptionsConfig.GetUseScaling();
 	checkbox->SetTextParameters(0, L"Use scaling in game window (BETA VERSION!!!)", g_OptionsTextColor);
 
 	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P2_REMOVE_TEXT_WITH_BLENDING, 0x00D2, 0x00D3, 0x00D2, 0, 100));
@@ -949,15 +949,15 @@ void CGumpOptions::DrawPage2()
 
 	html->Add(new CGUIGroup(1));
 	CGUIRadio *radio = (CGUIRadio*)html->Add(new CGUIRadio(ID_GO_P2_NO_DRAW_CHARACTERS_STATUS, 0x00D0, 0x00D1, 0x00D2, 10, 140));
-	radio->Checked = (g_OptionsConfig.DrawStatusState == DCSS_NO_DRAW);
+	radio->Checked = (g_OptionsConfig.GetDrawStatusState() == DCSS_NO_DRAW);
 	radio->SetTextParameters(0, L"No draw", g_OptionsTextColor);
 
 	radio = (CGUIRadio*)html->Add(new CGUIRadio(ID_GO_P2_DRAW_CHARACTERS_STATUS_TOP, 0x00D0, 0x00D1, 0x00D2, 10, 160));
-	radio->Checked = (g_OptionsConfig.DrawStatusState == DCSS_ABOVE);
+	radio->Checked = (g_OptionsConfig.GetDrawStatusState() == DCSS_ABOVE);
 	radio->SetTextParameters(0, L"Above character (Text)", g_OptionsTextColor);
 
 	radio = (CGUIRadio*)html->Add(new CGUIRadio(ID_GO_P2_DRAW_CHARACTERS_STATUS_BOTTOM, 0x00D0, 0x00D1, 0x00D2, 10, 180));
-	radio->Checked = (g_OptionsConfig.DrawStatusState == DCSS_UNDER);
+	radio->Checked = (g_OptionsConfig.GetDrawStatusState() == DCSS_UNDER);
 	radio->SetTextParameters(0, L"Under character (Line)", g_OptionsTextColor);
 
 	html->Add(new CGUIGroup(2));
@@ -977,19 +977,19 @@ void CGumpOptions::DrawPage2()
 	m_SliderDrawStatusConditionValue->SetTextParameters(true, STP_RIGHT_CENTER, 0, g_OptionsTextColor, true);
 	
 	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P2_DRAW_STUMPS, 0x00D2, 0x00D3, 0x00D2, 0, 205));
-	checkbox->Checked = g_OptionsConfig.DrawStumps;
+	checkbox->Checked = g_OptionsConfig.GetDrawStumps();
 	checkbox->SetTextParameters(0, L"Change trees to stumps", g_OptionsTextColor);
 
 	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P2_MARKING_CAVES, 0x00D2, 0x00D3, 0x00D2, 0, 225));
-	checkbox->Checked = g_OptionsConfig.MarkingCaves;
+	checkbox->Checked = g_OptionsConfig.GetMarkingCaves();
 	checkbox->SetTextParameters(0, L"Marking cave tiles", g_OptionsTextColor);
 
 	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P2_NO_VEGETATION, 0x00D2, 0x00D3, 0x00D2, 0, 245));
-	checkbox->Checked = g_OptionsConfig.NoVegetation;
+	checkbox->Checked = g_OptionsConfig.GetNoVegetation();
 	checkbox->SetTextParameters(0, L"Hide vegetation", g_OptionsTextColor);
 
 	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P2_NO_ANIMATE_FIELDS, 0x00D2, 0x00D3, 0x00D2, 0, 265));
-	checkbox->Checked = g_OptionsConfig.NoAnimateFields;
+	checkbox->Checked = g_OptionsConfig.GetNoAnimateFields();
 	checkbox->SetTextParameters(0, L"No fields animation", g_OptionsTextColor);
 
 	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P2_LOCK_GUMP_MOVING, 0x00D2, 0x00D3, 0x00D2, 0, 285));
@@ -997,7 +997,7 @@ void CGumpOptions::DrawPage2()
 	checkbox->SetTextParameters(0, L"Lock gumps moving", g_OptionsTextColor);
 
 	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P2_CONSOLE_ENTER, 0x00D2, 0x00D3, 0x00D2, 0, 305));
-	checkbox->Checked = g_OptionsConfig.ConsoleNeedEnter;
+	checkbox->Checked = g_OptionsConfig.GetConsoleNeedEnter();
 	checkbox->SetTextParameters(0, L"Chat need press 'Enter' to activate it.", g_OptionsTextColor);
 
 	text = (CGUIText*)html->Add(new CGUIText(g_OptionsTextColor, 0, 325));
@@ -1031,31 +1031,31 @@ void CGumpOptions::DrawPage2()
 	checkbox->Checked = g_OptionsConfig.TransparentSpellIcons;
 	checkbox->SetTextParameters(0, L"Transparent spell icons, alpha:", g_OptionsTextColor);
 
-	m_SliderSpellIconsAlpha = (CGUISlider*)html->Add(new CGUISlider(ID_GO_P2_SPELL_ICONS_ALPHA, 0x00D8, 0x00D8, 0x00D8, 0x00D5, true, false, 232, 454, 90, 30, 255, g_OptionsConfig.SpellIconAlpha));
+	m_SliderSpellIconsAlpha = (CGUISlider*)html->Add(new CGUISlider(ID_GO_P2_SPELL_ICONS_ALPHA, 0x00D8, 0x00D8, 0x00D8, 0x00D5, true, false, 232, 454, 90, 30, 255, g_OptionsConfig.GetSpellIconAlpha()));
 	m_SliderSpellIconsAlpha->SetTextParameters(true, STP_RIGHT, 0, g_OptionsTextColor, true);
 	
 	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P2_OLD_STYLE_STATUSBAR, 0x00D2, 0x00D3, 0x00D2, 0, 470));
-	checkbox->Checked = g_OptionsConfig.OldStyleStatusbar;
+	checkbox->Checked = g_OptionsConfig.GetOldStyleStatusbar();
 	checkbox->SetTextParameters(0, L"Old style maximized statusbar", g_OptionsTextColor);
 
 	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P2_ORIGINAL_PARTY_STATUSBAR, 0x00D2, 0x00D3, 0x00D2, 0, 490));
-	checkbox->Checked = g_OptionsConfig.OriginalPartyStatusbar;
+	checkbox->Checked = g_OptionsConfig.GetOriginalPartyStatusbar();
 	checkbox->SetTextParameters(0, L"Original party statusbar gump", g_OptionsTextColor);
 
 	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P2_APPLY_STATE_COLOR_ON_CHARACTERS, 0x00D2, 0x00D3, 0x00D2, 0, 510));
-	checkbox->Checked = g_OptionsConfig.ApplyStateColorOnCharacters;
+	checkbox->Checked = g_OptionsConfig.GetApplyStateColorOnCharacters();
 	checkbox->SetTextParameters(0, L"Colorize characters by state", g_OptionsTextColor);
 
 	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P2_CHANGE_FIELDS_GRAPHIC, 0x00D2, 0x00D3, 0x00D2, 0, 530));
-	checkbox->Checked = g_OptionsConfig.ChangeFieldsGraphic;
+	checkbox->Checked = g_OptionsConfig.GetChangeFieldsGraphic();
 	checkbox->SetTextParameters(0, L"Change animated fields to tiles", g_OptionsTextColor);
 
 	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P2_PAPERDOLL_SLOTS, 0x00D2, 0x00D3, 0x00D2, 0, 550));
-	checkbox->Checked = g_OptionsConfig.PaperdollSlots;
+	checkbox->Checked = g_OptionsConfig.GetPaperdollSlots();
 	checkbox->SetTextParameters(0, L"Add paperdoll slots", g_OptionsTextColor);
 
 	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P2_SCALE_IMAGES_IN_PAPERDOLL_SLOTS, 0x00D2, 0x00D3, 0x00D2, 200, 550));
-	checkbox->Checked = g_OptionsConfig.ScaleImagesInPaperdollSlots;
+	checkbox->Checked = g_OptionsConfig.GetScaleImagesInPaperdollSlots();
 	checkbox->SetTextParameters(0, L"Scale images in slots", g_OptionsTextColor);
 
 	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P2_REMOVE_STATUSBARS_WITHOUT_OBJECTS, 0x00D2, 0x00D3, 0x00D2, 0, 570));
@@ -1072,15 +1072,15 @@ void CGumpOptions::DrawPage2()
 	html->Add(new CGUIGroup(4));
 
 	radio = (CGUIRadio*)html->Add(new CGUIRadio(ID_GO_P2_DRAW_AURA_NEVER, 0x00D0, 0x00D1, 0x00D2, 10, 630));
-	radio->Checked = (g_OptionsConfig.DrawAuraState == DAS_NEVER);
+	radio->Checked = (g_OptionsConfig.GetDrawAuraState() == DAS_NEVER);
 	radio->SetTextParameters(0, L"Never", g_OptionsTextColor);
 
 	radio = (CGUIRadio*)html->Add(new CGUIRadio(ID_GO_P2_DRAW_AURA_IN_WARMODE, 0x00D0, 0x00D1, 0x00D2, 10, 650));
-	radio->Checked = (g_OptionsConfig.DrawAuraState == DAS_IN_WARMODE);
+	radio->Checked = (g_OptionsConfig.GetDrawAuraState() == DAS_IN_WARMODE);
 	radio->SetTextParameters(0, L"Only in war mode", g_OptionsTextColor);
 
 	radio = (CGUIRadio*)html->Add(new CGUIRadio(ID_GO_P2_DRAW_AURA_ALWAYS, 0x00D0, 0x00D1, 0x00D2, 10, 670));
-	radio->Checked = (g_OptionsConfig.DrawAuraState == DAS_ALWAYS);
+	radio->Checked = (g_OptionsConfig.GetDrawAuraState() == DAS_ALWAYS);
 	radio->SetTextParameters(0, L"Always", g_OptionsTextColor);
 
 	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P2_DRAW_AURA_WITH_CTRL_PRESSED, 0x00D2, 0x00D3, 0x00D2, 0, 690));
@@ -1117,11 +1117,11 @@ void CGumpOptions::DrawPage2()
 	checkbox->SetTextParameters(0, L"Draw helmets on shroud in the world", g_OptionsTextColor);
 
 	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P2_USE_GLOBAL_MAP_LAYER, 0x00D2, 0x00D3, 0x00D2, 0, 800));
-	checkbox->Checked = g_OptionsConfig.UseGlobalMapLayer;
+	checkbox->Checked = g_OptionsConfig.GetUseGlobalMapLayer();
 	checkbox->SetTextParameters(0, L"Draw world map before all gumps", g_OptionsTextColor);
 
 	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P2_NO_DRAW_ROOFS, 0x00D2, 0x00D3, 0x00D2, 0, 820));
-	checkbox->Checked = g_OptionsConfig.NoDrawRoofs;
+	checkbox->Checked = g_OptionsConfig.GetNoDrawRoofs();
 	checkbox->SetTextParameters(0, L"No draw roofs", g_OptionsTextColor);
 
 	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P2_HIGHLIGHT_TARGET_BY_TYPE, 0x00D2, 0x00D3, 0x00D2, 0, 840));
@@ -1133,14 +1133,14 @@ void CGumpOptions::DrawPage2()
 	checkbox->SetTextParameters(0, L"Display a world map immediately after entering the world", g_OptionsTextColor);
 
 	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P2_USE_GL_LISTS_FOR_INTERFACE, 0x00D2, 0x00D3, 0x00D2, 0, 880));
-	checkbox->Checked = g_OptionsConfig.UseGLListsForInterface;
+	checkbox->Checked = g_OptionsConfig.GetUseGLListsForInterface();
 	checkbox->SetTextParameters(0, L"Use GL lists for draw interface gumps", g_OptionsTextColor);
 
 	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P2_CHECK_PING, 0x00D2, 0x00D3, 0x00D2, 0, 900));
 	checkbox->Checked = g_OptionsConfig.CheckPing;
 	checkbox->SetTextParameters(0, L"Check ping in game, timer in seconds:", g_OptionsTextColor);
 
-	m_SliderPingTimer = (CGUISlider*)html->Add(new CGUISlider(ID_GO_P2_PING_TIMER, 0x00D8, 0x00D8, 0x00D8, 0x00D5, true, false, 286, 904, 90, 10, 120, g_OptionsConfig.PingTimer));
+	m_SliderPingTimer = (CGUISlider*)html->Add(new CGUISlider(ID_GO_P2_PING_TIMER, 0x00D8, 0x00D8, 0x00D8, 0x00D5, true, false, 286, 904, 90, 10, 120, g_OptionsConfig.GetPingTimer()));
 	m_SliderPingTimer->SetTextParameters(true, STP_RIGHT, 0, g_OptionsTextColor, true);
 
 	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P2_CANCEL_NEW_TARGET_SYSTEM_ON_SHIFT_ESC, 0x00D2, 0x00D3, 0x00D2, 0, 920));
@@ -1647,23 +1647,23 @@ void CGumpOptions::DrawPage6()
 	text->CreateTextureW(0, L"Item Properties Display Mode:");
 
 	CGUIRadio *radio = (CGUIRadio*)html->Add(new CGUIRadio(ID_GO_P6_DISPLAY_ITEM_PROPERTIES_MODE_AT_ICON, 0x00D0, 0x00D1, 0x00D2, 10, 236));
-	radio->Checked = (g_OptionsConfig.ItemPropertiesMode == OPM_AT_ICON);
+	radio->Checked = (g_OptionsConfig.GetItemPropertiesMode() == OPM_AT_ICON);
 	radio->SetTextParameters(0, L"At Icon", g_OptionsTextColor);
 
 	radio = (CGUIRadio*)html->Add(new CGUIRadio(ID_GO_P6_DISPLAY_ITEM_PROPERTIES_MODE_ALWAYS_UP, 0x00D0, 0x00D1, 0x00D2, 10, 256));
-	radio->Checked = (g_OptionsConfig.ItemPropertiesMode == OPM_ALWAYS_UP);
+	radio->Checked = (g_OptionsConfig.GetItemPropertiesMode() == OPM_ALWAYS_UP);
 	radio->SetTextParameters(0, L"Always Up", g_OptionsTextColor);
 
 	radio = (CGUIRadio*)html->Add(new CGUIRadio(ID_GO_P6_DISPLAY_ITEM_PROPERTIES_MODE_FOLLOW_MOUSE, 0x00D0, 0x00D1, 0x00D2, 10, 276));
-	radio->Checked = (g_OptionsConfig.ItemPropertiesMode == OPM_FOLLOW_MOUSE);
+	radio->Checked = (g_OptionsConfig.GetItemPropertiesMode() == OPM_FOLLOW_MOUSE);
 	radio->SetTextParameters(0, L"Follow Mouse", g_OptionsTextColor);
 
 	radio = (CGUIRadio*)html->Add(new CGUIRadio(ID_GO_P6_DISPLAY_ITEM_PROPERTIES_MODE_SINGLE_CLICK, 0x00D0, 0x00D1, 0x00D2, 10, 296));
-	radio->Checked = (g_OptionsConfig.ItemPropertiesMode == OPM_SINGLE_CLICK);
+	radio->Checked = (g_OptionsConfig.GetItemPropertiesMode() == OPM_SINGLE_CLICK);
 	radio->SetTextParameters(0, L"Single Click", g_OptionsTextColor);
 
 	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P6_DISPLAY_ITEM_PROPERTIES_ICON, 0x00D2, 0x00D3, 0x00D2, 0, 316));
-	checkbox->Checked = g_OptionsConfig.ItemPropertiesIcon;
+	checkbox->Checked = g_OptionsConfig.GetItemPropertiesIcon();
 	checkbox->SetTextParameters(0, L"Display Item Properties Icon", g_OptionsTextColor);
 
 	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P6_HOLD_SHIFT_FOR_CONTEXT_MENUS, 0x00D2, 0x00D3, 0x00D2, 0, 336));
@@ -1680,19 +1680,19 @@ void CGumpOptions::DrawPage6()
 	text->CreateTextureW(0, L"Select Character Backpack Style");
 
 	radio = (CGUIRadio*)html->Add(new CGUIRadio(ID_GO_P6_CHARACTER_BACKPACK_STYLE_DEFAULT, 0x00D0, 0x00D1, 0x00D2, 10, 396));
-	radio->Checked = (g_OptionsConfig.CharacterBackpackStyle == CBS_DEFAULT);
+	radio->Checked = (g_OptionsConfig.GetCharacterBackpackStyle() == CBS_DEFAULT);
 	radio->SetTextParameters(0, L"Default", g_OptionsTextColor);
 
 	radio = (CGUIRadio*)html->Add(new CGUIRadio(ID_GO_P6_CHARACTER_BACKPACK_STYLE_SUEDE, 0x00D0, 0x00D1, 0x00D2, 10, 416));
-	radio->Checked = (g_OptionsConfig.CharacterBackpackStyle == CBS_SUEDE);
+	radio->Checked = (g_OptionsConfig.GetCharacterBackpackStyle() == CBS_SUEDE);
 	radio->SetTextParameters(0, L"Suede", g_OptionsTextColor);
 
 	radio = (CGUIRadio*)html->Add(new CGUIRadio(ID_GO_P6_CHARACTER_BACKPACK_STYLE_POLAR_BEAR, 0x00D0, 0x00D1, 0x00D2, 10, 436));
-	radio->Checked = (g_OptionsConfig.CharacterBackpackStyle == CBS_POLAR_BEAR);
+	radio->Checked = (g_OptionsConfig.GetCharacterBackpackStyle() == CBS_POLAR_BEAR);
 	radio->SetTextParameters(0, L"Polar Bear", g_OptionsTextColor);
 
 	radio = (CGUIRadio*)html->Add(new CGUIRadio(ID_GO_P6_CHARACTER_BACKPACK_STYLE_GHOUL_SKIN, 0x00D0, 0x00D1, 0x00D2, 10, 456));
-	radio->Checked = (g_OptionsConfig.CharacterBackpackStyle == CBS_GHOUL_SKIN);
+	radio->Checked = (g_OptionsConfig.GetCharacterBackpackStyle() == CBS_GHOUL_SKIN);
 	radio->SetTextParameters(0, L"Ghoul Skin", g_OptionsTextColor);
 
 	html->CalculateDataSize();
@@ -1803,7 +1803,7 @@ void CGumpOptions::DrawPage7()
 	checkbox->Checked = g_OptionsConfig.ColoredLighting;
 	checkbox->SetTextParameters(0, L"Colored Lighting", g_OptionsTextColor);
 
-	if (g_PacketManager.ClientVersion >= CV_6000)
+	if (g_PacketManager.GetClientVersion() >= CV_6000)
 	{
 		Add(new CGUIButton(ID_GO_P7_GUILD_MESSAGE_COLOR, 0x00D4, 0x00D4, 0x00D4, 354, 204));
 
@@ -2425,9 +2425,9 @@ void CGumpOptions::GUMP_CHECKBOX_EVENT_C
 		case 1: //Sound and Music
 		{
 			if (serial == ID_GO_P1_SOUND_ON_OFF) //Sound on/off
-				g_OptionsConfig.Sound = state;
+				g_OptionsConfig.SetSound(state);
 			else if (serial == ID_GO_P1_MUSIC_ON_OFF) //Music on/off
-				g_OptionsConfig.Music = state;
+				g_OptionsConfig.SetMusic(state);
 			else if (serial == ID_GO_P1_PLAY_FOOTSTEP_SOUNDS) //Play footstep sounds
 				g_OptionsConfig.FootstepsSound = state;
 			else if (serial == ID_GO_P1_PLAY_COMBAT_MUSIC) //Play combat music
@@ -2439,19 +2439,19 @@ void CGumpOptions::GUMP_CHECKBOX_EVENT_C
 		case 2: //Orion's configuration
 		{
 			if (serial == ID_GO_P2_ENABLE_SCALING) //Use scaling in game window
-				g_OptionsConfig.UseScaling = state;
+				g_OptionsConfig.SetUseScaling(state);
 			else if (serial == ID_GO_P2_REMOVE_TEXT_WITH_BLENDING) //Remove object's text with alpha-blending
 				g_OptionsConfig.RemoveTextWithBlending = state;
 			else if (serial == ID_GO_P2_DRAW_STUMPS)
-				g_OptionsConfig.DrawStumps = state;
+				g_OptionsConfig.SetDrawStumps(state);
 			else if (serial == ID_GO_P2_MARKING_CAVES)
-				g_OptionsConfig.MarkingCaves = state;
+				g_OptionsConfig.SetMarkingCaves(state);
 			else if (serial == ID_GO_P2_NO_VEGETATION)
-				g_OptionsConfig.NoVegetation = state;
+				g_OptionsConfig.SetNoVegetation(state);
 			else if (serial == ID_GO_P2_NO_ANIMATE_FIELDS)
-				g_OptionsConfig.NoAnimateFields = state;
+				g_OptionsConfig.SetNoAnimateFields(state);
 			else if (serial == ID_GO_P2_REDUCE_FPS_UNACTIVE_WINDOW) //Reduce FPS when Window is Unactive
-				g_OptionsConfig.ReduceFPSUnactiveWindow = state;
+				g_OptionsConfig.SetReduceFPSUnactiveWindow(state);
 			else if (serial == ID_GO_P2_CHARACTERS_ANIMATION_DELAY) //Standard characters animation delay
 				g_OptionsConfig.StandartCharactersAnimationDelay = state;
 			else if (serial == ID_GO_P2_ITEMS_ANIMATION_DELAY) //Standard items animation delay
@@ -2459,21 +2459,21 @@ void CGumpOptions::GUMP_CHECKBOX_EVENT_C
 			else if (serial == ID_GO_P2_LOCK_GUMP_MOVING) //Lock gump moving
 				g_OptionsConfig.LockGumpsMoving = state;
 			else if (serial == ID_GO_P2_CONSOLE_ENTER) //Console need press 'Enter' to activate it.
-				g_OptionsConfig.ConsoleNeedEnter = state;
+				g_OptionsConfig.SetConsoleNeedEnter(state);
 			else if (serial == ID_GO_P2_USE_HIDDEN_MODE_ONLY_FOR_SELF)
 				g_OptionsConfig.UseHiddenModeOnlyForSelf = state;
 			else if (serial == ID_GO_P2_TRANSPARENT_SPELL_ICONS)
 				g_OptionsConfig.TransparentSpellIcons = state;
 			else if (serial == ID_GO_P2_OLD_STYLE_STATUSBAR)
-				g_OptionsConfig.OldStyleStatusbar = state;
+				g_OptionsConfig.SetOldStyleStatusbar(state);
 			else if (serial == ID_GO_P2_ORIGINAL_PARTY_STATUSBAR)
-				g_OptionsConfig.OriginalPartyStatusbar = state;
+				g_OptionsConfig.SetOriginalPartyStatusbar(state);
 			else if (serial == ID_GO_P2_APPLY_STATE_COLOR_ON_CHARACTERS)
-				g_OptionsConfig.ApplyStateColorOnCharacters = state;
+				g_OptionsConfig.SetApplyStateColorOnCharacters(state);
 			else if (serial == ID_GO_P2_CHANGE_FIELDS_GRAPHIC)
-				g_OptionsConfig.ChangeFieldsGraphic = state;
+				g_OptionsConfig.SetChangeFieldsGraphic(state);
 			else if (serial == ID_GO_P2_PAPERDOLL_SLOTS)
-				g_OptionsConfig.PaperdollSlots = state;
+				g_OptionsConfig.SetPaperdollSlots(state);
 			else if (serial == ID_GO_P2_REMOVE_STATUSBARS_WITHOUT_OBJECTS)
 				g_OptionsConfig.RemoveStatusbarsWithoutObjects = state;
 			else if (serial == ID_GO_P2_SHOW_CONSOLE_ENTRY_MODE)
@@ -2481,21 +2481,21 @@ void CGumpOptions::GUMP_CHECKBOX_EVENT_C
 			else if (serial == ID_GO_P2_DRAW_AURA_WITH_CTRL_PRESSED)
 				g_OptionsConfig.DrawAuraWithCtrlPressed = state;
 			else if (serial == ID_GO_P2_SCALE_IMAGES_IN_PAPERDOLL_SLOTS)
-				g_OptionsConfig.ScaleImagesInPaperdollSlots = state;
+				g_OptionsConfig.SetScaleImagesInPaperdollSlots(state);
 			else if (serial == ID_GO_P2_REMOVE_OR_CREATE_OBJECTS_WITH_BLENDING)
 				g_OptionsConfig.RemoveOrCreateObjectsWithBlending = state;
 			else if (serial == ID_GO_P2_DRAW_HELMETS_ON_SHROUD)
 				g_OptionsConfig.DrawHelmetsOnShroud = state;
 			else if (serial == ID_GO_P2_USE_GLOBAL_MAP_LAYER)
-				g_OptionsConfig.UseGlobalMapLayer = state;
+				g_OptionsConfig.SetUseGlobalMapLayer(state);
 			else if (serial == ID_GO_P2_NO_DRAW_ROOFS)
-				g_OptionsConfig.NoDrawRoofs = state;
+				g_OptionsConfig.SetNoDrawRoofs(state);
 			else if (serial == ID_GO_P2_HIGHLIGHT_TARGET_BY_TYPE)
 				g_OptionsConfig.HighlightTargetByType = state;
 			else if (serial == ID_GO_P2_AUTO_DISPLAY_WORLD_MAP)
 				g_OptionsConfig.AutoDisplayWorldMap = state;
 			else if (serial == ID_GO_P2_USE_GL_LISTS_FOR_INTERFACE)
-				g_OptionsConfig.UseGLListsForInterface = state;
+				g_OptionsConfig.SetUseGLListsForInterface(state);
 			else if (serial == ID_GO_P2_CHECK_PING)
 				g_OptionsConfig.CheckPing = state;
 			else if (serial == ID_GO_P2_CANCEL_NEW_TARGET_SYSTEM_ON_SHIFT_ESC)
@@ -2556,7 +2556,7 @@ void CGumpOptions::GUMP_CHECKBOX_EVENT_C
 			else if (serial == ID_GO_P6_OBJECT_HANDLES) //Object Handles
 				g_OptionsConfig.ObjectHandles = state;
 			else if (serial == ID_GO_P6_DISPLAY_ITEM_PROPERTIES_ICON) //Display Item Properties Icon
-				g_OptionsConfig.ItemPropertiesIcon = state;
+				g_OptionsConfig.SetItemPropertiesIcon(state);
 			else if (serial == ID_GO_P6_HOLD_SHIFT_FOR_CONTEXT_MENUS) //Hold Shift For Context Menus
 				g_OptionsConfig.HoldShiftForContextMenus = state;
 			else if (serial == ID_GO_P6_HOLD_SHIFT_FOR_ENABLE_PATHFINDING) //Hold Shift For Enable Pathfinding
@@ -2623,11 +2623,11 @@ void CGumpOptions::GUMP_RADIO_EVENT_C
 		case 2: //Orion's configuration
 		{
 			if (serial == ID_GO_P2_NO_DRAW_CHARACTERS_STATUS) //No draw
-				g_OptionsConfig.DrawStatusState = DCSS_NO_DRAW;
+				g_OptionsConfig.SetDrawStatusState(DCSS_NO_DRAW);
 			else if (serial == ID_GO_P2_DRAW_CHARACTERS_STATUS_TOP) //Above character
-				g_OptionsConfig.DrawStatusState = DCSS_ABOVE;
+				g_OptionsConfig.SetDrawStatusState(DCSS_ABOVE);
 			else if (serial == ID_GO_P2_DRAW_CHARACTERS_STATUS_BOTTOM) //Under character
-				g_OptionsConfig.DrawStatusState = DCSS_UNDER;
+				g_OptionsConfig.SetDrawStatusState(DCSS_UNDER);
 			else if (serial == ID_GO_P2_HIDDEN_CHARACTES_MODE_1)
 				g_OptionsConfig.HiddenCharactersRenderMode = HCRM_ORIGINAL;
 			else if (serial == ID_GO_P2_HIDDEN_CHARACTES_MODE_2)
@@ -2643,11 +2643,11 @@ void CGumpOptions::GUMP_RADIO_EVENT_C
 			else if (serial == ID_GO_P2_DRAW_CHARACTER_BARS_LOWER)
 				g_OptionsConfig.DrawStatusConditionState = DCSCS_LOWER;
 			else if (serial == ID_GO_P2_DRAW_AURA_NEVER)
-				g_OptionsConfig.DrawAuraState = DAS_NEVER;
+				g_OptionsConfig.SetDrawAuraState(DAS_NEVER);
 			else if (serial == ID_GO_P2_DRAW_AURA_IN_WARMODE)
-				g_OptionsConfig.DrawAuraState = DAS_IN_WARMODE;
+				g_OptionsConfig.SetDrawAuraState(DAS_IN_WARMODE);
 			else if (serial == ID_GO_P2_DRAW_AURA_ALWAYS)
-				g_OptionsConfig.DrawAuraState = DAS_ALWAYS;
+				g_OptionsConfig.SetDrawAuraState(DAS_ALWAYS);
 			else if (serial == ID_GO_P2_SCREENSHOT_FORMAT_BMP)
 				g_OptionsConfig.ScreenshotFormat = SF_BMP;
 			else if (serial == ID_GO_P2_SCREENSHOT_FORMAT_PNG)
@@ -2681,21 +2681,21 @@ void CGumpOptions::GUMP_RADIO_EVENT_C
 		case 6: //Interface
 		{
 			if (serial == ID_GO_P6_DISPLAY_ITEM_PROPERTIES_MODE_AT_ICON) //At Icon
-				g_OptionsConfig.ItemPropertiesMode = OPM_AT_ICON;
+				g_OptionsConfig.SetItemPropertiesMode(OPM_AT_ICON);
 			else if (serial == ID_GO_P6_DISPLAY_ITEM_PROPERTIES_MODE_ALWAYS_UP) //Always Up
-				g_OptionsConfig.ItemPropertiesMode = OPM_ALWAYS_UP;
+				g_OptionsConfig.SetItemPropertiesMode(OPM_ALWAYS_UP);
 			else if (serial == ID_GO_P6_DISPLAY_ITEM_PROPERTIES_MODE_FOLLOW_MOUSE) //Follow Mouse
-				g_OptionsConfig.ItemPropertiesMode = OPM_FOLLOW_MOUSE;
+				g_OptionsConfig.SetItemPropertiesMode(OPM_FOLLOW_MOUSE);
 			else if (serial == ID_GO_P6_DISPLAY_ITEM_PROPERTIES_MODE_SINGLE_CLICK) //Single Click
-				g_OptionsConfig.ItemPropertiesMode = OPM_SINGLE_CLICK;
+				g_OptionsConfig.SetItemPropertiesMode(OPM_SINGLE_CLICK);
 			else if (serial == ID_GO_P6_CHARACTER_BACKPACK_STYLE_DEFAULT) //Default
-				g_OptionsConfig.CharacterBackpackStyle = CBS_DEFAULT;
+				g_OptionsConfig.SetCharacterBackpackStyle(CBS_DEFAULT);
 			else if (serial == ID_GO_P6_CHARACTER_BACKPACK_STYLE_SUEDE) //Suede
-				g_OptionsConfig.CharacterBackpackStyle = CBS_SUEDE;
+				g_OptionsConfig.SetCharacterBackpackStyle(CBS_SUEDE);
 			else if (serial == ID_GO_P6_CHARACTER_BACKPACK_STYLE_POLAR_BEAR) //Polar Bear
-				g_OptionsConfig.CharacterBackpackStyle = CBS_POLAR_BEAR;
+				g_OptionsConfig.SetCharacterBackpackStyle(CBS_POLAR_BEAR);
 			else if (serial == ID_GO_P6_CHARACTER_BACKPACK_STYLE_GHOUL_SKIN) //Ghoul Skin
-				g_OptionsConfig.CharacterBackpackStyle = CBS_GHOUL_SKIN;
+				g_OptionsConfig.SetCharacterBackpackStyle(CBS_GHOUL_SKIN);
 
 			break;
 		}
@@ -2734,24 +2734,24 @@ void CGumpOptions::GUMP_SLIDER_MOVE_EVENT_C
 		case 1: //Sound and Music
 		{
 			if (serial == ID_GO_P1_SOUND_VOLUME)
-				g_OptionsConfig.SoundVolume = m_SliderSound->Value;
+				g_OptionsConfig.SetSoundVolume(m_SliderSound->Value);
 			else if (serial == ID_GO_P1_MUSIC_VOLUME)
-				g_OptionsConfig.MusicVolume = m_SliderMusic->Value;
+				g_OptionsConfig.SetMusicVolume(m_SliderMusic->Value);
 
 			break;
 		}
 		case 2: //Orion's configuration
 		{
 			if (serial == ID_GO_P2_CLIENT_FPS)
-				g_OptionsConfig.ClientFPS = m_SliderClientFPS->Value;
+				g_OptionsConfig.SetClientFPS(m_SliderClientFPS->Value);
 			else if (serial == ID_GO_P2_HIDDEN_ALPHA)
 				g_OptionsConfig.HiddenAlpha = m_SliderHiddenAlpha->Value;
 			else if (serial == ID_GO_P2_SPELL_ICONS_ALPHA)
-				g_OptionsConfig.SpellIconAlpha = m_SliderSpellIconsAlpha->Value;
+				g_OptionsConfig.SetSpellIconAlpha(m_SliderSpellIconsAlpha->Value);
 			else if (serial == ID_GO_P2_DRAW_CHARACTER_BARS_LOWER_VALUE)
 				g_OptionsConfig.DrawStatusConditionValue = m_SliderDrawStatusConditionValue->Value;
 			else if (serial == ID_GO_P2_PING_TIMER)
-				g_OptionsConfig.PingTimer = m_SliderPingTimer->Value;
+				g_OptionsConfig.SetPingTimer(m_SliderPingTimer->Value);
 
 			break;
 		}
@@ -2985,7 +2985,7 @@ void CGumpOptions::OnKeyDown(const WPARAM &wParam, const LPARAM &lParam)
 	{
 		if (wParam == VK_RETURN)
 		{
-			if (g_ConfigManager.ConsoleNeedEnter)
+			if (g_ConfigManager.GetConsoleNeedEnter())
 				g_EntryPointer = NULL;
 			else
 				g_EntryPointer = &g_GameConsole;
@@ -3044,16 +3044,16 @@ void CGumpOptions::ApplyPageChanges()
 		case 1: //Sound and Music
 		{		
 			//Меняем громкость звука эффектам и текущим эффектам
-			g_ConfigManager.SoundVolume = g_OptionsConfig.SoundVolume;
+			g_ConfigManager.SetSoundVolume(g_OptionsConfig.GetSoundVolume());
 
 			//Меняем громкость звука музыке и текущей музыке
-			g_ConfigManager.MusicVolume = g_OptionsConfig.MusicVolume;
+			g_ConfigManager.SetMusicVolume(g_OptionsConfig.GetMusicVolume());
 			
 		    //Выключаем звук эффектов.
-			g_ConfigManager.Sound = g_OptionsConfig.Sound;
+			g_ConfigManager.SetSound(g_OptionsConfig.GetSound());
 
 			//Выключаем звук музыки.
-			g_ConfigManager.Music = g_OptionsConfig.Music;
+			g_ConfigManager.SetMusic(g_OptionsConfig.GetMusic());
 
 			g_ConfigManager.FootstepsSound = g_OptionsConfig.FootstepsSound;
 			g_ConfigManager.CombatMusic = g_OptionsConfig.CombatMusic;
@@ -3064,16 +3064,16 @@ void CGumpOptions::ApplyPageChanges()
 		}
 		case 2: //Orion's configuration
 		{
-			g_ConfigManager.ClientFPS = g_OptionsConfig.ClientFPS;
-			g_ConfigManager.UseScaling = g_OptionsConfig.UseScaling;
+			g_ConfigManager.SetClientFPS(g_OptionsConfig.GetClientFPS());
+			g_ConfigManager.SetUseScaling(g_OptionsConfig.GetUseScaling());
 			g_ConfigManager.RemoveTextWithBlending = g_OptionsConfig.RemoveTextWithBlending;
-			g_ConfigManager.DrawStatusState = g_OptionsConfig.DrawStatusState;
-			g_ConfigManager.DrawStumps = g_OptionsConfig.DrawStumps;
-			g_ConfigManager.MarkingCaves = g_OptionsConfig.MarkingCaves;
-			g_ConfigManager.NoVegetation = g_OptionsConfig.NoVegetation;
-			g_ConfigManager.NoAnimateFields = g_OptionsConfig.NoAnimateFields;
-			g_ConfigManager.ConsoleNeedEnter = g_OptionsConfig.ConsoleNeedEnter;
-			g_ConfigManager.ReduceFPSUnactiveWindow = g_OptionsConfig.ReduceFPSUnactiveWindow;
+			g_ConfigManager.SetDrawStatusState(g_OptionsConfig.GetDrawStatusState());
+			g_ConfigManager.SetDrawStumps(g_OptionsConfig.GetDrawStumps());
+			g_ConfigManager.SetMarkingCaves(g_OptionsConfig.GetMarkingCaves());
+			g_ConfigManager.SetNoVegetation(g_OptionsConfig.GetNoVegetation());
+			g_ConfigManager.SetNoAnimateFields(g_OptionsConfig.GetNoAnimateFields());
+			g_ConfigManager.SetConsoleNeedEnter(g_OptionsConfig.GetConsoleNeedEnter());
+			g_ConfigManager.SetReduceFPSUnactiveWindow(g_OptionsConfig.GetReduceFPSUnactiveWindow());
 			g_ConfigManager.StandartCharactersAnimationDelay = g_OptionsConfig.StandartCharactersAnimationDelay;
 			g_ConfigManager.StandartItemsAnimationDelay = g_OptionsConfig.StandartItemsAnimationDelay;
 			g_ConfigManager.LockGumpsMoving = g_OptionsConfig.LockGumpsMoving;
@@ -3081,29 +3081,29 @@ void CGumpOptions::ApplyPageChanges()
 			g_ConfigManager.HiddenAlpha = g_OptionsConfig.HiddenAlpha;
 			g_ConfigManager.UseHiddenModeOnlyForSelf = g_OptionsConfig.UseHiddenModeOnlyForSelf;
 			g_ConfigManager.TransparentSpellIcons = g_OptionsConfig.TransparentSpellIcons;
-			g_ConfigManager.SpellIconAlpha = g_OptionsConfig.SpellIconAlpha;
-			g_ConfigManager.OldStyleStatusbar = g_OptionsConfig.OldStyleStatusbar;
-			g_ConfigManager.OriginalPartyStatusbar = g_OptionsConfig.OriginalPartyStatusbar;
-			g_ConfigManager.ApplyStateColorOnCharacters = g_OptionsConfig.ApplyStateColorOnCharacters;
-			g_ConfigManager.ChangeFieldsGraphic = g_OptionsConfig.ChangeFieldsGraphic;
-			g_ConfigManager.PaperdollSlots = g_OptionsConfig.PaperdollSlots;
+			g_ConfigManager.SetSpellIconAlpha(g_OptionsConfig.GetSpellIconAlpha());
+			g_ConfigManager.SetOldStyleStatusbar(g_OptionsConfig.GetOldStyleStatusbar());
+			g_ConfigManager.SetOriginalPartyStatusbar(g_OptionsConfig.GetOriginalPartyStatusbar());
+			g_ConfigManager.SetApplyStateColorOnCharacters(g_OptionsConfig.GetApplyStateColorOnCharacters());
+			g_ConfigManager.SetChangeFieldsGraphic(g_OptionsConfig.GetChangeFieldsGraphic());
+			g_ConfigManager.SetPaperdollSlots(g_OptionsConfig.GetPaperdollSlots());
 			g_ConfigManager.DrawStatusConditionState = g_OptionsConfig.DrawStatusConditionState;
 			g_ConfigManager.DrawStatusConditionValue = g_OptionsConfig.DrawStatusConditionValue;
 			g_ConfigManager.RemoveStatusbarsWithoutObjects = g_OptionsConfig.RemoveStatusbarsWithoutObjects;
 			g_ConfigManager.ShowDefaultConsoleEntryMode = g_OptionsConfig.ShowDefaultConsoleEntryMode;
-			g_ConfigManager.DrawAuraState = g_OptionsConfig.DrawAuraState;
+			g_ConfigManager.SetDrawAuraState(g_OptionsConfig.GetDrawAuraState());
 			g_ConfigManager.DrawAuraWithCtrlPressed = g_OptionsConfig.DrawAuraWithCtrlPressed;
 			g_ConfigManager.ScreenshotFormat = g_OptionsConfig.ScreenshotFormat;
-			g_ConfigManager.ScaleImagesInPaperdollSlots = g_OptionsConfig.ScaleImagesInPaperdollSlots;
+			g_ConfigManager.SetScaleImagesInPaperdollSlots(g_OptionsConfig.GetScaleImagesInPaperdollSlots());
 			g_ConfigManager.RemoveOrCreateObjectsWithBlending = g_OptionsConfig.RemoveOrCreateObjectsWithBlending;
 			g_ConfigManager.DrawHelmetsOnShroud = g_OptionsConfig.DrawHelmetsOnShroud;
-			g_ConfigManager.UseGlobalMapLayer = g_OptionsConfig.UseGlobalMapLayer;
-			g_ConfigManager.NoDrawRoofs = g_OptionsConfig.NoDrawRoofs;
+			g_ConfigManager.SetUseGlobalMapLayer(g_OptionsConfig.GetUseGlobalMapLayer());
+			g_ConfigManager.SetNoDrawRoofs(g_OptionsConfig.GetNoDrawRoofs());
 			g_ConfigManager.HighlightTargetByType = g_OptionsConfig.HighlightTargetByType;
 			g_ConfigManager.AutoDisplayWorldMap = g_OptionsConfig.AutoDisplayWorldMap;
-			g_ConfigManager.UseGLListsForInterface = g_OptionsConfig.UseGLListsForInterface;
+			g_ConfigManager.SetUseGLListsForInterface(g_OptionsConfig.GetUseGLListsForInterface());
 			g_ConfigManager.CheckPing = g_OptionsConfig.CheckPing;
-			g_ConfigManager.PingTimer = g_OptionsConfig.PingTimer;
+			g_ConfigManager.SetPingTimer(g_OptionsConfig.GetPingTimer());
 			g_ConfigManager.CancelNewTargetSystemOnShiftEsc = g_OptionsConfig.CancelNewTargetSystemOnShiftEsc;
 			g_ConfigManager.DrawStatusForHumanoids = g_OptionsConfig.DrawStatusForHumanoids;
 			g_DeveloperMode = g_OptionsDeveloperMode;
@@ -3161,11 +3161,11 @@ void CGumpOptions::ApplyPageChanges()
 			g_ConfigManager.GrayOutOfRangeObjects = g_OptionsConfig.GrayOutOfRangeObjects;
 			g_ConfigManager.DisableNewTargetSystem = g_OptionsConfig.DisableNewTargetSystem;
 			g_ConfigManager.ObjectHandles = g_OptionsConfig.ObjectHandles;
-			g_ConfigManager.ItemPropertiesIcon = g_OptionsConfig.ItemPropertiesIcon;
-			g_ConfigManager.ItemPropertiesMode = g_OptionsConfig.ItemPropertiesMode;
+			g_ConfigManager.SetItemPropertiesIcon(g_OptionsConfig.GetItemPropertiesIcon());
+			g_ConfigManager.SetItemPropertiesMode(g_OptionsConfig.GetItemPropertiesMode());
 			g_ConfigManager.HoldShiftForContextMenus = g_OptionsConfig.HoldShiftForContextMenus;
 			g_ConfigManager.HoldShiftForEnablePathfind = g_OptionsConfig.HoldShiftForEnablePathfind;
-			g_ConfigManager.CharacterBackpackStyle = g_OptionsConfig.CharacterBackpackStyle;
+			g_ConfigManager.SetCharacterBackpackStyle(g_OptionsConfig.GetCharacterBackpackStyle());
 
 			int curX = g_ContainerRect.DefaultX;
 
@@ -3196,8 +3196,8 @@ void CGumpOptions::ApplyPageChanges()
 
 			if (curX < 640)
 				curX = 640;
-			else if (curX > (g_OrionWindow.Size.Width - 20))
-				curX = g_OrionWindow.Size.Width - 20;
+			else if (curX > (g_OrionWindow.GetSize().Width - 20))
+				curX = g_OrionWindow.GetSize().Width - 20;
 
 			g_OptionsConfig.GameWindowWidth = curX;
 			g_ConfigManager.GameWindowWidth = curX;
@@ -3209,8 +3209,8 @@ void CGumpOptions::ApplyPageChanges()
 
 			if (curY < 480)
 				curY = 480;
-			else if (curY > (g_OrionWindow.Size.Height - 40))
-				curY = (g_OrionWindow.Size.Height - 40);
+			else if (curY > (g_OrionWindow.GetSize().Height - 40))
+				curY = (g_OrionWindow.GetSize().Height - 40);
 
 			g_OptionsConfig.GameWindowHeight = curY;
 			g_ConfigManager.GameWindowHeight = curY;

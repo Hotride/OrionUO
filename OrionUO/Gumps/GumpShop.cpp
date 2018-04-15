@@ -65,9 +65,9 @@ CGumpShop::CGumpShop(uint serial, bool isBuyGump, short x, short y)
 			button->CheckPolygone = true;
 
 			if (!i)
-				button->Y -= 11;
+				button->SetY(button->GetY() - 11);
 			else
-				button->Y -= 16;
+				button->SetY(button->GetY() - 16);
 		}
 
 		button = m_ItemList[i]->m_ButtonDown;
@@ -80,11 +80,11 @@ CGumpShop::CGumpShop(uint serial, bool isBuyGump, short x, short y)
 			button->CheckPolygone = true;
 
 			if (!i)
-				button->Y -= 25;
+				button->SetY(button->GetY() - 25);
 			else
 			{
-				button->X -= 1;
-				button->Y += 18;
+				button->SetX(button->GetX() - 1);
+				button->SetY(button->GetY() + 18);
 			}
 		}
 
@@ -99,12 +99,12 @@ CGumpShop::CGumpShop(uint serial, bool isBuyGump, short x, short y)
 
 			if (!i)
 			{
-				slider->Y -= 11;
+				slider->SetY(slider->GetY() - 11);
 				slider->Length -= 14;
 			}
 			else
 			{
-				slider->Y -= 16;
+				slider->SetY(slider->GetY() - 16);
 				slider->Length += 34;
 			}
 		}
@@ -155,7 +155,7 @@ void CGumpShop::PrepareContent()
 	WISPFUN_DEBUG("c123_f4");
 	if (NoProcess && g_Player != NULL)
 	{
-		string name = g_Player->Name;
+		string name = g_Player->GetName();
 		int len = (int)name.length();
 
 		if (m_ContinueCounter > len)
@@ -236,7 +236,7 @@ void CGumpShop::GUMP_SCROLL_BUTTON_EVENT_C
 					m_ItemList[1]->Delete(item);
 				else
 				{
-					item->Y = y;
+					item->SetY(y);
 					y += item->GetSize().Height;
 				}
 			}

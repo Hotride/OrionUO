@@ -118,17 +118,17 @@ void CGumpJournal::UpdateHeight()
 	WISPFUN_DEBUG("c98_f3");
 	CGumpBaseScroll::UpdateHeight();
 
-	m_BottomLine->Y = Height - 26; //Bottom line
+	m_BottomLine->SetY(Height - 26); //Bottom line
 
-	m_TextLocker->Y = Height - 27;
+	m_TextLocker->SetY(Height - 27);
 
-	m_CheckboxShowSystem->Y = Height - 5;
-	m_CheckboxShowObjects->Y = Height - 5;
-	m_CheckboxShowClient->Y = Height - 5;
+	m_CheckboxShowSystem->SetY(Height - 5);
+	m_CheckboxShowObjects->SetY(Height - 5);
+	m_CheckboxShowClient->SetY(Height - 5);
 
-	m_TextShowSystem->Y = Height - 2;
-	m_TextShowObjects->Y = Height - 2;
-	m_TextShowClient->Y = Height - 2;
+	m_TextShowSystem->SetY(Height - 2);
+	m_TextShowObjects->SetY(Height - 2);
+	m_TextShowClient->SetY(Height - 2);
 
 	if (!m_TextLocker->Visible)
 		m_HTMLGump->m_Slider->Value = m_HTMLGump->m_Slider->MaxValue;
@@ -143,7 +143,7 @@ int CGumpJournal::RecalculateHeight()
 	{
 		if (item->Type == GOT_TEXT)
 		{
-			item->Y = height;
+			item->SetY(height);
 
 			bool visible = true;
 

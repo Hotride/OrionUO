@@ -69,8 +69,8 @@ void CGump::FixCoordinates()
 {
 	const int gumpOffsetX = 40;
 	const int gumpOffsetY = 40;
-	int maxX = g_OrionWindow.Size.Width - gumpOffsetX;
-	int maxY = g_OrionWindow.Size.Height - gumpOffsetY;
+	int maxX = g_OrionWindow.GetSize().Width - gumpOffsetX;
+	int maxY = g_OrionWindow.GetSize().Height - gumpOffsetY;
 
 	if (Minimized && GumpType != GT_MINIMAP)
 	{
@@ -147,13 +147,13 @@ void CGump::DrawLocker()
 {
 	WISPFUN_DEBUG("c84_f3");
 	if (m_Locker.Serial && g_ShowGumpLocker)
-		g_TextureGumpState[LockMoving].Draw(m_Locker.X, m_Locker.Y);
+		g_TextureGumpState[LockMoving].Draw(m_Locker.GetX(), m_Locker.GetY());
 }
 //---------------------------------------------------------------------------
 bool CGump::SelectLocker()
 {
 	WISPFUN_DEBUG("c84_f4");
-	return (m_Locker.Serial && g_ShowGumpLocker && g_Orion.PolygonePixelsInXY(m_Locker.X, m_Locker.Y, 10, 14));
+	return (m_Locker.Serial && g_ShowGumpLocker && g_Orion.PolygonePixelsInXY(m_Locker.GetX(), m_Locker.GetY(), 10, 14));
 }
 //---------------------------------------------------------------------------
 bool CGump::TestLockerClick()
@@ -335,8 +335,8 @@ void CGump::DrawItems(CBaseGUI *start, const int &currentPage, const int &draw2P
 				{
 					CGUIHTMLGump *htmlGump = (CGUIHTMLGump*)item;
 
-					GLfloat x = (GLfloat)htmlGump->X;
-					GLfloat y = (GLfloat)htmlGump->Y;
+					GLfloat x = (GLfloat)htmlGump->GetX();
+					GLfloat y = (GLfloat)htmlGump->GetY();
 
 					glTranslatef(x, y, 0.0f);
 
@@ -450,7 +450,7 @@ CRenderObject *CGump::SelectItems(CBaseGUI *start, const int &currentPage, const
 				{
 					CGUIHTMLGump *htmlGump = (CGUIHTMLGump*)item;
 
-					g_MouseManager.Position = WISP_GEOMETRY::CPoint2Di(oldPos.X - htmlGump->X, oldPos.Y - htmlGump->Y);
+					g_MouseManager.Position = WISP_GEOMETRY::CPoint2Di(oldPos.X - htmlGump->GetX(), oldPos.Y - htmlGump->GetY());
 
 					CBaseGUI *item = (CBaseGUI*)htmlGump->m_Items;
 
@@ -585,7 +585,7 @@ void CGump::TestItemsLeftMouseDown(CGump *gump, CBaseGUI *start, const int &curr
 					if (g_SelectedObject.Object == ((CGUIShopResult*)item)->m_MinMaxButtons)
 					{
 						WISP_GEOMETRY::CPoint2Di oldPos = g_MouseManager.Position;
-						g_MouseManager.Position = WISP_GEOMETRY::CPoint2Di(g_MouseManager.Position.X - item->X, g_MouseManager.Position.Y - item->Y);
+						g_MouseManager.Position = WISP_GEOMETRY::CPoint2Di(g_MouseManager.Position.X - item->GetX(), g_MouseManager.Position.Y - item->GetY());
 
 						((CGUIShopResult*)item)->m_MinMaxButtons->OnClick();
 
@@ -644,8 +644,8 @@ void CGump::TestItemsLeftMouseDown(CGump *gump, CBaseGUI *start, const int &curr
 
 							if (!entry->ReadOnly)
 							{
-								int x = g_MouseManager.Position.X - item->X;
-								int y = g_MouseManager.Position.Y - item->Y;
+								int x = g_MouseManager.Position.X - item->GetX();
+								int y = g_MouseManager.Position.Y - item->GetY();
 
 								entry->OnClick(gump, x, y);
 							}
@@ -689,7 +689,7 @@ void CGump::TestItemsLeftMouseDown(CGump *gump, CBaseGUI *start, const int &curr
 				{
 					CGUIHTMLText *htmlText = (CGUIHTMLText*)item;
 
-					ushort link = htmlText->m_Texture.WebLinkUnderMouse(item->X, item->Y);
+					ushort link = htmlText->m_Texture.WebLinkUnderMouse(item->GetX(), item->GetY());
 
 					if (link && link != 0xFFFF)
 					{
@@ -719,8 +719,8 @@ void CGump::TestItemsLeftMouseDown(CGump *gump, CBaseGUI *start, const int &curr
 
 					if (!entry->ReadOnly)
 					{
-						int x = g_MouseManager.Position.X - item->X;
-						int y = g_MouseManager.Position.Y - item->Y;
+						int x = g_MouseManager.Position.X - item->GetX();
+						int y = g_MouseManager.Position.Y - item->GetY();
 
 						entry->OnClick(gump, x, y);
 					}
@@ -732,8 +732,8 @@ void CGump::TestItemsLeftMouseDown(CGump *gump, CBaseGUI *start, const int &curr
 				}
 				case GOT_SLIDER:
 				{
-					int x = g_MouseManager.Position.X - item->X;
-					int y = g_MouseManager.Position.Y - item->Y;
+					int x = g_MouseManager.Position.X - item->GetX();
+					int y = g_MouseManager.Position.Y - item->GetY();
 
 					((CGUISlider*)item)->OnClick(x, y);
 
@@ -765,7 +765,7 @@ void CGump::TestItemsLeftMouseDown(CGump *gump, CBaseGUI *start, const int &curr
 					htmlTextBackgroundCanBeColored = !htmlGump->HaveBackground;
 
 					WISP_GEOMETRY::CPoint2Di oldPos = g_MouseManager.Position;
-					g_MouseManager.Position = WISP_GEOMETRY::CPoint2Di(oldPos.X - htmlGump->X, oldPos.Y - htmlGump->Y);
+					g_MouseManager.Position = WISP_GEOMETRY::CPoint2Di(oldPos.X - htmlGump->GetX(), oldPos.Y - htmlGump->GetY());
 
 					CBaseGUI *item = (CBaseGUI*)htmlGump->m_Items;
 
@@ -1091,7 +1091,7 @@ void CGump::TestItemsScrolling(CGump *gump, CBaseGUI *start, const bool &up, con
 						CGUIHTMLGump *htmlGump = (CGUIHTMLGump*)item;
 
 						WISP_GEOMETRY::CPoint2Di oldPos = g_MouseManager.Position;
-						g_MouseManager.Position = WISP_GEOMETRY::CPoint2Di(oldPos.X - htmlGump->X, oldPos.Y - htmlGump->Y);
+						g_MouseManager.Position = WISP_GEOMETRY::CPoint2Di(oldPos.X - htmlGump->GetX(), oldPos.Y - htmlGump->GetY());
 
 						CBaseGUI *item = (CBaseGUI*)htmlGump->m_Items;
 
@@ -1165,8 +1165,8 @@ void CGump::TestItemsDragging(CGump *gump, CBaseGUI *start, const int &currentPa
 			{
 				case GOT_SLIDER:
 				{
-					int x = g_MouseManager.Position.X - item->X;
-					int y = g_MouseManager.Position.Y - item->Y;
+					int x = g_MouseManager.Position.X - item->GetX();
+					int y = g_MouseManager.Position.Y - item->GetY();
 
 					((CGUISlider*)item)->OnClick(x, y);
 
@@ -1194,7 +1194,7 @@ void CGump::TestItemsDragging(CGump *gump, CBaseGUI *start, const int &currentPa
 					CGUIHTMLGump *htmlGump = (CGUIHTMLGump*)item;
 
 					WISP_GEOMETRY::CPoint2Di oldPos = g_MouseManager.Position;
-					g_MouseManager.Position = WISP_GEOMETRY::CPoint2Di(oldPos.X - htmlGump->X, oldPos.Y - htmlGump->Y);
+					g_MouseManager.Position = WISP_GEOMETRY::CPoint2Di(oldPos.X - htmlGump->GetX(), oldPos.Y - htmlGump->GetY());
 
 					CBaseGUI *item = (CBaseGUI*)htmlGump->m_Items;
 
@@ -1256,7 +1256,7 @@ void CGump::GenerateFrame(const bool &stop)
 
 	PrepareTextures();
 
-	if (g_ConfigManager.UseGLListsForInterface)
+	if (g_ConfigManager.GetUseGLListsForInterface())
 	{
 		glNewList((GLuint)this, GL_COMPILE);
 
@@ -1289,7 +1289,7 @@ void CGump::Draw()
 	{
 		loc_create_frame:
 
-		if (!g_ConfigManager.UseGLListsForInterface)
+		if (!g_ConfigManager.GetUseGLListsForInterface())
 		{
 			if (!m_FrameBuffer.Ready(GumpRect.Size))
 				m_FrameBuffer.Init(GumpRect.Size);
@@ -1336,7 +1336,7 @@ void CGump::Draw()
 	GLfloat posX = g_GumpTranslate.X;
 	GLfloat posY = g_GumpTranslate.Y;
 
-	if (!g_ConfigManager.UseGLListsForInterface)
+	if (!g_ConfigManager.GetUseGLListsForInterface())
 	{
 		posX += (GLfloat)GumpRect.Position.X;
 		posY += (GLfloat)GumpRect.Position.Y;
@@ -1344,7 +1344,7 @@ void CGump::Draw()
 
 	glTranslatef(posX, posY, 0.0f);
 
-	if (!g_ConfigManager.UseGLListsForInterface)
+	if (!g_ConfigManager.GetUseGLListsForInterface())
 	{
 		glEnable(GL_BLEND);
 		//glBlendFunc(GL_DST_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -1469,7 +1469,7 @@ void CGump::GetItemsSize(CGump *gump, CBaseGUI *start, WISP_GEOMETRY::CPoint2Di 
 			case GOT_XFMHTMLGUMP:
 			case GOT_XFMHTMLTOKEN:
 			{
-				WISP_GEOMETRY::CPoint2Di htmlOffset(offset.X + item->X, offset.X + item->Y);
+				WISP_GEOMETRY::CPoint2Di htmlOffset(offset.X + item->GetX(), offset.X + item->GetY());
 				CGump::GetItemsSize(gump, (CBaseGUI*)item->m_Items, minPosition, maxPosition, htmlOffset, 5, currentPage, draw2Page);
 				break;
 			}
@@ -1477,8 +1477,8 @@ void CGump::GetItemsSize(CGump *gump, CBaseGUI *start, WISP_GEOMETRY::CPoint2Di 
 				((CGUIScissor*)item)->GumpParent = gump;
 			default:
 			{
-				int x = item->X + offset.X;
-				int y = item->Y + offset.Y;
+				int x = item->GetX() + offset.X;
+				int y = item->GetY() + offset.Y;
 
 				if (x < minPosition.X)
 					minPosition.X = x;

@@ -186,7 +186,7 @@ bool CGLEngine::Install()
 
 	glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, GL_FALSE);
 
-	ViewPort(0, 0, g_OrionWindow.Size.Width, g_OrionWindow.Size.Height);
+	ViewPort(0, 0, g_OrionWindow.GetSize().Width, g_OrionWindow.GetSize().Height);
 	
 	return true;
 }
@@ -213,7 +213,7 @@ void CGLEngine::UpdateRect()
 	int height = cr.bottom - cr.top;
 
 	ViewPort(0, 0, width, height);
-	//ViewPort(0, 0, g_OrionWindow.Size.Width, g_OrionWindow.Size.Height);
+	//ViewPort(0, 0, g_OrionWindow.GetSize().Width, g_OrionWindow.GetSize().Height);
 
 	g_GumpManager.RedrawAll();
 }
@@ -385,7 +385,7 @@ void CGLEngine::EndStencil()
 void CGLEngine::ViewPortScaled(const int &x, const int &y, const int &width, const int &height)
 {
 	WISPFUN_DEBUG("c29_f15");
-	glViewport(x, g_OrionWindow.Size.Height - y - height, width, height);
+	glViewport(x, g_OrionWindow.GetSize().Height - y - height, width, height);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 
@@ -407,7 +407,7 @@ void CGLEngine::ViewPortScaled(const int &x, const int &y, const int &width, con
 void CGLEngine::ViewPort(const int &x, const int &y, const int &width, const int &height)
 {
 	WISPFUN_DEBUG("c29_f16");
-	glViewport(x, g_OrionWindow.Size.Height - y - height, width, height);
+	glViewport(x, g_OrionWindow.GetSize().Height - y - height, width, height);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	glOrtho(x, width + x, height + y, y, -150.0, 150.0);
@@ -417,10 +417,10 @@ void CGLEngine::ViewPort(const int &x, const int &y, const int &width, const int
 void CGLEngine::RestorePort()
 {
 	WISPFUN_DEBUG("c29_f17");
-	glViewport(0, 0, g_OrionWindow.Size.Width, g_OrionWindow.Size.Height);
+	glViewport(0, 0, g_OrionWindow.GetSize().Width, g_OrionWindow.GetSize().Height);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	glOrtho(0.0, g_OrionWindow.Size.Width, g_OrionWindow.Size.Height, 0.0, -150.0, 150.0);
+	glOrtho(0.0, g_OrionWindow.GetSize().Width, g_OrionWindow.GetSize().Height, 0.0, -150.0, 150.0);
 	glMatrixMode(GL_MODELVIEW);
 }
 //----------------------------------------------------------------------------------

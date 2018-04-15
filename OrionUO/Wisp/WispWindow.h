@@ -9,10 +9,23 @@ class CWindow
 {
 public:
 	HWND Handle = 0;
-	SETGETE(WISP_GEOMETRY::CSize, Size, WISP_GEOMETRY::CSize());
 	bool NoResize = false;
-	SETGETE(WISP_GEOMETRY::CSize, MinSize, WISP_GEOMETRY::CSize(100, 100));
-	SETGETE(WISP_GEOMETRY::CSize, MaxSize, WISP_GEOMETRY::CSize(GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN)));
+
+protected:
+    WISP_GEOMETRY::CSize m_Size = WISP_GEOMETRY::CSize();
+	WISP_GEOMETRY::CSize m_MinSize = WISP_GEOMETRY::CSize(100, 100);
+	WISP_GEOMETRY::CSize m_MaxSize = WISP_GEOMETRY::CSize(GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN));
+
+public:
+    WISP_GEOMETRY::CSize GetSize() { return m_Size; };
+    void SetSize(const WISP_GEOMETRY::CSize& val);
+
+	WISP_GEOMETRY::CSize GetMinSize() { return m_MinSize; };
+	void SetMinSize(const WISP_GEOMETRY::CSize& val);
+
+	WISP_GEOMETRY::CSize GetMaxSize() { return m_MaxSize; };
+	void SetMaxSize(const WISP_GEOMETRY::CSize& val);
+
 
 private:
 	deque<WISP_THREADED_TIMER::CThreadedTimer*> m_ThreadedTimersStack;

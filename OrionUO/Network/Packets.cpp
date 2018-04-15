@@ -69,7 +69,7 @@ CPacketCreateCharacter::CPacketCreateCharacter(const string &name)
 	int skillsCount = 3;
 	uint packetID = 0x00;
 
-	if (g_PacketManager.ClientVersion >= CV_70160)
+	if (g_PacketManager.GetClientVersion() >= CV_70160)
 	{
 		skillsCount++;
 		Resize(106, true);
@@ -100,16 +100,16 @@ CPacketCreateCharacter::CPacketCreateCharacter(const string &name)
 	WriteUInt8(val); //profession
 	Move(15); //?
 
-	if (g_PacketManager.ClientVersion < CV_4011D)
-		val = (uchar)g_CreateCharacterManager.Female;
+	if (g_PacketManager.GetClientVersion() < CV_4011D)
+		val = (uchar)g_CreateCharacterManager.GetFemale();
 	else
 	{
-		val = (uchar)g_CreateCharacterManager.Race;
+		val = (uchar)g_CreateCharacterManager.GetRace();
 
-		if (g_PacketManager.ClientVersion < CV_7000)
+		if (g_PacketManager.GetClientVersion() < CV_7000)
 			val--;
 
-		val = (val * 2) + (uchar)g_CreateCharacterManager.Female;
+		val = (val * 2) + (uchar)g_CreateCharacterManager.GetFemale();
 	}
 
 	WriteUInt8(val);
@@ -151,7 +151,7 @@ CPacketCreateCharacter::CPacketCreateCharacter(const string &name)
 
 	uchar location = g_SelectTownScreen.m_City->LocationIndex;
 
-	if (g_PacketManager.ClientVersion < CV_70130)
+	if (g_PacketManager.GetClientVersion() < CV_70130)
 		location--;
 
 	WriteUInt8(location); //location
@@ -422,7 +422,7 @@ CPacketUnicodeSpeechRequest::CPacketUnicodeSpeechRequest(const wchar_t *text, SP
 CPacketCastSpell::CPacketCastSpell(int index)
 : CPacket(1)
 {
-	if (g_PacketManager.ClientVersion >= CV_60142)
+	if (g_PacketManager.GetClientVersion() >= CV_60142)
 	{
 		Resize(9, true);
 
@@ -546,7 +546,7 @@ CPacketGumpResponse::CPacketGumpResponse(CGumpGeneric *gump, int code)
 	size_t size = 19 + (switchesCount * 4) + 4 + ((textLinesCount * 4) + textLinesLength);
 	Resize(size, true);
 
-	g_PacketManager.SetCachedGumpCoords(gump->ID, gump->X, gump->Y);
+	g_PacketManager.SetCachedGumpCoords(gump->ID, gump->GetX(), gump->GetY());
 
 	WriteUInt8(0xB1);
 	WriteUInt16BE((ushort)size);
@@ -583,7 +583,7 @@ CPacketGumpResponse::CPacketGumpResponse(CGumpGeneric *gump, int code)
 CPacketVirtureGumpResponse::CPacketVirtureGumpResponse(CGump *gump, int code)
 : CPacket(15)
 {
-	g_PacketManager.SetCachedGumpCoords(gump->ID, gump->X, gump->Y);
+	g_PacketManager.SetCachedGumpCoords(gump->ID, gump->GetX(), gump->GetY());
 
 	WriteUInt8(0xB1);
 	WriteUInt16BE(0x000F);

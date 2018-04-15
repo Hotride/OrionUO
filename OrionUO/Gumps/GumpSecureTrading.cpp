@@ -95,7 +95,7 @@ void CGumpSecureTrading::UpdateContent()
 	{
 		Add(new CGUIGumppic(0x0866, 0, 0)); //Trade Gump
 
-		if (g_PacketManager.ClientVersion < CV_500A)
+		if (g_PacketManager.GetClientVersion() < CV_500A)
 		{
 			Add(new CGUIColoredPolygone(0, 0, 45, 90, 110, 60, 0xFF000001));
 
@@ -108,7 +108,7 @@ void CGumpSecureTrading::UpdateContent()
 			m_MyCheck = (CGUIButton*)Add(new CGUIButton(ID_GST_CHECKBOX, 0x0867, 0x0868, 0x0868, 52, 29));
 
 		CGUIText *text = (CGUIText*)Add(new CGUIText(0x0386, 84, 40));
-		text->CreateTextureA(1, g_Player->Name);
+		text->CreateTextureA(1, g_Player->GetName());
 
 		if (StateOpponent)
 			m_OpponentCheck = (CGUIGumppic*)Add(new CGUIGumppic(0x0869, 266, 160));
@@ -148,14 +148,14 @@ void CGumpSecureTrading::UpdateContent()
 			bool doubleDraw = false;
 			ushort graphic = item->GetDrawGraphic(doubleDraw);
 
-			CGUITilepicHightlighted *dataObject = (CGUITilepicHightlighted*)m_MyDataBox->Add(new CGUITilepicHightlighted(item->Serial, graphic, item->Color & 0x3FFF, 0x0035, 45 + item->X, 70 + item->Y, doubleDraw));
+			CGUITilepicHightlighted *dataObject = (CGUITilepicHightlighted*)m_MyDataBox->Add(new CGUITilepicHightlighted(item->Serial, graphic, item->Color & 0x3FFF, 0x0035, 45 + item->GetX(), 70 + item->GetY(), doubleDraw));
 			dataObject->PartialHue = IsPartialHue(g_Orion.GetStaticFlags(graphic));
 
-			if (dataObject->Y >= 150)
-				dataObject->Y = 120;
+			if (dataObject->GetY() >= 150)
+				dataObject->SetY(120);
 
-			if (dataObject->X >= 155)
-				dataObject->X = 125;
+			if (dataObject->GetX() >= 155)
+				dataObject->SetX(125);
 		}
 	}
 
@@ -168,14 +168,14 @@ void CGumpSecureTrading::UpdateContent()
 			bool doubleDraw = false;
 			ushort graphic = item->GetDrawGraphic(doubleDraw);
 
-			CGUITilepicHightlighted *dataObject = (CGUITilepicHightlighted*)m_OpponentDataBox->Add(new CGUITilepicHightlighted(item->Serial, graphic, item->Color & 0x3FFF, 0x0035, 192 + item->X, 70 + item->Y, doubleDraw));
+			CGUITilepicHightlighted *dataObject = (CGUITilepicHightlighted*)m_OpponentDataBox->Add(new CGUITilepicHightlighted(item->Serial, graphic, item->Color & 0x3FFF, 0x0035, 192 + item->GetX(), 70 + item->GetY(), doubleDraw));
 			dataObject->PartialHue = IsPartialHue(g_Orion.GetStaticFlags(graphic));
 
-			if (dataObject->Y >= 150)
-				dataObject->Y = 120;
+			if (dataObject->GetY() >= 150)
+				dataObject->SetY(120);
 
-			if (dataObject->X >= 302)
-				dataObject->X = 272;
+			if (dataObject->GetX() >= 302)
+				dataObject->SetX(272);
 		}
 	}
 }

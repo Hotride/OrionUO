@@ -26,14 +26,14 @@ void CQuestArrow::Draw()
 	WISPFUN_DEBUG("c200_f1");
 	if (Enabled)
 	{
-		int dir = g_MouseManager.GetFacing(g_Player->X, g_Player->Y, X, Y, 0);
+		int dir = g_MouseManager.GetFacing(g_Player->GetX(), g_Player->GetY(), X, Y, 0);
 
 		ushort gumpID = m_Gump + ((dir + 1) % 8);
 
 		WISP_GEOMETRY::CSize size = g_Orion.GetGumpDimension(gumpID);
 
-		int gox = X - g_Player->X;
-		int goy = Y - g_Player->Y;
+		int gox = X - g_Player->GetX();
+		int goy = Y - g_Player->GetY();
 
 		int x = g_RenderBounds.GameWindowCenterX + ((gox - goy) * 22) - (size.Width / 2);
 		int y = g_RenderBounds.GameWindowCenterY + ((gox + goy) * 22) - (size.Height / 2);

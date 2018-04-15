@@ -12,12 +12,36 @@
 //----------------------------------------------------------------------------------
 class CConnectionScreen : public CBaseScreen
 {
-	SETGETE(bool, ConnectionFailed, false);
-	SETGETE(bool, Connected, false);
-	SETGETE(bool, Completed, false);
-	SETGETE(int, ErrorCode, 0);
-	SETGETE(CONNECTION_SCREEN_TYPE, Type, CST_LOGIN);
-	SETGETE(string, Message, "");
+protected:
+    bool m_ConnectionFailed = false;
+public:
+    bool GetConnectionFailed() { return m_ConnectionFailed; };
+    void SetConnectionFailed(const bool& val);
+protected:
+    bool m_Connected = false;
+public:
+    bool GetConnected() { return m_Connected; };
+    void SetConnected(const bool& val);
+protected:
+    bool m_Completed = false;
+public:
+    bool GetCompleted() { return m_Completed; };
+    void SetCompleted(const bool& val);
+protected:
+    int m_ErrorCode = 0;
+public:
+    int GetErrorCode() { return m_ErrorCode; };
+    void SetErrorCode(const int& val);
+protected:
+    CONNECTION_SCREEN_TYPE m_Type = CST_LOGIN;
+public:
+    CONNECTION_SCREEN_TYPE GetType() { return m_Type; };
+    void SetType(const CONNECTION_SCREEN_TYPE& val);
+protected:
+    string m_Text = "";
+public:
+    string GetText() { return m_Text; };
+    void SetText(const string& val);
 
 private:
 	CGumpScreenConnection m_ConnectionGump;

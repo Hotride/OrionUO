@@ -106,8 +106,8 @@ void CGumpMinimap::GenerateMap()
 
 	if (g_Player != NULL)
 	{
-		LastX = g_Player->X;
-		LastY = g_Player->Y;
+		LastX = g_Player->GetX();
+		LastY = g_Player->GetY();
 	}
 
 	m_Texture.Clear();
@@ -247,7 +247,7 @@ void CGumpMinimap::CreatePixels(USHORT_LIST &data, const uint &color, const int 
 void CGumpMinimap::PrepareContent()
 {
 	WISPFUN_DEBUG("c102_f5");
-	if (g_Player->X != LastX || g_Player->Y != LastY || m_Texture.Texture == 0)
+	if (g_Player->GetX() != LastX || g_Player->GetY() != LastY || m_Texture.Texture == 0)
 		GenerateMap();
 	else if (!m_Count || m_Count == 6 || WantRedraw)
 		WantUpdateContent = true;
@@ -285,8 +285,8 @@ void CGumpMinimap::UpdateContent()
 
 	m_Body->Graphic = graphic;
 
-	int playerX = g_Player->X;
-	int playerY = g_Player->Y;
+	int playerX = g_Player->GetX();
+	int playerY = g_Player->GetY();
 
 	int gumpWidth = th->Width;
 	int gumpHeight = th->Height;
@@ -311,8 +311,8 @@ void CGumpMinimap::UpdateContent()
 				{
 					uint pcl = g_ColorManager.GetPolygoneColor(16, color);
 
-					int x = go->X - playerX;
-					int y = go->Y - playerY;
+					int x = go->GetX() - playerX;
+					int y = go->GetY() - playerY;
 
 					int gx = x - y;
 					int gy = x + y;

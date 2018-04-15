@@ -127,15 +127,15 @@ void COrion::ParseCommandLine()
 			}
 			else if (str == "proxyhost")
 			{
-				g_ConnectionManager.UseProxy = true;
-				g_ConnectionManager.ProxyAddress = strings[1];
-				g_ConnectionManager.ProxyPort = atoi(strings[2].c_str());
+				g_ConnectionManager.SetUseProxy(true);
+				g_ConnectionManager.SetProxyAddress(strings[1]);
+				g_ConnectionManager.SetProxyPort(atoi(strings[2].c_str()));
 			}
 			else if (str == "proxyaccount")
 			{
-				g_ConnectionManager.ProxySocks5 = true;
-				g_ConnectionManager.ProxyAccount = DecodeArgumentString(strings[1].c_str(), (int)strings[1].length());
-				g_ConnectionManager.ProxyPassword = DecodeArgumentString(strings[2].c_str(), (int)strings[2].length());
+				g_ConnectionManager.SetProxySocks5(true);
+				g_ConnectionManager.SetProxyAccount(DecodeArgumentString(strings[1].c_str(), (int)strings[1].length()));
+				g_ConnectionManager.SetProxyPassword(DecodeArgumentString(strings[2].c_str(), (int)strings[2].length()));
 			}
 			else if (str == "account")
 				g_MainScreen.SetAccounting(DecodeArgumentString(strings[1].c_str(), (int)strings[1].length()), DecodeArgumentString(strings[2].c_str(), (int)strings[2].length()));
@@ -262,7 +262,7 @@ bool COrion::Install()
 	LoadClientConfig();
 	LOG("Client config loaded!\n");
 
-	if (g_PacketManager.ClientVersion >= CV_305D)
+	if (g_PacketManager.GetClientVersion() >= CV_305D)
 	{
 		CGumpSpellbook::m_SpellReagents1[4] = "Sulfurous ash"; //Magic Arrow
 		CGumpSpellbook::m_SpellReagents1[17] = "Black pearl"; //Fireball
@@ -274,7 +274,7 @@ bool COrion::Install()
 
 	LOG("Load files\n");
 
-	if (g_PacketManager.ClientVersion >= CV_7000)
+	if (g_PacketManager.GetClientVersion() >= CV_7000)
 		g_FileManager.TryReadUOPAnimations();
 	if (!g_FileManager.Load())
 	{
@@ -298,7 +298,7 @@ bool COrion::Install()
 
 	int staticsCount = 512;
 
-	if (g_PacketManager.ClientVersion >= CV_7090)
+	if (g_PacketManager.GetClientVersion() >= CV_7090)
 		staticsCount = (int)(g_FileManager.m_TiledataMul.Size - (512 * sizeof(LAND_GROUP_NEW))) / sizeof(STATIC_GROUP_NEW);
 	else
 		staticsCount = (int)(g_FileManager.m_TiledataMul.Size - (512 * sizeof(LAND_GROUP_OLD))) / sizeof(STATIC_GROUP_OLD);
@@ -488,7 +488,7 @@ bool COrion::Install()
 
 	InitScreen(GS_MAIN);
 
-	if (g_PacketManager.ClientVersion >= CV_7000)
+	if (g_PacketManager.GetClientVersion() >= CV_7000)
 	{
 		LOG("Waiting for FileManager to try & load AnimationFrame files\n");
 		g_FileManager.m_AutoResetEvent.WaitOne();
@@ -1051,9 +1051,9 @@ void COrion::LoadClientConfig()
 		else
 			subVersion = file.ReadInt8();
 
-		g_PacketManager.ClientVersion = (CLIENT_VERSION)file.ReadInt8();
+		g_PacketManager.SetClientVersion((CLIENT_VERSION)file.ReadInt8());
 
-		if (g_PacketManager.ClientVersion >= CV_70331)
+		if (g_PacketManager.GetClientVersion() >= CV_70331)
 			g_MaxViewRange = MAX_VIEW_RANGE_NEW;
 		else
 			g_MaxViewRange = MAX_VIEW_RANGE_OLD;
@@ -1191,7 +1191,7 @@ void COrion::Process(const bool &rendering)
 		{
 			CPingThread *pingThread = new CPingThread(0xFFFFFFFF, m_GameServerIP, 10);
 			pingThread->Run();
-			g_PingTimer = g_Ticks + (g_ConfigManager.PingTimer * 1000);
+			g_PingTimer = g_Ticks + (g_ConfigManager.GetPingTimer() * 1000);
 		}
 
 		g_UseItemActions.Process();
@@ -1296,18 +1296,18 @@ void COrion::Process(const bool &rendering)
 
 						uoiSelectedObject.Graphic = rwo->Graphic;
 						uoiSelectedObject.Color = rwo->Color;
-						uoiSelectedObject.X = rwo->X;
-						uoiSelectedObject.Y = rwo->Y;
-						uoiSelectedObject.Z = rwo->Z;
+						uoiSelectedObject.X = rwo->GetX();
+						uoiSelectedObject.Y = rwo->GetY();
+						uoiSelectedObject.Z = rwo->GetZ();
 
 						rwo = rwo->GetLand();
 
 						if (rwo != NULL)
 						{
 							uoiSelectedObject.LandGraphic = rwo->Graphic;
-							uoiSelectedObject.LandX = rwo->X;
-							uoiSelectedObject.LandY = rwo->Y;
-							uoiSelectedObject.LandZ = rwo->Z;
+							uoiSelectedObject.LandX = rwo->GetX();
+							uoiSelectedObject.LandY = rwo->GetY();
+							uoiSelectedObject.LandZ = rwo->GetZ();
 						}
 						else
 						{
@@ -1382,12 +1382,12 @@ void COrion::LoadStartupConfig(const uint &serial)
 		
 	
 
-	g_SoundManager.SetMusicVolume(g_ConfigManager.MusicVolume);
+	g_SoundManager.SetMusicVolume(g_ConfigManager.GetMusicVolume());
 
-	if (!g_ConfigManager.Sound)
+	if (!g_ConfigManager.GetSound())
 		AdjustSoundEffects(g_Ticks + 100000);
 
-	if (!g_ConfigManager.Music)
+	if (!g_ConfigManager.GetMusic())
 		g_SoundManager.StopMusic();
 }
 //----------------------------------------------------------------------------------
@@ -1566,7 +1566,7 @@ void COrion::LoadLocalConfig(const uint &serial)
 	{
 		if (!g_MacroManager.Load(g_App.UOFilesPath("\\macros_debug.cuo"), g_App.UOFilesPath("\\macros.txt")))
 		{
-			//Создать стандартные макросы
+			//пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 		}
 	}
 
@@ -1581,12 +1581,12 @@ void COrion::LoadLocalConfig(const uint &serial)
 	else
 		g_EntryPointer = &g_GameConsole;
 
-	g_SoundManager.SetMusicVolume(g_ConfigManager.MusicVolume);
+	g_SoundManager.SetMusicVolume(g_ConfigManager.GetMusicVolume());
 
-	if (!g_ConfigManager.Sound)
+	if (!g_ConfigManager.GetSound())
 		AdjustSoundEffects(g_Ticks + 100000);
 
-	if (!g_ConfigManager.Music)
+	if (!g_ConfigManager.GetMusic())
 		g_SoundManager.StopMusic();
 
 	g_ConfigLoaded = true;
@@ -1642,8 +1642,8 @@ void COrion::SaveLocalConfig(const uint &serial)
 	if (g_Player != NULL)
 	{
 		LOG("player exists\n");
-		LOG("name len: %i\n", g_Player->Name.length());
-		path += string("_") + g_Player->Name + ".cuo";
+		LOG("name len: %i\n", g_Player->GetName().length());
+		path += string("_") + g_Player->GetName() + ".cuo";
 
 		if (!PathFileExistsA(path.c_str()))
 		{
@@ -1761,13 +1761,13 @@ void COrion::Connect()
 
 	if (g_ConnectionManager.Connect(login, port, g_GameSeed))
 	{
-		g_ConnectionScreen.Connected = true;
+		g_ConnectionScreen.SetConnected(true);
 		CPacketFirstLogin().Send();
 	}
 	else
 	{
-		g_ConnectionScreen.ConnectionFailed = true;
-		g_ConnectionScreen.ErrorCode = 8;
+		g_ConnectionScreen.SetConnectionFailed(true);
+		g_ConnectionScreen.SetErrorCode(8);
 	}
 }
 //----------------------------------------------------------------------------------
@@ -1858,14 +1858,14 @@ void COrion::RelayServer(const char *ip, int port, puchar gameSeed)
 
 	if (g_ConnectionManager.Connect(ip, port, gameSeed))
 	{
-		g_ConnectionScreen.Connected = true;
+		g_ConnectionScreen.SetConnected(true);
 
 		CPacketSecondLogin().Send();
 	}
 	else
 	{
-		g_ConnectionScreen.ConnectionFailed = true;
-		g_ConnectionScreen.ErrorCode = 8;
+		g_ConnectionScreen.SetConnectionFailed(true);
+		g_ConnectionScreen.SetErrorCode(8);
 	}
 }
 //----------------------------------------------------------------------------------
@@ -1873,7 +1873,7 @@ void COrion::CharacterSelection(int pos)
 {
 	WISPFUN_DEBUG("c194_f27");
 	InitScreen(GS_GAME_CONNECT);
-	g_ConnectionScreen.Type = CST_GAME;
+	g_ConnectionScreen.SetType(CST_GAME);
 
 	g_CharacterList.LastCharacterName = g_CharacterList.GetName(pos);
 
@@ -1887,17 +1887,17 @@ void COrion::LoginComplete(const bool &reload)
 	WISPFUN_DEBUG("c194_f28");
 	bool load = reload;
 
-	if (!load && !g_ConnectionScreen.Completed)
+	if (!load && !g_ConnectionScreen.GetCompleted())
 	{
 		load = true;
-		g_ConnectionScreen.Completed = true;
+		g_ConnectionScreen.SetCompleted(true);
 
 		InitScreen(GS_GAME);
 	}
 
 	if (load && g_Player != NULL)
 	{
-		string title = "Ultima Online - " + g_Player->Name;
+		string title = "Ultima Online - " + g_Player->GetName();
 
 		CServer *server = g_ServerList.GetSelectedServer();
 
@@ -1912,10 +1912,10 @@ void COrion::LoginComplete(const bool &reload)
 		//CPacketOpenChat(L"").Send();
 		//CPacketRazorAnswer().Send();
 
-		if (g_PacketManager.ClientVersion >= CV_306E)
+		if (g_PacketManager.GetClientVersion() >= CV_306E)
 			CPacketClientType().Send();
 
-		if (g_PacketManager.ClientVersion >= CV_305D)
+		if (g_PacketManager.GetClientVersion() >= CV_305D)
 			CPacketClientViewRange(g_ConfigManager.UpdateRange).Send();
 
 		LoadLocalConfig(g_PacketManager.ConfigSerial);
@@ -2265,16 +2265,16 @@ int COrion::ValueInt(const VALUE_KEY_INT &key, int value)
 		case VKI_SOUND:
 		{
 			if (value == -1)
-				value = g_ConfigManager.Sound;
+				value = g_ConfigManager.GetSound();
 			else
-				g_ConfigManager.Sound = (value != 0);
+				g_ConfigManager.SetSound(value != 0);
 
 			break;
 		}
 		case VKI_SOUND_VALUE:
 		{
 			if (value == -1)
-				value = g_ConfigManager.SoundVolume;
+				value = g_ConfigManager.GetSoundVolume();
 			else
 			{
 				if (value < 0)
@@ -2282,7 +2282,7 @@ int COrion::ValueInt(const VALUE_KEY_INT &key, int value)
 				else if (value > 255)
 					value = 255;
 
-				g_ConfigManager.SoundVolume = value;
+				g_ConfigManager.SetSoundVolume(value);
 			}
 
 			break;
@@ -2290,16 +2290,16 @@ int COrion::ValueInt(const VALUE_KEY_INT &key, int value)
 		case VKI_MUSIC:
 		{
 			if (value == -1)
-				value = g_ConfigManager.Music;
+				value = g_ConfigManager.GetMusic();
 			else
-				g_ConfigManager.Music = (value != 0);
+				g_ConfigManager.SetMusic(value != 0);
 
 			break;
 		}
 		case VKI_MUSIC_VALUE:
 		{
 			if (value == -1)
-				value = g_ConfigManager.MusicVolume;
+				value = g_ConfigManager.GetMusicVolume();
 			else
 			{
 				if (value < 0)
@@ -2307,7 +2307,7 @@ int COrion::ValueInt(const VALUE_KEY_INT &key, int value)
 				else if (value > 255)
 					value = 255;
 
-				g_ConfigManager.MusicVolume = value;
+				g_ConfigManager.SetMusicVolume(value);
 			}
 
 			break;
@@ -2335,7 +2335,7 @@ int COrion::ValueInt(const VALUE_KEY_INT &key, int value)
 			if (value == -1)
 				value = g_ConfigManager.DisableNewTargetSystem;
 			else
-				g_ConfigManager.DisableNewTargetSystem = (value == 0); //Именно == 0!!! Т.к. в плагине это Target System enable/disable
+				g_ConfigManager.DisableNewTargetSystem = (value == 0); //пїЅпїЅпїЅпїЅпїЅпїЅ == 0!!! пїЅ.пїЅ. пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ Target System enable/disable
 
 			break;
 		}
@@ -2455,7 +2455,7 @@ int COrion::ValueInt(const VALUE_KEY_INT &key, int value)
 		case VKI_CLIENT_FPS_VALUE:
 		{
 			if (value == -1)
-				value = g_ConfigManager.ClientFPS;
+				value = g_ConfigManager.GetClientFPS();
 			else
 			{
 				if (value < MIN_FPS_LIMIT)
@@ -2463,7 +2463,7 @@ int COrion::ValueInt(const VALUE_KEY_INT &key, int value)
 				else if (value > MAX_FPS_LIMIT)
 					value = MAX_FPS_LIMIT;
 
-				g_ConfigManager.ClientFPS = value;
+				g_ConfigManager.SetClientFPS(value);
 			}
 
 			break;
@@ -2471,16 +2471,16 @@ int COrion::ValueInt(const VALUE_KEY_INT &key, int value)
 		case VKI_USE_SCALING_GAME_WINDOW:
 		{
 			if (value == -1)
-				value = g_ConfigManager.UseScaling;
+				value = g_ConfigManager.GetUseScaling();
 			else
-				g_ConfigManager.UseScaling = (value != 0);
+				g_ConfigManager.SetUseScaling((value != 0));
 
 			break;
 		}
 		case VKI_DRAW_STATUS_STATE:
 		{
 			if (value == -1)
-				value = g_ConfigManager.DrawStatusState;
+				value = g_ConfigManager.GetDrawStatusState();
 			else
 			{
 				if (value < 0)
@@ -2488,7 +2488,7 @@ int COrion::ValueInt(const VALUE_KEY_INT &key, int value)
 				else if (value > DCSS_UNDER)
 					value = DCSS_UNDER;
 
-				g_ConfigManager.DrawStatusState = value;
+				g_ConfigManager.SetDrawStatusState(value);
 			}
 
 			break;
@@ -2496,36 +2496,36 @@ int COrion::ValueInt(const VALUE_KEY_INT &key, int value)
 		case VKI_DRAW_STUMPS:
 		{
 			if (value == -1)
-				value = g_ConfigManager.DrawStumps;
+				value = g_ConfigManager.GetDrawStumps();
 			else
-				g_ConfigManager.DrawStumps = (value != 0);
+				g_ConfigManager.SetDrawStumps((value != 0));
 
 			break;
 		}
 		case VKI_MARKING_CAVES:
 		{
 			if (value == -1)
-				value = g_ConfigManager.MarkingCaves;
+				value = g_ConfigManager.GetMarkingCaves();
 			else
-				g_ConfigManager.MarkingCaves = (value != 0);
+				g_ConfigManager.SetMarkingCaves((value != 0));
 
 			break;
 		}
 		case VKI_NO_VEGETATION:
 		{
 			if (value == -1)
-				value = g_ConfigManager.NoVegetation;
+				value = g_ConfigManager.GetNoVegetation();
 			else
-				g_ConfigManager.NoVegetation = (value != 0);
+				g_ConfigManager.SetNoVegetation((value != 0));
 
 			break;
 		}
 		case VKI_NO_ANIMATE_FIELDS:
 		{
 			if (value == -1)
-				value = g_ConfigManager.NoAnimateFields;
+				value = g_ConfigManager.GetNoAnimateFields();
 			else
-				g_ConfigManager.NoAnimateFields = (value != 0);
+				g_ConfigManager.SetNoAnimateFields((value != 0));
 
 			break;
 		}
@@ -2559,9 +2559,9 @@ int COrion::ValueInt(const VALUE_KEY_INT &key, int value)
 		case VKI_CONSOLE_NEED_ENTER:
 		{
 			if (value == -1)
-				value = g_ConfigManager.ConsoleNeedEnter;
+				value = g_ConfigManager.GetConsoleNeedEnter();
 			else
-				g_ConfigManager.ConsoleNeedEnter = (value != 0);
+				g_ConfigManager.SetConsoleNeedEnter(value != 0);
 
 			break;
 		}
@@ -2618,7 +2618,7 @@ int COrion::ValueInt(const VALUE_KEY_INT &key, int value)
 		case VKI_SPELL_ICONS_ALPHA:
 		{
 			if (value == -1)
-				value = g_ConfigManager.SpellIconAlpha;
+				value = g_ConfigManager.GetSpellIconAlpha();
 			else
 			{
 				if (value < 30)
@@ -2626,7 +2626,7 @@ int COrion::ValueInt(const VALUE_KEY_INT &key, int value)
 				else if (value > 255)
 					value = 255;
 
-				g_ConfigManager.SpellIconAlpha = value;
+				g_ConfigManager.SetSpellIconAlpha(value);
 			}
 
 			break;
@@ -2991,7 +2991,7 @@ string COrion::ValueString(const VALUE_KEY_STRING &key, string value)
 		case VKS_CHARACTER_NAME:
 		{
 			if (g_Player != NULL)
-				value = g_Player->Name;
+				value = g_Player->GetName();
 
 			break;
 		}
@@ -3113,7 +3113,7 @@ bool COrion::InTileFilter(const ushort &graphic)
 bool COrion::IsTreeTile(const ushort &graphic, int &index)
 {
 	WISPFUN_DEBUG("c194_f41");
-	if (!g_ConfigManager.DrawStumps || InTileFilter(graphic))
+	if (!g_ConfigManager.GetDrawStumps() || InTileFilter(graphic))
 		return false;
 
 	uchar flags = m_StaticTilesFilterFlags[graphic];
@@ -3143,7 +3143,7 @@ void COrion::ClearCaveTextures()
 bool COrion::IsCaveTile(const ushort &graphic)
 {
 	WISPFUN_DEBUG("c194_f43");
-	return (g_ConfigManager.MarkingCaves && (m_StaticTilesFilterFlags[graphic] & STFF_CAVE));
+	return (g_ConfigManager.GetMarkingCaves() && (m_StaticTilesFilterFlags[graphic] & STFF_CAVE));
 }
 //----------------------------------------------------------------------------------
 bool COrion::IsVegetation(const ushort &graphic)
@@ -3205,7 +3205,7 @@ void COrion::LoadTiledata(const int &landSize, const int &staticsSize)
 
 	if (file.Size)
 	{
-		bool isOldVersion = (g_PacketManager.ClientVersion < CV_7090);
+		bool isOldVersion = (g_PacketManager.GetClientVersion() < CV_7090);
 		file.ResetPtr();
 
 		m_LandData.resize(landSize * 32);
@@ -3905,7 +3905,7 @@ void COrion::ProcessStaticAnimList()
 	if (m_AnimData.size() && g_ProcessStaticAnimationTimer < g_Ticks)
 	{
 		int delay = (g_ConfigManager.StandartItemsAnimationDelay ? ORIGINAL_ITEMS_ANIMATION_DELAY : ORION_ITEMS_ANIMATION_DELAY);
-		bool noAnimateFields = g_ConfigManager.NoAnimateFields;
+		bool noAnimateFields = g_ConfigManager.GetNoAnimateFields();
 		uint nextTime = g_Ticks + 500;
 
 		for (deque<CIndexObjectStatic*>::iterator i = m_StaticAnimList.begin(); i != m_StaticAnimList.end(); ++i)
@@ -4049,7 +4049,7 @@ void COrion::PatchFiles()
 				{
 					LAND_TILES &tile = m_LandData[offset + j];
 
-					if (g_PacketManager.ClientVersion < CV_7090)
+					if (g_PacketManager.GetClientVersion() < CV_7090)
 						tile.Flags = file.ReadUInt32LE();
 					else
 						tile.Flags = file.ReadInt64LE();
@@ -4071,7 +4071,7 @@ void COrion::PatchFiles()
 				{
 					STATIC_TILES &tile = m_StaticData[offset + j];
 
-					if (g_PacketManager.ClientVersion < CV_7090)
+					if (g_PacketManager.GetClientVersion() < CV_7090)
 						tile.Flags = file.ReadUInt32LE();
 					else
 						tile.Flags = file.ReadInt64LE();
@@ -4107,7 +4107,7 @@ void COrion::PatchFiles()
 void COrion::IndexReplaces()
 {
 	WISPFUN_DEBUG("c194_f55");
-	if (g_PacketManager.ClientVersion < CV_305D) //CV_204C
+	if (g_PacketManager.GetClientVersion() < CV_305D) //CV_204C
 		return;
 
 	WISP_FILE::CTextFileParser newDataParser("", " \t,{}", "#;//", "");
@@ -4585,13 +4585,13 @@ void COrion::LoadClientStartupConfig()
 	}
 
 
-	g_SoundManager.SetMusicVolume(g_ConfigManager.MusicVolume);
+	g_SoundManager.SetMusicVolume(g_ConfigManager.GetMusicVolume());
 
-	if (g_ConfigManager.Music)
+	if (g_ConfigManager.GetMusic())
 	{
-		if (g_PacketManager.ClientVersion >= CV_7000)
+		if (g_PacketManager.GetClientVersion() >= CV_7000)
 			PlayMusic(78);
-		else if (g_PacketManager.ClientVersion > CV_308Z)//from 4.x the music played is 0, the first one
+		else if (g_PacketManager.GetClientVersion() > CV_308Z)//from 4.x the music played is 0, the first one
 			PlayMusic(0);
 		else
 			PlayMusic(8);
@@ -4601,12 +4601,12 @@ void COrion::LoadClientStartupConfig()
 void COrion::PlayMusic(const int &index, const bool &warmode)
 {
 	WISPFUN_DEBUG("c194_f61");
-	if (!g_ConfigManager.Music || index >= MAX_MUSIC_DATA_INDEX_COUNT)
+	if (!g_ConfigManager.GetMusic() || index >= MAX_MUSIC_DATA_INDEX_COUNT)
 		return;
 	if (!warmode && g_SoundManager.CurrentMusicIndex == index && g_SoundManager.IsPlayingNormalMusic())
 		return;
 
-	if (g_PacketManager.ClientVersion >= CV_306E)
+	if (g_PacketManager.GetClientVersion() >= CV_306E)
 	{
 		CIndexMusic &mp3Info = m_MP3Data[index];
 		g_SoundManager.PlayMP3(mp3Info.FilePath, index, mp3Info.Loop, warmode);
@@ -4630,7 +4630,7 @@ void COrion::ResumeSound()
 void COrion::PlaySoundEffect(const ushort &id, float volume)
 {
 	WISPFUN_DEBUG("c194_f64");
-	if (id >= 0x0800 || !g_ConfigManager.Sound)
+	if (id >= 0x0800 || !g_ConfigManager.GetSound())
 		return;
 
 	CIndexSound &is = m_SoundDataIndex[id];
@@ -4925,7 +4925,7 @@ void COrion::DrawLandTexture(CLandObject *land, ushort color, const int &x, cons
 			glUniform1iARB(g_ShaderDrawMode, SDM_LAND);
 
 
-		g_GL_DrawLandTexture(*th, x, y + (land->Z * 4), land);
+		g_GL_DrawLandTexture(*th, x, y + (land->GetZ() * 4), land);
 	}
 }
 //----------------------------------------------------------------------------------
@@ -5434,8 +5434,8 @@ void COrion::CreateTextMessage(const TEXT_TYPE &type, const uint &serial, const 
 					g_WorldTextRenderer.AddText(td);
 				else if (!obj->NPC)
 				{
-					td->X = g_ClickObject.X;
-					td->Y = g_ClickObject.Y;
+					td->SetX(g_ClickObject.X);
+					td->SetY(g_ClickObject.Y);
 
 					CGump *gump = g_GumpManager.GetGump(container, 0, GT_CONTAINER);
 					
@@ -5545,8 +5545,8 @@ void COrion::CreateUnicodeTextMessage(const TEXT_TYPE &type, const uint &serial,
  					g_WorldTextRenderer.AddText(td);
 				else if (!obj->NPC)
 				{
-					td->X = g_ClickObject.X;
-					td->Y = g_ClickObject.Y;
+					td->SetX(g_ClickObject.X);
+					td->SetY(g_ClickObject.Y);
 
 					CGump *gump = g_GumpManager.GetGump(container, 0, GT_CONTAINER);
 
@@ -5708,13 +5708,13 @@ void COrion::PickupItem(CGameItem *obj, int count, const bool &isGameFigure)
 		g_ObjectInHand.Color = obj->Color;
 		g_ObjectInHand.Container = obj->Container;
 		g_ObjectInHand.Layer = obj->Layer;
-		g_ObjectInHand.Flags = obj->Flags;
+		g_ObjectInHand.Flags = obj->GetFlags();
 		g_ObjectInHand.TiledataPtr = obj->GetStaticData();
 		g_ObjectInHand.Count = count;
 		g_ObjectInHand.IsGameFigure = isGameFigure;
-		g_ObjectInHand.X = obj->X;
-		g_ObjectInHand.Y = obj->Y;
-		g_ObjectInHand.Z = obj->Z;
+		g_ObjectInHand.X = obj->GetX();
+		g_ObjectInHand.Y = obj->GetY();
+		g_ObjectInHand.Z = obj->GetZ();
 		g_ObjectInHand.TotalCount = obj->Count;
 
 		CPacketPickupRequest(g_ObjectInHand.Serial, count).Send();
@@ -5728,7 +5728,7 @@ void COrion::DropItem(const uint &container, const ushort &x, const ushort &y, c
 	WISPFUN_DEBUG("c194_f104");
 	if (g_ObjectInHand.Enabled && g_ObjectInHand.Serial != container)
 	{
-		if (g_PacketManager.ClientVersion >= CV_6017)
+		if (g_PacketManager.GetClientVersion() >= CV_6017)
 			CPacketDropRequestNew(g_ObjectInHand.Serial, x, y, z, 0, container).Send();
 		else
 			CPacketDropRequestOld(g_ObjectInHand.Serial, x, y, z, container).Send();
@@ -5771,8 +5771,7 @@ void COrion::ChangeWarmode(uchar status)
 		newstatus = status;
 	}
 
-	//38, 39 и 40 это индексы боевой музыки.
-	if (newstatus == 1 && g_ConfigManager.Music)
+	if (newstatus == 1 && g_ConfigManager.GetMusic())
 		PlayMusic(rand() % 3 + 38, true);
 	else if (newstatus == 0)
 		g_SoundManager.StopWarMusic();
@@ -6128,8 +6127,8 @@ void COrion::DisplayStatusbarGump(const uint &serial, const int &x, const int &y
 		}
 		else
 		{
-			gump->X = x;
-			gump->Y = y;
+			gump->SetX(x);
+			gump->SetY(y);
 		}
 	}
 	else
@@ -6203,8 +6202,8 @@ void COrion::OpenChat()
 void COrion::OpenConfiguration()
 {
 	WISPFUN_DEBUG("c194_f143");
-	int x = (g_OrionWindow.Size.Width / 2) - 320;
-	int y = (g_OrionWindow.Size.Height / 2) - 240;
+	int x = (g_OrionWindow.GetSize().Width / 2) - 320;
+	int y = (g_OrionWindow.GetSize().Height / 2) - 240;
 
 	g_OptionsConfig = g_ConfigManager;
 
@@ -6219,8 +6218,8 @@ void COrion::OpenMail()
 void COrion::OpenPartyManifest()
 {
 	WISPFUN_DEBUG("c194_f145");
-	int x = (g_OrionWindow.Size.Width / 2) - 272;
-	int y = (g_OrionWindow.Size.Height / 2) - 240;
+	int x = (g_OrionWindow.GetSize().Width / 2) - 272;
+	int y = (g_OrionWindow.GetSize().Height / 2) - 240;
 
 	g_GumpManager.AddGump(new CGumpPartyManifest(0, x, y, g_Party.CanLoot));
 }

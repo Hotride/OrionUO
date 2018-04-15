@@ -34,7 +34,7 @@ CGumpStatusbar::CGumpStatusbar(uint serial, short x, short y, bool minimized)
 CGumpStatusbar::~CGumpStatusbar()
 {
 	WISPFUN_DEBUG("c128_f2");
-	if (g_ConnectionManager.Connected() && g_PacketManager.ClientVersion >= CV_200 && g_World != NULL && g_World->FindWorldObject(Serial) != NULL)
+	if (g_ConnectionManager.Connected() && g_PacketManager.GetClientVersion() >= CV_200 && g_World != NULL && g_World->FindWorldObject(Serial) != NULL)
 		CPacketCloseStatusbarGump(Serial).Send();
 
 	RemoveFromGroup();
@@ -450,7 +450,7 @@ void CGumpStatusbar::UpdateContent()
 		{
 			POINT p = { 0, 0 };
 
-			if (g_PacketManager.ClientVersion >= CV_308D && !g_ConfigManager.OldStyleStatusbar)
+			if (g_PacketManager.GetClientVersion() >= CV_308D && !g_ConfigManager.GetOldStyleStatusbar())
 				Add(new CGUIGumppic(0x2A6C, 0, 0));
 			else
 			{
@@ -461,19 +461,19 @@ void CGumpStatusbar::UpdateContent()
 			}
 			int xOffset = 0;
 			//Отрисовка набора характеристик, расположение в зависимости от версии протокола, комментировать не буду...
-			if (g_PacketManager.ClientVersion >= CV_308Z && !g_ConfigManager.OldStyleStatusbar)
+			if (g_PacketManager.GetClientVersion() >= CV_308Z && !g_ConfigManager.GetOldStyleStatusbar())
 			{
 				p.x = 389;
 				p.y = 152;
 
 				//Отрисуем имя игрока
-				if (g_Player->Name.length())
+				if (g_Player->GetName().length())
 				{
 					text = (CGUIText*)Add(new CGUIText(0x0386, useUOPGumps? 90 :58, 50));
-					text->CreateTextureA(1, g_Player->Name, 320, TS_CENTER);
+					text->CreateTextureA(1, g_Player->GetName(), 320, TS_CENTER);
 				}
 
-				if (g_PacketManager.ClientVersion >= CV_5020)
+				if (g_PacketManager.GetClientVersion() >= CV_5020)
 				{
 					//Кнопка вызова гампа бафов
 					Add(new CGUIButton(ID_GSB_BUFF_GUMP, 0x7538, 0x7538, 0x7538, 40, 50));
@@ -733,10 +733,10 @@ void CGumpStatusbar::UpdateContent()
 				}
 
 				//Отрисуем имя игрока
-				if (g_Player->Name.length())
+				if (g_Player->GetName().length())
 				{
 					text = (CGUIText*)Add(new CGUIText(0x0386, 86, 42));
-					text->CreateTextureA(1, g_Player->Name);
+					text->CreateTextureA(1, g_Player->GetName());
 				}
 
 				text = (CGUIText*)Add(new CGUIText(0x0386, 86, 61));
@@ -781,16 +781,16 @@ void CGumpStatusbar::UpdateContent()
 				Add(new CGUIHitBox(ID_GSB_TEXT_GOLD, 171, 97, 66, 12));
 				Add(new CGUIHitBox(ID_GSB_TEXT_WEIGHT, 171, 109, 66, 12));
 
-				if (!g_ConfigManager.OldStyleStatusbar)
+				if (!g_ConfigManager.GetOldStyleStatusbar())
 				{
-					if (g_PacketManager.ClientVersion == CV_308D)
+					if (g_PacketManager.GetClientVersion() == CV_308D)
 					{
 						text = (CGUIText*)Add(new CGUIText(0x0386, 171, 124));
 						text->CreateTextureA(1, std::to_string(g_Player->StatsCap));
 
 						Add(new CGUIHitBox(ID_GSB_TEXT_MAX_STATS, 171, 124, 34, 12));
 					}
-					else if (g_PacketManager.ClientVersion == CV_308J)
+					else if (g_PacketManager.GetClientVersion() == CV_308J)
 					{
 						text = (CGUIText*)Add(new CGUIText(0x0386, 180, 131));
 						text->CreateTextureA(1, std::to_string(g_Player->StatsCap));
@@ -815,7 +815,7 @@ void CGumpStatusbar::UpdateContent()
 		}
 		else //Это уменьшенная врсия статусбара (с полосками)
 		{
-			if (g_Party.Leader != 0 && !g_ConfigManager.OriginalPartyStatusbar) //inParty
+			if (g_Party.Leader != 0 && !g_ConfigManager.GetOriginalPartyStatusbar()) //inParty
 			{
 				CGUIGumppic *bodyGump = (CGUIGumppic*)Add(new CGUIGumppic(0x0803, 0, 0));
 				bodyGump->SelectOnly = true;
@@ -914,7 +914,7 @@ void CGumpStatusbar::UpdateContent()
 	}
 	else //Чужой статусбар
 	{
-		if (g_Party.Contains(Serial) && !g_ConfigManager.OriginalPartyStatusbar)
+		if (g_Party.Contains(Serial) && !g_ConfigManager.GetOriginalPartyStatusbar())
 		{
 			IFOR(i, 0, 10)
 			{
@@ -1032,7 +1032,7 @@ void CGumpStatusbar::UpdateContent()
 				if (obj->Notoriety == NT_CRIMINAL || obj->Notoriety == NT_SOMEONE_GRAY)
 					color = 0;
 
-				objName = obj->Name;
+				objName = obj->GetName();
 				m_Name = objName;
 
 				if (obj->CanChangeName)
@@ -1258,10 +1258,10 @@ void CGumpStatusbar::OnKeyDown(const WPARAM &wParam, const LPARAM &lParam)
 				CGameObject *obj = g_World->FindWorldObject(Serial);
 
 				if (obj != NULL)
-					g_EntryPointer->SetText(obj->Name);
+					g_EntryPointer->SetText(obj->GetName());
 			}
 
-			if (g_ConfigManager.ConsoleNeedEnter)
+			if (g_ConfigManager.GetConsoleNeedEnter())
 				g_EntryPointer = NULL;
 			else
 				g_EntryPointer = &g_GameConsole;
@@ -1288,9 +1288,9 @@ void CGumpStatusbar::OnKeyDown(const WPARAM &wParam, const LPARAM &lParam)
 
 			CGameObject *obj = g_World->FindWorldObject(Serial);
 			if (obj != NULL)
-				g_EntryPointer->SetText(obj->Name);
+				g_EntryPointer->SetText(obj->GetName());
 
-			if (g_ConfigManager.ConsoleNeedEnter)
+			if (g_ConfigManager.GetConsoleNeedEnter())
 				g_EntryPointer = NULL;
 			else
 				g_EntryPointer = &g_GameConsole;

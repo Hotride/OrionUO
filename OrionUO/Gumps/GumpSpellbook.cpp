@@ -239,8 +239,8 @@ void CGumpSpellbook::PrepareContent()
 		bool wantVisible = false;
 		ushort graphicBookmark = 0x08AD;
 		ushort graphicPointer = 0x08AF;
-		int wantX = m_LastSpellPointer->X;
-		int wantY = m_LastSpellPointer->Y;
+		int wantX = m_LastSpellPointer->GetX();
+		int wantY = m_LastSpellPointer->GetY();
 
 		if (Page < dictionaryPagesCount)
 		{
@@ -312,16 +312,16 @@ void CGumpSpellbook::PrepareContent()
 			}
 		}
 
-		if (wantVisible != m_LastSpellPointer->Visible || wantX != m_LastSpellPointer->X || wantY != m_LastSpellPointer->Y)
+		if (wantVisible != m_LastSpellPointer->Visible || wantX != m_LastSpellPointer->GetX() || wantY != m_LastSpellPointer->GetY())
 		{
 			m_LastSpellPointer->Visible = wantVisible;
 			m_LastSpellPointer->Graphic = graphicPointer;
-			m_LastSpellPointer->X = wantX;
-			m_LastSpellPointer->Y = wantY;
+			m_LastSpellPointer->SetX(wantX);
+			m_LastSpellPointer->SetY(wantY);
 
 			m_LastSpellBookmark->Visible = wantVisible;
 			m_LastSpellBookmark->Graphic = graphicBookmark;
-			m_LastSpellBookmark->X = wantX;
+			m_LastSpellBookmark->SetX(wantX);
 
 			WantRedraw = true;
 		}
@@ -955,7 +955,7 @@ bool CGumpSpellbook::OnLeftMouseButtonDoubleClick()
 
 				spellIndex += ((int)BookType * 100);
 
-				if (g_PacketManager.ClientVersion < CV_308Z)
+				if (g_PacketManager.GetClientVersion() < CV_308Z)
 					g_Orion.CastSpellFromBook(spellIndex, Serial);
 				else
 					g_Orion.CastSpell(spellIndex);

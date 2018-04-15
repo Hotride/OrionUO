@@ -52,9 +52,9 @@ void CWalker::DenyWalk(const uchar &sequence, const int &x, const int &y, const 
 
 	if (x != -1)
 	{
-		g_Player->X = x;
-		g_Player->Y = y;
-		g_Player->Z = z;
+		g_Player->SetX(x);
+		g_Player->SetY(y);
+		g_Player->SetZ(z);
 
 		g_RemoveRangeXY.X = x;
 		g_RemoveRangeXY.Y = y;

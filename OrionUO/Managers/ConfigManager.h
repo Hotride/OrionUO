@@ -13,54 +13,59 @@
 //!Класс менеджера конфига
 class CConfigManager
 {
-	SETGETE(bool, Sound, true);
-	SETGETE(bool, Music, false);
+protected:
+    bool m_Sound = true;
+	bool m_Music = false;
+	uchar m_SoundVolume = 255;
+	uchar m_MusicVolume = 255;
+	uchar m_ClientFPS = 32;
+	bool m_UseScaling = false;
+	uchar m_DrawStatusState = 0;
+	bool m_DrawStumps = false;
+	bool m_MarkingCaves = false;
+	bool m_NoVegetation = false;
+	bool m_NoAnimateFields = false;
+	bool m_ReduceFPSUnactiveWindow = false;
+	bool m_ConsoleNeedEnter = false;
+	uchar m_SpellIconAlpha = 0;
+	bool m_OldStyleStatusbar = false;
+	bool m_OriginalPartyStatusbar = false;
+	bool m_ApplyStateColorOnCharacters = false;
+	bool m_ChangeFieldsGraphic = false;
+	bool m_PaperdollSlots = false;
+	uchar m_DrawAuraState = 0;
+	bool m_ScaleImagesInPaperdollSlots = false;
+	bool m_UseGlobalMapLayer = false;
+	bool m_NoDrawRoofs = false;
+	bool m_UseGLListsForInterface = false;
+	uchar m_PingTimer = 10;
+	uchar m_ItemPropertiesMode = OPM_FOLLOW_MOUSE;
+	bool m_ItemPropertiesIcon = false;
+	uchar m_CharacterBackpackStyle = CBS_DEFAULT;
+
+public:
 	bool FootstepsSound = true;
 	bool CombatMusic = true;
-	SETGETE(uchar, SoundVolume, 255);
-	SETGETE(uchar, MusicVolume, 255);
 	bool BackgroundSound = false;
-
-	SETGETE(uchar, ClientFPS, 32);
-	SETGETE(bool, UseScaling, false);
 	bool RemoveTextWithBlending = false;
-	SETGETE(uchar, DrawStatusState, 0);
 	uchar DrawStatusConditionState = 0;
 	uchar DrawStatusConditionValue = 0;
-	SETGETE(bool, DrawStumps, false);
-	SETGETE(bool, MarkingCaves, false);
-	SETGETE(bool, NoVegetation, false);
-	SETGETE(bool, NoAnimateFields, false);
-	SETGETE(bool, ReduceFPSUnactiveWindow, false);
 	bool StandartCharactersAnimationDelay = false;
 	bool StandartItemsAnimationDelay = false;
 	bool LockGumpsMoving = false;
-	SETGETE(bool, ConsoleNeedEnter, false);
 	uchar HiddenCharactersRenderMode = 0;
 	uchar HiddenAlpha = 0;
 	bool UseHiddenModeOnlyForSelf = false;
 	uchar TransparentSpellIcons = 0;
-	SETGETE(uchar, SpellIconAlpha, 0);
-	SETGETE(bool, OldStyleStatusbar, false);
-	SETGETE(bool, OriginalPartyStatusbar, false);
-	SETGETE(bool, ApplyStateColorOnCharacters, false);
-	SETGETE(bool, ChangeFieldsGraphic, false);
-	SETGETE(bool, PaperdollSlots, false);
 	bool RemoveStatusbarsWithoutObjects = false;
 	bool ShowDefaultConsoleEntryMode = false;
-	SETGETE(uchar, DrawAuraState, 0);
 	bool DrawAuraWithCtrlPressed = false;
 	uchar ScreenshotFormat = 0;
-	SETGETE(bool, ScaleImagesInPaperdollSlots, false);
 	bool RemoveOrCreateObjectsWithBlending = false;
 	bool DrawHelmetsOnShroud = false;
-	SETGETE(bool, UseGlobalMapLayer, false);
-	SETGETE(bool, NoDrawRoofs, false);
 	bool HighlightTargetByType = true;
 	bool AutoDisplayWorldMap = false;
-	SETGETE(bool, UseGLListsForInterface, false);
 	bool CheckPing = true;
-	SETGETE(uchar, PingTimer, 10);
 	bool CancelNewTargetSystemOnShiftEsc = false;
 	bool DrawStatusForHumanoids = true;
 
@@ -95,13 +100,9 @@ class CConfigManager
 	bool DisableMenubar = false;
 	bool GrayOutOfRangeObjects = false;
 	bool DisableNewTargetSystem = false;
-	SETGETE(uchar, ItemPropertiesMode, OPM_FOLLOW_MOUSE);
-	SETGETE(bool, ItemPropertiesIcon, false);
 	bool ObjectHandles = false;
 	bool HoldShiftForContextMenus = false;
 	bool HoldShiftForEnablePathfind = false;
-	SETGETE(uchar, CharacterBackpackStyle, CBS_DEFAULT);
-
 	int GameWindowWidth = 0;
 	int GameWindowHeight = 0;
 	ushort SpeechDelay = 0;
@@ -144,6 +145,90 @@ class CConfigManager
 public:
 	CConfigManager();
 	~CConfigManager() {}
+
+	bool GetSound() { return m_Sound; };
+	void SetSound(const bool& val);
+
+	bool GetMusic() { return m_Music; };
+	void SetMusic(const bool& val);
+
+	uchar GetSoundVolume() { return m_SoundVolume; };
+	void SetSoundVolume(const uchar& val);
+
+	uchar GetMusicVolume() { return m_MusicVolume; };
+	void SetMusicVolume(const uchar& val);
+
+	uchar GetClientFPS() { return m_ClientFPS; };
+	void SetClientFPS(const uchar& val);
+
+	bool GetUseScaling() { return m_UseScaling; };
+	void SetUseScaling(const bool& val);
+
+	uchar GetDrawStatusState() { return m_DrawStatusState; };
+	void SetDrawStatusState(const uchar& val);
+
+	bool GetDrawStumps() { return m_DrawStumps; };
+	void SetDrawStumps(const bool& val);
+
+	bool GetMarkingCaves() { return m_MarkingCaves; };
+	void SetMarkingCaves(const bool& val);
+
+	bool GetNoVegetation() { return m_NoVegetation; };
+	void SetNoVegetation(const bool& val);
+
+	bool GetNoAnimateFields() { return m_NoAnimateFields; };
+	void SetNoAnimateFields(const bool& val);
+
+	bool GetReduceFPSUnactiveWindow() { return m_ReduceFPSUnactiveWindow; };
+	void SetReduceFPSUnactiveWindow(const bool& val);
+
+	bool GetConsoleNeedEnter() { return m_ConsoleNeedEnter; };
+	void SetConsoleNeedEnter(const bool& val);
+
+	uchar GetSpellIconAlpha() { return m_SpellIconAlpha; };
+	void SetSpellIconAlpha(const uchar& val);
+
+	bool GetOldStyleStatusbar() { return m_OldStyleStatusbar; };
+	void SetOldStyleStatusbar(const bool& val);
+
+	bool GetOriginalPartyStatusbar() { return m_OriginalPartyStatusbar; };
+	void SetOriginalPartyStatusbar(const bool& val);
+
+	bool GetApplyStateColorOnCharacters() { return m_ApplyStateColorOnCharacters; };
+	void SetApplyStateColorOnCharacters(const bool& val);
+
+	bool GetChangeFieldsGraphic() { return m_ChangeFieldsGraphic; };
+	void SetChangeFieldsGraphic(const bool& val);
+
+	bool GetPaperdollSlots() { return m_PaperdollSlots; };
+	void SetPaperdollSlots(const bool& val);
+
+	uchar GetDrawAuraState() { return m_DrawAuraState; };
+	void SetDrawAuraState(const uchar& val);
+
+	bool GetScaleImagesInPaperdollSlots() { return m_ScaleImagesInPaperdollSlots; };
+	void SetScaleImagesInPaperdollSlots(const bool& val);
+
+	bool GetUseGlobalMapLayer() { return m_UseGlobalMapLayer; };
+	void SetUseGlobalMapLayer(const bool& val);
+
+	bool GetNoDrawRoofs() { return m_NoDrawRoofs; };
+	void SetNoDrawRoofs(const bool& val);
+
+	bool GetUseGLListsForInterface() { return m_UseGLListsForInterface; };
+	void SetUseGLListsForInterface(const bool& val);
+
+	uchar GetPingTimer() { return m_PingTimer; };
+	void SetPingTimer(const uchar& val);
+
+	bool GetItemPropertiesIcon() { return m_ItemPropertiesIcon; };
+	void SetItemPropertiesIcon(const bool& val);
+
+	uchar GetItemPropertiesMode() { return m_ItemPropertiesMode; };
+	void SetItemPropertiesMode(const uchar& val);
+
+	uchar GetCharacterBackpackStyle() { return m_CharacterBackpackStyle; };
+	void SetCharacterBackpackStyle(const uchar& val);
 
 	/*!
 	Инициализация

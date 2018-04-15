@@ -190,7 +190,7 @@ void CCreateCharacterManager::SetRace(const RACE_TYPE &newRace)
 {
 	WISPFUN_DEBUG("c140_f2");
 	m_Race = newRace;
-	Female = m_Female;
+	SetFemale(m_Female);
 
 	SkinTone = (*GetSkinTonePtr()) + 1;
 	pushort ptr = GetHairColorPtr();

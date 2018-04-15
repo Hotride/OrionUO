@@ -25,8 +25,8 @@ CGumpScreenConnection::~CGumpScreenConnection()
 void CGumpScreenConnection::CreateText(const int &x, const int &y, string str, const uchar &font)
 {
 	WISPFUN_DEBUG("c113_f1");
-	if (g_ConnectionScreen.Message.length())
-		str = g_ConnectionScreen.Message;
+	if (g_ConnectionScreen.GetText().length())
+		str = g_ConnectionScreen.GetText();
 
 	CGUIText *obj = new CGUIText(0x0386, x, y);
 	obj->CreateTextureA(font, str, 260, TS_CENTER);
@@ -43,14 +43,14 @@ void CGumpScreenConnection::UpdateContent()
 	Add(new CGUIGumppic(0x15A0, 0, 4));
 	Add(new CGUIGumppic(0x1589, 555, 4));
 
-	if (g_ConnectionScreen.Type != CST_CONLOST)
+	if (g_ConnectionScreen.GetType() != CST_CONLOST)
 		Add(new CGUIResizepic(0, 0x0A28, 142, 134, 356, 212));
 
 	g_ConnectionScreen.CursorGraphic = 0x2073; //Main Gump mouse cursor
 
-	if (g_ConnectionScreen.Type == CST_CHARACTER_LIST)
+	if (g_ConnectionScreen.GetType() == CST_CHARACTER_LIST)
 	{
-		if (g_ConnectionScreen.ConnectionFailed)
+		if (g_ConnectionScreen.GetConnectionFailed())
 		{
 			const string text[6] =
 			{
@@ -61,7 +61,7 @@ void CGumpScreenConnection::UpdateContent()
 				g_ClilocManager.Cliloc(g_Language)->GetA(3000022, false, "That character is currently queued for backup and cannot be deleted."),
 				g_ClilocManager.Cliloc(g_Language)->GetA(3000023, false, "Couldn't carry out your request.")
 			};
-			int index = g_ConnectionScreen.ErrorCode;
+			int index = g_ConnectionScreen.GetErrorCode();
 			if (index >= 6)
 				index = 5;
 			CreateText(189, 178, text[index], 2);
@@ -79,9 +79,9 @@ void CGumpScreenConnection::UpdateContent()
 			Add(new CGUIButton(ID_CS_CANCEL, 0x047E, 0x047F, 0x0480, 348, 304));
 		}
 	}
-	else if (g_ConnectionScreen.Type == CST_GAME)
+	else if (g_ConnectionScreen.GetType() == CST_GAME)
 	{
-		if (g_ConnectionScreen.ConnectionFailed)
+		if (g_ConnectionScreen.GetConnectionFailed())
 		{
 			const string text[3] =
 			{
@@ -89,7 +89,7 @@ void CGumpScreenConnection::UpdateContent()
 				g_ClilocManager.Cliloc(g_Language)->GetA(3000612, false, "Your character name is too short."),
 				"No character to login with."
 			};
-			int index = g_ConnectionScreen.ErrorCode;
+			int index = g_ConnectionScreen.GetErrorCode();
 			if (index >= 3)
 				index = 2;
 			CreateText(189, 178, text[index], 2);
@@ -103,7 +103,7 @@ void CGumpScreenConnection::UpdateContent()
 			g_ConnectionScreen.CursorGraphic = 0x2077; //Waiting mouse cursor
 		}
 	}
-	else if (g_ConnectionScreen.Type == CST_GAME_LOGIN)
+	else if (g_ConnectionScreen.GetType() == CST_GAME_LOGIN)
 	{
 		const string text[10] =
 		{
@@ -118,20 +118,20 @@ void CGumpScreenConnection::UpdateContent()
 			"",
 			""
 		};
-		int index = g_ConnectionScreen.ErrorCode;
+		int index = g_ConnectionScreen.GetErrorCode();
 		if (index >= 10)
 			index = 9;
 		CreateText(189, 178, text[index], 2);
 
 		Add(new CGUIButton(ID_CS_OK, 0x0481, 0x0482, 0x0483, 306, 304));
 	}
-	else if (g_ConnectionScreen.Type == CST_SELECT_PROFESSOIN)
+	else if (g_ConnectionScreen.GetType() == CST_SELECT_PROFESSOIN)
 	{
 		CreateText(189, 178, "You must have three unique skills choosen!", 2);
 
 		Add(new CGUIButton(ID_CS_OK, 0x0481, 0x0482, 0x0483, 306, 304));
 	}
-	else if (g_ConnectionScreen.Type == CST_CONLOST)
+	else if (g_ConnectionScreen.GetType() == CST_CONLOST)
 	{
 		Add(new CGUIResizepic(0, 0x0A28, 210, 178, 203, 121));
 
@@ -143,7 +143,7 @@ void CGumpScreenConnection::UpdateContent()
 	}
 	else
 	{
-		if (g_ConnectionScreen.ConnectionFailed)
+		if (g_ConnectionScreen.GetConnectionFailed())
 		{
 			const string text[9] =
 			{
@@ -157,7 +157,7 @@ void CGumpScreenConnection::UpdateContent()
 				"General IGR authentication failure.",
 				g_ClilocManager.Cliloc(g_Language)->GetA(3000037, false, "Couldn't connect to Ultima Online.  Please try again in a few moments.")
 			};
-			int index = g_ConnectionScreen.ErrorCode;
+			int index = g_ConnectionScreen.GetErrorCode();
 			if (index >= 9)
 				index = 8;
 			CreateText(189, 178, text[index], 2);
@@ -172,7 +172,7 @@ void CGumpScreenConnection::UpdateContent()
 				g_ClilocManager.Cliloc(g_Language)->GetA(3000003, false, "Verifying Account...")
 			};
 
-			CreateText(189, 178, text[g_ConnectionScreen.Connected], 2);
+			CreateText(189, 178, text[g_ConnectionScreen.GetConnected()], 2);
 
 			g_ConnectionScreen.CursorGraphic = 0x2077; //Waiting mouse cursor
 		}
@@ -184,18 +184,18 @@ void CGumpScreenConnection::GUMP_BUTTON_EVENT_C
 	WISPFUN_DEBUG("c113_f3");
 	if (serial == ID_CS_OK) //v button
 	{
-		if (g_ConnectionScreen.Type == CST_CHARACTER_LIST)
+		if (g_ConnectionScreen.GetType() == CST_CHARACTER_LIST)
 		{
-			if (!g_ConnectionScreen.ConnectionFailed)
+			if (!g_ConnectionScreen.GetConnectionFailed())
 				g_ConnectionScreen.CreateSmoothAction(CConnectionScreen::ID_SMOOTH_CS_SEND_DELETE);
 			else
 				g_ConnectionScreen.CreateSmoothAction(CConnectionScreen::ID_SMOOTH_CS_GO_SCREEN_CHARACTER);
 		}
-		else if (g_ConnectionScreen.Type == CST_SELECT_PROFESSOIN)
+		else if (g_ConnectionScreen.GetType() == CST_SELECT_PROFESSOIN)
 			g_ConnectionScreen.CreateSmoothAction(CConnectionScreen::ID_SMOOTH_CS_GO_SCREEN_PROFESSION);
-		else if (g_ConnectionScreen.Type == CST_GAME || g_ConnectionScreen.Type == CST_GAME_LOGIN)
+		else if (g_ConnectionScreen.GetType() == CST_GAME || g_ConnectionScreen.GetType() == CST_GAME_LOGIN)
 			g_ConnectionScreen.CreateSmoothAction(CConnectionScreen::ID_SMOOTH_CS_GO_SCREEN_CHARACTER);
-		else if (g_ConnectionScreen.Type == CST_CONLOST || g_ConnectionScreen.ConnectionFailed)
+		else if (g_ConnectionScreen.GetType() == CST_CONLOST || g_ConnectionScreen.GetConnectionFailed())
 			g_ConnectionScreen.CreateSmoothAction(CConnectionScreen::ID_SMOOTH_CS_GO_SCREEN_MAIN);
 	}
 	else if (serial == ID_CS_CANCEL) //Button x

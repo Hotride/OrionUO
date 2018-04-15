@@ -19,7 +19,7 @@ TimeToRandomFidget(GetTickCount() + RANDOM_FIDGET_ANIMATION_DELAY)
 	NoDrawTile = false;
 	WISPFUN_DEBUG("c15_f1");
 
-	bool wantStatusRequest = (g_GumpManager.UpdateContent(serial, 0, GT_STATUSBAR) != NULL) || (g_GumpManager.UpdateContent(serial, 0, GT_TARGET_SYSTEM) != NULL) || g_ConfigManager.DrawStatusState || (serial == g_LastTargetObject) || (serial == g_LastAttackObject);
+	bool wantStatusRequest = (g_GumpManager.UpdateContent(serial, 0, GT_STATUSBAR) != NULL) || (g_GumpManager.UpdateContent(serial, 0, GT_TARGET_SYSTEM) != NULL) || g_ConfigManager.GetDrawStatusState() || (serial == g_LastTargetObject) || (serial == g_LastAttackObject);
 
 	if (!g_ConfigManager.DisableNewTargetSystem && g_NewTargetSystem.Serial == serial && g_GumpManager.UpdateContent(serial, 0, GT_TARGET_SYSTEM) == NULL)
 	{
@@ -83,7 +83,7 @@ void CGameCharacter::UpdateTextCoordinates()
 	int x = DrawX + OffsetX;
 	int y = DrawY + (OffsetY - OffsetZ) - ((dims.Height + dims.CenterY) + 8);
 
-	if (g_ConfigManager.DrawStatusState == DCSS_ABOVE)
+	if (g_ConfigManager.GetDrawStatusState() == DCSS_ABOVE)
 		y -= 14;
 
 	for (; text != NULL; text = (CTextData*)text->m_Prev)
@@ -138,7 +138,7 @@ int CGameCharacter::IsSitting()
 
 		while (obj != NULL && !result)
 		{
-			if (obj->IsStaticGroupObject() && abs(m_Z - obj->Z) <= 1) //m_Z == obj->Z
+			if (obj->IsStaticGroupObject() && abs(m_Z - obj->GetZ()) <= 1) //m_Z == obj->GetZ()
 			{
 				ushort graphic = obj->Graphic;
 

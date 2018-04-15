@@ -36,9 +36,9 @@ HaveBackgroundLines(haveBackgroundLines), ScissorOffsetHeight(scissorOffsetHeigh
 	WISP_GEOMETRY::CRect rect = m_Background->WorkSpace;
 
 	if (type != GT_SKILLS)
-		m_Minimizer->X = 137;
+		m_Minimizer->SetX(137);
 	else
-		m_Minimizer->X = 170;
+		m_Minimizer->SetX(170);
 
 	int heightDecBonus = ScissorOffsetHeight;
 
@@ -83,9 +83,9 @@ HaveBackgroundLines(haveBackgroundLines), ScissorOffsetHeight(scissorOffsetHeigh
 	m_Resizer = (CGUIResizeButton*)Add(new CGUIResizeButton(ID_GBS_BUTTON_RESIZE, 0x082E, 0x082F, 0x082F, 0, offsetY + Height - 3));
 
 	if (type != GT_SKILLS)
-		m_Resizer->X = 137;
+		m_Resizer->SetX(137);
 	else
-		m_Resizer->X = 170;
+		m_Resizer->SetX(170);
 }
 //----------------------------------------------------------------------------------
 CGumpBaseScroll::~CGumpBaseScroll()
@@ -121,7 +121,7 @@ void CGumpBaseScroll::UpdateHeight()
 
 	m_HTMLGump->UpdateHeight(m_Background->WorkSpace.Size.Height - ScrollerOffsetY - heightDecBonus);
 
-	m_Resizer->Y = offsetY + Height - 3;
+	m_Resizer->SetY(offsetY + Height - 3);
 }
 //----------------------------------------------------------------------------------
 void CGumpBaseScroll::GUMP_RESIZE_START_EVENT_C

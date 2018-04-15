@@ -26,8 +26,16 @@ struct CC_HAIR_STYLE
 //!Класс менеджера создания персонажей
 class CCreateCharacterManager
 {
-	SETGETE(bool, Female, false);
-	SETGETE(RACE_TYPE, Race, RT_HUMAN);
+protected:
+    bool m_Female = false;
+public:
+    bool GetFemale() { return m_Female; };
+    void SetFemale(const bool& val);
+protected:
+    RACE_TYPE m_Race = RT_HUMAN;
+public:
+    RACE_TYPE GetRace() { return m_Race; };
+    void SetRace(const RACE_TYPE& val);
 	uchar HairStyle = 1;
 	uchar BeardStyle = 0;
 	ushort SkinTone = 0x03EA;

@@ -118,7 +118,7 @@ bool CObjectPropertiesManager::RevisionCheck(const uint &serial, const uint &rev
 //----------------------------------------------------------------------------------
 void CObjectPropertiesManager::OnItemClicked(const uint &serial)
 {
-	if (!g_ConfigManager.ItemPropertiesIcon || !g_TooltipsEnabled || g_ConfigManager.ItemPropertiesMode != OPM_SINGLE_CLICK)
+	if (!g_ConfigManager.GetItemPropertiesIcon() || !g_TooltipsEnabled || g_ConfigManager.GetItemPropertiesMode() != OPM_SINGLE_CLICK)
 		return;
 
 	OBJECT_PROPERTIES_MAP::iterator it = m_Map.find(serial);
@@ -138,7 +138,7 @@ void CObjectPropertiesManager::Display(const uint &serial)
 	{
 		if (m_Object != NULL)
 		{
-			if (g_ConfigManager.ItemPropertiesMode == OPM_AT_ICON)
+			if (g_ConfigManager.GetItemPropertiesMode() == OPM_AT_ICON)
 			{
 				CGumpPropertyIcon *gump = (CGumpPropertyIcon*)g_GumpManager.UpdateContent(0, 0, GT_PROPERTY_ICON);
 
@@ -152,12 +152,12 @@ void CObjectPropertiesManager::Display(const uint &serial)
 		return;
 	}
 
-	if (!g_ConfigManager.ItemPropertiesIcon || g_ConfigManager.ItemPropertiesMode == OPM_FOLLOW_MOUSE)
+	if (!g_ConfigManager.GetItemPropertiesIcon() || g_ConfigManager.GetItemPropertiesMode() == OPM_FOLLOW_MOUSE)
 	{
 		g_ToolTip.Set(it->second.CreateTextData(false));
 		return;
 	}
-	else if (g_ConfigManager.ItemPropertiesMode == OPM_SINGLE_CLICK)
+	else if (g_ConfigManager.GetItemPropertiesMode() == OPM_SINGLE_CLICK)
 		return;
 
 	CGumpPropertyIcon *gump = (CGumpPropertyIcon*)g_GumpManager.GetGump(0, 0, GT_PROPERTY_ICON);
@@ -165,7 +165,7 @@ void CObjectPropertiesManager::Display(const uint &serial)
 	if (gump == NULL)
 		return;
 
-	bool condition = (g_ConfigManager.ItemPropertiesMode == OPM_ALWAYS_UP);
+	bool condition = (g_ConfigManager.GetItemPropertiesMode() == OPM_ALWAYS_UP);
 
 	CRenderObject *object = g_SelectedObject.Object;
 
@@ -180,7 +180,7 @@ void CObjectPropertiesManager::Display(const uint &serial)
 
 	if (condition && gump->Object != m_Object)
 	{
-		gump->Text = it->second.CreateTextData(true);
+		gump->SetText(it->second.CreateTextData(true));
 		gump->Object = m_Object;
 	}
 }

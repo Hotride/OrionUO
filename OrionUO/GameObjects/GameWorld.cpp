@@ -848,10 +848,10 @@ void CGameWorld::UpdateGameObject(const uint &serial, ushort graphic, const ucha
 			character->OnGraphicChange(1000);
 			character->Direction = direction;
 			character->Color = g_ColorManager.FixColor(color, (color & 0x8000));
-			character->X = x;
-			character->Y = y;
-			character->Z = z;
-			character->Flags = flags;
+			character->SetX(x);
+			character->SetY(y);
+			character->SetZ(z);
+			character->SetFlags(flags);
 		}
 		else
 		{
@@ -896,7 +896,7 @@ void CGameWorld::UpdateGameObject(const uint &serial, ushort graphic, const ucha
 		if (updateType == UGOT_MULTI)
 		{
 			item->MultiBody = true;
-			item->WantUpdateMulti = ((graphic & 0x3FFF) != obj->Graphic) || (obj->X != x) || (obj->Y != y) || (obj->Z != z);
+			item->WantUpdateMulti = ((graphic & 0x3FFF) != obj->Graphic) || (obj->GetX() != x) || (obj->GetY() != y) || (obj->GetZ() != z);
 
 			item->Graphic = graphic & 0x3FFF;
 		}
@@ -913,9 +913,9 @@ void CGameWorld::UpdateGameObject(const uint &serial, ushort graphic, const ucha
 			item->Dragged = false;
 		}
 
-		item->X = x;
-		item->Y = y;
-		item->Z = z;
+		item->SetX(x);
+		item->SetY(y);
+		item->SetZ(z);
 		item->LightID = direction;
 
 		if (graphic == 0x2006)
@@ -927,11 +927,11 @@ void CGameWorld::UpdateGameObject(const uint &serial, ushort graphic, const ucha
 			count = 1;
 
 		item->Count = count;
-		item->Flags = flags;
+		item->SetFlags(flags);
 
 		item->OnGraphicChange(direction);
 
-		LOG("serial:0x%08X graphic:0x%04X color:0x%04X count:%i xyz:%d,%d,%d light:%i flags:0x%02X\n", obj->Serial, obj->Graphic, obj->Color, item->Count, obj->X, obj->Y, obj->Z, direction, obj->Flags);
+		LOG("serial:0x%08X graphic:0x%04X color:0x%04X count:%i xyz:%d,%d,%d light:%i flags:0x%02X\n", obj->Serial, obj->Graphic, obj->Color, item->Count, obj->GetX(), obj->GetY(), obj->GetZ(), direction, obj->GetFlags());
 	}
 	else
 	{
@@ -952,7 +952,7 @@ void CGameWorld::UpdateGameObject(const uint &serial, ushort graphic, const ucha
 						found = true;
 					}
 				}
-				else if (character->X == x && character->Y == y && character->Z == z && character->Direction == direction)
+				else if (character->GetX() == x && character->GetY() == y && character->GetZ() == z && character->Direction == direction)
 				{
 					found = true;
 				}
@@ -970,9 +970,9 @@ void CGameWorld::UpdateGameObject(const uint &serial, ushort graphic, const ucha
 
 		if (!found)
 		{
-			character->X = x;
-			character->Y = y;
-			character->Z = z;
+			character->SetX(x);
+			character->SetY(y);
+			character->SetZ(z);
 			character->Direction = direction;
 
 			character->m_Steps.clear();
@@ -984,12 +984,12 @@ void CGameWorld::UpdateGameObject(const uint &serial, ushort graphic, const ucha
 
 		character->Graphic = graphic & 0x3FFF;
 		character->Color = g_ColorManager.FixColor(color, (color & 0x8000));
-		character->Flags = flags;
+		character->SetFlags(flags);
 
-		LOG("NPC serial:0x%08X graphic:0x%04X color:0x%04X xyz:%d,%d,%d flags:0x%02X direction:%d notoriety:%d\n", obj->Serial, obj->Graphic, obj->Color, obj->X, obj->Y, obj->Z, obj->Flags, character->Direction, character->Notoriety);
+		LOG("NPC serial:0x%08X graphic:0x%04X color:0x%04X xyz:%d,%d,%d flags:0x%02X direction:%d notoriety:%d\n", obj->Serial, obj->Graphic, obj->Color, obj->GetX(), obj->GetY(), obj->GetZ(), obj->GetFlags(), character->Direction, character->Notoriety);
 	}
 
-	if (created && g_ConfigManager.ShowIncomingNames && !obj->Clicked && !obj->Name.length())
+	if (created && g_ConfigManager.ShowIncomingNames && !obj->Clicked && !obj->GetName().length())
 	{
 		if (obj->NPC || obj->IsCorpse())
 			g_Orion.Click(obj->Serial);
@@ -1006,9 +1006,9 @@ void CGameWorld::UpdatePlayer(const uint &serial, const ushort &graphic, const u
 
 		g_Walker.WalkingFailed = false;
 
-		g_Player->X = x;
-		g_Player->Y = y;
-		g_Player->Z = z;
+		g_Player->SetX(x);
+		g_Player->SetY(y);
+		g_Player->SetZ(z);
 
 		g_RemoveRangeXY.X = x;
 		g_RemoveRangeXY.Y = y;
@@ -1029,7 +1029,7 @@ void CGameWorld::UpdatePlayer(const uint &serial, const ushort &graphic, const u
 
 		//UpdatePlayerCoordinates(x, y, z, serverID);
 
-		g_Player->Flags = flags;
+		g_Player->SetFlags(flags);
 
 		g_Walker.DenyWalk(-1, -1, -1, -1);
 		g_Weather.Reset();
@@ -1058,8 +1058,8 @@ void CGameWorld::UpdatePlayer(const uint &serial, const ushort &graphic, const u
 //----------------------------------------------------------------------------------
 void CGameWorld::UpdateItemInContainer(CGameObject *obj, CGameObject *container, const int &x, const int &y)
 {
-	obj->X = x;
-	obj->Y = y;
+	obj->SetX(x);
+	obj->SetY(y);
 	PutContainer(obj, container);
 
 	uint containerSerial = container->Serial;
@@ -1177,7 +1177,7 @@ void CGameWorld::Dump(uchar tCount, uint serial)
 			IFOR(i, 0, tCount)
 				LOG("\t");
 
-			LOG("%s%08X:%04X[%04X](%%02X)*%i\tin 0x%08X XYZ=%i,%i,%i on Map %i\n", (obj->NPC ? "NPC: " : "Item: "), obj->Serial, obj->Graphic, obj->Color, /*obj->Layer,*/ obj->Count, obj->Container, obj->X, obj->Y, obj->Z, obj->MapIndex);
+			LOG("%s%08X:%04X[%04X](%%02X)*%i\tin 0x%08X XYZ=%i,%i,%i on Map %i\n", (obj->NPC ? "NPC: " : "Item: "), obj->Serial, obj->Graphic, obj->Color, /*obj->Layer,*/ obj->Count, obj->Container, obj->GetX(), obj->GetY(), obj->GetZ(), obj->MapIndex);
 
 			if (obj->m_Items != NULL)
 				Dump(tCount + 1, obj->Container);

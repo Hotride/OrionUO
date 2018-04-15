@@ -19,7 +19,7 @@ CGumpSpell::CGumpSpell(uint serial, short x, short y, ushort graphic, SPELLBOOK_
 	m_Locker.Serial = ID_GS_LOCK_MOVING;
 	BigIcon = false; // (graphic >= 0x5300 && graphic < 0x5500);
 
-	m_Blender = (CGUIAlphaBlending*)Add(new CGUIAlphaBlending(g_ConfigManager.TransparentSpellIcons, g_ConfigManager.SpellIconAlpha / 255.0f));
+	m_Blender = (CGUIAlphaBlending*)Add(new CGUIAlphaBlending(g_ConfigManager.TransparentSpellIcons, g_ConfigManager.GetSpellIconAlpha() / 255.0f));
 	Add(new CGUIGumppic(Graphic, 0, 0));
 
 	/*if (BigIcon)
@@ -182,7 +182,7 @@ CGumpSpell *CGumpSpell::GetNearSpell(int &x, int &y)
 	{
 		if (gump != this && gump->GumpType == GT_SPELL && ((CGumpSpell*)gump)->BigIcon == BigIcon)
 		{
-			int gumpX = gump->X;
+			int gumpX = gump->GetX();
 			int offsetX = abs(x - gumpX);
 			int passed = 0;
 
@@ -200,7 +200,7 @@ CGumpSpell *CGumpSpell::GetNearSpell(int &x, int &y)
 					passed = 2;
 			}
 
-			int gumpY = gump->Y;
+			int gumpY = gump->GetY();
 
 			if (abs(passed) == 1)
 			{
@@ -261,7 +261,7 @@ CGumpSpell *CGumpSpell::GetNearSpell(int &x, int &y)
 				{
 					if (testGump != this && testGump->GumpType == GT_SPELL && ((CGumpSpell*)testGump)->BigIcon == BigIcon)
 					{
-						if (testGump->X == testX && testGump->Y == testY)
+						if (testGump->GetX() == testX && testGump->GetY() == testY)
 							break;
 					}
 
@@ -323,8 +323,8 @@ void CGumpSpell::UpdateGroup(int x, int y)
 	{
 		if (gump != this)
 		{
-			gump->X += x;
-			gump->Y += y;
+			gump->SetX(gump->GetX() + x);
+			gump->SetY(gump->GetY() + y);
 
 			g_GumpManager.MoveToBack(gump);
 			//gump->WantRedraw = true;

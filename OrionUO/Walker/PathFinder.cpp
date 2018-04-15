@@ -51,7 +51,7 @@ bool CPathFinder::CreateItemsList(vector<CPathObject> &list, const int &x, const
 
 	for (CRenderWorldObject *obj = block->GetRender(bx, by); obj != NULL; obj = obj->m_NextXY)
 	{
-		if (g_CustomHouseGump != NULL && obj->Z < g_Player->Z)
+		if (g_CustomHouseGump != NULL && obj->GetZ() < g_Player->GetZ())
 			continue;
 
 		ushort graphic = obj->Graphic;
@@ -102,7 +102,7 @@ bool CPathFinder::CreateItemsList(vector<CPathObject> &list, const int &x, const
 					CGameCharacter *gc = (CGameCharacter*)obj;
 
 					if (!ignoreGameCharacters && !gc->Dead() && !gc->IgnoreCharacters())
-						list.push_back(CPathObject(POF_IMPASSABLE_OR_SURFACE, obj->Z, obj->Z + DEFAULT_CHARACTER_HEIGHT, DEFAULT_CHARACTER_HEIGHT, obj));
+						list.push_back(CPathObject(POF_IMPASSABLE_OR_SURFACE, obj->GetZ(), obj->GetZ() + DEFAULT_CHARACTER_HEIGHT, DEFAULT_CHARACTER_HEIGHT, obj));
 
 					canBeAdd = false;
 				}
@@ -159,7 +159,7 @@ bool CPathFinder::CreateItemsList(vector<CPathObject> &list, const int &x, const
 
 				if (flags)
 				{
-					int objZ = obj->Z;
+					int objZ = obj->GetZ();
 					int staticHeight = tileInfo->Height;
 					int staticAverageZ = staticHeight;
 
@@ -495,9 +495,9 @@ bool CPathFinder::Walk(bool run, uchar direction)
 	else if (!run)
 		run = g_ConfigManager.AlwaysRun;
 
-	int x = g_Player->X;
-	int y = g_Player->Y;
-	char z = g_Player->Z;
+	int x = g_Player->GetX();
+	int y = g_Player->GetY();
+	char z = g_Player->GetZ();
 	uchar oldDirection = g_Player->Direction;
 
 	bool onMount = (g_Player->FindLayer(OL_MOUNT) != NULL);
@@ -594,7 +594,7 @@ bool CPathFinder::Walk(bool run, uchar direction)
 	if (run)
 		direction += 0x80;
 
-	g_Player->m_Steps.push_back(CWalkData(x, y, z, direction, g_Player->Graphic, g_Player->Flags));
+	g_Player->m_Steps.push_back(CWalkData(x, y, z, direction, g_Player->Graphic, g_Player->GetFlags()));
 
 	CPacketWalkRequest(direction, g_Walker.WalkSequence, g_Player->m_FastWalkStack.GetValue()).Send();
 
@@ -868,7 +868,7 @@ bool CPathFinder::FindPath(int maxNodes)
 
 	m_ClosedList[0].X = m_StartPoint.X;
 	m_ClosedList[0].Y = m_StartPoint.Y;
-	m_ClosedList[0].Z = g_Player->Z;
+	m_ClosedList[0].Z = g_Player->GetZ();
 	m_ClosedList[0].m_Parent = NULL;
 
 	m_ClosedList[0].DistFromGoalCost = GetGoalDistCost(m_StartPoint, 0);
@@ -927,8 +927,8 @@ bool CPathFinder::WalkTo(int x, int y, int z, int distance)
 	IFOR(i, 0, PATHFINDER_MAX_NODES) //m_ActiveClosedNodes)
 		m_ClosedList[i].Reset();
 
-	m_StartPoint.X = g_Player->X;
-	m_StartPoint.Y = g_Player->Y;
+	m_StartPoint.X = g_Player->GetX();
+	m_StartPoint.Y = g_Player->GetY();
 	m_EndPoint.X = x;
 	m_EndPoint.Y = y;
 	m_GoalNode = 0;

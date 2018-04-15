@@ -19,7 +19,11 @@ public:
 	int Index = 0;
 
 	//!Статус навыка
-	SETGETE(uchar, Status, 0);
+protected:
+    uchar m_Status = 0;
+public:
+    uchar GetStatus() { return m_Status; };
+    void SetStatus(const uchar& val);
 
 private:
 	//!Текустуры текста

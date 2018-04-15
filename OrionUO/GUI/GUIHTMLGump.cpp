@@ -127,7 +127,7 @@ void CGUIHTMLGump::UpdateHeight(const int &height)
 	if (thDown != NULL)
 		sliderHeight -= thDown->Height;
 
-	m_ButtonDown->Y = sliderHeight;
+	m_ButtonDown->SetY(sliderHeight);
 
 	CGLTexture *thUp = g_Orion.ExecuteGump(m_ButtonUp->Graphic);
 
@@ -166,16 +166,16 @@ void CGUIHTMLGump::CalculateDataSize(CBaseGUI *item, int &startX, int &startY, i
 			continue;
 		}
 
-		if (item->X < startX)
-			startX = item->X;
+		if (item->GetX() < startX)
+			startX = item->GetX();
 
-		if (item->Y < startY)
-			startY = item->Y;
+		if (item->GetY() < startY)
+			startY = item->GetY();
 
 		WISP_GEOMETRY::CSize size = item->GetSize();
 
-		int curX = item->X + size.Width;
-		int curY = item->Y + size.Height;
+		int curX = item->GetX() + size.Width;
+		int curY = item->GetY() + size.Height;
 
 		if (curX > endX)
 			endX = curX;

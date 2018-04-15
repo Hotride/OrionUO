@@ -19,7 +19,7 @@ m_Variant(variant)
 	ID = id;
 	m_MinHeight = 200;
 
-	bool useUnicode = (g_PacketManager.ClientVersion >= CV_305D);
+	bool useUnicode = (g_PacketManager.GetClientVersion() >= CV_305D);
 	int unicodeFontIndex = 1;
 	int unicodeHeightOffset = 0;
 	ushort textColor = 0x0386;
@@ -140,13 +140,13 @@ void CGumpBulletinBoardItem::UpdateHeight()
 	CGumpBaseScroll::UpdateHeight();
 
 	if (m_ButtonPost != NULL)
-		m_ButtonPost->Y = Height - 22; //Post
+		m_ButtonPost->SetY(Height - 22); //Post
 
 	if (m_ButtonRemove != NULL)
-		m_ButtonRemove->Y = Height - 22; //Remove
+		m_ButtonRemove->SetY(Height - 22); //Remove
 
 	if (m_ButtonReply != NULL)
-		m_ButtonReply->Y = Height - 22; //Reply
+		m_ButtonReply->SetY(Height - 22); //Reply
 }
 //----------------------------------------------------------------------------------
 void CGumpBulletinBoardItem::RecalculateHeight()
@@ -180,7 +180,7 @@ void CGumpBulletinBoardItem::GUMP_BUTTON_EVENT_C
 			wstring subj(L"RE: ");
 			subj += m_EntrySubject->m_Entry.Data();
 
-			CGumpBulletinBoardItem *gump = new CGumpBulletinBoardItem(0, 0, 0, 0, ID, ToWString(g_Player->Name), subj, L"Date/Time", L"");
+			CGumpBulletinBoardItem *gump = new CGumpBulletinBoardItem(0, 0, 0, 0, ID, ToWString(g_Player->GetName()), subj, L"Date/Time", L"");
 
 			g_GumpManager.AddGump(gump);
 		}

@@ -55,13 +55,13 @@ void CGumpScreenMain::UpdateContent()
 
 	Add(new CGUIGumppic(0x157C, 0, 0));
 
-	if (g_PacketManager.ClientVersion >= CV_500A)
+	if (g_PacketManager.GetClientVersion() >= CV_500A)
 		Add(new CGUIGumppic(0x2329, 0, 0));
 
 	Add(new CGUIGumppic(0x15A0, 0, 4));
 	Add(new CGUIResizepic(0, 0x13BE, 128, 288, 451, 157));
 
-	if (g_PacketManager.ClientVersion < CV_500A)
+	if (g_PacketManager.GetClientVersion() < CV_500A)
 		Add(new CGUIGumppic(0x058A, 286, 45));
 
 	Add(new CGUIButton(ID_MS_QUIT, 0x1589, 0x158A, 0x158B, 555, 4));

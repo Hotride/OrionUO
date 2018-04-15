@@ -42,17 +42,17 @@ void CGameEffectMoving::Update(CGameObject *parent)
 
 		if (obj != NULL)
 		{
-			DestX = obj->X;
-			DestY = obj->Y;
-			DestZ = obj->Z;
+			DestX = obj->GetX();
+			DestY = obj->GetY();
+			DestZ = obj->GetZ();
 		}
 	}
 
 	int screenCenterX = g_RenderBounds.GameWindowCenterX;
 	int screenCenterY = g_RenderBounds.GameWindowCenterY;
 
-	int playerX = g_Player->X;
-	int playerY = g_Player->Y;
+	int playerX = g_Player->GetX();
+	int playerY = g_Player->GetY();
 
 	int offsetX = m_X - playerX;
 	int offsetY = m_Y - playerY;

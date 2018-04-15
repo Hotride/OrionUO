@@ -61,17 +61,17 @@ void CGumpContainer::UpdateItemCoordinates(CGameObject *item)
 	{
 		const CContainerOffsetRect &rect = g_ContainerOffset[Graphic].Rect;
 
-		if (item->X < rect.MinX)
-			item->X = rect.MinX;
+		if (item->GetX() < rect.MinX)
+			item->SetX(rect.MinX);
 
-		if (item->Y < rect.MinY)
-			item->Y = rect.MinY;
+		if (item->GetY() < rect.MinY)
+			item->SetY(rect.MinY);
 
-		if (item->X > rect.MinX + rect.MaxX)
-			item->X = rect.MinX + rect.MaxX;
+		if (item->GetX() > rect.MinX + rect.MaxX)
+			item->SetX(rect.MinX + rect.MaxX);
 
-		if (item->Y > rect.MinY + rect.MaxY)
-			item->Y = rect.MinY + rect.MaxY;
+		if (item->GetY() > rect.MinY + rect.MaxY)
+			item->SetY(rect.MinY + rect.MaxY);
 	}
 }
 //----------------------------------------------------------------------------------
@@ -200,7 +200,7 @@ void CGumpContainer::UpdateContent()
 
 		if (backpack != NULL && backpack->Serial == Serial)
 		{
-			switch (g_ConfigManager.CharacterBackpackStyle)
+			switch (g_ConfigManager.GetCharacterBackpackStyle())
 			{
 				case CBS_SUEDE:
 					graphic = 0x775E;
@@ -239,12 +239,12 @@ void CGumpContainer::UpdateContent()
 
 			if (IsGameBoard)
 			{
-				item = (CGUIGumppicHightlighted*)m_DataBox->Add(new CGUIGumppicHightlighted(obj->Serial, graphic - GAME_FIGURE_GUMP_OFFSET, obj->Color & 0x3FFF, 0x0035, obj->X, obj->Y - 20));
+				item = (CGUIGumppicHightlighted*)m_DataBox->Add(new CGUIGumppicHightlighted(obj->Serial, graphic - GAME_FIGURE_GUMP_OFFSET, obj->Color & 0x3FFF, 0x0035, obj->GetX(), obj->GetY() - 20));
 				item->PartialHue = false;
 			}
 			else
 			{
-				item = (CGUIGumppicHightlighted*)m_DataBox->Add(new CGUITilepicHightlighted(obj->Serial, graphic, obj->Color & 0x3FFF, 0x0035, obj->X, obj->Y, doubleDraw));
+				item = (CGUIGumppicHightlighted*)m_DataBox->Add(new CGUITilepicHightlighted(obj->Serial, graphic, obj->Color & 0x3FFF, 0x0035, obj->GetX(), obj->GetY(), doubleDraw));
 				item->PartialHue = IsPartialHue(g_Orion.GetStaticFlags(graphic));
 			}
 		}

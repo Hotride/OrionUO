@@ -158,10 +158,10 @@ void CGumpMap::PrepareContent()
 				int newX = g_MouseManager.Position.X - (m_X + 20);
 				int newY = g_MouseManager.Position.Y - (m_Y + 30);
 
-				WantRedraw = (m_PinOnCursor->X != newX || m_PinOnCursor->Y != newY);
+				WantRedraw = (m_PinOnCursor->GetX() != newX || m_PinOnCursor->GetY() != newY);
 
-				m_PinOnCursor->X = newX;
-				m_PinOnCursor->Y = newY;
+				m_PinOnCursor->SetX(newX);
+				m_PinOnCursor->SetY(newY);
 			}
 		}
 
@@ -181,8 +181,8 @@ void CGumpMap::GenerateFrame(const bool &stop)
 
 		QFOR(item, m_DataBox->m_Items, CBaseGUI*)
 		{
-			int drawX = item->X + 18;
-			int drawY = item->Y + 21;
+			int drawX = item->GetX() + 18;
+			int drawY = item->GetY() + 21;
 
 			if (item != m_PinOnCursor)
 			{
@@ -210,15 +210,15 @@ void CGumpMap::GenerateFrame(const bool &stop)
 
 		QFOR(item, m_DataBox->m_Items, CBaseGUI*)
 		{
-			int drawX = item->X + 18;
-			int drawY = item->Y + 21;
+			int drawX = item->GetX() + 18;
+			int drawY = item->GetY() + 21;
 
 			CBaseGUI *next = (CBaseGUI*)item->m_Next;
 
 			if (next != NULL)
 			{
-				int nextDrawX = next->X + 20;
-				int nextDrawY = next->Y + 30;
+				int nextDrawX = next->GetX() + 20;
+				int nextDrawY = next->GetY() + 30;
 
 				if (next == m_PinOnCursor || item == m_PinOnCursor)
 					glColor4f(0.87f, 0.87f, 0.87f, 1.0f);
@@ -254,7 +254,7 @@ void CGumpMap::GenerateFrame(const bool &stop)
 		}
 	}
 
-	if (g_ConfigManager.UseGLListsForInterface)
+	if (g_ConfigManager.GetUseGLListsForInterface())
 		glEndList();
 }
 //----------------------------------------------------------------------------------
@@ -270,15 +270,15 @@ CRenderObject *CGumpMap::Select()
 
 		QFOR(item, m_DataBox->m_Items, CBaseGUI*)
 		{
-			int drawX = item->X + 18;
-			int drawY = item->Y + 21;
+			int drawX = item->GetX() + 18;
+			int drawY = item->GetY() + 21;
 
 			CBaseGUI *next = (CBaseGUI*)item->m_Next;
 
 			if (next != NULL)
 			{
-				int nextDrawX = next->X + 20;
-				int nextDrawY = next->Y + 30;
+				int nextDrawX = next->GetX() + 20;
+				int nextDrawY = next->GetY() + 30;
 
 				int checkX = drawX + 2;
 				int checkY = drawY + 8;
@@ -309,7 +309,7 @@ void CGumpMap::GUMP_BUTTON_EVENT_C
 	if (serial == ID_GM_PLOT_COURSE || serial == ID_GM_STOP_PLOTTING) //Plot Course /Stop Plotting
 	{
 		CPacketMapMessage(Serial, MM_EDIT, m_PlotState).Send();
-		PlotState = !m_PlotState;
+		SetPlotState(!m_PlotState);
 
 		WantRedraw = true;
 	}
@@ -351,15 +351,15 @@ void CGumpMap::OnLeftMouseButtonUp()
 					int x = m_X;
 					int y = m_Y;
 
-					int drawX = x + first->X + 18;
-					int drawY = y + first->Y + 21;
+					int drawX = x + first->GetX() + 18;
+					int drawY = y + first->GetY() + 21;
 
 					CBaseGUI *next = (CBaseGUI*)first->m_Next;
 
 					if (next != NULL)
 					{
-						int nextDrawX = x + next->X + 20;
-						int nextDrawY = y + next->Y + 30;
+						int nextDrawX = x + next->GetX() + 20;
+						int nextDrawY = y + next->GetY() + 30;
 
 						int checkX = drawX + 2;
 						int checkY = drawY + 8;
@@ -408,8 +408,8 @@ void CGumpMap::OnLeftMouseButtonUp()
 			x = g_MouseManager.Position.X - (x - 4);
 			y = g_MouseManager.Position.Y - (y - 2);
 
-			m_PinOnCursor->X = x;
-			m_PinOnCursor->Y = y;
+			m_PinOnCursor->SetX(x);
+			m_PinOnCursor->SetY(y);
 
 			CPacketMapMessage(Serial, MM_MOVE, idx, x, y).Send();
 		}

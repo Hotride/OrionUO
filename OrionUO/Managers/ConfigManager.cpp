@@ -54,7 +54,7 @@ void CConfigManager::Init()
 	GameWindowX = 0;
 	GameWindowY = 0;
 
-	if (g_PacketManager.ClientVersion >= CV_70331)
+	if (g_PacketManager.GetClientVersion() >= CV_70331)
 		g_MaxViewRange = MAX_VIEW_RANGE_NEW;
 	else
 		g_MaxViewRange = MAX_VIEW_RANGE_OLD;
@@ -216,15 +216,15 @@ void CConfigManager::DefaultPage9()
 //---------------------------------------------------------------------------
 void CConfigManager::UpdateFeatures()
 {
-	DrawStatusState = DrawStatusState;
-	DrawStumps = DrawStumps;
-	MarkingCaves = MarkingCaves;
-	NoVegetation = NoVegetation;
-	NoAnimateFields = NoAnimateFields;
-	ApplyStateColorOnCharacters = ApplyStateColorOnCharacters;
-	ChangeFieldsGraphic = ChangeFieldsGraphic;
-	DrawAuraState = DrawAuraState;
-	NoDrawRoofs = NoDrawRoofs;
+	SetDrawStatusState(m_DrawStatusState);
+	SetDrawStumps(m_DrawStumps);
+	SetMarkingCaves(m_MarkingCaves);
+	SetNoVegetation(m_NoVegetation);
+	SetNoAnimateFields(m_NoAnimateFields);
+	SetApplyStateColorOnCharacters(m_ApplyStateColorOnCharacters);
+	SetChangeFieldsGraphic(m_ChangeFieldsGraphic);
+	SetDrawAuraState(m_DrawAuraState);
+	SetNoDrawRoofs(m_NoDrawRoofs);
 }
 //---------------------------------------------------------------------------
 void CConfigManager::SetSound(const bool &val)
@@ -603,7 +603,7 @@ void CConfigManager::SetItemPropertiesMode(const uchar &val)
 		CGumpPropertyIcon *gump = (CGumpPropertyIcon*)g_GumpManager.UpdateContent(0, 0, GT_PROPERTY_ICON);
 
 		if (gump != NULL && (val == OPM_AT_ICON || val == OPM_ALWAYS_UP))
-			gump->Text = gump->Text;
+			gump->SetText(gump->GetText());
 
 		g_ObjectPropertiesManager.Reset();
 	}
@@ -623,7 +623,7 @@ void CConfigManager::SetItemPropertiesIcon(const bool &val)
 
 			if (gump == NULL)
 			{
-				WISP_GEOMETRY::CSize windowSize = g_OrionWindow.Size;
+				WISP_GEOMETRY::CSize windowSize = g_OrionWindow.GetSize();
 
 				int x = GameWindowX + (int)(GameWindowWidth * 0.9f);
 				int y = GameWindowY + GameWindowHeight;
@@ -740,8 +740,8 @@ bool CConfigManager::LoadBin(string path)
 
 		if (file.ReadInt8() == 1)
 		{
-			Sound = file.ReadUInt8();
-			Music = file.ReadUInt8();
+			SetSound(file.ReadUInt8());
+			SetMusic(file.ReadUInt8());
 			FootstepsSound = file.ReadUInt8();
 			CombatMusic = file.ReadUInt8();
 			m_SoundVolume = file.ReadUInt8();
@@ -783,7 +783,7 @@ bool CConfigManager::LoadBin(string path)
 		bool noDrawRoofs = false;
 		HighlightTargetByType = true;
 		AutoDisplayWorldMap = false;
-		UseGLListsForInterface = false;
+		SetUseGLListsForInterface(false);
 		CheckPing = true;
 		m_PingTimer = 10;
 		CancelNewTargetSystemOnShiftEsc = false;
@@ -793,7 +793,7 @@ bool CConfigManager::LoadBin(string path)
 		{
 			if (blockSize > 23)
 			{
-				ClientFPS = file.ReadUInt8();
+				SetClientFPS(file.ReadUInt8());
 				m_UseScaling = file.ReadUInt8();
 				RemoveTextWithBlending = file.ReadUInt8();
 				m_DrawStatusState = file.ReadUInt8();
@@ -860,7 +860,7 @@ bool CConfigManager::LoadBin(string path)
 			}
 			else if (blockSize > 2)
 			{
-				ClientFPS = file.ReadUInt8();
+				SetClientFPS(file.ReadUInt8());
 
 				if (blockSize > 3)
 				{
@@ -921,22 +921,22 @@ bool CConfigManager::LoadBin(string path)
 				}
 			}
 			else
-				ClientFPS = 32;
+				SetClientFPS(32);
 		}
 		else
-			ClientFPS = 32;
+			SetClientFPS(32);
 
-		DrawStumps = drawStumps;
-		MarkingCaves = markingCaves;
-		ChangeFieldsGraphic = changeFieldsGraphic;
-		PaperdollSlots = paperdollSlots;
-		ScaleImagesInPaperdollSlots = scaleImagesInPaperdollSlots;
-		UseGlobalMapLayer = useGlobalMapLayer;
-		NoDrawRoofs = noDrawRoofs;
-		ApplyStateColorOnCharacters = applyStateColorOnCharacters;
-		DrawAuraState = drawAuraState;
-		NoVegetation = noVegetation;
-		NoAnimateFields = noAnimateFields;
+		SetDrawStumps(drawStumps);
+		SetMarkingCaves(markingCaves);
+		SetChangeFieldsGraphic(changeFieldsGraphic);
+		SetPaperdollSlots(paperdollSlots);
+		SetScaleImagesInPaperdollSlots(scaleImagesInPaperdollSlots);
+		SetUseGlobalMapLayer(useGlobalMapLayer);
+		SetNoDrawRoofs(noDrawRoofs);
+		SetApplyStateColorOnCharacters(applyStateColorOnCharacters);
+		SetDrawAuraState(drawAuraState);
+		SetNoVegetation(noVegetation);
+		SetNoAnimateFields(noAnimateFields);
 		
 		file.Ptr = next;
 		
@@ -1006,7 +1006,7 @@ bool CConfigManager::LoadBin(string path)
 				m_ItemPropertiesMode = file.ReadUInt8();
 				m_ItemPropertiesIcon = file.ReadUInt8();
 				ObjectHandles = file.ReadUInt8();
-				ReduceFPSUnactiveWindow = file.ReadUInt8();
+				SetReduceFPSUnactiveWindow(file.ReadUInt8());
 
 				if (blockSize > 14)
 				{
@@ -1030,7 +1030,7 @@ bool CConfigManager::LoadBin(string path)
 				m_ItemPropertiesMode = OPM_FOLLOW_MOUSE;
 				m_ItemPropertiesIcon = false;
 				ObjectHandles = false;
-				ReduceFPSUnactiveWindow = true;
+				SetReduceFPSUnactiveWindow(true);
 			}
 		}
 		
@@ -1092,7 +1092,7 @@ bool CConfigManager::LoadBin(string path)
 			ShowIncomingNames = file.ReadUInt8();
 			UseCircleTrans = file.ReadUInt8();
 			StatReport = file.ReadUInt8();
-			ConsoleNeedEnter = file.ReadUInt8();
+			SetConsoleNeedEnter(file.ReadUInt8());
 			CircleTransRadius = file.ReadUInt8();
 			SkillReport = file.ReadUInt8();
 			SpeechFont = file.ReadUInt16LE();
@@ -1396,13 +1396,13 @@ bool CConfigManager::Load(const string &path)
 			{
 				//Page 1
 				case CMKC_SOUND:
-					Sound = ToBool(strings[1]);
+					SetSound(ToBool(strings[1]));
 					break;
 				case CMKC_SOUND_VOLUME:
 					m_SoundVolume = atoi(strings[1].c_str());
 					break;
 				case CMKC_MUSIC:
-					Music = ToBool(strings[1]);
+					SetMusic(ToBool(strings[1]));
 					break;
 				case CMKC_MUSIC_VOLUME:
 					m_MusicVolume = atoi(strings[1].c_str());
@@ -1419,7 +1419,7 @@ bool CConfigManager::Load(const string &path)
 
 				//Page 2
 				case CMKC_CLIENT_FPS:
-					ClientFPS = atoi(strings[1].c_str());
+					SetClientFPS(atoi(strings[1].c_str()));
 					break;
 				case CMKC_USE_SCALING:
 					m_UseScaling = ToBool(strings[1]);
@@ -1431,16 +1431,16 @@ bool CConfigManager::Load(const string &path)
 					m_DrawStatusState = atoi(strings[1].c_str());
 					break;
 				case CMKC_DRAW_STUMPS:
-					DrawStumps = ToBool(strings[1]);
+					SetDrawStumps(ToBool(strings[1]));
 					break;
 				case CMKC_MARKING_CAVES:
-					MarkingCaves = ToBool(strings[1]);
+					SetMarkingCaves(ToBool(strings[1]));
 					break;
 				case CMKC_NO_ANIMATE_FIELDS:
-					NoAnimateFields = ToBool(strings[1]);
+					SetNoAnimateFields(ToBool(strings[1]));
 					break;
 				case CMKC_NO_VEGETATION:
-					NoVegetation = ToBool(strings[1]);
+					SetNoVegetation(ToBool(strings[1]));
 					break;
 				case CMKC_HIDDEN_CHARACTERS_RENDER_MODE:
 					HiddenCharactersRenderMode = atoi(strings[1].c_str());
@@ -1464,13 +1464,13 @@ bool CConfigManager::Load(const string &path)
 					m_OriginalPartyStatusbar = ToBool(strings[1]);
 					break;
 				case CMKC_APPLY_STATE_COLOR_ON_CHARACTERS:
-					ApplyStateColorOnCharacters = ToBool(strings[1]);
+					SetApplyStateColorOnCharacters(ToBool(strings[1]));
 					break;
 				case CMKC_CHANGE_FIELDS_GRAPHIC:
-					ChangeFieldsGraphic = ToBool(strings[1]);
+					SetChangeFieldsGraphic(ToBool(strings[1]));
 					break;
 				case CMKC_PAPERDOLL_SLOTS:
-					PaperdollSlots = ToBool(strings[1]);
+					SetPaperdollSlots(ToBool(strings[1]));
 					break;
 				case CMKC_DRAW_STATUS_CONDITION_STATE:
 					DrawStatusConditionState = atoi(strings[1].c_str());
@@ -1485,7 +1485,7 @@ bool CConfigManager::Load(const string &path)
 					ShowDefaultConsoleEntryMode = ToBool(strings[1]);
 					break;
 				case CMKC_DRAW_AURA_STATE:
-					DrawAuraState = atoi(strings[1].c_str());
+					SetDrawAuraState(atoi(strings[1].c_str()));
 					break;
 				case CMKC_DRAW_AURA_WITH_CTRL_PRESSED:
 					DrawAuraWithCtrlPressed = ToBool(strings[1]);
@@ -1494,7 +1494,7 @@ bool CConfigManager::Load(const string &path)
 					ScreenshotFormat = atoi(strings[1].c_str());
 					break;
 				case CMKC_SCALE_IMAGES_IN_PAPERDOLL_SLOTS:
-					ScaleImagesInPaperdollSlots = ToBool(strings[1]);
+					SetScaleImagesInPaperdollSlots(ToBool(strings[1]));
 					break;
 				case CMKC_REMOVE_OR_CREATE_OBJECTS_WITH_BLENDING:
 					RemoveOrCreateObjectsWithBlending = ToBool(strings[1]);
@@ -1503,10 +1503,10 @@ bool CConfigManager::Load(const string &path)
 					DrawHelmetsOnShroud = ToBool(strings[1]);
 					break;
 				case CMKC_USE_GLOBAL_MAP_LAYER:
-					UseGlobalMapLayer = ToBool(strings[1]);
+					SetUseGlobalMapLayer(ToBool(strings[1]));
 					break;
 				case CMKC_NO_DRAW_ROOFS:
-					NoDrawRoofs = ToBool(strings[1]);
+					SetNoDrawRoofs(ToBool(strings[1]));
 					break;
 				case CMKC_HIGHLIGHT_TARGET_BY_TYPE:
 					HighlightTargetByType = ToBool(strings[1]);
@@ -1515,13 +1515,13 @@ bool CConfigManager::Load(const string &path)
 					AutoDisplayWorldMap = ToBool(strings[1]);
 					break;
 				case CMKC_USE_GL_LISTS_FOR_INTERFACE:
-					UseGLListsForInterface = ToBool(strings[1]);
+					SetUseGLListsForInterface(ToBool(strings[1]));
 					break;
 				case CMKC_CHECK_PING:
 					CheckPing = ToBool(strings[1]);
 					break;
 				case CMKC_PING_TIMER:
-					PingTimer = atoi(strings[1].c_str());
+					SetPingTimer(atoi(strings[1].c_str()));
 					break;
 				case CMKC_CANCEL_NEW_TARGET_SYSTEM_ON_SHIFT_ESC:
 					CancelNewTargetSystemOnShiftEsc = ToBool(strings[1]);
@@ -1632,7 +1632,7 @@ bool CConfigManager::Load(const string &path)
 					ObjectHandles = ToBool(strings[1]);
 					break;
 				case CMKC_REDUCE_FPS_UNACTIVE_WINDOW:
-					ReduceFPSUnactiveWindow = ToBool(strings[1]);
+					SetReduceFPSUnactiveWindow(ToBool(strings[1]));
 					break;
 				case CMKC_HOLD_SHIFT_FOR_CONTEXT_MENUS:
 					HoldShiftForContextMenus = ToBool(strings[1]);
@@ -1734,7 +1734,7 @@ bool CConfigManager::Load(const string &path)
 					StatReport = ToBool(strings[1]);
 					break;
 				case CMKC_CONSOLE_NEED_ENTER:
-					ConsoleNeedEnter = ToBool(strings[1]);
+					SetConsoleNeedEnter(ToBool(strings[1]));
 					break;
 				case CMKC_CIRCLE_TRANS_RADIUS:
 					CircleTransRadius = atoi(strings[1].c_str());
@@ -1941,7 +1941,7 @@ void CConfigManager::Save(const string &path)
 		writter.WriteBool("HoldShiftForEnablePathfind", HoldShiftForEnablePathfind);
 		writter.WriteInt("ContainerDefaultX", g_ContainerRect.DefaultX);
 		writter.WriteInt("ContainerDefaultY", g_ContainerRect.DefaultY);
-		writter.WriteInt("CharacterBackpackStyle", CharacterBackpackStyle);
+		writter.WriteInt("CharacterBackpackStyle", GetCharacterBackpackStyle());
 
 		//Page 7
 		writter.WriteInt("GameWindowWidth", GameWindowWidth);

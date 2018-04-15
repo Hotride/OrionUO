@@ -106,11 +106,11 @@ CBaseGUI *CGUISkillItem::SelectedItem()
 	WISPFUN_DEBUG("c76_f7");
 	CBaseGUI *selected = this;
 
-	if (g_Orion.PolygonePixelsInXY(m_X + m_ButtonStatus->X, m_Y + m_ButtonStatus->Y, 14, 14))
+	if (g_Orion.PolygonePixelsInXY(m_X + m_ButtonStatus->GetX(), m_Y + m_ButtonStatus->GetY(), 14, 14))
 		selected = m_ButtonStatus;
 	else if (m_ButtonUse != NULL)
 	{
-		if (g_Orion.GumpPixelsInXY(m_ButtonUse->Graphic, m_X + m_ButtonUse->X, m_Y + m_ButtonUse->Y))
+		if (g_Orion.GumpPixelsInXY(m_ButtonUse->Graphic, m_X + m_ButtonUse->GetX(), m_Y + m_ButtonUse->GetY()))
 			selected = m_ButtonUse;
 	}
 

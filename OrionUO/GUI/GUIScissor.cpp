@@ -26,7 +26,7 @@ void CGUIScissor::Draw(const bool &checktrans)
 	WISPFUN_DEBUG("c70_f1");
 	if (Enabled)
 	{
-		if (!g_ConfigManager.UseGLListsForInterface)
+		if (!g_ConfigManager.GetUseGLListsForInterface())
 		{
 			int x = m_X;
 			int y = m_Y;
@@ -40,7 +40,7 @@ void CGUIScissor::Draw(const bool &checktrans)
 			g_GL.PushScissor(BaseX + x, BaseY + y, Width, Height);
 		}
 		else
-			g_GL.PushScissor((int)g_GumpTranslate.X + BaseX + m_X, g_OrionWindow.Size.Height - ((int)g_GumpTranslate.Y + BaseY + m_Y) - Height, Width, Height);
+			g_GL.PushScissor((int)g_GumpTranslate.X + BaseX + m_X, g_OrionWindow.GetSize().Height - ((int)g_GumpTranslate.Y + BaseY + m_Y) - Height, Width, Height);
 	}
 	else
 		g_GL.PopScissor();

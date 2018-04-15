@@ -77,7 +77,7 @@ void CCharacterListScreen::ProcessSmoothAction(uchar action)
 		if (g_CharacterList.GetSelectedName().length())
 		{
 			g_Orion.InitScreen(GS_DELETE);
-			g_ConnectionScreen.Type = CST_CHARACTER_LIST;
+			g_ConnectionScreen.SetType(CST_CHARACTER_LIST);
 		}
 	}
 }

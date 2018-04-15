@@ -458,7 +458,7 @@ void CAnimationManager::Load(puint verdata)
 void CAnimationManager::InitIndexReplaces(puint verdata)
 {
 	WISPFUN_DEBUG("c133_f4");
-	if (g_PacketManager.ClientVersion >= CV_500A)
+	if (g_PacketManager.GetClientVersion() >= CV_500A)
 	{
 		static const string typeNames[5] = { "monster", "sea_monster", "animal", "human", "equipment" };
 
@@ -519,7 +519,7 @@ void CAnimationManager::InitIndexReplaces(puint verdata)
 		}
 	}
 
-	if (g_PacketManager.ClientVersion < CV_305D) //CV_204C
+	if (g_PacketManager.GetClientVersion() < CV_305D) //CV_204C
 		return;
 
 	WISP_FILE::CTextFileParser newBodyParser("", " \t,{}", "#;//", "");
@@ -720,7 +720,7 @@ void CAnimationManager::InitIndexReplaces(puint verdata)
 					CIndexAnimation &dataIndex = m_DataIndex[index];
 					dataIndex.MountedHeightOffset = mountedHeightOffset;
 
-					if (g_PacketManager.ClientVersion < CV_500A || groupType == AGT_UNKNOWN)
+					if (g_PacketManager.GetClientVersion() < CV_500A || groupType == AGT_UNKNOWN)
 					{
 						if (realAnimID >= 200)
 						{
@@ -1644,7 +1644,7 @@ void CAnimationManager::DrawCharacter(CGameCharacter *obj, int x, int y)
 	{
 		Color = 0;
 
-		if (g_ConfigManager.ApplyStateColorOnCharacters)
+		if (g_ConfigManager.GetApplyStateColorOnCharacters())
 		{
 			if (obj->Poisoned() || obj->SA_Poisoned)
 				Color = 0x0044;
@@ -1764,7 +1764,7 @@ void CAnimationManager::DrawCharacter(CGameCharacter *obj, int x, int y)
 					int xOffset = mirror ? -20 : 0;
 					int yOffset = -70;
 
-					g_GL.PushScissor(drawX + xOffset, g_OrionWindow.Size.Height - drawY + yOffset - 40, 20, 40);
+					g_GL.PushScissor(drawX + xOffset, g_OrionWindow.GetSize().Height - drawY + yOffset - 40, 20, 40);
 					bool selected = g_SelectedObject.Object == ro;
 					g_Orion.DrawStaticArt(sittingData.Graphic, selected ? 0x0035 : ro->Color, ro->RealDrawX, ro->RealDrawY, !selected);
 					g_GL.PopScissor();

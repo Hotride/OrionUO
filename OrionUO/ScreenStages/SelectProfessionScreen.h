@@ -13,7 +13,11 @@
 class CSelectProfessionScreen : public CBaseScreen
 {
 	//!Выбранный навык
-	SETGETE(int, SkillSelection, 0);
+protected:
+    int m_SkillSelection = 0;
+public:
+    int GetSkillSelection() { return m_SkillSelection; };
+    void SetSkillSelection(const int& val);
 
 private:
 	CGumpScreenSelectProfession m_SelectProfessionGump;

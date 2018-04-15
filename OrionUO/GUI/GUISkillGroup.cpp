@@ -15,8 +15,8 @@ CGUISkillGroup::CGUISkillGroup(const uint &serial, const uint &minimizeSerial, C
 : CBaseGUI(GOT_SKILLGROUP, serial, 0, 0, x, y)
 {
 	WISPFUN_DEBUG("c75_f1");
-	Minimized = !group->Maximized;
-	ushort graphic = (Minimized ? 0x0827 : 0x0826);
+	SetMinimized(!group->Maximized);
+	ushort graphic = (GetMinimized() ? 0x0827 : 0x0826);
 	m_Minimizer = new CGUIButton(minimizeSerial, graphic, graphic, graphic, 0, 0);
 
 	m_Name = new CGUITextEntry(serial, 0, 0, 0, 16, -5, 0, false, 6);
@@ -47,7 +47,7 @@ void CGUISkillGroup::UpdateDataPositions()
 
 	QFOR(item, m_Items, CBaseGUI*)
 	{
-		item->Y = y;
+		item->SetY(y);
 		y += 17;
 	}
 }
@@ -74,9 +74,9 @@ CBaseGUI *CGUISkillGroup::SelectedItem()
 	WISPFUN_DEBUG("c75_f7");
 	CBaseGUI *selected = m_Name;
 
-	if (g_Orion.PolygonePixelsInXY(m_X + m_Minimizer->X, m_Y + m_Minimizer->Y, 14, 14))
+	if (g_Orion.PolygonePixelsInXY(m_X + m_Minimizer->GetX(), m_Y + m_Minimizer->GetY(), 14, 14))
 		selected = m_Minimizer;
-	else if (!Minimized)
+	else if (!GetMinimized())
 	{
 		WISP_GEOMETRY::CPoint2Di oldMouse = g_MouseManager.Position;
 		g_MouseManager.Position = WISP_GEOMETRY::CPoint2Di(oldMouse.X - m_X, oldMouse.Y - (m_Y + 19));
@@ -105,7 +105,7 @@ WISP_GEOMETRY::CSize CGUISkillGroup::GetSize()
 	WISPFUN_DEBUG("c75_f8");
 	WISP_GEOMETRY::CSize size(220, 19);
 
-	if (!Minimized && m_Items != NULL)
+	if (!GetMinimized() && m_Items != NULL)
 		size.Height += GetItemsCount() * 17;
 
 	return size;
@@ -139,7 +139,7 @@ void CGUISkillGroup::Draw(const bool &checktrans)
 			g_Orion.DrawGump(0x0835, 0, x, 5, width, 0);
 	}
 
-	if (!Minimized && m_Items != NULL)
+	if (!GetMinimized() && m_Items != NULL)
 	{
 		glTranslatef(0.0f, 19.0f, 0.0f);
 
@@ -160,7 +160,7 @@ bool CGUISkillGroup::Select()
 
 	bool result = (x >= 0 && y >= 0 && x < 220 && y < 19);
 
-	if (!Minimized && !result)
+	if (!GetMinimized() && !result)
 	{
 		WISP_GEOMETRY::CPoint2Di oldMouse = g_MouseManager.Position;
 		g_MouseManager.Position = WISP_GEOMETRY::CPoint2Di(oldMouse.X - m_X, oldMouse.Y - (m_Y + 19));

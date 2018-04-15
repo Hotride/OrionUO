@@ -659,8 +659,8 @@ PACKET_HANDLER(LoginError)
 	WISPFUN_DEBUG("c150_f12");
 	if (g_GameState == GS_MAIN_CONNECT || g_GameState == GS_SERVER_CONNECT || g_GameState == GS_GAME_CONNECT)
 	{
-		g_ConnectionScreen.ConnectionFailed = true;
-		g_ConnectionScreen.ErrorCode = ReadUInt8();
+		g_ConnectionScreen.SetConnectionFailed(true);
+		g_ConnectionScreen.SetErrorCode(ReadUInt8());
 		g_ConnectionManager.Disconnect();
 	}
 }
@@ -740,7 +740,7 @@ PACKET_HANDLER(CharacterList)
 	g_CharacterList.OnePerson = (bool)(g_ClientFlag & CLF_ONE_CHARACTER_SLOT);
 	//g_SendLogoutNotification = (bool)(g_ClientFlag & LFF_RE);
 	g_PopupEnabled = (bool)(g_ClientFlag & CLF_CONTEXT_MENU);
-	g_TooltipsEnabled = (bool)((g_ClientFlag & CLF_PALADIN_NECROMANCER_TOOLTIPS) && (g_PacketManager.ClientVersion >= CV_308Z));
+	g_TooltipsEnabled = (bool)((g_ClientFlag & CLF_PALADIN_NECROMANCER_TOOLTIPS) && (g_PacketManager.GetClientVersion() >= CV_308Z));
 	g_PaperdollBooks = (bool)(g_ClientFlag & CLF_PALADIN_NECROMANCER_TOOLTIPS);
 
 	g_CharacterListScreen.UpdateContent();
@@ -858,14 +858,14 @@ PACKET_HANDLER(EnterWorld)
 	Move(4); //unused
 
 	if (strlen(g_SelectedCharName))
-		g_Player->Name = g_SelectedCharName;
+		g_Player->GetName() = g_SelectedCharName;
 
 	g_Player->Graphic = ReadUInt16BE();
 	g_Player->OnGraphicChange();
 
-	g_Player->X = ReadUInt16BE();
-	g_Player->Y = ReadUInt16BE();
-	g_Player->Z = (char)ReadUInt16BE();
+	g_Player->SetX(ReadUInt16BE());
+	g_Player->SetY(ReadUInt16BE());
+	g_Player->SetZ((char)ReadUInt16BE());
 	g_Player->Direction = ReadUInt8();
 	/*Move(1); //serverID
 	Move(4); //unused
@@ -874,8 +874,8 @@ PACKET_HANDLER(EnterWorld)
 	Move(2); //serverBoundaryWidth
 	Move(2); //serverBoundaryHeight*/
 
-	g_RemoveRangeXY.X = g_Player->X;
-	g_RemoveRangeXY.Y = g_Player->Y;
+	g_RemoveRangeXY.X = g_Player->GetX();
+	g_RemoveRangeXY.Y = g_Player->GetY();
 
 	UOI_PLAYER_XYZ_DATA xyzData = { g_RemoveRangeXY.X, g_RemoveRangeXY.Y, 0 };
 	g_PluginManager.WindowProc(g_OrionWindow.Handle, UOMSG_UPDATE_REMOVE_POS, (WPARAM)&xyzData, 0);
@@ -1026,7 +1026,7 @@ PACKET_HANDLER(NewHealthbarUpdate)
 		ushort type = ReadUInt16BE();
 		uchar enable = ReadUInt8(); //enable/disable
 
-		uchar flags = obj->Flags;
+		uchar flags = obj->GetFlags();
 
 		if (type == 1) //Poison, enable as poisonlevel + 1
 		{
@@ -1058,7 +1058,7 @@ PACKET_HANDLER(NewHealthbarUpdate)
 		{
 		}
 
-		obj->Flags = flags;
+		obj->SetFlags(flags);
 	}
 
 	g_GumpManager.UpdateContent(serial, 0, GT_STATUSBAR);
@@ -1098,7 +1098,7 @@ PACKET_HANDLER(CharacterStatus)
 		return;
 
 	string name = ReadString(30);
-	obj->Name = name;
+	obj->GetName() = name;
 
 	obj->Hits = ReadInt16BE();
 	obj->MaxHits = ReadInt16BE();
@@ -1215,7 +1215,7 @@ PACKET_HANDLER(CharacterStatus)
 				g_Player->LowerManaCost = ReadInt16BE();
 			}
 
-			if (!g_ConnectionScreen.Completed && g_PacketLoginComplete)
+			if (!g_ConnectionScreen.GetCompleted() && g_PacketLoginComplete)
 				g_Orion.LoginComplete(false);
 		}
 	}
@@ -1357,13 +1357,13 @@ PACKET_HANDLER(UpdateObject)
 	{
 		if (g_Player != NULL)
 		{
-			bool updateStatusbar = (g_Player->Flags != flags);
+			bool updateStatusbar = (g_Player->GetFlags() != flags);
 
 			oldDead = g_Player->Dead();
 			g_Player->Graphic = graphic;
 			g_Player->OnGraphicChange(1000);
 			g_Player->Color = g_ColorManager.FixColor(color);
-			g_Player->Flags = flags;
+			g_Player->SetFlags(flags);
 
 			if (updateStatusbar)
 				g_GumpManager.UpdateContent(serial, 0, GT_STATUSBAR);
@@ -1594,10 +1594,10 @@ PACKET_HANDLER(DenyMoveItem)
 					obj->Graphic = g_ObjectInHand.Graphic;
 					obj->Color = g_ObjectInHand.Color;
 					obj->Count = g_ObjectInHand.TotalCount;
-					obj->Flags = g_ObjectInHand.Flags;
-					obj->X = g_ObjectInHand.X;
-					obj->Y = g_ObjectInHand.Y;
-					obj->Z = g_ObjectInHand.Z;
+					obj->SetFlags(g_ObjectInHand.Flags);
+					obj->SetX(g_ObjectInHand.X);
+					obj->SetY(g_ObjectInHand.Y);
+					obj->SetZ(g_ObjectInHand.Z);
 					obj->OnGraphicChange();
 
 					CGameObject *container = g_World->FindWorldObject(g_ObjectInHand.Container);
@@ -1735,7 +1735,7 @@ PACKET_HANDLER(DeleteObject)
 							{
 								if (go1->Type == GOT_BB_OBJECT)
 								{
-									go1->Y = posY;
+									go1->SetY(posY);
 									posY += 18;
 								}
 							}
@@ -1798,7 +1798,7 @@ PACKET_HANDLER(UpdateCharacter)
 
 	if (obj->IsPlayer())
 	{
-		obj->Flags = flags;
+		obj->SetFlags(flags);
 	}
 	else
 	{
@@ -1806,9 +1806,9 @@ PACKET_HANDLER(UpdateCharacter)
 		{
 			CWalkData &wd = obj->m_Steps.back();
 
-			obj->X = wd.X;
-			obj->Y = wd.Y;
-			obj->Z = wd.Z;
+			obj->SetX(wd.X);
+			obj->SetY(wd.Y);
+			obj->SetZ(wd.Z);
 			obj->Direction = wd.Direction;
 
 			obj->m_Steps.clear();
@@ -2056,7 +2056,7 @@ PACKET_HANDLER(OpenContainer)
 					continue;
 				}
 
-				bool reverse = (item->X > 1);
+				bool reverse = (item->GetX() > 1);
 
 				if (reverse)
 				{
@@ -2076,7 +2076,7 @@ PACKET_HANDLER(OpenContainer)
 
 				while (item != NULL)
 				{
-					CGUIShopItem *shopItem = (CGUIShopItem*)htmlGump->Add(new CGUIShopItem(item->Serial, item->Graphic, item->Color, item->Count, item->Price, item->Name, 0, currentY));
+					CGUIShopItem *shopItem = (CGUIShopItem*)htmlGump->Add(new CGUIShopItem(item->Serial, item->Graphic, item->Color, item->Count, item->Price, item->GetName(), 0, currentY));
 					shopItem->NameFromCliloc = item->NameFromCliloc;
 
 					if (!currentY)
@@ -2136,8 +2136,8 @@ PACKET_HANDLER(OpenContainer)
 			{
 				if (cont->Serial == serial)
 				{
-					gump->X = cont->X;
-					gump->Y = cont->Y;
+					gump->SetX(cont->X);
+					gump->SetY(cont->Y);
 					gump->Minimized = cont->Minimized;
 					gump->MinimizedX = cont->MinimizedX;
 					gump->MinimizedY = cont->MinimizedY;
@@ -2363,7 +2363,7 @@ PACKET_HANDLER(ExtendedCommand)
 				str = g_ClilocManager.Cliloc(g_Language)->GetW(clilocNum, true);
 				if (str.length() > 0)
 				{
-					item->Name = ToString(str);
+					item->SetName(ToString(str));
 				}
 				
 				g_Orion.CreateUnicodeTextMessage(TT_OBJECT, serial, 0x03, 0x3B2, str);
@@ -2660,21 +2660,21 @@ PACKET_HANDLER(ExtendedCommand)
 				text->Type = TT_OBJECT;
 				text->Text = std::to_string(damage);
 				text->GenerateTexture(0);
-				text->X = text->m_Texture.Width / 2;
+				text->SetX(text->m_Texture.Width / 2);
 				int height = text->m_Texture.Height;
 
 				CTextData *head = (CTextData*)character->m_DamageTextControl.Last();
 
 				if (head != NULL)
 				{
-					height += head->Y;
+					height += head->GetY();
 
 					if (height > 0)
 					{
 						if (height > 100)
 							height = 0;
 
-						text->Y = height;
+						text->SetY(height);
 					}
 				}
 
@@ -2781,8 +2781,8 @@ PACKET_HANDLER(Talk)
 			if (Size > 44)
 			{
 				Ptr = Start + 44;
-				g_ConnectionScreen.ConnectionFailed = true;
-				g_ConnectionScreen.Message = ReadString(0);
+				g_ConnectionScreen.SetConnectionFailed(true);
+				g_ConnectionScreen.GetText() = ReadString(0);
 			}
 		}
 
@@ -2841,9 +2841,9 @@ PACKET_HANDLER(Talk)
 		{			
 			//reset
 			obj->JournalPrefix = "";
-			if (!obj->Name.length())
+			if (!obj->GetName().length())
 			{
-				obj->Name = name;
+				obj->GetName() = name;
 
 				if (obj->NPC)
 					g_GumpManager.UpdateContent(serial, 0, GT_STATUSBAR);
@@ -2851,8 +2851,8 @@ PACKET_HANDLER(Talk)
 
 			if (type == ST_SYSTEM)
 				obj->JournalPrefix = "You see: ";
-			else if (obj->Name.length())
-				obj->JournalPrefix = obj->Name + ": ";
+			else if (obj->GetName().length())
+				obj->JournalPrefix = obj->GetName() + ": ";
 		}
 
 		g_Orion.CreateTextMessage(TT_OBJECT, serial, (uchar)font, textColor, str);
@@ -2878,8 +2878,8 @@ PACKET_HANDLER(UnicodeTalk)
 			if (Size > 48)
 			{
 				Ptr = Start + 48;
-				g_ConnectionScreen.ConnectionFailed = true;
-				g_ConnectionScreen.Message = ToString(ReadWString((Size - 48) / 2));
+				g_ConnectionScreen.SetConnectionFailed(true);
+				g_ConnectionScreen.GetText() = ToString(ReadWString((Size - 48) / 2));
 			}
 		}
 
@@ -2948,9 +2948,9 @@ PACKET_HANDLER(UnicodeTalk)
 			//reset
 			obj->JournalPrefix = "";
 
-			if (!obj->Name.length())
+			if (!obj->GetName().length())
 			{
-				obj->Name = name;
+				obj->GetName() = name;
 
 				if (obj->NPC)
 					g_GumpManager.UpdateContent(serial, 0, GT_STATUSBAR);
@@ -2958,8 +2958,8 @@ PACKET_HANDLER(UnicodeTalk)
 
 			if (type == ST_SYSTEM)
 				obj->JournalPrefix = "You see: ";
-			else if (obj->Name.length())
-				obj->JournalPrefix = obj->Name + ": ";
+			else if (obj->GetName().length())
+				obj->JournalPrefix = obj->GetName() + ": ";
 		}
 
 		g_Orion.CreateUnicodeTextMessage(TT_OBJECT, serial, (uchar)g_ConfigManager.SpeechFont, textColor, str);
@@ -3097,24 +3097,24 @@ PACKET_HANDLER(GraphicEffect)
 
 	if (sourceObject != NULL)
 	{
-		effect->X = sourceObject->X;
-		effect->Y = sourceObject->Y;
-		effect->Z = sourceObject->Z;
+		effect->SetX(sourceObject->GetX());
+		effect->SetY(sourceObject->GetY());
+		effect->SetZ(sourceObject->GetZ());
 	}
 	else
 	{
-		effect->X = sourceX;
-		effect->Y = sourceY;
-		effect->Z = sourceZ;
+		effect->SetX(sourceX);
+		effect->SetY(sourceY);
+		effect->SetZ(sourceZ);
 	}
 	
 	CGameCharacter *destObject = g_World->FindWorldCharacter(destSerial);
 
 	if (destObject != NULL)
 	{
-		effect->DestX = destObject->X;
-		effect->DestY = destObject->Y;
-		effect->DestZ = destObject->Z;
+		effect->DestX = destObject->GetX();
+		effect->DestY = destObject->GetY();
+		effect->DestZ = destObject->GetZ();
 	}
 	else
 	{
@@ -3160,7 +3160,7 @@ PACKET_HANDLER(DeathScreen)
 
 		g_GumpManager.CloseGump(0, 0, GT_DRAG);
 
-		if (g_ConfigManager.Music)
+		if (g_ConfigManager.GetMusic())
 			g_Orion.PlayMusic(42, true);
 
 		g_Orion.ChangeWarmode(0);
@@ -3191,7 +3191,7 @@ PACKET_HANDLER(PlayMusic)
 	ushort index = ReadUInt16BE();
 
 	//LOG("Play midi music 0x%04X\n", index);
-	if (!g_ConfigManager.Music || GetForegroundWindow() != g_OrionWindow.Handle || g_ConfigManager.MusicVolume < 1)
+	if (!g_ConfigManager.GetMusic() || GetForegroundWindow() != g_OrionWindow.Handle || g_ConfigManager.GetMusicVolume() < 1)
 		return;
 
 	g_Orion.PlayMusic(index);
@@ -3231,9 +3231,9 @@ PACKET_HANDLER(DragAnimation)
 		sourceSerial = 0;
 	else
 	{
-		sourceX = sourceObj->X;
-		sourceY = sourceObj->Y;
-		sourceZ = sourceObj->Z;
+		sourceX = sourceObj->GetX();
+		sourceY = sourceObj->GetY();
+		sourceZ = sourceObj->GetZ();
 	}
 
 	CGameCharacter *destObj = g_World->FindWorldCharacter(destSerial);
@@ -3242,9 +3242,9 @@ PACKET_HANDLER(DragAnimation)
 		destSerial = 0;
 	else
 	{
-		destX = destObj->X;
-		destY = destObj->Y;
-		destZ = destObj->Z;
+		destX = destObj->GetX();
+		destY = destObj->GetY();
+		destZ = destObj->GetZ();
 	}
 
 	CGameEffect *effect = NULL;
@@ -3269,9 +3269,9 @@ PACKET_HANDLER(DragAnimation)
 	effect->Color = color;
 	effect->Serial = sourceSerial;
 	effect->DestSerial = destSerial;
-	effect->X = sourceX;
-	effect->Y = sourceY;
-	effect->Z = sourceZ;
+	effect->SetX(sourceX);
+	effect->SetY(sourceY);
+	effect->SetZ(sourceZ);
 	effect->DestX = destX;
 	effect->DestY = destY;
 	effect->DestZ = destZ;
@@ -3424,9 +3424,9 @@ PACKET_HANDLER(CharacterListNotification)
 {
 	WISPFUN_DEBUG("c150_f70");
 	g_Orion.InitScreen(GS_DELETE);
-	g_ConnectionScreen.Type = CST_CHARACTER_LIST;
-	g_ConnectionScreen.ConnectionFailed = true;
-	g_ConnectionScreen.ErrorCode = ReadUInt8();
+	g_ConnectionScreen.SetType(CST_CHARACTER_LIST);
+	g_ConnectionScreen.SetConnectionFailed(true);
+	g_ConnectionScreen.SetErrorCode(ReadUInt8());
 }
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(ErrorCode)
@@ -3435,11 +3435,11 @@ PACKET_HANDLER(ErrorCode)
 	uchar code = ReadUInt8();
 
 	g_Orion.InitScreen(GS_DELETE);
-	g_ConnectionScreen.Type = CST_GAME_LOGIN;
-	g_ConnectionScreen.ErrorCode = code;
+	g_ConnectionScreen.SetType(CST_GAME_LOGIN);
+	g_ConnectionScreen.SetErrorCode(code);
 
 	if (code > 7)
-		g_ConnectionScreen.ErrorCode = 3;
+		g_ConnectionScreen.SetErrorCode(3);
 }
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(AttackCharacter)
@@ -3564,7 +3564,7 @@ PACKET_HANDLER(DisplayClilocString)
 			else
 			{
 				obj->JournalPrefix = name + ": ";
-				obj->Name = name;
+				obj->GetName() = name;
 
 				if (obj->NPC)
 					g_GumpManager.UpdateContent(serial, 0, GT_STATUSBAR);
@@ -3659,7 +3659,7 @@ PACKET_HANDLER(MegaCliloc)
 
 				if (obj != NULL && !obj->NPC)
 				{
-					obj->Name = ToString(str);
+					obj->GetName() = ToString(str);
 					obj->GenerateObjectHandlesTexture(str);
 				}
 
@@ -3711,7 +3711,7 @@ PACKET_HANDLER(MegaCliloc)
 						QFOR(shopItem2, shopItem->m_Next, CBaseGUI*)
 						{
 							if (shopItem2->Type == GOT_SHOPITEM)
-								((CGUIShopItem*)shopItem2)->Y = ((CGUIShopItem*)shopItem2)->Y + delta;
+								((CGUIShopItem*)shopItem2)->SetY(((CGUIShopItem*)shopItem2)->GetY() + delta);
 						}
 					}
 
@@ -3745,21 +3745,21 @@ PACKET_HANDLER(Damage)
 		text->Type = TT_OBJECT;
 		text->Text = std::to_string(damage);
 		text->GenerateTexture(0);
-		text->X = text->m_Texture.Width / 2;
+		text->SetX(text->m_Texture.Width / 2);
 		int height = text->m_Texture.Height;
 
 		CTextData *head = (CTextData*)character->m_DamageTextControl.Last();
 
 		if (head != NULL)
 		{
-			height += head->Y;
+			height += head->GetY();
 
 			if (height > 0)
 			{
 				if (height > 100)
 					height = 0;
 
-				text->Y = height;
+				text->SetY(height);
 			}
 		}
 
@@ -4093,8 +4093,8 @@ PACKET_HANDLER(OpenMenu)
 	}
 	else //gray menu
 	{
-		int x = (g_OrionWindow.Size.Width / 2) - 200;
-		int y = (g_OrionWindow.Size.Height / 2) - ((121 + (count * 21)) / 2);
+		int x = (g_OrionWindow.GetSize().Width / 2) - 200;
+		int y = (g_OrionWindow.GetSize().Height / 2) - ((121 + (count * 21)) / 2);
 
 		CGumpGrayMenu *gump = new CGumpGrayMenu(serial, id, x, y);
 
@@ -4795,8 +4795,8 @@ PACKET_HANDLER(DyeData)
 
 	WISP_GEOMETRY::CSize gumpSize = g_Orion.GetGumpDimension(0x0906);
 
-	int x = (WORD)((g_OrionWindow.Size.Width / 2) - (gumpSize.Width / 2));
-	int y = (WORD)((g_OrionWindow.Size.Height / 2) - (gumpSize.Height / 2));
+	int x = (WORD)((g_OrionWindow.GetSize().Width / 2) - (gumpSize.Width / 2));
+	int y = (WORD)((g_OrionWindow.GetSize().Height / 2) - (gumpSize.Height / 2));
 
 	CGumpDye *gump = new CGumpDye(serial, x, y, graphic);
 
@@ -4893,7 +4893,7 @@ PACKET_HANDLER(MapData)
 			}
 			case MM_EDIT_RESPONSE: //Reply From Server to Action 6 (Plotting request)
 			{
-				gump->PlotState = ReadUInt8();
+				gump->SetPlotState(ReadUInt8());
 
 				break;
 			}
@@ -4988,8 +4988,8 @@ PACKET_HANDLER(BulletinBoardData)
 
 			string str((char*)Ptr);
 
-			int x = (g_OrionWindow.Size.Width / 2) - 245;
-			int y = (g_OrionWindow.Size.Height / 2) - 205;
+			int x = (g_OrionWindow.GetSize().Width / 2) - 245;
+			int y = (g_OrionWindow.GetSize().Height / 2) - 205;
 
 			CGumpBulletinBoard *gump = new CGumpBulletinBoard(serial, x, y, str);
 
@@ -5078,7 +5078,7 @@ PACKET_HANDLER(BulletinBoardData)
 						data += DecodeUTF8(ReadString(linelen));
 				}
 
-				uchar variant = 1 + (int)(poster == ToWString(g_Player->Name));
+				uchar variant = 1 + (int)(poster == ToWString(g_Player->GetName()));
 				g_GumpManager.AddGump(new CGumpBulletinBoardItem(serial, 0, 0, variant, boardSerial, poster, subject, dataTime, data));
 			}
 
@@ -5100,7 +5100,7 @@ PACKET_HANDLER(OpenBook)
 	Move(1);
 	WORD pageCount = ReadUInt16BE();
 
-	CGumpBook *gump = new CGumpBook(serial, 0, 0, pageCount, flags != 0, (g_PacketManager.ClientVersion >= CV_308Z));
+	CGumpBook *gump = new CGumpBook(serial, 0, 0, pageCount, flags != 0, (g_PacketManager.GetClientVersion() >= CV_308Z));
 
 	gump->m_EntryTitle->m_Entry.SetText(ReadString(60));
 	gump->m_EntryAuthor->m_Entry.SetText(ReadString(30));
@@ -5229,7 +5229,7 @@ PACKET_HANDLER(BuyList)
 		if (item == NULL)
 			return;
 
-		bool reverse = (item->X > 1);
+		bool reverse = (item->GetX() > 1);
 
 		if (reverse)
 		{
@@ -5265,12 +5265,12 @@ PACKET_HANDLER(BuyList)
 
 			if (Int32TryParse(name, clilocNum))
 			{
-				item->Name = g_ClilocManager.Cliloc(g_Language)->GetA(clilocNum, true);
+				item->SetName(g_ClilocManager.Cliloc(g_Language)->GetA(clilocNum, true));
 				item->NameFromCliloc = true;
 			}
 			else
 			{
-				item->Name = name;
+				item->SetName(name);
 				item->NameFromCliloc = false;
 			}
 
@@ -5698,8 +5698,8 @@ PACKET_HANDLER(OrionMessages)
 				}
 				else
 				{
-					gump->X = x;
-					gump->Y = y;
+					gump->SetX(x);
+					gump->SetY(y);
 				}
 			}
 			else
@@ -5845,8 +5845,8 @@ PACKET_HANDLER(OrionMessages)
 				}
 				else
 				{
-					gump->X = x;
-					gump->Y = y;
+					gump->SetX(x);
+					gump->SetY(y);
 				}
 			}
 
@@ -5941,7 +5941,7 @@ PACKET_HANDLER(BoatMoving)
 	ushort boatZ = ReadUInt16BE();
 	ushort boatObjectsCount = ReadUInt16BE();
 
-	g_World->UpdateGameObject(boatSerial, boat->Graphic, 0, boat->Count, boatX, boatY, boatZ, facingDirection, boat->Color, boat->Flags, 0, UGOT_MULTI, 1);
+	g_World->UpdateGameObject(boatSerial, boat->Graphic, 0, boat->Count, boatX, boatY, boatZ, facingDirection, boat->Color, boat->GetFlags(), 0, UGOT_MULTI, 1);
 
 	for (ushort i = 0; i < boatObjectsCount; i++)
 	{
@@ -5954,7 +5954,7 @@ PACKET_HANDLER(BoatMoving)
 		if (boatObject == NULL) continue;
 
 		uchar direction = boatObject->NPC ? ((CGameCharacter*)boatObject)->Direction : 0;
-		g_World->UpdateGameObject(boatObjectSerial, boatObject->Graphic, 0, 0, boatObjectX, boatObjectY, boatObjectZ, direction, boatObject->Color, boatObject->Flags, 0, UGOT_ITEM, 1);
+		g_World->UpdateGameObject(boatObjectSerial, boatObject->Graphic, 0, 0, boatObjectX, boatObjectY, boatObjectZ, direction, boatObject->Color, boatObject->GetFlags(), 0, UGOT_ITEM, 1);
 	}
 }
 //----------------------------------------------------------------------------------

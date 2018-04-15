@@ -222,7 +222,7 @@ bool CSpeechManager::LoadLangCodes()
 void CSpeechManager::GetKeywords(const wchar_t *text, UINT_LIST &codes)
 {
 	WISPFUN_DEBUG("c157_f4");
-	if (!m_Loaded || g_PacketManager.ClientVersion < CV_305D) //Но по факту с 2.0.7 версии клиента
+	if (!m_Loaded || g_PacketManager.GetClientVersion() < CV_305D) //Но по факту с 2.0.7 версии клиента
 		return;
 
 	size_t size = m_SpeechEntries.size();

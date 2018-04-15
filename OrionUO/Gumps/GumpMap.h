@@ -12,7 +12,11 @@
 //----------------------------------------------------------------------------------
 class CGumpMap : public CGump
 {
-	SETGETE(int, PlotState, 0);
+protected:
+    int m_PlotState = 0;
+public:
+    int GetPlotState() { return m_PlotState; };
+    void SetPlotState(const int& val);
 	int StartX = 0;
 	int StartY = 0;
 	int EndX = 0;

@@ -24,7 +24,7 @@ CScreenshotBuilder::~CScreenshotBuilder()
 void CScreenshotBuilder::SaveScreen()
 {
 	WISPFUN_DEBUG("c204_f1");
-	SaveScreen(0, 0, g_OrionWindow.Size.Width, g_OrionWindow.Size.Height);
+	SaveScreen(0, 0, g_OrionWindow.GetSize().Width, g_OrionWindow.GetSize().Height);
 }
 //---------------------------------------------------------------------------
 void CScreenshotBuilder::SaveScreen(const int &x, const int &y, const int &width, const int &height)
@@ -89,7 +89,7 @@ UINT_LIST CScreenshotBuilder::GetScenePixels(const int &x, const int &y, const i
 	WISPFUN_DEBUG("c204_f3");
 	UINT_LIST pixels(width * height);
 
-	glReadPixels(x, g_OrionWindow.Size.Height - y - height, width, height, GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, &pixels[0]);
+	glReadPixels(x, g_OrionWindow.GetSize().Height - y - height, width, height, GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, &pixels[0]);
 
 	for (uint &i : pixels)
 		i |= 0xFF000000;

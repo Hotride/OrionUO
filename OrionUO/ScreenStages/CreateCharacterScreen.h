@@ -13,10 +13,18 @@
 class CCreateCharacterScreen : public CBaseScreen
 {
 	//!Выбранный стиль прически/бороды
-	SETGETE(int, StyleSelection, 0);
+protected:
+    int m_StyleSelection = 0;
+public:
+    int GetStyleSelection() { return m_StyleSelection; };
+    void SetStyleSelection(const int& val);
 
 	//!Выбранный цвет тела/одежды/волосеного покрова
-	SETGETE(int, ColorSelection, 0);
+protected:
+    int m_ColorSelection = 0;
+public:
+    int GetColorSelection() { return m_ColorSelection; };
+    void SetColorSelection(const int& val);
 	string Name = "";
 
 private:

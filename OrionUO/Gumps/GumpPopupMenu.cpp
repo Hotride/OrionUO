@@ -154,12 +154,12 @@ void CGumpPopupMenu::PrepareContent()
 	{
 		CGUIHitBox *box = (CGUIHitBox*)g_SelectedObject.Object;
 
-		if (!m_Polygone->Visible || m_Polygone->Y != box->Y)
+		if (!m_Polygone->Visible || m_Polygone->GetY() != box->GetY())
 		{
 			WantRedraw = true;
 
-			m_Polygone->X = box->X;
-			m_Polygone->Y = box->Y;
+			m_Polygone->SetX(box->GetX());
+			m_Polygone->SetY(box->GetY());
 			m_Polygone->Width = box->Width;
 			m_Polygone->Height = box->Height;
 			m_Polygone->Visible = true;

@@ -39,7 +39,7 @@ CGumpBulletinBoard::CGumpBulletinBoard(uint serial, short x, short y, string nam
 		button->GraphicPressed = 0x0824;
 		button->SelectOnly = true;
 		button->CheckPolygone = true;
-		button->Y -= 14;
+		button->SetY(button->GetY() - 14);
 	}
 
 	button = m_HTMLGump->m_ButtonDown;
@@ -51,7 +51,7 @@ CGumpBulletinBoard::CGumpBulletinBoard(uint serial, short x, short y, string nam
 		button->GraphicPressed = 0x0825;
 		button->SelectOnly = true;
 		button->CheckPolygone = true;
-		button->Y -= 14;
+		button->SetY(button->GetY() - 14);
 	}
 
 	CGUIHTMLSlider *slider = m_HTMLGump->m_Slider;
@@ -62,7 +62,7 @@ CGumpBulletinBoard::CGumpBulletinBoard(uint serial, short x, short y, string nam
 		slider->GraphicSelected = 0x001F;
 		slider->GraphicPressed = 0x001F;
 		slider->BackgroundGraphic = 0;
-		slider->Y -= 14;
+		slider->SetY(slider->GetY() - 14);
 	}
 }
 //----------------------------------------------------------------------------------
@@ -77,7 +77,7 @@ void CGumpBulletinBoard::GUMP_BUTTON_EVENT_C
 	WISPFUN_DEBUG("c89_f3");
 	if (serial == ID_GBB_POST_MESSAGE)
 	{
-		CGumpBulletinBoardItem *gump = new CGumpBulletinBoardItem(0, 0, 0, 0, Serial, ToWString(g_Player->Name), L"", L"Date/Time", L"");
+		CGumpBulletinBoardItem *gump = new CGumpBulletinBoardItem(0, 0, 0, 0, Serial, ToWString(g_Player->GetName()), L"", L"Date/Time", L"");
 
 		g_GumpManager.AddGump(gump);
 	}

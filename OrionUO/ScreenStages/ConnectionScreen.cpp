@@ -29,7 +29,7 @@ CConnectionScreen::~CConnectionScreen()
 void CConnectionScreen::Init()
 {
 	WISPFUN_DEBUG("c161_f1");
-	m_Message = "";
+	m_Text = "";
 	m_ConnectionFailed = false;
 	m_Connected = false;
 	m_Completed= false;
@@ -73,9 +73,9 @@ void CConnectionScreen::SetType(const CONNECTION_SCREEN_TYPE &val)
 	m_Gump.WantUpdateContent = true;
 }
 //----------------------------------------------------------------------------------
-void CConnectionScreen::SetMessage(const string &val)
+void CConnectionScreen::SetText(const string &val)
 {
-	m_Message = val;
+	m_Text = val;
 	m_Gump.WantUpdateContent = true;
 }
 //----------------------------------------------------------------------------------

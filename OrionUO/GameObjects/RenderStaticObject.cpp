@@ -73,8 +73,8 @@ void CRenderStaticObject::UpdateTextCoordinates()
 
 			offset += text.m_Texture.Height;
 
-			text.RealDrawX = text.X - (text.m_Texture.Width / 2);
-			text.RealDrawY = text.Y - offset;
+			text.RealDrawX = text.GetX() - (text.m_Texture.Width / 2);
+			text.RealDrawY = text.GetY() - offset;
 		}
 	}
 	else
@@ -261,7 +261,7 @@ bool CRenderStaticObject::CheckDrawFoliage()
 	{
 		if (g_Season < ST_WINTER)
 		{
-			if (g_ConfigManager.DrawStumps)
+			if (g_ConfigManager.GetDrawStumps())
 				return g_Orion.InTileFilter(Graphic);
 
 			return true;
@@ -275,7 +275,7 @@ bool CRenderStaticObject::CheckDrawFoliage()
 //---------------------------------------------------------------------------
 bool CRenderStaticObject::CheckDrawVegetation()
 {
-	if (g_ConfigManager.NoVegetation && Vegetation)
+	if (g_ConfigManager.GetNoVegetation() && Vegetation)
 		return g_Orion.InTileFilter(Graphic);
 
 	return true;

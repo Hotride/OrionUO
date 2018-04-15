@@ -79,21 +79,21 @@ void CContainerRect::Calculate(ushort gumpID)
 			IFOR(i, 0, 4 && !passed)
 			{
 				//!Пора изменять смещение по оси Y и обнулять по оси X
-				if (X + tex->Width + CONTAINERS_RECT_STEP > g_OrionWindow.Size.Width)
+				if (X + tex->Width + CONTAINERS_RECT_STEP > g_OrionWindow.GetSize().Width)
 				{
 					X = CONTAINERS_RECT_DEFAULT_POS;
 
 					//!Если смещение по оси Y достигло максимума - выставим стандартное значение
-					if (Y + tex->Height + CONTAINERS_RECT_LINESTEP > g_OrionWindow.Size.Height)
+					if (Y + tex->Height + CONTAINERS_RECT_LINESTEP > g_OrionWindow.GetSize().Height)
 						Y = CONTAINERS_RECT_DEFAULT_POS;
 					else
 						Y += CONTAINERS_RECT_LINESTEP;
 				}
 				//!Пора изменять смещение по оси X и обнулять по оси Y
-				else if (Y + tex->Height + CONTAINERS_RECT_STEP > g_OrionWindow.Size.Height)
+				else if (Y + tex->Height + CONTAINERS_RECT_STEP > g_OrionWindow.GetSize().Height)
 				{
 					//!Если смещение по оси X достигло максимума - выставим стандартное значение
-					if (X + tex->Width + CONTAINERS_RECT_LINESTEP > g_OrionWindow.Size.Width)
+					if (X + tex->Width + CONTAINERS_RECT_LINESTEP > g_OrionWindow.GetSize().Width)
 						X = CONTAINERS_RECT_DEFAULT_POS;
 					else
 						X += CONTAINERS_RECT_LINESTEP;

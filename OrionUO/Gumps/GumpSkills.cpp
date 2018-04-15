@@ -58,7 +58,7 @@ CGumpSkills::CGumpSkills(short x, short y, bool minimized, int height)
 		QFOR(group, g_SkillGroupManager.m_Groups, CSkillGroupObject*)
 		{
 			CGUISkillGroup *skillGroup = (CGUISkillGroup*)m_HTMLGump->Add(new CGUISkillGroup(ID_GS_GROUP + currentIndex, ID_GS_GROUP_MINIMIZE + currentIndex, group, 0, currentY));
-			skillGroup->Minimized = true;
+			skillGroup->SetMinimized(true);
 
 			int count = group->Count;
 
@@ -72,7 +72,7 @@ CGumpSkills::CGumpSkills(short x, short y, bool minimized, int height)
 
 			currentY += 19;
 
-			if (!skillGroup->Minimized)
+			if (!skillGroup->GetMinimized())
 				currentY += count * 17;
 
 			currentIndex++;
@@ -146,10 +146,10 @@ void CGumpSkills::UpdateHeight()
 	WISPFUN_DEBUG("c125_f3");
 	CGumpBaseScroll::UpdateHeight();
 
-	m_BottomLine->Y = Height - 48; //Bottom line
-	m_Comment->Y = Height - 35;//Skills comment gump
-	m_CreateGroup->Y = Height - 3; //New Group gump
-	m_SkillSum->Y = Height - 6;
+	m_BottomLine->SetY(Height - 48); //Bottom line
+	m_Comment->SetY(Height - 35);//Skills comment gump
+	m_CreateGroup->SetY(Height - 3); //New Group gump
+	m_SkillSum->SetY(Height - 6);
 }
 //----------------------------------------------------------------------------------
 void CGumpSkills::UpdateGroupPositions()
@@ -163,14 +163,14 @@ void CGumpSkills::UpdateGroupPositions()
 		if (group->Type == GOT_SKILLGROUP)
 		{
 			CGUISkillGroup *skillGroup = (CGUISkillGroup*)group;
-			skillGroup->Y = currentY;
+			skillGroup->SetY(currentY);
 			skillGroup->Serial = ID_GS_GROUP + index;
 			skillGroup->m_Minimizer->Serial = ID_GS_GROUP_MINIMIZE + index;
 			skillGroup->m_Name->Serial = ID_GS_GROUP + index;
 
 			currentY += 19;
 
-			if (!skillGroup->Minimized)
+			if (!skillGroup->GetMinimized())
 				currentY += group->GetItemsCount() * 17;
 
 			index++;
@@ -231,7 +231,7 @@ void CGumpSkills::UpdateSkillValue(const int &index)
 					CSkill *skill = g_SkillsManager.Get(index);
 
 					if (skill != NULL)
-						((CGUISkillItem*)item)->Status = skill->Status;
+						((CGUISkillItem*)item)->SetStatus(skill->Status);
 
 					return;
 				}
@@ -302,7 +302,7 @@ void CGumpSkills::PrepareContent()
 	if (g_PressedObject.LeftGump == this && serial >= ID_GS_SKILL && serial < ID_GS_SKILL_STATE)
 	{
 		int y = g_MouseManager.Position.Y;
-		int testY = m_Y + m_HTMLGump->Y;
+		int testY = m_Y + m_HTMLGump->GetY();
 
 		if (y < testY)
 		{
@@ -405,8 +405,8 @@ CSkillGroupObject *CGumpSkills::GetGroupUnderCursor(int &index)
 	//Получить группу под курсором
 	int mouseY = g_MouseManager.Position.Y;
 
-	//mouse.X -= m_X + m_HTMLGump->X;
-	mouseY -= m_Y + m_HTMLGump->Y;
+	//mouse.X -= m_X + m_HTMLGump->GetX();
+	mouseY -= m_Y + m_HTMLGump->GetY();
 
 	//Если вышли за пределы гампа по оси X
 	//if (mouse.X < 0 || mouse.X > m_HTMLGump->Width)
@@ -456,7 +456,7 @@ void CGumpSkills::UpdateGroupText()
 				{
 					SetGroupTextFromEntry();
 
-					if (g_ConfigManager.ConsoleNeedEnter)
+					if (g_ConfigManager.GetConsoleNeedEnter())
 						g_EntryPointer = NULL;
 					else
 						g_EntryPointer = &g_GameConsole;
@@ -540,7 +540,7 @@ void CGumpSkills::GUMP_BUTTON_EVENT_C
 		g_SkillGroupManager.Add(group);
 
 		CGUISkillGroup *skillGroup = (CGUISkillGroup*)m_HTMLGump->Add(new CGUISkillGroup(ID_GS_GROUP, ID_GS_GROUP_MINIMIZE, group, 0, 0));
-		skillGroup->Minimized = !group->Maximized;
+		skillGroup->SetMinimized(!group->Maximized);
 
 		UpdateGroupPositions();
 	}
@@ -573,7 +573,7 @@ void CGumpSkills::GUMP_BUTTON_EVENT_C
 				CGUISkillItem *skillItem = GetSkill(index);
 
 				if (skillItem != NULL)
-					skillItem->Status = status;
+					skillItem->SetStatus(status);
 			}
 		}
 		else if (serial >= ID_GS_SKILL_BUTTON) //Выбор кнопки для использования скилла
@@ -600,7 +600,7 @@ void CGumpSkills::GUMP_BUTTON_EVENT_C
 
 					if (skillGroup != NULL)
 					{
-						skillGroup->Minimized = !group->Maximized;
+						skillGroup->SetMinimized(!group->Maximized);
 						UpdateGroupPositions();
 
 						m_HTMLGump->CalculateDataSize();
@@ -643,8 +643,8 @@ void CGumpSkills::GUMP_TEXT_ENTRY_EVENT_C
 	{
 		if (group->m_Name->Focused)
 		{
-			int x = g_MouseManager.Position.X - group->X;
-			int y = g_MouseManager.Position.Y - group->Y;
+			int x = g_MouseManager.Position.X - group->GetX();
+			int y = g_MouseManager.Position.Y - group->GetY();
 
 			group->m_Name->OnClick(this, x, y);
 		}
@@ -754,7 +754,7 @@ void CGumpSkills::OnKeyDown(const WPARAM &wParam, const LPARAM &lParam)
 		{
 			SetGroupTextFromEntry();
 
-			if (g_ConfigManager.ConsoleNeedEnter)
+			if (g_ConfigManager.GetConsoleNeedEnter())
 				g_EntryPointer = NULL;
 			else
 				g_EntryPointer = &g_GameConsole;

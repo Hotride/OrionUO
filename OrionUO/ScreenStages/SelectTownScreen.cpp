@@ -29,7 +29,7 @@ CSelectTownScreen::~CSelectTownScreen()
 void CSelectTownScreen::Init()
 {
 	WISPFUN_DEBUG("c167_f1");
-	if (g_PacketManager.ClientVersion >= CV_70130)
+	if (g_PacketManager.GetClientVersion() >= CV_70130)
 		m_City = g_CityList.GetCity(0);
 	else
 	{
