@@ -22,31 +22,32 @@
     <ProjectGuid>{909473C7-8499-4614-92F1-43E370383AE6}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>OrionUO</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0.15063.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v141_xp</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v141_xp</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v141_xp</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v141_xp</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
@@ -97,7 +98,6 @@ if exist "$(OutDir)bassmidi.dll" (del "$(OutDir)bassmidi.dll")
 if exist "$(OutDir)glew32.dll" (del "$(OutDir)glew32.dll")
 if exist "$(OutDir)zlib1.dll" (del "$(OutDir)zlib1.dll")
 if exist "$(OutDir)Freeimage.dll" (del "$(OutDir)Freeimage.dll")
-if exist "$(ProjectDir)Orion.dll" (del "$(ProjectDir)Orion.dll")
 xcopy /y /d  "$(SolutionDir)bin\bass.dll" "$(OutDir)"
 
 xcopy /y /d  "$(SolutionDir)bin\glew32.dll" "$(OutDir)"
@@ -105,7 +105,6 @@ xcopy /y /d  "$(SolutionDir)bin\zlib1.dll" "$(OutDir)"
 
 xcopy /y /d  "$(SolutionDir)bin\bassmidi.dll" "$(OutDir)"
 xcopy /y /d  "$(SolutionDir)bin\Freeimage.dll" "$(OutDir)"
-xcopy /y /d  "$(SolutionDir)debug_bin\Orion.dll" "$(ProjectDir)"
 
 </Command>
     </PostBuildEvent>
@@ -141,8 +140,6 @@ xcopy /y /d  "$(SolutionDir)bin\glew32.dll" "$(OutDir)"
 xcopy /y /d  "$(SolutionDir)bin\zlib1.dll" "$(OutDir)"
 xcopy /y /d  "$(SolutionDir)bin\bassmidi.dll" "$(OutDir)"
 xcopy /y /d  "$(SolutionDir)bin\Freeimage.dll" "$(OutDir)"
-if exist "$(ProjectDir)Orion.dll" (del "$(ProjectDir)Orion.dll")
-xcopy /y /d  "$(SolutionDir)debug_bin\Orion.dll" "$(ProjectDir)"
 
 </Command>
     </PostBuildEvent>
@@ -184,7 +181,6 @@ if exist "$(OutDir)bassmidi.dll" (del "$(OutDir)bassmidi.dll")
 if exist "$(OutDir)glew32.dll" (del "$(OutDir)glew32.dll")
 if exist "$(OutDir)zlib1.dll" (del "$(OutDir)zlib1.dll")
 if exist "$(OutDir)Freeimage.dll" (del "$(OutDir)Freeimage.dll")
-if exist "$(ProjectDir)Orion.dll" (del "$(ProjectDir)Orion.dll")
 xcopy /y /d  "$(SolutionDir)bin\bass.dll" "$(OutDir)"
 
 xcopy /y /d  "$(SolutionDir)bin\glew32.dll" "$(OutDir)"
@@ -192,7 +188,6 @@ xcopy /y /d  "$(SolutionDir)bin\zlib1.dll" "$(OutDir)"
 
 xcopy /y /d  "$(SolutionDir)bin\bassmidi.dll" "$(OutDir)"
 xcopy /y /d  "$(SolutionDir)bin\Freeimage.dll" "$(OutDir)"
-xcopy /y /d  "$(SolutionDir)bin\Orion.dll" "$(ProjectDir)"
 
 </Command>
     </PostBuildEvent>
@@ -230,7 +225,6 @@ if exist "$(OutDir)bassmidi.dll" (del "$(OutDir)bassmidi.dll")
 if exist "$(OutDir)glew32.dll" (del "$(OutDir)glew32.dll")
 if exist "$(OutDir)zlib1.dll" (del "$(OutDir)zlib1.dll")
 if exist "$(OutDir)Freeimage.dll" (del "$(OutDir)Freeimage.dll")
-if exist "$(ProjectDir)Orion.dll" (del "$(ProjectDir)Orion.dll")
 xcopy /y /d  "$(SolutionDir)bin64\bass.dll" "$(OutDir)"
 
 xcopy /y /d  "$(SolutionDir)bin64\glew32.dll" "$(OutDir)"
@@ -238,7 +232,6 @@ xcopy /y /d  "$(SolutionDir)bin64\zlib1.dll" "$(OutDir)"
 
 xcopy /y /d  "$(SolutionDir)bin64\bassmidi.dll" "$(OutDir)"
 xcopy /y /d  "$(SolutionDir)bin64\Freeimage.dll" "$(OutDir)"
-xcopy /y /d  "$(SolutionDir)bin64\Orion.dll" "$(ProjectDir)"
 
 </Command>
     </PostBuildEvent>
@@ -262,6 +255,12 @@ xcopy /y /d  "$(SolutionDir)bin64\Orion.dll" "$(ProjectDir)"
     <ClInclude Include="Constants.h" />
     <ClInclude Include="Container.h" />
     <ClInclude Include="ContainerStack.h" />
+    <ClInclude Include="Crypt\AES.h" />
+    <ClInclude Include="Crypt\GameCrypt.h" />
+    <ClInclude Include="Crypt\LoginCrypt.h" />
+    <ClInclude Include="Crypt\MD5.h" />
+    <ClInclude Include="Crypt\Platform.h" />
+    <ClInclude Include="Crypt\Table.h" />
     <ClInclude Include="DateTimeStamp.h" />
     <ClInclude Include="DefinitionMacro.h" />
     <ClInclude Include="EnumList.h" />
@@ -514,6 +513,10 @@ xcopy /y /d  "$(SolutionDir)bin64\Orion.dll" "$(ProjectDir)"
     <ClCompile Include="CommonInterfaces.cpp" />
     <ClCompile Include="Container.cpp" />
     <ClCompile Include="ContainerStack.cpp" />
+    <ClCompile Include="Crypt\GameCrypt.cpp" />
+    <ClCompile Include="Crypt\LoginCrypt.cpp" />
+    <ClCompile Include="Crypt\MD5.cpp" />
+    <ClCompile Include="Crypt\TwoFish.cpp" />
     <ClCompile Include="DateTimeStamp.cpp" />
     <ClCompile Include="ExceptionFilter.cpp" />
     <ClCompile Include="GameObjects\CustomHouseMultiObject.cpp" />

@@ -13,10 +13,6 @@
 //----------------------------------------------------------------------------------
 CConnectionManager g_ConnectionManager;
 //----------------------------------------------------------------------------------
-NETWORK_INIT_TYPE *g_NetworkInit = NULL;
-NETWORK_ACTION_TYPE *g_NetworkAction = NULL;
-NETWORK_POST_ACTION_TYPE *g_NetworkPostAction = NULL;
-//----------------------------------------------------------------------------------
 CConnectionManager::CConnectionManager()
 {
 }
@@ -108,7 +104,7 @@ void CConnectionManager::Init()
 			UCHAR_LIST &data = stream.Data();
 
 			memcpy(&m_Seed[0], &data[0], 4);
-			g_NetworkInit(true, &data[0]);
+			g_LoginCrypt.Init(&data[0]);
 		}
 	}
 
@@ -129,7 +125,17 @@ void CConnectionManager::Init(puchar gameSeed)
 
 	m_IsLoginSocket = false;
 
-	g_NetworkInit(false, &gameSeed[0]);
+	if (g_EncryptionType != ET_NOCRYPT) {
+		g_BlowfishCrypt.Init();
+	}
+
+	if (g_EncryptionType == ET_203 || g_EncryptionType == ET_TFISH) {
+		g_TwofishCrypt.Init(gameSeed);
+
+		if (g_EncryptionType == ET_TFISH) {
+			g_TwofishCrypt.Init_MD5();
+		}
+	}
 }
 //----------------------------------------------------------------------------------
 void CConnectionManager::SendIP(CSocket &socket, puchar seed)
@@ -343,27 +349,45 @@ int CConnectionManager::Send(puchar buf, int size)
 			buf[0] = 0x0A;
 	}
 
-	if (m_IsLoginSocket) //Логин сокет
-	{
+	if (m_IsLoginSocket) {
 		if (!m_LoginSocket.Connected)
-			return 0; //Нет подключения
+			return 0;
 
-		UCHAR_LIST cbuf(size); //Буффер для криптованного пакета
+		if (g_EncryptionType == ET_NOCRYPT) {
+			return m_LoginSocket.Send(buf, size);
+		} else {
+			UCHAR_LIST cbuf(size);
 
-		g_NetworkAction(true, &buf[0], &cbuf[0], size);
+			if (g_EncryptionType == ET_OLD_BFISH) {
+				g_LoginCrypt.Encrypt_Old(&buf[0], &cbuf[0], size);
+			} else if (g_EncryptionType == ET_1_25_36) {
+				g_LoginCrypt.Encrypt_1_25_36(&buf[0], &cbuf[0], size);
+			} else if (g_EncryptionType != ET_NOCRYPT) {
+				g_LoginCrypt.Encrypt(&buf[0], &cbuf[0], size);
+			}
 
-		return m_LoginSocket.Send(cbuf); //Отправляем зашифрованный пакет
-	}
-	else
-	{
+			return m_LoginSocket.Send(cbuf);
+		}
+	} else {
 		if (!m_GameSocket.Connected)
-			return 0; //Нет подключения
+			return 0;
 
-		UCHAR_LIST cbuf(size); //Буффер для криптованного пакета
+		if (g_EncryptionType == ET_NOCRYPT) {
+			return m_GameSocket.Send(buf, size);
+		} else {
+			UCHAR_LIST cbuf(size);
 
-		g_NetworkAction(false, &buf[0], &cbuf[0], size);
+			if (g_EncryptionType == ET_203) {
+				g_BlowfishCrypt.Encrypt(&buf[0], &cbuf[0], size);
+				g_TwofishCrypt.Encrypt(&cbuf[0], &cbuf[0], size);
+			} else if (g_EncryptionType == ET_TFISH) {
+				g_TwofishCrypt.Encrypt(&buf[0], &cbuf[0], size);
+			} else {
+				g_BlowfishCrypt.Encrypt(&buf[0], &cbuf[0], size);
+			}
 
-		return m_GameSocket.Send(cbuf); //Отправляем зашифрованный пакет
+			return m_GameSocket.Send(cbuf);
+		}
 	}
 
 	return 0;

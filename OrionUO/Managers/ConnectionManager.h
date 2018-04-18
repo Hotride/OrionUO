@@ -9,46 +9,33 @@
 //----------------------------------------------------------------------------------
 #ifndef CONNECTIONMANAGER_H
 #define CONNECTIONMANAGER_H
-//----------------------------------------------------------------------------------
-typedef void __cdecl NETWORK_INIT_TYPE(const bool&, BYTE*);
-typedef void __cdecl NETWORK_ACTION_TYPE(const bool&, BYTE*, BYTE*, const int&);
-typedef void __cdecl NETWORK_POST_ACTION_TYPE(BYTE*, BYTE*, const int&);
-//----------------------------------------------------------------------------------
-extern NETWORK_INIT_TYPE *g_NetworkInit;
-extern NETWORK_ACTION_TYPE *g_NetworkAction;
-extern NETWORK_POST_ACTION_TYPE *g_NetworkPostAction;
-//----------------------------------------------------------------------------------
 //!Класс менеджера подключения к серверу
 class CConnectionManager
 {
 protected:
     bool m_UseProxy = false;
+	string m_ProxyAddress = "";
+	int m_ProxyPort = 0;
+	bool m_ProxySocks5 = false;
+	string m_ProxyAccount = "";
+	string m_ProxyPassword = "";
+
 public:
     bool GetUseProxy() { return m_UseProxy; };
     void SetUseProxy(bool val);
-protected:
-    string m_ProxyAddress = "";
-public:
+
     string GetProxyAddress() { return m_ProxyAddress; };
     void SetProxyAddress(const string& val);
-protected:
-    int m_ProxyPort = 0;
-public:
+
     int GetProxyPort() { return m_ProxyPort; };
     void SetProxyPort(int val);
-protected:
-    bool m_ProxySocks5 = false;
-public:
+
     bool GetProxySocks5() { return m_ProxySocks5; };
     void SetProxySocks5(bool val);
-protected:
-    string m_ProxyAccount = "";
-public:
+
     string GetProxyAccount() { return m_ProxyAccount; };
     void SetProxyAccount(const string& val);
-protected:
-    string m_ProxyPassword = "";
-public:
+
     string GetProxyPassword() { return m_ProxyPassword; };
     void SetProxyPassword(const string& val);
 

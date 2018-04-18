@@ -4,9 +4,13 @@ pull_requests:
 branches:
   only:
   - master
+image: Visual Studio 2017
+configuration: Release
+platform: Win32
 skip_tags: true
 build:
   verbosity: minimal
+  parallel: true
 notifications:
 - provider: Webhook
   url: https://discordapp.com/api/webhooks/237606690495791104/ewURTxkzbXphiOgXbzImxaHAsFCDuIDsVIDSADAeSs8a_6sd5VgWGWUG42Ij_qRTkocf

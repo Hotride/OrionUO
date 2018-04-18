@@ -23,15 +23,8 @@ typedef struct PLUGIN_INFO
 
 #pragma pack (pop)
 //----------------------------------------------------------------------------------
-typedef void __cdecl PLUGIN_INIT_TYPE_OLD(STRING_LIST&, STRING_LIST&, UINT_LIST&);
-typedef void __cdecl PLUGIN_INIT_TYPE_NEW(PLUGIN_INFO*);
-typedef size_t __cdecl PLUGIN_GET_COUNT_FUNC();
-//----------------------------------------------------------------------------------
 COrion g_Orion;
 PLUGIN_CLIENT_INTERFACE g_PluginClientInterface = { 0 };
-PLUGIN_INIT_TYPE_OLD *g_PluginInitOld = NULL;
-PLUGIN_INIT_TYPE_NEW *g_PluginInitNew = NULL;
-PLUGIN_GET_COUNT_FUNC *g_PluginGetCount = NULL;
 //----------------------------------------------------------------------------------
 COrion::COrion()
 {
@@ -983,125 +976,64 @@ void COrion::LoadContaierOffsets()
 void COrion::LoadClientConfig()
 {
 	WISPFUN_DEBUG("c194_f11");
-	string path = g_App.ExeFilePath("Orion.dll");
-	HMODULE orionDll = LoadLibraryA(path.c_str());
-
-	if (orionDll == 0)
-	{
-		g_OrionWindow.ShowMessage("Orion.dll not found in " + path, "Error!");
-		ExitProcess(0);
-		return;
-	}
-
-	typedef void __cdecl installFuncOld(uchar*, int, UCHAR_LIST*);
-	typedef void __cdecl installFuncNew(uchar*, size_t, uchar*, size_t&);
-
-	installFuncOld *installOld = (installFuncOld*)GetProcAddress(orionDll, "Install");
-	installFuncNew *installNew = (installFuncNew*)GetProcAddress(orionDll, "InstallNew");
-
-	if (installNew == NULL)
-	{
-		if (installOld == NULL)
-		{
-			g_OrionWindow.ShowMessage("Install of InstallNew function in Orion.dll not found!", "Error!");
-			ExitProcess(0);
-			return;
-		}
-	}
-	else
-		installOld = NULL;
 
 	WISP_FILE::CMappedFile config;
 
-	if (config.Load(g_App.UOFilesPath("Client.cuo")) || config.Load(g_App.ExeFilePath("Client.cuo")))
-	{
-		UCHAR_LIST realData(config.Size, 0);
-		size_t realSize = 0;
-
-		if (installOld != NULL)
-		{
-			installOld(config.Start, (int)config.Size, &realData);
-			realSize = realData.size();
-		}
-		else
-			installNew(config.Start, config.Size, &realData[0], realSize);
-
-		config.Unload();
-
-		if (!realSize)
-		{
-			g_OrionWindow.ShowMessage("Corrupted config data!", "Error!");
-			ExitProcess(0);
-			return;
-		}
-
-		g_PluginGetCount = (PLUGIN_GET_COUNT_FUNC*)GetProcAddress(orionDll, "GetPluginsCount");
-
-		WISP_DATASTREAM::CDataReader file(&realData[0], realSize);
-
-		uchar version = file.ReadInt8();
-		uchar dllVersion = file.ReadInt8();
-		uchar subVersion = 0;
-
-		if (dllVersion != 0xFE)
-		{
-			g_OrionWindow.ShowMessage("Old version of Orion.dll detected!!!\nClient may be crashed in process.", "Warning!");
-			file.Move(-1);
-		}
-		else
-			subVersion = file.ReadInt8();
-
-		g_PacketManager.SetClientVersion((CLIENT_VERSION)file.ReadInt8());
-
-		if (g_PacketManager.GetClientVersion() >= CV_70331)
-			g_MaxViewRange = MAX_VIEW_RANGE_NEW;
-		else
-			g_MaxViewRange = MAX_VIEW_RANGE_OLD;
-
-		int len = file.ReadInt8();
-		ClientVersionText = file.ReadString(len);
-
-#if defined(_M_IX86)
-		g_NetworkInit = (NETWORK_INIT_TYPE*)file.ReadUInt32LE();
-		g_NetworkAction = (NETWORK_ACTION_TYPE*)file.ReadUInt32LE();
-		if (dllVersion == 0xFE)
-			g_NetworkPostAction = (NETWORK_POST_ACTION_TYPE*)file.ReadUInt32LE();
-
-		if (installOld != NULL)
-			g_PluginInitOld = (PLUGIN_INIT_TYPE_OLD*)file.ReadUInt32LE();
-		else
-			g_PluginInitNew = (PLUGIN_INIT_TYPE_NEW*)file.ReadUInt32LE();
-#else
-		g_NetworkInit = (NETWORK_INIT_TYPE*)file.ReadUInt64LE();
-		g_NetworkAction = (NETWORK_ACTION_TYPE*)file.ReadUInt64LE();
-		if (dllVersion == 0xFE)
-			g_NetworkPostAction = (NETWORK_POST_ACTION_TYPE*)file.ReadUInt64LE();
-
-		if (installOld != NULL)
-			g_PluginInitOld = (PLUGIN_INIT_TYPE_OLD*)file.ReadUInt64LE();
-		else
-			g_PluginInitNew = (PLUGIN_INIT_TYPE_NEW*)file.ReadUInt64LE();
-#endif
-
-		int mapsCount = MAX_MAPS_COUNT;
-
-		if (version >= 4)
-			mapsCount = file.ReadUInt8();
-		else
-			file.Move(1);
-
-		IFOR(i, 0, mapsCount)
-		{
-			g_MapSize[i].Width = file.ReadUInt16LE();
-			g_MapSize[i].Height = file.ReadUInt16LE();
-
-			g_MapBlockSize[i].Width = g_MapSize[i].Width / 8;
-			g_MapBlockSize[i].Height = g_MapSize[i].Height / 8;
-		}
-
-		g_CharacterList.ClientFlag = file.ReadInt8();
-		g_FileManager.UseVerdata = (file.ReadInt8() != 0);
+	if (!config.Load(g_App.UOFilesPath("Client.cuo")) && !config.Load(g_App.ExeFilePath("Client.cuo"))) {
+		return;
 	}
+
+	if (!config.Size) {
+		config.Unload();
+		return;
+	}
+
+	WISP_DATASTREAM::CDataReader file(config.Start, config.Size);
+	WISP_DATASTREAM::CDataWritter writter;
+
+	uchar version = file.ReadInt8();
+
+	ENCRYPTION_TYPE encryptionType = (ENCRYPTION_TYPE)file.ReadInt8();
+
+	g_PacketManager.SetClientVersion((CLIENT_VERSION)file.ReadInt8());
+
+	int len = file.ReadInt8();
+	ClientVersionText = file.ReadString(len);
+
+	g_LoginCrypt.Key1 = file.ReadUInt32LE(len);
+	g_LoginCrypt.Key2 = file.ReadUInt32LE(len);
+	g_LoginCrypt.Key3 = file.ReadUInt32LE(len);
+	g_LoginCrypt.SeedKey = file.ReadUInt16LE(len);
+
+	int mapsCount = MAX_MAPS_COUNT;
+
+	if (version >= 4) {
+		mapsCount = file.ReadUInt8();
+	} else {
+		file.Move(1);
+	}
+
+	for (int i = 0; i < mapsCount; i++) {
+		g_MapSize[i].Width = file.ReadUInt16LE();
+		g_MapSize[i].Height = file.ReadUInt16LE();
+
+		g_MapBlockSize[i].Width = g_MapSize[i].Width / 8;
+		g_MapBlockSize[i].Height = g_MapSize[i].Height / 8;
+	}
+
+	g_CharacterList.ClientFlag = file.ReadInt8();
+	g_FileManager.UseVerdata = (file.ReadInt8() != 0);
+
+	// plugin count
+	file.ReadInt8();
+
+	if (g_PacketManager.GetClientVersion() >= CV_70331) {
+		g_MaxViewRange = MAX_VIEW_RANGE_NEW;
+	} else {
+		g_MaxViewRange = MAX_VIEW_RANGE_OLD;
+	}
+
+	config.Unload();
 }
 //----------------------------------------------------------------------------------
 void COrion::LoadAutoLoginNames()
@@ -1454,31 +1386,45 @@ void COrion::LoadPluginConfig()
 	g_PluginClientInterface.PathFinder = &g_Interface_PathFinder;
 	g_PluginClientInterface.FileManager = &g_Interface_FileManager;
 
-	STRING_LIST libName;
-	STRING_LIST functions;
-	UINT_LIST flags;
+	WISP_FILE::CMappedFile config;
 
-	if (g_PluginInitOld != NULL)
-		g_PluginInitOld(libName, functions, flags);
-	else
-	{
-		size_t pluginsInfoCount = g_PluginGetCount();
-
-		PLUGIN_INFO *pluginsInfo = new PLUGIN_INFO[pluginsInfoCount];
-		g_PluginInitNew(pluginsInfo);
-
-		IFOR(i, 0, pluginsInfoCount)
-		{
-			libName.push_back(pluginsInfo[i].FileName);
-			functions.push_back(pluginsInfo[i].FunctionName);
-			flags.push_back((uint)pluginsInfo[i].Flags);
-		}
-
-		delete[] pluginsInfo;
+	if (!config.Load(g_App.UOFilesPath("Client.cuo")) && !config.Load(g_App.ExeFilePath("Client.cuo"))) {
+		return;
 	}
 
-	IFOR(i, 0, (int)libName.size())
-		LoadPlugin(g_App.ExeFilePath(libName[i].c_str()), functions[i], flags[i]);
+	if (!config.Size) {
+		config.Unload();
+		return;
+	}
+
+	WISP_DATASTREAM::CDataReader file(config.Start, config.Size);
+
+	uchar ver = file.ReadUInt8();
+	file.Move(2);
+	file.Move(file.ReadUInt8() + 39);
+
+	if (ver >= 2) {
+		file.Move(1);
+
+		if (ver >= 3) {
+			file.Move(1);
+		}
+
+		uint8_t pluginCount = file.ReadInt8();
+		PLUGIN_INFO *pluginsInfo = new PLUGIN_INFO[pluginCount];
+
+		for (int i = 0; i < pluginCount; i++) {
+			string fileName = file.ReadString(file.ReadInt16LE());
+
+			file.Move(2);
+			uint32_t flags = file.ReadUInt32LE();
+			file.Move(2);
+
+			string functionName = file.ReadString(file.ReadInt16LE());
+
+			LoadPlugin(g_App.ExeFilePath(fileName.c_str()), functionName, flags);
+		}
+	}
 
 	ParseCommandLine();
 
