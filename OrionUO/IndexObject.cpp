@@ -97,42 +97,42 @@ CIndexMusic::~CIndexMusic()
 //----------------------------------------------------------------------------------
 void CIndexObject::ReadIndexFile(const size_t &address, PBASE_IDX_BLOCK ptr, const ushort id)
 {
-	m_Address = ptr->Position;
-	m_DataSize = ptr->Size;
+	Address = ptr->Position;
+	DataSize = ptr->Size;
 
-	if (m_Address == 0xFFFFFFFF || !m_DataSize || m_DataSize == 0xFFFFFFFF)
+	if (Address == 0xFFFFFFFF || !DataSize || DataSize == 0xFFFFFFFF)
 	{
-		m_Address = 0;
-		m_DataSize = 0;
+		Address = 0;
+		DataSize = 0;
 	}
 	else
-		m_Address = m_Address + address;
+		Address = Address + address;
 
-	m_ID = id;
+	ID = id;
 };
 //----------------------------------------------------------------------------------
 void CIndexMulti::ReadIndexFile(const size_t &address, PBASE_IDX_BLOCK ptr, const ushort id)
 {
 	CIndexObject::ReadIndexFile(address, ptr, id);
-	if (g_PacketManager.ClientVersion >= CV_7090)
-		m_Count = (ushort)(DataSize / sizeof(MULTI_BLOCK_NEW));
+	if (g_PacketManager.GetClientVersion() >= CV_7090)
+		Count = (ushort)(DataSize / sizeof(MULTI_BLOCK_NEW));
 	else
-		m_Count = (ushort)(DataSize / sizeof(MULTI_BLOCK));
+		Count = (ushort)(DataSize / sizeof(MULTI_BLOCK));
 };
 //----------------------------------------------------------------------------------
 void CIndexLight::ReadIndexFile(const size_t &address, PBASE_IDX_BLOCK ptr, const ushort id)
 {
 	CIndexObject::ReadIndexFile(address, ptr, id);
 	PLIGHT_IDX_BLOCK realPtr = (PLIGHT_IDX_BLOCK)ptr;
-	m_Width = realPtr->Width;
-	m_Height = realPtr->Height;
+	Width = realPtr->Width;
+	Height = realPtr->Height;
 };
 //----------------------------------------------------------------------------------
 void CIndexGump::ReadIndexFile(const size_t &address, PBASE_IDX_BLOCK ptr, const ushort id)
 {
 	CIndexObject::ReadIndexFile(address, ptr, id);
 	PGUMP_IDX_BLOCK realPtr = (PGUMP_IDX_BLOCK)ptr;
-	m_Width = realPtr->Width;
-	m_Height = realPtr->Height;
+	Width = realPtr->Width;
+	Height = realPtr->Height;
 };
 //----------------------------------------------------------------------------------

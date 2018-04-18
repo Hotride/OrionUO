@@ -35,7 +35,7 @@ public:
 	//Отправить данные консоли
 	void Send();
 
-	static void Send(wstring text, const ushort &defaultColor = 0);
+	static void Send(wstring text, ushort defaultColor = 0);
 
 	//Тест данных на не стандартное сообщение
 	static wstring IsSystemCommand(const wchar_t *text, size_t &len, int &member, GAME_CONSOLE_TEXT_TYPE &type);
@@ -45,7 +45,7 @@ public:
 
 	void SaveConsoleMessage();
 
-	void ChangeConsoleMessage(const bool &next);
+	void ChangeConsoleMessage(bool next);
 
 	void ClearStack();
 };

@@ -14,7 +14,7 @@ class CPluginPacket : public WISP_DATASTREAM::CDataWritter
 {
 public:
 	CPluginPacket();
-	CPluginPacket(const int &size, const bool &autoResize = false);
+	CPluginPacket(int size, bool autoResize = false);
 
 	void SendToPlugin();
 };
@@ -40,25 +40,25 @@ public:
 class CPluginPacketFileInfo : public CPluginPacket
 {
 public:
-	CPluginPacketFileInfo(const int &index, const uint64 &address, const uint64 &size);
+	CPluginPacketFileInfo(int index, uint64 address, uint64 size);
 };
 //----------------------------------------------------------------------------------
 class CPluginPacketFileInfoLocalized : public CPluginPacket
 {
 public:
-	CPluginPacketFileInfoLocalized(const int &index, const uint64 &address, const uint64 &size, const string &language);
+	CPluginPacketFileInfoLocalized(int index, uint64 address, uint64 size, const string &language);
 };
 //----------------------------------------------------------------------------------
 class CPluginPacketStaticArtGraphicDataInfo : public CPluginPacket
 {
 public:
-	CPluginPacketStaticArtGraphicDataInfo(const ushort &graphic, const uint64 &address, const uint64 &size, const uint64 &compressedSize);
+	CPluginPacketStaticArtGraphicDataInfo(ushort graphic, uint64 address, uint64 size, uint64 compressedSize);
 };
 //----------------------------------------------------------------------------------
 class CPluginPacketGumpArtGraphicDataInfo : public CPluginPacket
 {
 public:
-	CPluginPacketGumpArtGraphicDataInfo(const ushort &graphic, const uint64 &address, const uint64 &size, const uint64 &compressedSize, const ushort &width, const ushort &height);
+	CPluginPacketGumpArtGraphicDataInfo(ushort graphic, uint64 address, uint64 size, uint64 compressedSize, ushort width, ushort height);
 };
 //----------------------------------------------------------------------------------
 class CPluginPacketFilesTransfered : public CPluginPacket

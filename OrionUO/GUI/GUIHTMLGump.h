@@ -14,29 +14,30 @@
 //----------------------------------------------------------------------------------
 class CGUIHTMLGump : public CGUIPolygonal
 {
+public:
 	//!Имеет фон
-	SETGET(bool, HaveBackground, false);
+	bool HaveBackground = false;
 
 	//!Имеет скроллер с кнопками
-	SETGET(bool, HaveScrollbar, false);
+	bool HaveScrollbar = false;
 
 	//!Размер данных, хранимых внутри компоненты
-	SETGET(WISP_GEOMETRY::CSize, DataSize, WISP_GEOMETRY::CSize());
+	WISP_GEOMETRY::CSize DataSize = WISP_GEOMETRY::CSize();
 
 	//!Смещение к данным
-	SETGET(WISP_GEOMETRY::CPoint2Di, DataOffset, WISP_GEOMETRY::CPoint2Di());
+	WISP_GEOMETRY::CPoint2Di DataOffset = WISP_GEOMETRY::CPoint2Di();
 
 	//!Текущее смещение к данным
-	SETGET(WISP_GEOMETRY::CPoint2Di, CurrentOffset, WISP_GEOMETRY::CPoint2Di());
+	WISP_GEOMETRY::CPoint2Di CurrentOffset = WISP_GEOMETRY::CPoint2Di();
 
 	//!Доступное смещение для скроллинга
-	SETGET(WISP_GEOMETRY::CPoint2Di, AvailableOffset, WISP_GEOMETRY::CPoint2Di());
+	WISP_GEOMETRY::CPoint2Di AvailableOffset = WISP_GEOMETRY::CPoint2Di();
 
 private:
 	void CalculateDataSize(CBaseGUI *item, int &startX, int &startY, int &endX, int &endY);
 
 public:
-	CGUIHTMLGump(const uint &serial, const ushort &graphic, const int &x, const int &y, const int &width, const int &height, const bool &haveBackground, const bool &haveScrollbar);
+	CGUIHTMLGump(int serial, ushort graphic, int x, int y, int width, int height, bool haveBackground, bool haveScrollbar);
 	virtual ~CGUIHTMLGump();
 
 	//!Ссылки на компоненты
@@ -53,7 +54,7 @@ public:
 	void Initalize(bool menu = false);
 
 	//!Обновление высота гампа
-	void UpdateHeight(const int &height);
+	void UpdateHeight(int height);
 
 	//!Сброс смещений
 	void ResetDataOffset();
@@ -68,7 +69,7 @@ public:
 	virtual bool Select();
 
 	//!Функция прокрутки
-	virtual void Scroll(const bool &up, const uint &delay);
+	virtual void Scroll(bool up, int delay);
 
 	virtual bool IsHTMLGump() { return true; }
 };

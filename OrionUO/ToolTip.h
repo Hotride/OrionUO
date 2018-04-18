@@ -13,14 +13,14 @@
 //Класс для работы с тултипами
 class CToolTip
 {
-	SETGET(uint, Timer, 0);
-	SETGET(wstring, Data, L"");
-	SETGET(uint, ClilocID, 0);
-	SETGET(int, MaxWidth, 0);
-	SETGET(WISP_GEOMETRY::CPoint2Di, Position, WISP_GEOMETRY::CPoint2Di());
-	SETGET(bool, Use, false);
-
 public:
+	uint Timer = 0;
+	wstring Data = L"";
+	uint ClilocID = 0;
+	int MaxWidth = 0;
+	WISP_GEOMETRY::CPoint2Di Position = WISP_GEOMETRY::CPoint2Di();
+	bool Use = false;
+
 	CToolTip();
 	~CToolTip();
 
@@ -31,16 +31,16 @@ public:
 	//Текстура тулпита
 	CGLTextTexture Texture;
 
-	void CreateTextTexture(CGLTextTexture &texture, const wstring &str, int &width, const int &minWidth);
+	void CreateTextTexture(CGLTextTexture &texture, const wstring &str, int &width, int minWidth);
 
 	//Установить тултип из строки
-	void Set(const wstring &str, const int &maxWidth = 0);
+	void Set(const wstring &str, int maxWidth = 0);
 
 	//Установить тултип из клилока
-	void Set(const uint &clilocID, const string &str, const int &maxWidth = 0, const bool &toCamelCase = false);
+	void Set(int clilocID, const string &str, int maxWidth = 0, bool toCamelCase = false);
 
 	//Отрисовать тултип
-	void Draw(const int &cursorWidth = 0, const int &cursorHeight = 0);
+	void Draw(int cursorWidth = 0, int cursorHeight = 0);
 };
 //----------------------------------------------------------------------------------
 extern CToolTip g_ToolTip;

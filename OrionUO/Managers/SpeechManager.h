@@ -12,49 +12,48 @@
 //----------------------------------------------------------------------------------
 class CLangCode
 {
-	SETGET(int, Code, 0);
+public:
+	int Code = 0;
 
 	//! Строковая, уникальная абревиатура локали.
-	SETGET(string, Abbreviature, "");
+	string Abbreviature = "";
 
 	//! Числовая абревиатура группы? локали.
-	SETGET(uint, Unknown, 0);
+	uint Unknown = 0;
 
 	//! Название языка.
-	SETGET(string, Language, "");
+	string Language = "";
 
 	//! Название страны.
-	SETGET(string, Country, "");
+	string Country = "";
 
-public:
 	CLangCode() {}
-	CLangCode(const string &abbreviature, const int &code, const string &language, const string &country)
-		: m_Abbreviature(abbreviature), m_Code(code), m_Language(language), m_Country(country) {}
+	CLangCode(const string &abbreviature, int code, const string &language, const string &country)
+		: Abbreviature(abbreviature), Code(code), Language(language), Country(country) {}
 	virtual ~CLangCode() {}
 };
 //----------------------------------------------------------------------------------
 class CSpeechItem
 {
+public:
 	//! Код посылаемый клиенту.
-	SETGET(ushort, Code, 0);
+	ushort Code = 0;
 
 	//! Строка с ключевым словом для поиска в вводе.
-	SETGET(wstring, Data, L"");
+	wstring Data = L"";
 
-	SETGET(bool, CheckStart, false);
-	SETGET(bool, CheckEnd, false);
+	bool CheckStart = false;
+	bool CheckEnd = false;
 
-public:
 	CSpeechItem() {}
-	CSpeechItem(const ushort &code, const wstring &data);
+	CSpeechItem(ushort code, const wstring &data);
 	virtual ~CSpeechItem() {}
 };
 //----------------------------------------------------------------------------------
 //!Класс менеджера cпича
 class CSpeechManager
 {
-	SETGETP(CLangCode*, CurrentLanguage, NULL);
-
+	CLangCode* CurrentLanguage = NULL;
 private:
 	vector<CSpeechItem> m_SpeechEntries;
 	vector<CLangCode> m_LangCodes;

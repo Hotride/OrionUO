@@ -24,7 +24,7 @@ void CCorpseManager::Add(const CCorpse &corpse)
 	m_List.push_back(corpse);
 }
 //----------------------------------------------------------------------------------
-void CCorpseManager::Remove(const uint &corpseSerial, const uint &objectSerial)
+void CCorpseManager::Remove(int corpseSerial, int objectSerial)
 {
 	for (deque<CCorpse>::iterator i = m_List.begin(); i != m_List.end();)
 	{
@@ -45,7 +45,7 @@ void CCorpseManager::Remove(const uint &corpseSerial, const uint &objectSerial)
 	}
 }
 //----------------------------------------------------------------------------------
-bool CCorpseManager::InList(const uint &corpseSerial, const uint &objectSerial)
+bool CCorpseManager::InList(int corpseSerial, int objectSerial)
 {
 	for (const CCorpse &item : m_List)
 	{
@@ -56,7 +56,7 @@ bool CCorpseManager::InList(const uint &corpseSerial, const uint &objectSerial)
 	return false;
 }
 //----------------------------------------------------------------------------------
-CGameObject *CCorpseManager::GetCorpseObject(const uint &serial)
+CGameObject *CCorpseManager::GetCorpseObject(int serial)
 {
 	for (const CCorpse &item : m_List)
 	{

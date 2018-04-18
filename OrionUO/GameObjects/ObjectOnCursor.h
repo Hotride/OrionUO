@@ -13,40 +13,39 @@
 //!Класс объекта на курсоре
 class CObjectOnCursor
 {
-	//!Активен
-	SETGET(bool, Enabled, false);
-	//!Сброшен
-	SETGET(bool, Dropped, false);
-	//!Серийник объекта
-	SETGET(uint, Serial, 0);
-	//!Индекс картинки
-	SETGET(ushort, Graphic, 0);
-	//!Цвет
-	SETGET(ushort, Color, 0);
-	//!Количество для перемещения
-	SETGET(ushort, Count, 0);
-	//!Количество ранее в стеке
-	SETGET(ushort, TotalCount, 0);
-	//!Слой
-	SETGET(uchar, Layer, 0);
-	//!Флаги
-	SETGET(uchar, Flags, 0);
-	//!Контейнер
-	SETGET(uint, Container, 0);
-	//!Координата X
-	SETGET(ushort, X, 0);
-	//!Координата Y
-	SETGET(ushort, Y, 0);
-	//!Координата Z
-	SETGET(char, Z, 0);
-	//!Это игровая фигура
-	SETGET(bool, IsGameFigure, false);
-	//!Указатель на тайлдату для объекта
-	SETGETP(STATIC_TILES*, TiledataPtr, NULL);
-	//!Обновлен ли предмет в мире
-	SETGET(bool, UpdatedInWorld, false);
-
 public:
+	//!Активен
+	bool Enabled = false;
+	//!Сброшен
+	bool Dropped = false;
+	//!Серийник объекта
+	uint Serial = 0;
+	//!Индекс картинки
+	ushort Graphic = 0;
+	//!Цвет
+	ushort Color = 0;
+	//!Количество для перемещения
+	ushort Count = 0;
+	//!Количество ранее в стеке
+	ushort TotalCount = 0;
+	//!Слой
+	uchar Layer = 0;
+	//!Флаги
+	uchar Flags = 0;
+	//!Контейнер
+	uint Container = 0;
+	//!Координата X
+	ushort X = 0;
+	//!Координата Y
+	ushort Y = 0;
+	//!Координата Z
+	char Z = 0;
+	//!Это игровая фигура
+	bool IsGameFigure = false;
+	//!Указатель на тайлдату для объекта
+	STATIC_TILES* TiledataPtr = NULL;	//!Обновлен ли предмет в мире
+	bool UpdatedInWorld = false;
+
 	CObjectOnCursor() {}
 	virtual ~CObjectOnCursor() {}
 

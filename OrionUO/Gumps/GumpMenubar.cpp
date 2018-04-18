@@ -15,7 +15,7 @@ CGumpMenubar::CGumpMenubar(short x, short y)
 : CGump(GT_MENUBAR, 0, x, y)
 {
 	WISPFUN_DEBUG("c101_f1");
-	m_Page = 2;
+	Page = 2;
 
 	Add(new CGUIPage(1));
 	Add(new CGUIResizepic(0, 0x13BE, 0, 0, 30, 27));
@@ -76,17 +76,17 @@ CGumpMenubar::~CGumpMenubar()
 {
 }
 //---------------------------------------------------------------------------
-void CGumpMenubar::SetOpened(const bool &val)
+void CGumpMenubar::SetOpened(bool val)
 {
 	WISPFUN_DEBUG("c101_f2");
 	m_Opened = val;
 
 	if (val)
-		m_Page = 2;
+		Page = 2;
 	else
-		m_Page = 1;
+		Page = 1;
 
-	m_WantRedraw = true;
+	WantRedraw = true;
 }
 //---------------------------------------------------------------------------
 void CGumpMenubar::InitToolTip()
@@ -94,7 +94,7 @@ void CGumpMenubar::InitToolTip()
 	WISPFUN_DEBUG("c101_f3");
 	uint id = g_SelectedObject.Serial;
 
-	if (!m_Minimized)
+	if (!Minimized)
 	{
 		switch (id)
 		{
@@ -160,8 +160,8 @@ void CGumpMenubar::GUMP_BUTTON_EVENT_C
 		{
 			m_Opened = !m_Opened;
 
-			m_Page = 1 + (int)m_Opened;
-			m_WantUpdateContent = true;
+			Page = 1 + (int)m_Opened;
+			WantUpdateContent = true;
 
 			break;
 		}
@@ -245,6 +245,6 @@ void CGumpMenubar::OnLeftMouseButtonUp()
 		}
 	}
 
-	m_WantRedraw = true;
+	WantRedraw = true;
 }
 //----------------------------------------------------------------------------------

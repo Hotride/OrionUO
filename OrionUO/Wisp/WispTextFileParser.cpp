@@ -270,14 +270,14 @@ void CTextFileParser::SaveRawLine()
 
 	if (size > 0)
 	{
-		m_RawLine.resize(size, 0);
-		memcpy(&m_RawLine[0], &m_Ptr[0], size);
+		RawLine.resize(size, 0);
+		memcpy(&RawLine[0], &m_Ptr[0], size);
 
-		while (m_RawLine.length() && (m_RawLine[size - 1] == '\r' || m_RawLine[size - 1] == '\n'))
-			m_RawLine.resize(m_RawLine.length() - 1);
+		while (RawLine.length() && (RawLine[size - 1] == '\r' || RawLine[size - 1] == '\n'))
+			RawLine.resize(RawLine.length() - 1);
 	}
 	else
-		m_RawLine = "";
+		RawLine = "";
 }
 //----------------------------------------------------------------------------------
 //Прочитать токены из файла
@@ -392,13 +392,13 @@ void CTextFileWritter::WriteString(const string &key, const string &value)
 		fputs(string(key + "=" + value + "\n").c_str(), m_File);
 }
 //----------------------------------------------------------------------------------
-void CTextFileWritter::WriteInt(const string &key, const int &value)
+void CTextFileWritter::WriteInt(const string &key, int value)
 {
 	if (m_File != NULL)
 		fputs(string(key + "=" + std::to_string(value) + "\n").c_str(), m_File);
 }
 //----------------------------------------------------------------------------------
-void CTextFileWritter::WriteBool(const string &key, const bool &value)
+void CTextFileWritter::WriteBool(const string &key, bool value)
 {
 	if (m_File != NULL)
 		fputs(string(key + "=" + (value ? "yes" : "no") + "\n").c_str(), m_File);

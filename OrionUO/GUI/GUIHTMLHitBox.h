@@ -19,11 +19,11 @@ private:
 	class CGUIHTMLGump *m_HTMLGump{ NULL };
 
 public:
-	CGUIHTMLHitBox(class CGUIHTMLGump *htmlGump, const uint &serial, const int &x, const int &y, const int &width, const int &height, const bool &callOnMouseUp = false);
+	CGUIHTMLHitBox(class CGUIHTMLGump *htmlGump, int serial, int x, int y, int width, int height, bool callOnMouseUp = false);
 	virtual ~CGUIHTMLHitBox();
 
 	//!Функция прокрутки
-	void Scroll(const bool &up, const uint &delay);
+	void Scroll(bool up, int delay);
 
 	virtual bool IsControlHTML() { return true; }
 };

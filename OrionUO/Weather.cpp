@@ -34,15 +34,15 @@ CWeather::CWeather()
 void CWeather::Reset()
 {
 	WISPFUN_DEBUG("c214_f1");
-	m_Type = 0;
-	m_Count = 0;
-	m_CurrentCount = 0;
-	m_Temperature = 0;
+	Type = 0;
+	Count = 0;
+	CurrentCount = 0;
+	Temperature = 0;
 
-	m_Wind = 0;
-	m_WindTimer = 0;
+	Wind = 0;
+	WindTimer = 0;
 
-	m_Timer = 0;
+	Timer = 0;
 	
 	m_Effects.clear();
 }
@@ -50,20 +50,20 @@ void CWeather::Reset()
 void CWeather::Generate()
 {
 	WISPFUN_DEBUG("c214_f2");
-	m_LastTick = g_Ticks;
+	LastTick = g_Ticks;
 
-	if (m_Type == 0xFF || m_Type == 0xFE)
+	if (Type == 0xFF || Type == 0xFE)
 		return;
 
 	int drawX = g_ConfigManager.GameWindowX;
 	int drawY = g_ConfigManager.GameWindowY;
 
-	if (m_Count > 70)
-		m_Count = 70;
+	if (Count > 70)
+		Count = 70;
 
-	m_WindTimer = 0;
+	WindTimer = 0;
 	
-	while (m_CurrentCount < m_Count)
+	while (CurrentCount < Count)
 	{
 		CWeatherEffect effect;
 
@@ -72,60 +72,60 @@ void CWeather::Generate()
 
 		m_Effects.push_back(effect);
 
-		m_CurrentCount++;
+		CurrentCount++;
 	}
 }
 //---------------------------------------------------------------------------
-void CWeather::Draw(const int &x, const int &y)
+void CWeather::Draw(int x, int y)
 {    
 	WISPFUN_DEBUG("c214_f3");
 	bool removeEffects = false;
 
-	if (m_Timer < g_Ticks)
+	if (Timer < g_Ticks)
 	{
-		//if (m_CurrentCount) Reset();
-		if (!m_CurrentCount)
+		//if (CurrentCount) Reset();
+		if (!CurrentCount)
 			return;
 
 		removeEffects = true;
 	}
-	else if (m_Type == 0xFF || m_Type == 0xFE)
+	else if (Type == 0xFF || Type == 0xFE)
 		return;
 
-	uint passed = g_Ticks - m_LastTick;
+	uint passed = g_Ticks - LastTick;
 
 	if (passed > 7000) // если времени слишком много прошло со старой симуляции
 	{
-		m_LastTick = g_Ticks;
+		LastTick = g_Ticks;
 		passed = 25;
 	}
 
 	bool windChanged = false;
 
-	if (m_WindTimer < g_Ticks)
+	if (WindTimer < g_Ticks)
 	{
-		if (!m_WindTimer)
+		if (!WindTimer)
 			windChanged = true; //Для установки стартовых значений снежинок
 
-		m_WindTimer = g_Ticks + (RandomIntMinMax(7, 13) * 1000);
+		WindTimer = g_Ticks + (RandomIntMinMax(7, 13) * 1000);
 
-		char lastWind = m_Wind;
+		char lastWind = Wind;
 
-		m_Wind = RandomInt(4);
+		Wind = RandomInt(4);
 
 		if (RandomInt(2))
-			m_Wind *= (-1);
+			Wind *= (-1);
 		
-		if (m_Wind < 0 && lastWind > 0)
-			m_Wind = 0;
-		else if (m_Wind > 0 && lastWind < 0)
-			m_Wind = 0;
+		if (Wind < 0 && lastWind > 0)
+			Wind = 0;
+		else if (Wind > 0 && lastWind < 0)
+			Wind = 0;
 
-		if (lastWind != m_Wind)
+		if (lastWind != Wind)
 			windChanged = true;
 	}
 	
-	switch (m_Type)
+	switch (Type)
 	{
 		case WT_RAIN:
 		case WT_FIERCE_STORM:
@@ -153,10 +153,10 @@ void CWeather::Draw(const int &x, const int &y)
 			{
 				effect = m_Effects.erase(effect);
 
-				if (m_CurrentCount > 0)
-					m_CurrentCount--;
+				if (CurrentCount > 0)
+					CurrentCount--;
 				else
-					m_CurrentCount = 0;
+					CurrentCount = 0;
 
 				continue;
 			}
@@ -167,52 +167,52 @@ void CWeather::Draw(const int &x, const int &y)
 			}
 		}        
 
-		switch (m_Type)
+		switch (Type)
 		{
 			case WT_RAIN:
 			{
-				float scaleRatio = effect->GetScaleRatio();
+				float scaleRatio = effect->ScaleRatio;
 				effect->SpeedX = -4.5f - scaleRatio;
 				effect->SpeedY = 5.0f + scaleRatio;
 				break;
 			}
 			case WT_FIERCE_STORM:
 			{
-				effect->SpeedX = m_Wind;
+				effect->SpeedX = Wind;
 				effect->SpeedY = 6.0f;
 				break;
 			}
 			case WT_SNOW:
 			case WT_STORM:
 			{
-				if (m_Type == WT_SNOW)
+				if (Type == WT_SNOW)
 				{
-					effect->SpeedX = m_Wind;
+					effect->SpeedX = Wind;
 					effect->SpeedY = 1.0f;
 				}
 				else
 				{
-					effect->SpeedX = (m_Wind * 1.5f);
+					effect->SpeedX = (Wind * 1.5f);
 					effect->SpeedY = 1.5f;
 				}
 
 				if (windChanged)
 				{
 					// вычисление угла скорости в градусах
-					effect->SetSpeedAngle(rad2degf(std::atan2f(effect->SpeedX, effect->SpeedY)));
+					effect->SpeedAngle = rad2degf(std::atan2f(effect->SpeedX, effect->SpeedY));
 					// числинное значение скорости
-					effect->SetSpeedMagnitude(sqrtf(powf(effect->SpeedX, 2) + powf(effect->SpeedY, 2)));
+					effect->SpeedMagnitude = sqrtf(powf(effect->SpeedX, 2) + powf(effect->SpeedY, 2));
 				}
 
-				float speed_angle = effect->GetSpeedAngle();
-				float speed_magnitude = effect->GetSpeedMagnitude();
+				float speed_angle = effect->SpeedAngle;
+				float speed_magnitude = effect->SpeedMagnitude;
 
 				// коэффицент скейлирования (используеться для рандомизации скорости снега)
-				speed_magnitude += effect->GetScaleRatio();
+				speed_magnitude += effect->ScaleRatio;
 
 				// тут движение УГЛА силы по синусоиде, ID() снежинки добавляется для смещения фазы
 				// хотя там можно заюзать любое постоянное число, например, порядковый номер снежинки
-				speed_angle += SinOscillate(0.4f, 20, g_Ticks + effect->GetID());
+				speed_angle += SinOscillate(0.4f, 20, g_Ticks + effect->ID);
 
 				// обратная проекция на оси X, Y из угла и (скалярного) значения
 				effect->SpeedX = speed_magnitude * sinf(deg2radf(speed_angle));
@@ -224,9 +224,9 @@ void CWeather::Draw(const int &x, const int &y)
 				break;
 		}
 
-		float speedOffset = passed / m_SimulationRatio;
+		float speedOffset = passed / SimulationRatio;
 
-		switch (m_Type)
+		switch (Type)
 		{
 			case WT_RAIN:
 			case WT_FIERCE_STORM:
@@ -274,6 +274,6 @@ void CWeather::Draw(const int &x, const int &y)
 	}
 
 	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-	m_LastTick = g_Ticks;
+	LastTick = g_Ticks;
 }
 //---------------------------------------------------------------------------

@@ -18,7 +18,7 @@ CPluginPacket::CPluginPacket()
 	WriteUInt16BE(0); //size reserved
 }
 //----------------------------------------------------------------------------------
-CPluginPacket::CPluginPacket(const int &size, const bool &autoResize)
+CPluginPacket::CPluginPacket(int size, bool autoResize)
 : WISP_DATASTREAM::CDataWritter(size, autoResize)
 {
 }
@@ -117,7 +117,7 @@ CPluginPacketMacrosList::CPluginPacketMacrosList()
 	}
 }
 //----------------------------------------------------------------------------------
-CPluginPacketFileInfo::CPluginPacketFileInfo(const int &index, const uint64 &address, const uint64 &size)
+CPluginPacketFileInfo::CPluginPacketFileInfo(int index, uint64 address, uint64 size)
 : CPluginPacket()
 {
 	WriteUInt16BE(OIPMT_FILE_INFO);
@@ -126,7 +126,7 @@ CPluginPacketFileInfo::CPluginPacketFileInfo(const int &index, const uint64 &add
 	WriteUInt64BE(size);
 }
 //----------------------------------------------------------------------------------
-CPluginPacketFileInfoLocalized::CPluginPacketFileInfoLocalized(const int &index, const uint64 &address, const uint64 &size, const string &language)
+CPluginPacketFileInfoLocalized::CPluginPacketFileInfoLocalized(int index, uint64 address, uint64 size, const string &language)
 : CPluginPacket()
 {
 	WriteUInt16BE(OIPMT_FILE_INFO_LOCALIZED);
@@ -136,7 +136,7 @@ CPluginPacketFileInfoLocalized::CPluginPacketFileInfoLocalized(const int &index,
 	WriteString(language);
 }
 //----------------------------------------------------------------------------------
-CPluginPacketStaticArtGraphicDataInfo::CPluginPacketStaticArtGraphicDataInfo(const ushort &graphic, const uint64 &address, const uint64 &size, const uint64 &compressedSize)
+CPluginPacketStaticArtGraphicDataInfo::CPluginPacketStaticArtGraphicDataInfo(ushort graphic, uint64 address, uint64 size, uint64 compressedSize)
 : CPluginPacket()
 {
 	WriteUInt16BE(OIPMT_GRAPHIC_DATA_INFO);
@@ -147,7 +147,7 @@ CPluginPacketStaticArtGraphicDataInfo::CPluginPacketStaticArtGraphicDataInfo(con
 	WriteUInt64BE(compressedSize);
 }
 //----------------------------------------------------------------------------------
-CPluginPacketGumpArtGraphicDataInfo::CPluginPacketGumpArtGraphicDataInfo(const ushort &graphic, const uint64 &address, const uint64 &size, const uint64 &compressedSize, const ushort &width, const ushort &height)
+CPluginPacketGumpArtGraphicDataInfo::CPluginPacketGumpArtGraphicDataInfo(ushort graphic, uint64 address, uint64 size, uint64 compressedSize, ushort width, ushort height)
 : CPluginPacket()
 {
 	WriteUInt16BE(OIPMT_GRAPHIC_DATA_INFO);

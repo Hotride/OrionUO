@@ -82,17 +82,17 @@ void CGumpTargetSystem::UpdateContent()
 		if (color)
 			m_DataBox->Add(new CGUIShader(&g_ColorizerShader, false));
 
-		m_OldName = obj->GetName();
+		OldName = obj->GetName();
 
-		if (!obj->NPC && !m_OldName.length())
+		if (!obj->NPC && !OldName.length())
 		{
 			STATIC_TILES *st = obj->StaticGroupObjectPtr()->GetStaticData();
 
-			m_OldName = g_ClilocManager.Cliloc(g_Language)->GetA(1020000 + obj->Graphic, true, st->Name);
+			OldName = g_ClilocManager.Cliloc(g_Language)->GetA(1020000 + obj->Graphic, true, st->Name);
 		}
 
 		CGUIText *text = (CGUIText*)m_DataBox->Add(new CGUIText(0x0386, 16, 14));
-		text->CreateTextureA(1, m_OldName, 150, TS_LEFT, UOFONT_FIXED);
+		text->CreateTextureA(1, OldName, 150, TS_LEFT, UOFONT_FIXED);
 
 		//Hits
 		m_DataBox->Add(new CGUIGumppic(0x0805, 34, 38));
@@ -128,7 +128,7 @@ void CGumpTargetSystem::UpdateContent()
 		m_DataBox->Add(new CGUIShader(&g_ColorizerShader, false));
 
 		CGUIText *text = (CGUIText*)m_DataBox->Add(new CGUIText(0x0386, 16, 14));
-		text->CreateTextureA(1, m_OldName, 150, TS_LEFT, UOFONT_FIXED);
+		text->CreateTextureA(1, OldName, 150, TS_LEFT, UOFONT_FIXED);
 	}
 }
 //----------------------------------------------------------------------------
@@ -157,7 +157,7 @@ void CGumpTargetSystem::GUMP_BUTTON_EVENT_C
 
 	if (serial == ID_GSB_LOCK_MOVING)
 	{
-		m_LockMoving = !m_LockMoving;
+		LockMoving = !LockMoving;
 		g_MouseManager.CancelDoubleClick = true;
 	}
 }

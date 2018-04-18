@@ -15,13 +15,13 @@
 class CGUIExternalTexture : public CBaseGUI
 {
 	//!Удалять ли текстуру при удалении объекта
-	SETGET(bool, DeleteTextureOnDestroy, false);
+	bool DeleteTextureOnDestroy = false;
 
-	SETGET(short, DrawWidth, 0);
-	SETGET(short, DrawHeight, 0);
+	short DrawWidth = 0;
+	short DrawHeight = 0;
 
 public:
-	CGUIExternalTexture(CGLTexture *texture, const bool &deleteTextureOnDestroy, const int &x, const int &y, const int &drawWidth = 0, const int &drawHeight = 0);
+	CGUIExternalTexture(CGLTexture *texture, bool deleteTextureOnDestroy, int x, int y, int drawWidth = 0, int drawHeight = 0);
 	virtual ~CGUIExternalTexture();
 
 	//!Ссылка на текстуру
@@ -30,7 +30,7 @@ public:
 	virtual WISP_GEOMETRY::CSize GetSize();
 
 	virtual void SetShaderMode();
-	virtual void Draw(const bool &checktrans = false);
+	virtual void Draw(bool checktrans = false);
 	virtual bool Select();
 };
 //----------------------------------------------------------------------------------

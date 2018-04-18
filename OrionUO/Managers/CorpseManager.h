@@ -12,15 +12,15 @@
 //----------------------------------------------------------------------------------
 class CCorpse
 {
-	SETGET(uint, CorpseSerial, 0);
-	SETGET(uint, ObjectSerial, 0);
-	SETGET(uchar, Direction, 0);
-	SETGET(bool, Running, false);
-
 public:
+	uint CorpseSerial = 0;
+	uint ObjectSerial = 0;
+	uchar Direction = 0;
+	bool Running = false;
+
 	CCorpse() {}
-	CCorpse(const uint &corpseSerial, const uint &objectSerial, const uchar &direction, const bool &running)
-		: m_CorpseSerial(corpseSerial), m_ObjectSerial(objectSerial), m_Direction(direction), m_Running(running) {}
+	CCorpse(int corpseSerial, int objectSerial, uchar direction, bool running)
+		: CorpseSerial(corpseSerial), ObjectSerial(objectSerial), Direction(direction), Running(running) {}
 	~CCorpse() {}
 };
 //----------------------------------------------------------------------------------
@@ -36,11 +36,11 @@ public:
 
 	void Add(const CCorpse &corpse);
 
-	void Remove(const uint &corpseSerial, const uint &objectSerial);
+	void Remove(int corpseSerial, int objectSerial);
 
-	bool InList(const uint &corpseSerial, const uint &objectSerial);
+	bool InList(int corpseSerial, int objectSerial);
 
-	CGameObject *GetCorpseObject(const uint &serial);
+	CGameObject *GetCorpseObject(int serial);
 
 	void Clear() { m_List.clear(); }
 };

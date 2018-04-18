@@ -15,15 +15,15 @@ CPartyObject::CPartyObject()
 {
 }
 //----------------------------------------------------------------------------------
-string CPartyObject::GetName(const int &index)
+string CPartyObject::GetName(int index)
 {
 	WISPFUN_DEBUG("c197_f1");
-	if (m_Serial)
+	if (Serial)
 	{
 		if (Character == NULL)
-			Character = g_World->FindWorldCharacter(m_Serial);
+			Character = g_World->FindWorldCharacter(Serial);
 		if (Character != NULL)
-			return Character->Name;
+			return Character->GetName();
 	}
 
 	char buf[10] = {0};

@@ -73,9 +73,13 @@ struct HTMLGumpDataInfo
 //----------------------------------------------------------------------------------
 class CPacketManager : public WISP_NETWORK::CPacketReader
 {
-	SETGETE(CLIENT_VERSION, ClientVersion, CV_OLD);
-	SETGET(string, AutoLoginNames, "");
-	SETGET(uint, ConfigSerial, 0);
+protected:
+    CLIENT_VERSION m_ClientVersion = CV_OLD;
+public:
+    CLIENT_VERSION GetClientVersion() { return m_ClientVersion; };
+    void SetClientVersion(CLIENT_VERSION val);
+	string AutoLoginNames = "";
+	uint ConfigSerial = 0;
 
 private:
 	static CPacketInfo m_Packets[0x100];
@@ -215,17 +219,17 @@ public:
 
 	virtual int GetPacketSize(const UCHAR_LIST &packet, int &offsetToSize);
 
-	CPacketInfo GetInfo(const uchar &buf) const { return m_Packets[buf]; }
+	CPacketInfo GetInfo(uchar buf) const { return m_Packets[buf]; }
 
 	void SendMegaClilocRequests();
 
-	void AddMegaClilocRequest(const uint &serial);
+	void AddMegaClilocRequest(int serial);
 
-	void SavePluginReceivePacket(puchar buf, const int &size);
+	void SavePluginReceivePacket(puchar buf, int size);
 
 	void ProcessPluginPackets();
 
-	void PluginReceiveHandler(puchar buf, const int &size);
+	void PluginReceiveHandler(puchar buf, int size);
 
 	void SetCachedGumpCoords(uint id, int x, int y);
 };

@@ -138,7 +138,7 @@ float CSoundManager::GetVolumeValue(int distance, bool music)
 {
 	WISPFUN_DEBUG("c156_f5");
 	float volume = BASS_GetVolume();
-	WORD clientConfigVolume = music ? g_ConfigManager.MusicVolume : g_ConfigManager.SoundVolume;
+	WORD clientConfigVolume = music ? g_ConfigManager.GetMusicVolume() : g_ConfigManager.GetSoundVolume();
 	if (volume == 0 || clientConfigVolume == 0) return 0;
 	float clientsVolumeValue = (static_cast<float>(255) / static_cast<float>(clientConfigVolume));
 	volume /= clientsVolumeValue;
@@ -258,7 +258,7 @@ void CSoundManager::PlayMidi(int index, bool warmode)
 			m_WarMusic = streamHandle;
 		else
 		{
-			m_CurrentMusicIndex = index;
+			CurrentMusicIndex = index;
 			m_Music = streamHandle;
 		}
 	}
@@ -284,7 +284,7 @@ void CSoundManager::PlayMP3(const string &fileName, int index, bool loop, bool w
 	else
 	{
 		m_Music = streamHandle;
-		m_CurrentMusicIndex = index;
+		CurrentMusicIndex = index;
 	}
 
 }

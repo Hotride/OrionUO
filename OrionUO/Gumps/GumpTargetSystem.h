@@ -12,7 +12,7 @@
 //----------------------------------------------------------------------------------
 class CGumpTargetSystem : public CGump
 {
-	SETGET(string, OldName, "");
+	string OldName = "";
 
 private:
 	static const int ID_GSB_BUFF_GUMP = 1;

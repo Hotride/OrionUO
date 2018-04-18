@@ -323,7 +323,7 @@ void CMacroManager::Save(const string &path)
 @param [__in] shift Зажатый шифт
 @return Ссылку на макрос или NULL
 */
-CMacro *CMacroManager::FindMacro(const ushort &key, const bool &alt, const bool &ctrl, const bool &shift)
+CMacro *CMacroManager::FindMacro(ushort key, bool alt, bool ctrl, bool shift)
 {
 	WISPFUN_DEBUG("c145_f5");
 	CMacro *obj = (CMacro*)m_Items;
@@ -357,9 +357,9 @@ void CMacroManager::ChangePointer(CMacroObject *macro)
 {
 	g_MacroPointer = macro;
 
-	if (g_MacroPointer == NULL && m_SendNotificationToPlugin)
+	if (g_MacroPointer == NULL && SendNotificationToPlugin)
 	{
-		m_SendNotificationToPlugin = false;
+		SendNotificationToPlugin = false;
 		g_PluginManager.WindowProc(g_OrionWindow.Handle, UOMSG_END_MACRO_PAYING, 0, 0);
 	}
 }
@@ -787,7 +787,7 @@ MACRO_RETURN_CODE CMacroManager::Process(CMacroObject *macro)
 						break;
 				}
 
-				if (g_PacketManager.ClientVersion >= CV_500A)
+				if (g_PacketManager.GetClientVersion() >= CV_500A)
 					CPacketUnicodeSpeechRequest(ToWString(mos->String).c_str(), st, 3, g_ConfigManager.SpeechColor, (puchar)g_Language.c_str()).Send();
 				else
 					CPacketASCIISpeechRequest(mos->String.c_str(), st, 3, g_ConfigManager.SpeechColor).Send();
@@ -959,8 +959,8 @@ MACRO_RETURN_CODE CMacroManager::Process(CMacroObject *macro)
 		}
 		case MC_LAST_TARGET:
 		{
-			if (m_WaitForTargetTimer == 0)
-				m_WaitForTargetTimer = g_Ticks + WAIT_FOR_TARGET_DELAY;
+			if (WaitForTargetTimer == 0)
+				WaitForTargetTimer = g_Ticks + WAIT_FOR_TARGET_DELAY;
 
 			if (g_Target.IsTargeting())
 			{
@@ -969,10 +969,10 @@ MACRO_RETURN_CODE CMacroManager::Process(CMacroObject *macro)
 				else
 					g_Target.SendTargetObject(g_LastTargetObject);
 
-				m_WaitForTargetTimer = 0;
+				WaitForTargetTimer = 0;
 			}
-			else if (m_WaitForTargetTimer < g_Ticks)
-				m_WaitForTargetTimer = 0;
+			else if (WaitForTargetTimer < g_Ticks)
+				WaitForTargetTimer = 0;
 			else
 				result = MRC_BREAK_PARSER;
 
@@ -980,17 +980,17 @@ MACRO_RETURN_CODE CMacroManager::Process(CMacroObject *macro)
 		}
 		case MC_TARGET_SELF:
 		{
-			if (m_WaitForTargetTimer == 0)
-				m_WaitForTargetTimer = g_Ticks + WAIT_FOR_TARGET_DELAY;
+			if (WaitForTargetTimer == 0)
+				WaitForTargetTimer = g_Ticks + WAIT_FOR_TARGET_DELAY;
 
 			if (g_Target.IsTargeting())
 			{
 				g_Target.SendTargetObject(g_PlayerSerial);
 
-				m_WaitForTargetTimer = 0;
+				WaitForTargetTimer = 0;
 			}
-			else if (m_WaitForTargetTimer < g_Ticks)
-				m_WaitForTargetTimer = 0;
+			else if (WaitForTargetTimer < g_Ticks)
+				WaitForTargetTimer = 0;
 			else
 				result = MRC_BREAK_PARSER;
 
@@ -1043,11 +1043,11 @@ MACRO_RETURN_CODE CMacroManager::Process(CMacroObject *macro)
 		}
 		case MC_WAIT_FOR_TARGET:
 		{
-			if (m_WaitForTargetTimer == 0)
-				m_WaitForTargetTimer = g_Ticks + WAIT_FOR_TARGET_DELAY;
+			if (WaitForTargetTimer == 0)
+				WaitForTargetTimer = g_Ticks + WAIT_FOR_TARGET_DELAY;
 
-			if (g_Target.IsTargeting() || m_WaitForTargetTimer < g_Ticks)
-				m_WaitForTargetTimer = 0;
+			if (g_Target.IsTargeting() || WaitForTargetTimer < g_Ticks)
+				WaitForTargetTimer = 0;
 			else
 				result = MRC_BREAK_PARSER;
 
@@ -1159,17 +1159,17 @@ MACRO_RETURN_CODE CMacroManager::Process(CMacroObject *macro)
 		{
 			if (!g_ConfigManager.DisableNewTargetSystem && g_NewTargetSystem.Serial)
 			{
-				if (m_WaitForTargetTimer == 0)
-					m_WaitForTargetTimer = g_Ticks + WAIT_FOR_TARGET_DELAY;
+				if (WaitForTargetTimer == 0)
+					WaitForTargetTimer = g_Ticks + WAIT_FOR_TARGET_DELAY;
 
 				if (g_Target.IsTargeting())
 				{
 					g_Target.SendTargetObject(g_NewTargetSystem.Serial);
 
-					m_WaitForTargetTimer = 0;
+					WaitForTargetTimer = 0;
 				}
-				else if (m_WaitForTargetTimer < g_Ticks)
-					m_WaitForTargetTimer = 0;
+				else if (WaitForTargetTimer < g_Ticks)
+					WaitForTargetTimer = 0;
 				else
 					result = MRC_BREAK_PARSER;
 			}
@@ -1186,12 +1186,12 @@ MACRO_RETURN_CODE CMacroManager::Process(CMacroObject *macro)
 		case MC_BANDAGE_TARGET:
 		{
 			//На самом деле с 5.0.4a
-			if (g_PacketManager.ClientVersion < CV_5020)
+			if (g_PacketManager.GetClientVersion() < CV_5020)
 			{
-				if (m_WaitingBandageTarget)
+				if (WaitingBandageTarget)
 				{
-					if (m_WaitForTargetTimer == 0)
-						m_WaitForTargetTimer = g_Ticks + 500;
+					if (WaitForTargetTimer == 0)
+						WaitForTargetTimer = g_Ticks + 500;
 
 					if (g_Target.IsTargeting())
 					{
@@ -1200,13 +1200,13 @@ MACRO_RETURN_CODE CMacroManager::Process(CMacroObject *macro)
 						else if (!g_ConfigManager.DisableNewTargetSystem && g_NewTargetSystem.Serial)
 							g_Target.SendTargetObject(g_NewTargetSystem.Serial);
 
-						m_WaitingBandageTarget = false;
-						m_WaitForTargetTimer = 0;
+						WaitingBandageTarget = false;
+						WaitForTargetTimer = 0;
 					}
-					else if (m_WaitForTargetTimer < g_Ticks)
+					else if (WaitForTargetTimer < g_Ticks)
 					{
-						m_WaitingBandageTarget = false;
-						m_WaitForTargetTimer = 0;
+						WaitingBandageTarget = false;
+						WaitForTargetTimer = 0;
 					}
 					else
 						result = MRC_BREAK_PARSER;
@@ -1217,7 +1217,7 @@ MACRO_RETURN_CODE CMacroManager::Process(CMacroObject *macro)
 
 					if (bandage != NULL)
 					{
-						m_WaitingBandageTarget = true;
+						WaitingBandageTarget = true;
 						g_Orion.DoubleClick(bandage->Serial);
 
 						result = MRC_BREAK_PARSER;

@@ -11,15 +11,15 @@
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
 //----------------------------------------------------------------------------------
-CGumpBulletinBoardItem::CGumpBulletinBoardItem(const uint &serial, const int &x, const int &y, const uchar &variant, const uint &id, const wstring &poster, const wstring &subject, const wstring &dataTime, const wstring &data)
+CGumpBulletinBoardItem::CGumpBulletinBoardItem(int serial, int x, int y, uchar variant, int id, const wstring &poster, const wstring &subject, const wstring &dataTime, const wstring &data)
 : CGumpBaseScroll(GT_BULLETIN_BOARD_ITEM, serial, 0x0820, 250, x, y, false, 70),
 m_Variant(variant)
 {
 	WISPFUN_DEBUG("c90_f1");
-	m_ID = id;
+	ID = id;
 	m_MinHeight = 200;
 
-	bool useUnicode = (g_PacketManager.ClientVersion >= CV_305D);
+	bool useUnicode = (g_PacketManager.GetClientVersion() >= CV_305D);
 	int unicodeFontIndex = 1;
 	int unicodeHeightOffset = 0;
 	ushort textColor = 0x0386;
@@ -107,17 +107,17 @@ m_Variant(variant)
 		case 0:
 		{
 			Add(new CGUIGumppic(0x0883, 97, 12)); //NEW MESSAGE
-			m_ButtonPost = (CGUIButton*)Add(new CGUIButton(ID_GBBI_POST, 0x0886, 0x0886, 0x0886, 37, m_Height - 22)); //Post
+			m_ButtonPost = (CGUIButton*)Add(new CGUIButton(ID_GBBI_POST, 0x0886, 0x0886, 0x0886, 37, Height - 22)); //Post
 			m_ButtonPost->CheckPolygone = true;
 
 			break;
 		}
 		case 2:
-			m_ButtonRemove = (CGUIButton*)Add(new CGUIButton(ID_GBBI_REMOVE, 0x0885, 0x0885, 0x0885, 235, m_Height - 22)); //Remove
+			m_ButtonRemove = (CGUIButton*)Add(new CGUIButton(ID_GBBI_REMOVE, 0x0885, 0x0885, 0x0885, 235, Height - 22)); //Remove
 			m_ButtonRemove->CheckPolygone = true;
 		case 1:
 		{
-			m_ButtonReply = (CGUIButton*)Add(new CGUIButton(ID_GBBI_REPLY, 0x0884, 0x0884, 0x0884, 37, m_Height - 22)); //Reply
+			m_ButtonReply = (CGUIButton*)Add(new CGUIButton(ID_GBBI_REPLY, 0x0884, 0x0884, 0x0884, 37, Height - 22)); //Reply
 			m_ButtonReply->CheckPolygone = true;
 
 			m_EntrySubject->ReadOnly = true;
@@ -140,13 +140,13 @@ void CGumpBulletinBoardItem::UpdateHeight()
 	CGumpBaseScroll::UpdateHeight();
 
 	if (m_ButtonPost != NULL)
-		m_ButtonPost->Y = m_Height - 22; //Post
+		m_ButtonPost->SetY(Height - 22); //Post
 
 	if (m_ButtonRemove != NULL)
-		m_ButtonRemove->Y = m_Height - 22; //Remove
+		m_ButtonRemove->SetY(Height - 22); //Remove
 
 	if (m_ButtonReply != NULL)
-		m_ButtonReply->Y = m_Height - 22; //Reply
+		m_ButtonReply->SetY(Height - 22); //Reply
 }
 //----------------------------------------------------------------------------------
 void CGumpBulletinBoardItem::RecalculateHeight()
@@ -171,22 +171,22 @@ void CGumpBulletinBoardItem::GUMP_BUTTON_EVENT_C
 	{
 		if (serial == ID_GBBI_POST)
 		{
-			CPacketBulletinBoardPostMessage(m_ID, 0, m_EntrySubject->m_Entry.c_str(), m_Entry->m_Entry.c_str()).Send();
+			CPacketBulletinBoardPostMessage(ID, 0, m_EntrySubject->m_Entry.c_str(), m_Entry->m_Entry.c_str()).Send();
 
-			m_RemoveMark = true;
+			RemoveMark = true;
 		}
 		else if (serial == ID_GBBI_REPLY)
 		{
 			wstring subj(L"RE: ");
 			subj += m_EntrySubject->m_Entry.Data();
 
-			CGumpBulletinBoardItem *gump = new CGumpBulletinBoardItem(0, 0, 0, 0, m_ID, ToWString(g_Player->Name), subj, L"Date/Time", L"");
+			CGumpBulletinBoardItem *gump = new CGumpBulletinBoardItem(0, 0, 0, 0, ID, ToWString(g_Player->GetName()), subj, L"Date/Time", L"");
 
 			g_GumpManager.AddGump(gump);
 		}
 		else if (serial == ID_GBBI_REMOVE)
 		{
-			CPacketBulletinBoardRemoveMessage(m_ID, m_Serial).Send();
+			CPacketBulletinBoardRemoveMessage(ID, Serial).Send();
 
 			//GumpManager->CloseGump(Serial, ID, GT_BULLETIN_BOARD_ITEM);
 		}
@@ -199,7 +199,7 @@ void CGumpBulletinBoardItem::OnCharPress(const WPARAM &wParam, const LPARAM &lPa
 	g_EntryPointer->Insert((wchar_t)wParam);
 
 	RecalculateHeight();
-	m_WantRedraw = true;
+	WantRedraw = true;
 }
 //----------------------------------------------------------------------------------
 void CGumpBulletinBoardItem::OnKeyDown(const WPARAM &wParam, const LPARAM &lParam)
@@ -210,13 +210,13 @@ void CGumpBulletinBoardItem::OnKeyDown(const WPARAM &wParam, const LPARAM &lPara
 		g_EntryPointer->Insert(L'\n');
 
 		RecalculateHeight();
-		m_WantRedraw = true;
+		WantRedraw = true;
 	}
 	else
 	{
 		g_EntryPointer->OnKey(this, wParam);
 
-		if (m_WantRedraw)
+		if (WantRedraw)
 			RecalculateHeight();
 	}
 }

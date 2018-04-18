@@ -12,17 +12,17 @@
 //----------------------------------------------------------------------------------
 class CBaseProfession : public CBaseQueueItem
 {
-	SETGET(string, Name, "");
-	SETGET(string, TrueName, "");
-	SETGET(wstring, Description, L"");
-	SETGET(uint, NameClilocID, 0);
-	SETGET(uint, DescriptionClilocID, 0);
-	SETGET(PROFESSION_TYPE, Type, PT_NO_PROF);
-	SETGET(ushort, Gump, 0);
-	SETGET(bool, TopLevel, false);
-	SETGET(int, DescriptionIndex, 0);
-
 public:
+	string Name = "";
+	string TrueName = "";
+	wstring Description = L"";
+	uint NameClilocID = 0;
+	uint DescriptionClilocID = 0;
+	PROFESSION_TYPE Type = PT_NO_PROF;
+	ushort Gump = 0;
+	bool TopLevel = false;
+	int DescriptionIndex = 0;
+
 	CBaseProfession();
 	virtual ~CBaseProfession();
 
@@ -32,9 +32,9 @@ public:
 //----------------------------------------------------------------------------------
 class CProfessionCategory : public CBaseProfession
 {
-	SETGET(string, Childrens, "|");
-
 public:
+	string Childrens = "|";
+
 	CProfessionCategory();
 	virtual ~CProfessionCategory();
 
@@ -43,9 +43,10 @@ public:
 //----------------------------------------------------------------------------------
 class CProfession : public CBaseProfession
 {
-	SETGET(uchar, Str, 0);
-	SETGET(uchar, Int, 0);
-	SETGET(uchar, Dex, 0);
+public:
+	uchar Str = 0;
+	uchar Int = 0;
+	uchar Dex = 0;
 
 private:
 	uchar m_SkillIndex[4];
@@ -55,11 +56,11 @@ public:
 	CProfession();
 	virtual ~CProfession();
 
-	void SetSkillIndex(const int &index, const uchar &val) { if (index >= 0 && index < 4) m_SkillIndex[index] = val; }
-	void SetSkillValue(const int &index, const uchar &val) { if (index >= 0 && index < 4) m_SkillValue[index] = val; }
+	void SetSkillIndex(int index, uchar val) { if (index >= 0 && index < 4) m_SkillIndex[index] = val; }
+	void SetSkillValue(int index, uchar val) { if (index >= 0 && index < 4) m_SkillValue[index] = val; }
 
-	uchar GetSkillIndex(const int &index) const { if (index >= 0 && index < 4) return m_SkillIndex[index]; else return 0xFF; }
-	uchar GetSkillValue(const int &index) const { if (index >= 0 && index < 4) return m_SkillValue[index]; else return 0xFF; }
+	uchar GetSkillIndex(int index) const { if (index >= 0 && index < 4) return m_SkillIndex[index]; else return 0xFF; }
+	uchar GetSkillValue(int index) const { if (index >= 0 && index < 4) return m_SkillValue[index]; else return 0xFF; }
 };
 //----------------------------------------------------------------------------------
 #endif

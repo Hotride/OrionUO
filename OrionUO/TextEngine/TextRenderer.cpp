@@ -79,7 +79,7 @@ bool CTextRenderer::InRect(CTextData *text, CRenderWorldObject *rwo)
 	{
 		if (it->InRect(rect))
 		{
-			if (rwo == NULL || rwo->TextCanBeTransparent(it->m_Text))
+			if (rwo == NULL || rwo->TextCanBeTransparent(it->Text))
 			{
 				result = true;
 				break;
@@ -122,7 +122,7 @@ bool CTextRenderer::ProcessTextRemoveBlending(CTextData &text)
 	return false;
 }
 //----------------------------------------------------------------------------------
-bool CTextRenderer::CalculatePositions(const bool &noCalculate)
+bool CTextRenderer::CalculatePositions(bool noCalculate)
 {
 	WISPFUN_DEBUG("c175_f5");
 	bool changed = false;
@@ -175,7 +175,7 @@ void CTextRenderer::Draw()
 
 		if (text.Timer >= g_Ticks)
 		{
-			const ushort &textColor = text.Color;
+			ushort textColor = text.Color;
 
 			if (textColor)
 			{
@@ -244,7 +244,7 @@ void CTextRenderer::Select(CGump *gump)
 	}
 }
 //----------------------------------------------------------------------------------
-bool CTextRenderer::CalculateWorldPositions(const bool &noCalculate)
+bool CTextRenderer::CalculateWorldPositions(bool noCalculate)
 {
 	WISPFUN_DEBUG("c175_f8");
 	bool changed = false;

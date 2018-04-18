@@ -12,8 +12,9 @@
 //----------------------------------------------------------------------------------
 class CGumpMinimap : public CGump
 {
-	SETGET(ushort, LastX, 0);
-	SETGET(ushort, LastY, 0);
+public:
+	ushort LastX = 0;
+	ushort LastY = 0;
 
 private:
 	static const int ID_GMM_LOCK_MOVING = 1;
@@ -27,7 +28,7 @@ private:
 
 	void GenerateMap();
 
-	void CreatePixels(USHORT_LIST &data, const uint &color, const int &x, const int &y, const int &width, const int &height, const WISP_GEOMETRY::CPoint2Di *table, const int &count);
+	void CreatePixels(USHORT_LIST &data, int color, int x, int y, int width, int height, const WISP_GEOMETRY::CPoint2Di *table, int count);
 
 protected:
 	virtual void CalculateGumpState();

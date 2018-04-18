@@ -52,7 +52,7 @@ public:
 	@param [__in] index Индекс элемента
 	@return 
 	*/
-	void Delete(const int &index);
+	void Delete(int index);
 
 	/*!
 	Получить элемент с указанным индексом
@@ -109,7 +109,7 @@ public:
 	@param [__in] up Вверх или вниз по очереди
 	@return true в случае успешного перемещения
 	*/
-	bool Move(CBaseQueueItem *item, const bool &up);
+	bool Move(CBaseQueueItem *item, bool up);
 
 	/*!
 	Пустой список или нет

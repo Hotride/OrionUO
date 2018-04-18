@@ -12,17 +12,17 @@
 #include "stdafx.h"
 //----------------------------------------------------------------------------------
 CGumpSpell::CGumpSpell(uint serial, short x, short y, ushort graphic, SPELLBOOK_TYPE spellType)
-: CGump(GT_SPELL, serial, x, y), m_SpellType(spellType)
+: CGump(GT_SPELL, serial, x, y), SpellType(spellType)
 {
 	WISPFUN_DEBUG("c126_f1");
-	m_Graphic = graphic;
+	Graphic = graphic;
 	m_Locker.Serial = ID_GS_LOCK_MOVING;
-	m_BigIcon = false; // (graphic >= 0x5300 && graphic < 0x5500);
+	BigIcon = false; // (graphic >= 0x5300 && graphic < 0x5500);
 
-	m_Blender = (CGUIAlphaBlending*)Add(new CGUIAlphaBlending(g_ConfigManager.TransparentSpellIcons, g_ConfigManager.SpellIconAlpha / 255.0f));
-	Add(new CGUIGumppic(m_Graphic, 0, 0));
+	m_Blender = (CGUIAlphaBlending*)Add(new CGUIAlphaBlending(g_ConfigManager.TransparentSpellIcons, g_ConfigManager.GetSpellIconAlpha() / 255.0f));
+	Add(new CGUIGumppic(Graphic, 0, 0));
 
-	/*if (m_BigIcon)
+	/*if (BigIcon)
 		m_SpellUnlocker = (CGUIButton*)Add(new CGUIButton(ID_GS_BUTTON_REMOVE_FROM_GROUP, 0x082C, 0x082C, 0x082C, 56, 30));
 	else*/
 	m_SpellUnlocker = (CGUIButton*)Add(new CGUIButton(ID_GS_BUTTON_REMOVE_FROM_GROUP, 0x082C, 0x082C, 0x082C, 30, 16));
@@ -51,14 +51,14 @@ void CGumpSpell::InitToolTip()
 
 		GetTooltipSpellInfo(tooltipOffset, spellIndexOffset);
 
-		g_ToolTip.Set(g_ClilocManager.Cliloc(g_Language)->GetW(tooltipOffset - spellIndexOffset + m_Serial, true), 80);
+		g_ToolTip.Set(g_ClilocManager.Cliloc(g_Language)->GetW(tooltipOffset - spellIndexOffset + Serial, true), 80);
 	}
 }
 //----------------------------------------------------------------------------
 void CGumpSpell::GetTooltipSpellInfo(int &tooltipOffset, int &spellIndexOffset)
 {
 	WISPFUN_DEBUG("c126_f4");
-	switch (m_SpellType)
+	switch (SpellType)
 	{
 		case ST_MAGE:
 		{
@@ -122,7 +122,7 @@ void CGumpSpell::PrepareContent()
 	if (m_Blender->Enabled != wantBlender)
 	{
 		m_Blender->Enabled = wantBlender;
-		m_WantRedraw = true;
+		WantRedraw = true;
 	}
 
 	bool wantUnlocker = (g_ShiftPressed && InGroup());
@@ -130,7 +130,7 @@ void CGumpSpell::PrepareContent()
 	if (m_SpellUnlocker->Visible != wantUnlocker)
 	{
 		m_SpellUnlocker->Visible = wantUnlocker;
-		m_WantRedraw = true;
+		WantRedraw = true;
 	}
 }
 //----------------------------------------------------------------------------------
@@ -165,7 +165,7 @@ CGumpSpell *CGumpSpell::GetNearSpell(int &x, int &y)
 	int rangeOffsetX = 30;
 	int rangeOffsetY = 30;
 
-	if (m_BigIcon)
+	if (BigIcon)
 	{
 		gumpWidth = 70;
 		gumpHeight = 70;
@@ -180,9 +180,9 @@ CGumpSpell *CGumpSpell::GetNearSpell(int &x, int &y)
 
 	while (gump != NULL)
 	{
-		if (gump != this && gump->GumpType == GT_SPELL && ((CGumpSpell*)gump)->BigIcon == m_BigIcon)
+		if (gump != this && gump->GumpType == GT_SPELL && ((CGumpSpell*)gump)->BigIcon == BigIcon)
 		{
-			int gumpX = gump->X;
+			int gumpX = gump->GetX();
 			int offsetX = abs(x - gumpX);
 			int passed = 0;
 
@@ -200,7 +200,7 @@ CGumpSpell *CGumpSpell::GetNearSpell(int &x, int &y)
 					passed = 2;
 			}
 
-			int gumpY = gump->Y;
+			int gumpY = gump->GetY();
 
 			if (abs(passed) == 1)
 			{
@@ -259,9 +259,9 @@ CGumpSpell *CGumpSpell::GetNearSpell(int &x, int &y)
 
 				while (testGump != NULL)
 				{
-					if (testGump != this && testGump->GumpType == GT_SPELL && ((CGumpSpell*)testGump)->BigIcon == m_BigIcon)
+					if (testGump != this && testGump->GumpType == GT_SPELL && ((CGumpSpell*)testGump)->BigIcon == BigIcon)
 					{
-						if (testGump->X == testX && testGump->Y == testY)
+						if (testGump->GetX() == testX && testGump->GetY() == testY)
 							break;
 					}
 
@@ -323,8 +323,8 @@ void CGumpSpell::UpdateGroup(int x, int y)
 	{
 		if (gump != this)
 		{
-			gump->X += x;
-			gump->Y += y;
+			gump->SetX(gump->GetX() + x);
+			gump->SetY(gump->GetY() + y);
 
 			g_GumpManager.MoveToBack(gump);
 			//gump->WantRedraw = true;
@@ -367,7 +367,7 @@ void CGumpSpell::AddSpell(CGumpSpell *spell)
 	{
 		m_SpellUnlocker->Visible = InGroup();
 
-		m_WantRedraw = true;
+		WantRedraw = true;
 	}
 }
 //----------------------------------------------------------------------------------
@@ -398,7 +398,7 @@ void CGumpSpell::RemoveFromGroup()
 	if (m_SpellUnlocker != NULL)
 	{
 		m_SpellUnlocker->Visible = InGroup();
-		m_WantRedraw = true;
+		WantRedraw = true;
 	}
 }
 //----------------------------------------------------------------------------------
@@ -438,7 +438,7 @@ void CGumpSpell::GUMP_BUTTON_EVENT_C
 {
 	WISPFUN_DEBUG("c126_f13");
 	if (serial == ID_GS_LOCK_MOVING)
-		m_LockMoving = !m_LockMoving;
+		LockMoving = !LockMoving;
 	else if (serial == ID_GS_BUTTON_REMOVE_FROM_GROUP)
 	{
 		CGumpSpell *oldGroup = m_GroupNext;
@@ -464,7 +464,7 @@ bool CGumpSpell::OnLeftMouseButtonDoubleClick()
 
 	GetTooltipSpellInfo(tooltipOffset, spellIndexOffset);
 
-	int spellIndex = m_Serial - spellIndexOffset + ((int)m_SpellType * 100);
+	int spellIndex = Serial - spellIndexOffset + ((int)SpellType * 100);
 
 	g_Orion.CastSpell(spellIndex);
 

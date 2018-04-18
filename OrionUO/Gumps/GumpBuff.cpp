@@ -15,10 +15,10 @@ CGumpBuff::CGumpBuff(short x, short y)
 : CGump(GT_BUFF, 0, x, y)
 {
 	WISPFUN_DEBUG("c88_f1");
-	m_Graphic = 0x7580;
+	Graphic = 0x7580;
 	m_Locker.Serial = ID_GB_LOCK_MOVING;
 
-	Add(new CGUIGumppic(m_Graphic, 0, 0));
+	Add(new CGUIGumppic(Graphic, 0, 0));
 	Add(new CGUIHitBox(0, 0, 0, 0, 0));
 	Add(new CGUIButton(ID_GB_NEXT_WINDOW_DIRECTION, 0x7585, 0x7589, 0x7589, 0, 0));
 	Add(new CGUIAlphaBlending(true, 0.1f));
@@ -50,12 +50,12 @@ void CGumpBuff::UpdateBuffIcons()
 
 			if (buff->Timer != 0xFFFFFFFF && delta < USE_ALPHA_BLENDING_WHEN_TIMER_LESS)
 			{
-				m_WantRedraw = true;
+				WantRedraw = true;
 
 				if (delta <= 0)
 				{
 					Delete(buff);
-					m_WantUpdateContent = true;
+					WantUpdateContent = true;
 				}
 				else
 				{
@@ -92,7 +92,7 @@ void CGumpBuff::UpdateBuffIcons()
 	}
 }
 //----------------------------------------------------------------------------------
-void CGumpBuff::AddBuff(const ushort &id, const ushort &timer, const wstring &text)
+void CGumpBuff::AddBuff(ushort id, ushort timer, const wstring &text)
 {
 	WISPFUN_DEBUG("c88_f4");
 	DWORD ticks = 0xFFFFFFFF;
@@ -113,17 +113,17 @@ void CGumpBuff::AddBuff(const ushort &id, const ushort &timer, const wstring &te
 			buff->TooltipTimer = 0;
 
 			MoveToBack(buff);
-			m_WantUpdateContent = true;
+			WantUpdateContent = true;
 
 			return;
 		}
 	}
 
 	Add(new CGUIBuff(id, ticks, text));
-	m_WantUpdateContent = true;
+	WantUpdateContent = true;
 }
 //----------------------------------------------------------------------------------
-void CGumpBuff::DeleteBuff(const ushort &id)
+void CGumpBuff::DeleteBuff(ushort id)
 {
 	WISPFUN_DEBUG("c88_f5");
 	QFOR(item, m_Items, CBaseGUI*)
@@ -131,7 +131,7 @@ void CGumpBuff::DeleteBuff(const ushort &id)
 		if (item->Type == GOT_BUFF && item->Graphic == id)
 		{
 			Delete(item);
-			m_WantUpdateContent = true;
+			WantUpdateContent = true;
 
 			break;
 		}
@@ -188,9 +188,9 @@ void CGumpBuff::GetGumpStatus(WISP_GEOMETRY::CPoint2Di &ball, WISP_GEOMETRY::CPo
 	startGump.X = 0;
 	startGump.Y = 0;
 
-	endGump = g_Orion.GetGumpDimension(m_Graphic);
+	endGump = g_Orion.GetGumpDimension(Graphic);
 
-	switch (m_Graphic)
+	switch (Graphic)
 	{
 		case 0x757F: //v
 		{
@@ -297,10 +297,10 @@ void CGumpBuff::GetGumpStatus(WISP_GEOMETRY::CPoint2Di &ball, WISP_GEOMETRY::CPo
 void CGumpBuff::PrepareContent()
 {
 	WISPFUN_DEBUG("c88_f8");
-	if (m_Graphic < 0x757F || m_Graphic > 0x7582)
+	if (Graphic < 0x757F || Graphic > 0x7582)
 	{
-		m_Graphic = 0x7580;
-		m_WantUpdateContent = true;
+		Graphic = 0x7580;
+		WantUpdateContent = true;
 	}
 }
 //----------------------------------------------------------------------------------
@@ -320,19 +320,19 @@ void CGumpBuff::UpdateContent()
 
 	//Body
 	CBaseGUI *gui = (CBaseGUI*)m_Items;
-	gui->Graphic = m_Graphic;
+	gui->Graphic = Graphic;
 
 	//Selection zone
 	gui = (CBaseGUI*)gui->m_Next;
-	gui->X = startGump.X;
-	gui->Y = startGump.Y;
+	gui->SetX(startGump.X);
+	gui->SetY(startGump.Y);
 	((CGUIPolygonal*)gui)->Width = endGump.Width;
 	((CGUIPolygonal*)gui)->Height = endGump.Height;
 
 	//Crystall ball
 	gui = (CBaseGUI*)gui->m_Next;
-	gui->X = ballCoordinates.X;
-	gui->Y = ballCoordinates.Y;
+	gui->SetX(ballCoordinates.X);
+	gui->SetY(ballCoordinates.Y);
 
 	gui = NULL;
 
@@ -349,8 +349,8 @@ void CGumpBuff::UpdateContent()
 		CGUIBuff *buff = (CGUIBuff*)item;
 
 		WISP_GEOMETRY::CSize gumpDim = g_Orion.GetGumpDimension(buff->Graphic);
-		buff->X = startCoordinates.X;
-		buff->Y = startCoordinates.Y;
+		buff->SetX(startCoordinates.X);
+		buff->SetY(startCoordinates.Y);
 
 		if (useX)
 		{
@@ -378,34 +378,34 @@ void CGumpBuff::GUMP_BUTTON_EVENT_C
 	WISPFUN_DEBUG("c88_f10");
 	if (serial == ID_GB_NEXT_WINDOW_DIRECTION)
 	{
-		switch (m_Graphic)
+		switch (Graphic)
 		{
 			case 0x7580:
 			{
-				m_Graphic = 0x7582;
+				Graphic = 0x7582;
 				break;
 			}
 			case 0x7581:
 			{
-				m_Graphic = 0x757F;
+				Graphic = 0x757F;
 				break;
 			}
 			case 0x7582:
 			{
-				m_Graphic = 0x7581;
+				Graphic = 0x7581;
 				break;
 			}
 			case 0x757F:
 			default:
 			{
-				m_Graphic = 0x7580;
+				Graphic = 0x7580;
 				break;
 			}
 		}
 
-		m_WantUpdateContent = true;
+		WantUpdateContent = true;
 	}
 	else if (serial == ID_GB_LOCK_MOVING)
-		m_LockMoving = !m_LockMoving;
+		LockMoving = !LockMoving;
 }
 //----------------------------------------------------------------------------------

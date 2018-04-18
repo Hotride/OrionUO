@@ -174,28 +174,28 @@ CCreateCharacterManager::~CCreateCharacterManager()
 {
 }
 //----------------------------------------------------------------------------------
-void CCreateCharacterManager::SetFemale(const bool &female)
+void CCreateCharacterManager::SetFemale(bool female)
 {
 	WISPFUN_DEBUG("c140_f1");
 	m_Female = female;
 
-	if (m_HairStyle >= GetCurrentHairCount())
-		m_HairStyle = 0;
+	if (HairStyle >= GetCurrentHairCount())
+		HairStyle = 0;
 
-	if (!m_Female && m_BeardStyle >= GetCurrentFacialHairCount())
-		m_BeardStyle = 0;
+	if (!m_Female && BeardStyle >= GetCurrentFacialHairCount())
+		BeardStyle = 0;
 }
 //----------------------------------------------------------------------------------
-void CCreateCharacterManager::SetRace(const RACE_TYPE &newRace)
+void CCreateCharacterManager::SetRace(RACE_TYPE newRace)
 {
 	WISPFUN_DEBUG("c140_f2");
 	m_Race = newRace;
-	Female = m_Female;
+	SetFemale(m_Female);
 
-	m_SkinTone = (*GetSkinTonePtr()) + 1;
+	SkinTone = (*GetSkinTonePtr()) + 1;
 	pushort ptr = GetHairColorPtr();
-	m_HairColor = (*ptr) + 1;
-	m_BeardColor = (*ptr) + 1;
+	HairColor = (*ptr) + 1;
+	BeardColor = (*ptr) + 1;
 }
 //----------------------------------------------------------------------------------
 /*!
@@ -229,15 +229,15 @@ void CCreateCharacterManager::Clear()
 {
 	WISPFUN_DEBUG("c140_f4");
 	m_Female = false;
-	m_HairStyle = 1;
-	m_BeardStyle = 0;
+	HairStyle = 1;
+	BeardStyle = 0;
 	m_Race = RT_HUMAN;
 
-	m_SkinTone = 0x03EA;
-	m_ShirtColor = 0x0084;
-	m_PantsColor = 0x035F;
-	m_HairColor = 0x044E;
-	m_BeardColor = 0x044E;
+	SkinTone = 0x03EA;
+	ShirtColor = 0x0084;
+	PantsColor = 0x035F;
+	HairColor = 0x044E;
+	BeardColor = 0x044E;
 }
 //----------------------------------------------------------------------------------
 int CCreateCharacterManager::GetCurrentHairCount()
@@ -344,7 +344,7 @@ pushort CCreateCharacterManager::GetHairColorPtr()
 @param [__in] pos Индекс волос
 @return Структура с данными о волосах
 */
-CC_HAIR_STYLE CCreateCharacterManager::GetHair(const uchar &pos) const
+CC_HAIR_STYLE CCreateCharacterManager::GetHair(uchar pos) const
 {
 	WISPFUN_DEBUG("c140_f13");
 	if (m_Race == RT_HUMAN)
@@ -395,7 +395,7 @@ CC_HAIR_STYLE CCreateCharacterManager::GetHair(const uchar &pos) const
 @param [__in] pos Индекс бороды
 @return Структура с данными о бороде
 */
-CC_HAIR_STYLE CCreateCharacterManager::GetBeard(const uchar &pos) const
+CC_HAIR_STYLE CCreateCharacterManager::GetBeard(uchar pos) const
 {
 	WISPFUN_DEBUG("c140_f14");
 	if (m_Race == RT_HUMAN)

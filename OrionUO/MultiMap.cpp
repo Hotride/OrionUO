@@ -34,10 +34,10 @@ void CMultiMap::LoadMap(CGumpMap *gump, CGUIExternalTexture *mapObject)
 
 	file.ResetPtr();
 	
-	int m_Width = file.ReadInt32LE();
-	int m_Height = file.ReadInt32LE();
+	int Width = file.ReadInt32LE();
+	int Height = file.ReadInt32LE();
 
-	if (m_Width < 1 || m_Height < 1)
+	if (Width < 1 || Height < 1)
 	{
 		LOG("Failed to load bounds from MultiMap.rle\n");
 		return;
@@ -100,7 +100,7 @@ void CMultiMap::LoadMap(CGumpMap *gump, CGUIExternalTexture *mapObject)
 
 			x++;
 
-			if (x >= m_Width)
+			if (x >= Width)
 			{
 				x = 0;
 				y++;
@@ -108,11 +108,11 @@ void CMultiMap::LoadMap(CGumpMap *gump, CGUIExternalTexture *mapObject)
 				posY = gump->Width * ((currentHeight - startHeight) >> 8);
 			}
 
-			//if (y >= m_Height)
+			//if (y >= Height)
 			//	break;
 		}
 
-		//if (y >= m_Height)
+		//if (y >= Height)
 		//	break;
 	}
 

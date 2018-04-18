@@ -11,19 +11,19 @@
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
 //----------------------------------------------------------------------------------
-CGUIComboboxText::CGUIComboboxText(const ushort &color, const uchar &font, const string &str, const int &width, const TEXT_ALIGN_TYPE &align, const ushort &flags)
+CGUIComboboxText::CGUIComboboxText(ushort color, uchar font, const string &str, int width, TEXT_ALIGN_TYPE align, ushort flags)
 : CGUIText(color, 0, 0)
 {
 	WISPFUN_DEBUG("c50_f1");
-	m_Serial = 0xFFFFFFFE;
+	Serial = 0xFFFFFFFE;
 	CreateTextureA(font, str, width, align, flags);
 }
 //----------------------------------------------------------------------------------
-CGUIComboboxText::CGUIComboboxText(const ushort &color, const uchar &font, const wstring &str, const int &width, const TEXT_ALIGN_TYPE &align, const ushort &flags)
+CGUIComboboxText::CGUIComboboxText(ushort color, uchar font, const wstring &str, int width, TEXT_ALIGN_TYPE align, ushort flags)
 : CGUIText(color, 0, 0)
 {
 	WISPFUN_DEBUG("c50_f2");
-	m_Serial = 0xFFFFFFFE;
+	Serial = 0xFFFFFFFE;
 	CreateTextureW(font, str, 30, width, align, flags);
 }
 //----------------------------------------------------------------------------------

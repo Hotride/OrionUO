@@ -11,14 +11,13 @@
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
 //----------------------------------------------------------------------------------
-CGUIHTMLGump::CGUIHTMLGump(const uint &serial, const ushort &graphic, const int &x, const int &y, const int &width, const int &height, const bool &haveBackground, const bool &haveScrollbar)
-: CGUIPolygonal(GOT_HTMLGUMP, x, y, width, height), m_HaveBackground(haveBackground),
-m_HaveScrollbar(haveScrollbar), m_DataSize(), m_DataOffset(), m_CurrentOffset(),
-m_AvailableOffset()
+CGUIHTMLGump::CGUIHTMLGump(int serial, ushort graphic, int x, int y, int width, int height, bool haveBackground, bool haveScrollbar)
+: CGUIPolygonal(GOT_HTMLGUMP, x, y, width, height), HaveBackground(haveBackground),
+HaveScrollbar(haveScrollbar), DataSize(), DataOffset(), CurrentOffset(), AvailableOffset()
 {
 	WISPFUN_DEBUG("c60_f1");
-	m_Serial = serial;
-	m_Graphic = graphic;
+	Serial = serial;
+	Graphic = graphic;
 
 	Initalize();
 }
@@ -44,16 +43,16 @@ void CGUIHTMLGump::Initalize(bool menu)
 		m_Background = new CGUIHTMLResizepic(this, 0, 0, 0, 0, 1, 1);
 		m_Background->Visible = false;
 
-		m_HitBoxLeft = new CGUIHTMLHitBox(this, m_Serial, -15, -2, 12, 52);
+		m_HitBoxLeft = new CGUIHTMLHitBox(this, Serial, -15, -2, 12, 52);
 
-		m_HitBoxRight = new CGUIHTMLHitBox(this, m_Serial, m_Width + 3, -2, 12, 52);
+		m_HitBoxRight = new CGUIHTMLHitBox(this, Serial, Width + 3, -2, 12, 52);
 		m_HitBoxRight->Color = 1;
 
-		m_Slider = new CGUIHTMLSlider(this, m_Serial, 0x00D8, 0x00D8, 0x00D8, 0x00D5, true, false, -10, m_Height + 1, m_Width + 20, 0, 0, 0);
+		m_Slider = new CGUIHTMLSlider(this, Serial, 0x00D8, 0x00D8, 0x00D8, 0x00D5, true, false, -10, Height + 1, Width + 20, 0, 0, 0);
 		m_Slider->ScrollStep = GUMP_MENU_PIXEL_STEP;
 		m_Slider->Vertical = false;
 
-		m_Scissor = new CGUIScissor(true, m_X, m_Y, 0, 0, m_Width, m_Height);
+		m_Scissor = new CGUIScissor(true, m_X, m_Y, 0, 0, Width, Height);
 
 		Add(m_Background);
 		Add(m_Slider);
@@ -63,9 +62,9 @@ void CGUIHTMLGump::Initalize(bool menu)
 	}
 	else
 	{
-		int offsetWidth = m_Width;
+		int offsetWidth = Width;
 
-		if (m_HaveScrollbar)
+		if (HaveScrollbar)
 		{
 			CGLTexture *th = g_Orion.ExecuteGump(0x00FE);
 
@@ -73,22 +72,22 @@ void CGUIHTMLGump::Initalize(bool menu)
 				offsetWidth -= th->Width;
 		}
 
-		m_Background = new CGUIHTMLResizepic(this, 0, m_Graphic, 0, 0, offsetWidth, m_Height);
-		m_Background->Visible = m_HaveBackground;
+		m_Background = new CGUIHTMLResizepic(this, 0, Graphic, 0, 0, offsetWidth, Height);
+		m_Background->Visible = HaveBackground;
 
-		m_ButtonUp = new CGUIHTMLButton(this, m_Serial, 0x00FA, 0x00FA, 0x00FA, offsetWidth, 0);
-		m_ButtonUp->Visible = m_HaveScrollbar;
+		m_ButtonUp = new CGUIHTMLButton(this, Serial, 0x00FA, 0x00FA, 0x00FA, offsetWidth, 0);
+		m_ButtonUp->Visible = HaveScrollbar;
 
 		CGLTexture *thDown = g_Orion.ExecuteGump(0x00FC);
 
-		int sliderHeight = m_Height;
+		int sliderHeight = Height;
 
 		if (thDown != NULL)
 			sliderHeight -= thDown->Height;
 
-		m_ButtonDown = new CGUIHTMLButton(this, m_Serial, 0x00FC, 0x00FC, 0x00FC, offsetWidth, sliderHeight);
+		m_ButtonDown = new CGUIHTMLButton(this, Serial, 0x00FC, 0x00FC, 0x00FC, offsetWidth, sliderHeight);
 		m_ButtonDown->Color = 1;
-		m_ButtonDown->Visible = m_HaveScrollbar;
+		m_ButtonDown->Visible = HaveScrollbar;
 
 		CGLTexture *thUp = g_Orion.ExecuteGump(0x00FA);
 
@@ -100,11 +99,11 @@ void CGUIHTMLGump::Initalize(bool menu)
 			sliderHeight -= sliderStartY;
 		}
 
-		m_Slider = new CGUIHTMLSlider(this, m_Serial, 0x00FE, 0x00FE, 0x00FE, 0x0100, false, true, offsetWidth, sliderStartY, sliderHeight, 0, 0, 0);
+		m_Slider = new CGUIHTMLSlider(this, Serial, 0x00FE, 0x00FE, 0x00FE, 0x0100, false, true, offsetWidth, sliderStartY, sliderHeight, 0, 0, 0);
 		//m_Slider->SetTextParameters(true, STP_RIGHT_CENTER, 3, 0x0021, false);
-		m_Slider->Visible = m_HaveScrollbar;
+		m_Slider->Visible = HaveScrollbar;
 
-		m_Scissor = new CGUIScissor(true, m_X, m_Y, 0, 0, offsetWidth, m_Height);
+		m_Scissor = new CGUIScissor(true, m_X, m_Y, 0, 0, offsetWidth, Height);
 
 		Add(m_Background);
 		Add(m_Slider);
@@ -114,10 +113,10 @@ void CGUIHTMLGump::Initalize(bool menu)
 	}
 }
 //----------------------------------------------------------------------------------
-void CGUIHTMLGump::UpdateHeight(const int &height)
+void CGUIHTMLGump::UpdateHeight(int height)
 {
 	WISPFUN_DEBUG("c60_f4");
-	m_Height = height;
+	Height = height;
 
 	m_Background->Height = height;
 
@@ -128,7 +127,7 @@ void CGUIHTMLGump::UpdateHeight(const int &height)
 	if (thDown != NULL)
 		sliderHeight -= thDown->Height;
 
-	m_ButtonDown->Y = sliderHeight;
+	m_ButtonDown->SetY(sliderHeight);
 
 	CGLTexture *thUp = g_Orion.ExecuteGump(m_ButtonUp->Graphic);
 
@@ -140,7 +139,7 @@ void CGUIHTMLGump::UpdateHeight(const int &height)
 		sliderHeight -= sliderStartY;
 	}
 
-	m_Slider->Lenght = sliderHeight;
+	m_Slider->Length = sliderHeight;
 
 	m_Scissor->Height = height;
 
@@ -151,7 +150,7 @@ void CGUIHTMLGump::ResetDataOffset()
 {
 	WISPFUN_DEBUG("c60_f5");
 	m_Slider->Value = 0;
-	m_CurrentOffset.Reset();
+	CurrentOffset.Reset();
 }
 //----------------------------------------------------------------------------------
 void CGUIHTMLGump::CalculateDataSize(CBaseGUI *item, int &startX, int &startY, int &endX, int &endY)
@@ -167,16 +166,16 @@ void CGUIHTMLGump::CalculateDataSize(CBaseGUI *item, int &startX, int &startY, i
 			continue;
 		}
 
-		if (item->X < startX)
-			startX = item->X;
+		if (item->GetX() < startX)
+			startX = item->GetX();
 
-		if (item->Y < startY)
-			startY = item->Y;
+		if (item->GetY() < startY)
+			startY = item->GetY();
 
 		WISP_GEOMETRY::CSize size = item->GetSize();
 
-		int curX = item->X + size.Width;
-		int curY = item->Y + size.Height;
+		int curX = item->GetX() + size.Width;
+		int curY = item->GetY() + size.Height;
 
 		if (curX > endX)
 			endX = curX;
@@ -201,28 +200,28 @@ void CGUIHTMLGump::CalculateDataSize()
 
 	CalculateDataSize(item, startX, startY, endX, endY);
 
-	m_DataSize.Width = abs(startX) + abs(endX);
-	m_DataSize.Height = abs(startY) + abs(endY);
+	DataSize.Width = abs(startX) + abs(endX);
+	DataSize.Height = abs(startY) + abs(endY);
 
-	m_DataOffset.X = startX;
-	m_DataOffset.Y = startY;
+	DataOffset.X = startX;
+	DataOffset.Y = startY;
 
-	m_AvailableOffset.X = m_DataSize.Width - m_Scissor->Width;
+	AvailableOffset.X = DataSize.Width - m_Scissor->Width;
 
-	if (m_AvailableOffset.X < 0)
-		m_AvailableOffset.X = 0;
+	if (AvailableOffset.X < 0)
+		AvailableOffset.X = 0;
 
-	m_AvailableOffset.Y = m_DataSize.Height - m_Scissor->Height;
+	AvailableOffset.Y = DataSize.Height - m_Scissor->Height;
 
-	if (m_AvailableOffset.Y < 0)
-		m_AvailableOffset.Y = 0;
+	if (AvailableOffset.Y < 0)
+		AvailableOffset.Y = 0;
 
 	m_Slider->MinValue = 0;
 
 	if (m_Slider->Vertical)
-		m_Slider->MaxValue = m_AvailableOffset.Y;
+		m_Slider->MaxValue = AvailableOffset.Y;
 	else
-		m_Slider->MaxValue = m_AvailableOffset.X;
+		m_Slider->MaxValue = AvailableOffset.X;
 
 	m_Slider->CalculateOffset();
 }
@@ -261,7 +260,7 @@ bool CGUIHTMLGump::Select()
 	return selected;
 }
 //----------------------------------------------------------------------------------
-void CGUIHTMLGump::Scroll(const bool &up, const uint &delay)
+void CGUIHTMLGump::Scroll(bool up, int delay)
 {
 	WISPFUN_DEBUG("c60_f10");
 	if (m_Slider != NULL)

@@ -11,10 +11,10 @@
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
 //----------------------------------------------------------------------------------
-CGameItem::CGameItem(const uint &serial)
+CGameItem::CGameItem(int serial)
 : CGameObject(serial)
 {
-	m_NPC = false;
+	NPC = false;
 }
 //----------------------------------------------------------------------------------
 CGameItem::~CGameItem()
@@ -22,38 +22,38 @@ CGameItem::~CGameItem()
 	WISPFUN_DEBUG("c19_f1");
 	ClearMultiItems();
 	
-	if (m_Opened)
+	if (Opened)
 	{
-		g_GumpManager.CloseGump(m_Serial, 0, GT_CONTAINER);
-		g_GumpManager.CloseGump(m_Serial, 0, GT_SPELLBOOK);
-		g_GumpManager.CloseGump(m_Serial, 0, GT_MAP);
+		g_GumpManager.CloseGump(Serial, 0, GT_CONTAINER);
+		g_GumpManager.CloseGump(Serial, 0, GT_SPELLBOOK);
+		g_GumpManager.CloseGump(Serial, 0, GT_MAP);
 
-		CGump *gump = g_GumpManager.GetGump(m_Serial, 0, GT_BULLETIN_BOARD);
+		CGump *gump = g_GumpManager.GetGump(Serial, 0, GT_BULLETIN_BOARD);
 		if (gump != NULL)
 			g_GumpManager.RemoveGump(gump);
 
-		m_Opened = false;
+		Opened = false;
 	}
 
-	if (m_Dragged)
+	if (Dragged)
 	{
-		g_GumpManager.CloseGump(m_Serial, 0, GT_DRAG);
+		g_GumpManager.CloseGump(Serial, 0, GT_DRAG);
 
-		m_Dragged = false;
+		Dragged = false;
 	}
 }
 //----------------------------------------------------------------------------------
 void CGameItem::ClearMultiItems()
 {
 	WISPFUN_DEBUG("c19_f2");
-	if (m_MultiBody && m_Items != NULL)
+	if (MultiBody && m_Items != NULL)
 	{
 		CMulti *multi = (CMulti*)m_Items;
 		m_Items = NULL;
 		delete multi;
 	}
 
-	m_WantUpdateMulti = true;
+	WantUpdateMulti = true;
 }
 //----------------------------------------------------------------------------------
 /*!
@@ -64,57 +64,57 @@ void CGameItem::ClearMultiItems()
 void CGameItem::OnGraphicChange(int direction)
 {
 	WISPFUN_DEBUG("c19_f4");
-	if (!m_MultiBody)
+	if (!MultiBody)
 	{
-		if (m_Graphic >= g_Orion.m_StaticData.size())
+		if (Graphic >= g_Orion.m_StaticData.size())
 			return;
 
 		if (IsCorpse())
 		{
-			m_AnimIndex = 99;
+			AnimIndex = 99;
 
 			if (direction & 0x80)
 			{
-				m_UsedLayer = 1;
+				UsedLayer = 1;
 				direction &= 0x7F;
 			}
 			else
-				m_UsedLayer = 0;
+				UsedLayer = 0;
 
-			m_Layer = direction;
+			Layer = direction;
 
-			m_NoDrawTile = false;
+			NoDrawTile = false;
 		}
 		else
 		{
-			m_TiledataPtr = &g_Orion.m_StaticData[m_Graphic];
+			m_TiledataPtr = &g_Orion.m_StaticData[Graphic];
 			STATIC_TILES &tile = *m_TiledataPtr;
 
-			m_NoDrawTile = IsNoDrawTile(m_Graphic);
+			NoDrawTile = IsNoDrawTile(Graphic);
 
-			if (IsWearable() || m_Graphic == 0x0A28)
+			if (IsWearable() || Graphic == 0x0A28)
 			{
-				m_AnimID = tile.AnimID;
+				AnimID = tile.AnimID;
 				
 				g_Orion.ExecuteGump(tile.AnimID + MALE_GUMP_OFFSET);
 				g_Orion.ExecuteGump(tile.AnimID + FEMALE_GUMP_OFFSET);
 
-				m_UsedLayer = tile.Layer;
+				UsedLayer = tile.Layer;
 			}
-			else if (m_Layer == OL_MOUNT)
+			else if (Layer == OL_MOUNT)
 			{
-				m_AnimID = tile.AnimID;
-				m_UsedLayer = tile.Layer;
+				AnimID = tile.AnimID;
+				UsedLayer = tile.Layer;
 			}
 
 			CalculateFieldColor();
 
-			g_Orion.ExecuteStaticArt(m_Graphic);
+			g_Orion.ExecuteStaticArt(Graphic);
 		}
 	}
-	else if (m_Items == NULL || m_WantUpdateMulti)
+	else if (m_Items == NULL || WantUpdateMulti)
 	{
-		if (!m_MultiDistanceBonus || CheckMultiDistance(g_RemoveRangeXY, this, g_ConfigManager.UpdateRange))
+		if (!MultiDistanceBonus || CheckMultiDistance(g_RemoveRangeXY, this, g_ConfigManager.UpdateRange))
 			LoadMulti(m_Items == NULL);
 	}
 }
@@ -122,43 +122,43 @@ void CGameItem::OnGraphicChange(int direction)
 void CGameItem::CalculateFieldColor()
 {
 	WISPFUN_DEBUG("c19_f5");
-	m_FieldColor = 0;
+	FieldColor = 0;
 
-	if (!g_ConfigManager.ChangeFieldsGraphic)
+	if (!g_ConfigManager.GetChangeFieldsGraphic())
 		return;
 
 	//fire field
-	if (IN_RANGE(m_Graphic, 0x398C, 0x399F))
-		m_FieldColor = 0x0020;
+	if (IN_RANGE(Graphic, 0x398C, 0x399F))
+		FieldColor = 0x0020;
 	//paralyze field
-	else if (IN_RANGE(m_Graphic, 0x3967, 0x397A))
-		m_FieldColor = 0x0058;
+	else if (IN_RANGE(Graphic, 0x3967, 0x397A))
+		FieldColor = 0x0058;
 	//energy field
-	else if (IN_RANGE(m_Graphic, 0x3946, 0x3964))
-		m_FieldColor = 0x0070;
+	else if (IN_RANGE(Graphic, 0x3946, 0x3964))
+		FieldColor = 0x0070;
 	//poison field
-	else if (IN_RANGE(m_Graphic, 0x3914, 0x3929))
-		m_FieldColor = 0x0044;
+	else if (IN_RANGE(Graphic, 0x3914, 0x3929))
+		FieldColor = 0x0044;
 	//wall of stone
-	else if (m_Graphic == 0x0080)
-		m_FieldColor = 0x038A;
+	else if (Graphic == 0x0080)
+		FieldColor = 0x038A;
 }
 //----------------------------------------------------------------------------------
-void CGameItem::Draw(const int &x, const int &y)
+void CGameItem::Draw(int x, int y)
 {
 	WISPFUN_DEBUG("c19_f7");
-	if (m_Container == 0xFFFFFFFF)
+	if (Container == 0xFFFFFFFF)
 	{
-		if (m_MultiBody)
+		if (MultiBody)
 		{
-			m_RenderGraphic = m_MultiTileGraphic;
+			RenderGraphic = MultiTileGraphic;
 
-			if (m_RenderGraphic)
+			if (RenderGraphic)
 			{
 				if (!Locked() && g_SelectedObject.Object == this)
-					m_RenderColor = 0x0035;
+					RenderColor = 0x0035;
 				else
-					m_RenderColor = m_Color;
+					RenderColor = Color;
 
 				CRenderStaticObject::Draw(x, y);
 			}
@@ -186,7 +186,7 @@ void CGameItem::Draw(const int &x, const int &y)
 			bool doubleDraw = false;
 			bool selMode = false;
 			ushort objGraphic = GetDrawGraphic(doubleDraw);
-			ushort objColor = m_Color & 0x3FFF;
+			ushort objColor = Color & 0x3FFF;
 
 			if (Hidden())
 			{
@@ -200,7 +200,7 @@ void CGameItem::Draw(const int &x, const int &y)
 				selMode = true;
 			}
 
-			if (m_Container == 0xFFFFFFFF)
+			if (Container == 0xFFFFFFFF)
 				selMode = false;
 
 			if (doubleDraw)
@@ -210,8 +210,8 @@ void CGameItem::Draw(const int &x, const int &y)
 			}
 			else
 			{
-				if (m_FieldColor)
-					g_Orion.DrawStaticArt(FIELD_REPLACE_GRAPHIC, m_FieldColor, x, y, selMode || Hidden());
+				if (FieldColor)
+					g_Orion.DrawStaticArt(FIELD_REPLACE_GRAPHIC, FieldColor, x, y, selMode || Hidden());
 				else
 					g_Orion.DrawStaticArtAnimated(objGraphic, objColor, x, y, selMode || Hidden());
 			}
@@ -226,9 +226,9 @@ void CGameItem::Draw(const int &x, const int &y)
 			glDisable(GL_BLEND);
 		}
 
-		if (!g_ConfigManager.DisableNewTargetSystem && g_NewTargetSystem.Serial == m_Serial && !Locked())
+		if (!g_ConfigManager.DisableNewTargetSystem && g_NewTargetSystem.Serial == Serial && !Locked())
 		{
-			WISP_GEOMETRY::CSize size = g_Orion.GetStaticArtDimension(m_Graphic);
+			WISP_GEOMETRY::CSize size = g_Orion.GetStaticArtDimension(Graphic);
 
 			if (size.Width >= 80)
 			{
@@ -266,16 +266,16 @@ void CGameItem::Draw(const int &x, const int &y)
 @param [__in] ticks Таймер рендера
 @return При выборе объектов возвращает выбранный элемент
 */
-void CGameItem::Select(const int &x, const int &y)
+void CGameItem::Select(int x, int y)
 {
 	WISPFUN_DEBUG("c19_f8");
-	if (m_Container == 0xFFFFFFFF)
+	if (Container == 0xFFFFFFFF)
 	{
-		if (m_MultiBody)
+		if (MultiBody)
 		{
-			m_RenderGraphic = m_MultiTileGraphic;
+			RenderGraphic = MultiTileGraphic;
 
-			if (m_RenderGraphic)
+			if (RenderGraphic)
 				CRenderStaticObject::Select(x, y);
 
 			return;
@@ -298,7 +298,7 @@ void CGameItem::Select(const int &x, const int &y)
 				else if (g_Orion.StaticPixelsInXY(objGraphic, x + 3, y))
 					g_SelectedObject.Init(this);
 			}
-			else if (m_FieldColor)
+			else if (FieldColor)
 			{
 				if (g_Orion.StaticPixelsInXY(FIELD_REPLACE_GRAPHIC, x, y))
 					g_SelectedObject.Init(this);
@@ -316,9 +316,9 @@ void CGameItem::Select(const int &x, const int &y)
 ushort CGameItem::GetMountAnimation()
 {
 	WISPFUN_DEBUG("c19_f9");
-	ushort graphic = m_Graphic;
+	ushort graphic = Graphic;
 
-	if (m_Layer == OL_MOUNT)
+	if (Layer == OL_MOUNT)
 	{
 		switch (graphic)
 		{
@@ -566,12 +566,12 @@ ushort CGameItem::GetMountAnimation()
 			graphic = m_TiledataPtr->AnimID;
 	}
 	else if (IsCorpse())
-		graphic = (ushort)m_Count;
+		graphic = (ushort)Count;
 		
 	return graphic;
 }
 //----------------------------------------------------------------------------------
-void CGameItem::ClearCustomHouseMultis(const uint &state)
+void CGameItem::ClearCustomHouseMultis(int state)
 {
 	CMulti *nextMulti = NULL;
 
@@ -594,7 +594,7 @@ void CGameItem::ClearCustomHouseMultis(const uint &state)
 				if (!state || item->State & state)
 					multi->Delete(item);
 			}
-			else if (item->Z == checkZ)
+			else if (item->GetZ() == checkZ)
 				item->State = item->State | CHMOF_FLOOR | CHMOF_IGNORE_IN_RENDER;
 		}
 
@@ -607,14 +607,14 @@ void CGameItem::ClearCustomHouseMultis(const uint &state)
 Добавить мульти в текущий объект
 @return
 */
-CMultiObject *CGameItem::AddMulti(const ushort &graphic, const ushort &color, const char &x, const char &y, const char &z, const bool &isCustomHouseMulti)
+CMultiObject *CGameItem::AddMulti(ushort graphic, ushort color, char x, char y, char z, bool isCustomHouseMulti)
 {
 	CMultiObject *mo = NULL;
 
 	if (isCustomHouseMulti)
-		mo = new CCustomHouseMultiObject(graphic, color, X + x, Y + y, z, 1);
+		mo = new CCustomHouseMultiObject(graphic, color, GetX() + x, GetY() + y, z, 1);
 	else
-		mo = new CMultiObject(graphic, X + x, Y + y, z, 1);
+		mo = new CMultiObject(graphic, GetX() + x, GetY() + y, z, 1);
 
 	g_MapManager.AddRender(mo);
 	AddMultiObject(mo);
@@ -626,17 +626,17 @@ CMultiObject *CGameItem::AddMulti(const ushort &graphic, const ushort &color, co
 Загрузка мульти в текущий объект
 @return 
 */
-void CGameItem::LoadMulti(const bool &dropAlpha)
+void CGameItem::LoadMulti(bool dropAlpha)
 {
 	WISPFUN_DEBUG("c19_f10");
 	ClearMultiItems();
 
-	if (m_Graphic >= MAX_MULTI_DATA_INDEX_COUNT)
+	if (Graphic >= MAX_MULTI_DATA_INDEX_COUNT)
 		return;
 
-	m_WantUpdateMulti = false;
+	WantUpdateMulti = false;
 
-	CIndexMulti &index = g_Orion.m_MultiDataIndex[m_Graphic];
+	CIndexMulti &index = g_Orion.m_MultiDataIndex[Graphic];
 
 	size_t address = index.Address;
 	int count = index.Count;
@@ -683,7 +683,7 @@ void CGameItem::LoadMulti(const bool &dropAlpha)
 				AddMultiObject(mo);
 			}
 			else if (!i)
-				m_MultiTileGraphic = graphic;
+				MultiTileGraphic = graphic;
 
 			if (x < minX)
 				minX = x;
@@ -700,7 +700,7 @@ void CGameItem::LoadMulti(const bool &dropAlpha)
 	{
 		int itemOffset = sizeof(MULTI_BLOCK);
 
-		if (g_PacketManager.ClientVersion >= CV_7090)
+		if (g_PacketManager.GetClientVersion() >= CV_7090)
 			itemOffset = sizeof(MULTI_BLOCK_NEW);
 
 		IFOR(j, 0, count)
@@ -717,7 +717,7 @@ void CGameItem::LoadMulti(const bool &dropAlpha)
 				AddMultiObject(mo);
 			}
 			else if (!j)
-				m_MultiTileGraphic = pmb->ID;
+				MultiTileGraphic = pmb->ID;
 
 			if (pmb->X < minX)
 				minX = pmb->X;
@@ -741,7 +741,7 @@ void CGameItem::LoadMulti(const bool &dropAlpha)
 		multi->MaxX = maxX;
 		multi->MaxY = maxY;
 
-		m_MultiDistanceBonus = max(max(abs(minX), maxX), max(abs(minY), maxY));
+		MultiDistanceBonus = max(max(abs(minX), maxX), max(abs(minY), maxY));
 	}
 
 	CGumpMinimap *minimap = (CGumpMinimap*)g_GumpManager.GetGump(0, 0, GT_MINIMAP);
@@ -760,7 +760,7 @@ void CGameItem::AddMultiObject(CMultiObject *obj)
 	WISPFUN_DEBUG("c19_f11");
 	if (m_Items == NULL)
 	{
-		m_Items = new CMulti(obj->X, obj->Y);
+		m_Items = new CMulti(obj->GetX(), obj->GetY());
 		m_Items->m_Next = NULL;
 		m_Items->m_Items = obj;
 		obj->m_Next = NULL;
@@ -768,13 +768,13 @@ void CGameItem::AddMultiObject(CMultiObject *obj)
 	}
 	else
 	{
-		CMulti *multi = GetMultiAtXY(obj->X, obj->Y);
+		CMulti *multi = GetMultiAtXY(obj->GetX(), obj->GetY());
 
 		if (multi != NULL)
 		{
 			QFOR(multiobj, multi->m_Items, CMultiObject*)
 			{
-				if (obj->Z < multiobj->Z)
+				if (obj->GetZ() < multiobj->GetZ())
 				{
 					if (multiobj->m_Prev == NULL)
 						multi->Insert(multiobj->m_Prev, obj);
@@ -798,7 +798,7 @@ void CGameItem::AddMultiObject(CMultiObject *obj)
 		}
 		else
 		{
-			CMulti *newmulti = new CMulti(obj->X, obj->Y);
+			CMulti *newmulti = new CMulti(obj->GetX(), obj->GetY());
 			newmulti->m_Next = NULL;
 			newmulti->m_Items = obj;
 			obj->m_Next = NULL;
@@ -823,7 +823,7 @@ void CGameItem::AddMultiObject(CMultiObject *obj)
 @param [__in] y Координата Y
 @return Ссылка на мульти или NULL
 */
-CMulti *CGameItem::GetMultiAtXY(const short &x, const short &y)
+CMulti *CGameItem::GetMultiAtXY(short x, short y)
 {
 	WISPFUN_DEBUG("c19_f12");
 	QFOR(multi, m_Items, CMulti*)
@@ -841,7 +841,7 @@ CMulti *CGameItem::GetMultiAtXY(const short &x, const short &y)
 @param [__in_opt] color Цвет предмета
 @return Ссылка на найденный объект или NULL
 */
-CGameItem *CGameItem::FindItem(const ushort &graphic, const ushort &color)
+CGameItem *CGameItem::FindItem(ushort graphic, ushort color)
 {
 	WISPFUN_DEBUG("c19_f13");
 	CGameItem *item = NULL;

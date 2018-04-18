@@ -26,15 +26,23 @@ struct CC_HAIR_STYLE
 //!Класс менеджера создания персонажей
 class CCreateCharacterManager
 {
-	SETGETE(bool, Female, false);
-	SETGETE(RACE_TYPE, Race, RT_HUMAN);
-	SETGET(uchar, HairStyle, 1);
-	SETGET(uchar, BeardStyle, 0);
-	SETGET(ushort, SkinTone, 0x03EA);
-	SETGET(ushort, ShirtColor, 0x0084);
-	SETGET(ushort, PantsColor, 0x035F);
-	SETGET(ushort, HairColor, 0x044E);
-	SETGET(ushort, BeardColor, 0x044E);
+protected:
+    bool m_Female = false;
+public:
+    bool GetFemale() { return m_Female; };
+    void SetFemale(bool val);
+protected:
+    RACE_TYPE m_Race = RT_HUMAN;
+public:
+    RACE_TYPE GetRace() { return m_Race; };
+    void SetRace(RACE_TYPE val);
+	uchar HairStyle = 1;
+	uchar BeardStyle = 0;
+	ushort SkinTone = 0x03EA;
+	ushort ShirtColor = 0x0084;
+	ushort PantsColor = 0x035F;
+	ushort HairColor = 0x044E;
+	ushort BeardColor = 0x044E;
 
 public:
 	static const int HUMAN_MALE_HAIR_COUNT = 10;
@@ -114,14 +122,14 @@ public:
 	@param [__in] pos Индекс волос
 	@return Структура с данными о волосах
 	*/
-	CC_HAIR_STYLE GetHair(const uchar &pos) const;
+	CC_HAIR_STYLE GetHair(uchar pos) const;
 
 	/*!
 	Получить стиль бороды
 	@param [__in] pos Индекс бороды
 	@return Структура с данными о бороде
 	*/
-	CC_HAIR_STYLE GetBeard(const uchar &pos) const;
+	CC_HAIR_STYLE GetBeard(uchar pos) const;
 
 };
 //----------------------------------------------------------------------------------

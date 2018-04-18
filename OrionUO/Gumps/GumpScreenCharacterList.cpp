@@ -14,8 +14,8 @@
 CGumpScreenCharacterList::CGumpScreenCharacterList()
 : CGump(GT_NONE, 0, 0, 0)
 {
-	m_NoMove = true;
-	m_NoClose = true;
+	NoMove = true;
+	NoClose = true;
 }
 //----------------------------------------------------------------------------------
 CGumpScreenCharacterList::~CGumpScreenCharacterList()
@@ -28,13 +28,13 @@ void CGumpScreenCharacterList::UpdateContent()
 	Clear();
 
 	int count = g_CharacterList.Count;
-	bool testField = (g_PacketManager.ClientVersion >= CV_305D);
+	bool testField = (g_PacketManager.GetClientVersion() >= CV_305D);
 	int posInList = 0;
 	int yOffset = 150;
 	int yBonus = 0;
 	int listTitleY = 106;
 
-	if (g_PacketManager.ClientVersion >= CV_6040)
+	if (g_PacketManager.GetClientVersion() >= CV_6040)
 	{
 		listTitleY = 96;
 		yOffset = 125;
@@ -122,7 +122,7 @@ void CGumpScreenCharacterList::InitToolTip()
 
 	if (id >= ID_CS_CHARACTERS)
 	{
-		bool testField = (g_PacketManager.ClientVersion >= CV_305D);
+		bool testField = (g_PacketManager.GetClientVersion() >= CV_305D);
 
 		IFOR(i, 0, g_CharacterList.Count)
 		{

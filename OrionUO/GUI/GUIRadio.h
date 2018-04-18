@@ -15,7 +15,7 @@
 class CGUIRadio : public CGUICheckbox
 {
 public:
-	CGUIRadio(const uint &serial, const ushort &graphic, const ushort &graphicChecked, const ushort &graphicDisabled, const int &x, const int &y);
+	CGUIRadio(int serial, ushort graphic, ushort graphicChecked, ushort graphicDisabled, int x, int y);
 	virtual ~CGUIRadio();
 };
 //----------------------------------------------------------------------------------

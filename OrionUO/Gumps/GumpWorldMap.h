@@ -12,16 +12,29 @@
 //----------------------------------------------------------------------------------
 class CGumpWorldMap : public CGump
 {
-	SETGET(int, Width, MIN_WORLD_MAP_WIDTH);
-	SETGET(int, Height, MIN_WORLD_MAP_HEIGHT);
-	SETGETE(int, Scale, 2);
-	SETGETE(int, Map, 0);
-	SETGETE(bool, LinkWithPlayer, true);
-	SETGET(int, OffsetX, 0);
-	SETGET(int, OffsetY, 0);
-	SETGET(bool, Called, false);
-	SETGET(int, CurrentOffsetX, 0);
-	SETGET(int, CurrentOffsetY, 0);
+public:
+	int Width = MIN_WORLD_MAP_WIDTH;
+	int Height = MIN_WORLD_MAP_HEIGHT;
+protected:
+    int m_Scale = 2;
+public:
+    int GetScale() { return m_Scale; };
+    void SetScale(int val);
+protected:
+    int m_Map = 0;
+public:
+    int GetMap() { return m_Map; };
+    void SetMap(int val);
+protected:
+    bool m_LinkWithPlayer = true;
+public:
+    bool GetLinkWithPlayer() { return m_LinkWithPlayer; };
+    void SetLinkWithPlayer(bool val);
+	int OffsetX = 0;
+	int OffsetY = 0;
+	bool Called = false;
+	int CurrentOffsetX = 0;
+	int CurrentOffsetY = 0;
 
 private:
 	static const int ID_GWM_MINIMIZE = 1;
@@ -43,14 +56,14 @@ private:
 	void GetScaledDimensions(int &width, int &height, int &playerX, int &playerY);
 	void GetCurrentCenter(int &x, int &y, int &mouseX, int &mouseY);
 	void ScaleOffsets(int newScale, int mouseX, int mouseY);
-	void LoadMap(const int &map);
+	void LoadMap(int map);
 
 	int GetCurrentMap();
 
 	CGUIButton *m_Minimizer{ NULL };
 	CGUIResizepic *m_Background{ NULL };
 	CGUIResizeButton *m_Resizer{ NULL };
-	CGUIText *m_Text{ NULL };
+	CGUIText *Text{ NULL };
 	CGUICheckbox *m_Checkbox{ NULL };
 	CGUIScissor *m_Scissor{ NULL };
 	CGUIWorldMapTexture *m_MapData{ NULL };
@@ -66,9 +79,9 @@ public:
 
 	void UpdateSize();
 
-	virtual bool CanBeDisplayed() { return m_Called; }
+	virtual bool CanBeDisplayed() { return Called; }
 
-	virtual void GenerateFrame(const bool &stop);
+	virtual void GenerateFrame(bool stop);
 
 	virtual void PrepareContent();
 
@@ -82,7 +95,7 @@ public:
 	virtual void OnLeftMouseButtonDown();
 	virtual void OnLeftMouseButtonUp();
 	virtual bool OnLeftMouseButtonDoubleClick();
-	virtual void OnMidMouseButtonScroll(const bool &up);
+	virtual void OnMidMouseButtonScroll(bool up);
 };
 //----------------------------------------------------------------------------------
 #endif

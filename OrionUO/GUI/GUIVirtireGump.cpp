@@ -11,7 +11,7 @@
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
 //----------------------------------------------------------------------------------
-CGUIVirtureGump::CGUIVirtureGump(const ushort &graphic, const int &x, const int &y)
+CGUIVirtureGump::CGUIVirtureGump(ushort graphic, int x, int y)
 : CGUIDrawObject(GOT_VIRTURE_GUMP, graphic, graphic, 0, x, y)
 {
 }
@@ -24,7 +24,7 @@ bool CGUIVirtureGump::Select()
 {
 	bool select = false;
 
-	CGLTexture *th = g_Orion.ExecuteGump(m_Graphic);
+	CGLTexture *th = g_Orion.ExecuteGump(Graphic);
 
 	if (th != NULL)
 	{

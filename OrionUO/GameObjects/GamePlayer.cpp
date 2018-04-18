@@ -13,11 +13,11 @@
 //----------------------------------------------------------------------------------
 CPlayer *g_Player = NULL;
 //----------------------------------------------------------------------------------
-CPlayer::CPlayer(const uint &serial)
+CPlayer::CPlayer(int serial)
 : CGameCharacter(serial)
 {
 	WISPFUN_DEBUG("c21_f1");
-	CPacketSkillsRequest(m_Serial).Send();
+	CPacketSkillsRequest(Serial).Send();
 }
 //---------------------------------------------------------------------------
 CPlayer::~CPlayer()

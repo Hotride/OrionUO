@@ -14,84 +14,85 @@
 //----------------------------------------------------------------------------------
 class CGUISlider : public CBaseGUI
 {
+public:
 	//!ИД картинки в выбранном состоянии
-	SETGET(ushort, GraphicSelected, 0);
+	ushort GraphicSelected = 0;
 
 	//!ИД картинки в зажатом состоянии
-	SETGET(ushort, GraphicPressed, 0);
+	ushort GraphicPressed = 0;
 
 	//!ИД картинки фона
-	SETGET(ushort, BackgroundGraphic, 0);
+	ushort BackgroundGraphic = 0;
 
 	//!Сборный фон
-	SETGET(bool, CompositeBackground, false);
+	bool CompositeBackground = false;
 
 	//!Вертикальный или горизонтальный
-	SETGET(bool, Vertical, false);
+	bool Vertical = false;
 
 	//!Длина
-	SETGET(int, Lenght, 0);
+	int Length = 0;
 
 	//!Смещение в процентах
-	SETGET(float, Percents, 0.0f);
+	float Percents = 0.0f;
 
 	//!Смещение
-	SETGET(int, Offset, 0);
+	int Offset = 0;
 
 	//!Минимальное значение
-	SETGET(int, MinValue, 0);
+	int MinValue = 0;
 
 	//!Максимальное значение
-	SETGET(int, MaxValue, 0);
+	int MaxValue = 0;
 
 	//!Текущее значение
-	SETGET(int, Value, 0);
+	int Value = 0;
 
 	//!Имеет текст
-	SETGET(bool, HaveText, false);
+	bool HaveText = false;
 
 	//!Позиция текста
-	SETGET(SLIDER_TEXT_POSITION, TextPosition, STP_RIGHT);
+	SLIDER_TEXT_POSITION TextPosition = STP_RIGHT;
 
 	//!Шрифт текста
-	SETGET(uchar, Font, 0);
+	uchar Font = 0;
 
 	//!Цвет текста
-	SETGET(ushort, TextColor, 0);
+	ushort TextColor = 0;
 
 	//!Текст в юникоде
-	SETGET(bool, Unicode, true);
+	bool Unicode = true;
 
 	//!Ширина текста
-	SETGET(int, TextWidth, 0);
+	int TextWidth = 0;
 
 	//!Ориентация текста
-	SETGET(TEXT_ALIGN_TYPE, Align, TS_LEFT);
+	TEXT_ALIGN_TYPE Align = TS_LEFT;
 
 	//!Флаги текста
-	SETGET(ushort, TextFlags, 0);
+	ushort TextFlags = 0;
 
 	//!Координата текста по оси X
-	SETGET(int, TextX, 0);
+	int TextX = 0;
 
 	//!Координата текста по оси Y
-	SETGET(int, TextY, 0);
+	int TextY = 0;
 
 	//!Шаг скроллера
-	SETGET(int, ScrollStep, 15);
+	int ScrollStep = 15;
 
 	//!Время последнего скроллинга
-	SETGET(uint, LastScrollTime, 0);
+	uint LastScrollTime = 0;
 
 	//!Стандартное смещение текста
-	SETGET(int, DefaultTextOffset, 2);
+	int DefaultTextOffset = 2;
 
 private:
 	//!Текстура текста
-	CGLTextTexture m_Text{ CGLTextTexture() };
+	CGLTextTexture Text{ CGLTextTexture() };
 
 public:
-	CGUISlider(const uint &serial, const ushort &graphic, const ushort &graphicSelected, const ushort &graphicPressed, const ushort &backgroundGraphic, const bool &compositeBackground, const bool &vertical, const int &x, const int &y, const int &lenght, const int &minValue, const int &maxValue, const int &value);
+	CGUISlider(int serial, ushort graphic, ushort graphicSelected, ushort graphicPressed, ushort backgroundGraphic, bool compositeBackground, bool vertical, int x, int y, int lenght, int minValue, int maxValue, int value);
 	virtual ~CGUISlider();
 
 	virtual bool IsPressedOuthit() { return true; }
@@ -99,10 +100,10 @@ public:
 	virtual WISP_GEOMETRY::CSize GetSize();
 
 	//!Скроллинг
-	virtual void OnScroll(const bool &up, const uint &delay);
+	virtual void OnScroll(bool up, int delay);
 
 	//!Нажатие на компоненту
-	virtual void OnClick(const int &x, const int &y);
+	virtual void OnClick(int x, int y);
 
 	//!Обновить текст
 	void UpdateText();
@@ -111,13 +112,13 @@ public:
 	virtual void CalculateOffset();
 
 	//!Установить параметры текста
-	void SetTextParameters(const bool &haveText, const SLIDER_TEXT_POSITION &textPosition, const uchar &font, const ushort &color, const bool &unicode, const int &textWidth = 0, const TEXT_ALIGN_TYPE &align = TS_LEFT, const ushort &textFlags = 0);
+	void SetTextParameters(bool haveText, SLIDER_TEXT_POSITION textPosition, uchar font, ushort color, bool unicode, int textWidth = 0, TEXT_ALIGN_TYPE align = TS_LEFT, ushort textFlags = 0);
 
 	virtual void PrepareTextures();
 
 	virtual ushort GetDrawGraphic();
 
-	virtual void Draw(const bool &checktrans = false);
+	virtual void Draw(bool checktrans = false);
 	virtual bool Select();
 
 	virtual void OnMouseEnter();

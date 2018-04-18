@@ -41,7 +41,7 @@ void CGameScreen::Init()
 	g_OrionWindow.NoResize = false;
 
 	g_ScreenEffectManager.UseSunrise();
-	m_SmoothScreenAction = 0;
+	SmoothScreenAction = 0;
 }
 //----------------------------------------------------------------------------------
 /*!
@@ -53,7 +53,7 @@ void CGameScreen::ProcessSmoothAction(uchar action)
 {
 	WISPFUN_DEBUG("c164_f4");
 	if (action == 0xFF)
-		action = m_SmoothScreenAction;
+		action = SmoothScreenAction;
 
 	if (action == ID_SMOOTH_GS_LOGOUT)
 		g_LogoutAfterClick = true;
@@ -125,21 +125,21 @@ void CGameScreen::InitToolTip()
 void CGameScreen::UpdateMaxDrawZ()
 {
 	WISPFUN_DEBUG("c164_f6");
-	int playerX = g_Player->X;
-	int playerY = g_Player->Y;
-	int playerZ = g_Player->Z;
+	int playerX = g_Player->GetX();
+	int playerY = g_Player->GetY();
+	int playerZ = g_Player->GetZ();
 
 	if (playerX == g_Player->OldX && playerY == g_Player->OldY && playerZ == g_Player->OldZ)
 		return;
 
-	g_Player->OldX = g_Player->X;
-	g_Player->OldY = g_Player->Y;
-	g_Player->OldZ = g_Player->Z;
+	g_Player->OldX = g_Player->GetX();
+	g_Player->OldY = g_Player->GetY();
+	g_Player->OldZ = g_Player->GetZ();
 
 	int maxZ1 = g_MaxGroundZ;
 	int maxZ2 = m_MaxDrawZ;
 
-	g_NoDrawRoof = g_ConfigManager.NoDrawRoofs;
+	g_NoDrawRoof = g_ConfigManager.GetNoDrawRoofs();
 	char maxGroundZ = 127;
 	g_MaxGroundZ = 127;
 	m_MaxDrawZ = 127;
@@ -160,7 +160,7 @@ void CGameScreen::UpdateMaxDrawZ()
 
 		for (CRenderWorldObject *ro = mb->GetRender(x, y); ro != NULL; ro = ro->m_NextXY)
 		{
-			char tileZ = ro->Z;
+			char tileZ = ro->GetZ();
 
 			if (!ro->IsGameObject())
 			{
@@ -218,7 +218,7 @@ void CGameScreen::UpdateMaxDrawZ()
 				else if (((CGameObject*)ro)->NPC)
 					continue;
 
-				char tileZ = ro->Z;
+				char tileZ = ro->GetZ();
 
 				if (tileZ > pz14 && m_MaxDrawZ > tileZ && !(((CRenderStaticObject*)ro)->GetStaticData()->Flags & 0x204) && ro->IsRoof())
 				{
@@ -253,7 +253,7 @@ void CGameScreen::UpdateMaxDrawZ()
 @param [__in] z Координата Z дерева
 @return 
 */
-void CGameScreen::ApplyTransparentFoliageToUnion(const ushort &graphic, const int &x, const int &y, const int &z)
+void CGameScreen::ApplyTransparentFoliageToUnion(ushort graphic, int x, int y, int z)
 {
 	WISPFUN_DEBUG("c164_f7");
 	int bx = x / 8;
@@ -274,7 +274,7 @@ void CGameScreen::ApplyTransparentFoliageToUnion(const ushort &graphic, const in
 			if (obj->IsGameObject() && !((CGameObject*)obj)->NPC && ((CGameItem*)obj)->MultiBody)
 				testGraphic = ((CGameItem*)obj)->MultiTileGraphic;
 
-			if (testGraphic == graphic && obj->Z == z)
+			if (testGraphic == graphic && obj->GetZ() == z)
 				obj->StaticGroupObjectPtr()->FoliageTransparentIndex = g_FoliageIndex;
 		}
 	}
@@ -330,12 +330,12 @@ void CGameScreen::CalculateRenderList()
 		int grZ = 0;
 		int stZ = 0;
 		CRenderObject *sel = g_SelectedObject.Object;
-		g_MapManager.GetMapZ(sel->X, sel->Y, grZ, stZ);
+		g_MapManager.GetMapZ(sel->GetX(), sel->GetY(), grZ, stZ);
 
 		if (((CRenderWorldObject*)sel)->IsStaticObject() && ((CRenderWorldObject*)sel)->IsWet())
-			grZ = ((CRenderWorldObject*)sel)->Z;
+			grZ = ((CRenderWorldObject*)sel)->GetZ();
 
-		g_Target.LoadMulti(sel->X - g_Target.MultiX, sel->Y - g_Target.MultiY, grZ);
+		g_Target.LoadMulti(sel->GetX() - g_Target.MultiX, sel->GetY() - g_Target.MultiY, grZ);
 	}
 
 	m_CanProcessAlpha = (m_ProcessAlphaTimer < g_Ticks);
@@ -348,7 +348,7 @@ void CGameScreen::CalculateRenderList()
 	if (g_FoliageIndex >= 100)
 		g_FoliageIndex = 1;
 
-	switch (g_ConfigManager.DrawAuraState)
+	switch (g_ConfigManager.GetDrawAuraState())
 	{
 		case DAS_IN_WARMODE:
 		{
@@ -378,7 +378,7 @@ void CGameScreen::CalculateRenderList()
 
 			if (go->IsPlayer())
 			{
-				int playerZOffset = (g_Player->Z * 4) - g_Player->OffsetZ;
+				int playerZOffset = (g_Player->GetZ() * 4) - g_Player->OffsetZ;
 
 				DRAW_FRAME_INFORMATION &dfInfo = go->m_FrameInfo;
 
@@ -468,8 +468,8 @@ void CGameScreen::CalculateRenderList()
 			if (mb == NULL)
 			{
 				mb = g_MapManager->AddBlock(blockIndex);
-				mb->X = bx;
-				mb->Y = by;
+				mb->GetX() = bx;
+				mb->GetY() = by;
 				g_MapManager->LoadBlock(mb);
 			}
 
@@ -520,24 +520,24 @@ void CGameScreen::CalculateRenderList()
 
 	QFOR(go, g_World->m_Items, CGameObject*)
 	{
-		if (go->UseInRender != m_RenderIndex && (go->NPC || go->IsCorpse()) && go->m_TextControl->m_Items != NULL)
+		if (go->UseInRender != RenderIndex && (go->NPC || go->IsCorpse()) && go->m_TextControl->m_Items != NULL)
 		{
 			go->UpdateDrawCoordinates();
-			go->UseInRender = m_RenderIndex;
+			go->UseInRender = RenderIndex;
 		}
 	}
 
 #if UO_RENDER_LIST_SORT == 1
-	m_RenderIndex++;
+	RenderIndex++;
 
-	if (m_RenderIndex >= 100)
-		m_RenderIndex = 1;
+	if (RenderIndex >= 100)
+		RenderIndex = 1;
 #endif
 
-	m_UpdateDrawPos = false;
+	UpdateDrawPos = false;
 }
 //----------------------------------------------------------------------------------
-void CGameScreen::AddTileToRenderList(CRenderWorldObject *obj, const int &worldX, const int &worldY, const bool &useObjectHandles, const int &maxZ)
+void CGameScreen::AddTileToRenderList(CRenderWorldObject *obj, int worldX, int worldY, bool useObjectHandles, int maxZ)
 {
 	WISPFUN_DEBUG("c164_f11");
 	ushort grayColor = 0;
@@ -560,11 +560,11 @@ void CGameScreen::AddTileToRenderList(CRenderWorldObject *obj, const int &worldX
 	for (; obj != NULL; obj = obj->m_NextXY)
 	{
 #if UO_RENDER_LIST_SORT == 1
-		if (obj->CurrentRenderIndex == m_RenderIndex || obj->NoDrawTile)
+		if (obj->CurrentRenderIndex == RenderIndex || obj->NoDrawTile)
 			continue;
 #endif
 
-		if ((m_UpdateDrawPos && obj->CurrentRenderIndex != m_RenderIndex) || obj->Changed)
+		if ((UpdateDrawPos && obj->CurrentRenderIndex != RenderIndex) || obj->Changed)
 			obj->UpdateDrawCoordinates();
 
 		obj->UseInRender = 0xFF;
@@ -577,7 +577,7 @@ void CGameScreen::AddTileToRenderList(CRenderWorldObject *obj, const int &worldX
 		bool aphaChanged = false;
 
 #if UO_RENDER_LIST_SORT == 1
-		int z = obj->Z;
+		int z = obj->GetZ();
 
 		int maxObjectZ = obj->PriorityZ;
 
@@ -616,7 +616,7 @@ void CGameScreen::AddTileToRenderList(CRenderWorldObject *obj, const int &worldX
 		if (maxObjectZ > maxZ)
 			break;
 
-		obj->CurrentRenderIndex = m_RenderIndex;
+		obj->CurrentRenderIndex = RenderIndex;
 #endif
 
 		if (obj->IsInternal())
@@ -691,8 +691,8 @@ void CGameScreen::AddTileToRenderList(CRenderWorldObject *obj, const int &worldX
 							}
 						}
 
-						text->RealDrawX = textDrawX - text->X;
-						text->RealDrawY = textDrawY + text->Y;
+						text->RealDrawX = textDrawX - text->GetX();
+						text->RealDrawY = textDrawY + text->GetY();
 
 						if (text->Transparent)
 						{
@@ -704,7 +704,7 @@ void CGameScreen::AddTileToRenderList(CRenderWorldObject *obj, const int &worldX
 
 						if (text->MoveTimer < g_Ticks)
 						{
-							text->Y -= DAMAGE_TEXT_STEP;
+							text->SetY(text->GetY() - DAMAGE_TEXT_STEP);
 							text->MoveTimer = g_Ticks + DAMAGE_TEXT_MOVE_DELAY;
 						}
 
@@ -755,7 +755,7 @@ void CGameScreen::AddTileToRenderList(CRenderWorldObject *obj, const int &worldX
 					{
 						index = g_FoliageIndex;
 
-						CheckFoliageUnion(obj->Graphic, obj->X, obj->Y, z);
+						CheckFoliageUnion(obj->Graphic, obj->GetX(), obj->GetY(), z);
 					}
 				}
 			}
@@ -796,7 +796,7 @@ void CGameScreen::AddTileToRenderList(CRenderWorldObject *obj, const int &worldX
 
 		m_RenderList[m_RenderListCount].Object = obj;
 		m_RenderList[m_RenderListCount].GrayColor = grayColor;
-		obj->UseInRender = m_RenderIndex;
+		obj->UseInRender = RenderIndex;
 
 		if (!grayColor && g_CustomHouseGump != NULL && g_Target.IsTargeting() && obj == g_SelectedObject.Object)
 		{
@@ -805,7 +805,7 @@ void CGameScreen::AddTileToRenderList(CRenderWorldObject *obj, const int &worldX
 			if (g_CustomHouseGump->CurrentFloor == 1)
 				zOffset = -7;
 
-			if (obj->Z >= g_Player->Z + zOffset && obj->Z < g_Player->Z + 20)
+			if (obj->GetZ() >= g_Player->GetZ() + zOffset && obj->GetZ() < g_Player->GetZ() + 20)
 			{
 				if (g_CustomHouseGump->Erasing)
 				{
@@ -823,11 +823,11 @@ void CGameScreen::AddTileToRenderList(CRenderWorldObject *obj, const int &worldX
 	}
 }
 //----------------------------------------------------------------------------------
-void CGameScreen::AddOffsetCharacterTileToRenderList(CGameObject *obj, const bool &useObjectHandles)
+void CGameScreen::AddOffsetCharacterTileToRenderList(CGameObject *obj, bool useObjectHandles)
 {
 	WISPFUN_DEBUG("c164_f12");
-	int characterX = obj->X;
-	int characterY = obj->Y;
+	int characterX = obj->GetX();
+	int characterY = obj->GetY();
 
 	//ANIMATION_DIMENSIONS dims = g_AnimationManager.GetAnimationDimensions(obj);
 	CGameCharacter *character = obj->GameCharacterPtr();
@@ -917,9 +917,9 @@ void CGameScreen::CalculateGameWindowBounds()
 	if (g_GrayedPixels && g_Season != ST_DESOLATION)
 		g_Orion.ChangeSeason(ST_DESOLATION, DEATH_MUSIC_INDEX);
 
-	g_RenderBounds.PlayerX = g_Player->X;
-	g_RenderBounds.PlayerY = g_Player->Y;
-	g_RenderBounds.PlayerZ = g_Player->Z;
+	g_RenderBounds.PlayerX = g_Player->GetX();
+	g_RenderBounds.PlayerY = g_Player->GetY();
+	g_RenderBounds.PlayerZ = g_Player->GetZ();
 
 	int oldDrawOffsetX = g_RenderBounds.WindowDrawOffsetX;
 	int oldDrawOffsetY = g_RenderBounds.WindowDrawOffsetY;
@@ -932,10 +932,10 @@ void CGameScreen::CalculateGameWindowBounds()
 
 	m_GameScreenGump.UpdateContent();
 
-	//int playerZOffset = (g_Player->Z * 4) - g_Player->OffsetZ;
+	//int playerZOffset = (g_Player->GetZ() * 4) - g_Player->OffsetZ;
 
 	g_RenderBounds.GameWindowCenterX = g_RenderBounds.GameWindowPosX + (g_RenderBounds.GameWindowWidth / 2);
-	g_RenderBounds.GameWindowCenterY = (g_RenderBounds.GameWindowPosY + g_RenderBounds.GameWindowHeight / 2) + (g_Player->Z * 4);
+	g_RenderBounds.GameWindowCenterY = (g_RenderBounds.GameWindowPosY + g_RenderBounds.GameWindowHeight / 2) + (g_Player->GetZ() * 4);
 
 	/*int earthquakeMagnitude = RandomInt(11);
 
@@ -948,10 +948,10 @@ void CGameScreen::CalculateGameWindowBounds()
 	g_RenderBounds.GameWindowCenterX -= g_Player->OffsetX;
 	g_RenderBounds.GameWindowCenterY -= (g_Player->OffsetY - g_Player->OffsetZ);
 
-	g_RenderBounds.WindowDrawOffsetX = ((g_Player->X - g_Player->Y) * 22) - g_RenderBounds.GameWindowCenterX;
-	g_RenderBounds.WindowDrawOffsetY = ((g_Player->X + g_Player->Y) * 22) - g_RenderBounds.GameWindowCenterY;
+	g_RenderBounds.WindowDrawOffsetX = ((g_Player->GetX() - g_Player->GetY()) * 22) - g_RenderBounds.GameWindowCenterX;
+	g_RenderBounds.WindowDrawOffsetY = ((g_Player->GetX() + g_Player->GetY()) * 22) - g_RenderBounds.GameWindowCenterY;
 
-	if (g_ConfigManager.UseScaling)
+	if (g_ConfigManager.GetUseScaling())
 	{
 		GLdouble left = (GLdouble)g_RenderBounds.GameWindowPosX;
 		GLdouble right = (GLdouble)(g_RenderBounds.GameWindowWidth + left);
@@ -986,22 +986,22 @@ void CGameScreen::CalculateGameWindowBounds()
 	else
 		rangeY = rangeX;
 
-	g_RenderBounds.RealMinRangeX = g_Player->X - rangeX;
+	g_RenderBounds.RealMinRangeX = g_Player->GetX() - rangeX;
 
 	if (g_RenderBounds.RealMinRangeX < 0)
 		g_RenderBounds.RealMinRangeX = 0;
 
-	g_RenderBounds.RealMaxRangeX = g_Player->X + rangeX;
+	g_RenderBounds.RealMaxRangeX = g_Player->GetX() + rangeX;
 
 	if (g_RenderBounds.RealMaxRangeX >= g_MapSize[g_CurrentMap].Width)
 		g_RenderBounds.RealMaxRangeX = g_MapSize[g_CurrentMap].Width;
 
-	g_RenderBounds.RealMinRangeY = g_Player->Y - rangeY;
+	g_RenderBounds.RealMinRangeY = g_Player->GetY() - rangeY;
 
 	if (g_RenderBounds.RealMinRangeY < 0)
 		g_RenderBounds.RealMinRangeY = 0;
 
-	g_RenderBounds.RealMaxRangeY = g_Player->Y + rangeY;
+	g_RenderBounds.RealMaxRangeY = g_Player->GetY() + rangeY;
 
 	if (g_RenderBounds.RealMaxRangeY >= g_MapSize[g_CurrentMap].Height)
 		g_RenderBounds.RealMaxRangeY = g_MapSize[g_CurrentMap].Height;
@@ -1036,22 +1036,22 @@ void CGameScreen::CalculateGameWindowBounds()
 	g_RenderBounds.MinPixelsY = (int)(((g_RenderBounds.GameWindowPosY - drawOffset) * g_GlobalScale) - (newMaxY - maxY)); // -playerZOffset;
 	g_RenderBounds.MaxPixelsY = (int)newMaxY; // + playerZOffset;
 
-	if (m_UpdateDrawPos || oldDrawOffsetX != g_RenderBounds.WindowDrawOffsetX || oldDrawOffsetX != g_RenderBounds.WindowDrawOffsetY)
+	if (UpdateDrawPos || oldDrawOffsetX != g_RenderBounds.WindowDrawOffsetX || oldDrawOffsetX != g_RenderBounds.WindowDrawOffsetY)
 	{
-		m_UpdateDrawPos = true;
-		m_RenderListInitalized = false;
+		UpdateDrawPos = true;
+		RenderListInitalized = false;
 	}
 
 	UpdateMaxDrawZ();
 
-	m_UseLight = (g_PersonalLightLevel < g_LightLevel);
+	UseLight = (g_PersonalLightLevel < g_LightLevel);
 
-	if (m_UseLight && g_GL.CanUseFrameBuffer)
+	if (UseLight && g_GL.CanUseFrameBuffer)
 	{
 		int testWidth = g_RenderBounds.GameWindowWidth;
 		int testHeight = g_RenderBounds.GameWindowHeight;
 
-		if (g_ConfigManager.UseScaling)
+		if (g_ConfigManager.GetUseScaling())
 		{
 			testWidth = g_RenderBounds.GameWindowScaledWidth;
 			testHeight = g_RenderBounds.GameWindowScaledHeight;
@@ -1070,7 +1070,7 @@ void CGameScreen::CalculateGameWindowBounds()
 @param [__in] y Экранная координата Y
 @return 
 */
-void CGameScreen::AddLight(CRenderWorldObject *rwo, CRenderWorldObject *lightObject, const int &x, const int &y)
+void CGameScreen::AddLight(CRenderWorldObject *rwo, CRenderWorldObject *lightObject, int x, int y)
 {
 	WISPFUN_DEBUG("c164_f14");
 
@@ -1078,8 +1078,8 @@ void CGameScreen::AddLight(CRenderWorldObject *rwo, CRenderWorldObject *lightObj
 	{
 		bool canBeAdded = true;
 		
-		int testX = rwo->X + 1;
-		int testY = rwo->Y + 1;
+		int testX = rwo->GetX() + 1;
+		int testY = rwo->GetY() + 1;
 		
 		int bx = testX / 8;
 		int by = testY / 8;
@@ -1092,14 +1092,14 @@ void CGameScreen::AddLight(CRenderWorldObject *rwo, CRenderWorldObject *lightObj
 			bx = testX % 8;
 			by = testY % 8;
 			
-			char z5 = rwo->Z + 5;
+			char z5 = rwo->GetZ() + 5;
 		
 			for (CRenderWorldObject *obj = mb->GetRender(bx, by); obj != NULL; obj = obj->m_NextXY)
 			{
 				if (!obj->IsStaticGroupObject() || (obj->IsGameObject() && ((CGameObject*)obj)->NPC) || obj->NoDrawTile || obj->IsTransparent())
 					continue;
 
-				if (obj->Z < m_MaxDrawZ && obj->Z >= z5)
+				if (obj->GetZ() < m_MaxDrawZ && obj->GetZ() >= z5)
 				{
 					canBeAdded = false;
 					break;
@@ -1141,7 +1141,7 @@ void CGameScreen::AddLight(CRenderWorldObject *rwo, CRenderWorldObject *lightObj
 @param [__in] mode true - отрисовка, false - выбор
 @return 
 */
-void CGameScreen::DrawGameWindow(const bool &mode)
+void CGameScreen::DrawGameWindow(bool mode)
 {
 	WISPFUN_DEBUG("c164_f15");
 	int playerZPlus5 = g_RenderBounds.PlayerZ + 5;
@@ -1179,7 +1179,7 @@ void CGameScreen::DrawGameWindow(const bool &mode)
 
 				obj->Draw(x, y);
 
-				if (g_ConfigManager.DrawStatusState && obj->IsGameObject() && ((CGameObject*)obj)->NPC && !((CGameCharacter*)obj)->Dead())
+				if (g_ConfigManager.GetDrawStatusState() && obj->IsGameObject() && ((CGameObject*)obj)->NPC && !((CGameCharacter*)obj)->Dead())
 				{
 					CGameCharacter *gc = (CGameCharacter*)obj;
 
@@ -1213,7 +1213,7 @@ void CGameScreen::DrawGameWindow(const bool &mode)
 						x += gc->OffsetX;
 						y += gc->OffsetY - gc->OffsetZ;
 
-						if (g_ConfigManager.DrawStatusState == DCSS_ABOVE)
+						if (g_ConfigManager.GetDrawStatusState() == DCSS_ABOVE)
 						{
 							ANIMATION_DIMENSIONS dims = g_AnimationManager.GetAnimationDimensions(gc, 0);
 							y -= (dims.Height + dims.CenterY) + 24;
@@ -1227,7 +1227,7 @@ void CGameScreen::DrawGameWindow(const bool &mode)
 						{
 							x -= 20;
 
-							if (g_ConfigManager.DrawStatusState == DCSS_UNDER)
+							if (g_ConfigManager.GetDrawStatusState() == DCSS_UNDER)
 							{
 								if (g_TargetGump.TargetedCharacter == obj) continue;
 								if (g_AttackTargetGump.TargetedCharacter == obj) continue;
@@ -1287,7 +1287,7 @@ void CGameScreen::DrawGameWindowLight()
 	WISPFUN_DEBUG("c164_f16");
 	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 
-	if (!m_UseLight)
+	if (!UseLight)
 		return;
 
 	g_LightColorizerShader.Use();
@@ -1311,7 +1311,7 @@ void CGameScreen::DrawGameWindowLight()
 			int offsetX = 0;
 			int offsetY = 0;
 
-			if (g_ConfigManager.UseScaling)
+			if (g_ConfigManager.GetUseScaling())
 			{
 				offsetX = g_RenderBounds.GameWindowPosX - g_RenderBounds.GameWindowScaledOffsetX;
 				offsetY = g_RenderBounds.GameWindowPosY - g_RenderBounds.GameWindowScaledOffsetY;
@@ -1337,7 +1337,7 @@ void CGameScreen::DrawGameWindowLight()
 
 			glBlendFunc(GL_ZERO, GL_SRC_COLOR);
 
-			if (g_ConfigManager.UseScaling)
+			if (g_ConfigManager.GetUseScaling())
 				g_LightBuffer.Draw(g_RenderBounds.GameWindowScaledOffsetX, g_RenderBounds.GameWindowScaledOffsetY);
 			else
 				g_LightBuffer.Draw(g_RenderBounds.GameWindowPosX, g_RenderBounds.GameWindowPosY);
@@ -1364,7 +1364,7 @@ void CGameScreen::DrawGameWindowLight()
 @param [__in] mode true - отрисовка, false - выбор
 @return 
 */
-void CGameScreen::DrawGameWindowText(const bool &mode)
+void CGameScreen::DrawGameWindowText(bool mode)
 {
 	WISPFUN_DEBUG("c164_f17");
 	if (mode)
@@ -1375,9 +1375,9 @@ void CGameScreen::DrawGameWindowText(const bool &mode)
 
 		UnuseShader();
 
-		if (g_ConfigManager.DrawStatusState && m_HitsStack.size())
+		if (g_ConfigManager.GetDrawStatusState() && m_HitsStack.size())
 		{
-			if (g_ConfigManager.DrawStatusState == DCSS_ABOVE)
+			if (g_ConfigManager.GetDrawStatusState() == DCSS_ABOVE)
 			{
 				for (vector<OBJECT_HITS_INFO>::iterator it = m_HitsStack.begin(); it != m_HitsStack.end(); ++it)
 				{
@@ -1504,16 +1504,16 @@ void CGameScreen::PrepareContent()
 @param [__in] mode true - отрисовка, false - выбор
 @return При выборе объектов - идентификатор выбранного объекта
 */
-void CGameScreen::Render(const bool &mode)
+void CGameScreen::Render(bool mode)
 {
 	WISPFUN_DEBUG("c164_f19");
-	if (!m_RenderListInitalized)
+	if (!RenderListInitalized)
 		CalculateRenderList();
 
 	if (g_DeathScreenTimer < g_Ticks)
 	{
 		if (g_DeathScreenTimer && g_ScreenEffectManager.UseSunrise())
-			m_SmoothScreenAction = 0;
+			SmoothScreenAction = 0;
 
 		g_DeathScreenTimer = 0;
 	}
@@ -1702,7 +1702,7 @@ void CGameScreen::Render(const bool &mode)
 						break;
 				}
 
-				int tz = selRwo->Z;
+				int tz = selRwo->GetZ();
 
 				//Если это тайл текстуры
 				if (land != NULL && land->IsStretched)
@@ -1710,7 +1710,7 @@ void CGameScreen::Render(const bool &mode)
 
 				uint tiledataFlags = (uint)(selRwo->IsStaticGroupObject() ? ((CRenderStaticObject*)selRwo)->GetStaticData()->Flags : 0);
 
-				sprintf_s(dbf, "Selected:\n%s: G=0x%04X C:0x%04X TF=0x%08X X=%i Y=%i Z=%i (%i) PriZ=%i", soName, selRwo->Graphic, selRwo->Color, tiledataFlags, selRwo->X, selRwo->Y, selRwo->Z, tz, selRwo->PriorityZ);
+				sprintf_s(dbf, "Selected:\n%s: G=0x%04X C:0x%04X TF=0x%08X X=%i Y=%i Z=%i (%i) PriZ=%i", soName, selRwo->Graphic, selRwo->Color, tiledataFlags, selRwo->GetX(), selRwo->GetY(), selRwo->GetZ(), tz, selRwo->PriorityZ);
 
 				const string flagNames[] =
 				{
@@ -1968,20 +1968,20 @@ void CGameScreen::OnLeftMouseButtonUp()
 				if (rwo->IsGameObject())
 					g_Target.SendTargetObject(rwo->Serial);
 				else if (rwo->IsLandObject())
-					g_Target.SendTargetTile(0/*g_SelectedObject->Index*/, rwo->X, rwo->Y, rwo->Z);
+					g_Target.SendTargetTile(0/*g_SelectedObject->Index*/, rwo->GetX(), rwo->GetY(), rwo->GetZ());
 				else if (rwo->IsStaticObject() || rwo->IsMultiObject())
 				{
 					STATIC_TILES *st = NULL;
 					
-					if (g_PacketManager.ClientVersion >= CV_7090 && rwo->IsSurface())
+					if (g_PacketManager.GetClientVersion() >= CV_7090 && rwo->IsSurface())
 						st = ((CRenderStaticObject*)rwo)->GetStaticData();
 
-					short targetZ = rwo->Z;
+					short targetZ = rwo->GetZ();
 
 					if (st != NULL)
 						targetZ += st->Height;
 
-					g_Target.SendTargetTile(rwo->Graphic, rwo->X, rwo->Y, (char)targetZ);
+					g_Target.SendTargetTile(rwo->Graphic, rwo->GetX(), rwo->GetY(), (char)targetZ);
 				}
 
 				g_MouseManager.LastLeftButtonClickTimer = 0;
@@ -2019,9 +2019,9 @@ void CGameScreen::OnLeftMouseButtonUp()
 						if (!target->IsSurface())
 							drop_container = target->Serial;
 
-						dropX = target->X;
-						dropY = target->Y;
-						dropZ = target->Z;
+						dropX = target->GetX();
+						dropY = target->GetY();
+						dropZ = target->GetZ();
 					}
 				}
 				else
@@ -2029,13 +2029,13 @@ void CGameScreen::OnLeftMouseButtonUp()
 			}
 			else if ((rwo->IsLandObject() || rwo->IsStaticObject() || rwo->IsMultiObject()) && g_ObjectInHand.Enabled)
 			{
-				can_drop = (GetDistance(g_Player, WISP_GEOMETRY::CPoint2Di(rwo->X, rwo->Y)) <= DRAG_ITEMS_DISTANCE);
+				can_drop = (GetDistance(g_Player, WISP_GEOMETRY::CPoint2Di(rwo->GetX(), rwo->GetY())) <= DRAG_ITEMS_DISTANCE);
 
 				if (can_drop)
 				{
-					dropX = rwo->X;
-					dropY = rwo->Y;
-					dropZ = rwo->Z;
+					dropX = rwo->GetX();
+					dropY = rwo->GetY();
+					dropZ = rwo->GetZ();
 				}
 				else
 					g_Orion.PlaySoundEffect(0x0051);
@@ -2073,7 +2073,7 @@ void CGameScreen::OnLeftMouseButtonUp()
 
 							if (str.length())
 							{
-								if (g_PacketManager.ClientVersion >= CV_6000)
+								if (g_PacketManager.GetClientVersion() >= CV_6000)
 									g_Orion.CreateUnicodeTextMessage(TT_CLIENT, (uint)rwo, 1, 0x03B2, str);
 								else
 									g_Orion.CreateTextMessage(TT_CLIENT, (uint)rwo, 3, 0x03B2, ToString(str));
@@ -2089,7 +2089,7 @@ void CGameScreen::OnLeftMouseButtonUp()
 	{
 		CGump *gumpEntry = g_GumpManager.GetTextEntryOwner();
 
-		if (g_ConfigManager.ConsoleNeedEnter)
+		if (g_ConfigManager.GetConsoleNeedEnter())
 			g_EntryPointer = NULL;
 		else
 			g_EntryPointer = &g_GameConsole;
@@ -2203,7 +2203,7 @@ void CGameScreen::OnRightMouseButtonUp()
 
 		if (rwo->IsLandObject() || rwo->IsSurface())
 		{
-			if (g_PathFinder.WalkTo(rwo->X, rwo->Y, rwo->Z, 0))
+			if (g_PathFinder.WalkTo(rwo->GetX(), rwo->GetY(), rwo->GetZ(), 0))
 				g_Orion.CreateTextMessage(TT_OBJECT, g_PlayerSerial, 3, 0, "Pathfinding!");
 		}
 	}
@@ -2222,7 +2222,7 @@ bool CGameScreen::OnRightMouseButtonDoubleClick()
 
 		if (rwo->IsLandObject() || rwo->IsSurface())
 		{
-			if (g_PathFinder.WalkTo(rwo->X, rwo->Y, rwo->Z, 0))
+			if (g_PathFinder.WalkTo(rwo->GetX(), rwo->GetY(), rwo->GetZ(), 0))
 			{
 				g_Orion.CreateTextMessage(TT_OBJECT, g_PlayerSerial, 3, 0, "Pathfinding!");
 				return true;
@@ -2238,12 +2238,12 @@ bool CGameScreen::OnRightMouseButtonDoubleClick()
 @param [__in] state Состояние колесика
 @return 
 */
-void CGameScreen::OnMidMouseButtonScroll(const bool &up)
+void CGameScreen::OnMidMouseButtonScroll(bool up)
 {
 	WISPFUN_DEBUG("c164_f26");
 	if (g_SelectedObject.Gump != NULL)
 		g_GumpManager.OnMidMouseButtonScroll(up, false);
-	else if (g_ConfigManager.UseScaling)
+	else if (g_ConfigManager.GetUseScaling())
 	{
 		int gameWindowPosX = g_ConfigManager.GameWindowX - 4;
 		int gameWindowPosY = g_ConfigManager.GameWindowY - 4;

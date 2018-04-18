@@ -14,14 +14,14 @@
 //----------------------------------------------------------------------------------
 class CGUITilepicScaled : public CGUITilepic
 {
-	SETGET(int, Width, 0);
-	SETGET(int, Height, 0);
+	int Width = 0;
+	int Height = 0;
 
 public:
-	CGUITilepicScaled(const ushort &graphic, const ushort &color, const int &x, const int &y, const int &width, const int &height);
+	CGUITilepicScaled(ushort graphic, ushort color, int x, int y, int width, int height);
 	virtual ~CGUITilepicScaled();
 
-	virtual void Draw(const bool &checktrans = false);
+	virtual void Draw(bool checktrans = false);
 	virtual bool Select() { return false; }
 };
 //----------------------------------------------------------------------------------

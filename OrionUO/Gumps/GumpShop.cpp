@@ -12,10 +12,10 @@
 #include "stdafx.h"
 //----------------------------------------------------------------------------------
 CGumpShop::CGumpShop(uint serial, bool isBuyGump, short x, short y)
-: CGump(GT_SHOP, serial, x, y), m_IsBuyGump(isBuyGump)
+: CGump(GT_SHOP, serial, x, y), IsBuyGump(isBuyGump)
 {
 	WISPFUN_DEBUG("c123_f1");
-	m_Visible = !isBuyGump;
+	Visible = !isBuyGump;
 
 	if (isBuyGump)
 		Add(new CGUIGumppic(0x0870, 0, 0));
@@ -65,9 +65,9 @@ CGumpShop::CGumpShop(uint serial, bool isBuyGump, short x, short y)
 			button->CheckPolygone = true;
 
 			if (!i)
-				button->Y -= 11;
+				button->SetY(button->GetY() - 11);
 			else
-				button->Y -= 16;
+				button->SetY(button->GetY() - 16);
 		}
 
 		button = m_ItemList[i]->m_ButtonDown;
@@ -80,11 +80,11 @@ CGumpShop::CGumpShop(uint serial, bool isBuyGump, short x, short y)
 			button->CheckPolygone = true;
 
 			if (!i)
-				button->Y -= 25;
+				button->SetY(button->GetY() - 25);
 			else
 			{
-				button->X -= 1;
-				button->Y += 18;
+				button->SetX(button->GetX() - 1);
+				button->SetY(button->GetY() + 18);
 			}
 		}
 
@@ -99,13 +99,13 @@ CGumpShop::CGumpShop(uint serial, bool isBuyGump, short x, short y)
 
 			if (!i)
 			{
-				slider->Y -= 11;
-				slider->Lenght -= 14;
+				slider->SetY(slider->GetY() - 11);
+				slider->Length -= 14;
 			}
 			else
 			{
-				slider->Y -= 16;
-				slider->Lenght += 34;
+				slider->SetY(slider->GetY() - 16);
+				slider->Length += 34;
 			}
 		}
 	}
@@ -118,12 +118,12 @@ CGumpShop::~CGumpShop()
 void CGumpShop::SendList()
 {
 	WISPFUN_DEBUG("c123_f2");
-	CGameCharacter *vendor = g_World->FindWorldCharacter(m_Serial);
+	CGameCharacter *vendor = g_World->FindWorldCharacter(Serial);
 
 	if (vendor == NULL)
 		return;
 
-	if (m_IsBuyGump)
+	if (IsBuyGump)
 		CPacketBuyRequest(this).Send();
 	else
 		CPacketSellRequest(this).Send();
@@ -153,9 +153,9 @@ void CGumpShop::UpdateTotalPrice()
 void CGumpShop::PrepareContent()
 {
 	WISPFUN_DEBUG("c123_f4");
-	if (m_NoProcess && g_Player != NULL)
+	if (NoProcess && g_Player != NULL)
 	{
-		string name = g_Player->Name;
+		string name = g_Player->GetName();
 		int len = (int)name.length();
 
 		if (m_ContinueCounter > len)
@@ -167,7 +167,7 @@ void CGumpShop::PrepareContent()
 
 		if (m_ContinueCounter == len)
 		{
-			m_NoProcess = false;
+			NoProcess = false;
 			SendList();
 		}
 		else if (!counterCount)
@@ -183,7 +183,7 @@ void CGumpShop::PrepareContent()
 
 		m_NameText->CreateTextureA(5, name);
 
-		m_WantRedraw = true;
+		WantRedraw = true;
 	}
 }
 //----------------------------------------------------------------------------------
@@ -192,7 +192,7 @@ void CGumpShop::GUMP_BUTTON_EVENT_C
 	WISPFUN_DEBUG("c123_f5");
 	if (serial == ID_GB_BUTTON_ACCEPT) //Accept
 	{
-		m_NoProcess = true;
+		NoProcess = true;
 		m_ContinueCounter = 0;
 	}
 	else if (serial == ID_GB_BUTTON_CLEAR) //Clear
@@ -236,7 +236,7 @@ void CGumpShop::GUMP_SCROLL_BUTTON_EVENT_C
 					m_ItemList[1]->Delete(item);
 				else
 				{
-					item->Y = y;
+					item->SetY(y);
 					y += item->GetSize().Height;
 				}
 			}
@@ -301,7 +301,7 @@ bool CGumpShop::OnLeftMouseButtonDoubleClick()
 
 					minmax->UpdateText();
 					shopItem->CreateCountText(minmax->Value);
-					m_WantRedraw = true;
+					WantRedraw = true;
 					result = true;
 					UpdateTotalPrice();
 				}
@@ -319,7 +319,7 @@ bool CGumpShop::OnLeftMouseButtonDoubleClick()
 				}
 
 				shopItem->CreateCountText(minmax->Value);
-				m_WantRedraw = true;
+				WantRedraw = true;
 				result = true;
 				UpdateTotalPrice();
 				m_ItemList[1]->CalculateDataSize();

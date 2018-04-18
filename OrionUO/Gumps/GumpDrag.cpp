@@ -28,7 +28,7 @@ void CGumpDrag::UpdateContent()
 	Add(new CGUIGumppic(0x085C, 0, 0));
 
 	int count = 0;
-	CGameItem *selobj = g_World->FindWorldItem(m_Serial);
+	CGameItem *selobj = g_World->FindWorldItem(Serial);
 
 	if (selobj != NULL)
 		count = selobj->Count;
@@ -95,7 +95,7 @@ void CGumpDrag::OnCharPress(const WPARAM &wParam, const LPARAM &lParam)
 		m_Slider->Value = val;
 		m_Slider->CalculateOffset();
 
-		m_WantRedraw = true;
+		WantRedraw = true;
 	}
 }
 //----------------------------------------------------------------------------------
@@ -112,7 +112,7 @@ void CGumpDrag::OnKeyDown(const WPARAM &wParam, const LPARAM &lParam)
 			{
 				OnOkayPressed();
 
-				if (g_ConfigManager.ConsoleNeedEnter)
+				if (g_ConfigManager.GetConsoleNeedEnter())
 					g_EntryPointer = NULL;
 				else
 					g_EntryPointer = &g_GameConsole;
@@ -129,7 +129,7 @@ void CGumpDrag::OnKeyDown(const WPARAM &wParam, const LPARAM &lParam)
 				if (m_StartText)
 					m_StartText = false;
 
-				m_WantRedraw = true;
+				WantRedraw = true;
 
 				break;
 			}
@@ -149,7 +149,7 @@ void CGumpDrag::OnKeyDown(const WPARAM &wParam, const LPARAM &lParam)
 				m_Slider->Value = val;
 				m_Slider->CalculateOffset();
 
-				m_WantRedraw = true;
+				WantRedraw = true;
 
 				break;
 			}
@@ -164,11 +164,11 @@ void CGumpDrag::OnOkayPressed()
 	WISPFUN_DEBUG("c94_f7");
 	if (!g_ObjectInHand.Enabled)
 	{
-		m_RemoveMark = true;
+		RemoveMark = true;
 
 		if (m_Slider->Value)
 		{
-			CGameItem *obj = g_World->FindWorldItem(m_Serial);
+			CGameItem *obj = g_World->FindWorldItem(Serial);
 
 			if (obj != NULL)
 				g_Orion.PickupItem(obj, m_Slider->Value);

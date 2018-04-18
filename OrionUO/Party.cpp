@@ -21,12 +21,12 @@ CParty::~CParty()
 {
 }
 //----------------------------------------------------------------------------------
-bool CParty::Contains(const uint &serial)
+bool CParty::Contains(int serial)
 {
 	WISPFUN_DEBUG("c196_f1");
 	bool result = false;
 
-	if (m_Leader != 0)
+	if (Leader != 0)
 	{
 		IFOR(i, 0, 10)
 		{
@@ -69,8 +69,8 @@ void CParty::ParsePacketData(WISP_DATASTREAM::CDataReader &reader)
 
 			if (count <= 1)
 			{
-				m_Leader = 0;
-				m_Inviter = 0;
+				Leader = 0;
+				Inviter = 0;
 				IFOR(i, 0, 10)
 				{
 					CPartyObject &member = Member[i];

@@ -13,8 +13,8 @@
 //----------------------------------------------------------------------------------
 CTextContainer g_SystemChat(30);
 //----------------------------------------------------------------------------------
-CTextContainer::CTextContainer(const int &maxSize)
-: m_MaxSize(maxSize)
+CTextContainer::CTextContainer(int maxSize)
+: MaxSize(maxSize)
 {
 }
 //----------------------------------------------------------------------------------
@@ -27,7 +27,7 @@ void CTextContainer::Clear()
 	WISPFUN_DEBUG("c173_f1");
 	CBaseQueue::Clear();
 
-	m_Size = 0;
+	Size = 0;
 }
 //----------------------------------------------------------------------------------
 void CTextContainer::Add(CTextData *obj)
@@ -35,10 +35,10 @@ void CTextContainer::Add(CTextData *obj)
 	WISPFUN_DEBUG("c173_f2");
 	CBaseQueue::Add(obj);
 
-	if (m_Size >= m_MaxSize)
+	if (Size >= MaxSize)
 		CBaseQueue::Delete(m_Items);
 	else
-		m_Size++;
+		Size++;
 }
 //----------------------------------------------------------------------------------
 void CTextContainer::Delete(CTextData *obj)
@@ -46,10 +46,10 @@ void CTextContainer::Delete(CTextData *obj)
 	WISPFUN_DEBUG("c173_f3");
 	CBaseQueue::Delete(obj);
 
-	m_Size--;
+	Size--;
 }
 //----------------------------------------------------------------------------------
-void CTextContainer::DrawSystemChat(const int &x, const int &y, const int &height)
+void CTextContainer::DrawSystemChat(int x, int y, int height)
 {
 	WISPFUN_DEBUG("c173_f4");
 	int offset = (y + height) - 41;

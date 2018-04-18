@@ -23,8 +23,8 @@ CFontsManager::CFontsManager()
 CFontsManager::~CFontsManager()
 {
 	WISPFUN_DEBUG("c143_f2");
-	delete []m_Font;
-	m_FontCount = 0;
+	delete []Font;
+	FontCount = 0;
 	m_WebLink.clear();
 }
 //----------------------------------------------------------------------------------
@@ -41,7 +41,7 @@ bool CFontsManager::LoadFonts()
 	if (!fontFile.Load(g_App.UOFilesPath("fonts.mul")))
 		return false;
 
-	m_FontCount = 0;
+	FontCount = 0;
 
 	while (!fontFile.IsEOF())
 	{
@@ -68,24 +68,24 @@ bool CFontsManager::LoadFonts()
 		if (exit)
 			break;
 
-		m_FontCount++;
+		FontCount++;
 	}
 
-	if (m_FontCount < 1)
+	if (FontCount < 1)
 	{
-		m_Font = NULL;
-		m_FontCount = 0;
+		Font = NULL;
+		FontCount = 0;
 
 		return false;
 	}
 
-	m_Font = new FONT_DATA[m_FontCount];
+	Font = new FONT_DATA[FontCount];
 
 	fontFile.ResetPtr();
 
-	IFOR(i, 0, m_FontCount)
+	IFOR(i, 0, FontCount)
 	{
-		FONT_DATA &fd = m_Font[i];
+		FONT_DATA &fd = Font[i];
 		fd.Header = fontFile.ReadUInt8();
 
 		IFOR(j, 0, 224)
@@ -122,7 +122,7 @@ bool CFontsManager::LoadFonts()
 	return true;
 }
 //----------------------------------------------------------------------------------
-bool CFontsManager::UnicodeFontExists(const uchar &font)
+bool CFontsManager::UnicodeFontExists(uchar font)
 {
 	WISPFUN_DEBUG("c143_f4");
 	if (font >= 20 || m_UnicodeFontAddress[font] == NULL)
@@ -156,7 +156,7 @@ void CFontsManager::GoToWebLink(ushort link)
 @param [__in] index Индекс символа
 @return Смещение в пикселях
 */
-int CFontsManager::GetFontOffsetY(const uchar &font, const uchar &index)
+int CFontsManager::GetFontOffsetY(uchar font, uchar index)
 {
 	WISPFUN_DEBUG("c143_f6");
 
@@ -194,15 +194,15 @@ int CFontsManager::GetFontOffsetY(const uchar &font, const uchar &index)
 @param [__in] flags Эффекты текста
 @return Координаты каретки
 */
-WISP_GEOMETRY::CPoint2Di CFontsManager::GetCaretPosA(const uchar &font, const string &str, int pos, int width, const TEXT_ALIGN_TYPE &align, const ushort &flags)
+WISP_GEOMETRY::CPoint2Di CFontsManager::GetCaretPosA(uchar font, const string &str, int pos, int width, TEXT_ALIGN_TYPE align, ushort flags)
 {
 	WISPFUN_DEBUG("c143_f7");
 	WISP_GEOMETRY::CPoint2Di p;
 
-	if (font >= m_FontCount || pos < 1 || str.empty())
+	if (font >= FontCount || pos < 1 || str.empty())
 		return p;
 
-	FONT_DATA &fd = m_Font[font];
+	FONT_DATA &fd = Font[font];
 
 	if (!width)
 		width = GetWidthA(font, str);
@@ -228,7 +228,7 @@ WISP_GEOMETRY::CPoint2Di CFontsManager::GetCaretPosA(const uchar &font, const st
 			IFOR(i, 0, len)
 			{
 				//collect data about width of each character
-				const uchar &index = m_FontIndex[(uchar)ptr->Data[i].item];
+				uchar index = m_FontIndex[(uchar)ptr->Data[i].item];
 				p.X += fd.Chars[index].Width;
 
 				if (info->CharStart + i + 1 == pos)
@@ -263,13 +263,13 @@ WISP_GEOMETRY::CPoint2Di CFontsManager::GetCaretPosA(const uchar &font, const st
 @param [__in] flags Эффекты текста
 @return Позиция каретки в строке
 */
-int CFontsManager::CalculateCaretPosA(const uchar &font, const string &str, const int &x, const int &y, int width, const TEXT_ALIGN_TYPE &align, const ushort &flags)
+int CFontsManager::CalculateCaretPosA(uchar font, const string &str, int x, int y, int width, TEXT_ALIGN_TYPE align, ushort flags)
 {
 	WISPFUN_DEBUG("c143_f8");
-	if (font >= m_FontCount || x < 0 || y < 0 || str.empty())
+	if (font >= FontCount || x < 0 || y < 0 || str.empty())
 		return 0;
 
-	FONT_DATA &fd = m_Font[font];
+	FONT_DATA &fd = Font[font];
 
 	if (!width)
 		width = GetWidthA(font, str);
@@ -305,7 +305,7 @@ int CFontsManager::CalculateCaretPosA(const uchar &font, const string &str, cons
 
 				IFOR(i, 0, len)
 				{
-					const uchar &index = m_FontIndex[(uchar)ptr->Data[i].item];
+					uchar index = m_FontIndex[(uchar)ptr->Data[i].item];
 
 					width += fd.Chars[index].Width;
 
@@ -340,16 +340,16 @@ int CFontsManager::CalculateCaretPosA(const uchar &font, const string &str, cons
 @param [__in_opt] len Длина текста
 @return Ширина текста в пикселях
 */
-int CFontsManager::GetWidthA(const uchar &font, const string &str)
+int CFontsManager::GetWidthA(uchar font, const string &str)
 {
 	WISPFUN_DEBUG("c143_f9");
-	if (font >= m_FontCount || str.empty())
+	if (font >= FontCount || str.empty())
 		return 0;
 
-	FONT_DATA &fd = m_Font[font];
+	FONT_DATA &fd = Font[font];
 	int textLength = 0;
 
-	for (const char &c : str)
+	for (char c : str)
 	{
 		textLength += fd.Chars[m_FontIndex[(uchar)c]].Width;
 	}
@@ -367,10 +367,10 @@ int CFontsManager::GetWidthA(const uchar &font, const string &str)
 @param [__in] flags Эффекты текста
 @return Ширина текста в пикселях
 */
-int CFontsManager::GetWidthExA(const uchar &font, const string &str, const int &maxWidth, const TEXT_ALIGN_TYPE &align, const ushort &flags)
+int CFontsManager::GetWidthExA(uchar font, const string &str, int maxWidth, TEXT_ALIGN_TYPE align, ushort flags)
 {
 	WISPFUN_DEBUG("c143_f10");
-	if (font >= m_FontCount || str.empty())
+	if (font >= FontCount || str.empty())
 		return 0;
 
 	PMULTILINES_FONT_INFO info = GetInfoA(font, str.c_str(), (int)str.length(), align, flags, maxWidth);
@@ -401,10 +401,10 @@ int CFontsManager::GetWidthExA(const uchar &font, const string &str, const int &
 @param [__in_opt] flags Эффекты текста
 @return Высота текста в пикселях
 */
-int CFontsManager::GetHeightA(const uchar &font, const string &str, int width, const TEXT_ALIGN_TYPE &align, const ushort &flags)
+int CFontsManager::GetHeightA(uchar font, const string &str, int width, TEXT_ALIGN_TYPE align, ushort flags)
 {
 	WISPFUN_DEBUG("c143_f11");
-	if (font >= m_FontCount || str.empty())
+	if (font >= FontCount || str.empty())
 		return 0;
 
 	if (!width)
@@ -457,13 +457,13 @@ int CFontsManager::GetHeightA(PMULTILINES_FONT_INFO info)
 @param [__in] IsCropped Ограниченный текст, вышедшая за доступные пределы часть обрезается и заменяется на многоточие
 @return Результирующий текст
 */
-string CFontsManager::GetTextByWidthA(const uchar &font, const string &str, int width, const bool &isCropped)
+string CFontsManager::GetTextByWidthA(uchar font, const string &str, int width, bool isCropped)
 {
 	WISPFUN_DEBUG("c143_f13");
-	if (font >= m_FontCount || str.empty())
+	if (font >= FontCount || str.empty())
 		return string("");
 
-	FONT_DATA &fd = m_Font[font];
+	FONT_DATA &fd = Font[font];
 
 	if (isCropped)
 	{
@@ -473,7 +473,7 @@ string CFontsManager::GetTextByWidthA(const uchar &font, const string &str, int 
 	int textLength = 0;
 	string result = "";
 
-	for (const char &c : str)
+	for (char c : str)
 	{
 		textLength += fd.Chars[m_FontIndex[(uchar)c]].Width;
 
@@ -503,10 +503,10 @@ string CFontsManager::GetTextByWidthA(const uchar &font, const string &str, int 
 PMULTILINES_FONT_INFO CFontsManager::GetInfoA(uchar font, const char *str, int len, TEXT_ALIGN_TYPE align, ushort flags, int width)
 {
 	WISPFUN_DEBUG("c143_f14");
-	if (font >= m_FontCount)
+	if (font >= FontCount)
 		return NULL;
 
-	FONT_DATA &fd = m_Font[font];
+	FONT_DATA &fd = Font[font];
 
 	PMULTILINES_FONT_INFO info = new MULTILINES_FONT_INFO();
 	info->Reset();
@@ -716,7 +716,7 @@ PMULTILINES_FONT_INFO CFontsManager::GetInfoA(uchar font, const char *str, int l
 @param [__in_opt] flags Эффекты текста
 @return true при успешной генерации
 */
-bool CFontsManager::GenerateA(const uchar &font, CGLTextTexture &th, const string &str, const ushort &color, const int &width, const TEXT_ALIGN_TYPE &align, const ushort &flags)
+bool CFontsManager::GenerateA(uchar font, CGLTextTexture &th, const string &str, ushort color, int width, TEXT_ALIGN_TYPE align, ushort flags)
 {
 	WISPFUN_DEBUG("c143_f15");
 	if ((flags & UOFONT_FIXED) || (flags & UOFONT_CROPPED))
@@ -749,21 +749,21 @@ bool CFontsManager::GenerateA(const uchar &font, CGLTextTexture &th, const strin
 @param [__in] flags Эффекты текста
 @return Ссылка на массив пикселей
 */
-UINT_LIST CFontsManager::GeneratePixelsA(const uchar &font, CGLTextTexture &th, const char *str, const ushort &color, int width, const TEXT_ALIGN_TYPE &align, const ushort &flags)
+UINT_LIST CFontsManager::GeneratePixelsA(uchar font, CGLTextTexture &th, const char *str, ushort color, int width, TEXT_ALIGN_TYPE align, ushort flags)
 {
 	WISPFUN_DEBUG("c143_f16");
 	UINT_LIST pData;
 
 	th.Clear();
 
-	if (font >= m_FontCount)
+	if (font >= FontCount)
 		return pData;
 
 	int len = (int)strlen(str);
 	if (!len)
 		return pData;
 
-	FONT_DATA &fd = m_Font[font];
+	FONT_DATA &fd = Font[font];
 
 	if (!width)
 		width = GetWidthA(font, str);
@@ -803,7 +803,7 @@ UINT_LIST CFontsManager::GeneratePixelsA(const uchar &font, CGLTextTexture &th, 
 	int lineOffsY = 0;
 	PMULTILINES_FONT_INFO ptr = info;
 
-	bool partialHue = (font != 5 && font != 8) && !m_UnusePartialHue;
+	bool partialHue = (font != 5 && font != 8) && !UnusePartialHue;
 	int font6OffsetY = (int)(font == 6) * 7;
 
 	while (ptr != NULL)
@@ -900,7 +900,7 @@ UINT_LIST CFontsManager::GeneratePixelsA(const uchar &font, CGLTextTexture &th, 
 @param [__in] flags Эффекты текста
 @return true при успешной генерации
 */
-bool CFontsManager::GenerateABase(const uchar &font, CGLTextTexture &th, const string &str, const ushort &color, const int &width, const TEXT_ALIGN_TYPE &align, const ushort &flags)
+bool CFontsManager::GenerateABase(uchar font, CGLTextTexture &th, const string &str, ushort color, int width, TEXT_ALIGN_TYPE align, ushort flags)
 {
 	WISPFUN_DEBUG("c143_f17");
 	UINT_LIST pixels = GeneratePixelsA(font, th, str.c_str(), color, width, align, flags);
@@ -928,7 +928,7 @@ bool CFontsManager::GenerateABase(const uchar &font, CGLTextTexture &th, const s
 @param [__in_opt] flags Эффекты текста
 @return 
 */
-void CFontsManager::DrawA(const uchar &font, const string &str, const ushort &color, const int &x, const int &y, const int &width, const TEXT_ALIGN_TYPE &align, const ushort &flags)
+void CFontsManager::DrawA(uchar font, const string &str, ushort color, int x, int y, int width, TEXT_ALIGN_TYPE align, ushort flags)
 {
 	WISPFUN_DEBUG("c143_f18");
 	CGLTextTexture th;
@@ -958,7 +958,7 @@ void CFontsManager::DrawA(const uchar &font, const string &str, const ushort &co
 @param [__in] flags Эффекты текста
 @return Координаты каретки
 */
-WISP_GEOMETRY::CPoint2Di CFontsManager::GetCaretPosW(const uchar &font, const wstring &str, int pos, int width, const TEXT_ALIGN_TYPE &align, const ushort &flags)
+WISP_GEOMETRY::CPoint2Di CFontsManager::GetCaretPosW(uchar font, const wstring &str, int pos, int width, TEXT_ALIGN_TYPE align, ushort flags)
 {
 	WISPFUN_DEBUG("c143_f19");
 	WISP_GEOMETRY::CPoint2Di p;
@@ -1032,7 +1032,7 @@ WISP_GEOMETRY::CPoint2Di CFontsManager::GetCaretPosW(const uchar &font, const ws
 @param [__in] flags Эффекты текста
 @return Позиция каретки в строке
 */
-int CFontsManager::CalculateCaretPosW(const uchar &font, const wstring &str, const int &x, const int &y, int width, const TEXT_ALIGN_TYPE &align, const ushort &flags)
+int CFontsManager::CalculateCaretPosW(uchar font, const wstring &str, int x, int y, int width, TEXT_ALIGN_TYPE align, ushort flags)
 {
 	WISPFUN_DEBUG("c143_f20");
 	if (x < 0 || y < 0 || font >= 20 || !m_UnicodeFontAddress[font] || str.empty())
@@ -1114,7 +1114,7 @@ int CFontsManager::CalculateCaretPosW(const uchar &font, const wstring &str, con
 @param [__in_opt] len Длина текста
 @return Ширина текста в пикселях
 */
-int CFontsManager::GetWidthW(const uchar &font, const wstring &str)
+int CFontsManager::GetWidthW(uchar font, const wstring &str)
 {
 	WISPFUN_DEBUG("c143_f21");
 	if (font >= 20 || !m_UnicodeFontAddress[font] || str.empty())
@@ -1155,7 +1155,7 @@ int CFontsManager::GetWidthW(const uchar &font, const wstring &str)
 @param [__in] flags Эффекты текста
 @return Ширина текста в пикселях
 */
-int CFontsManager::GetWidthExW(const uchar &font, const wstring &str, const int &maxWidth, const TEXT_ALIGN_TYPE &align, const ushort &flags)
+int CFontsManager::GetWidthExW(uchar font, const wstring &str, int maxWidth, TEXT_ALIGN_TYPE align, ushort flags)
 {
 	WISPFUN_DEBUG("c143_f22");
 	if (font >= 20 || !m_UnicodeFontAddress[font] || str.empty())
@@ -1190,7 +1190,7 @@ int CFontsManager::GetWidthExW(const uchar &font, const wstring &str, const int 
 @param [__in_opt] flags Эффекты текста
 @return Высота текста в пикселях
 */
-int CFontsManager::GetHeightW(const uchar &font, const wstring &str, int width, const TEXT_ALIGN_TYPE &align, const ushort &flags)
+int CFontsManager::GetHeightW(uchar font, const wstring &str, int width, TEXT_ALIGN_TYPE align, ushort flags)
 {
 	WISPFUN_DEBUG("c143_f23");
 	if (font >= 20 || !m_UnicodeFontAddress[font] || str.empty())
@@ -1252,7 +1252,7 @@ int CFontsManager::GetHeightW(PMULTILINES_FONT_INFO info)
 @param [__in] IsCropped Ограниченный текст, вышедшая за доступные пределы часть обрезается и заменяется на многоточие
 @return Результирующий текст
 */
-wstring CFontsManager::GetTextByWidthW(const uchar &font, const wstring &str, int width, const bool &isCropped)
+wstring CFontsManager::GetTextByWidthW(uchar font, const wstring &str, int width, bool isCropped)
 {
 	WISPFUN_DEBUG("c143_f25");
 	if (font >= 20 || !m_UnicodeFontAddress[font] || str.empty())
@@ -1769,7 +1769,7 @@ void CFontsManager::GetHTMLInfoFromContent(HTML_DATA_INFO &info, const string &c
 	}
 }
 //----------------------------------------------------------------------------------
-HTML_TAG_TYPE CFontsManager::ParseHTMLTag(const wchar_t *str, const int &len, intptr_t &i, bool &endTag, HTML_DATA_INFO &info)
+HTML_TAG_TYPE CFontsManager::ParseHTMLTag(const wchar_t *str, int len, intptr_t &i, bool &endTag, HTML_DATA_INFO &info)
 {
 	WISPFUN_DEBUG("c143_f34");
 	HTML_TAG_TYPE tag = HTT_NONE;
@@ -2358,7 +2358,7 @@ PMULTILINES_FONT_INFO CFontsManager::GetInfoW(uchar font, const wchar_t *str, in
 @param [__in_opt] flags Эффекты текста
 @return true при успешной генерации
 */
-bool CFontsManager::GenerateW(const uchar &font, CGLTextTexture &th, const wstring &str, const ushort &color, const uchar &cell, const int &width, const TEXT_ALIGN_TYPE &align, const ushort &flags)
+bool CFontsManager::GenerateW(uchar font, CGLTextTexture &th, const wstring &str, ushort color, uchar cell, int width, TEXT_ALIGN_TYPE align, ushort flags)
 {
 	WISPFUN_DEBUG("c143_f37");
 	if ((flags & UOFONT_FIXED) || (flags & UOFONT_CROPPED))
@@ -2392,7 +2392,7 @@ bool CFontsManager::GenerateW(const uchar &font, CGLTextTexture &th, const wstri
 @param [__in] flags Эффекты текста
 @return Ссылка на массив пикселей
 */
-UINT_LIST CFontsManager::GeneratePixelsW(const uchar &font, CGLTextTexture &th, const wchar_t *str, const ushort &color, const uchar &cell, int width, const TEXT_ALIGN_TYPE &align, const ushort &flags)
+UINT_LIST CFontsManager::GeneratePixelsW(uchar font, CGLTextTexture &th, const wchar_t *str, ushort color, uchar cell, int width, TEXT_ALIGN_TYPE align, ushort flags)
 {
 	WISPFUN_DEBUG("c143_f38");
 	UINT_LIST pData;
@@ -2443,7 +2443,7 @@ UINT_LIST CFontsManager::GeneratePixelsW(const uchar &font, CGLTextTexture &th, 
 			return pData;
 	}
 
-	if (!oldWidth && m_RecalculateWidthByInfo)
+	if (!oldWidth && RecalculateWidthByInfo)
 	{
 		PMULTILINES_FONT_INFO ptr = info;
 		width = 0;
@@ -2905,7 +2905,7 @@ UINT_LIST CFontsManager::GeneratePixelsW(const uchar &font, CGLTextTexture &th, 
 @param [__in] flags Эффекты текста
 @return true при успешной генерации
 */
-bool CFontsManager::GenerateWBase(const uchar &font, CGLTextTexture &th, const wstring &str, const ushort &color, const uchar &cell, const int &width, const TEXT_ALIGN_TYPE &align, const ushort &flags)
+bool CFontsManager::GenerateWBase(uchar font, CGLTextTexture &th, const wstring &str, ushort color, uchar cell, int width, TEXT_ALIGN_TYPE align, ushort flags)
 {
 	WISPFUN_DEBUG("c143_f39");
 	UINT_LIST pixels = GeneratePixelsW(font, th, str.c_str(), color, cell, width, align, flags);
@@ -2934,7 +2934,7 @@ bool CFontsManager::GenerateWBase(const uchar &font, CGLTextTexture &th, const w
 @param [__in_opt] flags Эффекты текста
 @return
 */
-void CFontsManager::DrawW(const uchar &font, const wstring &str, const ushort &color, const int &x, const int &y, const uchar &cell, const int &width, const TEXT_ALIGN_TYPE &align, const ushort &flags)
+void CFontsManager::DrawW(uchar font, const wstring &str, ushort color, int x, int y, uchar cell, int width, TEXT_ALIGN_TYPE align, ushort flags)
 {
 	WISPFUN_DEBUG("c143_f40");
 	CGLTextTexture th;

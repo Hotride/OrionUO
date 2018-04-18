@@ -12,10 +12,11 @@
 //----------------------------------------------------------------------------------
 class CGumpSecureTrading : public CGump
 {
-	SETGET(uint, ID2, 0);
-	SETGET(bool, StateMy, false);
-	SETGET(bool, StateOpponent, false);
-	SETGET(string, Text, "");
+public:
+	uint ID2 = 0;
+	bool StateMy = false;
+	bool StateOpponent = false;
+	string Text = "";
 
 private:
 	static const int ID_GST_CHECKBOX = 1;

@@ -13,31 +13,31 @@
 //Класс вектора нормали
 class CVector
 {
-	SETGET(double, X, 0.0);
-	SETGET(double, Y, 0.0);
-	SETGET(double, Z, 0.0);
-
 public:
-	CVector(const double &x = 0, const double &y = 0, const double &z = 0);
-	~CVector() {}
+	double X = 0.0;
+	double Y = 0.0;
+	double Z = 0.0;
+
+	CVector(double x = 0, double y = 0, double z = 0);
+	~CVector() {};
 
 	//Копирование векторов
 	void Link(const CVector &v);
 
 	//Изменение координат
-	void Link(const double &x, const double &y, const double &z);
+	void Link(double x, double y, double z);
 
 	//Складывание векторов
 	void Add(const CVector &v);
 
 	//Складывание координат
-	void Add(const double &x, const double &y, const double &z);
+	void Add(double x, double y, double z);
 
 	//Слияние векторов
 	void Merge(const CVector &v);
 
 	//Слияние координат
-	void Merge(const double &x, const double &y, const double &z);
+	void Merge(double x, double y, double z);
 
 	//Нормализация
 	void Normalize();

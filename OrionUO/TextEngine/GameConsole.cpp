@@ -28,10 +28,10 @@ CGameConsole::~CGameConsole()
 void CGameConsole::Send()
 {
 	WISPFUN_DEBUG("c170_f2");
-	Send(m_Text);
+	Send(Text);
 }
 //----------------------------------------------------------------------------------
-void CGameConsole::Send(wstring text, const ushort &defaultColor)
+void CGameConsole::Send(wstring text, ushort defaultColor)
 {
 	WISPFUN_DEBUG("c170_f2.1");
 	size_t len = text.length();
@@ -328,9 +328,9 @@ void CGameConsole::DrawW(BYTE font, WORD color, int x, int y, TEXT_ALIGN_TYPE al
 void CGameConsole::SaveConsoleMessage()
 {
 	WISPFUN_DEBUG("c170_f5");
-	if (m_ConsoleStack[m_ConsoleSelectedIndex % MAX_CONSOLE_STACK_SIZE] != m_Text)
+	if (m_ConsoleStack[m_ConsoleSelectedIndex % MAX_CONSOLE_STACK_SIZE] != Text)
 	{
-		m_ConsoleStack[m_ConsoleStackCount % MAX_CONSOLE_STACK_SIZE] = m_Text;
+		m_ConsoleStack[m_ConsoleStackCount % MAX_CONSOLE_STACK_SIZE] = Text;
 		m_ConsoleStackCount++;
 
 		if (m_ConsoleStackCount > 1100)
@@ -341,7 +341,7 @@ void CGameConsole::SaveConsoleMessage()
 	m_PositionChanged = false;
 }
 //----------------------------------------------------------------------------------
-void CGameConsole::ChangeConsoleMessage(const bool &next)
+void CGameConsole::ChangeConsoleMessage(bool next)
 {
 	WISPFUN_DEBUG("c170_f6");
 	if (m_ConsoleStackCount)

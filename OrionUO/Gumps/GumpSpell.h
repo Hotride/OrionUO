@@ -12,8 +12,9 @@
 //----------------------------------------------------------------------------------
 class CGumpSpell : public CGump
 {
-	SETGET(bool, BigIcon, false);
-	SETGET(SPELLBOOK_TYPE, SpellType, ST_MAGE);
+public:
+	bool BigIcon = false;
+	SPELLBOOK_TYPE SpellType = ST_MAGE;
 
 private:
 	static const int ID_GS_LOCK_MOVING = 1;

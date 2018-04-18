@@ -13,86 +13,87 @@
 //!Game character class
 class CGameCharacter: public CGameObject
 {
+public:
 	//!Hitpoints
-	SETGET(short, Hits, 0);
+	short Hits = 0;
 
 	//!Max hitpoints
-	SETGET(short, MaxHits, 0);
+	short MaxHits = 0;
 
 	//!Mana
-	SETGET(short, Mana, 0);
+	short Mana = 0;
 
 	//!Max mana
-	SETGET(short, MaxMana, 0);
+	short MaxMana = 0;
 
 	//!Stamina
-	SETGET(short, Stam, 0);
+	short Stam = 0;
 
 	//!Max stamina
-	SETGET(short, MaxStam, 0);
+	short MaxStam = 0;
 
 	//!Is female
-	SETGET(bool, Female, false);
+	bool Female = false;
 
 	//!Character's race
-	SETGET(RACE_TYPE, Race, RT_HUMAN);
+	RACE_TYPE Race = RT_HUMAN;
 
 	//!Current direction
-	SETGET(uchar, Direction, 0);
+	uchar Direction = 0;
 
 	//!Character's notoriety
-	SETGET(uchar, Notoriety, 0);
+	uchar Notoriety = 0;
 
 	//!Player can change the name for this character
-	SETGET(bool, CanChangeName, false);
+	bool CanChangeName = false;
 
 	//!Interval between animation playback
-	SETGET(uchar, AnimationInterval, 0);
+	uchar AnimationInterval = 0;
 
 	//!Current animation frame count
-	SETGET(uchar, AnimationFrameCount, 0);
+	uchar AnimationFrameCount = 0;
 
 	//!Current animation repeat mode
-	SETGET(uchar, AnimationRepeatMode, 1);
+	uchar AnimationRepeatMode = 1;
 
 	//!Current animation group
-	SETGET(uchar, AnimationGroup, 0xFF);
+	uchar AnimationGroup = 0xFF;
 
 	//!Current animation is repeat
-	SETGET(bool, AnimationRepeat, false);
+	bool AnimationRepeat = false;
 
 	//!Current animation direction (front or back)
-	SETGET(bool, AnimationDirection, false);
+	bool AnimationDirection = false;
 
 	//!Current animation called from the server
-	SETGET(bool, AnimationFromServer, false);
+	bool AnimationFromServer = false;
 
 	//!Last step sound time stamp
-	SETGET(uint, LastStepSoundTime, 0);
+	uint LastStepSoundTime = 0;
 
 	//!Time stamp to fidget animation
-	SETGET(uint, TimeToRandomFidget, 0);
+	uint TimeToRandomFidget = 0;
 
 	//!Offset to step sound
-	SETGET(uchar, StepSoundOffset, 0);
+	uchar StepSoundOffset = 0;
 
 	//!Sprite offset by X coordinate on the tile
-	SETGET(int, OffsetX, 0);
+	int OffsetX = 0;
 
 	//!Sprite offset by Y coordinate on the tile
-	SETGET(int, OffsetY, 0);
+	int OffsetY = 0;
 
 	//!Sprite offset by Z coordinate on the tile
-	SETGET(int, OffsetZ, 0);
+	int OffsetZ = 0;
 
 	//!Last step time stamp
-	SETGET(uint, LastStepTime, 0);
+	uint LastStepTime = 0;
 
 	//!Character's title
-	SETGET(string, Title, "");
+	string Title = "";
 
 	//!Percent of hits
-	SETGET(uchar, HitsPercent, 0);
+	uchar HitsPercent = 0;
 
 protected:
 	/*!
@@ -102,7 +103,7 @@ protected:
 	@param [__inout] animation Animation index
 	@return 
 	*/
-	void CorrectAnimationGroup(const ushort &graphic, const ANIMATION_GROUPS &group, uchar &animation);
+	void CorrectAnimationGroup(ushort graphic, ANIMATION_GROUPS group, uchar &animation);
 
 	/*!
 	Bonded pets status dead/alive
@@ -115,7 +116,7 @@ public:
 	@param [__in] serial Character's serial
 	@return
 	*/
-	CGameCharacter(const uint &serial);
+	CGameCharacter(int serial);
 
 	/*!
 	Destructor
@@ -143,7 +144,7 @@ public:
 	@param [__in] hits Current hitpoints
 	@return
 	*/
-	void UpdateHitsTexture(const uchar &hits);
+	void UpdateHitsTexture(uchar hits);
 
 	/*!
 	Process gargoyle animations
@@ -168,7 +169,7 @@ public:
 	@param [__in] y Place on screen coordinate Y
 	@return
 	*/
-	virtual void Draw(const int &x, const int &y);
+	virtual void Draw(int x, int y);
 
 	/*!
 	Select character in the world
@@ -176,7 +177,7 @@ public:
 	@param [__in] y Place on screen coordinate Y
 	@return
 	*/
-	virtual void Select(const int &x, const int &y);
+	virtual void Select(int x, int y);
 
 	/*!
 	Update graphic event
@@ -190,7 +191,7 @@ public:
 	@param [__in] val New animation group index
 	@return
 	*/
-	void ResetAnimationGroup(const uchar &val);
+	void ResetAnimationGroup(uchar val);
 
 	/*!
 	Reset animation group index to random fidget
@@ -208,7 +209,7 @@ public:
 	@param [__in_opt] frameDirection Frame direction (forwarf/backward)
 	@return
 	*/
-	void SetAnimation(const uchar &id, const uchar &interval = 0, const uchar &frameCount = 0, const uchar &repeatCount = 0, const bool &repeat = false, const bool &frameDirection = false);
+	void SetAnimation(uchar id, uchar interval = 0, uchar frameCount = 0, uchar repeatCount = 0, bool repeat = false, bool frameDirection = false);
 
 	/*!
 	Get mount animation index
@@ -229,32 +230,32 @@ public:
 	@param [__out] animation Animation index
 	@return
 	*/
-	void GetAnimationGroup(const ANIMATION_GROUPS &group, uchar &animation);
+	void GetAnimationGroup(ANIMATION_GROUPS group, uchar &animation);
 
 	/*!
 	Staying character state
 	@return true if character is staying
 	*/
-	bool Staying() { return m_AnimationGroup == 0xFF && m_Steps.empty(); }
+	bool Staying() { return AnimationGroup == 0xFF && m_Steps.empty(); }
 
 	/*!
 	Check for the possibility of changing the direction of the character when driving in a seated position
 	@param [__in] group Animation group
 	@return true if direction can be changed
 	*/
-	bool TestStepNoChangeDirection(const uchar &group);
+	bool TestStepNoChangeDirection(uchar group);
 
 	/*!
 	Character walking state
 	@return true if walking
 	*/
-	virtual bool Walking() { return (m_LastStepTime > (uint)(g_Ticks - WALKING_DELAY)); }
+	virtual bool Walking() { return (LastStepTime > (uint)(g_Ticks - WALKING_DELAY)); }
 
 	/*!
 	Check for animation frame changing
 	@return true if don't need iterate frames
 	*/
-	virtual bool NoIterateAnimIndex() { return ((m_LastStepTime > (uint)(g_Ticks - WALKING_DELAY)) && m_Steps.empty()); }
+	virtual bool NoIterateAnimIndex() { return ((LastStepTime > (uint)(g_Ticks - WALKING_DELAY)) && m_Steps.empty()); }
 
 	/*!
 	Update character animation state and world position
@@ -262,19 +263,19 @@ public:
 	@param [__in_opt] canChange Can change private fields/stacks
 	@return
 	*/
-	void UpdateAnimationInfo(uchar &dir, const bool &canChange = false);
+	void UpdateAnimationInfo(uchar &dir, bool canChange = false);
 
 	/*!
 	Check on humanoid
 	@return true if character is humanoid
 	*/
-	bool IsHuman() { return (IN_RANGE(m_Graphic, 0x0190, 0x0193) || IN_RANGE(m_Graphic, 0x00B7, 0x00BA) || IN_RANGE(m_Graphic, 0x025D, 0x0260) || IN_RANGE(m_Graphic, 0x029A, 0x029B) || IN_RANGE(m_Graphic, 0x02B6, 0x02B7) || (m_Graphic == 0x03DB) || (m_Graphic == 0x03DF) || (m_Graphic == 0x03E2)); }
+	bool IsHuman() { return (IN_RANGE(Graphic, 0x0190, 0x0193) || IN_RANGE(Graphic, 0x00B7, 0x00BA) || IN_RANGE(Graphic, 0x025D, 0x0260) || IN_RANGE(Graphic, 0x029A, 0x029B) || IN_RANGE(Graphic, 0x02B6, 0x02B7) || (Graphic == 0x03DB) || (Graphic == 0x03DF) || (Graphic == 0x03E2)); }
 
 	/*!
 	Check on dead
 	@return true if graphic is ghost
 	*/
-	bool Dead() { return (IN_RANGE(m_Graphic, 0x0192, 0x0193) || IN_RANGE(m_Graphic, 0x025F, 0x0260) || IN_RANGE(m_Graphic, 0x02B6, 0x02B7)) || m_Dead; }
+	bool Dead() { return (IN_RANGE(Graphic, 0x0192, 0x0193) || IN_RANGE(Graphic, 0x025F, 0x0260) || IN_RANGE(Graphic, 0x02B6, 0x02B7)) || m_Dead; }
 
 	/*!
 	Get character pointer

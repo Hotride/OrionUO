@@ -7,7 +7,8 @@ namespace WISP_FILE
 //----------------------------------------------------------------------------------
 class CTextFileParser
 {
-	SETGET(string, RawLine, "");
+public:
+	string RawLine = "";
 
 private:
 	//Указатель на адрес в памяти, куда загружен файл
@@ -106,9 +107,9 @@ public:
 
 	void WriteString(const string &key, const string &value);
 
-	void WriteInt(const string &key, const int &value);
+	void WriteInt(const string &key, int value);
 
-	void WriteBool(const string &key, const bool &value);
+	void WriteBool(const string &key, bool value);
 };
 //----------------------------------------------------------------------------------
 }; //namespace

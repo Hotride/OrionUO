@@ -12,13 +12,13 @@
 //----------------------------------------------------------------------------------
 class CGumpGeneric : public CGump
 {
-	SETGET(uint, MasterGump, 0);
-
 public:
+	uint MasterGump = 0;
+
 	CGumpGeneric(uint serial, short x, short y, uint id);
 	virtual ~CGumpGeneric();
 
-	void AddText(const int &index, const wstring &text, CBaseGUI *start = NULL, const bool &backbroundCanBeColored = false);
+	void AddText(int index, const wstring &text, CBaseGUI *start = NULL, bool backbroundCanBeColored = false);
 
 	void SendGumpResponse(int index);
 

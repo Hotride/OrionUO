@@ -98,7 +98,7 @@ CGLTexture *UOFileReader::ReadGump(CIndexObject &io)
 	return th;
 }
 //---------------------------------------------------------------------------
-USHORT_LIST UOFileReader::GetArtPixels(const ushort &id, CIndexObject &io, const bool &run, short &width, short &height)
+USHORT_LIST UOFileReader::GetArtPixels(ushort id, CIndexObject &io, bool run, short &width, short &height)
 {
 	WISPFUN_DEBUG("c148_f4");
 
@@ -334,7 +334,7 @@ USHORT_LIST UOFileReader::GetArtPixels(const ushort &id, CIndexObject &io, const
 @param [__in] io Ссылка на данные о арте
 @return Ссылка на данные о текстуре
 */
-CGLTexture *UOFileReader::ReadArt(const ushort &id, CIndexObject &io, const bool &run)
+CGLTexture *UOFileReader::ReadArt(ushort id, CIndexObject &io, bool run)
 {
 	WISPFUN_DEBUG("c148_f2");
 	CGLTexture *texture = NULL;

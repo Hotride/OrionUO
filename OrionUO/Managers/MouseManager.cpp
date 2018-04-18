@@ -125,9 +125,9 @@ ushort CMouseManager::GetGameCursor()
 	if (g_Target.IsTargeting() && !g_ObjectInHand.Enabled)
 		return g_CursorData[war][12]; //Targetting cursor
 
-	bool mouseInWindow = !(m_Position.X < g_ConfigManager.GameWindowX || m_Position.Y < g_ConfigManager.GameWindowY ||
-		m_Position.X > (g_ConfigManager.GameWindowX + g_ConfigManager.GameWindowWidth) || 
-		m_Position.Y > (g_ConfigManager.GameWindowY + g_ConfigManager.GameWindowHeight));
+	bool mouseInWindow = !(Position.X < g_ConfigManager.GameWindowX || Position.Y < g_ConfigManager.GameWindowY ||
+		Position.X > (g_ConfigManager.GameWindowX + g_ConfigManager.GameWindowWidth) || 
+		Position.Y > (g_ConfigManager.GameWindowY + g_ConfigManager.GameWindowHeight));
 
 	//bool gumpChecked = (g_LastSelectedGump || (g_LastSelectedObject && g_LastObjectType != SOT_GAME_OBJECT && g_LastObjectType != SOT_STATIC_OBJECT && g_LastObjectType != SOT_LAND_OBJECT && g_LastObjectType != SOT_TEXT_OBJECT));
 
@@ -137,7 +137,7 @@ ushort CMouseManager::GetGameCursor()
 	int gameWindowCenterX = g_ConfigManager.GameWindowX + (g_ConfigManager.GameWindowWidth / 2);
 	int gameWindowCenterY = g_ConfigManager.GameWindowY + (g_ConfigManager.GameWindowHeight / 2);
 
-	return g_CursorData[war][GetFacing(gameWindowCenterX, gameWindowCenterY, m_Position.X, m_Position.Y, 1)];
+	return g_CursorData[war][GetFacing(gameWindowCenterX, gameWindowCenterY, Position.X, Position.Y, 1)];
 }
 //----------------------------------------------------------------------------------
 /*!
@@ -149,8 +149,8 @@ void CMouseManager::ProcessWalking()
 	WISPFUN_DEBUG("c147_f3");
 	bool mouseInWindow = true;
 
-	if (m_Position.X < g_ConfigManager.GameWindowX || m_Position.Y < g_ConfigManager.GameWindowY || m_Position.X >(g_ConfigManager.GameWindowX + g_ConfigManager.GameWindowWidth) ||
-		m_Position.Y >(g_ConfigManager.GameWindowY + g_ConfigManager.GameWindowHeight))
+	if (Position.X < g_ConfigManager.GameWindowX || Position.Y < g_ConfigManager.GameWindowY || Position.X >(g_ConfigManager.GameWindowX + g_ConfigManager.GameWindowWidth) ||
+		Position.Y >(g_ConfigManager.GameWindowY + g_ConfigManager.GameWindowHeight))
 		mouseInWindow = false;
 
 	if ((g_MovingFromMouse || (mouseInWindow && g_AutoMoving)) && g_PressedObject.RightGump == NULL && !((g_ShiftPressed && !g_CtrlPressed && !g_AltPressed) && g_ConfigManager.HoldShiftForEnablePathfind && g_ConfigManager.EnablePathfind) && !(g_SelectedGameObjectHandle == g_PressedObject.RightSerial && g_PressedObject.RightObject != NULL && g_PressedObject.RightObject->IsGameObject()))
@@ -158,9 +158,9 @@ void CMouseManager::ProcessWalking()
 		int gameWindowCenterX = g_ConfigManager.GameWindowX + (g_ConfigManager.GameWindowWidth / 2);
 		int gameWindowCenterY = g_ConfigManager.GameWindowY + (g_ConfigManager.GameWindowHeight / 2);
 
-		int facing = GetFacing(gameWindowCenterX, gameWindowCenterY, m_Position.X, m_Position.Y, 1);
+		int facing = GetFacing(gameWindowCenterX, gameWindowCenterY, Position.X, Position.Y, 1);
 
-		float mouse_range = std::hypotf((float)(gameWindowCenterX - m_Position.X), (float)(gameWindowCenterY - m_Position.Y));
+		float mouse_range = std::hypotf((float)(gameWindowCenterX - Position.X), (float)(gameWindowCenterY - Position.Y));
 
 		int dir = facing;
 
@@ -390,8 +390,8 @@ void CMouseManager::Draw(ushort id)
 		{
 			g_ToolTip.Draw(th->Width, th->Height);
 
-			int x = m_Position.X + m_CursorOffset[0][id];
-			int y = m_Position.Y + m_CursorOffset[1][id];
+			int x = Position.X + m_CursorOffset[0][id];
+			int y = Position.Y + m_CursorOffset[1][id];
 
 			if (color)
 			{

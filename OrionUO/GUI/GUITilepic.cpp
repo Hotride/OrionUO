@@ -11,7 +11,7 @@
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
 //----------------------------------------------------------------------------------
-CGUITilepic::CGUITilepic(const ushort &graphic, const ushort &color, const int &x, const int &y)
+CGUITilepic::CGUITilepic(ushort graphic, ushort color, int x, int y)
 : CGUIDrawObject(GOT_TILEPIC, 0, graphic, color, x, y)
 {
 }
@@ -25,7 +25,7 @@ WISP_GEOMETRY::CSize CGUITilepic::GetSize()
 	WISPFUN_DEBUG("c80_f1");
 	WISP_GEOMETRY::CSize size;
 
-	CGLTexture *th = g_Orion.ExecuteStaticArt(m_Graphic);
+	CGLTexture *th = g_Orion.ExecuteStaticArt(Graphic);
 
 	if (th != NULL)
 	{
@@ -39,13 +39,13 @@ WISP_GEOMETRY::CSize CGUITilepic::GetSize()
 void CGUITilepic::PrepareTextures()
 {
 	WISPFUN_DEBUG("c80_f2");
-	g_Orion.ExecuteStaticArt(m_Graphic);
+	g_Orion.ExecuteStaticArt(Graphic);
 }
 //----------------------------------------------------------------------------------
-void CGUITilepic::Draw(const bool &checktrans)
+void CGUITilepic::Draw(bool checktrans)
 {
 	WISPFUN_DEBUG("c80_f3");
-	CGLTexture *th = g_Orion.ExecuteStaticArt(m_Graphic);
+	CGLTexture *th = g_Orion.ExecuteStaticArt(Graphic);
 
 	if (th != NULL)
 	{
@@ -60,10 +60,10 @@ bool CGUITilepic::Select()
 	WISPFUN_DEBUG("c80_f4");
 	//if (CGUIDrawObject::Select())
 	//	return true;
-	CGLTexture *th = g_Orion.m_StaticDataIndex[m_Graphic].Texture;
+	CGLTexture *th = g_Orion.m_StaticDataIndex[Graphic].Texture;
 
 	if (th != NULL)
-		return th->Select(m_X, m_Y, !m_CheckPolygone);
+		return th->Select(m_X, m_Y, !CheckPolygone);
 
 	return false;
 }

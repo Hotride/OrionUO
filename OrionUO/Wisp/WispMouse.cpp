@@ -29,22 +29,22 @@ void CMouse::Update()
 	if (WISP_WINDOW::g_WispWindow != NULL)
 		ScreenToClient(WISP_WINDOW::g_WispWindow->Handle, &pos);
 
-	m_Dragging = (m_LeftButtonPressed || m_RightButtonPressed || m_MidButtonPressed);
+	Dragging = (LeftButtonPressed || RightButtonPressed || MidButtonPressed);
 
-	m_Position.X = pos.x;
-	m_Position.Y = pos.y;
+	Position.X = pos.x;
+	Position.Y = pos.y;
 
-	m_RealPosition = m_Position;
+	RealPosition = Position;
 }
 //----------------------------------------------------------------------------------
 void CMouse::Update(WPARAM wParam, LPARAM lParam)
 {
 	WISPFUN_DEBUG("c8_f2");
-	m_LeftButtonPressed = (bool)(wParam & MK_LBUTTON);
-	m_RightButtonPressed = (bool)(wParam & MK_RBUTTON);
-	m_MidButtonPressed = (bool)(wParam & MK_MBUTTON);
+	LeftButtonPressed = (bool)(wParam & MK_LBUTTON);
+	RightButtonPressed = (bool)(wParam & MK_RBUTTON);
+	MidButtonPressed = (bool)(wParam & MK_MBUTTON);
 
-	m_Dragging = (m_LeftButtonPressed || m_RightButtonPressed || m_MidButtonPressed);
+	Dragging = (LeftButtonPressed || RightButtonPressed || MidButtonPressed);
 
 	POINT pos;
 	GetCursorPos(&pos);
@@ -52,19 +52,19 @@ void CMouse::Update(WPARAM wParam, LPARAM lParam)
 	if (WISP_WINDOW::g_WispWindow != NULL)
 		ScreenToClient(WISP_WINDOW::g_WispWindow->Handle, &pos);
 
-	m_Position.X = pos.x;
-	m_Position.Y = pos.y;
+	Position.X = pos.x;
+	Position.Y = pos.y;
 
-	//m_Position.X = LOWORD(lParam);
-	//m_Position.Y = HIWORD(lParam);
+	//Position.X = LOWORD(lParam);
+	//Position.Y = HIWORD(lParam);
 
-	m_RealPosition = m_Position;
+	RealPosition = Position;
 }
 //----------------------------------------------------------------------------------
 void CMouse::ReleaseCapture()
 {
 	WISPFUN_DEBUG("c8_f3");
-	if (!(m_LeftButtonPressed || m_RightButtonPressed || m_MidButtonPressed))
+	if (!(LeftButtonPressed || RightButtonPressed || MidButtonPressed))
 		::ReleaseCapture();
 }
 //----------------------------------------------------------------------------------
@@ -73,10 +73,10 @@ WISP_GEOMETRY::CPoint2Di CMouse::LeftDroppedOffset()
 	WISPFUN_DEBUG("c8_f4");
 	WISP_GEOMETRY::CPoint2Di position;
 
-	if (m_LeftButtonPressed)
+	if (LeftButtonPressed)
 	{
-		position.X = m_RealPosition.X - m_LeftDropPosition.X;
-		position.Y = m_RealPosition.Y - m_LeftDropPosition.Y;
+		position.X = RealPosition.X - LeftDropPosition.X;
+		position.Y = RealPosition.Y - LeftDropPosition.Y;
 	}
 
 	return position;
@@ -87,10 +87,10 @@ WISP_GEOMETRY::CPoint2Di CMouse::RightDroppedOffset()
 	WISPFUN_DEBUG("c8_f5");
 	WISP_GEOMETRY::CPoint2Di position;
 
-	if (m_RightButtonPressed)
+	if (RightButtonPressed)
 	{
-		position.X = m_RealPosition.X - m_RightDropPosition.X;
-		position.Y = m_RealPosition.Y - m_RightDropPosition.Y;
+		position.X = RealPosition.X - RightDropPosition.X;
+		position.Y = RealPosition.Y - RightDropPosition.Y;
 	}
 
 	return position;
@@ -101,10 +101,10 @@ WISP_GEOMETRY::CPoint2Di CMouse::MidDroppedOffset()
 	WISPFUN_DEBUG("c8_f6");
 	WISP_GEOMETRY::CPoint2Di position;
 
-	if (m_MidButtonPressed)
+	if (MidButtonPressed)
 	{
-		position.X = m_RealPosition.X - m_MidDropPosition.X;
-		position.Y = m_RealPosition.Y - m_MidDropPosition.Y;
+		position.X = RealPosition.X - MidDropPosition.X;
+		position.Y = RealPosition.Y - MidDropPosition.Y;
 	}
 
 	return position;

@@ -16,10 +16,10 @@ private:
 	static const int ID_GS_LOCK_MOVING = 1;
 
 public:
-	CGumpRacialAbility(const uint &serial, const int &x, const int &y);
+	CGumpRacialAbility(int serial, int x, int y);
 	virtual ~CGumpRacialAbility();
 
-	static void OnAbilityUse(const ushort &index);
+	static void OnAbilityUse(ushort index);
 
 	virtual void InitToolTip();
 

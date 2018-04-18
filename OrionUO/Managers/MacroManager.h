@@ -13,11 +13,12 @@
 //!Класс менеджера макросов
 class CMacroManager : public CBaseQueue
 {
+public:
 	//!Ожидание таргета от бинтов
-	SETGET(bool, WaitingBandageTarget, false);
+	bool WaitingBandageTarget = false;
 	//!Время ожидания таргета
-	SETGET(uint, WaitForTargetTimer, 0);
-	SETGET(bool, SendNotificationToPlugin, false);
+	uint WaitForTargetTimer = 0;
+	bool SendNotificationToPlugin = false;
 
 private:
 	//!Время следующего выполнения
@@ -51,7 +52,7 @@ public:
 	@param [__in] shift Зажатый шифт
 	@return Ссылку на макрос или NULL
 	*/
-	class CMacro *FindMacro(const ushort &key, const bool &alt, const bool &ctrl, const bool &shift);
+	class CMacro *FindMacro(ushort key, bool alt, bool ctrl, bool shift);
 
 	/*!
 	Сконвертировать файл макросов оригинального клиента

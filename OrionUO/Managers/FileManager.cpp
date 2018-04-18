@@ -21,12 +21,12 @@ CUopMappedFile::~CUopMappedFile()
 {
 }
 //----------------------------------------------------------------------------------
-void CUopMappedFile::Add(const uint64 &hash, const CUopBlockHeader &item)
+void CUopMappedFile::Add(uint64 hash, const CUopBlockHeader &item)
 {
 	m_Map[hash] = item;
 }
 //----------------------------------------------------------------------------------
-CUopBlockHeader *CUopMappedFile::GetBlock(const uint64 &hash)
+CUopBlockHeader *CUopMappedFile::GetBlock(uint64 hash)
 {
 	std::unordered_map<uint64, CUopBlockHeader>::iterator found = m_Map.find(hash);
 
@@ -47,7 +47,7 @@ UCHAR_LIST CUopMappedFile::GetData(const CUopBlockHeader &block)
 
 	if (compressedSize && compressedSize != decompressedSize)
 	{
-		int z_err = uncompress(&result[0], &decompressedSize, m_Ptr, compressedSize);
+		int z_err = uncompress(&result[0], &decompressedSize, Ptr, compressedSize);
 
 		if (z_err != Z_OK)
 		{
@@ -56,7 +56,7 @@ UCHAR_LIST CUopMappedFile::GetData(const CUopBlockHeader &block)
 		}
 	}
 	else
-		memcpy(&result[0], &m_Ptr[0], decompressedSize);
+		memcpy(&result[0], &Ptr[0], decompressedSize);
 
 	return result;
 }
@@ -72,7 +72,7 @@ CFileManager::~CFileManager()
 //----------------------------------------------------------------------------------
 bool CFileManager::Load()
 {
-	if (g_PacketManager.ClientVersion >= CV_7000 && LoadUOPFile(m_MainMisc, "MainMisc.uop"))
+	if (g_PacketManager.GetClientVersion() >= CV_7000 && LoadUOPFile(m_MainMisc, "MainMisc.uop"))
 		return LoadWithUOP();
 
 	if (!m_ArtIdx.Load(g_App.UOFilesPath("artidx.mul")))
@@ -153,11 +153,11 @@ bool CFileManager::Load()
 			s = g_App.UOFilesPath("unifont.mul");
 
 		if (m_UnifontMul[i].Load(s))
-			m_UnicodeFontsCount++;
+			UnicodeFontsCount++;
 	}
 
-	if (m_UseVerdata && !m_VerdataMul.Load(g_App.UOFilesPath("verdata.mul")))
-		m_UseVerdata = false;
+	if (UseVerdata && !m_VerdataMul.Load(g_App.UOFilesPath("verdata.mul")))
+		UseVerdata = false;
 
 	return true;
 }
@@ -283,11 +283,11 @@ bool CFileManager::LoadWithUOP()
 			s = g_App.UOFilesPath("unifont.mul");
 
 		if (m_UnifontMul[i].Load(s))
-			m_UnicodeFontsCount++;
+			UnicodeFontsCount++;
 	}
 
-	if (m_UseVerdata && !m_VerdataMul.Load(g_App.UOFilesPath("verdata.mul")))
-		m_UseVerdata = false;
+	if (UseVerdata && !m_VerdataMul.Load(g_App.UOFilesPath("verdata.mul")))
+		UseVerdata = false;
 
 	return true;
 }

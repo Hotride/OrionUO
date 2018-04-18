@@ -19,19 +19,19 @@ void COrionApplication::OnMainLoop()
 
 	g_Ticks = timeGetTime();
 
-	if (m_NextRenderTime <= g_Ticks)
+	if (NextRenderTime <= g_Ticks)
 	{
-		m_NextUpdateTime = g_Ticks + 50;
-		m_NextRenderTime = m_NextUpdateTime;// g_Ticks + g_OrionWindow.RenderTimerDelay;
+		NextUpdateTime = g_Ticks + 50;
+		NextRenderTime = NextUpdateTime;// g_Ticks + g_OrionWindow.RenderTimerDelay;
 
 		//g_Orion.Process(true);
 		g_ConnectionManager.Recv();
 		g_PacketManager.ProcessPluginPackets();
 		g_PacketManager.SendMegaClilocRequests();
 	}
-	else if (m_NextUpdateTime <= g_Ticks)
+	else if (NextUpdateTime <= g_Ticks)
 	{
-		m_NextUpdateTime = g_Ticks + 50;
+		NextUpdateTime = g_Ticks + 50;
 
 		//g_Orion.Process(false);
 		g_ConnectionManager.Recv();

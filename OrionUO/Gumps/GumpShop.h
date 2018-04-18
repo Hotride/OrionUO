@@ -12,7 +12,8 @@
 //----------------------------------------------------------------------------------
 class CGumpShop : public CGump
 {
-	SETGET(bool, IsBuyGump, false);
+public:
+	bool IsBuyGump = false;
 
 private:
 	static const int ID_GB_BUTTON_ACCEPT = 1;
@@ -37,7 +38,7 @@ public:
 
 	virtual void PrepareContent();
 
-	virtual bool CanBeDisplayed() { return m_Visible; }
+	virtual bool CanBeDisplayed() { return Visible; }
 
 	GUMP_BUTTON_EVENT_H;
 	GUMP_SCROLL_BUTTON_EVENT_H;

@@ -14,11 +14,16 @@
 //----------------------------------------------------------------------------------
 class CGUISkillItem : public CBaseGUI
 {
+public:
 	//!Индекс навыка
-	SETGET(int, Index, 0);
+	int Index = 0;
 
 	//!Статус навыка
-	SETGETE(uchar, Status, 0);
+protected:
+    uchar m_Status = 0;
+public:
+    uchar GetStatus() { return m_Status; };
+    void SetStatus(uchar val);
 
 private:
 	//!Текустуры текста
@@ -29,7 +34,7 @@ private:
 	ushort GetStatusButtonGraphic();
 
 public:
-	CGUISkillItem(const uint &serial, const uint &useSerial, const uint &statusSerial, const int &index, const int &x, const int &y);
+	CGUISkillItem(int serial, int useSerial, int statusSerial, int index, int x, int y);
 	virtual ~CGUISkillItem();
 
 	//!Компоненты управления
@@ -37,13 +42,13 @@ public:
 	CGUIButton *m_ButtonStatus{ NULL };
 
 	//!Создать текстуру значения навыка
-	void CreateValueText(const bool &showReal = false, const bool &showCap = false);
+	void CreateValueText(bool showReal = false, bool showCap = false);
 
 	virtual WISP_GEOMETRY::CSize GetSize() { return WISP_GEOMETRY::CSize(255, 17); }
 
 	virtual void PrepareTextures();
 
-	virtual void Draw(const bool &checktrans = false);
+	virtual void Draw(bool checktrans = false);
 	virtual bool Select();
 
 	//!Получить ссылку на выбранную компоненту или на себя

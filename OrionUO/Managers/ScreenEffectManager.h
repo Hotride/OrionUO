@@ -13,22 +13,22 @@
 //Класс для работы с плавным переключением экрана
 class CScreenEffectManager
 {
-	SETGET(SCREEN_EFFECT_MODE, Mode, SEM_NONE);
-	SETGET(SCREEN_EFFECT_TYPE, Type, SET_TO_BLACK);
-	SETGET(bool, Enabled, false);
-	SETGET(GLfloat, ColorR, 0.0f);
-	SETGET(GLfloat, ColorG, 0.0f);
-	SETGET(GLfloat, ColorB, 0.0f);
-	SETGET(GLfloat, Alpha, 1.0f);
-	SETGET(GLfloat, Step, 0.03f);
-
 public:
+	SCREEN_EFFECT_MODE Mode = SEM_NONE;
+	SCREEN_EFFECT_TYPE Type = SET_TO_BLACK;
+	bool Enabled = false;
+	GLfloat ColorR = 0.0f;
+	GLfloat ColorG = 0.0f;
+	GLfloat ColorB = 0.0f;
+	GLfloat Alpha = 1.0f;
+	GLfloat Step = 0.03f;
+
 	CScreenEffectManager();
 	virtual ~CScreenEffectManager();
 
 	int Process();
 	void Draw();
-	bool Use(const SCREEN_EFFECT_MODE &mode, const SCREEN_EFFECT_TYPE &type = SET_TO_BLACK, const bool &ignoreEnabled = false);
+	bool Use(const SCREEN_EFFECT_MODE &mode, const SCREEN_EFFECT_TYPE &type = SET_TO_BLACK, bool ignoreEnabled = false);
 	bool UseSunrise();
 	bool UseSunset();
 };

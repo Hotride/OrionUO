@@ -14,11 +14,11 @@
 //----------------------------------------------------------------------------------
 class CGUIGenericTextEntry : public CGUITextEntry
 {
-	//!Индекс текста
-	SETGET(uint, TextID, 0);
-
 public:
-	CGUIGenericTextEntry(const uint &serial, const uint &index, const ushort &color, const int &x, const int &y, const int &maxWidth = 0, const int &maxLength = 0);
+	//!Индекс текста
+	uint TextID = 0;
+
+	CGUIGenericTextEntry(int serial, int index, ushort color, int x, int y, int maxWidth = 0, int maxLength = 0);
 	virtual ~CGUIGenericTextEntry();
 };
 //----------------------------------------------------------------------------------

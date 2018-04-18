@@ -11,36 +11,36 @@
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
 //----------------------------------------------------------------------------------
-CGUIScissor::CGUIScissor(const bool &enabled, const int &baseX, const int &baseY, const int &x, const int &y, const int &width, const int &height)
-: CGUIPolygonal(GOT_SCISSOR, x, y, width, height), m_BaseX(baseX), m_BaseY(baseY)
+CGUIScissor::CGUIScissor(bool enabled, int baseX, int baseY, int x, int y, int width, int height)
+: CGUIPolygonal(GOT_SCISSOR, x, y, width, height), BaseX(baseX), BaseY(baseY)
 {
-	m_Enabled = enabled;
+	Enabled = enabled;
 }
 //----------------------------------------------------------------------------------
 CGUIScissor::~CGUIScissor()
 {
 }
 //----------------------------------------------------------------------------------
-void CGUIScissor::Draw(const bool &checktrans)
+void CGUIScissor::Draw(bool checktrans)
 {
 	WISPFUN_DEBUG("c70_f1");
-	if (m_Enabled)
+	if (Enabled)
 	{
-		if (!g_ConfigManager.UseGLListsForInterface)
+		if (!g_ConfigManager.GetUseGLListsForInterface())
 		{
 			int x = m_X;
 			int y = m_Y;
 
-			if (m_GumpParent != NULL)
+			if (GumpParent != NULL)
 			{
-				x -= m_GumpParent->GumpRect.Position.X;
-				y -= m_GumpParent->GumpRect.Position.Y;
+				x -= GumpParent->GumpRect.Position.X;
+				y -= GumpParent->GumpRect.Position.Y;
 			}
 
-			g_GL.PushScissor(m_BaseX + x, m_BaseY + y, m_Width, m_Height);
+			g_GL.PushScissor(BaseX + x, BaseY + y, Width, Height);
 		}
 		else
-			g_GL.PushScissor((int)g_GumpTranslate.X + m_BaseX + m_X, g_OrionWindow.Size.Height - ((int)g_GumpTranslate.Y + m_BaseY + m_Y) - m_Height, m_Width, m_Height);
+			g_GL.PushScissor((int)g_GumpTranslate.X + BaseX + m_X, g_OrionWindow.GetSize().Height - ((int)g_GumpTranslate.Y + BaseY + m_Y) - Height, Width, Height);
 	}
 	else
 		g_GL.PopScissor();

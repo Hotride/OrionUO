@@ -19,13 +19,13 @@ CGumpJournal::CGumpJournal(short x, short y, bool minimized, int height)
 
 	if (minimized)
 	{
-		m_Page = 1;
-		m_Minimized = true;
-		m_MinimizedX = x;
-		m_MinimizedY = y;
+		Page = 1;
+		Minimized = true;
+		MinimizedX = x;
+		MinimizedY = y;
 	}
 	else
-		m_Page = 2;
+		Page = 2;
 
 	Add(new CGUIPage(1));
 	Add(new CGUIGumppic(0x0830, 0, 0));
@@ -33,24 +33,24 @@ CGumpJournal::CGumpJournal(short x, short y, bool minimized, int height)
 	Add(new CGUIPage(2));
 	Add(new CGUIGumppic(0x082A, 111, 32)); //Journal text gump
 	Add(new CGUIGumppic(0x082B, 30, 58)); //Top line
-	m_BottomLine = (CGUIGumppic*)Add(new CGUIGumppic(0x082B, 31, m_Height - 26)); //Bottom line
+	m_BottomLine = (CGUIGumppic*)Add(new CGUIGumppic(0x082B, 31, Height - 26)); //Bottom line
 
-	m_TextLocker = (CGUIButton*)Add(new CGUIButton(ID_GJ_BUTTON_LOCK, 0x082C, 0x082C, 0x082C, 242, m_Height - 27));
+	m_TextLocker = (CGUIButton*)Add(new CGUIButton(ID_GJ_BUTTON_LOCK, 0x082C, 0x082C, 0x082C, 242, Height - 27));
 	m_TextLocker->CheckPolygone = true;
 	m_TextLocker->Visible = false;
 
-	m_CheckboxShowSystem = (CGUICheckbox*)Add(new CGUICheckbox(ID_GJ_SHOW_SYSTEM, 0x00D2, 0x00D3, 0x00D2, 40, m_Height - 5));
+	m_CheckboxShowSystem = (CGUICheckbox*)Add(new CGUICheckbox(ID_GJ_SHOW_SYSTEM, 0x00D2, 0x00D3, 0x00D2, 40, Height - 5));
 	m_CheckboxShowSystem->Checked = g_JournalShowSystem;
-	m_CheckboxShowObjects = (CGUICheckbox*)Add(new CGUICheckbox(ID_GJ_SHOW_OBJECTS, 0x00D2, 0x00D3, 0x00D2, 126, m_Height - 5));
+	m_CheckboxShowObjects = (CGUICheckbox*)Add(new CGUICheckbox(ID_GJ_SHOW_OBJECTS, 0x00D2, 0x00D3, 0x00D2, 126, Height - 5));
 	m_CheckboxShowObjects->Checked = g_JournalShowObjects;
-	m_CheckboxShowClient = (CGUICheckbox*)Add(new CGUICheckbox(ID_GJ_SHOW_CLIENT, 0x00D2, 0x00D3, 0x00D2, 210, m_Height - 5));
+	m_CheckboxShowClient = (CGUICheckbox*)Add(new CGUICheckbox(ID_GJ_SHOW_CLIENT, 0x00D2, 0x00D3, 0x00D2, 210, Height - 5));
 	m_CheckboxShowClient->Checked = g_JournalShowClient;
 
-	m_TextShowSystem = (CGUIText*)Add(new CGUIText(0x0386, 63, m_Height - 2));
+	m_TextShowSystem = (CGUIText*)Add(new CGUIText(0x0386, 63, Height - 2));
 	m_TextShowSystem->CreateTextureA(1, "System");
-	m_TextShowObjects = (CGUIText*)Add(new CGUIText(0x0386, 149, m_Height - 2));
+	m_TextShowObjects = (CGUIText*)Add(new CGUIText(0x0386, 149, Height - 2));
 	m_TextShowObjects->CreateTextureA(1, "Objects");
-	m_TextShowClient = (CGUIText*)Add(new CGUIText(0x0386, 233, m_Height - 2));
+	m_TextShowClient = (CGUIText*)Add(new CGUIText(0x0386, 233, Height - 2));
 	m_TextShowClient->CreateTextureA(1, "Client");
 
 	QFOR(item, g_Journal.m_Items, CTextData*)
@@ -66,7 +66,7 @@ void CGumpJournal::InitToolTip()
 	WISPFUN_DEBUG("c98_f2");
 	uint id = g_SelectedObject.Serial;
 
-	if (!m_Minimized)
+	if (!Minimized)
 	{
 		switch (id)
 		{
@@ -118,17 +118,17 @@ void CGumpJournal::UpdateHeight()
 	WISPFUN_DEBUG("c98_f3");
 	CGumpBaseScroll::UpdateHeight();
 
-	m_BottomLine->Y = m_Height - 26; //Bottom line
+	m_BottomLine->SetY(Height - 26); //Bottom line
 
-	m_TextLocker->Y = m_Height - 27;
+	m_TextLocker->SetY(Height - 27);
 
-	m_CheckboxShowSystem->Y = m_Height - 5;
-	m_CheckboxShowObjects->Y = m_Height - 5;
-	m_CheckboxShowClient->Y = m_Height - 5;
+	m_CheckboxShowSystem->SetY(Height - 5);
+	m_CheckboxShowObjects->SetY(Height - 5);
+	m_CheckboxShowClient->SetY(Height - 5);
 
-	m_TextShowSystem->Y = m_Height - 2;
-	m_TextShowObjects->Y = m_Height - 2;
-	m_TextShowClient->Y = m_Height - 2;
+	m_TextShowSystem->SetY(Height - 2);
+	m_TextShowObjects->SetY(Height - 2);
+	m_TextShowClient->SetY(Height - 2);
 
 	if (!m_TextLocker->Visible)
 		m_HTMLGump->m_Slider->Value = m_HTMLGump->m_Slider->MaxValue;
@@ -143,7 +143,7 @@ int CGumpJournal::RecalculateHeight()
 	{
 		if (item->Type == GOT_TEXT)
 		{
-			item->Y = height;
+			item->SetY(height);
 
 			bool visible = true;
 
@@ -212,11 +212,11 @@ void CGumpJournal::GUMP_BUTTON_EVENT_C
 	WISPFUN_DEBUG("c98_f7");
 	if (serial == ID_GBS_BUTTON_MINIMIZE)
 	{
-		m_Minimized = true;
-		m_Page = 1;
+		Minimized = true;
+		Page = 1;
 	}
 	else if (serial == ID_GJ_LOCK_MOVING)
-		m_LockMoving = !m_LockMoving;
+		LockMoving = !LockMoving;
 	else if (serial == ID_GJ_BUTTON_LOCK)
 	{
 		m_HTMLGump->m_Slider->Value = m_HTMLGump->m_Slider->MaxValue;
@@ -269,11 +269,11 @@ void CGumpJournal::GUMP_CHECKBOX_EVENT_C
 bool CGumpJournal::OnLeftMouseButtonDoubleClick()
 {
 	WISPFUN_DEBUG("c98_f9");
-	if (m_Minimized)
+	if (Minimized)
 	{
-		m_Minimized = false;
-		m_WantRedraw = true;
-		m_Page = 2;
+		Minimized = false;
+		WantRedraw = true;
+		Page = 2;
 
 		return true;
 	}

@@ -13,16 +13,16 @@ CApplication::CApplication()
 	g_MainThread = GetCurrentThreadId();
 	WISPFUN_DEBUG("c1_f1");
 	g_WispApplication = this;
-	m_ExePathA.resize(MAX_PATH, 0);
-	m_ExePathW.resize(MAX_PATH, 0);
+	ExePathA.resize(MAX_PATH, 0);
+	ExePathW.resize(MAX_PATH, 0);
 
-	GetCurrentDirectoryA(MAX_PATH, &m_ExePathA[0]);
-	m_ExePathA = m_ExePathA.c_str();
+	GetCurrentDirectoryA(MAX_PATH, &ExePathA[0]);
+	ExePathA = ExePathA.c_str();
 
-	GetCurrentDirectoryW(MAX_PATH, &m_ExePathW[0]);
-	m_ExePathW = m_ExePathW.c_str();
-	m_UOFilesPathA = m_ExePathA;
-	m_UOFilesPathW = m_ExePathW;
+	GetCurrentDirectoryW(MAX_PATH, &ExePathW[0]);
+	ExePathW = ExePathW.c_str();
+	UOFilesPathA = ExePathA;
+	UOFilesPathW = ExePathW;
 	g_MainScreen.LoadCustomPath();
 }
 //----------------------------------------------------------------------------------
@@ -30,14 +30,14 @@ CApplication::~CApplication()
 {
 	WISPFUN_DEBUG("c1_f2");
 	g_WispApplication = NULL;
-	m_Hinstance = 0;
+	Hinstance = 0;
 }
 //----------------------------------------------------------------------------------
 int CApplication::Run(HINSTANCE hinstance)
 {
 	WISPFUN_DEBUG("c1_f3");
 	timeBeginPeriod(1);
-	m_Hinstance = hinstance;
+	Hinstance = hinstance;
 
 	MSG msg = { 0 };
 
@@ -64,7 +64,7 @@ string CApplication::GetFileVersion(uint *numericVerion)
 	//File version info
 	wchar_t szFilename[MAX_PATH] = { 0 };
 
-	if (GetModuleFileName(m_Hinstance, &szFilename[0], sizeof(szFilename)))
+	if (GetModuleFileName(Hinstance, &szFilename[0], sizeof(szFilename)))
 	{
 		DWORD dummy = 0;
 		DWORD dwSize = GetFileVersionInfoSize(&szFilename[0], &dummy);
@@ -118,7 +118,7 @@ string CApplication::ExeFilePath(const char *str, ...)
 	vsprintf_s(out, str, arg);
 
 	va_end(arg);
-	string res = m_ExePathA + "\\" + out;
+	string res = ExePathA + "\\" + out;
 	return res;
 }
 //---------------------------------------------------------------------------
@@ -133,7 +133,7 @@ wstring CApplication::ExeFilePath(const wchar_t *str, ...)
 
 	va_end(arg);
 
-	return m_ExePathW + L"\\" + out;
+	return ExePathW + L"\\" + out;
 }
 //---------------------------------------------------------------------------
 string CApplication::UOFilesPath(const char *str, ...)
@@ -146,7 +146,7 @@ string CApplication::UOFilesPath(const char *str, ...)
 	vsprintf_s(out, str, arg);
 
 	va_end(arg);
-	string res = m_UOFilesPathA + "\\" + out;
+	string res = UOFilesPathA + "\\" + out;
 	return res;
 }
 //---------------------------------------------------------------------------
@@ -161,7 +161,7 @@ wstring CApplication::UOFilesPath(const wchar_t *str, ...)
 
 	va_end(arg);
 
-	return m_UOFilesPathW + L"\\" + out;
+	return UOFilesPathW + L"\\" + out;
 }
 //----------------------------------------------------------------------------------
 }; //namespace

@@ -24,16 +24,16 @@ CQuestArrow::~CQuestArrow()
 void CQuestArrow::Draw()
 {
 	WISPFUN_DEBUG("c200_f1");
-	if (m_Enabled)
+	if (Enabled)
 	{
-		int dir = g_MouseManager.GetFacing(g_Player->X, g_Player->Y, m_X, m_Y, 0);
+		int dir = g_MouseManager.GetFacing(g_Player->GetX(), g_Player->GetY(), X, Y, 0);
 
 		ushort gumpID = m_Gump + ((dir + 1) % 8);
 
 		WISP_GEOMETRY::CSize size = g_Orion.GetGumpDimension(gumpID);
 
-		int gox = m_X - g_Player->X;
-		int goy = m_Y - g_Player->Y;
+		int gox = X - g_Player->GetX();
+		int goy = Y - g_Player->GetY();
 
 		int x = g_RenderBounds.GameWindowCenterX + ((gox - goy) * 22) - (size.Width / 2);
 		int y = g_RenderBounds.GameWindowCenterY + ((gox + goy) * 22) - (size.Height / 2);
@@ -48,10 +48,10 @@ void CQuestArrow::Draw()
 		else if (y > g_RenderBounds.GameWindowPosY + g_RenderBounds.GameWindowHeight - size.Height)
 			y = g_RenderBounds.GameWindowPosY + g_RenderBounds.GameWindowHeight - size.Height;
 
-		if (m_Timer < g_Ticks)
+		if (Timer < g_Ticks)
 		{
-			if (m_Timer + 120 < g_Ticks)
-				m_Timer = g_Ticks + 1000;
+			if (Timer + 120 < g_Ticks)
+				Timer = g_Ticks + 1000;
 
 			g_ColorizerShader.Use();
 

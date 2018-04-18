@@ -12,8 +12,9 @@
 //----------------------------------------------------------------------------------
 class CServerScreen : public CBaseScreen
 {
+public:
 	//!Временная переменная для идентификации выбранного сервера
-	SETGET(int, SelectionServerTempValue, 0);
+	int SelectionServerTempValue = 0;
 
 private:
 	CGumpScreenServer m_ServerGump;

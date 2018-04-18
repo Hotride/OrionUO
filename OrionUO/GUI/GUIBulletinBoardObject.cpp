@@ -11,13 +11,13 @@
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
 //----------------------------------------------------------------------------------
-CGUIBulletinBoardObject::CGUIBulletinBoardObject(const uint &serial, const int &x, const int &y, const wstring &text)
-: CBaseGUI(GOT_BB_OBJECT, serial, 0, 0, x, y), m_Text(text)
+CGUIBulletinBoardObject::CGUIBulletinBoardObject(int serial, int x, int y, const wstring &text)
+: CBaseGUI(GOT_BB_OBJECT, serial, 0, 0, x, y), Text(text)
 {
 	WISPFUN_DEBUG("c43_f1");
-	m_MoveOnDrag = true;
+	MoveOnDrag = true;
 
-	if (g_PacketManager.ClientVersion >= CV_305D)
+	if (g_PacketManager.GetClientVersion() >= CV_305D)
 		g_FontManager.GenerateW(1, m_Texture, text, 0);
 	else
 		g_FontManager.GenerateA(9, m_Texture, ToString(text), 0x0386);
@@ -35,7 +35,7 @@ void CGUIBulletinBoardObject::PrepareTextures()
 	g_Orion.ExecuteGump(0x1523);
 }
 //----------------------------------------------------------------------------------
-void CGUIBulletinBoardObject::Draw(const bool &checktrans)
+void CGUIBulletinBoardObject::Draw(bool checktrans)
 {
 	WISPFUN_DEBUG("c43_f3");
 	CGLTexture *th = g_Orion.ExecuteGump(0x1523);

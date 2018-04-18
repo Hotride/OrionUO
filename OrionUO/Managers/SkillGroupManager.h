@@ -13,7 +13,7 @@
 //!Класс менеджера групп навыков
 class CSkillGroupManager
 {
-	SETGET(int, Count, 0);
+	int Count = 0;
 
 private:
 	//!Выставление значение по-умолчанию для стандартных групп

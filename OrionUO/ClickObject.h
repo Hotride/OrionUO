@@ -13,15 +13,13 @@
 //!Объект клика мышкой
 class CClickObject
 {
-	SETGET(uint, Timer, 0);
-	SETGET(ushort, X, 0);
-	SETGET(ushort, Y, 0);
-	SETGET(bool, Enabled, false);
-	SETGET(uint, Page, 0);
-	SETGETP(CRenderObject*, Object, NULL);
-	SETGETP(CGump*, Gump, NULL);
-
 public:
+	uint Timer = 0;
+	ushort X = 0;
+	ushort Y = 0;
+	bool Enabled = false;
+	uint Page = 0;
+	CRenderObject* Object = NULL;	CGump* Gump = NULL;
 	CClickObject() {}
 	~CClickObject() {}
 

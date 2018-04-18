@@ -15,8 +15,8 @@ CGumpScreenSelectTown::CGumpScreenSelectTown()
 : CGump(GT_NONE, 0, 0, 0)
 {
 	WISPFUN_DEBUG("c118_f1");
-	m_NoMove = true;
-	m_NoClose = true;
+	NoMove = true;
+	NoClose = true;
 
 	//!Список точек для отображения кнопок городов
 	m_TownButtonText.push_back(WISP_GEOMETRY::CPoint2Di(105, 130));
@@ -58,7 +58,7 @@ void CGumpScreenSelectTown::UpdateContent()
 	Add(new CGUIGumppic(0x157C, 0, 0));
 	Add(new CGUIGumppic(0x15A0, 0, 4));
 
-	if (g_PacketManager.ClientVersion >= CV_70130)
+	if (g_PacketManager.GetClientVersion() >= CV_70130)
 	{
 		Add(new CGUIGumppic(0x15D9 + map, 62, 54));
 		Add(new CGUIGumppic(0x15DF, 57, 49));
@@ -90,7 +90,7 @@ void CGumpScreenSelectTown::UpdateContent()
 
 	IFOR(i, 0, g_CityList.CityCount())
 	{
-		if (g_PacketManager.ClientVersion >= CV_70130)
+		if (g_PacketManager.GetClientVersion() >= CV_70130)
 			city = g_CityList.GetCity((uint)i);
 		else
 			city = g_CityList.GetCity((uint)i + 1);

@@ -12,9 +12,10 @@
 //----------------------------------------------------------------------------------
 class CGumpBook : public CGump
 {
-	SETGET(bool, Writable, false);
-	SETGET(short, PageCount, 0);
-	SETGET(bool, Unicode, false);
+public:
+	bool Writable = false;
+	short PageCount = 0;
+	bool Unicode = false;
 
 private:
 	static const int ID_GB_TEXT_AREA_AUTHOR = 1;
@@ -27,7 +28,7 @@ private:
 	bool *m_ChangedPage{ NULL };
 	bool *m_PageDataReceived{ NULL };
 
-	void InsertInContent(const WPARAM &wparam, const bool &isCharPress = true);
+	void InsertInContent(const WPARAM &wparam, bool isCharPress = true);
 
 	CGUIButton *m_PrevPage{ NULL };
 	CGUIButton *m_NextPage{ NULL };
@@ -43,13 +44,13 @@ public:
 	CGUITextEntry *m_EntryAuthor{ NULL };
 	CGUITextEntry *m_EntryTitle{ NULL };
 
-	CGUITextEntry *GetEntry(const int &page);
+	CGUITextEntry *GetEntry(int page);
 
 	virtual void DelayedClick(CRenderObject *obj);
 
 	virtual void PrepareContent();
 
-	void SetPageData(const int &page, const wstring &data);
+	void SetPageData(int page, const wstring &data);
 
 	void ChangePage(int newPage, bool playSound = true);
 

@@ -13,7 +13,7 @@
 class CPacket : public WISP_DATASTREAM::CDataWritter
 {
 public:
-	CPacket(const size_t &size, const bool &autoResize = false);
+	CPacket(const size_t &size, bool autoResize = false);
 
 	void Send();
 };
@@ -45,13 +45,13 @@ public:
 class CPacketDeleteCharacter : public CPacket
 {
 public:
-	CPacketDeleteCharacter(const uint &charIndex);
+	CPacketDeleteCharacter(int charIndex);
 };
 //----------------------------------------------------------------------------------
 class CPacketSelectCharacter : public CPacket
 {
 public:
-	CPacketSelectCharacter(const uint &index, const string &name);
+	CPacketSelectCharacter(int index, const string &name);
 };
 //----------------------------------------------------------------------------------
 class CPacketPickupRequest : public CPacket
@@ -423,7 +423,7 @@ public:
 class CPacketMegaClilocRequestOld : public CPacket
 {
 public:
-	CPacketMegaClilocRequestOld(const uint &serial);
+	CPacketMegaClilocRequestOld(int serial);
 };
 //----------------------------------------------------------------------------------
 class CPacketMegaClilocRequest : public CPacket
@@ -447,7 +447,7 @@ public:
 class CPacketBookPageDataRequest : public CPacket
 {
 public:
-	CPacketBookPageDataRequest(const uint &serial, const int &page);
+	CPacketBookPageDataRequest(int serial, int page);
 };
 //----------------------------------------------------------------------------------
 class CPacketBuyRequest : public CPacket
@@ -465,13 +465,13 @@ public:
 class CPacketUseCombatAbility : public CPacket
 {
 public:
-	CPacketUseCombatAbility(const uchar &index);
+	CPacketUseCombatAbility(uchar index);
 };
 //----------------------------------------------------------------------------------
 class CPacketTargetSelectedObject : public CPacket
 {
 public:
-	CPacketTargetSelectedObject(const uint &useObjectSerial, const uint &targetObjectSerial);
+	CPacketTargetSelectedObject(int useObjectSerial, int targetObjectSerial);
 };
 //----------------------------------------------------------------------------------
 class CPacketToggleGargoyleFlying : public CPacket
@@ -483,7 +483,7 @@ public:
 class CPacketCustomHouseDataReq : public CPacket
 {
 public:
-	CPacketCustomHouseDataReq(const uint &serial);
+	CPacketCustomHouseDataReq(int serial);
 };
 //----------------------------------------------------------------------------------
 class CPacketStunReq : public CPacket
@@ -507,7 +507,7 @@ public:
 class CPacketWalkRequest : public CPacket
 {
 public:
-	CPacketWalkRequest(const uchar &direction, const uchar &sequence, const uint &fastWalkKey);
+	CPacketWalkRequest(uchar direction, uchar sequence, int fastWalkKey);
 };
 //----------------------------------------------------------------------------------
 class CPacketCustomHouseBackup : public CPacket
@@ -537,7 +537,7 @@ public:
 class CPacketCustomHouseGoToFloor : public CPacket
 {
 public:
-	CPacketCustomHouseGoToFloor(const uchar &floor);
+	CPacketCustomHouseGoToFloor(uchar floor);
 };
 //----------------------------------------------------------------------------------
 class CPacketCustomHouseSync : public CPacket
@@ -567,37 +567,37 @@ public:
 class CPacketCustomHouseAddItem : public CPacket
 {
 public:
-	CPacketCustomHouseAddItem(const ushort &graphic, const int &x, const int &y);
+	CPacketCustomHouseAddItem(ushort graphic, int x, int y);
 };
 //----------------------------------------------------------------------------------
 class CPacketCustomHouseDeleteItem : public CPacket
 {
 public:
-	CPacketCustomHouseDeleteItem(const ushort &graphic, const int &x, const int &y, const int &z);
+	CPacketCustomHouseDeleteItem(ushort graphic, int x, int y, int z);
 };
 //----------------------------------------------------------------------------------
 class CPacketCustomHouseAddRoof : public CPacket
 {
 public:
-	CPacketCustomHouseAddRoof(const ushort &graphic, const int &x, const int &y, const int &z);
+	CPacketCustomHouseAddRoof(ushort graphic, int x, int y, int z);
 };
 //----------------------------------------------------------------------------------
 class CPacketCustomHouseDeleteRoof : public CPacket
 {
 public:
-	CPacketCustomHouseDeleteRoof(const ushort &graphic, const int &x, const int &y, const int &z);
+	CPacketCustomHouseDeleteRoof(ushort graphic, int x, int y, int z);
 };
 //----------------------------------------------------------------------------------
 class CPacketCustomHouseAddStair : public CPacket
 {
 public:
-	CPacketCustomHouseAddStair(const ushort &graphic, const int &x, const int &y);
+	CPacketCustomHouseAddStair(ushort graphic, int x, int y);
 };
 //----------------------------------------------------------------------------------
 class CPacketOrionVersion : public CPacket
 {
 public:
-	CPacketOrionVersion(const uint &version);
+	CPacketOrionVersion(int version);
 };
 //----------------------------------------------------------------------------------
 #endif

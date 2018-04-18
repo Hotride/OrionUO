@@ -63,7 +63,7 @@ int GetDistance(const WISP_GEOMETRY::CPoint2Di &current, const WISP_GEOMETRY::CP
 int GetRemoveDistance(const WISP_GEOMETRY::CPoint2Di &current, CGameObject *target);
 int GetTopObjDistance(CGameObject *current, CGameObject *target);
 //----------------------------------------------------------------------------------
-const char *GetReagentName(const ushort &id);
+const char *GetReagentName(ushort id);
 //----------------------------------------------------------------------------------
 //!Счетчики объектов (только для отладки)
 extern int g_LandObjectsCount;

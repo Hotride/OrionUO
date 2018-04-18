@@ -19,16 +19,16 @@ CWalker::CWalker()
 //---------------------------------------------------------------------------
 void CWalker::Reset()
 {
-	m_UnacceptedPacketsCount = 0;
-	m_StepsCount = 0;
-	m_WalkSequence = 0;
-	m_CurrentWalkSequence = 0;
-	m_WalkingFailed = false;
-	m_ResendPacketSended = false;
-	m_LastStepRequestTime = 0;
+	UnacceptedPacketsCount = 0;
+	StepsCount = 0;
+	WalkSequence = 0;
+	CurrentWalkSequence = 0;
+	WalkingFailed = false;
+	ResendPacketSended = false;
+	LastStepRequestTime = 0;
 }
 //----------------------------------------------------------------------------------
-void CWalker::DenyWalk(const uchar &sequence, const int &x, const int &y, const char &z)
+void CWalker::DenyWalk(uchar sequence, int x, int y, char z)
 {
 	g_Player->m_Steps.clear();
 
@@ -52,9 +52,9 @@ void CWalker::DenyWalk(const uchar &sequence, const int &x, const int &y, const 
 
 	if (x != -1)
 	{
-		g_Player->X = x;
-		g_Player->Y = y;
-		g_Player->Z = z;
+		g_Player->SetX(x);
+		g_Player->SetY(y);
+		g_Player->SetZ(z);
 
 		g_RemoveRangeXY.X = x;
 		g_RemoveRangeXY.Y = y;
@@ -64,14 +64,14 @@ void CWalker::DenyWalk(const uchar &sequence, const int &x, const int &y, const 
 	}
 }
 //----------------------------------------------------------------------------------
-void CWalker::ConfirmWalk(const uchar &sequence)
+void CWalker::ConfirmWalk(uchar sequence)
 {
-	if (m_UnacceptedPacketsCount)
-		m_UnacceptedPacketsCount--;
+	if (UnacceptedPacketsCount)
+		UnacceptedPacketsCount--;
 
 	int stepIndex = 0;
 
-	IFOR(i, 0, m_StepsCount)
+	IFOR(i, 0, StepsCount)
 	{
 		if (m_Step[i].Sequence == sequence)
 			break;
@@ -79,11 +79,11 @@ void CWalker::ConfirmWalk(const uchar &sequence)
 		stepIndex++;
 	}
 
-	bool isBadStep = (stepIndex == m_StepsCount);
+	bool isBadStep = (stepIndex == StepsCount);
 
 	if (!isBadStep)
 	{
-		if (stepIndex >= m_CurrentWalkSequence)
+		if (stepIndex >= CurrentWalkSequence)
 		{
 			m_Step[stepIndex].Accepted = true;
 			g_RemoveRangeXY.X = m_Step[stepIndex].X;
@@ -94,13 +94,13 @@ void CWalker::ConfirmWalk(const uchar &sequence)
 			g_RemoveRangeXY.X = m_Step[0].X;
 			g_RemoveRangeXY.Y = m_Step[0].Y;
 
-			IFOR(i, 1, m_StepsCount)
+			IFOR(i, 1, StepsCount)
 			{
 				m_Step[i - 1] = m_Step[i];
 			}
 
-			m_StepsCount--;
-			m_CurrentWalkSequence--;
+			StepsCount--;
+			CurrentWalkSequence--;
 		}
 		else //if (stepIndex)
 			isBadStep = true;
@@ -108,15 +108,15 @@ void CWalker::ConfirmWalk(const uchar &sequence)
 
 	if (isBadStep)
 	{
-		if (!m_ResendPacketSended)
+		if (!ResendPacketSended)
 		{
 			CPacketResend().Send();
-			m_ResendPacketSended = true;
+			ResendPacketSended = true;
 		}
 
-		m_WalkingFailed = true;
-		m_StepsCount = 0;
-		m_CurrentWalkSequence = 0;
+		WalkingFailed = true;
+		StepsCount = 0;
+		CurrentWalkSequence = 0;
 	}
 	else
 	{

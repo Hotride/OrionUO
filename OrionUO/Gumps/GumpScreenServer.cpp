@@ -14,8 +14,8 @@
 CGumpScreenServer::CGumpScreenServer()
 : CGump(GT_NONE, 0, 0, 0)
 {
-	m_NoMove = true;
-	m_NoClose = true;
+	NoMove = true;
+	NoClose = true;
 }
 //----------------------------------------------------------------------------------
 CGumpScreenServer::~CGumpScreenServer()
@@ -37,12 +37,12 @@ void CGumpScreenServer::UpdateContent()
 	CCliloc *cliloc = g_ClilocManager.Cliloc(g_Language);
 
 	ushort textColor = 0x0481;
-	if (g_PacketManager.ClientVersion >= CV_500A)
+	if (g_PacketManager.GetClientVersion() >= CV_500A)
 		textColor = 0xFFFF;
 
 	CGUIText *text = new CGUIText(textColor, 155, 70);
 
-	if (g_PacketManager.ClientVersion >= CV_500A)
+	if (g_PacketManager.GetClientVersion() >= CV_500A)
 		text->CreateTextureW(0, cliloc->GetW(1044579, false, "Select which shard to play on:"));
 	else
 		text->CreateTextureA(9, "Select which shard to play on:");
@@ -51,7 +51,7 @@ void CGumpScreenServer::UpdateContent()
 
 	text = new CGUIText(textColor, 400, 70);
 
-	if (g_PacketManager.ClientVersion >= CV_500A)
+	if (g_PacketManager.GetClientVersion() >= CV_500A)
 		text->CreateTextureW(0, cliloc->GetW(1044577, false, "Latency:"));
 	else
 		text->CreateTextureA(9, "Latency:");
@@ -60,7 +60,7 @@ void CGumpScreenServer::UpdateContent()
 
 	text = new CGUIText(textColor, 470, 70);
 
-	if (g_PacketManager.ClientVersion >= CV_500A)
+	if (g_PacketManager.GetClientVersion() >= CV_500A)
 		text->CreateTextureW(0, cliloc->GetW(1044578, false, "Packet Loss:"));
 	else
 		text->CreateTextureA(9, "Packet Loss:");
@@ -69,12 +69,12 @@ void CGumpScreenServer::UpdateContent()
 
 	CGUIHTMLGump *htmlGump = (CGUIHTMLGump*)Add(new CGUIHTMLGump(ID_SS_HTML_GUMP, 0x0DAC, 150, 90, 393, 271, true, true));
 
-	htmlGump->m_Scissor->Y += 16;
+	htmlGump->m_Scissor->SetY(htmlGump->m_Scissor->GetY() + 16);
 	htmlGump->m_Scissor->Height -= 32;
 
 	text = new CGUIText(textColor, 153, 368);
 
-	if (g_PacketManager.ClientVersion >= CV_500A)
+	if (g_PacketManager.GetClientVersion() >= CV_500A)
 		text->CreateTextureW(0, cliloc->GetW(1044580, false, "Sort by:"));
 	else
 		text->CreateTextureA(9, "Sort by:");

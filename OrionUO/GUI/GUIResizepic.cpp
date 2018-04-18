@@ -11,11 +11,11 @@
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
 //----------------------------------------------------------------------------------
-CGUIResizepic::CGUIResizepic(const uint &serial, const ushort &graphic, const int &x, const int &y, const int &width, const int &height)
+CGUIResizepic::CGUIResizepic(int serial, ushort graphic, int x, int y, int width, int height)
 : CGUIPolygonal(GOT_RESIZEPIC, x, y, width, height)
 {
-	m_Serial = serial;
-	m_Graphic = graphic;
+	Serial = serial;
+	Graphic = graphic;
 }
 //----------------------------------------------------------------------------------
 CGUIResizepic::~CGUIResizepic()
@@ -25,17 +25,17 @@ CGUIResizepic::~CGUIResizepic()
 void CGUIResizepic::PrepareTextures()
 {
 	WISPFUN_DEBUG("c69_f1");
-	g_Orion.ExecuteResizepic(m_Graphic);
+	g_Orion.ExecuteResizepic(Graphic);
 }
 //----------------------------------------------------------------------------------
-void CGUIResizepic::Draw(const bool &checktrans)
+void CGUIResizepic::Draw(bool checktrans)
 {
 	WISPFUN_DEBUG("c69_f2");
 	CGLTexture *th[9] = { NULL };
 
 	IFOR(i, 0, 9)
 	{
-		CGLTexture *pth = g_Orion.ExecuteGump(m_Graphic + (int)i);
+		CGLTexture *pth = g_Orion.ExecuteGump(Graphic + (int)i);
 
 		if (pth == NULL)
 			return;
@@ -55,26 +55,26 @@ void CGUIResizepic::Draw(const bool &checktrans)
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-		g_GL_DrawResizepic(th, m_X, m_Y, m_Width, m_Height);
+		g_GL_DrawResizepic(th, m_X, m_Y, Width, Height);
 
 		glDisable(GL_BLEND);
 
 		glEnable(GL_STENCIL_TEST);
 
-		g_GL_DrawResizepic(th, m_X, m_Y, m_Width, m_Height);
+		g_GL_DrawResizepic(th, m_X, m_Y, Width, Height);
 
 		glDisable(GL_STENCIL_TEST);
 	}
 	else
-		g_GL_DrawResizepic(th, m_X, m_Y, m_Width, m_Height);
+		g_GL_DrawResizepic(th, m_X, m_Y, Width, Height);
 }
 //----------------------------------------------------------------------------------
 bool CGUIResizepic::Select()
 {
 	WISPFUN_DEBUG("c69_f3");
-	if (m_CheckPolygone)
+	if (CheckPolygone)
 		return CGUIPolygonal::Select();
 
-	return g_Orion.ResizepicPixelsInXY(m_Graphic, m_X, m_Y, m_Width, m_Height);
+	return g_Orion.ResizepicPixelsInXY(Graphic, m_X, m_Y, Width, Height);
 }
 //----------------------------------------------------------------------------------

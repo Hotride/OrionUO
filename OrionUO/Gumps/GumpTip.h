@@ -12,7 +12,7 @@
 //----------------------------------------------------------------------------------
 class CGumpTip : public CGumpBaseScroll
 {
-	SETGET(bool, Updates, false);
+	bool Updates = false;
 
 private:
 	static const int ID_GT_PREV_GUMP = 1;

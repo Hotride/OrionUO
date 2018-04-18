@@ -13,9 +13,9 @@
 //Класс текста объекта мира
 class CRenderTextObject : public CRenderObject
 {
-	SETGET(bool, Transparent, false);
-
 public:
+	bool Transparent = false;
+
 	CRenderTextObject();
 	virtual ~CRenderTextObject();
 

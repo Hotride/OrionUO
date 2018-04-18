@@ -24,10 +24,10 @@ CScreenshotBuilder::~CScreenshotBuilder()
 void CScreenshotBuilder::SaveScreen()
 {
 	WISPFUN_DEBUG("c204_f1");
-	SaveScreen(0, 0, g_OrionWindow.Size.Width, g_OrionWindow.Size.Height);
+	SaveScreen(0, 0, g_OrionWindow.GetSize().Width, g_OrionWindow.GetSize().Height);
 }
 //---------------------------------------------------------------------------
-void CScreenshotBuilder::SaveScreen(const int &x, const int &y, const int &width, const int &height)
+void CScreenshotBuilder::SaveScreen(int x, int y, int width, int height)
 {
 	WISPFUN_DEBUG("c204_f2");
 	string path = g_App.ExeFilePath("snapshots");
@@ -84,12 +84,12 @@ void CScreenshotBuilder::SaveScreen(const int &x, const int &y, const int &width
 		g_Orion.CreateTextMessageF(3, 0, "Screenshot saved to: %s", path.c_str());
 }
 //---------------------------------------------------------------------------
-UINT_LIST CScreenshotBuilder::GetScenePixels(const int &x, const int &y, const int &width, const int &height)
+UINT_LIST CScreenshotBuilder::GetScenePixels(int x, int y, int width, int height)
 {
 	WISPFUN_DEBUG("c204_f3");
 	UINT_LIST pixels(width * height);
 
-	glReadPixels(x, g_OrionWindow.Size.Height - y - height, width, height, GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, &pixels[0]);
+	glReadPixels(x, g_OrionWindow.GetSize().Height - y - height, width, height, GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, &pixels[0]);
 
 	for (uint &i : pixels)
 		i |= 0xFF000000;

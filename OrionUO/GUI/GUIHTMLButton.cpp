@@ -11,7 +11,7 @@
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
 //----------------------------------------------------------------------------------
-CGUIHTMLButton::CGUIHTMLButton(CGUIHTMLGump *htmlGump, const uint &serial, const ushort &graphic, const ushort &graphicSelected, const ushort &graphicPressed, const int &x, const int &y)
+CGUIHTMLButton::CGUIHTMLButton(CGUIHTMLGump *htmlGump, int serial, ushort graphic, ushort graphicSelected, ushort graphicPressed, int x, int y)
 : CGUIButton(serial, graphic, graphicSelected, graphicPressed, x, y),
 m_HTMLGump(htmlGump)
 {
@@ -27,7 +27,7 @@ void CGUIHTMLButton::SetShaderMode()
 	glUniform1iARB(g_ShaderDrawMode, SDM_NO_COLOR);
 }
 //----------------------------------------------------------------------------------
-void CGUIHTMLButton::Scroll(const bool &up, const uint &delay)
+void CGUIHTMLButton::Scroll(bool up, int delay)
 {
 	WISPFUN_DEBUG("c59_f2");
 	if (m_HTMLGump != NULL)

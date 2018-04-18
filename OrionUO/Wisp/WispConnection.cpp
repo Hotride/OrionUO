@@ -7,7 +7,7 @@ namespace WISP_NETWORK
 {
 //----------------------------------------------------------------------------------
 CConnection::CConnection(int af, int type, int protocol)
-: m_Af(af), m_Type(type), m_Protocol(protocol)
+: Af(af), Type(type), Protocol(protocol)
 {
 	WISPFUN_DEBUG("c3_f1");
 	WSADATA wsaData = { 0 };
@@ -32,14 +32,14 @@ CConnection::~CConnection()
 	}
 }
 //----------------------------------------------------------------------------------
-bool CConnection::Connect(const string &address, const int &port)
+bool CConnection::Connect(const string &address, int port)
 {
 	WISPFUN_DEBUG("c3_f3");
-	if (m_Connected)
+	if (Connected)
 		return false;
 	else if (m_Socket == INVALID_SOCKET)
 	{
-		m_Socket = socket(m_Af, m_Type, m_Protocol);
+		m_Socket = socket(Af, Type, Protocol);
 
 		if (m_Socket == INVALID_SOCKET)
 			return false;
@@ -70,8 +70,8 @@ bool CConnection::Connect(const string &address, const int &port)
 	if (connect(m_Socket, (struct sockaddr*)&caddr, sizeof(caddr)) == -1)
 		return false;
 
-	m_Port = port;
-	m_Connected = true;
+	Port = port;
+	Connected = true;
 	WSASetLastError(0);
 	m_MessageParser->Clear();
 
@@ -81,14 +81,14 @@ bool CConnection::Connect(const string &address, const int &port)
 void CConnection::Disconnect()
 {
 	WISPFUN_DEBUG("c3_f4");
-	if (m_Connected && m_Socket != INVALID_SOCKET)
+	if (Connected && m_Socket != INVALID_SOCKET)
 	{
 		closesocket(m_Socket);
 
 		m_Socket = INVALID_SOCKET;
-		m_Connected = false;
-		m_DataReady = 0;
-		m_Port = 0;
+		Connected = false;
+		DataReady = 0;
+		Port = 0;
 		m_MessageParser->Clear();
 	}
 }
@@ -96,7 +96,7 @@ void CConnection::Disconnect()
 bool CConnection::ReadyRead()
 {
 	WISPFUN_DEBUG("c3_f5");
-	if (!m_Connected || m_Socket == INVALID_SOCKET)
+	if (!Connected || m_Socket == INVALID_SOCKET)
 		return false;
 
 	fd_set rfds;
@@ -104,26 +104,26 @@ bool CConnection::ReadyRead()
 	FD_ZERO(&rfds);
 	FD_SET(m_Socket, &rfds);
 
-	m_DataReady = select((int)m_Socket, &rfds, NULL, NULL, &tv);
+	DataReady = select((int)m_Socket, &rfds, NULL, NULL, &tv);
 
-	if (m_DataReady == SOCKET_ERROR)
+	if (DataReady == SOCKET_ERROR)
 	{
 		LOG("CConnection::ReadyRead SOCKET_ERROR\n");
 		Disconnect();
 	}
 
-	return (m_DataReady != 0);
+	return (DataReady != 0);
 }
 //----------------------------------------------------------------------------------
-bool CConnection::Read(const int &maxSize)
+bool CConnection::Read(int maxSize)
 {
 	WISPFUN_DEBUG("c3_f6");
-	if (m_DataReady == SOCKET_ERROR)
+	if (DataReady == SOCKET_ERROR)
 	{
-		LOG("CConnection::Read, m_DataReady=%i\n", m_DataReady);
+		LOG("CConnection::Read, m_DataReady=%i\n", DataReady);
 		Disconnect();
 	}
-	else if (m_Connected && m_Socket != INVALID_SOCKET)
+	else if (Connected && m_Socket != INVALID_SOCKET)
 	{
 		UCHAR_LIST data(maxSize);
 		int size = recv(m_Socket, (char*)&data[0], maxSize, 0);
@@ -143,15 +143,15 @@ bool CConnection::Read(const int &maxSize)
 			LOG("CConnection::Read, bad size=%i\n", size);
 	}
 	else
-		LOG("CConnection::Read, unknown state, m_Connected=%i, m_Socket=%i\n", m_Connected, m_Socket);
+		LOG("CConnection::Read, unknown state, m_Connected=%i, m_Socket=%i\n", Connected, m_Socket);
 
 	return false;
 }
 //----------------------------------------------------------------------------------
-int CConnection::Send(puchar data, const int &size)
+int CConnection::Send(puchar data, int size)
 {
 	WISPFUN_DEBUG("c3_f7");
-	if (!m_Connected || m_Socket == INVALID_SOCKET)
+	if (!Connected || m_Socket == INVALID_SOCKET)
 		return 0;
 
 	int sent = send(m_Socket, (char*)data, size, 0);

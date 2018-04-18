@@ -15,8 +15,8 @@ CGumpScreenGame::CGumpScreenGame()
 : CGump(GT_NONE, 0, 0, 0)
 {
 	WISPFUN_DEBUG("c115_f1");
-	m_NoMove = true;
-	m_NoClose = true;
+	NoMove = true;
+	NoClose = true;
 
 	Add(new CGUIButton(ID_GS_RESIZE, 0x0837, 0x0837, 0x0838, 0, 0));
 	Add(new CGUIGumppic(0x0E14, 0, 0));
@@ -70,11 +70,11 @@ void CGumpScreenGame::UpdateContent()
 			if (g_RenderBounds.GameWindowPosY < 0)
 				g_RenderBounds.GameWindowPosY = 0;
 
-			if (g_RenderBounds.GameWindowPosX + g_RenderBounds.GameWindowWidth > g_OrionWindow.Size.Width)
-				g_RenderBounds.GameWindowPosX = g_OrionWindow.Size.Width - g_RenderBounds.GameWindowWidth;
+			if (g_RenderBounds.GameWindowPosX + g_RenderBounds.GameWindowWidth > g_OrionWindow.GetSize().Width)
+				g_RenderBounds.GameWindowPosX = g_OrionWindow.GetSize().Width - g_RenderBounds.GameWindowWidth;
 
-			if (g_RenderBounds.GameWindowPosY + g_RenderBounds.GameWindowHeight > g_OrionWindow.Size.Height)
-				g_RenderBounds.GameWindowPosY = g_OrionWindow.Size.Height - g_RenderBounds.GameWindowHeight;
+			if (g_RenderBounds.GameWindowPosY + g_RenderBounds.GameWindowHeight > g_OrionWindow.GetSize().Height)
+				g_RenderBounds.GameWindowPosY = g_OrionWindow.GetSize().Height - g_RenderBounds.GameWindowHeight;
 		}
 	}
 }
@@ -164,7 +164,7 @@ void CGumpScreenGame::OnLeftMouseButtonUp()
 		if (g_ConfigManager.GameWindowHeight >= GetSystemMetrics(SM_CYSCREEN) - 60)
 			g_ConfigManager.GameWindowHeight = GetSystemMetrics(SM_CYSCREEN) - 60;
 
-		if (g_PacketManager.ClientVersion >= CV_200)
+		if (g_PacketManager.GetClientVersion() >= CV_200)
 			CPacketGameWindowSize().Send();
 	}
 	else //scope
@@ -178,11 +178,11 @@ void CGumpScreenGame::OnLeftMouseButtonUp()
 		if (g_ConfigManager.GameWindowY < 1)
 			g_ConfigManager.GameWindowY = 0;
 
-		if (g_ConfigManager.GameWindowX + g_ConfigManager.GameWindowWidth > g_OrionWindow.Size.Width)
-			g_ConfigManager.GameWindowX = g_OrionWindow.Size.Width - g_ConfigManager.GameWindowWidth;
+		if (g_ConfigManager.GameWindowX + g_ConfigManager.GameWindowWidth > g_OrionWindow.GetSize().Width)
+			g_ConfigManager.GameWindowX = g_OrionWindow.GetSize().Width - g_ConfigManager.GameWindowWidth;
 
-		if (g_ConfigManager.GameWindowY + g_ConfigManager.GameWindowHeight > g_OrionWindow.Size.Height)
-			g_ConfigManager.GameWindowY = g_OrionWindow.Size.Height - g_ConfigManager.GameWindowHeight;
+		if (g_ConfigManager.GameWindowY + g_ConfigManager.GameWindowHeight > g_OrionWindow.GetSize().Height)
+			g_ConfigManager.GameWindowY = g_OrionWindow.GetSize().Height - g_ConfigManager.GameWindowHeight;
 	}
 }
 //----------------------------------------------------------------------------------

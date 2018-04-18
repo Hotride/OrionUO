@@ -13,19 +13,27 @@
 //Класс для работы с объектами рендера
 class CRenderObject : public CBaseQueueItem
 {
-	SETGET(uint, Serial, 0);
-	SETGET(ushort, Graphic, 0);
-	SETGET(ushort, Color, 0);
-	SETGETE(int, X, 0);
-	SETGETE(int, Y, 0);
-	SETGET(int, RealDrawX, 0);
-	SETGET(int, RealDrawY, 0);
-	SETGET(int, DrawX, 0);
-	SETGET(int, DrawY, 0);
-	SETGET(bool, Changed, true);
-
 public:
-	CRenderObject(const uint &serial, const ushort &graphic, const ushort &color, const short &x, const short &y);
+	uint Serial = 0;
+	ushort Graphic = 0;
+	ushort Color = 0;
+protected:
+    int m_X = 0;
+public:
+    int GetX() { return m_X; };
+    void SetX(int val);
+protected:
+    int m_Y = 0;
+public:
+    int GetY() { return m_Y; };
+    void SetY(int val);
+	int RealDrawX = 0;
+	int RealDrawY = 0;
+	int DrawX = 0;
+	int DrawY = 0;
+	bool Changed = true;
+
+	CRenderObject(int serial, ushort graphic, ushort color, short x, short y);
 	virtual ~CRenderObject();
 
 	//Подготовка текстур

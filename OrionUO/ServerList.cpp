@@ -19,9 +19,9 @@ CServer::CServer()
 {
 }
 //----------------------------------------------------------------------------------
-CServer::CServer(const ushort &index, const string &name, const uchar &fullPercent, const uchar &timezone, const uint &ip, const bool &selected)
-: m_Index(index), m_Name(name), m_FullPercent(fullPercent), m_Timezone(timezone),
-m_IP(ip), m_Selected(selected)
+CServer::CServer(ushort index, const string &name, uchar fullPercent, uchar timezone, int ip, bool selected)
+: Index(index), Name(name), FullPercent(fullPercent), Timezone(timezone),
+IP(ip), Selected(selected)
 {
 }
 //----------------------------------------------------------------------------------
@@ -80,7 +80,7 @@ void CServerList::ParsePacket(WISP_DATASTREAM::CDataReader &reader)
 	g_ServerScreen.UpdateContent();
 }
 //----------------------------------------------------------------------------------
-CServer *CServerList::GetServer(const uint &index)
+CServer *CServerList::GetServer(int index)
 {
 	WISPFUN_DEBUG("c206_f3");
 	if (index < m_Servers.size())

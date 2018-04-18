@@ -11,10 +11,10 @@
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
 //----------------------------------------------------------------------------------
-CGUIHitBox::CGUIHitBox(const uint &serial, const int &x, const int &y, const int &width, const int &height, const bool &callOnMouseUp)
+CGUIHitBox::CGUIHitBox(int serial, int x, int y, int width, int height, bool callOnMouseUp)
 : CGUIPolygonal(GOT_HITBOX, x, y, width, height, callOnMouseUp)
 {
-	m_Serial = serial;
+	Serial = serial;
 }
 //----------------------------------------------------------------------------------
 CGUIHitBox::~CGUIHitBox()

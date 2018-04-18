@@ -13,12 +13,12 @@
 //!Класс города (для старых клиентов)
 class CCityItem
 {
-	SETGET(uchar, LocationIndex, 0);
-	SETGET(string, Name, "");
-	SETGET(string, Area, "");
-	SETGET(bool, Selected, false);
-
 public:
+	uchar LocationIndex = 0;
+	string Name = "";
+	string Area = "";
+	bool Selected = false;
+
 	CCityItem();
 	virtual ~CCityItem();
 
@@ -41,13 +41,13 @@ public:
 //!Класс города (для новых клиентов)
 class CCityItemNew : public CCityItem
 {
-	SETGET(uint, X, 0);
-	SETGET(uint, Y, 0);
-	SETGET(uint, Z, 0);
-	SETGET(uint, MapIndex, 0);
-	SETGET(uint, Cliloc, 0);
-
 public:
+	uint X = 0;
+	uint Y = 0;
+	uint Z = 0;
+	uint MapIndex = 0;
+	uint Cliloc = 0;
+
 	CCityItemNew();
 	virtual ~CCityItemNew();
 
@@ -72,7 +72,7 @@ public:
 
 	void AddCity(CCityItem *city) { m_CityList.push_back(city); }
 
-	CCityItem *GetCity(const uint &index);
+	CCityItem *GetCity(int index);
 
 	void Clear();
 };

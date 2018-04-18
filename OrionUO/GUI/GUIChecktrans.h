@@ -15,10 +15,10 @@
 class CGUIChecktrans : public CGUIPolygonal
 {
 public:
-	CGUIChecktrans(const int &x, const int &y, const int &width, const int &height);
+	CGUIChecktrans(int x, int y, int width, int height);
 	virtual ~CGUIChecktrans();
 
-	virtual void Draw(const bool &checktrans = false);
+	virtual void Draw(bool checktrans = false);
 	virtual bool Select() { return false; }
 };
 //----------------------------------------------------------------------------------

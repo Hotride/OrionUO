@@ -23,7 +23,7 @@ CBaseScreen::CBaseScreen(CGump &gump)
 @param [__in] mode true - отрисовка, false - выбор
 @return При выборе объектов - идентификатор выбранного объекта
 */
-void CBaseScreen::Render(const bool &mode)
+void CBaseScreen::Render(bool mode)
 {
 	WISPFUN_DEBUG("c159_f1");
 	if (mode)
@@ -41,7 +41,7 @@ void CBaseScreen::Render(const bool &mode)
 
 		DrawSmoothMonitorEffect();
 
-		g_MouseManager.Draw(m_CursorGraphic);
+		g_MouseManager.Draw(CursorGraphic);
 
 		g_GL.EndDraw();
 	}
@@ -74,7 +74,7 @@ void CBaseScreen::Render(const bool &mode)
 int CBaseScreen::DrawSmoothMonitor()
 {
 	WISPFUN_DEBUG("c159_f2");
-	if (g_ScreenEffectManager.Process() && m_SmoothScreenAction)
+	if (g_ScreenEffectManager.Process() && SmoothScreenAction)
 	{
 		ProcessSmoothAction();
 
@@ -105,7 +105,7 @@ void CBaseScreen::CreateSmoothAction(BYTE action)
 {
 	WISPFUN_DEBUG("c159_f4");
 	if (g_ScreenEffectManager.UseSunset())
-		m_SmoothScreenAction = action;
+		SmoothScreenAction = action;
 	else
 		ProcessSmoothAction(action);
 }

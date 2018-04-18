@@ -11,11 +11,11 @@
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
 //----------------------------------------------------------------------------------
-CCustomHouseMultiObject::CCustomHouseMultiObject(const ushort &graphic, const ushort &color, const short &x, const short &y, const char &z, const uint &flags)
+CCustomHouseMultiObject::CCustomHouseMultiObject(ushort graphic, ushort color, short x, short y, char z, int flags)
 : CMultiObject(graphic, x, y, z, flags)
 {
 	WISPFUN_DEBUG("");
-	m_Color = color;
+	Color = color;
 }
 //----------------------------------------------------------------------------------
 CCustomHouseMultiObject::~CCustomHouseMultiObject()

@@ -27,9 +27,9 @@ struct WEB_LINK_RECT
 //----------------------------------------------------------------------------------
 class CGLTextTexture : public CGLTexture
 {
-	SETGET(int, LinesCount, 0);
-
 public:
+	int LinesCount = 0;
+
 	CGLTextTexture();
 	virtual ~CGLTextTexture();
 
@@ -38,7 +38,7 @@ public:
 	virtual void Clear();
 
 	//Отрисовать текстуру
-	virtual void Draw(const int &x, const int &y, const bool &checktrans = false);
+	virtual void Draw(int x, int y, bool checktrans = false);
 
 	//Очистка веб-ссылки
 	virtual void ClearWebLink() {}

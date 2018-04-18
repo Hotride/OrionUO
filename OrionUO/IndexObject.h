@@ -12,16 +12,15 @@
 //----------------------------------------------------------------------------------
 class CIndexObject
 {
-	SETGET(size_t, Address, 0);
-	SETGET(int, DataSize, 0);
-	SETGET(int, Width, 0);
-	SETGET(int, Height, 0);
-	SETGET(ushort, ID, 0);
-	SETGET(ushort, Color, 0);
-	SETGET(uint, LastAccessTime, 0);
-	SETGETP(CUopBlockHeader*, UopBlock, NULL);
-
 public:
+	size_t Address = 0;
+	int DataSize = 0;
+	int Width = 0;
+	int Height = 0;
+	ushort ID = 0;
+	ushort Color = 0;
+	uint LastAccessTime = 0;
+	CUopBlockHeader* UopBlock = NULL;
 	CIndexObject();
 	virtual ~CIndexObject();
 	virtual void ReadIndexFile(const size_t &address, PBASE_IDX_BLOCK ptr, const ushort id);
@@ -30,32 +29,32 @@ public:
 //----------------------------------------------------------------------------------
 class CIndexObjectLand : public CIndexObject
 {
-	SETGET(bool, AllBlack, false);
-
 public:
+	bool AllBlack = false;
+
 	CIndexObjectLand();
 	virtual ~CIndexObjectLand();
 };
 //----------------------------------------------------------------------------------
 class CIndexObjectStatic : public CIndexObject
 {
-	SETGET(ushort, Index, 0);
-	SETGET(char, Offset, 0);
-	SETGET(char, AnimIndex, 0);
-	SETGET(uint, ChangeTime, 0);
-	SETGET(ushort, LightColor, 0);
-	SETGET(bool, IsFiled, false);
-
 public:
+	ushort Index = 0;
+	char Offset = 0;
+	char AnimIndex = 0;
+	uint ChangeTime = 0;
+	ushort LightColor = 0;
+	bool IsFiled = false;
+
 	CIndexObjectStatic();
 	virtual ~CIndexObjectStatic();
 };
 //----------------------------------------------------------------------------------
 class CIndexSound : public CIndexObject
 {
-	SETGET(uint, Delay, 0);
-
 public:
+	uint Delay = 0;
+
 	CIndexSound();
 	virtual ~CIndexSound();
 
@@ -65,9 +64,9 @@ public:
 //----------------------------------------------------------------------------------
 class CIndexMulti : public CIndexObject
 {
-	SETGET(uint, Count, 0);
-
 public:
+	uint Count = 0;
+
 	CIndexMulti();
 	virtual ~CIndexMulti();
 	virtual void ReadIndexFile(const size_t &address, PBASE_IDX_BLOCK ptr, const ushort id) override;
@@ -91,14 +90,14 @@ public:
 //---------------------------------------------------------------------------
 class CIndexAnimation
 {
-	SETGET(ushort, Graphic, 0);
-	SETGET(ushort, Color, 0);
-	SETGET(ANIMATION_GROUPS_TYPE, Type, AGT_UNKNOWN);
-	SETGET(uint, Flags, 0);
-	SETGET(char, MountedHeightOffset, 0);
-	SETGET(bool, IsUOP, false);
-
 public:
+	ushort Graphic = 0;
+	ushort Color = 0;
+	ANIMATION_GROUPS_TYPE Type = AGT_UNKNOWN;
+	uint Flags = 0;
+	char MountedHeightOffset = 0;
+	bool IsUOP = false;
+
 	CIndexAnimation();
 	virtual ~CIndexAnimation();
 
@@ -107,10 +106,10 @@ public:
 //---------------------------------------------------------------------------
 class CIndexMusic
 {
-	SETGET(string, FilePath, "");
-	SETGET(bool, Loop, false);
-
 public:
+	string FilePath = "";
+	bool Loop = false;
+
 	CIndexMusic();
 	virtual ~CIndexMusic();
 };

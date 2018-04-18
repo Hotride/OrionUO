@@ -9,7 +9,7 @@ class CThread
 {
 private:
 	HANDLE m_Handle{ 0 };
-	UINT m_ID{ 0 };
+	UINT ID{ 0 };
 	CRITICAL_SECTION m_CriticalSection;
 	bool m_Paused{ false };
 	bool m_Cycled{ false };

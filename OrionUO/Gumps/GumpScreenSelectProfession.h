@@ -29,8 +29,8 @@ private:
 	void UpdateContentOld();
 	void UpdateContentNew();
 
-	void ShuffleStats(const int &id, const int &maxSum, const int &maxVal);
-	void ShuffleSkills(const int &id);
+	void ShuffleStats(int id, int maxSum, int maxVal);
+	void ShuffleSkills(int id);
 
 	CGUISlider *m_StatsSliders[3];
 	CGUISlider *m_SkillsSliders[4];

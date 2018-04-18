@@ -65,7 +65,7 @@ wstring ToUpperW(wstring str);
 bool Int32TryParse(string str, int &result);
 bool ToBool(const string &str);
 //----------------------------------------------------------------------------------
-inline float deg2radf(const float &degr)
+inline float deg2radf(float degr)
 {
 	return degr * (float)(M_PI / 180.0f);
 }

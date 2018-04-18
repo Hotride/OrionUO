@@ -61,7 +61,7 @@ CPlugin::CPlugin(uint flags)
 	memset(m_PPS, 0, sizeof(PLUGIN_INTERFACE));
 
 	m_PPS->WindowHandle = g_OrionWindow.Handle;
-	m_PPS->ClientVersion = g_PacketManager.ClientVersion;
+	m_PPS->ClientVersion = g_PacketManager.GetClientVersion();
 	m_PPS->ClientFlags = (g_FileManager.UseVerdata ? 0x01 : 0);
 }
 //----------------------------------------------------------------------------------
@@ -102,7 +102,7 @@ LRESULT CPluginManager::WindowProc(HWND hWnd, UINT msg, WPARAM wparam, LPARAM lp
 	return result;
 }
 //----------------------------------------------------------------------------------
-bool CPluginManager::PacketRecv(puchar buf, const int &size)
+bool CPluginManager::PacketRecv(puchar buf, int size)
 {
 	WISPFUN_DEBUG("c152_f2");
 	bool result = true;
@@ -121,7 +121,7 @@ bool CPluginManager::PacketRecv(puchar buf, const int &size)
 	return result;
 }
 //----------------------------------------------------------------------------------
-bool CPluginManager::PacketSend(puchar buf, const int &size)
+bool CPluginManager::PacketSend(puchar buf, int size)
 {
 	WISPFUN_DEBUG("c152_f3");
 	bool result = true;

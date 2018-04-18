@@ -11,10 +11,10 @@
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
 //----------------------------------------------------------------------------------
-CGUIResizeButton::CGUIResizeButton(const uint &serial, const ushort &graphic, const ushort &graphicSelected, const ushort &graphicPressed, const int &x, const int &y)
+CGUIResizeButton::CGUIResizeButton(int serial, ushort graphic, ushort graphicSelected, ushort graphicPressed, int x, int y)
 : CGUIButton(serial, graphic, graphicSelected, graphicPressed, x, y)
 {
-	m_Type = GOT_RESIZEBUTTON;
+	Type = GOT_RESIZEBUTTON;
 }
 //----------------------------------------------------------------------------------
 CGUIResizeButton::~CGUIResizeButton()

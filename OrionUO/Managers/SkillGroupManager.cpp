@@ -52,7 +52,7 @@ void CSkillGroupManager::MakeDefaultMiscellaneous()
 {
 	WISPFUN_DEBUG("c155_f2");
 	CSkillGroupObject *group = new CSkillGroupObject();
-	group->SetName("Miscellaneous");
+	group->Name = "Miscellaneous";
 	group->Add(4);
 	group->Add(6);
 	group->Add(10);
@@ -70,7 +70,7 @@ void CSkillGroupManager::MakeDefaultCombat()
 	int cnt = g_SkillsManager.Count;
 
 	CSkillGroupObject *group = new CSkillGroupObject();
-	group->SetName("Combat");
+	group->Name = "Combat";
 	group->Add(1);
 	group->Add(31);
 	group->Add(42);
@@ -95,7 +95,7 @@ void CSkillGroupManager::MakeDefaultTradeSkills()
 {
 	WISPFUN_DEBUG("c155_f4");
 	CSkillGroupObject *group = new CSkillGroupObject();
-	group->SetName("Trade Skills");
+	group->Name = "Trade Skills";
 	group->Add(0);
 	group->Add(7);
 	group->Add(8);
@@ -116,7 +116,7 @@ void CSkillGroupManager::MakeDefaultMagic()
 	int cnt = g_SkillsManager.Count;
 
 	CSkillGroupObject *group = new CSkillGroupObject();
-	group->SetName("Magic");
+	group->Name = "Magic";
 	group->Add(16);
 	if (cnt > 56) group->Add(56); //Imbuing
 	group->Add(25);
@@ -134,7 +134,7 @@ void CSkillGroupManager::MakeDefaultWilderness()
 {
 	WISPFUN_DEBUG("c155_f6");
 	CSkillGroupObject *group = new CSkillGroupObject();
-	group->SetName("Wilderness");
+	group->Name = "Wilderness";
 	group->Add(2);
 	group->Add(35);
 	group->Add(18);
@@ -149,7 +149,7 @@ void CSkillGroupManager::MakeDefaultThieving()
 {
 	WISPFUN_DEBUG("c155_f7");
 	CSkillGroupObject *group = new CSkillGroupObject();
-	group->SetName("Thieving");
+	group->Name = "Thieving";
 	group->Add(14);
 	group->Add(21);
 	group->Add(24);
@@ -166,7 +166,7 @@ void CSkillGroupManager::MakeDefaultBard()
 {
 	WISPFUN_DEBUG("c155_f8");
 	CSkillGroupObject *group = new CSkillGroupObject();
-	group->SetName("Bard");
+	group->Name = "Bard";
 	group->Add(15);
 	group->Add(29);
 	group->Add(9);
@@ -193,7 +193,7 @@ void CSkillGroupManager::Clear()
 		item = next;
 	}
 
-	m_Count = 0;
+	Count = 0;
 	m_Groups = NULL;
 }
 //----------------------------------------------------------------------------------
@@ -210,7 +210,7 @@ void CSkillGroupManager::Add(CSkillGroupObject *group)
 		m_Groups = group;
 		m_Groups->m_Next = NULL;
 		m_Groups->m_Prev = NULL;
-		m_Count = 1;
+		Count = 1;
 
 		return;
 	}
@@ -224,7 +224,7 @@ void CSkillGroupManager::Add(CSkillGroupObject *group)
 	group->m_Next = NULL;
 	group->m_Prev = item;
 
-	m_Count++;
+	Count++;
 }
 //----------------------------------------------------------------------------------
 /*!
@@ -251,10 +251,10 @@ bool CSkillGroupManager::Remove(CSkillGroupObject *group)
 	}
 	else
 	{
-		m_Count--;
+		Count--;
 
-		if (m_Count < 0)
-			m_Count = 0;
+		if (Count < 0)
+			Count = 0;
 
 		if (group->m_Next != NULL)
 			group->m_Next->m_Prev = group->m_Prev;
@@ -298,7 +298,7 @@ bool CSkillGroupManager::Load(string path)
 
 			short length = file.ReadUInt16LE();
 			string str = file.ReadString(length);
-			group->SetName(str);
+			group->Name = str;
 
 			short skills = file.ReadUInt16LE();
 
@@ -341,30 +341,30 @@ void CSkillGroupManager::Save(string path)
 	
 	writter.WriteUInt8(0); //version
 	
-	m_Count = 0;
+	Count = 0;
 	CSkillGroupObject *group = m_Groups;
 	while (group != NULL)
 	{
-		m_Count++;
+		Count++;
 		group = group->m_Next;
 	}
 	
-	writter.WriteUInt16LE(m_Count); //Count
+	writter.WriteUInt16LE(Count); //Count
 
 	group = m_Groups;
 
-	IFOR(i, 0, m_Count)
+	IFOR(i, 0, Count)
 	{
-		string str = group->GetName();
+		string str = group->Name;
 		size_t len = str.length() + 1;
 
-		short size = (short)len + 2 + 2 + 2 + group->GetCount();
+		short size = (short)len + 2 + 2 + 2 + group->Count;
 		writter.WriteUInt16LE(size); //Block size
 		
 		writter.WriteUInt16LE((short)len); //Name length
 		writter.WriteString(str, false); //Name
 		
-		short count = group->GetCount();
+		short count = group->Count;
 
 		writter.WriteUInt16LE(count); //Skills count
 
