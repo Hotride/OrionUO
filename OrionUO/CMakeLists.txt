@@ -9,12 +9,23 @@ if(CMAKE_SYSTEM_NAME MATCHES "Windows")
   add_definitions(-D_CRT_SECURE_NO_DEPRECATE)
 endif()
 
+if(ORION_DLL_STATIC)
+  add_definitions(-DUSE_ORIONDLL=0)
+else()
+  add_definitions(-DUSE_ORIONDLL=1)
+endif()
+
+if(ORION_WISP)
+  add_definitions(-DUSE_WISP=1)
+else()
+  add_definitions(-DUSE_WISP=0)
+endif()
+
 if(CMAKE_C_COMPILER_ID MATCHES "MSVC")
   # enable the latest C++ standard feature set,
   # and also disable MSVC specific extensions
   # to be even more standards compliant.
   check_and_add_flag(CPPLATEST /std:c++latest)
-  check_and_add_flag(STANDARD_COMPLIANCE /permissive-)
 else()
   # Enable C++17, but fall back to C++14 if it isn't available.
   # CMAKE_CXX_STANDARD cannot be used here because we require C++14 or newer, not any standard.
@@ -34,40 +45,40 @@ add_definitions(-D__STDC_LIMIT_MACROS)
 add_definitions(-D__STDC_CONSTANT_MACROS)
 
 set(wisp_src
-  Wisp/WispApplication.cpp        
-  Wisp/WispConnection.cpp  
-  Wisp/WispGeometry.cpp  
-  Wisp/WispLogger.cpp      
-  Wisp/WispMouse.cpp          
-  Wisp/WispPacketReader.cpp    
-  Wisp/WispThread.cpp         
+  Wisp/WispApplication.cpp
+  Wisp/WispConnection.cpp
+  Wisp/WispGeometry.cpp
+  Wisp/WispLogger.cpp
+  Wisp/WispMouse.cpp
+  Wisp/WispPacketReader.cpp
+  Wisp/WispThread.cpp
   Wisp/WispWindow.cpp
-  Wisp/WispBinaryFileWritter.cpp  
-  Wisp/WispDataStream.cpp  
-  Wisp/WispGlobal.cpp    
-  Wisp/WispMappedFile.cpp  
-  Wisp/WispPacketMessage.cpp  
-  Wisp/WispTextFileParser.cpp  
+  Wisp/WispBinaryFileWritter.cpp
+  Wisp/WispDataStream.cpp
+  Wisp/WispGlobal.cpp
+  Wisp/WispMappedFile.cpp
+  Wisp/WispPacketMessage.cpp
+  Wisp/WispTextFileParser.cpp
   Wisp/WispThreadedTimer.cpp
 )
 
 set(gameobjects_src
-  GameObjects/CustomHouseMultiObject.cpp  
-  GameObjects/GameEffect.cpp        
-  GameObjects/GameItem.cpp    
-  GameObjects/GameWorld.cpp   
-  GameObjects/MapObject.cpp       
+  GameObjects/CustomHouseMultiObject.cpp
+  GameObjects/GameEffect.cpp
+  GameObjects/GameItem.cpp
+  GameObjects/GameWorld.cpp
+  GameObjects/MapObject.cpp
   GameObjects/RenderStaticObject.cpp
-  GameObjects/CustomHouseObjects.cpp      
-  GameObjects/GameEffectDrag.cpp    
-  GameObjects/GameObject.cpp  
-  GameObjects/LandObject.cpp  
-  GameObjects/MultiObject.cpp     
+  GameObjects/CustomHouseObjects.cpp
+  GameObjects/GameEffectDrag.cpp
+  GameObjects/GameObject.cpp
+  GameObjects/LandObject.cpp
+  GameObjects/MultiObject.cpp
   GameObjects/StaticObject.cpp
-  GameObjects/GameCharacter.cpp           
-  GameObjects/GameEffectMoving.cpp  
-  GameObjects/GamePlayer.cpp  
-  GameObjects/MapBlock.cpp    
+  GameObjects/GameCharacter.cpp
+  GameObjects/GameEffectMoving.cpp
+  GameObjects/GamePlayer.cpp
+  GameObjects/MapBlock.cpp
   GameObjects/ObjectOnCursor.cpp
 )
 
@@ -134,7 +145,7 @@ set(gui_src
   GUI/GUITilepic.cpp
   GUI/GUITilepicHightlighted.cpp
   GUI/GUITilepicScaled.cpp
-  GUI/GUIVirtireGump.cpp
+  GUI/GUIVirtireGump.cpp             # FIXME: filename GUIVirtureGump
   GUI/GUIWorldMapTexture.cpp
 )
 
@@ -267,6 +278,14 @@ set(walker_src
   Walker/Walker.cpp
 )
 
+set(crypt_src
+  Crypt/GameCrypt.cpp
+  Crypt/LoginCrypt.cpp
+  Crypt/md5.cpp
+  Crypt/twofish.cpp
+  Crypt/CryptEntry.cpp
+)
+
 set(orion_src
   BaseQueue.cpp
   CharacterList.cpp
@@ -303,8 +322,10 @@ set(orion_src
   ToolTip.cpp
   UseItemsList.cpp
   Weather.cpp
-  WeatherEffeect.cpp
+  WeatherEffeect.cpp            # FIXME: filename
 
+  FileSystem.cpp
+  OrionMain.cpp
   Stubs.cpp                     # FIXME: temporary stubbed stuff
 )
 
@@ -335,11 +356,13 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
 endif()
 
 macro(orion_library TARGET SRCS)
-  add_library(${TARGET} ${SRCS})
+  string(REPLACE ".cpp" ".h" headers "${SRCS}")
+  string(REPLACE "GUI/GUIVirtireGump.h" "GUI/GUIVirtureGump.h" headers "${headers}")
+  string(REPLACE "Crypt/twofish.h" "" headers "${headers}")
+  add_library(${TARGET} ${SRCS} ${headers})
   set_target_properties(${TARGET} PROPERTIES COTIRE_CXX_PREFIX_HEADER_INIT "stdafx.h")
   cotire(${TARGET})
 endmacro()
-
 
 if(ORION_BUILD_MODULES)
   orion_library(wisp "${wisp_src}")
@@ -353,18 +376,25 @@ if(ORION_BUILD_MODULES)
   orion_library(textengine "${textengine_src}")
   orion_library(utility "${utility_src}")
   orion_library(walker "${walker_src}")
+  orion_library(crypt "${crypt_src}")
 
-  add_executable(OrionUO ${orion_src})
+  string(REPLACE ".cpp" ".h" orion_hdr "${orion_src}")
+  string(REPLACE "WeatherEffeect.h" "WeatherEffect.h" orion_hdr "${orion_hdr}")
+  add_executable(OrionUO ${orion_src} ${orion_hdr})
   target_link_libraries(screenstages PRIVATE gumps)
   target_link_libraries(gumps PRIVATE managers)
-  target_link_libraries(OrionUO PUBLIC managers network gumps screenstages gameobjects glengine gui textengine utility walker wisp)
+  target_link_libraries(OrionUO PUBLIC managers network gumps screenstages gameobjects glengine gui textengine utility walker crypt wisp)
 else()
-  set(SRCS ${orion_src} ${gameobjects_src} ${glengine_src} ${gui_src} ${gumps_src} ${managers_src} ${network_src} ${screenstages_src} ${textengine_src} ${utility_src} ${walker_src} ${wisp_src})
-  source_group(TREE "${PROJECT_SOURCE_DIR}/OrionUO/" FILES ${SRCS})
-  add_executable(OrionUO ${SRCS})
+  set(SRCS ${orion_src} ${gameobjects_src} ${glengine_src} ${gui_src} ${gumps_src} ${managers_src} ${network_src} ${screenstages_src} ${textengine_src} ${utility_src} ${walker_src} ${crypt_src} ${wisp_src})
+  string(REPLACE ".cpp" ".h" headers "${SRCS}")
+  string(REPLACE "WeatherEffeect.h" "WeatherEffect.h" headers "${headers}")
+  string(REPLACE "GUI/GUIVirtireGump.h" "GUI/GUIVirtureGump.h" headers "${headers}")
+  string(REPLACE "Crypt/twofish.h" "" headers "${headers}")
+  source_group(TREE "${PROJECT_SOURCE_DIR}/OrionUO/" FILES ${SRCS} ${headers})
+  add_executable(OrionUO ${SRCS} ${headers})
 endif()
 
-target_link_libraries(OrionUO PUBLIC ${SDL2_LIBRARIES} ${SDL2_IMAGE_LIBRARIES} ${ZLIB_LIBRARIES} ${OPENGL_LIBRARIES} ${FREEIMAGE_LIBRARIES} ${GLEW_LIBRARIES} ${THREAD})
+target_link_libraries(OrionUO PUBLIC ${SDL2_LIBRARIES} ${SDL2_IMAGE_LIBRARIES} ${ZLIB_LIBRARIES} ${OPENGL_LIBRARIES} ${FREEIMAGE_LIBRARIES} ${GLEW_LIBRARIES} ${THREAD} -lm)
 
 set_target_properties(OrionUO PROPERTIES COTIRE_CXX_PREFIX_HEADER_INIT "stdafx.h")
 cotire(OrionUO)

@@ -1,4 +1,4 @@
-﻿// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 /***********************************************************************************
 **
@@ -10,6 +10,7 @@
 */
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
+#include "FileSystem.h"
 //----------------------------------------------------------------------------------
 const int m_Scales[7] = { 1, 1, 1, 2, 4, 6, 10 };
 //----------------------------------------------------------------------------------
@@ -318,18 +319,16 @@ void CGumpWorldMap::LoadMap(int map)
 			}
 		}
 
-		string path = g_App.ExeFilePath("OrionData/WorldMap%08X.cuo", crc32);
+		auto path = g_App.ExeFilePath("OrionData/WorldMap%08X.cuo", crc32);
 		bool fromFile = false;
 
 		USHORT_LIST buf;
 
-		if (PathFileExistsA(path.c_str()))
+		if (fs_path_exists(path))
 		{
 			fromFile = true;
-			FILE *mapFile = NULL;
-			fopen_s(&mapFile, path.c_str(), "rb");
-
-			if (mapFile != NULL)
+			FILE *mapFile = fs_open(path, FS_READ); // "rb"
+			if (mapFile != nullptr)
 			{
 				fseek(mapFile, 0, SEEK_END);
 				long size = ftell(mapFile) / sizeof(short);
@@ -340,12 +339,12 @@ void CGumpWorldMap::LoadMap(int map)
 				if (buf.size() != size)
 				{
 					LOG("Allocation pixels memory for World Map failed (want size: %i)\n", size);
-					fclose(mapFile);
+					fs_close(mapFile);
 					return;
 				}
 
 				size_t readed = fread(&buf[0], sizeof(short), size, mapFile);
-				fclose(mapFile);
+				fs_close(mapFile);
 
 				if (readed != size)
 				{
@@ -356,7 +355,7 @@ void CGumpWorldMap::LoadMap(int map)
 					LOG("World map readed from file!\n");
 			}
 			else
-				LOG("Error open world map file: %s\n", path.c_str());
+				LOG("Error open world map file: %s\n", CStringFromPath(path));
 		}
 		
 		int wantSize = g_MapSize[map].Width * g_MapSize[map].Height;
@@ -451,15 +450,13 @@ void CGumpWorldMap::LoadMap(int map)
 				}
 			}
 
-			CreateDirectoryA(g_App.ExeFilePath("OrionData").c_str(), NULL);
+			fs_path_create(g_App.ExeFilePath("OrionData"));
 
-			FILE *mapFile = NULL;
-			fopen_s(&mapFile, path.c_str(), "wb");
-
-			if (mapFile != NULL)
+			FILE *mapFile = fs_open(path, FS_WRITE); // "wb"
+			if (mapFile != nullptr)
 			{
 				size_t written = fwrite(&buf[0], sizeof(short), buf.size(), mapFile);
-				fclose(mapFile);
+				fs_close(mapFile);
 				
 				LOG("Write world map file, want=%i, written=%i\n", buf.size(), written);
 			}

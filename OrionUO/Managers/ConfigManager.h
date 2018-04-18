@@ -262,7 +262,7 @@ public:
 	@param [__in] path Путь к файлу с конфигом
 	@return 
 	*/
-	bool LoadBin(string path);
+	bool LoadBin(const os_path &path);
 
 	int GetConfigKeyCode(const string &key);
 
@@ -395,9 +395,9 @@ public:
 		CMKC_COUNT
 	};
 
-	bool Load(const string &path);
+	bool Load(const os_path &path);
 
-	void Save(const string &path);
+	void Save(const os_path &path);
  };
  //----------------------------------------------------------------------------------
 //!Менеджер конфига

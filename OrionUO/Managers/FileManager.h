@@ -1,4 +1,4 @@
-﻿/***********************************************************************************
+/***********************************************************************************
 **
 ** FileManager.h
 **
@@ -126,9 +126,9 @@ public:
 
 private:
 	void ReadTask();
-	static bool FileExists(const std::string& filename);
+	static bool FileExists(const os_path &filename);
 
-	static bool TryOpenFileStream(std::fstream &fileStream, std::string filePath);
+	static bool TryOpenFileStream(std::fstream &fileStream, const os_path &filePath);
 
 	bool LoadUOPFile(CUopMappedFile &file, const char *fileName);
 };

@@ -1,4 +1,4 @@
-﻿// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 /***********************************************************************************
 **
@@ -10,6 +10,7 @@
 */
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
+#include "FileSystem.h"
 //----------------------------------------------------------------------------------
 CMacroManager g_MacroManager;
 //----------------------------------------------------------------------------------
@@ -134,11 +135,11 @@ ushort CMacroManager::ConvertStringToKeyCode(const STRING_LIST &strings)
 @param [__in] path Путь к файлу с макросами
 @return true при успешном конвертировании
 */
-bool CMacroManager::Convert(const string &path)
+bool CMacroManager::Convert(const os_path &path)
 {
 	WISPFUN_DEBUG("c145_f2");
 	WISP_FILE::CTextFileParser file(path, "", "", "");
-	WISP_FILE::CTextFileParser unicodeParser("", " ", "", "");
+	WISP_FILE::CTextFileParser unicodeParser({}, " ", "", "");
 
 	//Позиции доп. кнопок в списке, индексация с конца, т.е. strings.size() - position
 	const int MACRO_POSITION_ALT = 2;
@@ -253,7 +254,7 @@ bool CMacroManager::Convert(const string &path)
 			Add(macro);
 	}
 
-	return PathFileExistsA(path.c_str());
+	return fs_path_exists(path);
 }
 //----------------------------------------------------------------------------------
 /*!
@@ -261,7 +262,7 @@ bool CMacroManager::Convert(const string &path)
 @param [__in] path Путь к файлу конфига
 @return 
 */
-bool CMacroManager::Load(const string &path, const string &originalPath)
+bool CMacroManager::Load(const os_path &path, const os_path &originalPath)
 {
 	WISPFUN_DEBUG("c145_f3");
 	bool result = false;
@@ -293,7 +294,7 @@ bool CMacroManager::Load(const string &path, const string &originalPath)
 @param [__in] path Путь к файлу конфига
 @return 
 */
-void CMacroManager::Save(const string &path)
+void CMacroManager::Save(const os_path &path)
 {
 	WISPFUN_DEBUG("c145_f4");
 	WISP_FILE::CBinaryFileWritter writter;

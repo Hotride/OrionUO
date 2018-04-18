@@ -29,6 +29,7 @@
 *.pdb
 *.sf2
 /.vs
+/.vscode
 /Makefile*
 /ipch
 /OrionUO/snapshots

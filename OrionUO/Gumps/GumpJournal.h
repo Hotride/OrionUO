@@ -1,4 +1,4 @@
-﻿/***********************************************************************************
+/***********************************************************************************
 **
 ** GumpJournal.h
 **
@@ -17,7 +17,7 @@ private:
 	static const int ID_GJ_SHOW_OBJECTS = 2;
 	static const int ID_GJ_SHOW_CLIENT = 3;
 	static const int ID_GJ_BUTTON_LOCK = 4;
-	static const int ID_GJ_LOCK_MOVING = 5;
+	static constexpr int ID_GJ_LOCK_MOVING = 5;
 
 	CGUIGumppic *m_BottomLine{ NULL };
 	CGUIButton *m_TextLocker{ NULL };

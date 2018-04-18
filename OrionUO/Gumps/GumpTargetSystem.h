@@ -1,4 +1,4 @@
-﻿/***********************************************************************************
+/***********************************************************************************
 **
 ** GumpTargetSystem.h
 **
@@ -15,8 +15,8 @@ class CGumpTargetSystem : public CGump
 	string OldName = "";
 
 private:
-	static const int ID_GSB_BUFF_GUMP = 1;
-	static const int ID_GSB_LOCK_MOVING = 2;
+	const int ID_GSB_BUFF_GUMP = 1;
+	const int ID_GSB_LOCK_MOVING = 2;
 
 	CGUIGumppic *m_Body{ NULL };
 	CGUIDataBox *m_DataBox{ NULL };

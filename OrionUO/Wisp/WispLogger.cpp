@@ -1,7 +1,8 @@
-﻿// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
+#include "FileSystem.h"
 //----------------------------------------------------------------------------------
 namespace WISP_LOGGER
 {
@@ -20,20 +21,20 @@ CLogger::~CLogger()
 //----------------------------------------------------------------------------------
 void CLogger::Close()
 {
-	if (m_File != NULL)
+	if (m_File != nullptr)
 	{
 		LOG("Log closed.\n");
-		fclose(m_File);
-		m_File = NULL;
+		fs_close(m_File);
+		m_File = nullptr;
 	}
 }
 //----------------------------------------------------------------------------------
-void CLogger::Init(const string &filePath)
+void CLogger::Init(const os_path &filePath)
 {
-	if (m_File != NULL)
-		fclose(m_File);
+	if (m_File != nullptr)
+		fs_close(m_File);
 
-	fopen_s(&m_File, filePath.c_str(), "w");
+	m_File = fs_open(filePath, FS_WRITE);
 
 	if (this == &g_WispLogger)
 		LOG("Log opened.\n");
@@ -41,22 +42,9 @@ void CLogger::Init(const string &filePath)
 	FileName = filePath;
 }
 //----------------------------------------------------------------------------------
-void CLogger::Init(const wstring &filePath)
-{
-	if (m_File != NULL)
-		fclose(m_File);
-
-	_wfopen_s(&m_File, filePath.c_str(), L"w");
-
-	if (this == &g_WispLogger)
-		LOG("Log opened.\n");
-
-	FileName = ToString(filePath);
-}
-//----------------------------------------------------------------------------------
 void CLogger::Print(const char *format, ...)
 {
-	if (m_File == NULL)
+	if (m_File == nullptr)
 		return;
 
 	va_list arg;
@@ -68,7 +56,7 @@ void CLogger::Print(const char *format, ...)
 //----------------------------------------------------------------------------------
 void CLogger::VPrint(const char *format, va_list ap)
 {
-	if (m_File == NULL)
+	if (m_File == nullptr)
 		return;
 
 	vfprintf(m_File, format, ap);
@@ -77,7 +65,7 @@ void CLogger::VPrint(const char *format, va_list ap)
 //----------------------------------------------------------------------------------
 void CLogger::Print(const wchar_t *format, ...)
 {
-	if (m_File == NULL)
+	if (m_File == nullptr)
 		return;
 
 	va_list arg;
@@ -89,7 +77,7 @@ void CLogger::Print(const wchar_t *format, ...)
 //----------------------------------------------------------------------------------
 void CLogger::VPrint(const wchar_t *format, va_list ap)
 {
-	if (m_File == NULL)
+	if (m_File == nullptr)
 		return;
 
 	vfwprintf(m_File, format, ap);
@@ -98,7 +86,7 @@ void CLogger::VPrint(const wchar_t *format, va_list ap)
 //----------------------------------------------------------------------------------
 void CLogger::Dump(uchar *buf, int size)
 {
-	if (m_File == NULL)
+	if (m_File == nullptr)
 		return;
 
 	int num_lines = size / 16;

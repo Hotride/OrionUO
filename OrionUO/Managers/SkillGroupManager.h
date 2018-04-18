@@ -64,14 +64,14 @@ public:
 	@param [__in] path Путь к файлу конфига
 	@return 
 	*/
-	bool Load(string path);
+	bool Load(const os_path &path);
 
 	/*!
 	Сохранение групп в файл конфиг
 	@param [__in] path Путьк  файлу конфига
 	@return 
 	*/
-	void Save(string path);
+	void Save(const os_path &path);
 };
 //----------------------------------------------------------------------------------
 //!Менеджер групп навыков

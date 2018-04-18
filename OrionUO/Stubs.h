@@ -20,6 +20,7 @@
 
 using namespace std;
 
+#if defined(__clang__)
 // Enable these incrementally to cleanup bad code
 #pragma clang diagnostic ignored "-Wint-to-pointer-cast" // FIXME: CGLTextTexture
 #pragma clang diagnostic ignored "-Wtautological-constant-out-of-range-compare" // FIXME: always true expression
@@ -43,10 +44,33 @@ using namespace std;
 #pragma clang diagnostic ignored "-Wc++11-narrowing" // FIXME: ID_BGS_BUTTON_*
 #pragma clang diagnostic ignored "-Wunused-private-field" // FIXME: m_FakeInsertionPin
 #pragma clang diagnostic ignored "-Wcomment"
-
+#elif defined(__GNUC__)
+// GCC warnings
+#pragma GCC diagnostic ignored "-Wunknown-pragmas"
+#pragma GCC diagnostic ignored "-Wmultichar"
+#pragma GCC diagnostic ignored "-Wsign-compare"
+#pragma GCC diagnostic ignored "-Wmissing-declarations"
+#pragma GCC diagnostic ignored "-Wpointer-arith"
+#pragma GCC diagnostic ignored "-Wtype-limits"
+#pragma GCC diagnostic ignored "-Wformat="
+#pragma GCC diagnostic ignored "-Wunused-value"
+#pragma GCC diagnostic ignored "-Wparentheses"
+#pragma GCC diagnostic ignored "-Wint-to-pointer-cast"
+#pragma GCC diagnostic ignored "-Wshadow"
+#pragma GCC diagnostic ignored "-Wpragmas"
+#pragma GCC diagnostic ignored "-Wcomment"
+#pragma GCC diagnostic ignored "-Wunused-but-set-variable"
+#pragma GCC diagnostic ignored "-Wstrict-overflow"
+#pragma GCC diagnostic ignored "-Wformat-extra-args"
+#pragma GCC diagnostic ignored "-Wconversion-null"
+#pragma GCC diagnostic ignored "-Wmultichar"
+#pragma GCC diagnostic ignored "-Wswitch"
+#pragma GCC diagnostic ignored "-Waggressive-loop-optimizations"
+#pragma GCC diagnostic ignored "-Wstrict-overflow"
+#pragma GCC diagnostic ignored "-Wuninitialized"
+#endif
 
 typedef int SOCKET;
-//typedef uint32_t DWORD;
 typedef uint16_t WORD;
 typedef uintptr_t LPARAM;
 typedef uintptr_t LRESULT;
@@ -55,9 +79,6 @@ typedef int32_t HRESULT;
 typedef int32_t LONG;
 typedef unsigned char BYTE;
 typedef unsigned char* PBYTE;
-//typedef uint64_t uint64;
-//typedef int64_t __int64;
-//typedef int BOOL;
 typedef void* PVOID;
 typedef void* LPVOID;
 typedef void* HANDLE;
@@ -322,35 +343,6 @@ struct MINMAXINFO {
   POINT ptMaxTrackSize;
 };
 
-struct PIXELFORMATDESCRIPTOR {
-  WORD  nSize;
-  WORD  nVersion;
-  DWORD dwFlags;
-  BYTE  iPixelType;
-  BYTE  cColorBits;
-  BYTE  cRedBits;
-  BYTE  cRedShift;
-  BYTE  cGreenBits;
-  BYTE  cGreenShift;
-  BYTE  cBlueBits;
-  BYTE  cBlueShift;
-  BYTE  cAlphaBits;
-  BYTE  cAlphaShift;
-  BYTE  cAccumBits;
-  BYTE  cAccumRedBits;
-  BYTE  cAccumGreenBits;
-  BYTE  cAccumBlueBits;
-  BYTE  cAccumAlphaBits;
-  BYTE  cDepthBits;
-  BYTE  cStencilBits;
-  BYTE  cAuxBuffers;
-  BYTE  iLayerType;
-  BYTE  bReserved;
-  DWORD dwLayerMask;
-  DWORD dwVisibleMask;
-  DWORD dwDamageMask;
-};
-
 struct MEMORY_BASIC_INFORMATION {
   PVOID  BaseAddress;
   PVOID  AllocationBase;
@@ -373,7 +365,6 @@ void ShowCursor(bool) ;
 void SetWindowTextA(void *, const char *) ;
 void SetWindowTextW(void *, const wchar_t *) ;
 bool IsZoomed(void *) ;
-void UpdateWindow(void *) ;
 int GetSystemMetrics(int) ;
 int DefWindowProc(void *, unsigned int, uintptr_t, uintptr_t) ;
 bool PtInRect(const RECT *, POINT) ;
@@ -392,9 +383,6 @@ int GetWindowLongA(void*,int) ;
 int RegisterClassEx(const WNDCLASSEX*) ;
 bool SetWindowPos(void *, void*, int, int, int, int, int) ;
 bool IsIconic(void*) ;
-int MessageBoxA(void*, const char*, const char*, int) ;
-int MessageBoxW(void*, const wchar_t*, const wchar_t*, int) ;
-int MessageBox(void*, const wchar_t*, const wchar_t*, int) ;
 bool GetClientRect(void*, RECT*) ;
 bool AdjustWindowRectEx(RECT*, int, bool, int) ;
 void* CreateWindowEx(int, const wchar_t*, const wchar_t*, int, int, int, int, int, void*, void*, void*, void*) ;
@@ -424,51 +412,18 @@ void* GlobalLock(void*);
 bool GlobalUnlock(void*);
 int GetProfileStringA(const char*, const char*, const char*, char*, int);
 
-// VM
-#define MEM_COMMIT 1
-#define MEM_FREE 2
-void DebugBreak() ;
-size_t VirtualQueryEx(void*, void*, MEMORY_BASIC_INFORMATION*, size_t);
-void GetSystemInfo(SYSTEM_INFO*);
-
-// dll
-void* LoadLibraryA(const char*) ;
-void FreeLibrary(void*) ;
-void* GetProcAddress(void*, const char*) ;
-
-// Exception
-#define SetUnhandledExceptionFilter(x) assert(false && "Not Implemented");
-
-// Filesystem
-bool PathFileExistsW(const wchar_t *) ;
-bool PathFileExistsA(const char *) ;
-void* CreateFileMapping(void *, void *, int, int, void *, void *) ;
-int GetFileVersionInfoSize(void *, void *) ;
-int GetFileVersionInfo(void *, void *, int, void*) ;
-int GetFileSize(void *, void *) ;
-void GetCurrentDirectoryA(int, char *) ;
-void GetCurrentDirectoryW(int, wchar_t *) ;
-void CloseHandle(void *) ;
-void UnmapViewOfFile(void *) ;
-void* MapViewOfFile(void*, int, int, int, int) ;
-void* CreateFileA(const char *, int, int, void *, int, int, void *) ;
-void* CreateFileW(const wchar_t *, int, int, void *, int, int, void *) ;
-bool CreateDirectoryA(const char*, SECURITY_ATTRIBUTES*) ;
-
 // Thread
+void CloseHandle(void *) ; // WispThread.cpp
 void KillTimer(void *, unsigned int) ;
 void SetTimer(void *, unsigned int, unsigned int, void *) ;
 int GetTickCount() ;
-void Sleep(int) ;
 int timeBeginPeriod(int) ;
-int GetCurrentThreadId() ;
 void EnterCriticalSection(void*) ;
 void LeaveCriticalSection(void*) ;
 void DeleteCriticalSection(void*) ;
 void InitializeCriticalSection(void*) ;
 void* _beginthreadex(void *, unsigned, unsigned (*)( void * ), void *, unsigned, unsigned *) ;
 void _endthreadex(int) ;
-int timeGetTime() ;
 int timeEndPeriod(int) ;
 void GetLocalTime(SYSTEMTIME*) ;
 
@@ -485,21 +440,11 @@ typedef HOSTENT* LPHOSTENT;
 #define LPIN_ADDR struct in_addr*
 #define LPSOCKADDR const SOCKADDR*
 
-
 // OpenGL
-#define PFNGLGETPOINTERI_VEXTPROC void*
-bool wglDeleteContext(void*)  ;
-void* wglCreateContext(void*)  ;
-bool wglMakeCurrent(void*, void*) ;
-void* wglGetProcAddress(const char*) ;
-void wglSwapIntervalEXT(int) ;
-int ChoosePixelFormat(void*, PIXELFORMATDESCRIPTOR*) ;
-bool SetPixelFormat(void*, int, PIXELFORMATDESCRIPTOR*) ;
-void SwapBuffers(void*) ;
 #define WGLEW_ARB_render_texture 0
 #define GetRValue(x) (x&0xff)
-#define GetGValue(x) (x&0xff)
-#define GetBValue(x) (x&0xff)
+#define GetGValue(x) (x>>8&0xff)
+#define GetBValue(x) (x>>16&0xff)
 
 // BASS
 #define BASS_OK 0
@@ -585,8 +530,6 @@ void SwapBuffers(void*) ;
 #define INVALID_SOCKET -1
 #define SOCKET_ERROR -1
 
-inline int _wfopen_s(FILE** f, const wchar_t *n, const wchar_t *m) { fopen((const char *)n, (const char *)m); return 0; }
-inline int fopen_s(FILE** f, const char *n, const char *m) { fopen(n, m); return 0; }
 inline int max(int a, int b) { return a > b ? a : b; }
 inline int min(int a, int b) { return a > b ? b : a; }
 inline int _wtoi(const wchar_t *a) { return std::stoi(wstring(a)); }

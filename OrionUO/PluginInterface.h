@@ -11,14 +11,25 @@
 //----------------------------------------------------------------------------------
 #if defined(ORION_LINUX)
 #include "stdafx.h"
+#define CDECL
 #else
 #include <Windows.h>
 #endif
 //----------------------------------------------------------------------------------
+#pragma pack (push,1)
+typedef struct PLUGIN_INFO
+{
+	char FileName[MAX_PATH];
+	char FunctionName[100];
+	uint64_t Flags;
+} *PPLUGIN_INFO;
+
+#pragma pack (pop)
+//----------------------------------------------------------------------------------
 typedef LRESULT WINDOW_PROC(HWND, UINT, WPARAM, LPARAM);
-typedef bool __cdecl PACKET_PROC(unsigned char *, const int&);
-typedef void __cdecl VOID_PROC();
-typedef bool __cdecl WORLD_MAP_DRAW_PROC();
+typedef bool CDECL PACKET_PROC(unsigned char *, const int&);
+typedef void CDECL VOID_PROC();
+typedef bool CDECL WORLD_MAP_DRAW_PROC();
 //----------------------------------------------------------------------------------
 #define UOMSG_SET_SERVER_NAME		WM_USER + 660
 #define UOMSG_SET_PLAYER_NAME		WM_USER + 661
@@ -64,8 +75,8 @@ typedef struct UOI_MENU_RESPONSE
 	int Code;
 } *PUOI_MENU_RESPONSE;
 //----------------------------------------------------------------------------------
-bool __cdecl PluginRecvFunction(unsigned char *buf, const int &size);
-bool __cdecl PluginSendFunction(unsigned char *buf, const int &size);
+bool CDECL PluginRecvFunction(unsigned char *buf, const int &size);
+bool CDECL PluginSendFunction(unsigned char *buf, const int &size);
 //----------------------------------------------------------------------------------
 typedef struct PLUGIN_INTERFACE
 {

@@ -1204,8 +1204,6 @@ void StackWalker::OnSymInit(LPCSTR szSearchPath, DWORD symOptions, LPCSTR szUser
 	}
 #else
 	TCHAR path[MAX_PATH];
-	UINT n;
-	BOOL r;
 	DWORD versz;
 	UINT blocksz;
 	VS_FIXEDFILEINFO *vinfo;

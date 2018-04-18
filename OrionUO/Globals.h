@@ -45,7 +45,9 @@ extern bool g_Asmut;
 	#define DEBUGLOG(...)
 #endif //CWISPDEBUGLOGGER!=0
 //----------------------------------------------------------------------------------
+#if defined(_MSC_VER)
 #pragma warning(disable: 4800) //forcing value to bool 'true' or 'false' (performance warning)
+#endif
 //----------------------------------------------------------------------------------
 bool CanBeDraggedByOffset(const WISP_GEOMETRY::CPoint2Di &point);
 //----------------------------------------------------------------------------------

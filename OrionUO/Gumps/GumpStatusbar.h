@@ -1,4 +1,4 @@
-﻿/***********************************************************************************
+/***********************************************************************************
 **
 ** GumpStatusbar.h
 **
@@ -70,7 +70,7 @@ public:
 	CGumpStatusbar(uint serial, short x, short y, bool minimized);
 	virtual ~CGumpStatusbar();
 
-	static const int ID_GSB_LOCK_MOVING = 10;
+	const int ID_GSB_LOCK_MOVING = 10;
 
 	static int m_StatusbarDefaultWidth;
 	static int m_StatusbarDefaultHeight;

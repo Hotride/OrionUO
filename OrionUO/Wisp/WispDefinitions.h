@@ -1,10 +1,11 @@
-﻿//----------------------------------------------------------------------------------
+//----------------------------------------------------------------------------------
 #ifndef WISPDEFINITIONS_H
 #define WISPDEFINITIONS_H
 //----------------------------------------------------------------------------------
 //0 - disable debugging
 //1 - debugging with queue (very slow run mode)
 //2 - debugging with function name (normal run mode)
+//3 - printing
 #define USE_WISP_DEBUG_FUNCTION_NAMES 0
 
 #if USE_WISP_DEBUG_FUNCTION_NAMES == 1
@@ -16,6 +17,9 @@
 	extern char *g_WispCurrentFunctionName;
 #define WISPFUN_DEBUG(name) \
 	g_WispCurrentFunctionName = "w_" __FUNCTION__
+#elif USE_WISP_DEBUG_FUNCTION_NAMES == 3
+	#define WISPFUN_DEBUG(name) \
+	do{ fprintf(stdout, "CALL: %s\n", __FUNCTION__); } while(0)
 #else
 	#define WISPFUN_DEBUG(name)
 #endif
@@ -59,9 +63,9 @@ typedef short *pshort;
 typedef int *pint;
 typedef int64_t *pint64;
 //----------------------------------------------------------------------------------
-#define DEBUGGIND_OUTPUT 1
+#define DEBUGGING_OUTPUT 1
 
-#if DEBUGGIND_OUTPUT == 1
+#if DEBUGGING_OUTPUT == 1
 void DebugMsg(const char *format, ...);
 void DebugMsg(const wchar_t *format, ...);
 void DebugDump(puchar data, int size);

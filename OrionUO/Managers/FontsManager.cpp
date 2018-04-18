@@ -1678,7 +1678,7 @@ uint CFontsManager::GetHTMLColorFromText(string &str)
 void CFontsManager::GetHTMLInfoFromContent(HTML_DATA_INFO &info, const string &content)
 {
 	WISPFUN_DEBUG("c143_f33");
-	WISP_FILE::CTextFileParser parser("", " =", "", "\"\"");
+	WISP_FILE::CTextFileParser parser({}, " =", "", "\"\"");
 
 	STRING_LIST strings = parser.GetTokens(content.c_str());
 	int size = (int)strings.size();

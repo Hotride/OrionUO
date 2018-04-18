@@ -5,8 +5,10 @@
 
 namespace WISP_MOUSE
 {
+#if defined(_MSC_VER)
 //forcing value to bool 'true' or 'false' (performance warning)
 #pragma warning(disable: 4800)
+#endif
 
 CMouse *g_WispMouse = NULL;
 //----------------------------------------------------------------------------------

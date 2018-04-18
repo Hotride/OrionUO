@@ -10,6 +10,7 @@
 */
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
+#include "FileSystem.h"
 CFileManager g_FileManager;
 //----------------------------------------------------------------------------------
 CUopMappedFile::CUopMappedFile()
@@ -72,6 +73,9 @@ CFileManager::~CFileManager()
 //----------------------------------------------------------------------------------
 bool CFileManager::Load()
 {
+	WISPFUN_DEBUG("");
+	LOG("Client Verison: %d\n", g_PacketManager.GetClientVersion());
+
 	if (g_PacketManager.GetClientVersion() >= CV_7000 && LoadUOPFile(m_MainMisc, "MainMisc.uop"))
 		return LoadWithUOP();
 
@@ -93,9 +97,9 @@ bool CFileManager::Load()
 		return false;
 	else if (!m_MultiIdx.Load(g_App.UOFilesPath("multi.idx")))
 		return false;
-	else if (!m_SkillsIdx.Load(g_App.UOFilesPath("skills.idx")))
+	else if (!m_SkillsIdx.Load(g_App.UOFilesPath("Skills.idx"))) // FIXME: need be case insensitive
 		return false;
-	else if (!m_MultiMap.Load(g_App.UOFilesPath("multimap.rle")))
+	else if (!m_MultiMap.Load(g_App.UOFilesPath("Multimap.rle"))) // FIXME: need be case insensitive
 		return false;
 	else if (!m_TextureIdx.Load(g_App.UOFilesPath("texidx.mul")))
 		return false;
@@ -145,13 +149,7 @@ bool CFileManager::Load()
 
 	IFOR(i, 0, 20)
 	{
-		string s;
-		
-		if (i)
-			s = g_App.UOFilesPath("unifont%i.mul", i);
-		else
-			s = g_App.UOFilesPath("unifont.mul");
-
+		auto s = i != 0 ? g_App.UOFilesPath("unifont%i.mul", i) : g_App.UOFilesPath("unifont.mul");
 		if (m_UnifontMul[i].Load(s))
 			UnicodeFontsCount++;
 	}
@@ -221,9 +219,9 @@ bool CFileManager::LoadWithUOP()
 		return false;
 	if (!m_LightIdx.Load(g_App.UOFilesPath("lightidx.mul")))
 		return false;
-	else if (!m_SkillsIdx.Load(g_App.UOFilesPath("skills.idx")))
+	else if (!m_SkillsIdx.Load(g_App.UOFilesPath("Skills.idx"))) // FIXME: need be case insensitive
 		return false;
-	else if (!m_MultiMap.Load(g_App.UOFilesPath("multimap.rle")))
+	else if (!m_MultiMap.Load(g_App.UOFilesPath("Multimap.rle"))) // FIXME: need be case insensitive
 		return false;
 	else if (!m_TextureIdx.Load(g_App.UOFilesPath("texidx.mul")))
 		return false;
@@ -258,7 +256,7 @@ bool CFileManager::LoadWithUOP()
 		string mapName = string("map") + std::to_string(i);
 
 		if (!LoadUOPFile(m_MapUOP[i], (mapName + "LegacyMUL.uop").c_str()))
-			m_MapMul[i].Load(g_App.UOFilesPath((mapName + ".mul").c_str()));
+			m_MapMul[i].Load(g_App.UOFilesPath((mapName + ".mul")));
 
 
 		m_StaticIdx[i].Load(g_App.UOFilesPath("staidx%i.mul", i));
@@ -275,13 +273,7 @@ bool CFileManager::LoadWithUOP()
 
 	IFOR(i, 0, 20)
 	{
-		string s;
-		
-		if (i)
-			s = g_App.UOFilesPath("unifont%i.mul", i);
-		else
-			s = g_App.UOFilesPath("unifont.mul");
-
+		auto s = i != 0 ? g_App.UOFilesPath("unifont%i.mul", i) : g_App.UOFilesPath("unifont.mul");
 		if (m_UnifontMul[i].Load(s))
 			UnicodeFontsCount++;
 	}
@@ -294,7 +286,7 @@ bool CFileManager::LoadWithUOP()
 //----------------------------------------------------------------------------------
 void CFileManager::Unload()
 {
-	WISPFUN_DEBUG("c142_f2");
+	//WISPFUN_DEBUG("c142_f2");
 	m_ArtIdx.Unload();
 	m_GumpIdx.Unload();
 	m_SoundIdx.Unload();
@@ -435,16 +427,14 @@ void CFileManager::ReadTask()
 		char nextBlock[8];
 
 		std::fstream *animFile = new std::fstream();
-		string path(g_App.UOFilesPath("AnimationFrame%i.uop", i));
-		if (!FileExists(path))
-		{
+		if (!animFile)
 			continue;
-		}
+
+		auto path{g_App.UOFilesPath("AnimationFrame%i.uop", i)};
+		if (!FileExists(path))
+			continue;
+
 		animFile->open(path, std::ios::binary | std::ios::in);
-
-		if (!animFile) continue;
-
-
 		animFile->read(magic, 4);
 		animFile->read(version, 4);
 		animFile->read(signature, 4);
@@ -533,14 +523,12 @@ void CFileManager::ReadTask()
 	m_AutoResetEvent.Set();
 }
 //----------------------------------------------------------------------------------
-bool CFileManager::FileExists(const std::string& filename)
+bool CFileManager::FileExists(const os_path &filename)
 {
-	struct stat buf;
-	if (stat(filename.c_str(), &buf) != -1)
-	{
-		return true;
-	}
-	return false;
+	WISPFUN_DEBUG("");
+	auto r = fs_path_exists(filename);
+	LOG("FileExists: %s = %d\n", CStringFromPath(filename), r);
+	return r;
 }
 //----------------------------------------------------------------------------------
 char *CFileManager::ReadUOPDataFromFileStream(UOPAnimationData &animData)
@@ -564,7 +552,7 @@ bool CFileManager::DecompressUOPFileData(UOPAnimationData &animData, UCHAR_LIST 
 	if (z_err != Z_OK)
 	{
 		LOG("UOP anim decompression failed %d\n", z_err);
-		LOG("Anim file: %s\n", animData.path.c_str());
+		LOG("Anim file: %s\n", CStringFromPath(animData.path));
 		LOG("Anim offset: %d\n", animData.offset);
 		return false;
 	}
@@ -573,8 +561,7 @@ bool CFileManager::DecompressUOPFileData(UOPAnimationData &animData, UCHAR_LIST 
 //----------------------------------------------------------------------------------
 bool CFileManager::LoadUOPFile(CUopMappedFile &file, const char *fileName)
 {
-	//LOG("Loading UOP fileName: %s\n", fileName);
-
+	LOG("Loading UOP fileName: %s\n", fileName);
 	if (!file.Load(g_App.UOFilesPath(fileName)))
 		return false;
 
@@ -675,16 +662,16 @@ bool CFileManager::LoadUOPFile(CUopMappedFile &file, const char *fileName)
 	return true;
 }
 //----------------------------------------------------------------------------------
-bool CFileManager::TryOpenFileStream(std::fstream &fileStream, std::string filePath)
+bool CFileManager::TryOpenFileStream(std::fstream &fileStream, const os_path &filePath)
 {
-	LOG("Trying to open file stream for %s\n", filePath);
+	LOG("Trying to open file stream for %s\n", CStringFromPath(filePath));
 	if(!FileExists(filePath))
 	{
-		LOG("%s doesnt exist\n", filePath);
+		LOG("%s doesnt exist\n", CStringFromPath(filePath));
 		return false;
 	}
 	fileStream.open(filePath, std::ios::binary | std::ios::in);
-	LOG("Opened file stream for %s\n", filePath);
+	LOG("Opened file stream for %s\n", CStringFromPath(filePath));
 	return true;
 }
 //----------------------------------------------------------------------------------

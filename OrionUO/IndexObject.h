@@ -107,7 +107,7 @@ public:
 class CIndexMusic
 {
 public:
-	string FilePath = "";
+	os_path FilePath;
 	bool Loop = false;
 
 	CIndexMusic();

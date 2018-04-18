@@ -1,4 +1,4 @@
-﻿/***********************************************************************************
+/***********************************************************************************
 **
 ** GumpSpell.h
 **
@@ -17,8 +17,8 @@ public:
 	SPELLBOOK_TYPE SpellType = ST_MAGE;
 
 private:
-	static const int ID_GS_LOCK_MOVING = 1;
-	static const int ID_GS_BUTTON_REMOVE_FROM_GROUP = 2;
+	static constexpr int ID_GS_LOCK_MOVING = 1;
+	static constexpr int ID_GS_BUTTON_REMOVE_FROM_GROUP = 2;
 
 	void GetTooltipSpellInfo(int &tooltipOffset, int &spellIndexOffset);
 

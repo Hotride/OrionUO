@@ -6,9 +6,15 @@
 **
 ************************************************************************************
 */
+#pragma once
 //----------------------------------------------------------------------------------
-#ifndef COMMONINTERFACES_H
-#define COMMONINTERFACES_H
+#if defined(ORION_LINUX)
+#include "stdafx.h"
+#include <stdint.h>
+#define CDECL
+#else
+#include <Windows.h>
+#endif
 //----------------------------------------------------------------------------------
 #ifndef UOInterface
 #define UOInterface struct
@@ -54,68 +60,68 @@ struct ORION_RAW_GUMP_INFO
 };
 //----------------------------------------------------------------------------------
 //IGLEngine
-typedef void __cdecl FUNCDEF_PUSH_SCISSOR(int, int, int, int);
-typedef void __cdecl FUNCDEF_POP_SCISSOR();
-typedef void __cdecl FUNCDEF_DRAW_LINE(unsigned int, int, int, int, int);
-typedef void __cdecl FUNCDEF_DRAW_POLYGONE(unsigned int, int, int, int, int);
-typedef void __cdecl FUNCDEF_DRAW_CIRCLE(unsigned int, float, float, float, int);
-typedef void __cdecl FUNCDEF_DRAW_TEXT_A(int, int, unsigned char, const char*, unsigned short, int, TEXT_ALIGN_TYPE, unsigned short);
-typedef void __cdecl FUNCDEF_DRAW_TEXT_W(int, int, unsigned char, const wchar_t*, unsigned short, int, TEXT_ALIGN_TYPE, unsigned short);
-typedef void __cdecl FUNCDEF_DRAW_ART(int, int, unsigned short, unsigned short);
-typedef void __cdecl FUNCDEF_DRAW_ART_ANIMATED(int, int, unsigned short, unsigned short);
-typedef void __cdecl FUNCDEF_DRAW_RESIZEPIC_GUMP(int, int, unsigned short, int, int);
-typedef void __cdecl FUNCDEF_DRAW_GUMP(int, int, unsigned short, unsigned short);
-typedef void __cdecl FUNCDEF_DRAW_GUMPPIC(int, int, unsigned short, unsigned short, int, int);
+typedef void CDECL FUNCDEF_PUSH_SCISSOR(int, int, int, int);
+typedef void CDECL FUNCDEF_POP_SCISSOR();
+typedef void CDECL FUNCDEF_DRAW_LINE(unsigned int, int, int, int, int);
+typedef void CDECL FUNCDEF_DRAW_POLYGONE(unsigned int, int, int, int, int);
+typedef void CDECL FUNCDEF_DRAW_CIRCLE(unsigned int, float, float, float, int);
+typedef void CDECL FUNCDEF_DRAW_TEXT_A(int, int, unsigned char, const char*, unsigned short, int, TEXT_ALIGN_TYPE, unsigned short);
+typedef void CDECL FUNCDEF_DRAW_TEXT_W(int, int, unsigned char, const wchar_t*, unsigned short, int, TEXT_ALIGN_TYPE, unsigned short);
+typedef void CDECL FUNCDEF_DRAW_ART(int, int, unsigned short, unsigned short);
+typedef void CDECL FUNCDEF_DRAW_ART_ANIMATED(int, int, unsigned short, unsigned short);
+typedef void CDECL FUNCDEF_DRAW_RESIZEPIC_GUMP(int, int, unsigned short, int, int);
+typedef void CDECL FUNCDEF_DRAW_GUMP(int, int, unsigned short, unsigned short);
+typedef void CDECL FUNCDEF_DRAW_GUMPPIC(int, int, unsigned short, unsigned short, int, int);
 
 //IUltimaOnline
-typedef uint64_t __cdecl FUNCDEF_GET_LAND_FLAGS(unsigned short);
-typedef uint64_t __cdecl FUNCDEF_GET_STATIC_FLAGS(unsigned short);
-typedef int __cdecl FUNCDEF_GET_VALUE_INT(VALUE_KEY_INT, int);
-typedef void __cdecl FUNCDEF_SET_VALUE_INT(VALUE_KEY_INT, int);
-typedef IOrionString *__cdecl FUNCDEF_GET_VALUE_STRING(VALUE_KEY_STRING, const char*);
-typedef void __cdecl FUNCDEF_SET_VALUE_STRING(VALUE_KEY_STRING, const char*);
-typedef void __cdecl FUNCDEF_SET_TARGET_DATA(unsigned char*, int);
-typedef void __cdecl FUNCDEF_SEND_TARGET_OBJECT(unsigned int);
-typedef void __cdecl FUNCDEF_SEND_TARGET_TILE(unsigned short, short, short, char);
-typedef void __cdecl FUNCDEF_SEND_TARGET_CANCEL();
-typedef void __cdecl FUNCDEF_SEND_CAST_SPELL(int);
-typedef void __cdecl FUNCDEF_SEND_USE_SKILL(int);
-typedef void __cdecl FUNCDEF_SEND_ASCII_SPEECH(const char*, unsigned short);
-typedef void __cdecl FUNCDEF_SEND_UNICODE_SPEECH(const wchar_t*, unsigned short);
-typedef void __cdecl FUNCDEF_SEND_RENAME_MOUNT(unsigned int, const char*);
-typedef void __cdecl FUNCDEF_SEND_MENU_RESPONSE(unsigned int, unsigned int, int);
-typedef void __cdecl FUNCDEF_DISPLAY_STATUSBAR(unsigned int, int, int);
-typedef void __cdecl FUNCDEF_CLOSE_STATUSBAR(unsigned int);
-typedef void __cdecl FUNCDEF_LOGOUT();
-typedef void __cdecl FUNCDEF_SECURE_TRADING_CHECK_STATE(unsigned int, bool);
-typedef void __cdecl FUNCDEF_SECURE_TRADING_CLOSE(unsigned int);
+typedef uint64_t CDECL FUNCDEF_GET_LAND_FLAGS(unsigned short);
+typedef uint64_t CDECL FUNCDEF_GET_STATIC_FLAGS(unsigned short);
+typedef int CDECL FUNCDEF_GET_VALUE_INT(VALUE_KEY_INT, int);
+typedef void CDECL FUNCDEF_SET_VALUE_INT(VALUE_KEY_INT, int);
+typedef IOrionString *CDECL FUNCDEF_GET_VALUE_STRING(VALUE_KEY_STRING, const char*);
+typedef void CDECL FUNCDEF_SET_VALUE_STRING(VALUE_KEY_STRING, const char*);
+typedef void CDECL FUNCDEF_SET_TARGET_DATA(unsigned char*, int);
+typedef void CDECL FUNCDEF_SEND_TARGET_OBJECT(unsigned int);
+typedef void CDECL FUNCDEF_SEND_TARGET_TILE(unsigned short, short, short, char);
+typedef void CDECL FUNCDEF_SEND_TARGET_CANCEL();
+typedef void CDECL FUNCDEF_SEND_CAST_SPELL(int);
+typedef void CDECL FUNCDEF_SEND_USE_SKILL(int);
+typedef void CDECL FUNCDEF_SEND_ASCII_SPEECH(const char*, unsigned short);
+typedef void CDECL FUNCDEF_SEND_UNICODE_SPEECH(const wchar_t*, unsigned short);
+typedef void CDECL FUNCDEF_SEND_RENAME_MOUNT(unsigned int, const char*);
+typedef void CDECL FUNCDEF_SEND_MENU_RESPONSE(unsigned int, unsigned int, int);
+typedef void CDECL FUNCDEF_DISPLAY_STATUSBAR(unsigned int, int, int);
+typedef void CDECL FUNCDEF_CLOSE_STATUSBAR(unsigned int);
+typedef void CDECL FUNCDEF_LOGOUT();
+typedef void CDECL FUNCDEF_SECURE_TRADING_CHECK_STATE(unsigned int, bool);
+typedef void CDECL FUNCDEF_SECURE_TRADING_CLOSE(unsigned int);
 
 //IClilocManager
-typedef IOrionString *__cdecl FUNCDEF_GET_CLILOC_A(unsigned int, const char*);
-typedef IOrionString *__cdecl FUNCDEF_GET_CLILOC_W(unsigned int, const char*);
-typedef IOrionString *__cdecl FUNCDEF_GET_CLILOC_ARGUMENTS(unsigned int, const wchar_t*);
+typedef IOrionString *CDECL FUNCDEF_GET_CLILOC_A(unsigned int, const char*);
+typedef IOrionString *CDECL FUNCDEF_GET_CLILOC_W(unsigned int, const char*);
+typedef IOrionString *CDECL FUNCDEF_GET_CLILOC_ARGUMENTS(unsigned int, const wchar_t*);
 
 //IColorManager
-typedef int __cdecl FUNCDEF_GET_HUES_COUNT();
-typedef unsigned short __cdecl FUNCDEF_GET_COLOR32TO16(unsigned int&);
-typedef unsigned int __cdecl FUNCDEF_GET_COLOR16TO32(unsigned short&);
-typedef unsigned short __cdecl FUNCDEF_GET_COLOR_TO_GRAY(unsigned short&);
-typedef unsigned int __cdecl FUNCDEF_GET_POLYGONE_COLOR(unsigned short, unsigned short);
-typedef unsigned int __cdecl FUNCDEF_GET_COLOR(unsigned short&, unsigned short);
-typedef unsigned int __cdecl FUNCDEF_GET_PARTIAL_HUE_COLOR(unsigned short&, unsigned short);
+typedef int CDECL FUNCDEF_GET_HUES_COUNT();
+typedef unsigned short CDECL FUNCDEF_GET_COLOR32TO16(unsigned int&);
+typedef unsigned int CDECL FUNCDEF_GET_COLOR16TO32(unsigned short&);
+typedef unsigned short CDECL FUNCDEF_GET_COLOR_TO_GRAY(unsigned short&);
+typedef unsigned int CDECL FUNCDEF_GET_POLYGONE_COLOR(unsigned short, unsigned short);
+typedef unsigned int CDECL FUNCDEF_GET_COLOR(unsigned short&, unsigned short);
+typedef unsigned int CDECL FUNCDEF_GET_PARTIAL_HUE_COLOR(unsigned short&, unsigned short);
 
 //IPathFinder
-typedef bool __cdecl FUNCDEF_GET_CAN_WALK(unsigned char&, int&, int&, char&);
-typedef bool __cdecl FUNCDEF_GET_WALK(bool, unsigned char);
-typedef bool __cdecl FUNCDEF_GET_WALK_TO(int, int, int, int);
-typedef void __cdecl FUNCDEF_GET_STOP_AUTOWALK();
-typedef bool __cdecl FUNCDEF_GET_AUTOWALKING();
+typedef bool CDECL FUNCDEF_GET_CAN_WALK(unsigned char&, int&, int&, char&);
+typedef bool CDECL FUNCDEF_GET_WALK(bool, unsigned char);
+typedef bool CDECL FUNCDEF_GET_WALK_TO(int, int, int, int);
+typedef void CDECL FUNCDEF_GET_STOP_AUTOWALK();
+typedef bool CDECL FUNCDEF_GET_AUTOWALKING();
 
 //IFileManager
-typedef void __cdecl FUNCDEF_GET_FILE_INFO(unsigned int, ORION_RAW_FILE_INFO&);
-typedef void __cdecl FUNCDEF_GET_LAND_ART_INFO(unsigned short, ORION_RAW_ART_INFO&);
-typedef void __cdecl FUNCDEF_GET_STATIC_ART_INFO(unsigned short, ORION_RAW_ART_INFO&);
-typedef void __cdecl FUNCDEF_GET_GUMP_ART_INFO(unsigned short, ORION_RAW_GUMP_INFO&);
+typedef void CDECL FUNCDEF_GET_FILE_INFO(unsigned int, ORION_RAW_FILE_INFO&);
+typedef void CDECL FUNCDEF_GET_LAND_ART_INFO(unsigned short, ORION_RAW_ART_INFO&);
+typedef void CDECL FUNCDEF_GET_STATIC_ART_INFO(unsigned short, ORION_RAW_ART_INFO&);
+typedef void CDECL FUNCDEF_GET_GUMP_ART_INFO(unsigned short, ORION_RAW_GUMP_INFO&);
 //----------------------------------------------------------------------------------
 UOInterface IGLEngine
 {
@@ -230,6 +236,4 @@ typedef struct PLUGIN_CLIENT_INTERFACE
 #pragma pack (pop)
 //----------------------------------------------------------------------------------
 extern PLUGIN_CLIENT_INTERFACE g_PluginClientInterface;
-//----------------------------------------------------------------------------------
-#endif
 //----------------------------------------------------------------------------------

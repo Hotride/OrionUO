@@ -2,6 +2,7 @@
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
+#if defined(ORION_WINDOWS)
 
 #include <psapi.h>
 #include <tlhelp32.h>
@@ -180,7 +181,7 @@ LONG __stdcall OrionUnhandledExceptionFilter(struct _EXCEPTION_POINTERS *excepti
 			WISP_FILE::CMappedFile file;
 
 			wchar_t fileName[MAX_PATH] = { 0 };
-			GetModuleFileName(0, fileName, MAX_PATH);
+			GetModuleFileNameW(0, fileName, MAX_PATH);
 			bool crashlog = false;
 			if (file.Load(fileName))
 			{
@@ -217,13 +218,13 @@ LONG __stdcall OrionUnhandledExceptionFilter(struct _EXCEPTION_POINTERS *excepti
 			}
 
 			Wisp::g_WispCrashLogger.Close();
-			string crashlogPath = "\"" + Wisp::g_WispCrashLogger.FileName + "\"";
-			STARTUPINFOA si;
+			os_path crashlogPath = L"\"" + Wisp::g_WispCrashLogger.FileName + L"\"";
+			STARTUPINFOW si;
 			PROCESS_INFORMATION pi;
 			ZeroMemory(&si, sizeof(si));
 			si.cb = sizeof(si);
 			ZeroMemory(&pi, sizeof(pi));
-			bool reportSent = CreateProcessA("OrionCrashReporter.exe",
+			bool reportSent = CreateProcessW(L"OrionCrashReporter.exe",
 				&crashlogPath[0],        // Command line
 				NULL,           // Process handle not inheritable
 				NULL,           // Thread handle not inheritable
@@ -262,4 +263,5 @@ LONG __stdcall OrionUnhandledExceptionFilter(struct _EXCEPTION_POINTERS *excepti
 	//	return EXCEPTION_CONTINUE_SEARCH;
 	return EXCEPTION_CONTINUE_EXECUTION;
 }
+#endif // ORION_WINDOWS
 //----------------------------------------------------------------------------------

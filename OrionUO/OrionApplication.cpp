@@ -10,14 +10,14 @@
 */
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
+#include <SDL_timer.h>
 //----------------------------------------------------------------------------------
 COrionApplication g_App;
 //----------------------------------------------------------------------------------
 void COrionApplication::OnMainLoop()
 {
-	WISPFUN_DEBUG("c193_f1");
-
-	g_Ticks = timeGetTime();
+	//WISPFUN_DEBUG("c193_f1");
+	g_Ticks = SDL_GetTicks();
 
 	if (NextRenderTime <= g_Ticks)
 	{
@@ -38,7 +38,5 @@ void COrionApplication::OnMainLoop()
 		g_PacketManager.ProcessPluginPackets();
 		g_PacketManager.SendMegaClilocRequests();
 	}
-	//else
-	//	Sleep(1);
 }
 //----------------------------------------------------------------------------------

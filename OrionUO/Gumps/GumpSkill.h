@@ -1,4 +1,4 @@
-﻿/***********************************************************************************
+/***********************************************************************************
 **
 ** GumpSkill.h
 **
@@ -13,7 +13,7 @@
 class CGumpSkill : public CGump
 {
 private:
-	static const int ID_GS_LOCK_MOVING = 1;
+	const int ID_GS_LOCK_MOVING = 1;
 
 public:
 	CGumpSkill(int serial, int x, int y);

@@ -1,4 +1,4 @@
-﻿/***********************************************************************************
+/***********************************************************************************
 **
 ** GumpSpellbook.h
 **
@@ -47,16 +47,16 @@ public:
 	static string m_SpellReagents1[SPELLBOOK_1_SPELLS_COUNT];
 
 private:
-	static const int ID_GSB_BUTTON_PREV = 1;
-	static const int ID_GSB_BUTTON_NEXT = 2;
-	static const int ID_GSB_BUTTON_CIRCLE_1_2 = 3;
-	static const int ID_GSB_BUTTON_CIRCLE_3_4 = 4;
-	static const int ID_GSB_BUTTON_CIRCLE_5_6 = 5;
-	static const int ID_GSB_BUTTON_CIRCLE_7_8 = 6;
-	static const int ID_GSB_BUTTON_MINIMIZE = 7;
-	static const int ID_GSB_LOCK_MOVING = 8;
-	static const int ID_GSB_SPELL_ICON_LEFT = 100;
-	static const int ID_GSB_SPELL_ICON_RIGHT = 1000;
+	const int ID_GSB_BUTTON_PREV = 1;
+	const int ID_GSB_BUTTON_NEXT = 2;
+	const int ID_GSB_BUTTON_CIRCLE_1_2 = 3;
+	const int ID_GSB_BUTTON_CIRCLE_3_4 = 4;
+	const int ID_GSB_BUTTON_CIRCLE_5_6 = 5;
+	const int ID_GSB_BUTTON_CIRCLE_7_8 = 6;
+	const int ID_GSB_BUTTON_MINIMIZE = 7;
+	const int ID_GSB_LOCK_MOVING = 8;
+	const int ID_GSB_SPELL_ICON_LEFT = 100;
+	const int ID_GSB_SPELL_ICON_RIGHT = 1000;
 
 	static const int MAX_SPELLS_COUNT = 64;
 

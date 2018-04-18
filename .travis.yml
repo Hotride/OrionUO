@@ -6,7 +6,7 @@ os:
     - linux
 env:
   - CXX_COMPILER=/usr/bin/clang++-6.0 CC_COMPILER=/usr/bin/clang-6.0
-  #- CXX_COMPILER=gcc++-7 CC_COMPILELR=gcc-7
+  - CXX_COMPILER=gcc++-7 CC_COMPILELR=gcc-7
 addons:
   apt:
     sources:
@@ -16,8 +16,8 @@ addons:
       - ninja-build
       - clang-6.0
       - clang++-6.0
-      #- g++-7
-      #- gcc-7
+      - g++-7
+      - gcc-7
       - cppcheck
       - clang-format-6.0
       - libglu1-mesa-dev
@@ -32,14 +32,10 @@ addons:
 script:
     - export CC=${CC_COMPILER}
     - export CXX=${CXX_COMPILER}
-    - clang -v && clang++ -v && cmake --version
-    - mkdir build && cd build && cmake -G Ninja .. && time ninja OrionUO_unity -j 8
+    - mkdir release && cd release && cmake -G Ninja .. -DCMAKE_BUILD_TYPE=Release && time ninja OrionUO_unity -j 8
     - file ./OrionUO/unity/OrionUO
-    #- ./OrionUO/OrionUO
-notifications:
-  webhooks:
-    urls:
-      secure: https://discordapp.com/api/webhooks/237606690495791104/ewURTxkzbXphiOgXbzImxaHAsFCDuIDsVIDSADAeSs8a_6sd5VgWGWUG42Ij_qRTkocf
-    on_success: always
-    on_failure: always
-    on_start: always
+    - ./OrionUO/unity/OrionUO --headless
+    #- cd ..
+    #- mkdir debug && cd debug && cmake -G Ninja .. -DCMAKE_BUILD_TYPE=Debug && time ninja OrionUO_unity -j 8    
+    #- file ./OrionUO/unity/OrionUO
+    #- ./OrionUO/unity/OrionUO --headless

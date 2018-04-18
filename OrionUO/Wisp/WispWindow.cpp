@@ -2,11 +2,14 @@
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
+#include "WispWindow.h"
+#include <SDL_syswm.h>
 
 namespace WISP_WINDOW
 {
-CWindow *g_WispWindow = NULL;
+CWindow *g_WispWindow = nullptr;
 //---------------------------------------------------------------------------
+#if USE_WISP
 LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	WISPFUN_DEBUG("c_ww_wp");
@@ -15,6 +18,7 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 
 	return DefWindowProc(hWnd, message, wParam, lParam);
 }
+#endif
 //----------------------------------------------------------------------------------
 CWindow::CWindow()
 {
@@ -116,9 +120,17 @@ void CWindow::SetMaxSize(const WISP_GEOMETRY::CSize &newMaxSize)
 	m_MaxSize = newMaxSize;
 }
 //----------------------------------------------------------------------------------
-bool CWindow::Create(HINSTANCE hInstance, const wchar_t *className, const wchar_t *title, bool showCursor, int width, int height, HICON icon, HCURSOR cursor)
+
+bool CWindow::Create(const char *className, const char *title, bool showCursor, int width, int height)
 {
 	WISPFUN_DEBUG("c14_f5");
+
+#if USE_WISP
+	HICON icon = LoadIcon(0, MAKEINTRESOURCE(IDI_ORIONUO));
+	HCURSOR cursor = LoadCursor(0, MAKEINTRESOURCE(IDC_CURSOR1));
+
+	static wstring wclassName = ToWString(className);
+	static wstring wtitle = ToWString(title);
 	WNDCLASSEX wcex = { 0 };
 	wcex.cbSize = sizeof(WNDCLASSEX);
 	wcex.style = CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
@@ -129,7 +141,7 @@ bool CWindow::Create(HINSTANCE hInstance, const wchar_t *className, const wchar_
 	wcex.hCursor = cursor; //LoadCursor(NULL, IDC_ARROW);
 	wcex.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
 	wcex.lpszMenuName = NULL;
-	wcex.lpszClassName = className;
+	wcex.lpszClassName = wclassName.c_str();
 	wcex.hIcon = icon;
 	wcex.hIconSm = icon;
 
@@ -138,8 +150,7 @@ bool CWindow::Create(HINSTANCE hInstance, const wchar_t *className, const wchar_
 	width += 2 * GetSystemMetrics(SM_CXSIZEFRAME);
 	height += GetSystemMetrics(SM_CYCAPTION) + (GetSystemMetrics(SM_CYFRAME) * 2);
 
-	Handle = CreateWindowEx(WS_EX_WINDOWEDGE, className, title, WS_OVERLAPPEDWINDOW, 0, 0, width, height, NULL, NULL, hInstance, NULL);
-
+	Handle = CreateWindowEx(WS_EX_WINDOWEDGE, wclassName.c_str(), wtitle.c_str(), WS_OVERLAPPEDWINDOW, 0, 0, width, height, NULL, NULL, hInstance, NULL);
 	if (!Handle)
 		return false;
 
@@ -166,28 +177,94 @@ bool CWindow::Create(HINSTANCE hInstance, const wchar_t *className, const wchar_
 
 	::ShowWindow(Handle, FALSE);
 	UpdateWindow(Handle);
+#else
+	if (SDL_InitSubSystem(SDL_INIT_VIDEO) < 0)
+		return false;
+
+	m_window = SDL_CreateWindow(title, 0, 0, width, height, SDL_WINDOW_OPENGL);
+	if (!m_window)
+	{
+		SDL_LogError(SDL_LOG_CATEGORY_VIDEO, "Coult not create window: %s\n", SDL_GetError());
+		return false;
+	}
+
+	SDL_SysWMinfo info;
+	SDL_VERSION(&info.version);
+	if (SDL_GetWindowWMInfo(m_window, &info))
+	{
+		SDL_Log("SDL %d.%d.%d\n", info.version.major, info.version.minor, info.version.patch);
+
+		const char *subsystem = "Unknown";
+		switch(info.subsystem)
+		{
+      case SDL_SYSWM_UNKNOWN:   break;
+      case SDL_SYSWM_WINDOWS:   subsystem = "Microsoft Windows(TM)";  break;
+      case SDL_SYSWM_X11:       subsystem = "X Window System";        break;
+#if SDL_VERSION_ATLEAST(2, 0, 3)
+      case SDL_SYSWM_WINRT:     subsystem = "WinRT";                  break;
+#endif
+      case SDL_SYSWM_DIRECTFB:  subsystem = "DirectFB";               break;
+      case SDL_SYSWM_COCOA:     subsystem = "Apple OS X";             break;
+      case SDL_SYSWM_UIKIT:     subsystem = "UIKit";                  break;
+#if SDL_VERSION_ATLEAST(2, 0, 2)
+      case SDL_SYSWM_WAYLAND:   subsystem = "Wayland";                break;
+      case SDL_SYSWM_MIR:       subsystem = "Mir";                    break;
+#endif
+#if SDL_VERSION_ATLEAST(2, 0, 4)
+      case SDL_SYSWM_ANDROID:   subsystem = "Android";                break;
+#endif
+#if SDL_VERSION_ATLEAST(2, 0, 5)
+      case SDL_SYSWM_VIVANTE:   subsystem = "Vivante";                break;
+#endif
+		}
+
+		SDL_Log("System: %s\n", subsystem);
+#if defined(ORION_WINDOWS)
+	m_Handle = info.info.win.window;
+#endif
+	}
+
+	SDL_ShowCursor(showCursor);
+#endif // USE_WISP
 
 	return OnCreate();
 }
+
 //----------------------------------------------------------------------------------
 void CWindow::Destroy()
 {
 	WISPFUN_DEBUG("c14_f6");
+#if USE_WISP
 	PostMessage(Handle, WM_CLOSE, 0, 0);
+#else
+	if (m_window)
+		SDL_DestroyWindow(m_window);
+#endif
 }
 //----------------------------------------------------------------------------------
 void CWindow::ShowMessage(const string &text, const string &title, int buttons)
 {
 	WISPFUN_DEBUG("c14_f7");
+#if USE_WISP	
 	MessageBoxA(Handle, text.c_str(), title.c_str(), buttons);
+#else
+	UNUSED(buttons);
+	SDL_Log("%s: %s\n", title.c_str(), text.c_str());
+#endif
 }
 //----------------------------------------------------------------------------------
 void CWindow::ShowMessage(const wstring &text, const wstring &title, int buttons)
 {
 	WISPFUN_DEBUG("c14_f8");
+#if USE_WISP
 	MessageBoxW(Handle, text.c_str(), title.c_str(), buttons);
+#else
+	UNUSED(buttons);
+	SDL_Log("%s: %s\n", title.c_str(), text.c_str());
+#endif
 }
 //----------------------------------------------------------------------------------
+#if USE_WISP
 LRESULT CWindow::OnWindowProc(HWND &hWnd, UINT &message, WPARAM &wParam, LPARAM &lParam)
 {
 	WISPFUN_DEBUG("c14_f9");
@@ -506,6 +583,25 @@ LRESULT CWindow::OnWindowProc(HWND &hWnd, UINT &message, WPARAM &wParam, LPARAM 
 
 	return DefWindowProc(hWnd, message, wParam, lParam);
 }
+#else
+bool CWindow::OnWindowProc(SDL_Event &ev)
+{
+	switch (ev.type)
+	{
+		case SDL_QUIT:
+		{
+			OnDestroy();
+			return true;
+			break;
+		}
+
+		default:
+			break;
+	}
+
+	return false;
+}
+#endif
 //----------------------------------------------------------------------------------
 void CWindow::CreateThreadedTimer(uint id, int delay, bool oneShot, bool waitForProcessMessage, bool synchronizedDelay)
 {

@@ -1133,7 +1133,7 @@ bool CGumpManager::OnKeyDown(const WPARAM &wParam, const LPARAM &lParam, bool bl
 @param [__in] path Путь к файлу конфига
 @return 
 */
-void CGumpManager::Load(const string &path)
+void CGumpManager::Load(const os_path &path)
 {
 	WISPFUN_DEBUG("c144_f28");
 	WISP_FILE::CMappedFile file;
@@ -1513,7 +1513,7 @@ void CGumpManager::SaveDefaultGumpProperties(WISP_FILE::CBinaryFileWritter &writ
 @param [__in] path Путь к файлу кофнига
 @return 
 */
-void CGumpManager::Save(const string &path)
+void CGumpManager::Save(const os_path &path)
 {
 	WISPFUN_DEBUG("c144_f30");
 	WISP_FILE::CBinaryFileWritter writter;

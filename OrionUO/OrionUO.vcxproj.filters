@@ -840,6 +840,12 @@
     <ClInclude Include="GUI\GUIBulletinBoardObject.h">
       <Filter>Header Files\GUI</Filter>
     </ClInclude>
+    <ClInclude Include="FileSystem.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OrionMain.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="OrionUO.cpp">
@@ -1558,6 +1564,12 @@
     </ClCompile>
     <ClCompile Include="Utility\PingThread.cpp">
       <Filter>Source Files\Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="FileSystem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OrionMain.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

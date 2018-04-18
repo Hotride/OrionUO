@@ -1,4 +1,4 @@
-﻿/***********************************************************************************
+/***********************************************************************************
 **
 ** GumpTextEntryDialog.h
 **
@@ -18,9 +18,9 @@ public:
 	uchar ButtonID = 0;
 
 private:
-	static const int ID_GTED_BUTTON_OKAY = 1;
-	static const int ID_GTED_BUTTON_CANCEL = 2;
-	static const int ID_GTED_TEXT_FIELD = 3;
+	static constexpr int ID_GTED_BUTTON_OKAY = 1;
+	static constexpr int ID_GTED_BUTTON_CANCEL = 2;
+	static constexpr int ID_GTED_TEXT_FIELD = 3;
 
 	string Text = string("");
 	string m_Description = string("");

@@ -221,7 +221,6 @@ public:
 	*/
 	void SetUseHTML(bool val, int htmlStartColor = 0xFFFFFFFF, const bool backgroundCanBeColored = false) { m_UseHTML = val; m_HTMLColor = htmlStartColor; m_HTMLBackgroundCanBeColored = backgroundCanBeColored; }
 	bool GetUseHTML() const { return m_UseHTML; }
-	__declspec(property(get = GetUseHTML)) bool UseHTML;
 
 	/*!
 	Загрузка ASCII шрифтов

@@ -59,7 +59,7 @@ public:
 	@param [__in] path Путь к файлу с макросами
 	@return true при успешном конвертировании
 	*/
-	bool Convert(const string &path);
+	bool Convert(const os_path &path);
 
 	/*!
 	Загрузить макросы из конфига
@@ -67,14 +67,14 @@ public:
 	@param [__in] originalPath Путь к файлу с макросами оригинального клиента
 	@return 
 	*/
-	bool Load(const string &path, const string &originalPath);
+	bool Load(const os_path &path, const os_path &originalPath);
 
 	/*!
 	Сохранить макросы в конфиг
 	@param [__in] path Путь к файлу конфига
 	@return 
 	*/
-	void Save(const string &path);
+	void Save(const os_path &path);
 
 	/*!
 	Загрузить макросы из опций

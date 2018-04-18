@@ -273,7 +273,7 @@ bool CSkillGroupManager::Remove(CSkillGroupObject *group)
 @param [__in] path Путь к файлу конфига
 @return 
 */
-bool CSkillGroupManager::Load(string path)
+bool CSkillGroupManager::Load(const os_path &path)
 {
 	WISPFUN_DEBUG("c155_f12");
 	bool result = false;
@@ -332,7 +332,7 @@ bool CSkillGroupManager::Load(string path)
 @param [__in] path Путьк  файлу конфига
 @return 
 */
-void CSkillGroupManager::Save(string path)
+void CSkillGroupManager::Save(const os_path &path)
 {
 	WISPFUN_DEBUG("c155_f13");
 	WISP_FILE::CBinaryFileWritter writter;

@@ -4155,7 +4155,7 @@ void CPacketManager::AddHTMLGumps(CGump *gump, vector<HTMLGumpDataInfo> &list)
 	{
 		HTMLGumpDataInfo &data = list[i];
 
-		CGUIHTMLGump *htmlGump = (CGUIHTMLGump*)gump->Add(new CGUIHTMLGump(data.TextID + 1, 0x0BB8, data.GumpCoords->X, data.GumpCoords->Y, data.Width, data.Height, data.HaveBackground, data.HaveScrollbar));
+		CGUIHTMLGump *htmlGump = (CGUIHTMLGump*)gump->Add(new CGUIHTMLGump(data.TextID + 1, 0x0BB8, data.sGumpCoords->X, data.sGumpCoords->Y, data.Width, data.Height, data.HaveBackground, data.HaveScrollbar));
 		htmlGump->DrawOnly = (data.HaveScrollbar == 0);
 
 		int width = htmlGump->Width;
@@ -4233,9 +4233,9 @@ PACKET_HANDLER(OpenGump)
 	ushort commandsLength = ReadUInt16BE();
 	string commands = ReadString(commandsLength);
 
-	WISP_FILE::CTextFileParser parser("", " ", "", "{}");
-	WISP_FILE::CTextFileParser cmdParser("", " ", "", "");
-	WISP_FILE::CTextFileParser tilepicGraphicParser("", ",", "", "");
+	WISP_FILE::CTextFileParser parser({}, " ", "", "{}");
+	WISP_FILE::CTextFileParser cmdParser({}, " ", "", "");
+	WISP_FILE::CTextFileParser tilepicGraphicParser({}, ",", "", "");
 
 	STRING_LIST commandList = parser.GetTokens(commands.c_str());
 	CBaseGUI *lastGumpObject = NULL;
@@ -4554,7 +4554,7 @@ PACKET_HANDLER(OpenGump)
 
 				if (listSize >= 5 && m_ClientVersion >= CV_305D)
 				{
-					WISP_FILE::CTextFileParser gumppicParser("", "=", "", "");
+					WISP_FILE::CTextFileParser gumppicParser({}, "=", "", "");
 					STRING_LIST hueList = gumppicParser.GetTokens(list[4].c_str());
 
 					if (hueList.size() > 1)
@@ -4608,7 +4608,7 @@ PACKET_HANDLER(OpenGump)
 				HTMLGumpDataInfo htmlInfo = { 0 };
 				htmlInfo.IsXMF = (cmd != "htmlgump");
 				GumpCoords* gumpCoords = new GumpCoords{ ToInt(list[1]), ToInt(list[2]) };
-				htmlInfo.GumpCoords = gumpCoords;
+				htmlInfo.sGumpCoords = gumpCoords;
 				htmlInfo.Width = ToInt(list[3]);
 				htmlInfo.Height = ToInt(list[4]);
 				htmlInfo.TextID = ToInt(list[5]);
@@ -4634,7 +4634,7 @@ PACKET_HANDLER(OpenGump)
 				HTMLGumpDataInfo htmlInfo = { 0 };
 				htmlInfo.IsXMF = true;
 				GumpCoords* gumpCoords = new GumpCoords{ ToInt(list[1]), ToInt(list[2]) };
-				htmlInfo.GumpCoords = gumpCoords;
+				htmlInfo.sGumpCoords = gumpCoords;
 				htmlInfo.Width = ToInt(list[3]);
 				htmlInfo.Height = ToInt(list[4]);
 				htmlInfo.HaveBackground = ToInt(list[5]);

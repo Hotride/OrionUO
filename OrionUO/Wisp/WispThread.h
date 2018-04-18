@@ -35,6 +35,8 @@ public:
 
 	virtual void OnExecute(uint nowTime) {}
 	virtual void OnDestroy() {}
+
+	static std::thread::id GetCurrentThreadId();
 };
 //----------------------------------------------------------------------------------
 }; //namespace

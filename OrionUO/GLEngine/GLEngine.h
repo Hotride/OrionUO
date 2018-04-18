@@ -80,6 +80,7 @@ public:
 	GLuint PositionBuffer = 0;
 	bool IgnoreHitMap = false;
 
+	SDL_GLContext m_context;
 private:
 	bool GLSetupPixelFormat();
 

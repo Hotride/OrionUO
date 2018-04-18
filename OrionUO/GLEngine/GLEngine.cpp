@@ -43,6 +43,7 @@ CGLEngine::~CGLEngine()
 //----------------------------------------------------------------------------------
 bool CGLEngine::GLSetupPixelFormat()
 {
+#if USE_WISP
 	WISPFUN_DEBUG("c29_f2");
 	PIXELFORMATDESCRIPTOR pfd =
 	{
@@ -79,7 +80,7 @@ bool CGLEngine::GLSetupPixelFormat()
 		MessageBox(NULL, L"SetPixelFormat failed", L"Error", MB_OK);
 		return false;
 	}
-
+#endif
 	return true;
 }
 //----------------------------------------------------------------------------------
@@ -88,6 +89,7 @@ bool CGLEngine::Install()
 	WISPFUN_DEBUG("c29_f3");
 	OldTexture = -1;
 
+#if USE_WISP
 	DC = ::GetDC(g_OrionWindow.Handle);
 	if (!GLSetupPixelFormat())
 		return false;
@@ -98,52 +100,61 @@ bool CGLEngine::Install()
 
 	if (!wglMakeCurrent(DC, RC))
 		return false;
-	
+#else
+	m_context = SDL_GL_CreateContext(g_OrionWindow.m_window);
+	SDL_GL_MakeCurrent(g_OrionWindow.m_window, m_context);
+	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+#endif
+
 	int glewInitResult = glewInit();
 	LOG("glewInit() = %i rt=%i fb=%i v(%s) (shader: %i)\n", glewInitResult, WGLEW_ARB_render_texture, GL_ARB_framebuffer_object, glGetString(GL_VERSION), GL_ARB_shader_objects);
-
-	if (!glewInitResult)
-	{
-		CanUseFrameBuffer = (GL_ARB_framebuffer_object &&
-			glBindFramebuffer &&
-			glDeleteFramebuffers &&
-			glFramebufferTexture2D &&
-			glGenFramebuffers
-			);
-
-		CanUseBuffer = (GL_VERSION_1_5 &&
-			glBindBuffer &&
-			glBufferData &&
-			glDeleteBuffers &&
-			glGenBuffers
-			);
-
-		CanUseBuffer = false;
-
-		if (CanUseBuffer)
-		{
-			glGenBuffers(3, &PositionBuffer);
-
-			int positionArray[] = { 0, 1, 1, 1, 0, 0, 1, 0 };
-
-			glBindBuffer(GL_ARRAY_BUFFER, PositionBuffer);
-			glBufferData(GL_ARRAY_BUFFER, sizeof(positionArray), &positionArray[0], GL_STATIC_DRAW);
-
-			g_GL_BindTexture16_Ptr = &CGLEngine::GL2_BindTexture16;
-			g_GL_BindTexture32_Ptr = &CGLEngine::GL2_BindTexture32;
-
-			g_GL_DrawLandTexture_Ptr = &CGLEngine::GL2_DrawLandTexture;
-			g_GL_Draw_Ptr = &CGLEngine::GL2_Draw;
-			g_GL_DrawRotated_Ptr = &CGLEngine::GL2_DrawRotated;
-			g_GL_DrawMirrored_Ptr = &CGLEngine::GL2_DrawMirrored;
-			g_GL_DrawSitting_Ptr = &CGLEngine::GL2_DrawSitting;
-			g_GL_DrawShadow_Ptr = &CGLEngine::GL2_DrawShadow;
-			g_GL_DrawStretched_Ptr = &CGLEngine::GL2_DrawStretched;
-			g_GL_DrawResizepic_Ptr = &CGLEngine::GL2_DrawResizepic;
-		}
-	}
-	else
+	if (glewInitResult)
 		return false;
+
+	LOG("Graphics Successfully Initialized\n");
+	LOG("OpenGL Info:\n");
+	LOG("    Version: %s\n", glGetString(GL_VERSION));
+	LOG("     Vendor: %s\n", glGetString(GL_VENDOR));
+	LOG("   Renderer: %s\n", glGetString(GL_RENDERER));
+	LOG("    Shading: %s\n", glGetString(GL_SHADING_LANGUAGE_VERSION));
+
+	CanUseFrameBuffer = (GL_ARB_framebuffer_object &&
+		glBindFramebuffer &&
+		glDeleteFramebuffers &&
+		glFramebufferTexture2D &&
+		glGenFramebuffers
+		);
+
+	CanUseBuffer = (GL_VERSION_1_5 &&
+		glBindBuffer &&
+		glBufferData &&
+		glDeleteBuffers &&
+		glGenBuffers
+		);
+
+	CanUseBuffer = false;
+
+	if (CanUseBuffer)
+	{
+		glGenBuffers(3, &PositionBuffer);
+
+		int positionArray[] = { 0, 1, 1, 1, 0, 0, 1, 0 };
+
+		glBindBuffer(GL_ARRAY_BUFFER, PositionBuffer);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(positionArray), &positionArray[0], GL_STATIC_DRAW);
+
+		g_GL_BindTexture16_Ptr = &CGLEngine::GL2_BindTexture16;
+		g_GL_BindTexture32_Ptr = &CGLEngine::GL2_BindTexture32;
+
+		g_GL_DrawLandTexture_Ptr = &CGLEngine::GL2_DrawLandTexture;
+		g_GL_Draw_Ptr = &CGLEngine::GL2_Draw;
+		g_GL_DrawRotated_Ptr = &CGLEngine::GL2_DrawRotated;
+		g_GL_DrawMirrored_Ptr = &CGLEngine::GL2_DrawMirrored;
+		g_GL_DrawSitting_Ptr = &CGLEngine::GL2_DrawSitting;
+		g_GL_DrawShadow_Ptr = &CGLEngine::GL2_DrawShadow;
+		g_GL_DrawStretched_Ptr = &CGLEngine::GL2_DrawStretched;
+		g_GL_DrawResizepic_Ptr = &CGLEngine::GL2_DrawResizepic;
+	}
 
 	LOG("g_UseFrameBuffer = %i; CanUseBuffer = %i\n", CanUseFrameBuffer, CanUseBuffer);
 
@@ -160,11 +171,15 @@ bool CGLEngine::Install()
 
 	glEnable(GL_TEXTURE_2D);
 
+#if USE_WISP
 	typedef BOOL(WINAPI *PFNWGLSWAPINTERVALEXTPROC)(int interval);
 	PFNWGLSWAPINTERVALEXTPROC wglSwapIntervalEXT = (PFNWGLSWAPINTERVALEXTPROC)wglGetProcAddress("wglSwapIntervalEXT");
 
 	if (wglSwapIntervalEXT != NULL)
 		wglSwapIntervalEXT(0);
+#else
+	SDL_GL_SetSwapInterval(0); // 1 vsync
+#endif
 
 	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
 	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
@@ -194,6 +209,7 @@ bool CGLEngine::Install()
 void CGLEngine::Uninstall()
 {
 	WISPFUN_DEBUG("c29_f4");
+#if USE_WISP
 	DC = 0;
 	wglMakeCurrent(NULL, NULL);
 
@@ -202,15 +218,23 @@ void CGLEngine::Uninstall()
 		wglDeleteContext(RC);
 		RC = 0;
 	}
+#else
+	SDL_GL_DeleteContext(m_context);
+#endif
 }
 //----------------------------------------------------------------------------------
 void CGLEngine::UpdateRect()
 {
+#if USE_WISP
 	WISPFUN_DEBUG("c29_f5");
 	RECT cr;
 	GetClientRect(g_OrionWindow.Handle, &cr);
 	int width = cr.right - cr.left;
 	int height = cr.bottom - cr.top;
+#else
+	int width, height;
+	SDL_GL_GetDrawableSize(g_OrionWindow.m_window, &width, &height);
+#endif
 
 	ViewPort(0, 0, width, height);
 	//ViewPort(0, 0, g_OrionWindow.GetSize().Width, g_OrionWindow.GetSize().Height);
@@ -357,7 +381,11 @@ void CGLEngine::EndDraw()
 
 	glDisable(GL_ALPHA_TEST);
 
+#if USE_WISP
 	SwapBuffers(DC);
+#else
+	SDL_GL_SwapWindow(WISP_WINDOW::g_WispWindow->m_window);
+#endif
 }
 //----------------------------------------------------------------------------------
 void CGLEngine::BeginStencil()

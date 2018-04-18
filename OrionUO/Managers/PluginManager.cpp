@@ -10,10 +10,16 @@
 */
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
+#if defined(ORION_LINUX)
+#include <stdint.h>
+#define CDECL
+#else
+#include <Windows.h>
+#endif
 //----------------------------------------------------------------------------------
 CPluginManager g_PluginManager;
 //----------------------------------------------------------------------------------
-bool __cdecl PluginRecvFunction(puchar buf, const int &size)
+bool CDECL PluginRecvFunction(puchar buf, const int &size)
 {
 	WISPFUN_DEBUG("c_plgrcvfnc");
 	//SendMessage(g_OrionWindow.Handle, UOMSG_RECV, (WPARAM)buf, size);
@@ -23,7 +29,7 @@ bool __cdecl PluginRecvFunction(puchar buf, const int &size)
 	return true;
 }
 //----------------------------------------------------------------------------------
-bool __cdecl PluginSendFunction(puchar buf, const int &size)
+bool CDECL PluginSendFunction(puchar buf, const int &size)
 {
 	WISPFUN_DEBUG("c_plgsndfnc");
 	//SendMessage(g_OrionWindow.Handle, UOMSG_SEND, (WPARAM)buf, size);
