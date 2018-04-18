@@ -1,4 +1,4 @@
-﻿/***********************************************************************************
+/***********************************************************************************
 **
 ** GumpPropertyIcon.h
 **
@@ -19,8 +19,8 @@ public:
     void SetText(const wstring& val);
 	CRenderObject* Object = NULL;
 private:
-	static const int ID_GPI_LOCK_MOVING = 1;
-	static const int ID_GPI_MINIMIZE = 2;
+	const int ID_GPI_LOCK_MOVING = 1;
+	const int ID_GPI_MINIMIZE = 2;
 
 	CGLTextTexture m_Texture;
 

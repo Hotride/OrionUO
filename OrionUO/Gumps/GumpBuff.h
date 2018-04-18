@@ -1,4 +1,4 @@
-﻿/***********************************************************************************
+/***********************************************************************************
 **
 ** GumpBuff.h
 **
@@ -13,15 +13,15 @@
 class CGumpBuff : public CGump
 {
 private:
-	static const int BUFF_ITEM_STEP_OFFSET_X = 3;
-	static const int BUFF_ITEM_STEP_OFFSET_Y = 3;
-	static const int MUNIMUM_ICON_ALPHA = 80;
-	static const int ALPHA_CHANGE_KOEFF = 600;
-	static const int USE_ALPHA_BLENDING_WHEN_TIMER_LESS = 10000;
+	const int BUFF_ITEM_STEP_OFFSET_X = 3;
+	const int BUFF_ITEM_STEP_OFFSET_Y = 3;
+	const int MUNIMUM_ICON_ALPHA = 80;
+	const int ALPHA_CHANGE_KOEFF = 600;
+	const int USE_ALPHA_BLENDING_WHEN_TIMER_LESS = 10000;
 
-	static const int ID_GB_NEXT_WINDOW_DIRECTION = 1;
-	static const int ID_GB_LOCK_MOVING = 2;
-	static const int ID_GB_BUFF_ITEM = 10;
+	const int ID_GB_NEXT_WINDOW_DIRECTION = 1;
+	const int ID_GB_LOCK_MOVING = 2;
+	const int ID_GB_BUFF_ITEM = 10;
 
 	void GetGumpStatus(WISP_GEOMETRY::CPoint2Di &ball, WISP_GEOMETRY::CPoint2Di &items, bool &useX, bool &decX, bool &decY, WISP_GEOMETRY::CPoint2Di &startGump, WISP_GEOMETRY::CSize &endGump);
 

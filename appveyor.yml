@@ -7,7 +7,7 @@ branches:
 skip_tags: true
 clone_folder: c:\projects\orion
 image:
-- Visual Studio 2013
+#- Visual Studio 2013
 - Visual Studio 2015
 - Visual Studio 2017
 configuration:
@@ -45,10 +45,4 @@ only_commits:
     - CMakeLists.txt
     - appveyor.yml
     - OrionUO/
-notifications:
-- provider: Webhook
-  url: https://discordapp.com/api/webhooks/237606690495791104/ewURTxkzbXphiOgXbzImxaHAsFCDuIDsVIDSADAeSs8a_6sd5VgWGWUG42Ij_qRTkocf
-  method: POST
-  on_build_success: true
-  on_build_failure: true
-  on_build_status_changed: true
+    - CMake/

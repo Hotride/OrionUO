@@ -1,4 +1,4 @@
-﻿// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 /***********************************************************************************
 **
@@ -13,7 +13,6 @@
 //----------------------------------------------------------------------------------
 CAnimationManager g_AnimationManager;
 //----------------------------------------------------------------------------------
-#pragma region layers table
 const int CAnimationManager::m_UsedLayers[8][USED_LAYER_COUNT] =
 {
 	{ //dir 0
@@ -217,7 +216,6 @@ const int CAnimationManager::m_UsedLayers[8][USED_LAYER_COUNT] =
 		OL_CLOAK,
 	},
 };
-#pragma endregion
 //----------------------------------------------------------------------------------
 CAnimationManager::CAnimationManager()
 : WISP_DATASTREAM::CDataReader()
@@ -462,7 +460,7 @@ void CAnimationManager::InitIndexReplaces(puint verdata)
 	{
 		static const string typeNames[5] = { "monster", "sea_monster", "animal", "human", "equipment" };
 
-		WISP_FILE::CTextFileParser mobtypesParser(g_App.UOFilesPath("mobtypes.txt").c_str(), " \t", "#;//", "");
+		WISP_FILE::CTextFileParser mobtypesParser(g_App.UOFilesPath("mobtypes.txt"), " \t", "#;//", "");
 
 		while (!mobtypesParser.IsEOF())
 		{
@@ -497,10 +495,10 @@ void CAnimationManager::InitIndexReplaces(puint verdata)
 
 	//std::pair<ushort, char> m_GroupReplaces[2];
 
-	WISP_FILE::CTextFileParser animParser[2]
+	WISP_FILE::CTextFileParser animParser[2] =
 	{
-		WISP_FILE::CTextFileParser(g_App.UOFilesPath("Anim1.def").c_str(), " \t", "#;//", "{}"),
-			WISP_FILE::CTextFileParser(g_App.UOFilesPath("Anim2.def").c_str(), " \t", "#;//", "{}")
+		WISP_FILE::CTextFileParser(g_App.UOFilesPath("Anim1.def"), " \t", "#;//", "{}"),
+		WISP_FILE::CTextFileParser(g_App.UOFilesPath("Anim2.def"), " \t", "#;//", "{}"),
 	};
 
 	IFOR(i, 0, 2)
@@ -522,10 +520,10 @@ void CAnimationManager::InitIndexReplaces(puint verdata)
 	if (g_PacketManager.GetClientVersion() < CV_305D) //CV_204C
 		return;
 
-	WISP_FILE::CTextFileParser newBodyParser("", " \t,{}", "#;//", "");
-	WISP_FILE::CTextFileParser bodyParser(g_App.UOFilesPath("Body.def").c_str(), " \t", "#;//", "{}");
-	WISP_FILE::CTextFileParser bodyconvParser(g_App.UOFilesPath("Bodyconv.def").c_str(), " \t", "#;//", "");
-	WISP_FILE::CTextFileParser corpseParser(g_App.UOFilesPath("Corpse.def").c_str(), " \t", "#;//", "{}");
+	WISP_FILE::CTextFileParser newBodyParser({}, " \t,{}", "#;//", "");
+	WISP_FILE::CTextFileParser bodyParser(g_App.UOFilesPath("Body.def"), " \t", "#;//", "{}");
+	WISP_FILE::CTextFileParser bodyconvParser(g_App.UOFilesPath("Bodyconv.def"), " \t", "#;//", "");
+	WISP_FILE::CTextFileParser corpseParser(g_App.UOFilesPath("Corpse.def"), " \t", "#;//", "{}");
 
 	WISP_FILE::CTextFileParser equipConvParser(g_App.UOFilesPath("EquipConv.def"), " \t", "#;//", "");
 

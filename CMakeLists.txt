@@ -9,6 +9,8 @@ project(OrionUO)
 #
 option(ENABLE_LTO "Enables Link Time Optimization" OFF)
 option(ORION_BUILD_MODULES "Enables Modular Project Structure" OFF)
+option(ORION_DLL_STATIC "Use Builtin Orion Crypto Library (Windows option)" OFF)
+option(ORION_WISP "Use WISP pure Win32 API Implementation (Windows option)" ON)
 
 list(APPEND CMAKE_MODULE_PATH
   ${CMAKE_SOURCE_DIR}/CMake
@@ -42,6 +44,9 @@ endif()
 include(CheckCXXSourceRuns)
 
 if(ORION_WINDOWS)
+	set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /MD")
+	set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /MDd")
+
 	if(NOT "${CMAKE_GENERATOR}" MATCHES "(Win64|IA64)")
 		set(_WIN_TARGET "Win32")
 	else()
@@ -63,15 +68,17 @@ if(ORION_WINDOWS)
 	set(GLEW_INCLUDE_DIR "${DEP_INCLUDE_DIR}")
 	set(GLEW_LIBRARIES "${DEP_LIB_DIR}glew32.lib")
 
-	set(SDL2_INCLUDE_DIRS "${DEP_INCLUDE_DIR}")
+	set(SDL2_INCLUDE_DIRS "${DEP_INCLUDE_DIR}/SDL2")
 	set(SDL2_LIBRARIES "${DEP_LIB_DIR}sdl2.lib" "${DEP_LIB_DIR}sdl2main.lib")
 
-	set(SDL2_IMAGE_INCLUDE_DIRS "${DEP_INCLUDE_DIR}")
+	set(SDL2_IMAGE_INCLUDE_DIRS "${DEP_INCLUDE_DIR}/SDL2")
 	set(SDL2_IMAGE_LIBRARIES "${DEP_LIB_DIR}")
 
 	# temporary hijacking to use other libs
 	set(SDL2_LIBRARIES ${SDL2_LIBRARIES} "${DEP_LIB_DIR}bass.lib" "${DEP_LIB_DIR}bassmidi.lib" "${DEP_LIB_DIR}psapi.lib")
 else()
+	set(ORION_DLL_STATIC ON)
+	set(ORION_WISP OFF)	
 	find_package(ZLIB REQUIRED)
 	find_package(SDL2 REQUIRED)
 	find_package(SDL2_image REQUIRED)

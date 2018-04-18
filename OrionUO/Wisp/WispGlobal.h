@@ -1,4 +1,4 @@
-﻿//----------------------------------------------------------------------------------
+//----------------------------------------------------------------------------------
 #ifndef WISPGLOBAL_H
 #define WISPGLOBAL_H
 
@@ -12,7 +12,7 @@
 
 #define _USE_MATH_DEFINES
 #include <math.h>
-
+#include <thread>
 #include <string>
 using std::string;
 using std::wstring;
@@ -40,7 +40,7 @@ public:
 	~CWispFunDebug();
 };
 //----------------------------------------------------------------------------------
-extern DWORD g_MainThread;
+extern std::thread::id g_MainThread;
 extern deque<string> g_WispDebugFunStack;
 //----------------------------------------------------------------------------------
 typedef vector<uchar> UCHAR_LIST;
@@ -57,6 +57,9 @@ string EncodeUTF8(const wstring &str);
 wstring DecodeUTF8(const string &str);
 string ToCamelCaseA(string str);
 wstring ToCamelCaseW(wstring str);
+#if defined(ORION_LINUX)
+const string &ToString(const string &str);
+#endif
 string ToString(const wstring &wstr);
 wstring ToWString(const string &str);
 string Trim(const string &str);
@@ -88,25 +91,25 @@ inline int RandomIntMinMax(int n, int m)
 	return (rand() % (m - n) + n);
 }
 //----------------------------------------------------------------------------------
-inline DWORD unpack32(PBYTE buf)
+inline uint unpack32(puchar buf)
 {
 	return (buf[0] << 24) | (buf[1] << 16) | (buf[2] << 8) | buf[3];
 }
 //----------------------------------------------------------------------------------
-inline WORD unpack16(PBYTE buf)
+inline ushort unpack16(puchar buf)
 {
 	return (buf[0] << 8) | buf[1];
 }
 //----------------------------------------------------------------------------------
-inline void pack32(PBYTE buf, DWORD x)
+inline void pack32(puchar buf, uint x)
 {
-	buf[0] = BYTE(x >> 24);
-	buf[1] = BYTE((x >> 16) & 0xff);
-	buf[2] = BYTE((x >> 8) & 0xff);
-	buf[3] = BYTE(x & 0xff);
+	buf[0] = uchar(x >> 24);
+	buf[1] = uchar((x >> 16) & 0xff);
+	buf[2] = uchar((x >> 8) & 0xff);
+	buf[3] = uchar(x & 0xff);
 }
 //----------------------------------------------------------------------------------
-inline void pack16(PBYTE buf, WORD x)
+inline void pack16(puchar buf, ushort x)
 {
 	buf[0] = x >> 8;
 	buf[1] = x & 0xff;

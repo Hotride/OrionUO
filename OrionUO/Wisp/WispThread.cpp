@@ -3,12 +3,20 @@
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
 
+#include <thread>
+#include <SDL_timer.h>
 #define THREAD_USE_CLOCK 0
+
+#if defined(ORION_WINDOWS)
+#define ORION_API __stdcall
+#else
+#define ORION_API
+#endif
 
 namespace WISP_THREAD
 {
 //----------------------------------------------------------------------------------
-unsigned __stdcall CThreadLoop(void *arg)
+unsigned ORION_API CThreadLoop(void *arg)
 {
 	WISPFUN_DEBUG("c_trdlp");
 	CThread *parent = (CThread*)arg;
@@ -16,12 +24,12 @@ unsigned __stdcall CThreadLoop(void *arg)
 	while (parent->IsActive())
 	{
 		while (parent->Paused())
-			Sleep(1);
+			SDL_Delay(1);
 
 #if THREAD_USE_CLOCK == 1
 		parent->OnExecute(clock());
 #else
-		parent->OnExecute(timeGetTime());
+		parent->OnExecute(SDL_GetTicks());
 #endif
 
 		if (!parent->Cycled())
@@ -31,7 +39,7 @@ unsigned __stdcall CThreadLoop(void *arg)
 			int delay = parent->Delay();
 
 			if (delay > 0)
-				Sleep(delay);
+				SDL_Delay(delay);
 		}
 	}
 
@@ -43,7 +51,7 @@ unsigned __stdcall CThreadLoop(void *arg)
 	return 0;
 };
 //----------------------------------------------------------------------------------
-unsigned __stdcall CThreadLoopSynchronizedDelay(void *arg)
+unsigned ORION_API CThreadLoopSynchronizedDelay(void *arg)
 {
 	WISPFUN_DEBUG("c_trdlpsd");
 	CThread *parent = (CThread*)arg;
@@ -52,12 +60,12 @@ unsigned __stdcall CThreadLoopSynchronizedDelay(void *arg)
 	while (parent->IsActive())
 	{
 		while (parent->Paused())
-			Sleep(1);
+			SDL_Delay(1);
 
 #if THREAD_USE_CLOCK == 1
 		uint nowTime = clock();
 #else
-		uint nowTime = timeGetTime();
+		uint nowTime = SDL_GetTicks();
 #endif
 
 		parent->OnExecute(nowTime);
@@ -69,13 +77,10 @@ unsigned __stdcall CThreadLoopSynchronizedDelay(void *arg)
 #if THREAD_USE_CLOCK == 1
 			int delay = (int)((nowTime + parent->Delay()) - clock());
 #else
-			int delay = (int)((nowTime + parent->Delay()) - timeGetTime());
+			int delay = (int)((nowTime + parent->Delay()) - SDL_GetTicks());
 #endif
 
-			if (delay > 0)
-				Sleep(delay);
-			else
-				Sleep(1);
+			SDL_Delay(delay > 0 ? delay : 1);
 		}
 	}
 
@@ -197,6 +202,12 @@ void CThread::ChangeDelay(int newDelay)
 	EnterCriticalSection(&m_CriticalSection);
 	m_Delay = newDelay;
 	LeaveCriticalSection(&m_CriticalSection);
+}
+//----------------------------------------------------------------------------------
+std::thread::id CThread::GetCurrentThreadId()
+{
+	//return GetCurrentThreadId();
+	return std::this_thread::get_id();
 }
 //----------------------------------------------------------------------------------
 }; //namespace

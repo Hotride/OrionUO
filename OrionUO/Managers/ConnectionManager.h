@@ -7,12 +7,14 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#ifndef CONNECTIONMANAGER_H
-#define CONNECTIONMANAGER_H
+#pragma once
+#if defined(ORION_LINUX)
+#define CDECL
+#endif
 //----------------------------------------------------------------------------------
-typedef void __cdecl NETWORK_INIT_TYPE(const bool&, BYTE*);
-typedef void __cdecl NETWORK_ACTION_TYPE(const bool&, BYTE*, BYTE*, const int&);
-typedef void __cdecl NETWORK_POST_ACTION_TYPE(BYTE*, BYTE*, const int&);
+typedef void CDECL NETWORK_INIT_TYPE(const bool&, BYTE*);
+typedef void CDECL NETWORK_ACTION_TYPE(const bool&, BYTE*, BYTE*, const int&);
+typedef void CDECL NETWORK_POST_ACTION_TYPE(BYTE*, BYTE*, const int&);
 //----------------------------------------------------------------------------------
 extern NETWORK_INIT_TYPE *g_NetworkInit;
 extern NETWORK_ACTION_TYPE *g_NetworkAction;
@@ -129,6 +131,4 @@ public:
 //----------------------------------------------------------------------------------
 //!Менеджер подключения
 extern CConnectionManager g_ConnectionManager;
-//----------------------------------------------------------------------------------
-#endif //CONNECTIONMANAGER_H
 //----------------------------------------------------------------------------------

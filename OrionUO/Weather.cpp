@@ -1,4 +1,4 @@
-﻿// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 /***********************************************************************************
 **
@@ -199,7 +199,7 @@ void CWeather::Draw(int x, int y)
 				if (windChanged)
 				{
 					// вычисление угла скорости в градусах
-					effect->SpeedAngle = rad2degf(std::atan2f(effect->SpeedX, effect->SpeedY));
+					effect->SpeedAngle = rad2degf(atan2f(effect->SpeedX, effect->SpeedY));
 					// числинное значение скорости
 					effect->SpeedMagnitude = sqrtf(powf(effect->SpeedX, 2) + powf(effect->SpeedY, 2));
 				}

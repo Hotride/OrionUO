@@ -51,8 +51,8 @@ public:
 	void WriteInt32BE(int val, const intptr_t &offset = 0) { WriteDataBE((puchar)&val, sizeof(int), offset); }
 	void WriteInt32LE(int val, const intptr_t &offset = 0) { WriteDataLE((puchar)&val, sizeof(int), offset); }
 
-	void WriteInt64BE(const __int64 &val, const intptr_t &offset = 0) { WriteDataBE((puchar)&val, sizeof(__int64), offset); }
-	void WriteInt64LE(const __int64 &val, const intptr_t &offset = 0) { WriteDataLE((puchar)&val, sizeof(__int64), offset); }
+	void WriteInt64BE(const int64_t &val, const intptr_t &offset = 0) { WriteDataBE((puchar)&val, sizeof(int64_t), offset); }
+	void WriteInt64LE(const int64_t &val, const intptr_t &offset = 0) { WriteDataLE((puchar)&val, sizeof(int64_t), offset); }
 
 	void WriteFloatBE(float val, const intptr_t &offset = 0) { WriteDataBE((puchar)&val, sizeof(float), offset); }
 	void WriteFloatLE(float val, const intptr_t &offset = 0) { WriteDataLE((puchar)&val, sizeof(float), offset); }
@@ -103,8 +103,8 @@ public:
 	int ReadInt32BE(const intptr_t &offset = 0) { int val = 0; ReadDataBE((puchar)&val, sizeof(int), offset); return val; }
 	int ReadInt32LE(const intptr_t &offset = 0) { int val = 0; ReadDataLE((puchar)&val, sizeof(int), offset); return val; }
 
-	__int64 ReadInt64BE(const intptr_t &offset = 0) { __int64 val = 0; ReadDataBE((puchar)&val, sizeof(__int64), offset); return val; }
-	__int64 ReadInt64LE(const intptr_t &offset = 0) { __int64 val = 0; ReadDataLE((puchar)&val, sizeof(__int64), offset); return val; }
+	int64_t ReadInt64BE(const intptr_t &offset = 0) { int64_t val = 0; ReadDataBE((puchar)&val, sizeof(int64_t), offset); return val; }
+	int64_t ReadInt64LE(const intptr_t &offset = 0) { int64_t val = 0; ReadDataLE((puchar)&val, sizeof(int64_t), offset); return val; }
 
 	uint64 ReadUInt64BE(const intptr_t &offset = 0) { uint64 val = 0; ReadDataBE((puchar)&val, sizeof(uint64), offset); return val; }
 	uint64 ReadUInt64LE(const intptr_t &offset = 0) { uint64 val = 0; ReadDataLE((puchar)&val, sizeof(uint64), offset); return val; }

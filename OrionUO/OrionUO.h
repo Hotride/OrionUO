@@ -40,7 +40,7 @@ private:
 
 	string m_GameServerIP = "";
 
-	void LoadClientConfig();
+	bool LoadClientConfig();
 	void LoadAutoLoginNames();
 
 	void LoadTiledata(int landSize, int staticsSize);
@@ -91,9 +91,9 @@ private:
 
 	void ParseCommandLine();
 
-	void LoadPlugin(const string &libpath, const string &function, int flags);
+	void LoadPlugin(const os_path &libpath, const string &function, int flags);
 
-	void LoadContaierOffsets();
+	void LoadContainerOffsets();
 
 public:
 	COrion();
@@ -107,7 +107,9 @@ public:
 	//Данные из тайлдаты по статике
 	vector<STATIC_TILES> m_StaticData;
 
+#if defined(ORION_WINDOWS) 
 	static UINT_LIST FindPattern(puchar ptr, int size, const UCHAR_LIST &pattern);
+#endif
 
 	bool Install();
 	void Uninstall();

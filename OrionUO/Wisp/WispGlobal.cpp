@@ -2,8 +2,14 @@
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
+
+#include <locale>
+#include <codecvt>
+#include <string>
+
+#include "WispThread.h"
 //----------------------------------------------------------------------------------
-DWORD g_MainThread = 0;
+std::thread::id g_MainThread;
 deque<string> g_WispDebugFunStack;
 #if USE_WISP_DEBUG_FUNCTION_NAMES == 2
 char *g_WispCurrentFunctionName = NULL;
@@ -11,13 +17,13 @@ char *g_WispCurrentFunctionName = NULL;
 //----------------------------------------------------------------------------------
 CWispFunDebug::CWispFunDebug(const char *str)
 {
-	if (g_MainThread == GetCurrentThreadId())
+	if (g_MainThread == WISP_THREAD::CThread::GetCurrentThreadId())
 		g_WispDebugFunStack.push_back(str);
 }
 //----------------------------------------------------------------------------------
 CWispFunDebug::~CWispFunDebug()
 {
-	if (g_MainThread == GetCurrentThreadId())
+	if (g_MainThread == WISP_THREAD::CThread::GetCurrentThreadId())
 		g_WispDebugFunStack.pop_back();
 }
 //----------------------------------------------------------------------------------
@@ -109,8 +115,16 @@ wstring ToCamelCaseW(wstring str)
 	return str;
 }
 //----------------------------------------------------------------------------------
+#if defined(ORION_LINUX)
+const string &ToString(const string &str)
+{
+	return str;
+}
+#endif
+//----------------------------------------------------------------------------------
 string ToString(const wstring &wstr)
 {
+#if USE_WISP
 	string str = "";
 	int size = (int)wstr.length();
 	int newSize = ::WideCharToMultiByte(GetACP(), 0, wstr.c_str(), size, NULL, 0, NULL, NULL);
@@ -121,12 +135,17 @@ string ToString(const wstring &wstr)
 		::WideCharToMultiByte(GetACP(), 0, wstr.c_str(), size, &str[0], newSize, NULL, NULL);
 		str.resize(newSize); // str[newSize] = 0;
 	}
-
 	return str;
+#else
+	std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
+	return converter.to_bytes(wstr);
+#endif
 }
+
 //----------------------------------------------------------------------------------
 wstring ToWString(const string &str)
 {
+#if USE_WISP
 	int size = (int)str.length();
 	wstring wstr = L"";
 
@@ -136,8 +155,11 @@ wstring ToWString(const string &str)
 		MultiByteToWideChar(GetACP(), 0, str.c_str(), size, &wstr[0], size);
 		wstr.resize(size); // wstr[size] = 0;
 	}
-
 	return wstr;
+#else
+	std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
+	return converter.from_bytes(str);
+#endif
 }
 //----------------------------------------------------------------------------------
 string Trim(const string &str)
@@ -222,7 +244,7 @@ bool ToBool(const string &str)
 	return result;
 }
 //----------------------------------------------------------------------------------
-#if DEBUGGIND_OUTPUT == 1
+#if DEBUGGING_OUTPUT == 1
 void DebugMsg(const char *format, ...)
 {
 	va_list arg;

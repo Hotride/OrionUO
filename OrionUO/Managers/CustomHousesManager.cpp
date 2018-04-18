@@ -72,7 +72,7 @@ void CustomHousesManager::Add(CCustomHouse* house)
 		m_Items[house->Serial] = house;
 }
 //----------------------------------------------------------------------------------
-void CustomHousesManager::Load(const string &path)
+void CustomHousesManager::Load(const os_path &path)
 {
 	WISPFUN_DEBUG("");
 	Clear();
@@ -122,7 +122,7 @@ void CustomHousesManager::Load(const string &path)
 	}
 }
 //----------------------------------------------------------------------------------
-void CustomHousesManager::Save(const string &path)
+void CustomHousesManager::Save(const os_path &path)
 {
 	WISPFUN_DEBUG("");
 	WISP_FILE::CBinaryFileWritter writter;

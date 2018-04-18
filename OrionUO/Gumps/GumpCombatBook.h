@@ -1,4 +1,4 @@
-﻿/***********************************************************************************
+/***********************************************************************************
 **
 ** GumpCombatBook.h
 **
@@ -17,13 +17,13 @@ class CGumpCombatBook : public CGump
 	int PagesCount = 37;
 
 private:
-	static const int ID_GCB_BUTTON_PREV = 1;
-	static const int ID_GCB_BUTTON_NEXT = 2;
-	static const int ID_GCB_BUTTON_MINIMIZE = 3;
-	static const int ID_GCB_LOCK_MOVING = 4;
-	static const int ID_GCB_ICON_FIRST = 5;
-	static const int ID_GCB_ICON_SECOND = 6;
-	static const int ID_GCB_ICON = 100;
+	const int ID_GCB_BUTTON_PREV = 1;
+	const int ID_GCB_BUTTON_NEXT = 2;
+	const int ID_GCB_BUTTON_MINIMIZE = 3;
+	const int ID_GCB_LOCK_MOVING = 4;
+	const int ID_GCB_ICON_FIRST = 5;
+	const int ID_GCB_ICON_SECOND = 6;
+	const int ID_GCB_ICON = 100;
 
 	static const string m_AbilityName[MAX_ABILITIES_COUNT];
 

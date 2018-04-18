@@ -13,8 +13,6 @@
 //----------------------------------------------------------------------------------
 CSoundManager g_SoundManager;
 //----------------------------------------------------------------------------------
-#pragma region BASS.DLL error code descriptions
-
 struct BASS_ErrorDescription
 {
 	int errorCode;
@@ -75,7 +73,6 @@ const char *BASS_ErrorGetDescription()
 
 	return BASS_ErrorTable[0].desc;
 }
-#pragma endregion
 //----------------------------------------------------------------------------------
 CSoundManager::CSoundManager()
 {
@@ -102,8 +99,8 @@ bool CSoundManager::Init()
 
 		if (!BASS_SetConfig(BASS_CONFIG_3DALGORITHM, BASS_3DALG_FULL))
 			LOG("Error setting 3d sound: %s\n", BASS_ErrorGetDescription());
-		string path = g_App.ExeFilePath("uo_4mb_2.sf2");
-		if (!BASS_SetConfigPtr(BASS_CONFIG_MIDI_DEFFONT, path.c_str()))
+		auto path = g_App.ExeFilePath("uo_4mb_2.sf2");
+		if (!BASS_SetConfigPtr(BASS_CONFIG_MIDI_DEFFONT, CStringFromPath(path)))
 			LOG("Could not load soundfont file for midi");
 	}
 	return true;
@@ -269,7 +266,7 @@ void CSoundManager::PlayMidi(int index, bool warmode)
 		LOG("Music ID is out of range: %i\n", index);
 }
 //----------------------------------------------------------------------------------
-void CSoundManager::PlayMP3(const string &fileName, int index, bool loop, bool warmode)
+void CSoundManager::PlayMP3(const os_path &fileName, int index, bool loop, bool warmode)
 {
 	WISPFUN_DEBUG("c156_f12");
 	if (warmode && m_WarMusic != 0)

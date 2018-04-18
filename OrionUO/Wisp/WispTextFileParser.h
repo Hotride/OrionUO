@@ -1,4 +1,4 @@
-﻿//----------------------------------------------------------------------------------
+//----------------------------------------------------------------------------------
 #ifndef WISPTEXTFILEPARSER_H
 #define WISPTEXTFILEPARSER_H
 //----------------------------------------------------------------------------------
@@ -73,8 +73,7 @@ private:
 	void SaveRawLine();
 
 public:
-	CTextFileParser(const string &path, const char *delimiters = "", const char *comentaries = "", const char *quotes = "");
-	CTextFileParser(const wstring &path, const char *delimiters = "", const char *comentaries = "", const char *quotes = "");
+	CTextFileParser(const os_path &path, const char *delimiters = "", const char *comentaries = "", const char *quotes = "");
 	~CTextFileParser();
 
 	//Сбросить указатель на старт
@@ -94,14 +93,13 @@ class CTextFileWritter
 {
 private:
 	//Указатель на адрес в памяти, куда загружен файл
-	FILE *m_File{ NULL };
+	FILE *m_File{ nullptr };
 
 public:
-	CTextFileWritter(const string &path);
-	CTextFileWritter(const wstring &path);
+	CTextFileWritter(const os_path &path);
 	~CTextFileWritter();
 
-	bool Opened() { return (m_File != NULL); };
+	bool Opened() { return (m_File != nullptr); };
 
 	void Close();
 

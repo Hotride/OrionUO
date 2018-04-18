@@ -1,4 +1,4 @@
-﻿/***********************************************************************************
+/***********************************************************************************
 **
 ** GumpWorldMap.h
 **
@@ -37,15 +37,15 @@ public:
 	int CurrentOffsetY = 0;
 
 private:
-	static const int ID_GWM_MINIMIZE = 1;
-	static const int ID_GWM_RESIZE = 2;
-	static const int ID_GWM_MAP = 3;
-	static const int ID_GWM_LINK_WITH_PLAYER = 4;
-	static const int ID_GWM_MAP_LIST = 10;
-	static const int ID_GWM_SCALE_LIST = 20;
+	static constexpr int ID_GWM_MINIMIZE = 1;
+	static constexpr int ID_GWM_RESIZE = 2;
+	static constexpr int ID_GWM_MAP = 3;
+	static constexpr int ID_GWM_LINK_WITH_PLAYER = 4;
+	static constexpr int ID_GWM_MAP_LIST = 10;
+	static constexpr int ID_GWM_SCALE_LIST = 20;
 
-	static const int MIN_WORLD_MAP_HEIGHT = 300;
-	static const int MIN_WORLD_MAP_WIDTH = 400;
+	static constexpr int MIN_WORLD_MAP_HEIGHT = 300;
+	static constexpr int MIN_WORLD_MAP_WIDTH = 400;
 
 	int m_StartResizeWidth{ 0 };
 	int m_StartResizeHeight{ 0 };

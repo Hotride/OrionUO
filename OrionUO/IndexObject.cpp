@@ -17,7 +17,7 @@ CIndexObject::CIndexObject()
 //----------------------------------------------------------------------------------
 CIndexObject::~CIndexObject()
 {
-	WISPFUN_DEBUG("c189_f1");
+	//WISPFUN_DEBUG("c189_f1");
 	if (Texture != NULL)
 	{
 		delete Texture;

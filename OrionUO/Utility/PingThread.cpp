@@ -10,6 +10,7 @@
 */
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
+#include <SDL_timer.h>
 //----------------------------------------------------------------------------------
 typedef struct tagICMPHDR
 {
@@ -108,7 +109,7 @@ int CPingThread::CalculatePing()
 				ECHOREQUEST request = { 0 };
 
 				request.icmpHdr.Type = ICMP_ECHOREQ;
-				request.dwTime = timeGetTime();
+				request.dwTime = SDL_GetTicks();
 				memset(request.cData, 80, 64);
 				request.icmpHdr.Checksum = CalculateChecksum((pushort)&request, sizeof(ECHOREQUEST));
 
@@ -130,7 +131,7 @@ int CPingThread::CalculatePing()
 					int length = sizeof(sockaddr_in);
 
 					if (::recvfrom(socket, (LPSTR)&answer, sizeof(ECHOREPLY), 0, (LPSOCKADDR)&sourceAddress, &length) != SOCKET_ERROR)
-						result = timeGetTime() - answer.echoRequest.dwTime;
+						result = SDL_GetTicks() - answer.echoRequest.dwTime;
 					else
 						result = -1;
 				}

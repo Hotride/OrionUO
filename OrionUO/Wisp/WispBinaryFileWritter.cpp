@@ -1,4 +1,4 @@
-﻿// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
@@ -16,30 +16,16 @@ CBinaryFileWritter::~CBinaryFileWritter()
 	Close();
 }
 //----------------------------------------------------------------------------------
-bool CBinaryFileWritter::Open(const string &path)
+bool CBinaryFileWritter::Open(const os_path &path)
 {
 	WISPFUN_DEBUG("c2_f1");
 	bool result = false;
 
-	//if (PathFileExistsA(path.c_str()))
+	//if (fs_path_exists(path))
 	{
-		fopen_s(&m_File, path.c_str(), "wb");
-		result = (m_File != NULL);
+		m_File = fs_open(path, FS_WRITE);
+		result = (m_File != nullptr);
 
-	}
-
-	return result;
-}
-//----------------------------------------------------------------------------------
-bool CBinaryFileWritter::Open(const wstring &path)
-{
-	WISPFUN_DEBUG("c2_f2");
-	bool result = false;
-
-	//if (PathFileExistsW(path.c_str()))
-	{
-		_wfopen_s(&m_File, path.c_str(), L"wb");
-		result = (m_File != NULL);
 	}
 
 	return result;
@@ -50,17 +36,17 @@ void CBinaryFileWritter::Close()
 	WISPFUN_DEBUG("c2_f3");
 	WriteBuffer();
 
-	if (m_File != NULL)
+	if (m_File != nullptr)
 	{
-		fclose(m_File);
-		m_File = NULL;
+		fs_close(m_File);
+		m_File = nullptr;
 	}
 }
 //----------------------------------------------------------------------------------
 void CBinaryFileWritter::WriteBuffer()
 {
 	WISPFUN_DEBUG("c2_f4");
-	if (m_File != NULL && m_Data.size() > 0)
+	if (m_File != nullptr && m_Data.size() > 0)
 	{
 		fwrite(&m_Data[0], m_Data.size(), 1, m_File);
 		m_Data.clear();

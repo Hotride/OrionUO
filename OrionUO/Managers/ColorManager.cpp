@@ -1,4 +1,4 @@
-﻿// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 /***********************************************************************************
 **
@@ -282,7 +282,7 @@ uint CColorManager::GetColor(ushort &c, ushort color)
 */
 uint CColorManager::GetPartialHueColor(ushort &c, ushort color)
 {
-	WISPFUN_DEBUG("c137_f11");
+	//WISPFUN_DEBUG("c137_f11");
 	if (color != 0 && color < m_HuesCount)
 	{
 		color -= 1;

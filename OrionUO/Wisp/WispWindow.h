@@ -2,6 +2,8 @@
 #ifndef WISPWINDOW_H
 #define WISPWINDOW_H
 //----------------------------------------------------------------------------------
+#include <SDL_video.h>
+
 namespace WISP_WINDOW
 {
 //----------------------------------------------------------------------------------
@@ -12,13 +14,13 @@ public:
 	bool NoResize = false;
 
 protected:
-    WISP_GEOMETRY::CSize m_Size = WISP_GEOMETRY::CSize();
+	WISP_GEOMETRY::CSize m_Size = WISP_GEOMETRY::CSize();
 	WISP_GEOMETRY::CSize m_MinSize = WISP_GEOMETRY::CSize(100, 100);
 	WISP_GEOMETRY::CSize m_MaxSize = WISP_GEOMETRY::CSize(GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN));
 
 public:
-    WISP_GEOMETRY::CSize GetSize() { return m_Size; };
-    void SetSize(const WISP_GEOMETRY::CSize& val);
+	WISP_GEOMETRY::CSize GetSize() { return m_Size; };
+	void SetSize(const WISP_GEOMETRY::CSize& val);
 
 	WISP_GEOMETRY::CSize GetMinSize() { return m_MinSize; };
 	void SetMinSize(const WISP_GEOMETRY::CSize& val);
@@ -26,7 +28,8 @@ public:
 	WISP_GEOMETRY::CSize GetMaxSize() { return m_MaxSize; };
 	void SetMaxSize(const WISP_GEOMETRY::CSize& val);
 
-
+	// GetSystemMetrics -> SDL_GetCurrentDisplayMode
+	SDL_Window *m_window = nullptr; 
 private:
 	deque<WISP_THREADED_TIMER::CThreadedTimer*> m_ThreadedTimersStack;
 
@@ -37,25 +40,37 @@ public:
 	void SetMinSize(int width, int height) { m_MinSize.Width = width; m_MinSize.Height = height; }
 	void SetMaxSize(int width, int height) { m_MaxSize.Width = width; m_MaxSize.Height = height; }
 
-	bool Create(HINSTANCE hInstance, const wchar_t *className, const wchar_t *title, bool showCursor = false, int width = 800, int height = 600, HICON icon = 0, HCURSOR cursor = 0);
+	bool Create(const char *className, const char *title, bool showCursor = false, int width = 800, int height = 600);
 	void Destroy();
 
 	void ShowMessage(const string &text, const string &title, int buttons = MB_OK);
 	void ShowMessage(const wstring &text, const wstring &title, int buttons = MB_OK);
 
+#if USE_WISP
+	HINSTANCE hInstance = 0;
 	LRESULT OnWindowProc(HWND &hWnd, UINT &message, WPARAM &wParam, LPARAM &lParam);
+#else
+	bool OnWindowProc(SDL_Event &ev);
+#endif
 
-	void Update() { ::UpdateWindow(Handle); }
+	void Update()
+	{
+#if USE_WISP
+		::UpdateWindow(Handle);
+#endif
+	}
 
 	bool IsActive() { return (::GetForegroundWindow() == Handle); }
 
 	void ShowCursor(bool show = true) { ::ShowCursor(show ? TRUE : FALSE); }
+#if USE_WISP
 	void ShowWindow(bool show) { ::ShowWindow(Handle, show ? TRUE : FALSE); }
+#endif
 
 	bool Zoomed() { return (::IsZoomed(Handle) != FALSE); }
 
 	void SetTitle(const string &text) { ::SetWindowTextA(Handle, text.c_str()); }
-	void SetTitle(const wstring &text) { ::SetWindowTextW(Handle, text.c_str()); }
+	//void SetTitle(const wstring &text) { ::SetWindowTextW(Handle, text.c_str()); }
 
 	void CreateTimer(uint id, int delay) { ::SetTimer(Handle, id, delay, NULL); }
 	void RemoveTimer(uint id) { ::KillTimer(Handle, id); }

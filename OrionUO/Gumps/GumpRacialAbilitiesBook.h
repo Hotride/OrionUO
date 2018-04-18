@@ -1,4 +1,4 @@
-﻿/***********************************************************************************
+/***********************************************************************************
 **
 ** GumpRacialAbilitiesBook.h
 **
@@ -23,12 +23,12 @@ class CGumpRacialAbilitiesBook : public CGump
 	int TooltipOffset = 1112198;
 
 private:
-	static const int ID_GRAB_BUTTON_PREV = 1;
-	static const int ID_GRAB_BUTTON_NEXT = 2;
-	static const int ID_GRAB_BUTTON_MINIMIZE = 3;
-	static const int ID_GRAB_LOCK_MOVING = 4;
-	static const int ID_GRAB_DICTIONARY_ICON = 100;
-	static const int ID_GRAB_ICON = 1000;
+	const int ID_GRAB_BUTTON_PREV = 1;
+	const int ID_GRAB_BUTTON_NEXT = 2;
+	const int ID_GRAB_BUTTON_MINIMIZE = 3;
+	const int ID_GRAB_LOCK_MOVING = 4;
+	const int ID_GRAB_DICTIONARY_ICON = 100;
+	const int ID_GRAB_ICON = 1000;
 
 	CGUIButton *m_PrevPage{ NULL };
 	CGUIButton *m_NextPage{ NULL };

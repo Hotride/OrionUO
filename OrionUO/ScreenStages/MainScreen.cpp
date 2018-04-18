@@ -1,4 +1,4 @@
-﻿// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 /***********************************************************************************
 **
@@ -10,6 +10,7 @@
 */
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
+#include "FileSystem.h"
 //----------------------------------------------------------------------------------
 CMainScreen g_MainScreen;
 //----------------------------------------------------------------------------------
@@ -191,7 +192,7 @@ void CMainScreen::OnKeyDown(const WPARAM &wParam, const LPARAM &lParam)
 */
 int CMainScreen::GetConfigKeyCode(const string &key)
 {
-	WISPFUN_DEBUG("c165_f9");
+	//WISPFUN_DEBUG("c165_f9");
 	const int keyCount = MSCC_COUNT - 1;
 
 	static const string m_Keys[keyCount] =
@@ -240,8 +241,7 @@ void CMainScreen::LoadCustomPath()
 			{
 				case MSCC_CUSTOM_PATH:
 				{
-					g_App.UOFilesPathA = strings[1];
-					g_App.UOFilesPathW = ToWString(strings[1]);
+					g_App.m_UOPath = ToPath(strings[1]);
 				}
 			}
 		}
@@ -356,10 +356,8 @@ void CMainScreen::LoadGlobalConfig()
 void CMainScreen::SaveGlobalConfig()
 {
 	WISPFUN_DEBUG("c165_f11");
-	FILE *uo_cfg = NULL;
-	fopen_s(&uo_cfg, g_App.ExeFilePath("uo_debug.cfg").c_str(), "w");
-
-	if (uo_cfg == NULL)
+	FILE *uo_cfg = fs_open(g_App.ExeFilePath("uo_debug.cfg"), FS_WRITE);
+	if (uo_cfg == nullptr)
 		return;
 
 	char buf[128] = { 0 };
@@ -393,12 +391,12 @@ void CMainScreen::SaveGlobalConfig()
 	sprintf_s(buf, "Asmut=%s\n", (g_Asmut ? "yes" : "no"));
 	fputs(buf, uo_cfg);
 
-	if (g_App.UOFilesPathA != g_App.ExePathA)
+	if (g_App.m_UOPath != g_App.m_ExePath)
 	{
-		sprintf_s(buf, "CustomPath=%s\n", g_App.UOFilesPathA.c_str());
+		sprintf_s(buf, "CustomPath=%s\n", CStringFromPath(g_App.m_UOPath));
 		fputs(buf, uo_cfg);
 	}
-	fclose(uo_cfg);
+	fs_close(uo_cfg);
 }
 //----------------------------------------------------------------------------------
 /*!

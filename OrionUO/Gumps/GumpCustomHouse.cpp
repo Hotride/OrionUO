@@ -1,4 +1,4 @@
-﻿// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 /***********************************************************************************
 **
@@ -10,18 +10,15 @@
 */
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
-
+#include "FileSystem.h"
 CGumpCustomHouse *g_CustomHouseGump = NULL;
 //----------------------------------------------------------------------------------
 template<class T, class A>
-void ParseCustomHouseObjectFileWithCategory(vector<A> &list, const string &path)
+void ParseCustomHouseObjectFileWithCategory(vector<A> &list, const os_path &path)
 {
-	LOG("parse CH file (CAT): %s\n", path.c_str());
-
-	FILE *file = NULL;
-	fopen_s(&file, path.c_str(), "r");
-
-	if (file != NULL)
+	LOG("parse CH file (CAT): %s\n", CStringFromPath(path));
+	FILE *file = fs_open(path, FS_READ); //"r"
+	if (file != nullptr)
 	{
 		int line = 0;
 
@@ -66,19 +63,16 @@ void ParseCustomHouseObjectFileWithCategory(vector<A> &list, const string &path)
 			}
 		}
 
-		fclose(file);
+		fs_close(file);
 	}
 }
 //----------------------------------------------------------------------------------
 template<class T>
-void ParseCustomHouseObjectFile(vector<T> &list, const string &path)
+void ParseCustomHouseObjectFile(vector<T> &list, const os_path &path)
 {
-	LOG("parse CH file: %s\n", path.c_str());
-
-	FILE *file = NULL;
-	fopen_s(&file, path.c_str(), "r");
-
-	if (file != NULL)
+	LOG("parse CH file: %s\n", CStringFromPath(path));
+	FILE *file = fs_open(path, FS_READ); //"r"
+	if (file != nullptr)
 	{
 		int line = 0;
 
@@ -104,7 +98,7 @@ void ParseCustomHouseObjectFile(vector<T> &list, const string &path)
 			}
 		}
 
-		fclose(file);
+		fs_close(file);
 	}
 }
 //----------------------------------------------------------------------------------

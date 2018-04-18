@@ -140,8 +140,8 @@ public:
 	bool OnCharPress(const WPARAM &wParam, const LPARAM &lParam, bool blocked);
 	bool OnKeyDown(const WPARAM &wParam, const LPARAM &lParam, bool blocked);
 
-	void Load(const string &path);
-	void Save(const string &path);
+	void Load(const os_path &path);
+	void Save(const os_path &path);
 };
 //----------------------------------------------------------------------------------
 //!Ссылка на менеджер гампов

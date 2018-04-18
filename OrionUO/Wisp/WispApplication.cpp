@@ -2,40 +2,34 @@
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
-
+#include "FileSystem.h"
+#include "WispThread.h"
+#include <SDL_timer.h>
 namespace WISP_APPLICATION
 {
-CApplication *g_WispApplication = NULL;
+CApplication *g_WispApplication = nullptr;
 //----------------------------------------------------------------------------------
 CApplication::CApplication()
 {
-	LOG("INITIATING CAPPLICATION");
-	g_MainThread = GetCurrentThreadId();
+	LOG("INITIATING CAPPLICATION\n");
+	g_MainThread = CThread::GetCurrentThreadId();
 	WISPFUN_DEBUG("c1_f1");
 	g_WispApplication = this;
-	ExePathA.resize(MAX_PATH, 0);
-	ExePathW.resize(MAX_PATH, 0);
-
-	GetCurrentDirectoryA(MAX_PATH, &ExePathA[0]);
-	ExePathA = ExePathA.c_str();
-
-	GetCurrentDirectoryW(MAX_PATH, &ExePathW[0]);
-	ExePathW = ExePathW.c_str();
-	UOFilesPathA = ExePathA;
-	UOFilesPathW = ExePathW;
+	m_UOPath = m_ExePath = fs_path_current();
 	g_MainScreen.LoadCustomPath();
 }
 //----------------------------------------------------------------------------------
 CApplication::~CApplication()
 {
 	WISPFUN_DEBUG("c1_f2");
-	g_WispApplication = NULL;
+	g_WispApplication = nullptr;
 	Hinstance = 0;
 }
 //----------------------------------------------------------------------------------
 int CApplication::Run(HINSTANCE hinstance)
 {
-	WISPFUN_DEBUG("c1_f3");
+	// WISPFUN_DEBUG("c1_f3");
+#if USE_WISP	
 	timeBeginPeriod(1);
 	Hinstance = hinstance;
 
@@ -49,7 +43,7 @@ int CApplication::Run(HINSTANCE hinstance)
 			DispatchMessage(&msg);
 		}
 		else
-			Sleep(1);
+			SDL_Delay(1);
 
 		OnMainLoop();
 	}
@@ -57,10 +51,25 @@ int CApplication::Run(HINSTANCE hinstance)
 	timeEndPeriod(1);
 
 	return (int)msg.wParam;
+#else
+	bool quit = false;
+	while (!quit)
+	{
+		SDL_Event event;
+		while (SDL_PollEvent(&event))
+		{
+			if (!(quit = WISP_WINDOW::g_WispWindow->OnWindowProc(event)))
+				OnMainLoop();
+		}
+	}
+
+	return EXIT_SUCCESS;
+#endif
 }
 //---------------------------------------------------------------------------
-string CApplication::GetFileVersion(uint *numericVerion)
+string CApplication::GetFileVersion(uint *numericVerion) const
 {
+#if USE_WISP
 	//File version info
 	wchar_t szFilename[MAX_PATH] = { 0 };
 
@@ -73,12 +82,12 @@ string CApplication::GetFileVersion(uint *numericVerion)
 		{
 			UCHAR_LIST lpVersionInfo(dwSize, 0);
 
-			if (GetFileVersionInfo(&szFilename[0], NULL, dwSize, &lpVersionInfo[0]))
+			if (GetFileVersionInfoW(&szFilename[0], NULL, dwSize, &lpVersionInfo[0]))
 			{
 				UINT uLen = 0;
 				VS_FIXEDFILEINFO *lpFfi = NULL;
 
-				VerQueryValue(&lpVersionInfo[0], L"\\", (LPVOID *)&lpFfi, &uLen);
+				VerQueryValueW(&lpVersionInfo[0], PATH_SEP, (LPVOID *)&lpFfi, &uLen);
 
 				DWORD dwFileVersionMS = 0;
 				DWORD dwFileVersionLS = 0;
@@ -106,9 +115,12 @@ string CApplication::GetFileVersion(uint *numericVerion)
 	}
 
 	return "unknown";
+#else
+	return "(other)";
+#endif
 }
 //---------------------------------------------------------------------------
-string CApplication::ExeFilePath(const char *str, ...)
+os_path CApplication::ExeFilePath(const char *str, ...) const
 {
 	WISPFUN_DEBUG("c1_f4");
 	va_list arg;
@@ -118,25 +130,19 @@ string CApplication::ExeFilePath(const char *str, ...)
 	vsprintf_s(out, str, arg);
 
 	va_end(arg);
-	string res = ExePathA + "\\" + out;
+
+	os_path res{m_ExePath.c_str()};
+	res.append(PATH_SEP);
+	res.append(ToPath(out));
 	return res;
 }
 //---------------------------------------------------------------------------
-wstring CApplication::ExeFilePath(const wchar_t *str, ...)
+os_path CApplication::UOFilesPath(const string &str, ...) const
 {
-	WISPFUN_DEBUG("c1_f5");
-	va_list arg;
-	va_start(arg, str);
-
-	wchar_t out[MAX_PATH] = { 0 };
-	vswprintf_s(out, str, arg);
-
-	va_end(arg);
-
-	return ExePathW + L"\\" + out;
+	return UOFilesPath(str.c_str());
 }
 //---------------------------------------------------------------------------
-string CApplication::UOFilesPath(const char *str, ...)
+os_path CApplication::UOFilesPath(const char *str, ...) const
 {
 	WISPFUN_DEBUG("c1_f6");
 	va_list arg;
@@ -146,22 +152,11 @@ string CApplication::UOFilesPath(const char *str, ...)
 	vsprintf_s(out, str, arg);
 
 	va_end(arg);
-	string res = UOFilesPathA + "\\" + out;
+
+	os_path res{m_UOPath.c_str()};
+	res.append(PATH_SEP);
+	res.append(ToPath(out));
 	return res;
-}
-//---------------------------------------------------------------------------
-wstring CApplication::UOFilesPath(const wchar_t *str, ...)
-{
-	WISPFUN_DEBUG("c1_f7");
-	va_list arg;
-	va_start(arg, str);
-
-	wchar_t out[MAX_PATH] = { 0 };
-	vswprintf_s(out, str, arg);
-
-	va_end(arg);
-
-	return UOFilesPathW + L"\\" + out;
 }
 //----------------------------------------------------------------------------------
 }; //namespace

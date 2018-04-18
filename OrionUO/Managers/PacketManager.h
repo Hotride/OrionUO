@@ -59,7 +59,7 @@ struct GumpCoords
 //----------------------------------------------------------------------------------
 struct HTMLGumpDataInfo
 {
-	GumpCoords* GumpCoords;
+	GumpCoords* sGumpCoords;
 	int Width;
 	int Height;
 	int TextID;

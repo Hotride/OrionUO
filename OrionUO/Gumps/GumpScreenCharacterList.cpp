@@ -1,4 +1,4 @@
-﻿// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 /***********************************************************************************
 **
@@ -10,6 +10,7 @@
 */
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
+#include <SDL_timer.h>
 //----------------------------------------------------------------------------------
 CGumpScreenCharacterList::CGumpScreenCharacterList()
 : CGump(GT_NONE, 0, 0, 0)
@@ -190,7 +191,7 @@ bool CGumpScreenCharacterList::OnLeftMouseButtonDoubleClick()
 			else
 			{
 				g_CharacterListScreen.CreateSmoothAction(CCharacterListScreen::ID_SMOOTH_CLS_SELECT_CHARACTER);
-				Sleep(200);
+				SDL_Delay(200);
 			}
 
 			return true;

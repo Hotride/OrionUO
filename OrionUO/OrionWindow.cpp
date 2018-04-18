@@ -10,38 +10,9 @@
 */
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
+#include <SDL_timer.h>
 //----------------------------------------------------------------------------------
 COrionWindow g_OrionWindow;
-//----------------------------------------------------------------------------------
-int APIENTRY _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLine, int nCmdShow)
-{
-	WISPFUN_DEBUG("c_main");
-	INITLOGGER("uolog.txt");
-
-	string path = g_App.ExeFilePath("crashlogs");
-	CreateDirectoryA(path.c_str(), NULL);
-
-	SYSTEMTIME st;
-	GetLocalTime(&st);
-
-	char buf[100] = { 0 };
-
-	sprintf_s(buf, "\\crash_%i_%i_%i___%i_%i_%i_%i.txt", st.wYear, st.wMonth, st.wDay, st.wHour, st.wMinute, st.wSecond, st.wMilliseconds);
-
-	path += buf;
-
-	INITCRASHLOGGER(path.c_str());
-
-	if (!g_OrionWindow.Create(hInstance, L"Orion UO Client", L"Ultima Online", true, 640, 480, LoadIcon(hInstance, MAKEINTRESOURCE(IDI_ORIONUO)), LoadCursor(hInstance, MAKEINTRESOURCE(IDC_CURSOR1))))
-			return 0;
-
-	g_OrionWindow.ShowWindow(true);
-	g_OrionWindow.NoResize = true;
-
-	g_Orion.LoadPluginConfig();
-
-	return g_App.Run(hInstance);
-}
 //----------------------------------------------------------------------------------
 COrionWindow::COrionWindow()
 : WISP_WINDOW::CWindow()
@@ -67,7 +38,7 @@ bool COrionWindow::OnCreate()
 	if (!g_GL.Install())
 	{
 		LOG("Error install OpenGL\n");
-		MessageBoxA(Handle, "Error install OpenGL", "Error install OpenGL!", MB_OK);
+		ShowMessage("Error install OpenGL", "Error install OpenGL!", MB_OK);
 		return false;
 	}
 
@@ -91,7 +62,9 @@ void COrionWindow::OnDestroy()
 	g_Orion.Uninstall();
 
 	WISP_LOGGER::g_WispCrashLogger.Close();
-	remove(WISP_LOGGER::g_WispCrashLogger.FileName.c_str());
+#if USE_WISP
+	::remove(CStringFromPath(WISP_LOGGER::g_WispCrashLogger.FileName));
+#endif
 }
 //----------------------------------------------------------------------------------
 void COrionWindow::OnResize(WISP_GEOMETRY::CSize &newSize)
@@ -387,7 +360,7 @@ void COrionWindow::OnTimer(uint id)
 	WISPFUN_DEBUG("c195_f25");
 	if (id == UPDATE_TIMER_ID)
 	{
-		g_Ticks = timeGetTime();
+		g_Ticks = SDL_GetTicks();
 		g_Orion.Process(false);
 	}
 	if (id == FASTLOGIN_TIMER_ID)

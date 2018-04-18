@@ -27,26 +27,26 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v141_xp</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v141_xp</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v141_xp</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v141_xp</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
@@ -83,9 +83,9 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;USE_ORIONDLL=1;USE_WISP=1;ORION_WINDOWS;WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
-      <AdditionalIncludeDirectories>$(SolutionDir)/OrionUO</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)/OrionUO;$(SolutionDir)/OrionUO/Dependencies/include/SDL2</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -125,9 +125,9 @@ xcopy /y /d  "$(SolutionDir)debug_bin\Orion.dll" "$(ProjectDir)"
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;USE_ORIONDLL=1;USE_WISP=1;ORION_WINDOWS;WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
-      <AdditionalIncludeDirectories>$(SolutionDir)/OrionUO</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)/OrionUO;$(SolutionDir)/OrionUO/Dependencies/include/SDL2</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -160,10 +160,10 @@ xcopy /y /d  "$(SolutionDir)debug_bin\Orion.dll" "$(ProjectDir)"
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;USE_ORIONDLL=1;USE_WISP=1;ORION_WINDOWS;WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-      <AdditionalIncludeDirectories>$(SolutionDir)/OrionUO</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)/OrionUO;$(SolutionDir)/OrionUO/Dependencies/include/SDL2</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <CompileAsManaged>false</CompileAsManaged>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
@@ -213,10 +213,10 @@ xcopy /y /d  "$(SolutionDir)bin\Orion.dll" "$(ProjectDir)"
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;USE_ORIONDLL=1;USE_WISP=1;ORION_WINDOWS;WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-      <AdditionalIncludeDirectories>$(SolutionDir)/OrionUO</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)/OrionUO;$(SolutionDir)/OrionUO/Dependencies/include/SDL2</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -266,6 +266,7 @@ xcopy /y /d  "$(SolutionDir)bin64\Orion.dll" "$(ProjectDir)"
     <ClInclude Include="DefinitionMacro.h" />
     <ClInclude Include="EnumList.h" />
     <ClInclude Include="ExceptionFilter.h" />
+    <ClInclude Include="FileSystem.h" />
     <ClInclude Include="GameObjects\CustomHouseMultiObject.h" />
     <ClInclude Include="GameObjects\CustomHouseObjects.h" />
     <ClInclude Include="GameObjects\GameCharacter.h" />
@@ -435,6 +436,7 @@ xcopy /y /d  "$(SolutionDir)bin64\Orion.dll" "$(ProjectDir)"
     <ClInclude Include="Network\PluginPackets.h" />
     <ClInclude Include="Network\UOHuffman.h" />
     <ClInclude Include="OrionApplication.h" />
+    <ClInclude Include="OrionMain.h" />
     <ClInclude Include="OrionStackWalker.h" />
     <ClInclude Include="OrionUO.h" />
     <ClInclude Include="OrionWindow.h" />
@@ -516,6 +518,7 @@ xcopy /y /d  "$(SolutionDir)bin64\Orion.dll" "$(ProjectDir)"
     <ClCompile Include="ContainerStack.cpp" />
     <ClCompile Include="DateTimeStamp.cpp" />
     <ClCompile Include="ExceptionFilter.cpp" />
+    <ClCompile Include="FileSystem.cpp" />
     <ClCompile Include="GameObjects\CustomHouseMultiObject.cpp" />
     <ClCompile Include="GameObjects\CustomHouseObjects.cpp" />
     <ClCompile Include="GameObjects\GameCharacter.cpp" />
@@ -670,7 +673,9 @@ xcopy /y /d  "$(SolutionDir)bin64\Orion.dll" "$(ProjectDir)"
     <ClCompile Include="Managers\UOFileReader.cpp" />
     <ClCompile Include="Managers\OptionsMacroManager.cpp" />
     <ClCompile Include="Managers\PacketManager.cpp" />
-    <ClCompile Include="Managers\PluginManager.cpp" />
+    <ClCompile Include="Managers\PluginManager.cpp">
+      <ShowIncludes Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ShowIncludes>
+    </ClCompile>
     <ClCompile Include="Managers\ProfessionManager.cpp" />
     <ClCompile Include="Managers\ScreenEffectManager.cpp" />
     <ClCompile Include="Managers\SkillGroupManager.cpp" />
@@ -683,6 +688,7 @@ xcopy /y /d  "$(SolutionDir)bin64\Orion.dll" "$(ProjectDir)"
     <ClCompile Include="Network\PluginPackets.cpp" />
     <ClCompile Include="Network\UOHuffman.cpp" />
     <ClCompile Include="OrionApplication.cpp" />
+    <ClCompile Include="OrionMain.cpp" />
     <ClCompile Include="OrionUO.cpp" />
     <ClCompile Include="OrionWindow.cpp" />
     <ClCompile Include="Globals.cpp" />

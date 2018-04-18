@@ -1,4 +1,4 @@
-﻿// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 /***********************************************************************************
 **
@@ -10,6 +10,7 @@
 */
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
+#include "FileSystem.h"
 
 CScreenshotBuilder g_ScreenshotBuilder;
 //---------------------------------------------------------------------------
@@ -30,17 +31,17 @@ void CScreenshotBuilder::SaveScreen()
 void CScreenshotBuilder::SaveScreen(int x, int y, int width, int height)
 {
 	WISPFUN_DEBUG("c204_f2");
-	string path = g_App.ExeFilePath("snapshots");
-	CreateDirectoryA(path.c_str(), NULL);
+	auto path = g_App.ExeFilePath("snapshots");
+	fs_path_create(path);
 
 	SYSTEMTIME st;
 	GetLocalTime(&st);
 
 	char buf[100] = { 0 };
 
-	sprintf_s(buf, "\\snapshot_d(%i.%i.%i)_t(%i.%i.%i_%i)", st.wYear, st.wMonth, st.wDay, st.wHour, st.wMinute, st.wSecond, st.wMilliseconds);
+	sprintf_s(buf, "/snapshot_d(%i.%i.%i)_t(%i.%i.%i_%i)", st.wYear, st.wMonth, st.wDay, st.wHour, st.wMinute, st.wSecond, st.wMilliseconds);
 
-	path += buf;
+	path += ToPath(buf);
 
 	UINT_LIST pixels = GetScenePixels(x, y, width, height);
 
@@ -52,36 +53,36 @@ void CScreenshotBuilder::SaveScreen(int x, int y, int width, int height)
 	{
 		case SF_PNG:
 		{
-			path += ".png";
+			path += ToPath(".png");
 			format = FIF_PNG;
 			break;
 		}
 		case SF_TIFF:
 		{
-			path += ".tiff";
+			path += ToPath(".tiff");
 			format = FIF_TIFF;
 			break;
 		}
 		case SF_JPEG:
 		{
-			path += ".jpeg";
+			path += ToPath(".jpeg");
 			format = FIF_JPEG;
 			break;
 		}
 		default:
 		{
-			path += ".bmp";
+			path += ToPath(".bmp");
 			format = FIF_BMP;
 			break;
 		}
 	}
 
-	FreeImage_Save(format, fBmp, path.c_str());
+	FreeImage_Save(format, fBmp, CStringFromPath(path));
 
 	FreeImage_Unload(fBmp);
 
 	if (g_GameState >= GS_GAME)
-		g_Orion.CreateTextMessageF(3, 0, "Screenshot saved to: %s", path.c_str());
+		g_Orion.CreateTextMessageF(3, 0, "Screenshot saved to: %s", CStringFromPath(path));
 }
 //---------------------------------------------------------------------------
 UINT_LIST CScreenshotBuilder::GetScenePixels(int x, int y, int width, int height)

@@ -15,6 +15,7 @@
 #include <string.h>
 #include <wchar.h>
 #include <algorithm>
+#include <stdint.h>
 
 #include <thread>
 #include <mutex>
@@ -28,6 +29,8 @@
 #include <algorithm>
 #include <functional>
 #include <cassert>
+
+#define UNUSED(x) (void)x
 
 #if defined(ORION_WINDOWS)
 
@@ -69,6 +72,9 @@
 #pragma comment(lib, "Dependencies/lib/Win32/FreeImage.lib")
 #pragma comment(lib, "Dependencies/lib/Win32/Psapi.lib")
 #pragma comment(lib, "Dependencies/lib/Win32/zlib.lib")
+#pragma comment(lib, "Dependencies/lib/Win32/SDL2.lib")
+#pragma comment(lib, "Dependencies/lib/Win32/SDL2main.lib")
+#pragma comment(lib, "Dependencies/lib/Win32/SDL2test.lib")
 //----------------------------------------------------------------------------------
 #else
 #pragma comment(lib, "Dependencies/lib/x64/glew32.lib")
@@ -77,6 +83,9 @@
 #pragma comment(lib, "Dependencies/lib/x64/FreeImage.lib")
 #pragma comment(lib, "Dependencies/lib/x64/Psapi.lib")
 #pragma comment(lib, "Dependencies/lib/x64/zdll.lib")
+#pragma comment(lib, "Dependencies/lib/x64/SDL2.lib")
+#pragma comment(lib, "Dependencies/lib/x64/SDL2main.lib")
+#pragma comment(lib, "Dependencies/lib/x64/SDL2test.lib")
 #endif
 #endif
 //----------------------------------------------------------------------------------
@@ -87,9 +96,7 @@ using namespace std;
 #include "Resource.h"
 
 #else
-
 #include "Stubs.h"
-
 #endif
 
 #include "Wisp/WispDefinitions.h"

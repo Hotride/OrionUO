@@ -1,4 +1,4 @@
-﻿/***********************************************************************************
+/***********************************************************************************
 **
 ** GumpPaperdoll.h
 **
@@ -30,7 +30,7 @@ protected:
 	static const int ID_GP_BUTTON_VIRTURE = 12;
 	static const int ID_GP_COMBAT_BOOK = 13;
 	static const int ID_GP_RACIAL_ABILITIES_BOOK = 14;
-	static const int ID_GP_LOCK_MOVING = 15;
+	static constexpr int ID_GP_LOCK_MOVING = 15;
 
 	CTextRenderer m_TextRenderer{ CTextRenderer() };
 	

@@ -1,4 +1,4 @@
-﻿//----------------------------------------------------------------------------------
+//----------------------------------------------------------------------------------
 #ifndef WISPMAPPEDFILE_H
 #define WISPMAPPEDFILE_H
 //----------------------------------------------------------------------------------
@@ -7,19 +7,20 @@ namespace WISP_FILE
 //----------------------------------------------------------------------------------
 class CMappedFile : public WISP_DATASTREAM::CDataReader
 {
+#if USE_WISP
 private:
-	HANDLE m_File{ INVALID_HANDLE_VALUE };
-	HANDLE m_Map{ 0 };
+	HANDLE m_File{ nullptr };
+	void* m_Map{ nullptr };
 
 	bool Load();
+#endif
 
 public:
 	CMappedFile();
 
 	virtual ~CMappedFile();
 
-	bool Load(const string &path);
-	bool Load(const wstring &path);
+	bool Load(const os_path &path);
 
 	void Unload();
 };

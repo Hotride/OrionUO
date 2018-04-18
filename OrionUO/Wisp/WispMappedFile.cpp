@@ -1,7 +1,8 @@
-﻿// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
+#include "FileSystem.h"
 
 namespace WISP_FILE
 {
@@ -18,28 +19,27 @@ CMappedFile::~CMappedFile()
 	Unload();
 }
 //----------------------------------------------------------------------------------
+#if USE_WISP
 bool CMappedFile::Load()
 {
 	WISPFUN_DEBUG("c7_f1");
 	bool result = false;
-
-	Size = GetFileSize(m_File, NULL);
-
+	Size = GetFileSize(m_File, nullptr);
 	if (Size > 0)
 	{
-		m_Map = CreateFileMapping(m_File, NULL, 2, 0, NULL, NULL);
+		m_Map = CreateFileMapping(m_File, nullptr, 2, 0, 0, nullptr);
 
-		if (m_Map != NULL)
+		if (m_Map != nullptr)
 		{
 			Start = (puchar)MapViewOfFile(m_Map, FILE_MAP_READ, 0, 0, Size);
 
-			result = (Start != NULL);
+			result = (Start != nullptr);
 
 			if (!result)
 			{
 				CloseHandle(m_Map);
 				CloseHandle(m_File);
-				m_Map = NULL;
+				m_Map = nullptr;
 				m_File = INVALID_HANDLE_VALUE;
 			}
 			else
@@ -59,66 +59,51 @@ bool CMappedFile::Load()
 
 	return result;
 }
+#endif
 //----------------------------------------------------------------------------------
-bool CMappedFile::Load(const string &path)
+bool CMappedFile::Load(const os_path &path)
 {
 	WISPFUN_DEBUG("c7_f2");
-	LOG("Mmaping  %s\n", path.c_str());
+	LOG("Mmaping  %s\n", CStringFromPath(path));
 	bool result = false;
 
-	if (PathFileExistsA(path.c_str()))
+	if (fs_path_exists(path))
 	{
 		Unload();
 
-		m_File = CreateFileA(path.c_str(), GENERIC_READ, 1, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
-
+#if USE_WISP
+		m_File = CreateFileW(path.c_str(), GENERIC_READ, 1, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
 		if (m_File != INVALID_HANDLE_VALUE)
 			result = Load();
 		else
-			LOG("INVALID_HANDLE_VALUE for CreateFileA  %s\n", path.c_str());
+			LOG("INVALID_HANDLE_VALUE for CreateFileW  %s\n", CStringFromPath(path));
+#else
+		Start = fs_map(path.c_str(), &Size);
+		result = Start != nullptr;
+		SetData(Start, Size);
+#endif
 	}
 	else
-		LOG("File not found %s\n", path.c_str());
+		LOG("File not found %s\n", CStringFromPath(path));
 
 	if (!result)
 	{
-		DWORD errorCode = GetLastError();
-		LOG("Failed to memory map, error code: %i\n", errorCode);
-		g_WispMappedFileError = path;
+		LOG("Failed to memory map, error code: %i\n", GetLastError());
+		g_WispMappedFileError = CStringFromPath(path);
 	}
 		
 
 	return result;
 }
 //----------------------------------------------------------------------------------
-bool CMappedFile::Load(const wstring &path)
-{
-	WISPFUN_DEBUG("c7_f3");
-	bool result = false;
-
-	if (PathFileExistsW(path.c_str()))
-	{
-		Unload();
-
-		m_File = CreateFileW(path.c_str(), GENERIC_READ, 1, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
-
-		if (m_File != INVALID_HANDLE_VALUE)
-			result = Load();
-	}
-
-	if (!result)
-		g_WispMappedFileError = ToString(path);
-
-	return result;
-}
-//----------------------------------------------------------------------------------
 void CMappedFile::Unload()
 {
-	WISPFUN_DEBUG("c7_f4");
-	if (Start != NULL)
+	//WISPFUN_DEBUG("c7_f4");
+#if USE_WISP	
+	if (Start != nullptr)
 		UnmapViewOfFile(Start);
 
-	if (m_Map != NULL)
+	if (m_Map != nullptr)
 	{
 		CloseHandle(m_Map);
 		m_Map = 0;
@@ -129,8 +114,12 @@ void CMappedFile::Unload()
 		CloseHandle(m_File);
 		m_File = INVALID_HANDLE_VALUE;
 	}
+#else
+	if (Start != nullptr)
+		fs_unmap(Start, Size);
+#endif
 
-	SetData(NULL, 0);
+	SetData(nullptr, 0);
 }
 //----------------------------------------------------------------------------------
 }; //namespace

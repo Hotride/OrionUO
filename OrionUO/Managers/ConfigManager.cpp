@@ -1,4 +1,4 @@
-﻿// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 /***********************************************************************************
 **
@@ -10,6 +10,7 @@
 */
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
+#include "FileSystem.h"
 //----------------------------------------------------------------------------------
 CConfigManager g_ConfigManager;
 CConfigManager g_OptionsConfig;
@@ -720,7 +721,7 @@ ushort CConfigManager::GetColorByNotoriety(uchar notoriety)
 @param [__in] path Путь к файлу с конфигом
 @return 
 */
-bool CConfigManager::LoadBin(string path)
+bool CConfigManager::LoadBin(const os_path& path)
 {
 	WISPFUN_DEBUG("c138_f30");
 	bool result = false;
@@ -1229,7 +1230,7 @@ bool CConfigManager::LoadBin(string path)
 //---------------------------------------------------------------------------
 int CConfigManager::GetConfigKeyCode(const string &key)
 {
-	WISPFUN_DEBUG("");
+	//WISPFUN_DEBUG("");
 
 	static const string keys[CMKC_COUNT] =
 	{
@@ -1370,7 +1371,7 @@ int CConfigManager::GetConfigKeyCode(const string &key)
 	return -1;
 }
 //---------------------------------------------------------------------------
-bool CConfigManager::Load(const string &path)
+bool CConfigManager::Load(const os_path &path)
 {
 	WISP_FILE::CTextFileParser file(path, "=", "#;", "");
 
@@ -1841,10 +1842,10 @@ bool CConfigManager::Load(const string &path)
 		SendMessage(g_OrionWindow.Handle, WM_SYSCOMMAND, SC_MAXIMIZE, 0);
 	}
 
-	return PathFileExistsA(path.c_str());
+	return fs_path_exists(path);
 }
 //---------------------------------------------------------------------------
-void CConfigManager::Save(const string &path)
+void CConfigManager::Save(const os_path &path)
 {
 	WISPFUN_DEBUG("");
 	WISP_FILE::CTextFileWritter writter(path);

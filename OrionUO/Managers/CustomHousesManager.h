@@ -54,8 +54,8 @@ public:
 
 	void Add(CCustomHouse* house);
 
-	void Load(const string &path);
-	void Save(const string &path);
+	void Load(const os_path &path);
+	void Save(const os_path &path);
 };
 //----------------------------------------------------------------------------------
 extern CustomHousesManager g_CustomHousesManager;
