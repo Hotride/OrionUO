@@ -114,10 +114,10 @@ void CGumpPartyManifest::GUMP_BUTTON_EVENT_C
 			CPacketPartyChangeLootTypeRequest((uchar)m_CanLoot).Send();
 		}
 
-		m_RemoveMark = true;
+		RemoveMark = true;
 	}
 	else if (serial == ID_GPM_BUTTON_CANCEL)
-		m_RemoveMark = true;
+		RemoveMark = true;
 	else if (serial == ID_GPM_BUTTON_SEND_MESSAGE)
 	{
 		if (g_Party.Leader == 0)
@@ -128,7 +128,7 @@ void CGumpPartyManifest::GUMP_BUTTON_EVENT_C
 	else if (serial == ID_GPM_BUTTON_LOOT_TYPE)
 	{
 		m_CanLoot = !m_CanLoot;
-		m_WantUpdateContent = true;
+		WantUpdateContent = true;
 	}
 	else if (serial == ID_GPM_BUTTON_LEAVE)
 	{

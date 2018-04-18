@@ -15,10 +15,10 @@ CGumpGrayMenu::CGumpGrayMenu(uint serial, uint id, short x, short y)
 : CGump(GT_GRAY_MENU, serial, x, y)
 {
 	WISPFUN_DEBUG("c97_f1");
-	m_NoMove = true;
-	m_Blocked = true;
+	NoMove = true;
+	Blocked = true;
 
-	m_ID = id;
+	ID = id;
 
 	if (!g_GrayMenuCount)
 	{
@@ -65,6 +65,6 @@ void CGumpGrayMenu::SendMenuResponse(int index)
 	CPacketGrayMenuResponse(this, index).Send();
 
 	//Удаляем использованный гамп
-	m_RemoveMark = true;
+	RemoveMark = true;
 }
 //----------------------------------------------------------------------------------

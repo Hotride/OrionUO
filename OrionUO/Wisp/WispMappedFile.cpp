@@ -23,17 +23,17 @@ bool CMappedFile::Load()
 	WISPFUN_DEBUG("c7_f1");
 	bool result = false;
 
-	m_Size = GetFileSize(m_File, NULL);
+	Size = GetFileSize(m_File, NULL);
 
-	if (m_Size > 0)
+	if (Size > 0)
 	{
 		m_Map = CreateFileMapping(m_File, NULL, 2, 0, NULL, NULL);
 
 		if (m_Map != NULL)
 		{
-			m_Start = (puchar)MapViewOfFile(m_Map, FILE_MAP_READ, 0, 0, m_Size);
+			Start = (puchar)MapViewOfFile(m_Map, FILE_MAP_READ, 0, 0, Size);
 
-			result = (m_Start != NULL);
+			result = (Start != NULL);
 
 			if (!result)
 			{
@@ -43,7 +43,7 @@ bool CMappedFile::Load()
 				m_File = INVALID_HANDLE_VALUE;
 			}
 			else
-				SetData(m_Start, m_Size);
+				SetData(Start, Size);
 		}
 		else
 		{
@@ -115,8 +115,8 @@ bool CMappedFile::Load(const wstring &path)
 void CMappedFile::Unload()
 {
 	WISPFUN_DEBUG("c7_f4");
-	if (m_Start != NULL)
-		UnmapViewOfFile(m_Start);
+	if (Start != NULL)
+		UnmapViewOfFile(Start);
 
 	if (m_Map != NULL)
 	{

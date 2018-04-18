@@ -12,7 +12,7 @@
 #include "stdafx.h"
 //----------------------------------------------------------------------------------
 CTextureAnimationFrame::CTextureAnimationFrame()
-: CGLTexture(), m_CenterX(0), m_CenterY(0)
+: CGLTexture(), CenterX(0), CenterY(0)
 {
 }
 //----------------------------------------------------------------------------------
@@ -21,8 +21,8 @@ CTextureAnimationFrame::~CTextureAnimationFrame()
 }
 //----------------------------------------------------------------------------------
 CTextureAnimationDirection::CTextureAnimationDirection()
-: m_FrameCount(0), m_BaseAddress(0), m_BaseSize(0), m_PatchedAddress(0),
-m_PatchedSize(0), m_Address(0), m_Size(0), m_LastAccessTime(0), m_Frames(NULL), m_IsUOP(false), m_IsVerdata(false)
+: FrameCount(0), BaseAddress(0), BaseSize(0), PatchedAddress(0),
+PatchedSize(0), Address(0), Size(0), LastAccessTime(0), m_Frames(NULL), IsUOP(false), IsVerdata(false)
 {
 }
 //----------------------------------------------------------------------------------

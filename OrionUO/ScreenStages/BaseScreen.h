@@ -13,9 +13,10 @@
 //Базовый класс стадий окна клиента
 class CBaseScreen : public CBaseQueue
 {
+public:
 	//!Индекс действия, которое необходимо совершить после окончания плавного перехода затемненного состояния экрана
-	SETGET(uchar, SmoothScreenAction, 0);
-	SETGET(ushort, CursorGraphic, 0x2073);
+	uchar SmoothScreenAction = 0;
+	ushort CursorGraphic = 0x2073;
 
 protected:
 	CGump &m_Gump;
@@ -45,7 +46,7 @@ public:
 	@param [__in] mode true - отрисовка, false - выбор
 	@return При выборе объектов - идентификатор выбранного объекта
 	*/
-	virtual void Render(const bool &mode);
+	virtual void Render(bool mode);
 
 	/*!
 	Создание плавного затемнения экрана
@@ -84,7 +85,7 @@ public:
 	virtual void OnMidMouseButtonDown() { m_Gump.OnMidMouseButtonDown(); }
 	virtual void OnMidMouseButtonUp() { m_Gump.OnMidMouseButtonUp(); }
 	virtual bool OnMidMouseButtonDoubleClick() { return m_Gump.OnMidMouseButtonDoubleClick(); }
-	virtual void OnMidMouseButtonScroll(const bool &up) { m_Gump.OnMidMouseButtonScroll(up); }
+	virtual void OnMidMouseButtonScroll(bool up) { m_Gump.OnMidMouseButtonScroll(up); }
 	virtual void OnDragging() { m_Gump.OnDragging(); }
 	virtual void OnCharPress(const WPARAM &wParam, const LPARAM &lParam) { m_Gump.OnCharPress(wParam, lParam); }
 	virtual void OnKeyDown(const WPARAM &wParam, const LPARAM &lParam) { m_Gump.OnKeyDown(wParam, lParam); }

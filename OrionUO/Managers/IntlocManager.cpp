@@ -15,15 +15,15 @@ CIntlocManager g_IntlocManager;
 //----------------------------------------------------------------------------------
 //--------------------------------------CIntloc-------------------------------------
 //----------------------------------------------------------------------------------
-CIntloc::CIntloc(const int &fileIndex, const string &lang)
+CIntloc::CIntloc(int fileIndex, const string &lang)
 : CBaseQueueItem()
 {
 	WISPFUN_DEBUG("c135_f1");
-	m_Loaded = false;
-	m_Language = lang;
-	m_FileIndex = fileIndex;
+	Loaded = false;
+	Language = lang;
+	FileIndex = fileIndex;
 
-	if (m_Language.length())
+	if (Language.length())
 	{
 		if (m_File.Load(g_App.UOFilesPath("intloc%02i.%s", fileIndex, lang.c_str())))
 		{
@@ -56,7 +56,7 @@ CIntloc::CIntloc(const int &fileIndex, const string &lang)
 					break;
 			}
 
-			m_Loaded = (m_Strings.size() != 0);
+			Loaded = (m_Strings.size() != 0);
 		}
 	}
 }
@@ -75,7 +75,7 @@ CIntloc::~CIntloc()
 @param [__in] result Стандартное сообщение, если клилок не был найден
 @return Полученный результат, замена или сообщение с ошибкой
 */
-wstring CIntloc::Get(const uint &id, const bool &toCamelCase)
+wstring CIntloc::Get(int id, bool toCamelCase)
 {
 	WISPFUN_DEBUG("c135_f4");
 	if (id < m_Strings.size())
@@ -100,7 +100,7 @@ CIntlocManager::~CIntlocManager()
 {
 }
 //----------------------------------------------------------------------------------
-CIntloc *CIntlocManager::Intloc(const int &fileIndex, const string &lang)
+CIntloc *CIntlocManager::Intloc(int fileIndex, const string &lang)
 {
 	WISPFUN_DEBUG("c136_f1");
 	QFOR(obj, m_Items, CIntloc*)
@@ -133,7 +133,7 @@ CIntloc *CIntlocManager::Intloc(const int &fileIndex, const string &lang)
 	return NULL;
 }
 //----------------------------------------------------------------------------------
-wstring CIntlocManager::Intloc(const string &lang, uint clilocID, const bool &isNewCliloc)
+wstring CIntlocManager::Intloc(const string &lang, uint clilocID, bool isNewCliloc)
 {
 	WISPFUN_DEBUG("c136_f1");
 	string language = ToLowerA(lang).c_str();

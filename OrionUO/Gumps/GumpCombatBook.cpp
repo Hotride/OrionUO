@@ -11,31 +11,31 @@
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
 //----------------------------------------------------------------------------------
-CGumpCombatBook::CGumpCombatBook(const int &x, const int &y)
+CGumpCombatBook::CGumpCombatBook(int x, int y)
 : CGump(GT_COMBAT_BOOK, 0, x, y)
 {
 	WISPFUN_DEBUG("c91_f1");
-	m_Draw2Page = true;
+	Draw2Page = true;
 
-	if (g_PacketManager.ClientVersion < CV_7000)
+	if (g_PacketManager.GetClientVersion() < CV_7000)
 	{
-		if (g_PacketManager.ClientVersion >= CV_500A)
-			m_AbilityCount = 29;
+		if (g_PacketManager.GetClientVersion() >= CV_500A)
+			AbilityCount = 29;
 		else
 		{
-			m_AbilityCount = 13;
-			m_DictionaryPagesCount = 2;
+			AbilityCount = 13;
+			DictionaryPagesCount = 2;
 		}
 	}
 
-	m_PagesCount = m_DictionaryPagesCount + (m_AbilityCount * 2);
+	PagesCount = DictionaryPagesCount + (AbilityCount * 2);
 }
 //----------------------------------------------------------------------------------
 CGumpCombatBook::~CGumpCombatBook()
 {
 }
 //----------------------------------------------------------------------------------
-USHORT_LIST CGumpCombatBook::GetItemsList(const uchar &index)
+USHORT_LIST CGumpCombatBook::GetItemsList(uchar index)
 {
 	WISPFUN_DEBUG("c91_f2");
 	USHORT_LIST list;
@@ -351,7 +351,7 @@ USHORT_LIST CGumpCombatBook::GetItemsList(const uchar &index)
 void CGumpCombatBook::InitToolTip()
 {
 	WISPFUN_DEBUG("c91_f3");
-	if (m_Minimized)
+	if (Minimized)
 	{
 		g_ToolTip.Set(L"Double click to maximize book gump");
 		return;
@@ -359,7 +359,7 @@ void CGumpCombatBook::InitToolTip()
 
 	uint serial = g_SelectedObject.Serial;
 
-	if (m_Page >= m_DictionaryPagesCount)
+	if (Page >= DictionaryPagesCount)
 	{
 		if (serial >= ID_GCB_ICON)
 			g_ToolTip.Set(g_ClilocManager.Cliloc(g_Language)->GetW(1061693 + (serial - ID_GCB_ICON), true), 150);
@@ -376,7 +376,7 @@ void CGumpCombatBook::InitToolTip()
 void CGumpCombatBook::PrepareContent()
 {
 	WISPFUN_DEBUG("c91_f4");
-	if (g_PressedObject.LeftGump == this && m_Page < m_DictionaryPagesCount && (g_PressedObject.LeftSerial == ID_GCB_ICON_FIRST || g_PressedObject.LeftSerial == ID_GCB_ICON_SECOND))
+	if (g_PressedObject.LeftGump == this && Page < DictionaryPagesCount && (g_PressedObject.LeftSerial == ID_GCB_ICON_FIRST || g_PressedObject.LeftSerial == ID_GCB_ICON_SECOND))
 	{
 		WISP_GEOMETRY::CPoint2Di offset = g_MouseManager.LeftDroppedOffset();
 
@@ -399,7 +399,7 @@ void CGumpCombatBook::UpdateContent()
 
 	Add(new CGUIPage(-1));
 
-	if (m_Minimized)
+	if (Minimized)
 	{
 		Add(new CGUIGumppic(0x2B05, 0, 0));
 
@@ -412,7 +412,7 @@ void CGumpCombatBook::UpdateContent()
 
 	int offs = 0;
 
-	IFOR(page, 0, m_DictionaryPagesCount)
+	IFOR(page, 0, DictionaryPagesCount)
 	{
 		Add(new CGUIPage((int)page));
 
@@ -433,7 +433,7 @@ void CGumpCombatBook::UpdateContent()
 
 		IFOR(i, 0, spellsOnPage)
 		{
-			if (offs >= m_AbilityCount)
+			if (offs >= AbilityCount)
 				break;
 
 			CGUIHitBox *box = (CGUIHitBox*)Add(new CGUIHitBox(ID_GCB_ICON + offs, dataX, 42 + y, 100, 16, true));
@@ -465,9 +465,9 @@ void CGumpCombatBook::UpdateContent()
 		}
 	}
 
-	int page = m_DictionaryPagesCount;
+	int page = DictionaryPagesCount;
 
-	IFOR(i, 0, m_AbilityCount)
+	IFOR(i, 0, AbilityCount)
 	{
 		Add(new CGUIPage(page));
 		page += 2;
@@ -509,9 +509,9 @@ void CGumpCombatBook::UpdateContent()
 	Add(new CGUIPage(-1));
 
 	m_PrevPage = (CGUIButton*)Add(new CGUIButton(ID_GCB_BUTTON_PREV, 0x08BB, 0x08BB, 0x08BB, 50, 8));
-	m_PrevPage->Visible = (m_Page != 0);
+	m_PrevPage->Visible = (Page != 0);
 	m_NextPage = (CGUIButton*)Add(new CGUIButton(ID_GCB_BUTTON_NEXT, 0x08BC, 0x08BC, 0x08BC, 321, 8));
-	m_NextPage->Visible = (m_Page + 2 < m_PagesCount);
+	m_NextPage->Visible = (Page + 2 < PagesCount);
 }
 //----------------------------------------------------------------------------
 void CGumpCombatBook::GUMP_BUTTON_EVENT_C
@@ -521,9 +521,9 @@ void CGumpCombatBook::GUMP_BUTTON_EVENT_C
 
 	if (serial == ID_GCB_BUTTON_PREV)
 	{
-		if (m_Page > 0)
+		if (Page > 0)
 		{
-			newPage = m_Page - 2;
+			newPage = Page - 2;
 
 			if (newPage < 0)
 				newPage = 0;
@@ -531,25 +531,25 @@ void CGumpCombatBook::GUMP_BUTTON_EVENT_C
 	}
 	else if (serial == ID_GCB_BUTTON_NEXT)
 	{
-		if (m_Page < m_PagesCount)
+		if (Page < PagesCount)
 		{
-			newPage = m_Page + 2;
+			newPage = Page + 2;
 
-			if (newPage >= m_PagesCount)
-				newPage = m_PagesCount - 1;
+			if (newPage >= PagesCount)
+				newPage = PagesCount - 1;
 		}
 	}
 	else if (serial == ID_GCB_BUTTON_MINIMIZE)
 	{
-		m_Minimized = true;
-		m_WantUpdateContent = true;
+		Minimized = true;
+		WantUpdateContent = true;
 	}
 	else if (serial == ID_GCB_LOCK_MOVING)
-		m_LockMoving = !m_LockMoving;
+		LockMoving = !LockMoving;
 	else if (serial >= ID_GCB_ICON)
 	{
-		if (m_Page < m_DictionaryPagesCount) //List of spells
-			newPage = m_DictionaryPagesCount + ((serial - ID_GCB_ICON) * 2);
+		if (Page < DictionaryPagesCount) //List of spells
+			newPage = DictionaryPagesCount + ((serial - ID_GCB_ICON) * 2);
 	}
 
 	if (newPage > -1 && !g_ClickObject.Enabled)
@@ -568,10 +568,10 @@ bool CGumpCombatBook::OnLeftMouseButtonDoubleClick()
 	WISPFUN_DEBUG("c91_f7");
 	bool result = false;
 
-	if (m_Minimized)
+	if (Minimized)
 	{
-		m_Minimized = false;
-		m_WantUpdateContent = true;
+		Minimized = false;
+		WantUpdateContent = true;
 
 		result = true;
 	}
@@ -581,20 +581,20 @@ bool CGumpCombatBook::OnLeftMouseButtonDoubleClick()
 		{
 			ChangePage(0);
 
-			m_WantRedraw = true;
+			WantRedraw = true;
 
 			result = true;
 		}
 		else if (g_PressedObject.LeftSerial == ID_GCB_BUTTON_NEXT)
 		{
-			int newPage = m_PagesCount - 1;
+			int newPage = PagesCount - 1;
 
 			if (newPage % 2)
 				newPage--;
 
 			ChangePage(newPage);
 
-			m_WantRedraw = true;
+			WantRedraw = true;
 
 			result = true;
 		}
@@ -602,7 +602,7 @@ bool CGumpCombatBook::OnLeftMouseButtonDoubleClick()
 		{
 			CGumpAbility::OnAbilityUse(0);
 
-			m_WantUpdateContent = true;
+			WantUpdateContent = true;
 
 			result = true;
 		}
@@ -610,7 +610,7 @@ bool CGumpCombatBook::OnLeftMouseButtonDoubleClick()
 		{
 			CGumpAbility::OnAbilityUse(1);
 
-			m_WantUpdateContent = true;
+			WantUpdateContent = true;
 
 			result = true;
 		}
@@ -625,17 +625,17 @@ void CGumpCombatBook::DelayedClick(CRenderObject *obj)
 	if (obj != NULL)
 	{
 		ChangePage(g_ClickObject.Page);
-		m_WantRedraw = true;
+		WantRedraw = true;
 	}
 }
 //----------------------------------------------------------------------------------
 void CGumpCombatBook::ChangePage(int newPage)
 {
 	WISPFUN_DEBUG("c91_f9");
-	m_Page = newPage;
+	Page = newPage;
 
-	m_PrevPage->Visible = (m_Page != 0);
-	m_NextPage->Visible = (m_Page + 2 < m_PagesCount);
+	m_PrevPage->Visible = (Page != 0);
+	m_NextPage->Visible = (Page + 2 < PagesCount);
 
 	g_Orion.PlaySoundEffect(0x0055);
 }

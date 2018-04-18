@@ -13,8 +13,8 @@
 //----------------------------------------------------------------------------------
 CImageBounds g_PlayerRect(0, 0, 0, 0);
 //----------------------------------------------------------------------------------
-CImageBounds::CImageBounds(const int &x, const int &y, const int &width, const int &height)
-: m_X(x), m_Y(y), m_Width(width), m_Height(height)
+CImageBounds::CImageBounds(int x, int y, int width, int height)
+: X(x), Y(y), Width(width), Height(height)
 {
 }
 //----------------------------------------------------------------------------------
@@ -27,29 +27,29 @@ bool CImageBounds::InRect(const CImageBounds &ib)
 	WISPFUN_DEBUG("c188_f1");
 	bool inRect = false;
 
-	if (m_X < ib.X)
+	if (X < ib.X)
 	{
-		if (ib.X < m_X + m_Width)
+		if (ib.X < X + Width)
 			inRect = true;
 	}
 	else
 	{
-		if (m_X < ib.X + ib.Width)
+		if (X < ib.X + ib.Width)
 			inRect = true;
 	}
 
 	if (inRect)
 	{
-		if (m_Y < ib.Y)
+		if (Y < ib.Y)
 		{
-			if (ib.Y < m_Y + m_Height)
+			if (ib.Y < Y + Height)
 				inRect = true;
 			else
 				inRect = false;
 		}
 		else
 		{
-			if (m_Y < ib.Y + ib.Height)
+			if (Y < ib.Y + ib.Height)
 				inRect = true;
 			else
 				inRect = false;
@@ -59,18 +59,18 @@ bool CImageBounds::InRect(const CImageBounds &ib)
 	return inRect;
 }
 //----------------------------------------------------------------------------------
-CTextImageBounds::CTextImageBounds(const int &x, const int &y, const int &width, const int &height, CRenderTextObject *text)
-: CImageBounds(x, y, width, height), m_Text(text)
+CTextImageBounds::CTextImageBounds(int x, int y, int width, int height, CRenderTextObject *text)
+: CImageBounds(x, y, width, height), Text(text)
 {
 }
 //----------------------------------------------------------------------------------
 CTextImageBounds::CTextImageBounds(CTextData *text)
-: CImageBounds(text->RealDrawX, text->RealDrawY, text->m_Texture.Width, text->m_Texture.Height), m_Text(text)
+: CImageBounds(text->RealDrawX, text->RealDrawY, text->m_Texture.Width, text->m_Texture.Height), Text(text)
 {
 }
 //----------------------------------------------------------------------------------
 CTextImageBounds::~CTextImageBounds()
 {
-	m_Text = NULL;
+	Text = NULL;
 }
 //----------------------------------------------------------------------------------

@@ -11,14 +11,14 @@
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
 //----------------------------------------------------------------------------------
-CGUIShopResult::CGUIShopResult(CGUIShopItem *shopItem, const int &x, const int &y)
+CGUIShopResult::CGUIShopResult(CGUIShopItem *shopItem, int x, int y)
 : CBaseGUI(GOT_SHOPRESULT, shopItem->Serial, shopItem->Graphic, shopItem->Color, x, y),
-m_Price(shopItem->Price), m_Name(shopItem->Name)
+Price(shopItem->Price), Name(shopItem->Name)
 {
 	WISPFUN_DEBUG("c74_f1");
-	m_MoveOnDrag = true;
+	MoveOnDrag = true;
 
-	string name = m_Name + "\n" + "at " + std::to_string(m_Price) + " g.p.";
+	string name = Name + "\n" + "at " + std::to_string(Price) + " g.p.";
 	g_FontManager.GenerateA(9, m_NameText, name, 0x021F, 100);
 	
 	int maxCount = shopItem->Count;
@@ -26,7 +26,7 @@ m_Price(shopItem->Price), m_Name(shopItem->Name)
 	if (maxCount > 999)
 		maxCount = 999;
 
-	m_MinMaxButtons = new CGUIMinMaxButtons(m_Serial, 0x0037, 156, m_NameText.Height / 2, 0, maxCount, 1);
+	m_MinMaxButtons = new CGUIMinMaxButtons(Serial, 0x0037, 156, m_NameText.Height / 2, 0, maxCount, 1);
 	m_MinMaxButtons->DefaultTextOffset = -122;
 	m_MinMaxButtons->SetTextParameters(true, STP_LEFT_CENTER, 9, 0x021F, false);
 }
@@ -44,7 +44,7 @@ CBaseGUI *CGUIShopResult::SelectedItem()
 	CBaseGUI *result = this;
 	WISP_GEOMETRY::CSize size = m_MinMaxButtons->GetSize();
 
-	if (g_Orion.PolygonePixelsInXY(m_X + m_MinMaxButtons->X, m_Y + m_MinMaxButtons->Y, size.Width, size.Height))
+	if (g_Orion.PolygonePixelsInXY(m_X + m_MinMaxButtons->GetX(), m_Y + m_MinMaxButtons->GetY(), size.Width, size.Height))
 		result = m_MinMaxButtons;
 
 	return result;
@@ -56,7 +56,7 @@ void CGUIShopResult::PrepareTextures()
 	m_MinMaxButtons->PrepareTextures();
 }
 //----------------------------------------------------------------------------------
-void CGUIShopResult::Draw(const bool &checktrans)
+void CGUIShopResult::Draw(bool checktrans)
 {
 	WISPFUN_DEBUG("c74_f5");
 	glTranslatef((GLfloat)m_X, (GLfloat)m_Y, 0.0f);

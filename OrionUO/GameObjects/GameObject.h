@@ -21,28 +21,37 @@ struct DRAW_FRAME_INFORMATION
 //!Класс игрового объекта
 class CGameObject : public CRenderStaticObject
 {
+public:
 	//!Серийник контейнера, содержащего объект (0xFFFFFFFF - объект лежит в мире)
-	SETGET(uint, Container, 0xFFFFFFFF);
+	uint Container = 0xFFFFFFFF;
 	//!Карта объекта
-	SETGET(uchar, MapIndex, 0);
+	uchar MapIndex = 0;
 	//!Количество
-	SETGET(uint, Count, 0);
+	uint Count = 0;
 	//!Флаги от сервера
-	SETGETE(uchar, Flags, 0);
+protected:
+    uchar m_Flags = 0;
+public:
+    uchar GetFlags() { return m_Flags; };
+    void SetFlags(uchar val);
 	//!Имя
-	SETGETE(string, Name, "");
+protected:
+    string m_Name = "";
+public:
+    string GetName() { return m_Name; };
+    void SetName(const string& val);
 	//!НПС или предмет
-	SETGET(bool, NPC, false);
+	bool NPC = false;
 	//!На предмет кликнули
-	SETGET(bool, Clicked, false);
+	bool Clicked = false;
 	//!Текущий индекс анимации
-	SETGET(char, AnimIndex, 0);
+	char AnimIndex = 0;
 	//!Префикс You see: в журнале
-	SETGET(string, JournalPrefix, "");
+	string JournalPrefix = "";
 	//!Время последнего изменения анимации
-	SETGET(uint, LastAnimationChangeTime, 0);
-	SETGET(bool, SA_Poisoned, false);
-	SETGET(bool, ClosedObjectHandle, false);
+	uint LastAnimationChangeTime = 0;
+	bool SA_Poisoned = false;
+	bool ClosedObjectHandle = false;
 
 protected:
 	//!Ссылка на список эффектов персонажа
@@ -52,7 +61,7 @@ protected:
 	CGLTexture m_TextureObjectHalndes{ CGLTexture() };
 
 public:
-	CGameObject(const uint &serial = 0);
+	CGameObject(int serial = 0);
 	virtual ~CGameObject();
 
 	//!Информация о ФБ объекта (для Animation Manager)
@@ -103,7 +112,7 @@ public:
 	@param [__in] playerZ Координата Z игрока
 	@return Может ли быть прозрачным
 	*/
-	virtual bool TranparentTest(const int &playerZ) { return false; }
+	virtual bool TranparentTest(int playerZ) { return false; }
 
 	/*!
 	Отрисовать эффект
@@ -225,7 +234,7 @@ public:
 	Золото ли это
 	@return Индекс в таблице золота
 	*/
-	static int IsGold(const ushort &graphic);
+	static int IsGold(ushort graphic);
 
 	/*!
 	Получить индекс картинки для рисования
@@ -244,7 +253,7 @@ public:
 	Это труп
 	@return
 	*/
-	bool IsCorpse() { return (m_Graphic == 0x2006); }
+	bool IsCorpse() { return (Graphic == 0x2006); }
 
 	/*!
 	Найти объект в мире, в котором содержится контейнер
@@ -252,7 +261,7 @@ public:
 	*/
 	CGameObject *GetTopObject();
 
-	CGameItem *FindLayer(const int &layer);
+	CGameItem *FindLayer(int layer);
 
 	virtual CGameItem *FindSecureTradeBox() { return NULL; }
 };

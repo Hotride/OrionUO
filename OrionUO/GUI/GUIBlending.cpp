@@ -11,23 +11,23 @@
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
 //----------------------------------------------------------------------------------
-CGUIBlending::CGUIBlending(const bool &enabled, const GLenum &sFactor, const GLenum &dFactor)
-: CBaseGUI(GOT_BLENDING, 0, 0, 0, 0, 0), m_SFactor(sFactor), m_DFactor(dFactor)
+CGUIBlending::CGUIBlending(bool enabled, GLenum sFactor, GLenum dFactor)
+: CBaseGUI(GOT_BLENDING, 0, 0, 0, 0, 0), SFactor(sFactor), DFactor(dFactor)
 {
-	m_Enabled = enabled;
+	Enabled = enabled;
 }
 //----------------------------------------------------------------------------------
 CGUIBlending::~CGUIBlending()
 {
 }
 //----------------------------------------------------------------------------------
-void CGUIBlending::Draw(const bool &checktrans)
+void CGUIBlending::Draw(bool checktrans)
 {
 	WISPFUN_DEBUG("c41_f1");
-	if (m_Enabled)
+	if (Enabled)
 	{
 		glEnable(GL_BLEND);
-		glBlendFunc(m_SFactor, m_DFactor);
+		glBlendFunc(SFactor, DFactor);
 	}
 	else
 		glDisable(GL_BLEND);

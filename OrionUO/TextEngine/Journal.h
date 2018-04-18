@@ -13,11 +13,11 @@
 //Класс для хранения и учета сообщений в журнале
 class CJournal : public CBaseQueue
 {
-	SETGET(int, MaxSize, 0);
-	SETGET(int, Size, 0);
+	int MaxSize = 0;
+	int Size = 0;
 
 public:
-	CJournal(const int &maxSize);
+	CJournal(int maxSize);
 	~CJournal();
 
 	//Добавить сообщение в журнал

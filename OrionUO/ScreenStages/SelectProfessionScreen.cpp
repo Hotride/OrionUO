@@ -22,7 +22,7 @@ CSelectProfessionScreen::~CSelectProfessionScreen()
 {
 }
 //----------------------------------------------------------------------------------
-void CSelectProfessionScreen::SetSkillSelection(const int &val)
+void CSelectProfessionScreen::SetSkillSelection(int val)
 {
 	m_SkillSelection = val;
 	m_Gump.WantUpdateContent = true;
@@ -39,7 +39,7 @@ void CSelectProfessionScreen::Init()
 	m_SkillSelection = 0;
 
 	g_ScreenEffectManager.UseSunrise();
-	m_SmoothScreenAction = 0;
+	SmoothScreenAction = 0;
 
 	m_Gump.PrepareTextures();
 	m_Gump.WantUpdateContent = true;
@@ -54,7 +54,7 @@ void CSelectProfessionScreen::ProcessSmoothAction(uchar action)
 {
 	WISPFUN_DEBUG("c166_f2");
 	if (action == 0xFF)
-		action = m_SmoothScreenAction;
+		action = SmoothScreenAction;
 
 	if (action == ID_SMOOTH_SPS_QUIT)
 		g_OrionWindow.Destroy();
@@ -63,7 +63,7 @@ void CSelectProfessionScreen::ProcessSmoothAction(uchar action)
 	else if (action == ID_SMOOTH_SPS_GO_SCREEN_GAME_CONNECT)
 	{
 		g_Orion.InitScreen(GS_GAME_CONNECT);
-		g_ConnectionScreen.Type = CST_SELECT_PROFESSOIN;
+		g_ConnectionScreen.SetType(CST_SELECT_PROFESSOIN);
 	}
 	else if (action == ID_SMOOTH_SPS_GO_SCREEN_CREATE)
 		g_Orion.InitScreen(GS_CREATE);

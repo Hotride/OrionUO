@@ -28,7 +28,7 @@ CGLFrameBuffer::~CGLFrameBuffer()
 @param [__in] height Высота буфера
 @return true в случае успеха
 */
-bool CGLFrameBuffer::Init(const int &width, const int &height)
+bool CGLFrameBuffer::Init(int width, int height)
 {
 	WISPFUN_DEBUG("c30_f3");
 	Free();
@@ -107,13 +107,13 @@ void CGLFrameBuffer::Release()
 @param [__in] height Высота буфера
 @return true в случае готовности
 */
-bool CGLFrameBuffer::Ready(const int &width, const int &height)
+bool CGLFrameBuffer::Ready(int width, int height)
 {
 	WISPFUN_DEBUG("c30_f6");
 	return (g_GL.CanUseFrameBuffer && m_Ready && Texture.Width == width && Texture.Height == height);
 }
 //----------------------------------------------------------------------------------
-bool CGLFrameBuffer::ReadyMinSize(const int &width, const int &height)
+bool CGLFrameBuffer::ReadyMinSize(int width, int height)
 {
 	WISPFUN_DEBUG("c30_f6");
 	return (g_GL.CanUseFrameBuffer && m_Ready && Texture.Width >= width && Texture.Height >= height);
@@ -157,7 +157,7 @@ bool CGLFrameBuffer::Use()
 @param [__in] y Экранная координата Y
 @return 
 */
-void CGLFrameBuffer::Draw(const int &x, const int &y)
+void CGLFrameBuffer::Draw(int x, int y)
 {
 	WISPFUN_DEBUG("c30_f8");
 	if (g_GL.CanUseFrameBuffer && m_Ready)

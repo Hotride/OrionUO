@@ -12,24 +12,25 @@
 //----------------------------------------------------------------------------------
 class CSkill
 {
-	SETGET(bool, Button, 0);
-	SETGET(string, Name, "");
-	SETGET(float, BaseValue, 0.0f);
-	SETGET(float, Value, 0.0f);
-	SETGET(float, Cap, 0.0f);
-	SETGET(uchar, Status, 0);
-
 public:
+	bool Button = 0;
+	string Name = "";
+	float BaseValue = 0.0f;
+	float Value = 0.0f;
+	float Cap = 0.0f;
+	uchar Status = 0;
+
 	CSkill() {}
-	CSkill(const bool &haveButton, const string &name);
+	CSkill(bool haveButton, const string &name);
 	~CSkill() {}
 };
 //----------------------------------------------------------------------------------
 class CSkillsManager
 {
-	SETGET(int, Count, 0);
-	SETGET(bool, SkillsRequested, false);
-	SETGET(float, SkillsTotal, 0.0f);
+public:
+	int Count = 0;
+	bool SkillsRequested = false;
+	float SkillsTotal = 0.0f;
 
 private:
 	vector<CSkill> m_Skills;
@@ -47,11 +48,11 @@ public:
 
 	void Clear();
 
-	CSkill *Get(const uint &index);
+	CSkill *Get(int index);
 
 	void Sort();
 
-	int GetSortedIndex(const uint &index);
+	int GetSortedIndex(int index);
 
 	void UpdateSkillsSum();
 };

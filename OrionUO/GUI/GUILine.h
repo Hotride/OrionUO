@@ -15,28 +15,28 @@
 class CGUILine : public CBaseGUI
 {
 	//!Целевая координата по оси X
-	SETGET(int, TargetX, 0);
+	int TargetX = 0;
 
 	//!Целевая координата по оси Y
-	SETGET(int, TargetY, 0);
+	int TargetY = 0;
 
 	//!R-компонента цвета
-	SETGET(uchar, ColorR, 0);
+	uchar ColorR = 0;
 
 	//!G-компонента цвета
-	SETGET(uchar, ColorG, 0);
+	uchar ColorG = 0;
 
 	//!B-компонента цвета
-	SETGET(uchar, ColorB, 0);
+	uchar ColorB = 0;
 
 	//!Значение альфа-канала
-	SETGET(uchar, ColorA, 0);
+	uchar ColorA = 0;
 
 public:
-	CGUILine(const int &x, const int &y, const int &targetX, const int &targetY, const uint &polygoneColor);
+	CGUILine(int x, int y, int targetX, int targetY, int polygoneColor);
 	virtual ~CGUILine();
 
-	virtual void Draw(const bool &checktrans = false);
+	virtual void Draw(bool checktrans = false);
 };
 //----------------------------------------------------------------------------------
 #endif

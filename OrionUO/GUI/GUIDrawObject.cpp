@@ -11,7 +11,7 @@
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
 //----------------------------------------------------------------------------------
-CGUIDrawObject::CGUIDrawObject(const GUMP_OBJECT_TYPE &type, const uint &serial, const ushort &graphic, const ushort &color, const int &x, const int &y)
+CGUIDrawObject::CGUIDrawObject(GUMP_OBJECT_TYPE type, int serial, ushort graphic, ushort color, int x, int y)
 : CBaseGUI(type, serial, graphic, color, x, y)
 {
 }
@@ -39,14 +39,14 @@ void CGUIDrawObject::SetShaderMode()
 {
 	WISPFUN_DEBUG("c52_f2");
 
-	if (m_Color != 0)
+	if (Color != 0)
 	{
-		if (m_PartialHue)
+		if (PartialHue)
 			glUniform1iARB(g_ShaderDrawMode, SDM_PARTIAL_HUE);
 		else
 			glUniform1iARB(g_ShaderDrawMode, SDM_COLORED);
 
-		g_ColorManager.SendColorsToShader(m_Color);
+		g_ColorManager.SendColorsToShader(Color);
 	}
 	else
 		glUniform1iARB(g_ShaderDrawMode, SDM_NO_COLOR);
@@ -55,10 +55,10 @@ void CGUIDrawObject::SetShaderMode()
 void CGUIDrawObject::PrepareTextures()
 {
 	WISPFUN_DEBUG("c52_f3");
-	g_Orion.ExecuteGump(m_Graphic);
+	g_Orion.ExecuteGump(Graphic);
 }
 //----------------------------------------------------------------------------------
-void CGUIDrawObject::Draw(const bool &checktrans)
+void CGUIDrawObject::Draw(bool checktrans)
 {
 	WISPFUN_DEBUG("c52_f4");
 	CGLTexture *th = g_Orion.ExecuteGump(GetDrawGraphic());
@@ -74,10 +74,10 @@ void CGUIDrawObject::Draw(const bool &checktrans)
 bool CGUIDrawObject::Select()
 {
 	WISPFUN_DEBUG("c52_f5");
-	CGLTexture *th = g_Orion.ExecuteGump(m_Graphic);
+	CGLTexture *th = g_Orion.ExecuteGump(Graphic);
 
 	if (th != NULL)
-		return th->Select(m_X, m_Y, !m_CheckPolygone);
+		return th->Select(m_X, m_Y, !CheckPolygone);
 
 	return false;
 }

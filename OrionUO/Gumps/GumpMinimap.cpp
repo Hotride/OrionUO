@@ -15,7 +15,7 @@ CGumpMinimap::CGumpMinimap(short x, short y, bool minimized)
 : CGump(GT_MINIMAP, 0, x, y)
 {
 	WISPFUN_DEBUG("c102_f1");
-	m_Minimized = minimized;
+	Minimized = minimized;
 	m_Locker.Serial = ID_GMM_LOCK_MOVING;
 	GenerateMap();
 }
@@ -29,12 +29,12 @@ CGumpMinimap::~CGumpMinimap()
 void CGumpMinimap::CalculateGumpState()
 {
 	WISPFUN_DEBUG("c102_f3");
-	bool minimized = m_Minimized;
-	m_Minimized = false;
+	bool minimized = Minimized;
+	Minimized = false;
 
 	CGump::CalculateGumpState();
 
-	m_Minimized = minimized;
+	Minimized = minimized;
 }
 //----------------------------------------------------------------------------------
 void CGumpMinimap::GenerateMap()
@@ -106,13 +106,13 @@ void CGumpMinimap::GenerateMap()
 
 	if (g_Player != NULL)
 	{
-		m_LastX = g_Player->X;
-		m_LastY = g_Player->Y;
+		LastX = g_Player->GetX();
+		LastY = g_Player->GetY();
 	}
 
 	m_Texture.Clear();
 	
-	ushort gumpID = 0x1393 - (int)m_Minimized;
+	ushort gumpID = 0x1393 - (int)Minimized;
 	CIndexObject &io = g_Orion.m_GumpDataIndex[gumpID];
 
 	int gumpWidth = io.Width;
@@ -132,10 +132,10 @@ void CGumpMinimap::GenerateMap()
 	//0xFF080808 - pixel32
 	//0x8421 - pixel16
 
-	int minBlockX = (m_LastX - blockOffsetX) / 8 - 1;
-	int minBlockY = (m_LastY - blockOffsetY) / 8 - 1;
-	int maxBlockX = ((m_LastX + blockOffsetX) / 8) + 1;
-	int maxBlockY = ((m_LastY + blockOffsetY) / 8) + 1;
+	int minBlockX = (LastX - blockOffsetX) / 8 - 1;
+	int minBlockY = (LastY - blockOffsetY) / 8 - 1;
+	int maxBlockX = ((LastX + blockOffsetX) / 8) + 1;
+	int maxBlockY = ((LastY + blockOffsetY) / 8) + 1;
 
 	if (minBlockX < 0)
 		minBlockX = 0;
@@ -168,11 +168,11 @@ void CGumpMinimap::GenerateMap()
 
 			IFOR(x, 0, 8)
 			{
-				int px = ((realBlockX + (int)x) - m_LastX) + gumpCenterX;
+				int px = ((realBlockX + (int)x) - LastX) + gumpCenterX;
 
 				IFOR(y, 0, 8)
 				{
-					int py = (realBlockY + (int)y) - m_LastY;
+					int py = (realBlockY + (int)y) - LastY;
 
 					int gx = px - py;
 					int gy = px + py;
@@ -215,10 +215,10 @@ void CGumpMinimap::GenerateMap()
 
 	g_GL_BindTexture16(m_Texture, gumpWidth, gumpHeight, &data[0]);
 
-	m_WantUpdateContent = true;
+	WantUpdateContent = true;
 }
 //----------------------------------------------------------------------------------
-void CGumpMinimap::CreatePixels(USHORT_LIST &data, const uint &color, const int &x, const int &y, const int &width, const int &height, const WISP_GEOMETRY::CPoint2Di *table, const int &count)
+void CGumpMinimap::CreatePixels(USHORT_LIST &data, int color, int x, int y, int width, int height, const WISP_GEOMETRY::CPoint2Di *table, int count)
 {
 	int px = x;
 	int py = y;
@@ -247,10 +247,10 @@ void CGumpMinimap::CreatePixels(USHORT_LIST &data, const uint &color, const int 
 void CGumpMinimap::PrepareContent()
 {
 	WISPFUN_DEBUG("c102_f5");
-	if (g_Player->X != m_LastX || g_Player->Y != m_LastY || m_Texture.Texture == 0)
+	if (g_Player->GetX() != LastX || g_Player->GetY() != LastY || m_Texture.Texture == 0)
 		GenerateMap();
-	else if (!m_Count || m_Count == 6 || m_WantRedraw)
-		m_WantUpdateContent = true;
+	else if (!m_Count || m_Count == 6 || WantRedraw)
+		WantUpdateContent = true;
 
 	static uint ticks = 0;
 
@@ -267,7 +267,7 @@ void CGumpMinimap::PrepareContent()
 void CGumpMinimap::UpdateContent()
 {
 	WISPFUN_DEBUG("c102_f6");
-	ushort graphic = 0x1393 - (int)m_Minimized;
+	ushort graphic = 0x1393 - (int)Minimized;
 
 	CGLTexture *th = g_Orion.ExecuteGump(graphic);
 
@@ -285,8 +285,8 @@ void CGumpMinimap::UpdateContent()
 
 	m_Body->Graphic = graphic;
 
-	int playerX = g_Player->X;
-	int playerY = g_Player->Y;
+	int playerX = g_Player->GetX();
+	int playerY = g_Player->GetY();
 
 	int gumpWidth = th->Width;
 	int gumpHeight = th->Height;
@@ -311,8 +311,8 @@ void CGumpMinimap::UpdateContent()
 				{
 					uint pcl = g_ColorManager.GetPolygoneColor(16, color);
 
-					int x = go->X - playerX;
-					int y = go->Y - playerY;
+					int x = go->GetX() - playerX;
+					int y = go->GetY() - playerY;
 
 					int gx = x - y;
 					int gy = x + y;
@@ -330,7 +330,7 @@ void CGumpMinimap::GUMP_BUTTON_EVENT_C
 {
 	WISPFUN_DEBUG("c102_f7");
 	if (serial == ID_GMM_LOCK_MOVING)
-		m_LockMoving = !m_LockMoving;
+		LockMoving = !LockMoving;
 }
 //----------------------------------------------------------------------------------
 bool CGumpMinimap::OnLeftMouseButtonDoubleClick()

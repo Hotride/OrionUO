@@ -11,8 +11,8 @@
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
 //----------------------------------------------------------------------------------
-CGUITilepicScaled::CGUITilepicScaled(const ushort &graphic, const ushort &color, const int &x, const int &y, const int &width, const int &height)
-: CGUITilepic(graphic, color, x, y), m_Width(width), m_Height(height)
+CGUITilepicScaled::CGUITilepicScaled(ushort graphic, ushort color, int x, int y, int width, int height)
+: CGUITilepic(graphic, color, x, y), Width(width), Height(height)
 {
 }
 //----------------------------------------------------------------------------------
@@ -20,10 +20,10 @@ CGUITilepicScaled::~CGUITilepicScaled()
 {
 }
 //----------------------------------------------------------------------------------
-void CGUITilepicScaled::Draw(const bool &checktrans)
+void CGUITilepicScaled::Draw(bool checktrans)
 {
 	WISPFUN_DEBUG("c82_f1");
-	CGLTexture *th = g_Orion.ExecuteStaticArt(m_Graphic);
+	CGLTexture *th = g_Orion.ExecuteStaticArt(Graphic);
 
 	if (th != NULL)
 	{

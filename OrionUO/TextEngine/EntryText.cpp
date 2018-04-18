@@ -14,7 +14,7 @@
 CEntryText *g_EntryPointer = NULL;
 //----------------------------------------------------------------------------------
 CEntryText::CEntryText(int maxLength, int width, int maxWidth, bool numberOnly)
-: m_MaxLength(maxLength), m_Width(width), m_MaxWidth(maxWidth), m_NumberOnly(numberOnly)
+: MaxLength(maxLength), Width(width), MaxWidth(maxWidth), NumberOnly(numberOnly)
 {
 	WISPFUN_DEBUG("c169_f1");
 }
@@ -44,7 +44,7 @@ CEntryText::~CEntryText()
 const char *CEntryText::c_str()
 {
 	WISPFUN_DEBUG("c169_f3");
-	m_CText = ToString(m_Text);
+	m_CText = ToString(Text);
 	return m_CText.c_str();
 }
 //----------------------------------------------------------------------------------
@@ -60,13 +60,13 @@ void CEntryText::OnClick(CGump *gump, uchar font, bool unicode, int x, int y, TE
 
 		//Вычислим новую позицию согласно типа шрифта
 		if (unicode)
-			m_Position = g_FontManager.CalculateCaretPosW(font, m_Text.c_str(), x, y, m_Width, align, flags);
+			m_Position = g_FontManager.CalculateCaretPosW(font, Text.c_str(), x, y, Width, align, flags);
 		else
-			m_Position = g_FontManager.CalculateCaretPosA(font, c_str(), x, y, m_Width, align, flags);
+			m_Position = g_FontManager.CalculateCaretPosA(font, c_str(), x, y, Width, align, flags);
 
 		//Если позиция изменилась - укажем что текст изменен
 		if (oldPos != m_Position)
-			m_Changed = true;
+			Changed = true;
 	}
 	else //Иначе зададим текущее поле как поле для ввода
 	{
@@ -79,7 +79,7 @@ void CEntryText::OnClick(CGump *gump, uchar font, bool unicode, int x, int y, TE
 
 		//Изменим указатель
 		g_EntryPointer = this;
-		m_Changed = true;
+		Changed = true;
 	}
 
 	//Если это ентри гампа - обновим его
@@ -139,7 +139,7 @@ int CEntryText::GetLinesCountA(uchar font, TEXT_ALIGN_TYPE align, ushort flags, 
 {
 	WISPFUN_DEBUG("c169_f6");
 	if (!width)
-		width = m_Width;
+		width = Width;
 
 	MULTILINES_FONT_INFO *info = g_FontManager.GetInfoA(font, c_str(), (int)Length(), align, flags, width);
 
@@ -161,7 +161,7 @@ int CEntryText::GetLinesCountW(uchar font, TEXT_ALIGN_TYPE align, ushort flags, 
 {
 	WISPFUN_DEBUG("c169_f7");
 	if (!width)
-		width = m_Width;
+		width = Width;
 
 	MULTILINES_FONT_INFO *info = g_FontManager.GetInfoW(font, Data(), (int)Length(), align, flags, width);
 
@@ -187,33 +187,33 @@ bool CEntryText::Insert(wchar_t ch, CGump *gump)
 		m_Position = 0;
 
 	//Коррекция позиции
-	if (m_Position > (int)m_Text.length())
-		m_Position = (int)m_Text.length();
+	if (m_Position > (int)Text.length())
+		m_Position = (int)Text.length();
 
 	//Если максимальная ширина задана
-	if (m_MaxLength > 0)
+	if (MaxLength > 0)
 	{
 		//Если это числовое поле для ввода
-		if (m_NumberOnly)
+		if (NumberOnly)
 		{
-			wstring wstr = m_Text;
+			wstring wstr = Text;
 			wstr.insert(wstr.begin() + m_Position, ch);
 
-			if (_wtoi(wstr.c_str()) >= m_MaxLength) //Сверим максимальное значение
+			if (_wtoi(wstr.c_str()) >= MaxLength) //Сверим максимальное значение
 				return false;
 		}
-		else if ((int)m_Text.length() >= m_MaxLength) //Иначе - сверим длину с максимальной
+		else if ((int)Text.length() >= MaxLength) //Иначе - сверим длину с максимальной
 			return false;
 	}
 
 	//После прохождения всех проверок и коррекций - добавляем символ в указанную позицию
-	m_Text.insert(m_Text.begin() + m_Position, ch);
+	Text.insert(Text.begin() + m_Position, ch);
 
 	//Увеличиваем индекс позиции
 	m_Position++;
 
 	//Изменения внесены
-	m_Changed = true;
+	Changed = true;
 
 	//Обновляем гамп (если есть)
 	if (gump != NULL)
@@ -238,18 +238,18 @@ void CEntryText::Remove(bool left, CGump *gump)
 	else //Или ткнули Delete
 	{
 		//Уже в конце строки
-		if (m_Position >= (int)m_Text.length())
+		if (m_Position >= (int)Text.length())
 			return;
 	}
 
 	//Удаляем указанный символ
-	if (m_Position < m_Text.length())
-		m_Text.erase(m_Text.begin() + m_Position);
+	if (m_Position < Text.length())
+		Text.erase(Text.begin() + m_Position);
 	else
-		m_Text.erase(m_Text.length() - 1);
+		Text.erase(Text.length() - 1);
 
 	//Регистрируем изменения
-	m_Changed = true;
+	Changed = true;
 
 	//Обновляем гамп (если есть)
 	if (gump != NULL)
@@ -264,13 +264,13 @@ void CEntryText::Clear()
 {
 	WISPFUN_DEBUG("c169_f10");
 	//Очистка
-	m_Text = L"";
+	Text = L"";
 	m_CText = "";
 	m_Position = 0;
-	m_Changed = true;
-	m_DrawOffset = 0;
+	Changed = true;
+	DrawOffset = 0;
 	m_Texture.Clear();
-	m_CaretPos.Reset();
+	CaretPos.Reset();
 }
 //----------------------------------------------------------------------------------
 void CEntryText::Paste()
@@ -311,11 +311,11 @@ void CEntryText::AddPos(int val, CGump *gump)
 		m_Position = 0;
 
 	//Корректировка
-	if (m_Position > (int)m_Text.length())
-		m_Position = (int)m_Text.length();
+	if (m_Position > (int)Text.length())
+		m_Position = (int)Text.length();
 	
 	//Регистрируем изменения
-	m_Changed = true;
+	Changed = true;
 
 	//Обновляем гамп (если есть)
 	if (gump != NULL)
@@ -334,11 +334,11 @@ void CEntryText::SetPos(int val, CGump *gump)
 		m_Position = 0;
 
 	//Корректировка
-	if (m_Position > (int)m_Text.length())
-		m_Position = (int)m_Text.length();
+	if (m_Position > (int)Text.length())
+		m_Position = (int)Text.length();
 	
 	//Регистрируем изменения
-	m_Changed = true;
+	Changed = true;
 
 	//Обновляем гамп (если есть)
 	if (gump != NULL)
@@ -364,33 +364,33 @@ void CEntryText::SetText(const wstring &text)
 	Clear();
 
 	//Изменим текст и выставим указатель в конец текста
-	m_Text = text;
-	m_Position = (int)m_Text.length();
+	Text = text;
+	m_Position = (int)Text.length();
 
 	if (m_Position < 0)
 		m_Position = 0;
 
 	//Если указана максимальная длина
-	if (m_MaxLength > 0)
+	if (MaxLength > 0)
 	{
 		//Если это числовое поле для ввода
-		if (m_NumberOnly)
+		if (NumberOnly)
 		{
-			string str = ToString(m_Text);
+			string str = ToString(Text);
 
 			//Пока строка не пустая и значение больше допустимого - удаляем по 1 символу сзади
 			while (true)
 			{
 				size_t len = str.length();
 
-				if (std::atoi(str.c_str()) >= m_MaxLength && len > 0)
+				if (std::atoi(str.c_str()) >= MaxLength && len > 0)
 					str.resize(len - 1);
 				else
 					break;
 			}
 		}
-		else if ((int)m_Text.length() >= m_MaxLength) //Иначе - сверим длину
-			m_Text.resize(m_MaxLength);
+		else if ((int)Text.length() >= MaxLength) //Иначе - сверим длину
+			Text.resize(MaxLength);
 	}
 
 	//Обновим гамп (если есть)
@@ -405,14 +405,14 @@ string CEntryText::CheckMaxWidthA(uchar font, string str)
 {
 	WISPFUN_DEBUG("c169_f16");
 	//Если задана максимальная ширина
-	if (m_MaxWidth > 0)
+	if (MaxWidth > 0)
 	{
 		//Вычислим текущую ширину
 		int width = g_FontManager.GetWidthA(font, str);
 		size_t len = str.length();
 
 		//И пока строка не будет соответствовать указанным параметрам - урезаем ее
-		while (m_MaxWidth < width && len > 0)
+		while (MaxWidth < width && len > 0)
 		{
 			str.erase(str.begin() + len);
 			len--;
@@ -427,14 +427,14 @@ wstring CEntryText::CheckMaxWidthW(uchar font, wstring str)
 {
 	WISPFUN_DEBUG("c169_f17");
 	//Если задана максимальная ширина
-	if (m_MaxWidth > 0)
+	if (MaxWidth > 0)
 	{
 		//Вычислим текущую ширину
 		int width = g_FontManager.GetWidthW(font, str);
 		size_t len = str.length();
 
 		//И пока строка не будет соответствовать указанным параметрам - урезаем ее
-		while (m_MaxWidth < width && len > 0)
+		while (MaxWidth < width && len > 0)
 		{
 			str.erase(str.begin() + len);
 			len--;
@@ -451,14 +451,14 @@ void CEntryText::FixMaxWidthA(uchar font)
 	c_str();
 
 	//Если задана максимальная ширина
-	if (m_MaxWidth > 0)
+	if (MaxWidth > 0)
 	{
 		//Вычислим текущую ширину
 		int width = g_FontManager.GetWidthA(font, m_CText);
 		size_t len = m_CText.length();
 
 		//И пока строка не будет соответствовать указанным параметрам - урезаем ее
-		while (m_MaxWidth < width && len > 0)
+		while (MaxWidth < width && len > 0)
 		{
 			Remove((m_Position > 0), NULL);
 			len--;
@@ -471,18 +471,18 @@ void CEntryText::FixMaxWidthW(uchar font)
 {
 	WISPFUN_DEBUG("c169_f19");
 	//Если задана максимальная ширина
-	if (m_MaxWidth > 0)
+	if (MaxWidth > 0)
 	{
 		//Вычислим текущую ширину
-		int width = g_FontManager.GetWidthW(font, m_Text);
-		size_t len = m_Text.length();
+		int width = g_FontManager.GetWidthW(font, Text);
+		size_t len = Text.length();
 
 		//И пока строка не будет соответствовать указанным параметрам - урезаем ее
-		while (m_MaxWidth < width && len > 0)
+		while (MaxWidth < width && len > 0)
 		{
 			Remove((m_Position > 0), NULL);
 			len--;
-			width = g_FontManager.GetWidthW(font, m_Text);
+			width = g_FontManager.GetWidthW(font, Text);
 		}
 	}
 }
@@ -501,36 +501,36 @@ void CEntryText::CreateTextureA(uchar font, string str, ushort color, int width,
 		//Вычисляем позицию каретки
 		if (m_Position)
 		{
-			m_CaretPos = g_FontManager.GetCaretPosA(font, str.c_str(), m_Position, width, align, flags);
+			CaretPos = g_FontManager.GetCaretPosA(font, str.c_str(), m_Position, width, align, flags);
 
 			if (flags & UOFONT_FIXED)
 			{
-				if (m_DrawOffset)
+				if (DrawOffset)
 				{
-					if (m_CaretPos.X + m_DrawOffset < 0)
-						m_DrawOffset = -m_CaretPos.X;
-					else if (m_Width + -m_DrawOffset < m_CaretPos.X)
-						m_DrawOffset = m_Width - m_CaretPos.X;
+					if (CaretPos.X + DrawOffset < 0)
+						DrawOffset = -CaretPos.X;
+					else if (Width + -DrawOffset < CaretPos.X)
+						DrawOffset = Width - CaretPos.X;
 				}
-				else if (m_Width + m_DrawOffset < m_CaretPos.X)
-					m_DrawOffset = m_Width - m_CaretPos.X;
+				else if (Width + DrawOffset < CaretPos.X)
+					DrawOffset = Width - CaretPos.X;
 				else
-					m_DrawOffset = 0;
+					DrawOffset = 0;
 
-				/*if (m_Width + m_DrawOffset < m_CaretPos.x)
-					m_DrawOffset = m_Width - m_CaretPos.x;
+				/*if (Width + DrawOffset < CaretPos.x)
+					DrawOffset = Width - CaretPos.x;
 				else
-					m_DrawOffset = 0;*/
+					DrawOffset = 0;*/
 			}
 		}
 		else //Либо обнуляем ее
 		{
-			m_CaretPos.Reset();
-			m_DrawOffset = 0;
+			CaretPos.Reset();
+			DrawOffset = 0;
 		}
 
 		//Генерируем текстуру
-		g_FontManager.GenerateA(font, m_Texture, str, color, m_Width + abs(m_DrawOffset), align, flags);
+		g_FontManager.GenerateA(font, m_Texture, str, color, Width + abs(DrawOffset), align, flags);
 	}
 }
 //----------------------------------------------------------------------------------
@@ -548,31 +548,31 @@ void CEntryText::CreateTextureW(uchar font, wstring str, ushort color, int width
 		//Вычисляем позицию каретки
 		if (m_Position)
 		{
-			m_CaretPos = g_FontManager.GetCaretPosW(font, str, m_Position, width, align, flags);
+			CaretPos = g_FontManager.GetCaretPosW(font, str, m_Position, width, align, flags);
 
 			if (flags & UOFONT_FIXED)
 			{
-				if (m_DrawOffset)
+				if (DrawOffset)
 				{
-					if (m_CaretPos.X + m_DrawOffset < 0)
-						m_DrawOffset = -m_CaretPos.X;
-					else if (m_Width + -m_DrawOffset < m_CaretPos.X)
-						m_DrawOffset = m_Width - m_CaretPos.X;
+					if (CaretPos.X + DrawOffset < 0)
+						DrawOffset = -CaretPos.X;
+					else if (Width + -DrawOffset < CaretPos.X)
+						DrawOffset = Width - CaretPos.X;
 				}
-				else if (m_Width + m_DrawOffset < m_CaretPos.X)
-					m_DrawOffset = m_Width - m_CaretPos.X;
+				else if (Width + DrawOffset < CaretPos.X)
+					DrawOffset = Width - CaretPos.X;
 				else
-					m_DrawOffset = 0;
+					DrawOffset = 0;
 			}
 		}
 		else //Либо обнуляем ее
 		{
-			m_CaretPos.Reset();
-			m_DrawOffset = 0;
+			CaretPos.Reset();
+			DrawOffset = 0;
 		}
 
 		//Генерируем текстуру
-		g_FontManager.GenerateW(font, m_Texture, str, color, 30, m_Width, align, flags);
+		g_FontManager.GenerateW(font, m_Texture, str, color, 30, Width, align, flags);
 	}
 }
 //----------------------------------------------------------------------------------
@@ -580,17 +580,17 @@ void CEntryText::PrepareToDrawA(uchar font, ushort color, TEXT_ALIGN_TYPE align,
 {
 	WISPFUN_DEBUG("c169_f22");
 	//Если изменился текст или цвет
-	if (m_Changed || m_Color != color)
+	if (Changed || Color != color)
 	{
 		//Урезаем данные до максимальных габаритов
 		FixMaxWidthA(font);
 
 		//Создаем текстуру
-		CreateTextureA(font, m_CText, color, /*m_MaxWidth*/m_Width, align, flags);
+		CreateTextureA(font, m_CText, color, /*MaxWidth*/Width, align, flags);
 
 		//Регистрируем изменения
-		m_Changed = false;
-		m_Color = color;
+		Changed = false;
+		Color = color;
 
 		//Если это поле для ввода - сгенерируем каретку
 		if (this == g_EntryPointer)
@@ -602,17 +602,17 @@ void CEntryText::PrepareToDrawW(uchar font, ushort color, TEXT_ALIGN_TYPE align,
 {
 	WISPFUN_DEBUG("c169_f23");
 	//Если изменился текст или цвет
-	if (m_Changed || m_Color != color)
+	if (Changed || Color != color)
 	{
 		//Урезаем данные до максимальных габаритов
 		FixMaxWidthW(font);
 
 		//Создаем текстуру
-		CreateTextureW(font, m_Text, color, m_Width, align, flags);
+		CreateTextureW(font, Text, color, Width, align, flags);
 
 		//Регистрируем изменения
-		m_Changed = false;
-		m_Color = color;
+		Changed = false;
+		Color = color;
 
 		//Если это поле для ввода - сгенерируем каретку
 		if (this == g_EntryPointer)
@@ -626,7 +626,7 @@ void CEntryText::DrawA(uchar font, ushort color, int x, int y, TEXT_ALIGN_TYPE a
 	PrepareToDrawA(font, color, align, flags);
 
 	//Отрисовка текстуры
-	m_Texture.Draw(x + m_DrawOffset, y);
+	m_Texture.Draw(x + DrawOffset, y);
 
 	//Если это поле для ввода - отобразим каретку
 	if (this == g_EntryPointer)
@@ -636,7 +636,7 @@ void CEntryText::DrawA(uchar font, ushort color, int x, int y, TEXT_ALIGN_TYPE a
 		int offsY = offsetTable[font % 10];
 
 		//Отрисуем каретку
-		m_CaretTexture.Draw(x + m_DrawOffset + m_CaretPos.X, y + offsY + m_CaretPos.Y);
+		m_CaretTexture.Draw(x + DrawOffset + CaretPos.X, y + offsY + CaretPos.Y);
 	}
 }
 //----------------------------------------------------------------------------------
@@ -646,11 +646,11 @@ void CEntryText::DrawW(uchar font, ushort color, int x, int y, TEXT_ALIGN_TYPE a
 	PrepareToDrawW(font, color, align, flags);
 
 	//Отрисовка текстуры
-	m_Texture.Draw(x + m_DrawOffset, y);
+	m_Texture.Draw(x + DrawOffset, y);
 
 	//Если это поле для ввода - отобразим каретку
 	if (this == g_EntryPointer)
-		m_CaretTexture.Draw(x + m_DrawOffset + m_CaretPos.X, y + m_CaretPos.Y);
+		m_CaretTexture.Draw(x + DrawOffset + CaretPos.X, y + CaretPos.Y);
 }
 //----------------------------------------------------------------------------------
 void CEntryText::DrawMaskA(uchar font, ushort color, int x, int y, TEXT_ALIGN_TYPE align, ushort flags)
@@ -664,7 +664,7 @@ void CEntryText::DrawMaskA(uchar font, ushort color, int x, int y, TEXT_ALIGN_TY
 
 	//Если текст есть - отрисуем его
 	if (len)
-		g_FontManager.DrawA(font, str, color, x + m_DrawOffset, y);
+		g_FontManager.DrawA(font, str, color, x + DrawOffset, y);
 
 	//Если это поле для ввода - отобразим каретку
 	if (this == g_EntryPointer)
@@ -681,7 +681,7 @@ void CEntryText::DrawMaskA(uchar font, ushort color, int x, int y, TEXT_ALIGN_TY
 		}
 
 		//Отрисуем каретку
-		g_FontManager.DrawA(font, "_", color, x + m_DrawOffset, y + offsY);
+		g_FontManager.DrawA(font, "_", color, x + DrawOffset, y + offsY);
 	}
 }
 //----------------------------------------------------------------------------------
@@ -696,7 +696,7 @@ void CEntryText::DrawMaskW(uchar font, ushort color, int x, int y, TEXT_ALIGN_TY
 
 	//Если текст есть - отрисуем его
 	if (len)
-		g_FontManager.DrawW(font, str, color, x + m_DrawOffset, y, 30, 0, TS_LEFT, flags);
+		g_FontManager.DrawW(font, str, color, x + DrawOffset, y, 30, 0, TS_LEFT, flags);
 
 	//Если это поле для ввода - отобразим каретку
 	if (this == g_EntryPointer)
@@ -709,19 +709,19 @@ void CEntryText::DrawMaskW(uchar font, ushort color, int x, int y, TEXT_ALIGN_TY
 		}
 
 		//Отрисуем каретку
-		g_FontManager.DrawW(font, L"_", color, x + m_DrawOffset, y, 30, 0, TS_LEFT, flags);
+		g_FontManager.DrawW(font, L"_", color, x + DrawOffset, y, 30, 0, TS_LEFT, flags);
 	}
 }
 //----------------------------------------------------------------------------------
 WPARAM CEntryText::GetLastChar()
 {
-	if (m_Text.length() == 0) return 0;
-	return m_Text[m_Text.length() - 1];
+	if (Text.length() == 0) return 0;
+	return Text[Text.length() - 1];
 }
 //----------------------------------------------------------------------------------
 void CEntryText::RemoveSequence(int startPos, int length)
 {
-	m_Text.erase(startPos, length);
+	Text.erase(startPos, length);
 }
 //----------------------------------------------------------------------------------
 string CEntryText::GetTextA() const
@@ -731,6 +731,6 @@ string CEntryText::GetTextA() const
 //----------------------------------------------------------------------------------
 wstring CEntryText::GetTextW() const
 {
-	return m_Text;
+	return Text;
 }
 //----------------------------------------------------------------------------------

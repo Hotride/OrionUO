@@ -12,9 +12,9 @@
 //----------------------------------------------------------------------------------
 class CGumpCombatBook : public CGump
 {
-	SETGET(int, DictionaryPagesCount, 6);
-	SETGET(int, AbilityCount, MAX_ABILITIES_COUNT);
-	SETGET(int, PagesCount, 37);
+	int DictionaryPagesCount = 6;
+	int AbilityCount = MAX_ABILITIES_COUNT;
+	int PagesCount = 37;
 
 private:
 	static const int ID_GCB_BUTTON_PREV = 1;
@@ -31,10 +31,10 @@ private:
 	CGUIButton *m_NextPage{ NULL };
 
 public:
-	CGumpCombatBook(const int &x, const int &y);
+	CGumpCombatBook(int x, int y);
 	virtual ~CGumpCombatBook();
 
-	static USHORT_LIST GetItemsList(const uchar &index);
+	static USHORT_LIST GetItemsList(uchar index);
 
 	virtual void DelayedClick(CRenderObject *obj);
 

@@ -12,13 +12,17 @@
 //----------------------------------------------------------------------------------
 class CGumpMap : public CGump
 {
-	SETGETE(int, PlotState, 0);
-	SETGET(int, StartX, 0);
-	SETGET(int, StartY, 0);
-	SETGET(int, EndX, 0);
-	SETGET(int, EndY, 0);
-	SETGET(int, Width, 0);
-	SETGET(int, Height, 0);
+protected:
+    int m_PlotState = 0;
+public:
+    int GetPlotState() { return m_PlotState; };
+    void SetPlotState(int val);
+	int StartX = 0;
+	int StartY = 0;
+	int EndX = 0;
+	int EndY = 0;
+	int Width = 0;
+	int Height = 0;
 
 private:
 	static const int ID_GM_PLOT_COURSE = 1;
@@ -49,7 +53,7 @@ public:
 
 	virtual void PrepareContent();
 
-	virtual void GenerateFrame(const bool &stop);
+	virtual void GenerateFrame(bool stop);
 
 	virtual CRenderObject *Select();
 

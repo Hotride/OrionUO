@@ -31,9 +31,9 @@ public:
 
 	virtual bool CanBeDisplayed();
 
-	void AddBuff(const ushort &id, const ushort &timer, const wstring &text);
+	void AddBuff(ushort id, ushort timer, const wstring &text);
 
-	void DeleteBuff(const ushort &id);
+	void DeleteBuff(ushort id);
 
 	void UpdateBuffIcons();
 

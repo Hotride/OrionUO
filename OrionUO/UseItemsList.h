@@ -12,7 +12,7 @@
 //----------------------------------------------------------------------------------
 class CUseItemActions
 {
-	SETGET(uint, Timer, 0);
+	uint Timer = 0;
 
 private:
 	deque<uint> m_List;
@@ -21,7 +21,7 @@ public:
 	CUseItemActions() {}
 	~CUseItemActions() {}
 
-	void Add(const uint &serial);
+	void Add(int serial);
 
 	void Clear() { m_List.clear(); }
 

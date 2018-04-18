@@ -29,7 +29,7 @@ CSelectTownScreen::~CSelectTownScreen()
 void CSelectTownScreen::Init()
 {
 	WISPFUN_DEBUG("c167_f1");
-	if (g_PacketManager.ClientVersion >= CV_70130)
+	if (g_PacketManager.GetClientVersion() >= CV_70130)
 		m_City = g_CityList.GetCity(0);
 	else
 	{
@@ -40,7 +40,7 @@ void CSelectTownScreen::Init()
 	}
 
 	g_ScreenEffectManager.UseSunrise();
-	m_SmoothScreenAction = 0;
+	SmoothScreenAction = 0;
 	
 	m_Gump.PrepareTextures();
 	m_Gump.WantUpdateContent = true;
@@ -55,7 +55,7 @@ void CSelectTownScreen::ProcessSmoothAction(uchar action)
 {
 	WISPFUN_DEBUG("c167_f2");
 	if (action == 0xFF)
-		action = m_SmoothScreenAction;
+		action = SmoothScreenAction;
 
 	if (action == ID_SMOOTH_STS_QUIT)
 		g_OrionWindow.Destroy();

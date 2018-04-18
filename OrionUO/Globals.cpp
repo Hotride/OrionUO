@@ -264,8 +264,8 @@ int GetDistance(CGameObject *current, CGameObject *target)
 {
 	if (current != NULL && target != NULL)
 	{
-		int distx = abs(target->X - current->X);
-		int disty = abs(target->Y - current->Y);
+		int distx = abs(target->GetX() - current->GetX());
+		int disty = abs(target->GetY() - current->GetY());
 
 		if (disty > distx)
 			distx = disty;
@@ -280,8 +280,8 @@ int GetDistance(CGameObject *current, const WISP_GEOMETRY::CPoint2Di &target)
 {
 	if (current != NULL)
 	{
-		int distx = abs(target.X - current->X);
-		int disty = abs(target.Y - current->Y);
+		int distx = abs(target.X - current->GetX());
+		int disty = abs(target.Y - current->GetY());
 
 		if (disty > distx)
 			distx = disty;
@@ -296,8 +296,8 @@ int GetDistance(const WISP_GEOMETRY::CPoint2Di &current, CGameObject *target)
 {
 	if (target != NULL)
 	{
-		int distx = abs(target->X - current.X);
-		int disty = abs(target->Y - current.Y);
+		int distx = abs(target->GetX() - current.X);
+		int disty = abs(target->GetY() - current.Y);
 
 		if (disty > distx)
 			distx = disty;
@@ -312,7 +312,7 @@ int GetRemoveDistance(const WISP_GEOMETRY::CPoint2Di &current, CGameObject *targ
 {
 	if (target != NULL)
 	{
-		WISP_GEOMETRY::CPoint2Di targetPoint(target->X, target->Y);
+		WISP_GEOMETRY::CPoint2Di targetPoint(target->GetX(), target->GetY());
 
 		if (target->NPC && !((CGameCharacter*)target)->m_Steps.empty())
 		{
@@ -341,7 +341,7 @@ bool CheckMultiDistance(const WISP_GEOMETRY::CPoint2Di &current, CGameObject *ta
 	{
 		maxDistance += ((CGameItem*)target)->MultiDistanceBonus;
 
-		result = ((abs(target->X - current.X) <= maxDistance) && (abs(target->Y - current.Y) <= maxDistance));
+		result = ((abs(target->GetX() - current.X) <= maxDistance) && (abs(target->GetY() - current.Y) <= maxDistance));
 	}
 
 	return result;
@@ -367,8 +367,8 @@ int GetTopObjDistance(CGameObject *current, CGameObject *target)
 
 		if (target != NULL)
 		{
-			int distx = abs(target->X - current->X);
-			int disty = abs(target->Y - current->Y);
+			int distx = abs(target->GetX() - current->GetX());
+			int disty = abs(target->GetY() - current->GetY());
 
 			if (disty > distx)
 				distx = disty;
@@ -380,7 +380,7 @@ int GetTopObjDistance(CGameObject *current, CGameObject *target)
 	return 100500;
 }
 //---------------------------------------------------------------------------
-const char *GetReagentName(const ushort &id)
+const char *GetReagentName(ushort id)
 {
 	switch (id)
 	{

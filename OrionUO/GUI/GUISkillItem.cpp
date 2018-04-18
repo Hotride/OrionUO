@@ -11,11 +11,11 @@
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
 //----------------------------------------------------------------------------------
-CGUISkillItem::CGUISkillItem(const uint &serial, const uint &useSerial, const uint &statusSerial, const int &index, const int &x, const int &y)
-: CBaseGUI(GOT_SKILLITEM, serial, 0, 0, x, y), m_Index(index)
+CGUISkillItem::CGUISkillItem(int serial, int useSerial, int statusSerial, int index, int x, int y)
+: CBaseGUI(GOT_SKILLITEM, serial, 0, 0, x, y), Index(index)
 {
 	WISPFUN_DEBUG("c76_f1");
-	CSkill *skill = g_SkillsManager.Get(m_Index);
+	CSkill *skill = g_SkillsManager.Get(Index);
 
 	if (skill != NULL)
 	{
@@ -46,7 +46,7 @@ CGUISkillItem::~CGUISkillItem()
 	RELEASE_POINTER(m_ButtonStatus);
 }
 //----------------------------------------------------------------------------------
-void CGUISkillItem::SetStatus(const uchar &val)
+void CGUISkillItem::SetStatus(uchar val)
 {
 	WISPFUN_DEBUG("c76_f3");
 	m_Status = val;
@@ -71,10 +71,10 @@ ushort CGUISkillItem::GetStatusButtonGraphic()
 	return graphic;
 }
 //----------------------------------------------------------------------------------
-void CGUISkillItem::CreateValueText(const bool &showReal, const bool &showCap)
+void CGUISkillItem::CreateValueText(bool showReal, bool showCap)
 {
 	WISPFUN_DEBUG("c76_f5");
-	CSkill *skill = g_SkillsManager.Get(m_Index);
+	CSkill *skill = g_SkillsManager.Get(Index);
 
 	if (skill != NULL)
 	{
@@ -106,18 +106,18 @@ CBaseGUI *CGUISkillItem::SelectedItem()
 	WISPFUN_DEBUG("c76_f7");
 	CBaseGUI *selected = this;
 
-	if (g_Orion.PolygonePixelsInXY(m_X + m_ButtonStatus->X, m_Y + m_ButtonStatus->Y, 14, 14))
+	if (g_Orion.PolygonePixelsInXY(m_X + m_ButtonStatus->GetX(), m_Y + m_ButtonStatus->GetY(), 14, 14))
 		selected = m_ButtonStatus;
 	else if (m_ButtonUse != NULL)
 	{
-		if (g_Orion.GumpPixelsInXY(m_ButtonUse->Graphic, m_X + m_ButtonUse->X, m_Y + m_ButtonUse->Y))
+		if (g_Orion.GumpPixelsInXY(m_ButtonUse->Graphic, m_X + m_ButtonUse->GetX(), m_Y + m_ButtonUse->GetY()))
 			selected = m_ButtonUse;
 	}
 
 	return selected;
 }
 //----------------------------------------------------------------------------------
-void CGUISkillItem::Draw(const bool &checktrans)
+void CGUISkillItem::Draw(bool checktrans)
 {
 	WISPFUN_DEBUG("c76_f8");
 	glTranslatef((GLfloat)m_X, (GLfloat)m_Y, 0.0f);

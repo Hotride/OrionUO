@@ -13,16 +13,16 @@
 //Класс объекта макроса
 class CMacroObject : public CBaseQueueItem
 {
+public:
 	//Код действия
-	SETGET(MACRO_CODE, Code, MC_NONE);
+	MACRO_CODE Code = MC_NONE;
 
 	//Подкод действия
-	SETGET(MACRO_SUB_CODE, SubCode, MSC_NONE);
+	MACRO_SUB_CODE SubCode = MSC_NONE;
 
 	//Имеет подменю
-	SETGET(char, HasSubMenu, 0);
+	char HasSubMenu = 0;
 
-public:
 	CMacroObject(const MACRO_CODE &code, const MACRO_SUB_CODE &subCode);
 	virtual ~CMacroObject();
 
@@ -32,10 +32,10 @@ public:
 //Класс объекта макроса, содержащий строку
 class CMacroObjectString : public CMacroObject
 {
-	//Строка действия
-	SETGET(string, String, "");
-
 public:
+	//Строка действия
+	string String = "";
+
 	CMacroObjectString(const MACRO_CODE &code, const MACRO_SUB_CODE &subCode, const string &str);
 	virtual ~CMacroObjectString();
 
@@ -45,16 +45,16 @@ public:
 //Класс макроса
 class CMacro : public CBaseQueueItem
 {
+public:
 	//Код клавиши для срабатывания макроса
-	SETGET(ushort, Key, 0);
+	ushort Key = 0;
 
 	//Флаги дополнительных клавиш
-	SETGET(bool, Alt, false);
-	SETGET(bool, Ctrl, false);
-	SETGET(bool, Shift, false);
+	bool Alt = false;
+	bool Ctrl = false;
+	bool Shift = false;
 
-public:
-	CMacro(const ushort &key, const bool &alt, const bool &ctrl, const bool &shift);
+	CMacro(ushort key, bool alt, bool ctrl, bool shift);
 	virtual ~CMacro();
 
 	static const int MACRO_ACTION_NAME_COUNT = 60;

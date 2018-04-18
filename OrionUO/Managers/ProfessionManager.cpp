@@ -363,7 +363,7 @@ bool CProfessionManager::Load()
 		apc->SetSkillIndex(2, 0xFF);
 		apc->SetSkillIndex(3, 0xFF);
 
-		if (g_PacketManager.ClientVersion >= CV_70160)
+		if (g_PacketManager.GetClientVersion() >= CV_70160)
 		{
 			apc->Str = 45;
 			apc->Int = 35;

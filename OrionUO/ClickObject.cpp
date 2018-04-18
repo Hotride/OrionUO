@@ -16,39 +16,39 @@ CClickObject g_ClickObject;
 void CClickObject::Clear(CRenderObject *obj)
 {
 	WISPFUN_DEBUG("c185_f1");
-	if (obj == m_Object)
+	if (obj == Object)
 	{
-		m_Object = NULL;
-		m_Gump = NULL;
-		m_Timer = 0;
-		m_X = 0;
-		m_Y = 0;
-		m_Enabled = false;
-		m_Page = 0;
+		Object = NULL;
+		Gump = NULL;
+		Timer = 0;
+		X = 0;
+		Y = 0;
+		Enabled = false;
+		Page = 0;
 	}
 }
 //----------------------------------------------------------------------------------
 void CClickObject::Clear()
 {
 	WISPFUN_DEBUG("c185_f2");
-	m_Object = NULL;
-	m_Gump = NULL;
-	m_Timer = 0;
+	Object = NULL;
+	Gump = NULL;
+	Timer = 0;
 	//m_X = 0;
 	//m_Y = 0;
-	m_Enabled = false;
-	m_Page = 0;
+	Enabled = false;
+	Page = 0;
 }
 //----------------------------------------------------------------------------------
 void CClickObject::Init(CRenderObject *obj, CGump *gump)
 {
 	WISPFUN_DEBUG("c185_f3");
-	m_Enabled = true;
-	m_Object = obj;
-	m_Gump = gump;
-	m_Timer = 0;
-	m_X = 0;
-	m_Y = 0;
-	m_Page = 0;
+	Enabled = true;
+	Object = obj;
+	Gump = gump;
+	Timer = 0;
+	X = 0;
+	Y = 0;
+	Page = 0;
 }
 //----------------------------------------------------------------------------------

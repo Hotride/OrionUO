@@ -43,13 +43,13 @@ public:
 	//Проверка, есть ли текст в координатах
 	bool InRect(CTextData *text, CRenderWorldObject *rwo);
 
-	bool CalculatePositions(const bool &noCalculate);
+	bool CalculatePositions(bool noCalculate);
 
 	void Draw();
 
 	void Select(class CGump *gump);
 
-	bool CalculateWorldPositions(const bool &noCalculate);
+	bool CalculateWorldPositions(bool noCalculate);
 
 	void WorldDraw();
 };

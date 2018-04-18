@@ -19,11 +19,11 @@ private:
 	class CGUIHTMLGump *m_HTMLGump{ NULL };
 
 public:
-	CGUIHTMLResizepic(class CGUIHTMLGump *htmlGump, const uint &serial, const ushort &graphic, const int &x, const int &y, const int &width, const int &height);
+	CGUIHTMLResizepic(class CGUIHTMLGump *htmlGump, int serial, ushort graphic, int x, int y, int width, int height);
 	virtual ~CGUIHTMLResizepic();
 
 	//!Функция прокрутки
-	void Scroll(const bool &up, const uint &delay);
+	void Scroll(bool up, int delay);
 
 	virtual bool IsControlHTML() { return true; }
 };

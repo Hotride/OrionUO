@@ -14,11 +14,11 @@
 //----------------------------------------------------------------------------------
 class CGUIGroup : public CBaseGUI
 {
-	//!Индекс группы. 0 - эквивалентно EndGroup
-	SETGET(int, Index, 0);
-
 public:
-	CGUIGroup(const int &index);
+	//!Индекс группы. 0 - эквивалентно EndGroup
+	int Index = 0;
+
+	CGUIGroup(int index);
 	virtual ~CGUIGroup();
 };
 //----------------------------------------------------------------------------------

@@ -14,33 +14,33 @@
 //----------------------------------------------------------------------------------
 class CGUIScrollBackground : public CBaseGUI
 {
+public:
 	//!Высота
-	SETGET(int, Height, 0);
+	int Height = 0;
 
 	//!Смещение по оси X
-	SETGET(int, OffsetX, 0);
+	int OffsetX = 0;
 
 	//!Смещение нижней части по оси X
-	SETGET(int, BottomOffsetX, 0);
+	int BottomOffsetX = 0;
 
 	//!Ширина
-	SETGET(int, Width, 0);
+	int Width = 0;
 
 	//!Рабочая область
-	SETGET(WISP_GEOMETRY::CRect, WorkSpace, WISP_GEOMETRY::CRect());
+	WISP_GEOMETRY::CRect WorkSpace = WISP_GEOMETRY::CRect();
 
-public:
-	CGUIScrollBackground(const uint &serial, const ushort &graphic, const int &x, const int &y, const int &height);
+	CGUIScrollBackground(int serial, ushort graphic, int x, int y, int height);
 	virtual ~CGUIScrollBackground();
 
 	//!Обновить высоту
-	void UpdateHeight(const int &height);
+	void UpdateHeight(int height);
 
-	virtual WISP_GEOMETRY::CSize GetSize() { return WISP_GEOMETRY::CSize(m_Width, m_Height); }
+	virtual WISP_GEOMETRY::CSize GetSize() { return WISP_GEOMETRY::CSize(Width, Height); }
 
 	virtual void PrepareTextures();
 
-	virtual void Draw(const bool &checktrans = false);
+	virtual void Draw(bool checktrans = false);
 	virtual bool Select();
 };
 //----------------------------------------------------------------------------------

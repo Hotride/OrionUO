@@ -13,9 +13,10 @@
 //Класс группы навыков
 class CSkillGroupObject
 {
-	SETGET(int, Count, 0);
-	SETGET(bool, Maximized, false);
-	SETGET(string, Name, "No Name");
+public:
+	int Count = 0;
+	bool Maximized = false;
+	string Name = "No Name";
 
 private:
 	//Номера навыков

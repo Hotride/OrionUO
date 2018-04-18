@@ -15,7 +15,7 @@ CGumpProfile::CGumpProfile(uint serial, short x, short y, wstring topText, wstri
 : CGumpBaseScroll(GT_PROFILE, serial, 0x0820, 250, x, y, true)
 {
 	WISPFUN_DEBUG("c108_f1");
-	m_Changed = false;
+	Changed = false;
 	Add(new CGUIPage(1));
 	Add(new CGUIGumppic(0x09D4, 0, 0));
 
@@ -61,14 +61,14 @@ CGumpProfile::CGumpProfile(uint serial, short x, short y, wstring topText, wstri
 CGumpProfile::~CGumpProfile()
 {
 	WISPFUN_DEBUG("c108_f2");
-	if (m_Changed && m_Entry != NULL)
-		CPacketProfileUpdate(m_Serial, m_Entry->m_Entry.Data(), m_Entry->m_Entry.Length()).Send();
+	if (Changed && m_Entry != NULL)
+		CPacketProfileUpdate(Serial, m_Entry->m_Entry.Data(), m_Entry->m_Entry.Length()).Send();
 }
 //----------------------------------------------------------------------------
 void CGumpProfile::RecalculateHeight()
 {
 	WISPFUN_DEBUG("c108_f3");
-	int offsetY = m_Entry->Y;
+	int offsetY = m_Entry->GetY();
 	m_Entry->m_Entry.CreateTextureW(0, m_Entry->m_Entry.Data(), 0, 210, TS_LEFT, 0);
 
 	if (m_Entry->m_Entry.m_Texture.Height > 14)
@@ -78,10 +78,10 @@ void CGumpProfile::RecalculateHeight()
 
 	offsetY += m_HitBox->Height + 3;
 
-	m_BottomData[0]->Y = offsetY;
-	m_BottomData[1]->Y = offsetY + 9;
-	m_BottomData[2]->Y = offsetY;
-	m_BottomData[3]->Y = offsetY + 26;
+	m_BottomData[0]->SetY(offsetY);
+	m_BottomData[1]->SetY(offsetY + 9);
+	m_BottomData[2]->SetY(offsetY);
+	m_BottomData[3]->SetY(offsetY + 26);
 
 	m_HTMLGump->CalculateDataSize();
 }
@@ -91,34 +91,34 @@ void CGumpProfile::GUMP_BUTTON_EVENT_C
 	WISPFUN_DEBUG("c108_f4");
 	if (serial == ID_GBS_BUTTON_MINIMIZE)
 	{
-		m_Minimized = true;
-		m_Page = 1;
-		m_WantRedraw = true;
+		Minimized = true;
+		Page = 1;
+		WantRedraw = true;
 	}
-	else if (m_Serial == g_PlayerSerial && serial == ID_GP_APPLY && m_Entry != NULL)
+	else if (Serial == g_PlayerSerial && serial == ID_GP_APPLY && m_Entry != NULL)
 	{
-		m_Changed = true;
+		Changed = true;
 		
 		if (g_EntryPointer == &m_Entry->m_Entry)
 		{
-			if (g_ConfigManager.ConsoleNeedEnter)
+			if (g_ConfigManager.GetConsoleNeedEnter())
 				g_EntryPointer = NULL;
 			else
 				g_EntryPointer = &g_GameConsole;
 		}
 
-		m_WantRedraw = true;
+		WantRedraw = true;
 	}
 }
 //----------------------------------------------------------------------------
 bool CGumpProfile::OnLeftMouseButtonDoubleClick()
 {
 	WISPFUN_DEBUG("c108_f5");
-	if (m_Minimized)
+	if (Minimized)
 	{
-		m_Minimized = false;
-		m_Page = 2;
-		m_WantRedraw = true;
+		Minimized = false;
+		Page = 2;
+		WantRedraw = true;
 
 		return true;
 	}
@@ -133,7 +133,7 @@ void CGumpProfile::OnCharPress(const WPARAM &wParam, const LPARAM &lParam)
 
 	RecalculateHeight();
 
-	m_WantRedraw = true;
+	WantRedraw = true;
 }
 //----------------------------------------------------------------------------
 void CGumpProfile::OnKeyDown(const WPARAM &wParam, const LPARAM &lParam)
@@ -145,13 +145,13 @@ void CGumpProfile::OnKeyDown(const WPARAM &wParam, const LPARAM &lParam)
 
 		RecalculateHeight();
 
-		m_WantRedraw = true;
+		WantRedraw = true;
 	}
 	else
 	{
 		g_EntryPointer->OnKey(this, wParam);
 
-		if (m_WantRedraw)
+		if (WantRedraw)
 			RecalculateHeight();
 	}
 }

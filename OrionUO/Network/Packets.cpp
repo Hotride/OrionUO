@@ -11,7 +11,7 @@
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
 //----------------------------------------------------------------------------------
-CPacket::CPacket(const size_t &size, const bool &autoResize)
+CPacket::CPacket(const size_t &size, bool autoResize)
 : WISP_DATASTREAM::CDataWritter(size, autoResize)
 {
 }
@@ -69,7 +69,7 @@ CPacketCreateCharacter::CPacketCreateCharacter(const string &name)
 	int skillsCount = 3;
 	uint packetID = 0x00;
 
-	if (g_PacketManager.ClientVersion >= CV_70160)
+	if (g_PacketManager.GetClientVersion() >= CV_70160)
 	{
 		skillsCount++;
 		Resize(106, true);
@@ -100,16 +100,16 @@ CPacketCreateCharacter::CPacketCreateCharacter(const string &name)
 	WriteUInt8(val); //profession
 	Move(15); //?
 
-	if (g_PacketManager.ClientVersion < CV_4011D)
-		val = (uchar)g_CreateCharacterManager.Female;
+	if (g_PacketManager.GetClientVersion() < CV_4011D)
+		val = (uchar)g_CreateCharacterManager.GetFemale();
 	else
 	{
-		val = (uchar)g_CreateCharacterManager.Race;
+		val = (uchar)g_CreateCharacterManager.GetRace();
 
-		if (g_PacketManager.ClientVersion < CV_7000)
+		if (g_PacketManager.GetClientVersion() < CV_7000)
 			val--;
 
-		val = (val * 2) + (uchar)g_CreateCharacterManager.Female;
+		val = (val * 2) + (uchar)g_CreateCharacterManager.GetFemale();
 	}
 
 	WriteUInt8(val);
@@ -151,7 +151,7 @@ CPacketCreateCharacter::CPacketCreateCharacter(const string &name)
 
 	uchar location = g_SelectTownScreen.m_City->LocationIndex;
 
-	if (g_PacketManager.ClientVersion < CV_70130)
+	if (g_PacketManager.GetClientVersion() < CV_70130)
 		location--;
 
 	WriteUInt8(location); //location
@@ -173,7 +173,7 @@ CPacketCreateCharacter::CPacketCreateCharacter(const string &name)
 	WriteUInt16BE(g_CreateCharacterManager.PantsColor);
 }
 //----------------------------------------------------------------------------------
-CPacketDeleteCharacter::CPacketDeleteCharacter(const uint &charIndex)
+CPacketDeleteCharacter::CPacketDeleteCharacter(int charIndex)
 : CPacket(39)
 {
 	WriteUInt8(0x83);
@@ -182,7 +182,7 @@ CPacketDeleteCharacter::CPacketDeleteCharacter(const uint &charIndex)
 	WriteDataBE(g_ConnectionManager.GetClientIP(), 4);
 }
 //----------------------------------------------------------------------------------
-CPacketSelectCharacter::CPacketSelectCharacter(const uint &index, const string &name)
+CPacketSelectCharacter::CPacketSelectCharacter(int index, const string &name)
 : CPacket(73)
 {
 	int copyLen = (int)name.length();
@@ -422,7 +422,7 @@ CPacketUnicodeSpeechRequest::CPacketUnicodeSpeechRequest(const wchar_t *text, SP
 CPacketCastSpell::CPacketCastSpell(int index)
 : CPacket(1)
 {
-	if (g_PacketManager.ClientVersion >= CV_60142)
+	if (g_PacketManager.GetClientVersion() >= CV_60142)
 	{
 		Resize(9, true);
 
@@ -519,7 +519,7 @@ CPacketGumpResponse::CPacketGumpResponse(CGumpGeneric *gump, int code)
 
 	QFOR(item, gump->m_Items, CBaseGUI*)
 	{
-		switch (item->GetType())
+		switch (item->Type)
 		{
 			case GOT_CHECKBOX:
 			case GOT_RADIO:
@@ -546,7 +546,7 @@ CPacketGumpResponse::CPacketGumpResponse(CGumpGeneric *gump, int code)
 	size_t size = 19 + (switchesCount * 4) + 4 + ((textLinesCount * 4) + textLinesLength);
 	Resize(size, true);
 
-	g_PacketManager.SetCachedGumpCoords(gump->ID, gump->X, gump->Y);
+	g_PacketManager.SetCachedGumpCoords(gump->ID, gump->GetX(), gump->GetY());
 
 	WriteUInt8(0xB1);
 	WriteUInt16BE((ushort)size);
@@ -583,7 +583,7 @@ CPacketGumpResponse::CPacketGumpResponse(CGumpGeneric *gump, int code)
 CPacketVirtureGumpResponse::CPacketVirtureGumpResponse(CGump *gump, int code)
 : CPacket(15)
 {
-	g_PacketManager.SetCachedGumpCoords(gump->ID, gump->X, gump->Y);
+	g_PacketManager.SetCachedGumpCoords(gump->ID, gump->GetX(), gump->GetY());
 
 	WriteUInt8(0xB1);
 	WriteUInt16BE(0x000F);
@@ -1093,7 +1093,7 @@ CPacketInvokeVirtureRequest::CPacketInvokeVirtureRequest(uchar id)
 	WriteUInt8(0x00);
 }
 //---------------------------------------------------------------------------
-CPacketMegaClilocRequestOld::CPacketMegaClilocRequestOld(const uint &serial)
+CPacketMegaClilocRequestOld::CPacketMegaClilocRequestOld(int serial)
 : CPacket(9)
 {
 	WriteUInt8(0xBF);
@@ -1185,15 +1185,15 @@ CPacketBookPageData::CPacketBookPageData(CGumpBook *gump, int page)
 				if (ch == '\n')
 					ch = 0;
 
-				*m_Ptr++ = ch;
+				*Ptr++ = ch;
 			}
 
-			*m_Ptr = 0;
+			*Ptr = 0;
 		}
 	}
 }
 //---------------------------------------------------------------------------
-CPacketBookPageDataRequest::CPacketBookPageDataRequest(const uint &serial, const int &page)
+CPacketBookPageDataRequest::CPacketBookPageDataRequest(int serial, int page)
 : CPacket(13)
 {
 	WriteUInt8(0x66);
@@ -1275,7 +1275,7 @@ CPacketSellRequest::CPacketSellRequest(CGumpShop *gump)
 	}
 }
 //---------------------------------------------------------------------------
-CPacketUseCombatAbility::CPacketUseCombatAbility(const uchar &index)
+CPacketUseCombatAbility::CPacketUseCombatAbility(uchar index)
 : CPacket(15)
 {
 	WriteUInt8(0xD7);
@@ -1287,7 +1287,7 @@ CPacketUseCombatAbility::CPacketUseCombatAbility(const uchar &index)
 	WriteUInt8(0x0A);
 }
 //---------------------------------------------------------------------------
-CPacketTargetSelectedObject::CPacketTargetSelectedObject(const uint &useObjectSerial, const uint &targetObjectSerial)
+CPacketTargetSelectedObject::CPacketTargetSelectedObject(int useObjectSerial, int targetObjectSerial)
 : CPacket(13)
 {
 	WriteUInt8(0xBF);
@@ -1307,7 +1307,7 @@ CPacketToggleGargoyleFlying::CPacketToggleGargoyleFlying()
 	WriteUInt32BE(0x00000000);
 }
 //----------------------------------------------------------------------------------
-CPacketCustomHouseDataReq::CPacketCustomHouseDataReq(const uint &serial)
+CPacketCustomHouseDataReq::CPacketCustomHouseDataReq(int serial)
 	: CPacket(9)
 {
 	WriteUInt8(0xBF);
@@ -1338,7 +1338,7 @@ CPacketResend::CPacketResend()
 	WriteUInt8(0x22);
 }
 //----------------------------------------------------------------------------------
-CPacketWalkRequest::CPacketWalkRequest(const uchar &direction, const uchar &sequence, const uint &fastWalkKey)
+CPacketWalkRequest::CPacketWalkRequest(uchar direction, uchar sequence, int fastWalkKey)
 : CPacket(7)
 {
 	WriteUInt8(0x02);
@@ -1387,7 +1387,7 @@ CPacketCustomHouseBuildingExit::CPacketCustomHouseBuildingExit()
 	WriteUInt8(0x0A);
 }
 //---------------------------------------------------------------------------
-CPacketCustomHouseGoToFloor::CPacketCustomHouseGoToFloor(const uchar &floor)
+CPacketCustomHouseGoToFloor::CPacketCustomHouseGoToFloor(uchar floor)
 : CPacket(15)
 {
 	WriteUInt8(0xD7);
@@ -1439,7 +1439,7 @@ CPacketCustomHouseResponse::CPacketCustomHouseResponse()
 	WriteUInt8(0x0A);
 }
 //---------------------------------------------------------------------------
-CPacketCustomHouseAddItem::CPacketCustomHouseAddItem(const ushort &graphic, const int &x, const int &y)
+CPacketCustomHouseAddItem::CPacketCustomHouseAddItem(ushort graphic, int x, int y)
 : CPacket(25)
 {
 	WriteUInt8(0xD7);
@@ -1455,7 +1455,7 @@ CPacketCustomHouseAddItem::CPacketCustomHouseAddItem(const ushort &graphic, cons
 	WriteUInt8(0x0A);
 }
 //---------------------------------------------------------------------------
-CPacketCustomHouseDeleteItem::CPacketCustomHouseDeleteItem(const ushort &graphic, const int &x, const int &y, const int &z)
+CPacketCustomHouseDeleteItem::CPacketCustomHouseDeleteItem(ushort graphic, int x, int y, int z)
 : CPacket(30)
 {
 	WriteUInt8(0xD7);
@@ -1473,7 +1473,7 @@ CPacketCustomHouseDeleteItem::CPacketCustomHouseDeleteItem(const ushort &graphic
 	WriteUInt8(0x0A);
 }
 //---------------------------------------------------------------------------
-CPacketCustomHouseAddRoof::CPacketCustomHouseAddRoof(const ushort &graphic, const int &x, const int &y, const int &z)
+CPacketCustomHouseAddRoof::CPacketCustomHouseAddRoof(ushort graphic, int x, int y, int z)
 : CPacket(30)
 {
 	WriteUInt8(0xD7);
@@ -1491,7 +1491,7 @@ CPacketCustomHouseAddRoof::CPacketCustomHouseAddRoof(const ushort &graphic, cons
 	WriteUInt8(0x0A);
 }
 //---------------------------------------------------------------------------
-CPacketCustomHouseDeleteRoof::CPacketCustomHouseDeleteRoof(const ushort &graphic, const int &x, const int &y, const int &z)
+CPacketCustomHouseDeleteRoof::CPacketCustomHouseDeleteRoof(ushort graphic, int x, int y, int z)
 : CPacket(30)
 {
 	WriteUInt8(0xD7);
@@ -1509,7 +1509,7 @@ CPacketCustomHouseDeleteRoof::CPacketCustomHouseDeleteRoof(const ushort &graphic
 	WriteUInt8(0x0A);
 }
 //---------------------------------------------------------------------------
-CPacketCustomHouseAddStair::CPacketCustomHouseAddStair(const ushort &graphic, const int &x, const int &y)
+CPacketCustomHouseAddStair::CPacketCustomHouseAddStair(ushort graphic, int x, int y)
 : CPacket(25)
 {
 	WriteUInt8(0xD7);
@@ -1525,7 +1525,7 @@ CPacketCustomHouseAddStair::CPacketCustomHouseAddStair(const ushort &graphic, co
 	WriteUInt8(0x0A);
 }
 //----------------------------------------------------------------------------------
-CPacketOrionVersion::CPacketOrionVersion(const uint &version)
+CPacketOrionVersion::CPacketOrionVersion(int version)
 : CPacket(9)
 {
 	WriteUInt8(0xFC);

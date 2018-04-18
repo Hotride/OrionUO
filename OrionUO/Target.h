@@ -13,20 +13,21 @@
 //Класс для работы с таргетом
 class CTarget
 {
+public:
 	//Тип объекта прицела
-	SETGET(uchar, Type, 0);
+	uchar Type = 0;
 	//Тип прицела
-	SETGET(uchar, CursorType, 0);
+	uchar CursorType = 0;
 	//Мульти на таргете
-	SETGET(ushort, MultiGraphic, 0);
+	ushort MultiGraphic = 0;
 	//Мульти на таргете X
-	SETGET(ushort, MultiX, 0);
+	ushort MultiX = 0;
 	//Мульти на таргете Y
-	SETGET(ushort, MultiY, 0);
+	ushort MultiY = 0;
 	//Серийник объекта, к которому привязан прицел
-	SETGET(uint, CursorID, 0);
+	uint CursorID = 0;
 	//Флаг состояния прицела
-	SETGET(bool, Targeting, false);
+	bool Targeting = false;
 
 private:
 	//Текущие и последний данные прицела
@@ -44,7 +45,7 @@ public:
 	~CTarget() {}
 
 	//Послать таргет на объект
-	void SetLastTargetObject(const uint &serial);
+	void SetLastTargetObject(int serial);
 
 	//Установить данные прицела
 	void SetData(WISP_DATASTREAM::CDataReader &reader);
@@ -52,7 +53,7 @@ public:
 	//Установить данные мульти-таргета
 	void SetMultiData(WISP_DATASTREAM::CDataReader &reader);
 
-	bool IsTargeting() const { return m_Targeting; }
+	bool IsTargeting() const { return Targeting; }
 
 	//Очистить таргет
 	void Reset();
@@ -60,19 +61,19 @@ public:
 	void RequestFromCustomHouse();
 
 	//Послать таргет на объект
-	void SendTargetObject(const uint &Serial);
+	void SendTargetObject(int Serial);
 
 	//Послать таргет на тайл
-	void SendTargetTile(const ushort &tileID, const short &x, const short &Y, char z);
+	void SendTargetTile(ushort tileID, short x, short Y, char z);
 
 	//Послать отмену таргета
 	void SendCancelTarget();
 
 	//Послать таргет на объект
-	void Plugin_SendTargetObject(const uint &Serial);
+	void Plugin_SendTargetObject(int Serial);
 
 	//Послать таргет на тайл
-	void Plugin_SendTargetTile(const ushort &tileID, const short &x, const short &Y, char z);
+	void Plugin_SendTargetTile(ushort tileID, short x, short Y, char z);
 
 	//Послать отмену таргета
 	void Plugin_SendCancelTarget();
@@ -87,13 +88,13 @@ public:
 	void SendTarget();
 
 	//Загрузить мульти-объект
-	void LoadMulti(const int &offsetX, const int &offsetY, const char &offsetZ);
+	void LoadMulti(int offsetX, int offsetY, char offsetZ);
 
 	//Выгрузить мульти-объект
 	void UnloadMulti();
 
 	//Получить объект мульти в координатах
-	CMulti *GetMultiAtXY(const short &x, const short &y);
+	CMulti *GetMultiAtXY(short x, short y);
 };
 //----------------------------------------------------------------------------------
 extern CTarget g_Target;

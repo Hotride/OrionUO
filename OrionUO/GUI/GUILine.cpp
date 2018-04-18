@@ -11,39 +11,39 @@
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
 //----------------------------------------------------------------------------------
-CGUILine::CGUILine(const int &startX, const int &startY, const int &targetX, const int &targetY, const uint &polygoneColor)
-: CBaseGUI(GOT_LINE, 0, 0, 0, startX, startY), m_TargetX(targetX), m_TargetY(targetY)
+CGUILine::CGUILine(int startX, int startY, int targetX, int targetY, int polygoneColor)
+: CBaseGUI(GOT_LINE, 0, 0, 0, startX, startY), TargetX(targetX), TargetY(targetY)
 {
 	WISPFUN_DEBUG("c65_f1");
-	m_ColorR = GetRValue(polygoneColor);
-	m_ColorG = GetGValue(polygoneColor);
-	m_ColorB = GetBValue(polygoneColor);
-	m_ColorA = polygoneColor >> 24;
+	ColorR = GetRValue(polygoneColor);
+	ColorG = GetGValue(polygoneColor);
+	ColorB = GetBValue(polygoneColor);
+	ColorA = polygoneColor >> 24;
 
-	if (!m_ColorA)
-		m_ColorA = 0xFF;
+	if (!ColorA)
+		ColorA = 0xFF;
 }
 //----------------------------------------------------------------------------------
 CGUILine::~CGUILine()
 {
 }
 //----------------------------------------------------------------------------------
-void CGUILine::Draw(const bool &checktrans)
+void CGUILine::Draw(bool checktrans)
 {
 	WISPFUN_DEBUG("c65_f2");
-	glColor4ub(m_ColorR, m_ColorG, m_ColorB, m_ColorA);
+	glColor4ub(ColorR, ColorG, ColorB, ColorA);
 
-	if (m_ColorA < 0xFF)
+	if (ColorA < 0xFF)
 	{
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-		g_GL.DrawLine(m_X, m_Y, m_TargetX, m_TargetY);
+		g_GL.DrawLine(m_X, m_Y, TargetX, TargetY);
 
 		glDisable(GL_BLEND);
 	}
 	else
-		g_GL.DrawLine(m_X, m_Y, m_TargetX, m_TargetY);
+		g_GL.DrawLine(m_X, m_Y, TargetX, TargetY);
 
 	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 }

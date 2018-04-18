@@ -21,9 +21,9 @@ struct PING_INFO_DATA
 //----------------------------------------------------------------------------------
 class CPingThread : public WISP_THREAD::CThread
 {
-	SETGET(uint, ServerID, 0xFFFFFFFF);
-	SETGET(string, ServerIP, "");
-	SETGET(int, RequestsCount, 10);
+	uint ServerID = 0xFFFFFFFF;
+	string ServerIP = "";
+	int RequestsCount = 10;
 
 private:
 	ushort CalculateChecksum(pushort addr, int count);
@@ -31,7 +31,7 @@ private:
 	int CalculatePing();
 
 public:
-	CPingThread(const uint &serverID, const string &serverIP, const int &requestsCount);
+	CPingThread(int serverID, const string &serverIP, int requestsCount);
 	virtual ~CPingThread();
 
 	static const uint MessageID = WM_USER + 401;

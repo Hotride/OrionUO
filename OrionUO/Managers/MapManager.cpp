@@ -37,7 +37,7 @@ CMapManager::~CMapManager()
 		m_Blocks = NULL;
 	}
 
-	m_MaxBlockIndex = 0;
+	MaxBlockIndex = 0;
 }
 //----------------------------------------------------------------------------------
 void CMapManager::CreateBlocksTable()
@@ -194,18 +194,18 @@ void CMapManager::ApplyPatches(WISP_DATASTREAM::CDataReader &stream)
 	WISPFUN_DEBUG("c146_f6");
 	ResetPatchesInBlockTable();
 
-	m_PatchesCount = stream.ReadUInt32BE();
+	PatchesCount = stream.ReadUInt32BE();
 
-	if (m_PatchesCount < 0)
-		m_PatchesCount = 0;
+	if (PatchesCount < 0)
+		PatchesCount = 0;
 
-	if (m_PatchesCount > MAX_MAPS_COUNT)
-		m_PatchesCount = MAX_MAPS_COUNT;
+	if (PatchesCount > MAX_MAPS_COUNT)
+		PatchesCount = MAX_MAPS_COUNT;
 
 	memset(&m_MapPatchCount[0], 0, sizeof(m_MapPatchCount));
 	memset(&m_StaticPatchCount[0], 0, sizeof(m_StaticPatchCount));
 
-	IFOR(i, 0, m_PatchesCount)
+	IFOR(i, 0, PatchesCount)
 	{
 		if (g_FileManager.m_MapMul[i].Start == NULL)
 		{
@@ -327,7 +327,7 @@ void CMapManager::UpdatePatched()
 		gump->LastX = 0;
 }
 //----------------------------------------------------------------------------------
-CIndexMap *CMapManager::GetIndex(const uint &map, const int &blockX, const int &blockY)
+CIndexMap *CMapManager::GetIndex(int map, int blockX, int blockY)
 {
 	WISPFUN_DEBUG("c146_f8");
 	if (map >= MAX_MAPS_COUNT)
@@ -347,7 +347,7 @@ void CMapManager::ClearBlockAccess()
 	memset(&m_BlockAccessList[0], 0, sizeof(m_BlockAccessList));
 }
 //----------------------------------------------------------------------------------
-char CMapManager::CalculateNearZ(char defaultZ, const int &x, const int &y, const int &z)
+char CMapManager::CalculateNearZ(char defaultZ, int x, int y, int z)
 {
 	int blockX = x / 8;
 	int blockY = y / 8;
@@ -375,7 +375,7 @@ char CMapManager::CalculateNearZ(char defaultZ, const int &x, const int &y, cons
 			else if (((CGameObject*)item)->NPC)
 				continue;
 
-			if (!item->IsRoof() || abs(z - item->Z) > 6)
+			if (!item->IsRoof() || abs(z - item->GetZ()) > 6)
 				continue;
 
 			break;
@@ -384,7 +384,7 @@ char CMapManager::CalculateNearZ(char defaultZ, const int &x, const int &y, cons
 		if (item == NULL)
 			return defaultZ;
 
-		char tileZ = item->Z;
+		char tileZ = item->GetZ();
 
 		if (tileZ < defaultZ)
 			defaultZ = tileZ;
@@ -405,7 +405,7 @@ char CMapManager::CalculateNearZ(char defaultZ, const int &x, const int &y, cons
 @param [__out] mb Ссылка на блок
 @return 
 */
-void CMapManager::GetRadarMapBlock(const int &blockX, const int &blockY, RADAR_MAP_BLOCK &mb)
+void CMapManager::GetRadarMapBlock(int blockX, int blockY, RADAR_MAP_BLOCK &mb)
 {
 	WISPFUN_DEBUG("c146_f10");
 	CIndexMap *indexMap = GetIndex(GetActualMap(), blockX, blockY);
@@ -439,7 +439,7 @@ void CMapManager::GetRadarMapBlock(const int &blockX, const int &blockY, RADAR_M
 			{
 				RADAR_MAP_CELLS &outCell = mb.Cells[sb->X][sb->Y];
 
-				//int pos = (sb->Y * 8) + sb->X;
+				//int pos = (sb->GetY() * 8) + sb->GetX();
 				//if (pos > 64) continue;
 
 				if (outCell.Z <= sb->Z)
@@ -463,14 +463,14 @@ void CMapManager::GetRadarMapBlock(const int &blockX, const int &blockY, RADAR_M
 @param [__out] staticZ Значение Z коррдинаты статики
 @return 
 */
-void CMapManager::GetMapZ(const int &x, const int &y, int &groundZ, int &staticZ)
+void CMapManager::GetMapZ(int x, int y, int &groundZ, int &staticZ)
 {
 	WISPFUN_DEBUG("c146_f11");
 	int blockX = x / 8;
 	int blockY = y / 8;
 	uint index = (blockX * g_MapBlockSize[g_CurrentMap].Height) + blockY;
 
-	if (index < m_MaxBlockIndex)
+	if (index < MaxBlockIndex)
 	{
 		CMapBlock *block = GetBlock(index);
 
@@ -487,9 +487,9 @@ void CMapManager::GetMapZ(const int &x, const int &y, int &groundZ, int &staticZ
 		while (item != NULL)
 		{
 			if (item->IsLandObject())
-				groundZ = item->Z;
-			else if (staticZ < item->Z)
-				staticZ = item->Z;
+				groundZ = item->GetZ();
+			else if (staticZ < item->GetZ())
+				staticZ = item->GetZ();
 
 			item = (CMapObject*)item->m_Next;
 		}
@@ -549,7 +549,7 @@ void CMapManager::ClearUsedBlocks()
 @param [__in_opt] delayed По истечении времени на загрузку выходить из цикла
 @return 
 */
-void CMapManager::Init(const bool &delayed)
+void CMapManager::Init(bool delayed)
 {
 	WISPFUN_DEBUG("c146_f14");
 	if (g_Player == NULL)
@@ -567,21 +567,21 @@ void CMapManager::Init(const bool &delayed)
 			m_Blocks = NULL;
 		}
 
-		m_MaxBlockIndex = g_MapBlockSize[map].Width * g_MapBlockSize[map].Height;
-		m_Blocks = new CMapBlock*[m_MaxBlockIndex];
-		memset(&m_Blocks[0], 0, sizeof(CMapBlock*) * m_MaxBlockIndex);
+		MaxBlockIndex = g_MapBlockSize[map].Width * g_MapBlockSize[map].Height;
+		m_Blocks = new CMapBlock*[MaxBlockIndex];
+		memset(&m_Blocks[0], 0, sizeof(CMapBlock*) * MaxBlockIndex);
 		ClearBlockAccess();
-		m_PatchesCount = 0;
+		PatchesCount = 0;
 		memset(&m_MapPatchCount[0], 0, sizeof(m_MapPatchCount));
 		memset(&m_StaticPatchCount[0], 0, sizeof(m_StaticPatchCount));
 	}
 	
 	const int XY_Offset = 30; //70;
 
-	int minBlockX = (g_Player->X - XY_Offset) / 8 - 1;
-	int minBlockY = (g_Player->Y - XY_Offset) / 8 - 1;
-	int maxBlockX = ((g_Player->X + XY_Offset) / 8) + 1;
-	int maxBlockY = ((g_Player->Y + XY_Offset) / 8) + 1;
+	int minBlockX = (g_Player->GetX() - XY_Offset) / 8 - 1;
+	int minBlockY = (g_Player->GetY() - XY_Offset) / 8 - 1;
+	int maxBlockX = ((g_Player->GetX() + XY_Offset) / 8) + 1;
+	int maxBlockY = ((g_Player->GetY() + XY_Offset) / 8) + 1;
 
 	if (minBlockX < 0)
 		minBlockX = 0;
@@ -606,7 +606,7 @@ void CMapManager::Init(const bool &delayed)
 		{
 			uint realIndex = index + j;
 
-			if (realIndex < m_MaxBlockIndex)
+			if (realIndex < MaxBlockIndex)
 			{
 				CMapBlock *block = GetBlock(realIndex);
 
@@ -704,15 +704,15 @@ int CMapManager::GetActualMap()
 void CMapManager::AddRender(CRenderWorldObject *item)
 {
 	WISPFUN_DEBUG("c146_f17");
-	int itemX = item->X;
-	int itemY = item->Y;
+	int itemX = item->GetX();
+	int itemY = item->GetY();
 
 	int x = itemX / 8;
 	int y = itemY / 8;
 	
 	uint index = (x * g_MapBlockSize[g_CurrentMap].Height) + y;
 	
-	if (index < m_MaxBlockIndex)
+	if (index < MaxBlockIndex)
 	{
 		CMapBlock *block = GetBlock(index);
 
@@ -736,12 +736,12 @@ void CMapManager::AddRender(CRenderWorldObject *item)
 @param [__in] index Индекс блока
 @return Ссылка на блок или NULL
 */
-CMapBlock *CMapManager::GetBlock(const uint &index)
+CMapBlock *CMapManager::GetBlock(int index)
 {
 	WISPFUN_DEBUG("c146_f18");
 	CMapBlock *block = NULL;
 
-	if (index < m_MaxBlockIndex)
+	if (index < MaxBlockIndex)
 	{
 		block = m_Blocks[index];
 
@@ -757,7 +757,7 @@ CMapBlock *CMapManager::GetBlock(const uint &index)
 @param [__in] index Индекс блока
 @return Ссылка на блок или NULL
 */
-CMapBlock *CMapManager::AddBlock(const uint &index)
+CMapBlock *CMapManager::AddBlock(int index)
 {
 	WISPFUN_DEBUG("c146_f19");
 	CMapBlock *block = (CMapBlock*)Add(new CMapBlock(index));
@@ -772,7 +772,7 @@ CMapBlock *CMapManager::AddBlock(const uint &index)
 @param [__in] index Индекс блока
 @return 
 */
-void CMapManager::DeleteBlock(const uint &index)
+void CMapManager::DeleteBlock(int index)
 {
 	WISPFUN_DEBUG("c146_f20");
 	CMapBlock *block = (CMapBlock*)m_Items;

@@ -11,11 +11,11 @@
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
 //----------------------------------------------------------------------------------
-CGUISlider::CGUISlider(const uint &serial, const ushort &graphic, const ushort &graphicSelected, const ushort &graphicPressed, const ushort &backgroundGraphic, const bool &compositeBackground, const bool &vertical, const int &x, const int &y, const int &lenght, const int &minValue, const int &maxValue, const int &value)
-: CBaseGUI(GOT_SLIDER, serial, graphic, 0, x, y), m_GraphicSelected(graphicSelected),
-m_GraphicPressed(graphicPressed), m_BackgroundGraphic(backgroundGraphic),
-m_CompositeBackground(compositeBackground), m_Vertical(vertical), m_Lenght(lenght),
-m_MinValue(minValue), m_MaxValue(maxValue), m_Value(value)
+CGUISlider::CGUISlider(int serial, ushort graphic, ushort graphicSelected, ushort graphicPressed, ushort backgroundGraphic, bool compositeBackground, bool vertical, int x, int y, int length, int minValue, int maxValue, int value)
+: CBaseGUI(GOT_SLIDER, serial, graphic, 0, x, y), GraphicSelected(graphicSelected),
+GraphicPressed(graphicPressed), BackgroundGraphic(backgroundGraphic),
+CompositeBackground(compositeBackground), Vertical(vertical), Length(length),
+MinValue(minValue), MaxValue(maxValue), Value(value)
 {
 	WISPFUN_DEBUG("c77_f1");
 	CalculateOffset();
@@ -24,42 +24,42 @@ m_MinValue(minValue), m_MaxValue(maxValue), m_Value(value)
 CGUISlider::~CGUISlider()
 {
 	WISPFUN_DEBUG("c77_f2");
-	m_Text.Clear();
+	Text.Clear();
 }
 //----------------------------------------------------------------------------------
 void CGUISlider::UpdateText()
 {
 	WISPFUN_DEBUG("c77_f3");
-	if (m_HaveText)
+	if (HaveText)
 	{
-		if (m_Unicode)
-			g_FontManager.GenerateW(m_Font, m_Text, std::to_wstring(m_Value), m_TextColor, 30, m_TextWidth, m_Align, m_TextFlags);
+		if (Unicode)
+			g_FontManager.GenerateW(Font, Text, std::to_wstring(Value), TextColor, 30, TextWidth, Align, TextFlags);
 		else
-			g_FontManager.GenerateA(m_Font, m_Text, std::to_string(m_Value), m_TextColor, m_TextWidth, m_Align, m_TextFlags);
+			g_FontManager.GenerateA(Font, Text, std::to_string(Value), TextColor, TextWidth, Align, TextFlags);
 
-		CGLTexture *th = g_Orion.ExecuteGump(m_Graphic);
+		CGLTexture *th = g_Orion.ExecuteGump(Graphic);
 
 		if (th != NULL)
 		{
 			int textX = m_X;
 			int textY = m_Y;
 
-			switch (m_TextPosition)
+			switch (TextPosition)
 			{
 				case STP_TOP:
 				case STP_TOP_CENTER:
 				{
-					textY -= m_Text.Height - m_DefaultTextOffset;
+					textY -= Text.Height - DefaultTextOffset;
 
 					break;
 				}
 				case STP_BOTTOM:
 				case STP_BOTTOM_CENTER:
 				{
-					if (m_Vertical)
-						textY += m_Lenght + m_DefaultTextOffset;
+					if (Vertical)
+						textY += Length + DefaultTextOffset;
 					else
-						textY += th->Height + m_DefaultTextOffset;
+						textY += th->Height + DefaultTextOffset;
 
 					break;
 				}
@@ -67,7 +67,7 @@ void CGUISlider::UpdateText()
 					//textY -= 4;
 				case STP_LEFT_CENTER:
 				{
-					textX -= m_Text.Width - m_DefaultTextOffset;
+					textX -= Text.Width - DefaultTextOffset;
 
 					break;
 				}
@@ -75,10 +75,10 @@ void CGUISlider::UpdateText()
 					//textY -= 4;
 				case STP_RIGHT_CENTER:
 				{
-					if (m_Vertical)
-						textX += th->Width + m_DefaultTextOffset;
+					if (Vertical)
+						textX += th->Width + DefaultTextOffset;
 					else
-						textX += m_Lenght + m_DefaultTextOffset;
+						textX += Length + DefaultTextOffset;
 
 					break;
 				}
@@ -86,15 +86,15 @@ void CGUISlider::UpdateText()
 					break;
 			}
 
-			switch (m_TextPosition)
+			switch (TextPosition)
 			{
 				case STP_TOP_CENTER:
 				case STP_BOTTOM_CENTER:
 				{
-					int textWidth = m_Text.Width;
-					int sliderWidth = m_Lenght;
+					int textWidth = Text.Width;
+					int sliderWidth = Length;
 
-					if (m_Vertical)
+					if (Vertical)
 						sliderWidth = th->Width;
 
 					int deltaX = abs(sliderWidth - textWidth) / 2;
@@ -109,10 +109,10 @@ void CGUISlider::UpdateText()
 				case STP_LEFT_CENTER:
 				case STP_RIGHT_CENTER:
 				{
-					int textHeight = m_Text.Height;
-					int sliderHeight = m_Lenght;
+					int textHeight = Text.Height;
+					int sliderHeight = Length;
 
-					if (!m_Vertical)
+					if (!Vertical)
 						sliderHeight = th->Height;
 
 					int deltaY = abs(sliderHeight - textHeight) / 2;
@@ -128,8 +128,8 @@ void CGUISlider::UpdateText()
 					break;
 			}
 
-			m_TextX = textX;
-			m_TextY = textY;
+			TextX = textX;
+			TextY = textY;
 		}
 	}
 }
@@ -139,66 +139,66 @@ WISP_GEOMETRY::CSize CGUISlider::GetSize()
 	WISPFUN_DEBUG("c77_f4");
 	WISP_GEOMETRY::CSize size;
 
-	CGLTexture *th = g_Orion.ExecuteGump(m_Graphic);
+	CGLTexture *th = g_Orion.ExecuteGump(Graphic);
 
 	if (th != NULL)
 	{
-		if (m_Vertical)
+		if (Vertical)
 		{
 			size.Width = th->Width;
-			size.Height = m_Lenght;
+			size.Height = Length;
 		}
 		else
 		{
-			size.Width = m_Lenght;
+			size.Width = Length;
 			size.Height = th->Height;
 		}
 
-		if (m_HaveText)
+		if (HaveText)
 		{
-			//m_Text.Draw(m_TextX, m_TextY, checktrans);
+			//Text.Draw(TextX, TextY, checktrans);
 		}
 	}
 
 	return size;
 }
 //----------------------------------------------------------------------------------
-void CGUISlider::OnScroll(const bool &up, const uint &delay)
+void CGUISlider::OnScroll(bool up, int delay)
 {
 	WISPFUN_DEBUG("c77_f5");
-	if (m_LastScrollTime < g_Ticks)
+	if (LastScrollTime < g_Ticks)
 	{
 		if (up)
-			m_Value += m_ScrollStep;
+			Value += ScrollStep;
 		else
-			m_Value -= m_ScrollStep;
+			Value -= ScrollStep;
 
-		if (m_Value < m_MinValue)
-			m_Value = m_MinValue;
-		else if (m_Value > m_MaxValue)
-			m_Value = m_MaxValue;
+		if (Value < MinValue)
+			Value = MinValue;
+		else if (Value > MaxValue)
+			Value = MaxValue;
 
-		m_LastScrollTime = g_Ticks + delay;
+		LastScrollTime = g_Ticks + delay;
 
 		CalculateOffset();
 		UpdateText();
 	}
 }
 //----------------------------------------------------------------------------------
-void CGUISlider::OnClick(const int &x, const int &y)
+void CGUISlider::OnClick(int x, int y)
 {
 	WISPFUN_DEBUG("c77_f6");
-	int lenght = m_Lenght;
-	int maxValue = m_MaxValue - m_MinValue;
+	int lenght = Length;
+	int maxValue = MaxValue - MinValue;
 
-	CGLTexture *th = g_Orion.ExecuteGump(m_Graphic);
+	CGLTexture *th = g_Orion.ExecuteGump(Graphic);
 
 	if (th != NULL)
-		lenght -= (m_Vertical ? (th->Height / 2) : th->Width);
+		lenght -= (Vertical ? (th->Height / 2) : th->Width);
 
-	float percents = ((m_Vertical ? y : x) / (float)lenght) * 100.0f;
+	float percents = ((Vertical ? y : x) / (float)lenght) * 100.0f;
 
-	m_Value = (int)((maxValue * percents) / 100.0f) + m_MinValue;
+	Value = (int)((maxValue * percents) / 100.0f) + MinValue;
 
 	CalculateOffset();
 	UpdateText();
@@ -207,42 +207,42 @@ void CGUISlider::OnClick(const int &x, const int &y)
 void CGUISlider::CalculateOffset()
 {
 	WISPFUN_DEBUG("c77_f7");
-	if (m_Value < m_MinValue)
-		m_Value = m_MinValue;
-	else if (m_Value > m_MaxValue)
-		m_Value = m_MaxValue;
+	if (Value < MinValue)
+		Value = MinValue;
+	else if (Value > MaxValue)
+		Value = MaxValue;
 
-	int value = m_Value - m_MinValue;
-	int maxValue = m_MaxValue - m_MinValue;
-	int lenght = m_Lenght;
+	int value = Value - MinValue;
+	int maxValue = MaxValue - MinValue;
+	int lenght = Length;
 
-	CGLTexture *th = g_Orion.ExecuteGump(m_Graphic);
+	CGLTexture *th = g_Orion.ExecuteGump(Graphic);
 
 	if (th != NULL)
-		lenght -= (m_Vertical ? th->Height : th->Width);
+		lenght -= (Vertical ? th->Height : th->Width);
 
 	if (maxValue > 0)
-		m_Percents = ((value / (float)maxValue) * 100.0f);
+		Percents = ((value / (float)maxValue) * 100.0f);
 	else
-		m_Percents = 0.0f;
+		Percents = 0.0f;
 
-	m_Offset = (int)((lenght * m_Percents) / 100.0f);
+	Offset = (int)((lenght * Percents) / 100.0f);
 
-	if (m_Offset < 0)
-		m_Offset = 0;
+	if (Offset < 0)
+		Offset = 0;
 }
 //----------------------------------------------------------------------------------
-void CGUISlider::SetTextParameters(const bool &haveText, const SLIDER_TEXT_POSITION &textPosition, const uchar &font, const ushort &color, const bool &unicode, const int &textWidth, const TEXT_ALIGN_TYPE &align, const ushort &textFlags)
+void CGUISlider::SetTextParameters(bool haveText, SLIDER_TEXT_POSITION textPosition, uchar font, ushort color, bool unicode, int textWidth, TEXT_ALIGN_TYPE align, ushort textFlags)
 {
 	WISPFUN_DEBUG("c77_f8");
-	m_HaveText = haveText;
-	m_TextPosition = textPosition;
-	m_Font = font;
-	m_TextColor = color;
-	m_Unicode = unicode;
-	m_TextWidth = textWidth;
-	m_Align = align;
-	m_TextFlags = textFlags;
+	HaveText = haveText;
+	TextPosition = textPosition;
+	Font = font;
+	TextColor = color;
+	Unicode = unicode;
+	TextWidth = textWidth;
+	Align = align;
+	TextFlags = textFlags;
 
 	UpdateText();
 }
@@ -250,87 +250,87 @@ void CGUISlider::SetTextParameters(const bool &haveText, const SLIDER_TEXT_POSIT
 void CGUISlider::PrepareTextures()
 {
 	WISPFUN_DEBUG("c77_f9");
-	g_Orion.ExecuteGump(m_Graphic);
-	g_Orion.ExecuteGump(m_GraphicSelected);
-	g_Orion.ExecuteGump(m_GraphicPressed);
+	g_Orion.ExecuteGump(Graphic);
+	g_Orion.ExecuteGump(GraphicSelected);
+	g_Orion.ExecuteGump(GraphicPressed);
 
-	if (m_BackgroundGraphic)
+	if (BackgroundGraphic)
 	{
-		if (m_CompositeBackground)
-			g_Orion.ExecuteGumpPart(m_BackgroundGraphic, 3);
+		if (CompositeBackground)
+			g_Orion.ExecuteGumpPart(BackgroundGraphic, 3);
 		else
-			g_Orion.ExecuteGump(m_BackgroundGraphic);
+			g_Orion.ExecuteGump(BackgroundGraphic);
 	}
 }
 //----------------------------------------------------------------------------------
 ushort CGUISlider::GetDrawGraphic()
 {
 	WISPFUN_DEBUG("c77_f10");
-	ushort graphic = m_Graphic;
+	ushort graphic = Graphic;
 
 	if (g_GumpPressedElement == this)
-		graphic = m_GraphicPressed;
+		graphic = GraphicPressed;
 	else if (g_GumpSelectedElement == this)
-		graphic = m_GraphicSelected;
+		graphic = GraphicSelected;
 
 	return graphic;
 }
 //----------------------------------------------------------------------------------
-void CGUISlider::Draw(const bool &checktrans)
+void CGUISlider::Draw(bool checktrans)
 {
 	WISPFUN_DEBUG("c77_f11");
-	/*m_Value++;
-	if (m_Value > m_MaxValue)
+	/*Value++;
+	if (Value > MaxValue)
 	{
-		m_Value = m_MinValue;
+		Value = MinValue;
 
-		m_TextPosition = (SLIDER_TEXT_POSITION)(m_TextPosition + 1);
+		TextPosition = (SLIDER_TEXT_POSITION)(TextPosition + 1);
 
-		if (m_TextPosition > STP_RIGHT)
-			m_TextPosition = STP_TOP;
+		if (TextPosition > STP_RIGHT)
+			TextPosition = STP_TOP;
 	}
 	UpdateText();
 	CalculateOffset();*/
 
 	glUniform1iARB(g_ShaderDrawMode, SDM_NO_COLOR);
 
-	if (m_BackgroundGraphic)
+	if (BackgroundGraphic)
 	{
-		if (m_CompositeBackground)
+		if (CompositeBackground)
 		{
 			CGLTexture *th[3] = { NULL };
 
 			IFOR(i, 0, 3)
 			{
-				th[i] = g_Orion.ExecuteGump(m_BackgroundGraphic + (int)i);
+				th[i] = g_Orion.ExecuteGump(BackgroundGraphic + (int)i);
 
 				if (th[i] == NULL)
 					return;
 			}
 
-			if (m_Vertical)
+			if (Vertical)
 			{
 				th[0]->Draw(m_X, m_Y, checktrans);
-				th[2]->Draw(m_X, m_Y + (m_Lenght - th[2]->Height), checktrans);
-				th[1]->Draw(m_X, m_Y + th[0]->Height, 0, (m_Lenght - (th[0]->Height + th[2]->Height)), checktrans);
+				th[2]->Draw(m_X, m_Y + (Length - th[2]->Height), checktrans);
+				th[1]->Draw(m_X, m_Y + th[0]->Height, 0, (Length - (th[0]->Height + th[2]->Height)), checktrans);
 			}
 			else
 			{
 				th[0]->Draw(m_X, m_Y, checktrans);
-				th[2]->Draw(m_X + (m_Lenght - th[2]->Width), m_Y, checktrans);
-				th[1]->Draw(m_X + th[0]->Width, m_Y, (m_Lenght - (th[0]->Width + th[2]->Width)), 0, checktrans);
+				th[2]->Draw(m_X + (Length - th[2]->Width), m_Y, checktrans);
+				th[1]->Draw(m_X + th[0]->Width, m_Y, (Length - (th[0]->Width + th[2]->Width)), 0, checktrans);
 			}
 		}
 		else
 		{
-			CGLTexture *th = g_Orion.ExecuteGump(m_BackgroundGraphic);
+			CGLTexture *th = g_Orion.ExecuteGump(BackgroundGraphic);
 
 			if (th != NULL)
 			{
-				if (m_Vertical)
-					th->Draw(m_X, m_Y, 0, m_Lenght, checktrans);
+				if (Vertical)
+					th->Draw(m_X, m_Y, 0, Length, checktrans);
 				else
-					th->Draw(m_X, m_Y, m_Lenght, 0, checktrans);
+					th->Draw(m_X, m_Y, Length, 0, checktrans);
 			}
 		}
 	}
@@ -339,45 +339,45 @@ void CGUISlider::Draw(const bool &checktrans)
 
 	if (th != NULL)
 	{
-		if (m_Vertical)
-			th->Draw(m_X, m_Y + m_Offset, checktrans);
+		if (Vertical)
+			th->Draw(m_X, m_Y + Offset, checktrans);
 		else
-			th->Draw(m_X + m_Offset, m_Y, checktrans);
+			th->Draw(m_X + Offset, m_Y, checktrans);
 
-		if (m_HaveText)
-			m_Text.Draw(m_TextX, m_TextY, checktrans);
+		if (HaveText)
+			Text.Draw(TextX, TextY, checktrans);
 	}
 }
 //----------------------------------------------------------------------------------
 bool CGUISlider::Select()
 {
 	WISPFUN_DEBUG("c77_f12");
-	CGLTexture *th = g_Orion.ExecuteGump(m_Graphic);
+	CGLTexture *th = g_Orion.ExecuteGump(Graphic);
 
 	if (th != NULL)
 	{
 		int buttonX = m_X;
 		int buttonY = m_Y;
 
-		if (m_Vertical)
-			buttonY += m_Offset;
+		if (Vertical)
+			buttonY += Offset;
 		else
-			buttonX += m_Offset;
+			buttonX += Offset;
 
-		if (th->Select(buttonX, buttonY, !m_CheckPolygone))
+		if (th->Select(buttonX, buttonY, !CheckPolygone))
 			return true;
 
-		if (m_BackgroundGraphic)
+		if (BackgroundGraphic)
 		{
 			int x = g_MouseManager.Position.X - m_X;
 			int y = g_MouseManager.Position.Y - m_Y;
 
 			if (x >= 0 && y >= 0)
 			{
-				if (m_Vertical)
-					return (x < th->Width && y < m_Lenght);
+				if (Vertical)
+					return (x < th->Width && y < Length);
 				else
-					return (x < m_Lenght && y < th->Height);
+					return (x < Length && y < th->Height);
 			}
 		}
 	}

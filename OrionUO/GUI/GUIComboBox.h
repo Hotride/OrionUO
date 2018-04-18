@@ -15,37 +15,41 @@
 class CGUIComboBox : public CBaseGUI
 {
 	//!ИД картинки в развернутом состоянии
-	SETGET(ushort, OpenGraphic, 0);
+	ushort OpenGraphic = 0;
 
 	//!Флаг составного фона, если включено - используются повторяющиеся картинки (5 штук) m_OpenGraphic, в выключенном состоянии выводит Resizepic из m_OpenGraphic
-	SETGET(bool, CompositeBackground, false);
+	bool CompositeBackground = false;
 
 	//!Количество отображаемых строк в открытом списке
-	SETGETE(int, ShowItemsCount, 0);
+protected:
+    int m_ShowItemsCount = 0;
+public:
+    int GetShowItemsCount() { return m_ShowItemsCount; };
+    void SetShowItemsCount(int val);
 
 	//!Ширина в свернутом состоянии (только для отрисовки Resizepic)
-	SETGET(int, Width, 0);
+	int Width = 0;
 
 	//!Ширина в развернутом состоянии (только для отрисовки Resizepic)
-	SETGET(int, OpenedWidth, 0);
+	int OpenedWidth = 0;
 
 	//!Стартовый индекс для отображения в развернутом состоянии
-	SETGET(int, StartIndex, 0);
+	int StartIndex = 0;
 
 	//!Текущий выбранный индекс
-	SETGET(int, SelectedIndex, -1);
+	int SelectedIndex = -1;
 
 	//!Направление скроллинга (вычисляется в Select())
-	SETGET(int, ListingDirection, 0);
+	int ListingDirection = 0;
 
 	//!Таймер скроллинга
-	SETGET(uint, ListingTimer, 0);
+	uint ListingTimer = 0;
 
 	//!Центрировать развернутое состояние по оси Y
-	SETGET(bool, ShowMaximizedCenter, false);
+	bool ShowMaximizedCenter = false;
 
 	//!Смещение текста для отображения
-	SETGET(int, TextOffsetY, 0);
+	int TextOffsetY = 0;
 
 private:
 	//!Получить указатель на первый объект отображения
@@ -70,14 +74,14 @@ private:
 	int m_WorkHeight{ 0 };
 
 	//!Выводимый в свернутом состоянии текст
-	class CGUIText *m_Text{ NULL };
+	class CGUIText *Text{ NULL };
 
 public:
-	CGUIComboBox(const uint &serial, const ushort &graphic, const bool &compositeBackground, const ushort &openGraphic, const int &x, const int &y, const int &width, const int &showItemsCount, const bool &showMaximizedCenter);
+	CGUIComboBox(int serial, ushort graphic, bool compositeBackground, ushort openGraphic, int x, int y, int width, int showItemsCount, bool showMaximizedCenter);
 	virtual ~CGUIComboBox();
 
 	//!Установить текст
-	void SetText(class CGUIText *text) { m_Text = text; }
+	void SetText(class CGUIText *text) { Text = text; }
 
 	//!Пересчитать ширину
 	void RecalculateWidth();
@@ -86,7 +90,7 @@ public:
 
 	virtual void PrepareTextures();
 
-	virtual void Draw(const bool &checktrans = false);
+	virtual void Draw(bool checktrans = false);
 	virtual bool Select();
 
 	//!Получить ссылку на выбранный элемент списка (или на самого себя)

@@ -12,15 +12,15 @@
 //----------------------------------------------------------------------------------
 class CIndexMap
 {
-	SETGET(size_t, OriginalMapAddress, 0);
-	SETGET(size_t, OriginalStaticAddress, 0);
-	SETGET(uint, OriginalStaticCount, 0);
-
-	SETGET(size_t, MapAddress, 0);
-	SETGET(size_t, StaticAddress, 0);
-	SETGET(uint, StaticCount, 0);
-
 public:
+	size_t OriginalMapAddress = 0;
+	size_t OriginalStaticAddress = 0;
+	uint OriginalStaticCount = 0;
+
+	size_t MapAddress = 0;
+	size_t StaticAddress = 0;
+	uint StaticCount = 0;
+
 	CIndexMap();
 	virtual ~CIndexMap();
 };
@@ -30,9 +30,10 @@ typedef vector<CIndexMap> MAP_INDEX_LIST;
 //!Класс менеджера карт
 class CMapManager : public CBaseQueue
 {
+public:
 	//!Максимальный индекс блока для текущей карты
-	SETGET(uint, MaxBlockIndex, 0);
-	SETGET(int, PatchesCount, 0);
+	uint MaxBlockIndex = 0;
+	int PatchesCount = 0;
 
 protected:
 	//!Вектор ссылок на блоки карты
@@ -51,7 +52,7 @@ public:
 	int m_MapPatchCount[MAX_MAPS_COUNT];
 	int m_StaticPatchCount[MAX_MAPS_COUNT];
 
-	CIndexMap *GetIndex(const uint &map, const int &blockX, const int &blockY);
+	CIndexMap *GetIndex(int map, int blockX, int blockY);
 
 	void CreateBlockTable(int map);
 
@@ -63,7 +64,7 @@ public:
 
 	void ClearBlockAccess();
 
-	char CalculateNearZ(char defaultZ, const int &x, const int &y, const int &z);
+	char CalculateNearZ(char defaultZ, int x, int y, int z);
 
 	/*!
 	Получить индекс текущей карты
@@ -87,7 +88,7 @@ public:
 	@param [__out] mb Ссылка на блок
 	@return 
 	*/
-	void GetRadarMapBlock(const int &blockX, const int &blockY, RADAR_MAP_BLOCK &mb);
+	void GetRadarMapBlock(int blockX, int blockY, RADAR_MAP_BLOCK &mb);
 
 	/*!
 	Получить значение Z координаты для указанной точки в мире
@@ -97,35 +98,35 @@ public:
 	@param [__out] staticZ Значение Z коррдинаты статики
 	@return 
 	*/
-	void GetMapZ(const int &x, const int &y, int &groundZ, int &staticZ);
+	void GetMapZ(int x, int y, int &groundZ, int &staticZ);
 
 	/*!
 	Инициализация
 	@param [__in_opt] delayed По истечении времени на загрузку выходить из цикла
 	@return 
 	*/
-	void Init(const bool &delayed = false);
+	void Init(bool delayed = false);
 
 	/*!
 	Получить ссылку на блок
 	@param [__in] index Индекс блока
 	@return Ссылка на блок или NULL
 	*/
-	CMapBlock *GetBlock(const uint &index);
+	CMapBlock *GetBlock(int index);
 
 	/*!
 	Добавить блок
 	@param [__in] index Индекс блока
 	@return Ссылка на блок или NULL
 	*/
-	CMapBlock *AddBlock(const uint &index);
+	CMapBlock *AddBlock(int index);
 
 	/*!
 	Удалить блок
 	@param [__in] index Индекс блока
 	@return 
 	*/
-	void DeleteBlock(const uint &index);
+	void DeleteBlock(int index);
 
 	/*!
 	Удалить неиспользуемые блоки

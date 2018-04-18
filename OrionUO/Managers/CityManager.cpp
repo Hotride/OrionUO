@@ -16,7 +16,7 @@ CCityManager g_CityManager;
 //---------------------------------------CCity--------------------------------------
 //----------------------------------------------------------------------------------
 CCity::CCity(const string &name, const wstring &description)
-: m_Name(name), m_Description(description)
+: Name(name), Description(description)
 {
 }
 //----------------------------------------------------------------------------------

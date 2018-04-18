@@ -13,23 +13,27 @@
 //Класс для работы с объектами рендера
 class CRenderWorldObject : public CRenderObject
 {
-	SETGETE(char, Z, 0);
-	SETGET(short, PriorityZ, 0);
-	SETGET(RENDER_OBJECT_TYPE, RenderType, ROT_GAME_OBJECT);
+protected:
+    char m_Z = 0;
+public:
+    char GetZ() { return m_Z; };
+    void SetZ(char val);
+	short PriorityZ = 0;
+	RENDER_OBJECT_TYPE RenderType = ROT_GAME_OBJECT;
 #if UO_RENDER_LIST_SORT == 1
-	SETGET(uchar, CurrentRenderIndex, 0);
-	SETGET(uchar, UseInRender, 0);
+	uchar CurrentRenderIndex = 0;
+	uchar UseInRender = 0;
 #endif
-	SETGET(bool, NoDrawTile, false);
+	bool NoDrawTile = false;
 
 public:
-	CRenderWorldObject(const RENDER_OBJECT_TYPE &renderType, const uint &serial, const ushort &graphic, const ushort &color, const int &x, const int &y, const char &z);
+	CRenderWorldObject(RENDER_OBJECT_TYPE renderType, int serial, ushort graphic, ushort color, int x, int y, char z);
 	virtual ~CRenderWorldObject();
 
 	//Ссылка на компонентный состав текстуры
 	uchar m_DrawTextureColor[4];
 
-	bool ProcessAlpha(const int &maxAlpha);
+	bool ProcessAlpha(int maxAlpha);
 
 	bool RemovedFromRender();
 
@@ -40,7 +44,7 @@ public:
 	virtual bool TextCanBeTransparent(CRenderTextObject *text) { return false; }
 
 	//Проверка прозрачности (для круга прозрачности)
-	virtual bool TranparentTest(const int &playerZ) { return false; }
+	virtual bool TranparentTest(int playerZ) { return false; }
 
 	//Ссылки на предыдущий и следующий элементы в очереди рендера
 	CRenderWorldObject *m_NextXY{ NULL };
@@ -53,10 +57,10 @@ public:
 	virtual ushort GetLightID() { return 0; }
 
 	//Отрисовать объект
-	virtual void Draw(const int &x, const int &y) { }
+	virtual void Draw(int x, int y) { }
 
 	//Выбрать объект
-	virtual void Select(const int &x, const int &y) { }
+	virtual void Select(int x, int y) { }
 
 	virtual void UpdateGraphicBySeason() {}
 

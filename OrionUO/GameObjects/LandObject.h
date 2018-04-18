@@ -13,32 +13,33 @@
 //Класс ландшафта
 class CLandObject : public CMapObject
 {
+public:
 	//Минимальная Z координата
-	SETGET(char, MinZ, 0);
+	char MinZ = 0;
 
 	//Средняя Z координата
-	SETGET(char, AverageZ, 0);
+	char AverageZ = 0;
 
 	//Флаг отображения (true - картинка из texmaps, false - из art.mul)
-	SETGET(bool, IsStretched, false);
+	bool IsStretched = false;
 
 	//Оригинальный индекс картинки
-	SETGET(ushort, OriginalGraphic, 0);
+	ushort OriginalGraphic = 0;
 
 	//!Буфер текстурных координат
-	SETGET(GLuint, PositionBuffer, 0);
+	GLuint PositionBuffer = 0;
 
 	//!Буфер вершин
-	SETGET(GLuint, VertexBuffer, 0);
+	GLuint VertexBuffer = 0;
 
 	//!Буфер нормалей
-	SETGET(GLuint, NormalBuffer, 0);
+	GLuint NormalBuffer = 0;
 
 private:
-	int GetDirectionZ(const int &direction);
+	int GetDirectionZ(int direction);
 
 public:
-	CLandObject(const uint &serial, const ushort &graphic, const ushort &color, const short &x, const short &y, const char &z);
+	CLandObject(int serial, ushort graphic, ushort color, short x, short y, char z);
 	virtual ~CLandObject();
 
 	//Координаты привязки вершин
@@ -46,21 +47,21 @@ public:
 
 	virtual void UpdateGraphicBySeason();
 
-	int CalculateCurrentAverageZ(const int &z);
+	int CalculateCurrentAverageZ(int z);
 
 	//Векторы нормали
 	CVector m_Normals[4];
 
 	//Отрисовать объект
-	virtual void Draw(const int &x, const int &y);
+	virtual void Draw(int x, int y);
 
 	//Выбрать объект
-	virtual void Select(const int &x, const int &y);
+	virtual void Select(int x, int y);
 
 	//Это объект ландшафта
 	bool IsLandObject() {return true;}
 
-	void UpdateZ(const int &zTop, const int &zRight, const int &zBottom);
+	void UpdateZ(int zTop, int zRight, int zBottom);
 
 	//Игнорирование при некоторых расчетах
 	bool Ignored() {return (Graphic == 2 || Graphic == 0x1DB || (Graphic >= 0x1AE && Graphic <= 0x1B5));}

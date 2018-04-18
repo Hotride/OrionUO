@@ -11,12 +11,12 @@
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
 //----------------------------------------------------------------------------------
-CGUITilepicHightlighted::CGUITilepicHightlighted(const uint &serial, const ushort &graphic, const ushort &color, const ushort &selectedColor, const int &x, const int &y, const bool &doubleDraw)
-: CGUITilepic(graphic, color, x, y), m_SelectedColor(selectedColor),
-m_DoubleDraw(doubleDraw)
+CGUITilepicHightlighted::CGUITilepicHightlighted(int serial, ushort graphic, ushort color, ushort selectedColor, int x, int y, bool doubleDraw)
+: CGUITilepic(graphic, color, x, y), SelectedColor(selectedColor),
+DoubleDraw(doubleDraw)
 {
-	m_Type = GOT_TILEPICHIGHTLIGHTED;
-	m_Serial = serial;
+	Type = GOT_TILEPICHIGHTLIGHTED;
+	Serial = serial;
 }
 //----------------------------------------------------------------------------------
 CGUITilepicHightlighted::~CGUITilepicHightlighted()
@@ -31,25 +31,25 @@ void CGUITilepicHightlighted::SetShaderMode()
 	{
 		glUniform1iARB(g_ShaderDrawMode, SDM_COLORED);
 
-		g_ColorManager.SendColorsToShader(m_SelectedColor);
+		g_ColorManager.SendColorsToShader(SelectedColor);
 	}
-	else if (m_Color != 0)
+	else if (Color != 0)
 	{
-		if (m_PartialHue)
+		if (PartialHue)
 			glUniform1iARB(g_ShaderDrawMode, SDM_PARTIAL_HUE);
 		else
 			glUniform1iARB(g_ShaderDrawMode, SDM_COLORED);
 
-		g_ColorManager.SendColorsToShader(m_Color);
+		g_ColorManager.SendColorsToShader(Color);
 	}
 	else
 		glUniform1iARB(g_ShaderDrawMode, SDM_NO_COLOR);
 }
 //----------------------------------------------------------------------------------
-void CGUITilepicHightlighted::Draw(const bool &checktrans)
+void CGUITilepicHightlighted::Draw(bool checktrans)
 {
 	WISPFUN_DEBUG("c81_f2");
-	CGLTexture *th = g_Orion.ExecuteStaticArt(m_Graphic);
+	CGLTexture *th = g_Orion.ExecuteStaticArt(Graphic);
 
 	if (th != NULL)
 	{
@@ -57,7 +57,7 @@ void CGUITilepicHightlighted::Draw(const bool &checktrans)
 
 		th->Draw(m_X, m_Y, checktrans);
 
-		if (m_DoubleDraw)
+		if (DoubleDraw)
 			th->Draw(m_X + 5, m_Y + 5, checktrans);
 	}
 }
@@ -65,16 +65,16 @@ void CGUITilepicHightlighted::Draw(const bool &checktrans)
 bool CGUITilepicHightlighted::Select()
 {
 	WISPFUN_DEBUG("c81_f3");
-	CGLTexture *th = g_Orion.m_StaticDataIndex[m_Graphic].Texture;
+	CGLTexture *th = g_Orion.m_StaticDataIndex[Graphic].Texture;
 
 	if (th != NULL)
 	{
-		int count = 1 + m_DoubleDraw;
+		int count = 1 + DoubleDraw;
 		int offset = 0;
 
 		IFOR(i, 0, count)
 		{
-			if (th->Select(m_X + offset, m_Y + offset, !m_CheckPolygone))
+			if (th->Select(m_X + offset, m_Y + offset, !CheckPolygone))
 				return true;
 
 			offset = 5;

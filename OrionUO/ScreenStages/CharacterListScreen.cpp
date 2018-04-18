@@ -42,7 +42,7 @@ void CCharacterListScreen::Init()
 	g_CharacterList.Selected = 0;
 
 	g_ScreenEffectManager.UseSunrise();
-	m_SmoothScreenAction = 0;
+	SmoothScreenAction = 0;
 
 	m_Gump.PrepareTextures();
 	m_Gump.WantUpdateContent = true;
@@ -57,7 +57,7 @@ void CCharacterListScreen::ProcessSmoothAction(uchar action)
 {
 	WISPFUN_DEBUG("c160_f2");
 	if (action == 0xFF)
-		action = m_SmoothScreenAction;
+		action = SmoothScreenAction;
 
 	if (action == ID_SMOOTH_CLS_QUIT)
 		g_OrionWindow.Destroy();
@@ -77,7 +77,7 @@ void CCharacterListScreen::ProcessSmoothAction(uchar action)
 		if (g_CharacterList.GetSelectedName().length())
 		{
 			g_Orion.InitScreen(GS_DELETE);
-			g_ConnectionScreen.Type = CST_CHARACTER_LIST;
+			g_ConnectionScreen.SetType(CST_CHARACTER_LIST);
 		}
 	}
 }

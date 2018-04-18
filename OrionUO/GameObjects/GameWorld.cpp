@@ -13,7 +13,7 @@
 //----------------------------------------------------------------------------------
 CGameWorld *g_World = NULL;
 //----------------------------------------------------------------------------------
-CGameWorld::CGameWorld(const uint &serial)
+CGameWorld::CGameWorld(int serial)
 {
 	WISPFUN_DEBUG("c22_f1");
 	CreatePlayer(serial);
@@ -44,7 +44,7 @@ void CGameWorld::ResetObjectHandlesState()
 		obj->ClosedObjectHandle = false;
 }
 //----------------------------------------------------------------------------------
-void CGameWorld::ProcessSound(const uint &ticks, CGameCharacter *gc)
+void CGameWorld::ProcessSound(int ticks, CGameCharacter *gc)
 {
 	WISPFUN_DEBUG("c22_f3");
 	if (g_ConfigManager.FootstepsSound && gc->IsHuman() && !gc->Hidden())
@@ -297,7 +297,7 @@ void CGameWorld::ProcessAnimation()
 @param [__in] serial Серийник игрока
 @return 
 */
-void CGameWorld::CreatePlayer(const uint &serial)
+void CGameWorld::CreatePlayer(int serial)
 {
 	WISPFUN_DEBUG("c22_f5");
 	RemovePlayer();
@@ -340,7 +340,7 @@ void CGameWorld::RemovePlayer()
 @param [__in] serial Серийник нового игрока
 @return 
 */
-void CGameWorld::SetPlayer(const uint &serial)
+void CGameWorld::SetPlayer(int serial)
 {
 	WISPFUN_DEBUG("c22_f6");
 	if (serial != g_Player->Serial)
@@ -352,7 +352,7 @@ void CGameWorld::SetPlayer(const uint &serial)
 @param [__in] serial Серийник предмета
 @return Ссылка на предмет
 */
-CGameItem *CGameWorld::GetWorldItem(const uint &serial)
+CGameItem *CGameWorld::GetWorldItem(int serial)
 {
 	WISPFUN_DEBUG("c22_f8");
 	WORLD_MAP::iterator i = m_Map.find(serial);
@@ -383,7 +383,7 @@ CGameItem *CGameWorld::GetWorldItem(const uint &serial)
 @param [__in] serial Серийник персонажа
 @return Ссылка на персонажа
 */
-CGameCharacter *CGameWorld::GetWorldCharacter(const uint &serial)
+CGameCharacter *CGameWorld::GetWorldCharacter(int serial)
 {
 	WISPFUN_DEBUG("c22_f9");
 	WORLD_MAP::iterator i = m_Map.find(serial);
@@ -414,7 +414,7 @@ CGameCharacter *CGameWorld::GetWorldCharacter(const uint &serial)
 @param [__in] serial Серийник объекта
 @return Ссылка на объект или NULL
 */
-CGameObject *CGameWorld::FindWorldObject(const uint &serial)
+CGameObject *CGameWorld::FindWorldObject(int serial)
 {
 	WISPFUN_DEBUG("c22_f10");
 	CGameObject *result = NULL;
@@ -431,7 +431,7 @@ CGameObject *CGameWorld::FindWorldObject(const uint &serial)
 @param [__in] serial Серийник предмета
 @return Ссылка на предмет или NULL
 */
-CGameItem *CGameWorld::FindWorldItem(const uint &serial)
+CGameItem *CGameWorld::FindWorldItem(int serial)
 {
 	WISPFUN_DEBUG("c22_f11");
 	CGameItem *result = NULL;
@@ -448,7 +448,7 @@ CGameItem *CGameWorld::FindWorldItem(const uint &serial)
 @param [__in] serial Серийник персонажа
 @return Ссылка а персонажа или NULL
 */
-CGameCharacter *CGameWorld::FindWorldCharacter(const uint &serial)
+CGameCharacter *CGameWorld::FindWorldCharacter(int serial)
 {
 	WISPFUN_DEBUG("c22_f12");
 	CGameCharacter *result = NULL;
@@ -460,7 +460,7 @@ CGameCharacter *CGameWorld::FindWorldCharacter(const uint &serial)
 	return result;
 }
 //---------------------------------------------------------------------------
-void CGameWorld::ReplaceObject(CGameObject *obj, const uint &newSerial)
+void CGameWorld::ReplaceObject(CGameObject *obj, int newSerial)
 {
 	WISPFUN_DEBUG("c22_f12_1");
 
@@ -696,7 +696,7 @@ void CGameWorld::MoveToTop(CGameObject *obj)
 @param [__in] scanMode Режим поиска
 @return Ссылка на найденный объект или NULL
 */
-CGameObject *CGameWorld::SearchWorldObject(const uint &serialStart, const int &scanDistance, const SCAN_TYPE_OBJECT &scanType, const SCAN_MODE_OBJECT &scanMode)
+CGameObject *CGameWorld::SearchWorldObject(int serialStart, int scanDistance, SCAN_TYPE_OBJECT scanType, SCAN_MODE_OBJECT scanMode)
 {
 	WISPFUN_DEBUG("c22_f18");
 	CGameObject *result = NULL;
@@ -805,7 +805,7 @@ CGameObject *CGameWorld::SearchWorldObject(const uint &serialStart, const int &s
 	return result;
 }
 //----------------------------------------------------------------------------------
-void CGameWorld::UpdateGameObject(const uint &serial, ushort graphic, const uchar &graphicIncrement, int count, const int &x, const int &y, const char &z, const uchar &direction, const ushort &color, const uchar &flags, const int &a11, const UPDATE_GAME_OBJECT_TYPE &updateType, const ushort &a13)
+void CGameWorld::UpdateGameObject(int serial, ushort graphic, uchar graphicIncrement, int count, int x, int y, char z, uchar direction, ushort color, uchar flags, int a11, UPDATE_GAME_OBJECT_TYPE updateType, ushort a13)
 {
 	LOG("UpdateGameObject 0x%08lX:0x%04X 0x%04X (%i) %d:%d:%d %i\n", serial, graphic, color, count, x, y, z, direction);
 
@@ -848,10 +848,10 @@ void CGameWorld::UpdateGameObject(const uint &serial, ushort graphic, const ucha
 			character->OnGraphicChange(1000);
 			character->Direction = direction;
 			character->Color = g_ColorManager.FixColor(color, (color & 0x8000));
-			character->X = x;
-			character->Y = y;
-			character->Z = z;
-			character->Flags = flags;
+			character->SetX(x);
+			character->SetY(y);
+			character->SetZ(z);
+			character->SetFlags(flags);
 		}
 		else
 		{
@@ -896,7 +896,7 @@ void CGameWorld::UpdateGameObject(const uint &serial, ushort graphic, const ucha
 		if (updateType == UGOT_MULTI)
 		{
 			item->MultiBody = true;
-			item->WantUpdateMulti = ((graphic & 0x3FFF) != obj->Graphic) || (obj->X != x) || (obj->Y != y) || (obj->Z != z);
+			item->WantUpdateMulti = ((graphic & 0x3FFF) != obj->Graphic) || (obj->GetX() != x) || (obj->GetY() != y) || (obj->GetZ() != z);
 
 			item->Graphic = graphic & 0x3FFF;
 		}
@@ -913,9 +913,9 @@ void CGameWorld::UpdateGameObject(const uint &serial, ushort graphic, const ucha
 			item->Dragged = false;
 		}
 
-		item->X = x;
-		item->Y = y;
-		item->Z = z;
+		item->SetX(x);
+		item->SetY(y);
+		item->SetZ(z);
 		item->LightID = direction;
 
 		if (graphic == 0x2006)
@@ -927,11 +927,11 @@ void CGameWorld::UpdateGameObject(const uint &serial, ushort graphic, const ucha
 			count = 1;
 
 		item->Count = count;
-		item->Flags = flags;
+		item->SetFlags(flags);
 
 		item->OnGraphicChange(direction);
 
-		LOG("serial:0x%08X graphic:0x%04X color:0x%04X count:%i xyz:%d,%d,%d light:%i flags:0x%02X\n", obj->Serial, obj->Graphic, obj->Color, item->Count, obj->X, obj->Y, obj->Z, direction, obj->Flags);
+		LOG("serial:0x%08X graphic:0x%04X color:0x%04X count:%i xyz:%d,%d,%d light:%i flags:0x%02X\n", obj->Serial, obj->Graphic, obj->Color, item->Count, obj->GetX(), obj->GetY(), obj->GetZ(), direction, obj->GetFlags());
 	}
 	else
 	{
@@ -952,7 +952,7 @@ void CGameWorld::UpdateGameObject(const uint &serial, ushort graphic, const ucha
 						found = true;
 					}
 				}
-				else if (character->X == x && character->Y == y && character->Z == z && character->Direction == direction)
+				else if (character->GetX() == x && character->GetY() == y && character->GetZ() == z && character->Direction == direction)
 				{
 					found = true;
 				}
@@ -970,9 +970,9 @@ void CGameWorld::UpdateGameObject(const uint &serial, ushort graphic, const ucha
 
 		if (!found)
 		{
-			character->X = x;
-			character->Y = y;
-			character->Z = z;
+			character->SetX(x);
+			character->SetY(y);
+			character->SetZ(z);
 			character->Direction = direction;
 
 			character->m_Steps.clear();
@@ -984,12 +984,12 @@ void CGameWorld::UpdateGameObject(const uint &serial, ushort graphic, const ucha
 
 		character->Graphic = graphic & 0x3FFF;
 		character->Color = g_ColorManager.FixColor(color, (color & 0x8000));
-		character->Flags = flags;
+		character->SetFlags(flags);
 
-		LOG("NPC serial:0x%08X graphic:0x%04X color:0x%04X xyz:%d,%d,%d flags:0x%02X direction:%d notoriety:%d\n", obj->Serial, obj->Graphic, obj->Color, obj->X, obj->Y, obj->Z, obj->Flags, character->Direction, character->Notoriety);
+		LOG("NPC serial:0x%08X graphic:0x%04X color:0x%04X xyz:%d,%d,%d flags:0x%02X direction:%d notoriety:%d\n", obj->Serial, obj->Graphic, obj->Color, obj->GetX(), obj->GetY(), obj->GetZ(), obj->GetFlags(), character->Direction, character->Notoriety);
 	}
 
-	if (created && g_ConfigManager.ShowIncomingNames && !obj->Clicked && !obj->Name.length())
+	if (created && g_ConfigManager.ShowIncomingNames && !obj->Clicked && !obj->GetName().length())
 	{
 		if (obj->NPC || obj->IsCorpse())
 			g_Orion.Click(obj->Serial);
@@ -998,7 +998,7 @@ void CGameWorld::UpdateGameObject(const uint &serial, ushort graphic, const ucha
 	MoveToTop(obj);
 }
 //----------------------------------------------------------------------------------
-void CGameWorld::UpdatePlayer(const uint &serial, const ushort &graphic, const uchar &graphicIncrement, const ushort &color, const uchar &flags, const int &x, const int &y, const ushort &serverID, const uchar &direction, const char &z)
+void CGameWorld::UpdatePlayer(int serial, ushort graphic, uchar graphicIncrement, ushort color, uchar flags, int x, int y, ushort serverID, uchar direction, char z)
 {
 	if (serial == g_PlayerSerial)
 	{
@@ -1006,9 +1006,9 @@ void CGameWorld::UpdatePlayer(const uint &serial, const ushort &graphic, const u
 
 		g_Walker.WalkingFailed = false;
 
-		g_Player->X = x;
-		g_Player->Y = y;
-		g_Player->Z = z;
+		g_Player->SetX(x);
+		g_Player->SetY(y);
+		g_Player->SetZ(z);
 
 		g_RemoveRangeXY.X = x;
 		g_RemoveRangeXY.Y = y;
@@ -1029,7 +1029,7 @@ void CGameWorld::UpdatePlayer(const uint &serial, const ushort &graphic, const u
 
 		//UpdatePlayerCoordinates(x, y, z, serverID);
 
-		g_Player->Flags = flags;
+		g_Player->SetFlags(flags);
 
 		g_Walker.DenyWalk(-1, -1, -1, -1);
 		g_Weather.Reset();
@@ -1056,10 +1056,10 @@ void CGameWorld::UpdatePlayer(const uint &serial, const ushort &graphic, const u
 	}
 }
 //----------------------------------------------------------------------------------
-void CGameWorld::UpdateItemInContainer(CGameObject *obj, CGameObject *container, const int &x, const int &y)
+void CGameWorld::UpdateItemInContainer(CGameObject *obj, CGameObject *container, int x, int y)
 {
-	obj->X = x;
-	obj->Y = y;
+	obj->SetX(x);
+	obj->SetY(y);
 	PutContainer(obj, container);
 
 	uint containerSerial = container->Serial;
@@ -1097,7 +1097,7 @@ void CGameWorld::UpdateItemInContainer(CGameObject *obj, CGameObject *container,
 	}
 }
 //----------------------------------------------------------------------------------
-void CGameWorld::UpdateContainedItem(const uint &serial, const ushort &graphic, const uchar &graphicIncrement, ushort count, const int &x, const int &y, const uint &containerSerial, const ushort &color)
+void CGameWorld::UpdateContainedItem(int serial, ushort graphic, uchar graphicIncrement, ushort count, int x, int y, int containerSerial, ushort color)
 {
 	if (g_ObjectInHand.Serial == serial && g_ObjectInHand.Dropped)
 		g_ObjectInHand.Clear();
@@ -1177,7 +1177,7 @@ void CGameWorld::Dump(uchar tCount, uint serial)
 			IFOR(i, 0, tCount)
 				LOG("\t");
 
-			LOG("%s%08X:%04X[%04X](%%02X)*%i\tin 0x%08X XYZ=%i,%i,%i on Map %i\n", (obj->NPC ? "NPC: " : "Item: "), obj->Serial, obj->Graphic, obj->Color, /*obj->Layer,*/ obj->Count, obj->Container, obj->X, obj->Y, obj->Z, obj->MapIndex);
+			LOG("%s%08X:%04X[%04X](%%02X)*%i\tin 0x%08X XYZ=%i,%i,%i on Map %i\n", (obj->NPC ? "NPC: " : "Item: "), obj->Serial, obj->Graphic, obj->Color, /*obj->Layer,*/ obj->Count, obj->Container, obj->GetX(), obj->GetY(), obj->GetZ(), obj->MapIndex);
 
 			if (obj->m_Items != NULL)
 				Dump(tCount + 1, obj->Container);

@@ -28,7 +28,7 @@ CGameBlockedScreen::~CGameBlockedScreen()
 */
 void CGameBlockedScreen::Init()
 {
-	m_Code = 0;
+	Code = 0;
 }
 //----------------------------------------------------------------------------------
 /*!
@@ -36,7 +36,7 @@ void CGameBlockedScreen::Init()
 @param [__in] mode true - отрисовка, false - выбор
 @return При выборе объектов - идентификатор выбранного объекта
 */
-void CGameBlockedScreen::Render(const bool &mode)
+void CGameBlockedScreen::Render(bool mode)
 {
 	WISPFUN_DEBUG("c163_f1");
 	if (mode)

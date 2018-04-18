@@ -11,48 +11,48 @@
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
 //----------------------------------------------------------------------------------
-CGUIMinMaxButtons::CGUIMinMaxButtons(const uint &serial, const ushort &graphic, const int &x, const int &y, const int &minValue, const int &maxValue, const int &value)
-: CBaseGUI(GOT_MINMAXBUTTONS, serial, graphic, 0, x, y), m_MinValue(minValue),
-m_MaxValue(maxValue), m_Value(value)
+CGUIMinMaxButtons::CGUIMinMaxButtons(int serial, ushort graphic, int x, int y, int minValue, int maxValue, int value)
+: CBaseGUI(GOT_MINMAXBUTTONS, serial, graphic, 0, x, y), MinValue(minValue),
+MaxValue(maxValue), Value(value)
 {
 }
 //----------------------------------------------------------------------------------
 CGUIMinMaxButtons::~CGUIMinMaxButtons()
 {
 	WISPFUN_DEBUG("c67_f1");
-	m_Text.Clear();
+	Text.Clear();
 }
 //----------------------------------------------------------------------------------
 void CGUIMinMaxButtons::UpdateText()
 {
 	WISPFUN_DEBUG("c67_f2");
-	if (m_HaveText)
+	if (HaveText)
 	{
-		if (m_Unicode)
-			g_FontManager.GenerateW(m_Font, m_Text, std::to_wstring(m_Value), m_TextColor, 30, m_TextWidth, m_Align, m_TextFlags);
+		if (Unicode)
+			g_FontManager.GenerateW(Font, Text, std::to_wstring(Value), TextColor, 30, TextWidth, Align, TextFlags);
 		else
-			g_FontManager.GenerateA(m_Font, m_Text, std::to_string(m_Value), m_TextColor, m_TextWidth, m_Align, m_TextFlags);
+			g_FontManager.GenerateA(Font, Text, std::to_string(Value), TextColor, TextWidth, Align, TextFlags);
 
-		CGLTexture *th = g_Orion.ExecuteGump(m_Graphic);
+		CGLTexture *th = g_Orion.ExecuteGump(Graphic);
 
 		if (th != NULL)
 		{
 			int textX = m_X;
 			int textY = m_Y;
 
-			switch (m_TextPosition)
+			switch (TextPosition)
 			{
 				case STP_TOP:
 				case STP_TOP_CENTER:
 				{
-					textY -= m_Text.Height - m_DefaultTextOffset;
+					textY -= Text.Height - DefaultTextOffset;
 
 					break;
 				}
 				case STP_BOTTOM:
 				case STP_BOTTOM_CENTER:
 				{
-					textY += 18 + m_DefaultTextOffset;
+					textY += 18 + DefaultTextOffset;
 
 					break;
 				}
@@ -60,7 +60,7 @@ void CGUIMinMaxButtons::UpdateText()
 					//textY -= 4;
 				case STP_LEFT_CENTER:
 				{
-					textX -= m_Text.Width - m_DefaultTextOffset;
+					textX -= Text.Width - DefaultTextOffset;
 
 					break;
 				}
@@ -68,7 +68,7 @@ void CGUIMinMaxButtons::UpdateText()
 					//textY -= 4;
 				case STP_RIGHT_CENTER:
 				{
-					textX += 36 + m_DefaultTextOffset;
+					textX += 36 + DefaultTextOffset;
 
 					break;
 				}
@@ -76,12 +76,12 @@ void CGUIMinMaxButtons::UpdateText()
 					break;
 			}
 
-			switch (m_TextPosition)
+			switch (TextPosition)
 			{
 				case STP_TOP_CENTER:
 				case STP_BOTTOM_CENTER:
 				{
-					int textWidth = m_Text.Width;
+					int textWidth = Text.Width;
 					int sliderWidth = 36;
 
 					int deltaX = abs(sliderWidth - textWidth) / 2;
@@ -96,7 +96,7 @@ void CGUIMinMaxButtons::UpdateText()
 				case STP_LEFT_CENTER:
 				case STP_RIGHT_CENTER:
 				{
-					int textHeight = m_Text.Height;
+					int textHeight = Text.Height;
 					int sliderHeight = 18;
 
 					int deltaY = abs(sliderHeight - textHeight) / 2;
@@ -112,29 +112,29 @@ void CGUIMinMaxButtons::UpdateText()
 					break;
 			}
 
-			m_TextX = textX;
-			m_TextY = textY;
+			TextX = textX;
+			TextY = textY;
 		}
 	}
 }
 //----------------------------------------------------------------------------------
-void CGUIMinMaxButtons::Scroll(const uint &delay)
+void CGUIMinMaxButtons::Scroll(int delay)
 {
 	WISPFUN_DEBUG("c67_f3");
-	if (m_LastScrollTime < g_Ticks && m_ScrollMode)
+	if (LastScrollTime < g_Ticks && m_ScrollMode)
 	{
 		if (m_ScrollMode == 1)
-			m_Value += m_ScrollStep;
+			Value += ScrollStep;
 		else
-			m_Value -= m_ScrollStep;
+			Value -= ScrollStep;
 
-		if (m_Value < m_MinValue)
-			m_Value = m_MinValue;
-		else if (m_Value > m_MaxValue)
-			m_Value = m_MaxValue;
+		if (Value < MinValue)
+			Value = MinValue;
+		else if (Value > MaxValue)
+			Value = MaxValue;
 
-		m_ScrollStep++;
-		m_LastScrollTime = g_Ticks + delay;
+		ScrollStep++;
+		LastScrollTime = g_Ticks + delay;
 
 		UpdateText();
 	}
@@ -156,21 +156,21 @@ void CGUIMinMaxButtons::OnClick()
 	else
 		m_ScrollMode = 0;
 
-	m_LastScrollTime = g_Ticks + 100;
-	m_ScrollStep = m_BaseScrollStep;
+	LastScrollTime = g_Ticks + 100;
+	ScrollStep = BaseScrollStep;
 }
 //----------------------------------------------------------------------------------
-void CGUIMinMaxButtons::SetTextParameters(const bool &haveText, const SLIDER_TEXT_POSITION &textPosition, const uchar &font, const ushort &color, const bool &unicode, const int &textWidth, const TEXT_ALIGN_TYPE &align, const ushort &textFlags)
+void CGUIMinMaxButtons::SetTextParameters(bool haveText, SLIDER_TEXT_POSITION textPosition, uchar font, ushort color, bool unicode, int textWidth, TEXT_ALIGN_TYPE align, ushort textFlags)
 {
 	WISPFUN_DEBUG("c67_f5");
-	m_HaveText = haveText;
-	m_TextPosition = textPosition;
-	m_Font = font;
-	m_TextColor = color;
-	m_Unicode = unicode;
-	m_TextWidth = textWidth;
-	m_Align = align;
-	m_TextFlags = textFlags;
+	HaveText = haveText;
+	TextPosition = textPosition;
+	Font = font;
+	TextColor = color;
+	Unicode = unicode;
+	TextWidth = textWidth;
+	Align = align;
+	TextFlags = textFlags;
 
 	UpdateText();
 }
@@ -178,25 +178,25 @@ void CGUIMinMaxButtons::SetTextParameters(const bool &haveText, const SLIDER_TEX
 void CGUIMinMaxButtons::PrepareTextures()
 {
 	WISPFUN_DEBUG("c67_f6");
-	g_Orion.ExecuteGump(m_Graphic);
-	g_Orion.ExecuteGump(m_Graphic + 1);
+	g_Orion.ExecuteGump(Graphic);
+	g_Orion.ExecuteGump(Graphic + 1);
 }
 //----------------------------------------------------------------------------------
-void CGUIMinMaxButtons::Draw(const bool &checktrans)
+void CGUIMinMaxButtons::Draw(bool checktrans)
 {
 	WISPFUN_DEBUG("c67_f7");
 	glUniform1iARB(g_ShaderDrawMode, SDM_NO_COLOR);
 
 	IFOR(i, 0, 2)
 	{
-		CGLTexture *th = g_Orion.ExecuteGump(m_Graphic + (int)i);
+		CGLTexture *th = g_Orion.ExecuteGump(Graphic + (int)i);
 
 		if (th != NULL)
 			th->Draw(m_X + ((int)i * 18), m_Y, checktrans);
 	}
 
-	if (m_HaveText)
-		m_Text.Draw(m_TextX, m_TextY, checktrans);
+	if (HaveText)
+		Text.Draw(TextX, TextY, checktrans);
 }
 //----------------------------------------------------------------------------------
 bool CGUIMinMaxButtons::Select()

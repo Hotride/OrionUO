@@ -15,10 +15,10 @@
 class CGUIMenuObject : public CGUITilepic
 {
 	//!Текст объекта
-	SETGET(string, Text, "");
+	string Text = "";
 
 public:
-	CGUIMenuObject(const uint &serial, const ushort &graphic, const ushort &color, const int &x, const int &y, const string &text);
+	CGUIMenuObject(int serial, ushort graphic, ushort color, int x, int y, const string &text);
 	virtual ~CGUIMenuObject();
 
 	virtual bool Select();

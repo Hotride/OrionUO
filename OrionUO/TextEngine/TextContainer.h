@@ -13,11 +13,11 @@
 //Контейнер для текста
 class CTextContainer : public CBaseQueue
 {
-	SETGET(int, MaxSize, 0);
-	SETGET(int, Size, 0);
-
 public:
-	CTextContainer(const int &maxSize);
+	int MaxSize = 0;
+	int Size = 0;
+
+	CTextContainer(int maxSize);
 	~CTextContainer();
 
 	//Добавить текст
@@ -30,7 +30,7 @@ public:
 	virtual void Clear();
 
 	//Отрисовать системный чат
-	void DrawSystemChat(const int &x, const int &y, const int &height);
+	void DrawSystemChat(int x, int y, int height);
 };
 //----------------------------------------------------------------------------------
 extern CTextContainer g_SystemChat;

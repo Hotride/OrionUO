@@ -25,19 +25,19 @@ CBaseProfession::~CBaseProfession()
 bool CBaseProfession::AddDescription(int desc, string name, const char *val)
 {
 	WISPFUN_DEBUG("c199_f1");
-	bool result = (m_DescriptionIndex == desc);
+	bool result = (DescriptionIndex == desc);
 
 	if (result)
 	{
-		if (!m_NameClilocID)
-			m_Name = name;
+		if (!NameClilocID)
+			Name = name;
 
 		g_FontManager.SetUseHTML(true);
 
 		if (desc == -2)
-			m_Description = ToWString(val);
+			Description = ToWString(val);
 		else
-			m_Description = ToWString(name + "\n" + val);
+			Description = ToWString(name + "\n" + val);
 
 		g_FontManager.SetUseHTML(false);
 	}
@@ -63,7 +63,7 @@ CProfessionCategory::~CProfessionCategory()
 //----------------------------------------------------------------------------------
 void CProfessionCategory::AddChildren(string child)
 {
-	m_Childrens += child + "|";
+	Childrens += child + "|";
 }
 //----------------------------------------------------------------------------------
 //-------------------------------------CProfession----------------------------------

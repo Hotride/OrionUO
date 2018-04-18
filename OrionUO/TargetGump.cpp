@@ -28,12 +28,12 @@ CTargetGump::~CTargetGump()
 void CTargetGump::Draw()
 {
 	WISPFUN_DEBUG("c210_f1");
-	if (m_Color != 0)
+	if (Color != 0)
 	{
-		g_Orion.DrawGump(0x1068, m_Color, m_X, m_Y);
+		g_Orion.DrawGump(0x1068, Color, X, Y);
 
-		if (m_Hits > 0)
-			g_Orion.DrawGump(0x1069, m_HealthColor, m_X, m_Y, m_Hits, 0);
+		if (Hits > 0)
+			g_Orion.DrawGump(0x1069, HealthColor, X, Y, Hits, 0);
 	}
 }
 //----------------------------------------------------------------------------------
@@ -50,18 +50,18 @@ CNewTargetSystem::~CNewTargetSystem()
 void CNewTargetSystem::Draw()
 {
 	WISPFUN_DEBUG("c211_f1");
-	if (!g_ConfigManager.DisableNewTargetSystem && m_ColorGump != 0)
+	if (!g_ConfigManager.DisableNewTargetSystem && ColorGump != 0)
 	{
-		CIndexObject &top = g_Orion.m_GumpDataIndex[m_GumpTop];
+		CIndexObject &top = g_Orion.m_GumpDataIndex[GumpTop];
 
-		int x = m_X - (top.Width / 2);
+		int x = X - (top.Width / 2);
 
-		g_Orion.DrawGump(m_GumpTop, 0, x, m_TopY - top.Height);
-		g_Orion.DrawGump(m_ColorGump, 0, x, m_TopY - top.Height);
-		g_Orion.DrawGump(m_GumpBottom, 0, x, m_BottomY);
+		g_Orion.DrawGump(GumpTop, 0, x, TopY - top.Height);
+		g_Orion.DrawGump(ColorGump, 0, x, TopY - top.Height);
+		g_Orion.DrawGump(GumpBottom, 0, x, BottomY);
 
-		if (m_Hits > 0)
-			g_Orion.DrawGump(0x1069, m_HealthColor, m_X - 16, m_BottomY + 15, m_Hits, 0);
+		if (Hits > 0)
+			g_Orion.DrawGump(0x1069, HealthColor, X - 16, BottomY + 15, Hits, 0);
 	}
 }
 //----------------------------------------------------------------------------------

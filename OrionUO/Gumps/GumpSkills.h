@@ -51,10 +51,10 @@ public:
 
 	void UpdateGroupText();
 
-	CGUISkillGroup *GetSkillGroup(const int &index);
-	CGUISkillItem *GetSkill(const int &index);
+	CGUISkillGroup *GetSkillGroup(int index);
+	CGUISkillItem *GetSkill(int index);
 
-	void UpdateSkillValue(const int &index);
+	void UpdateSkillValue(int index);
 	void UpdateSkillValues();
 
 	void UpdateSkillsSum();

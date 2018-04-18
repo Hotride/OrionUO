@@ -13,16 +13,16 @@
 //Класс эффекта погоды
 class CWeatherEffect
 {
-	SETGET(float, SpeedX, 0.0f);
-	SETGET(float, SpeedY, 0.0f);
-	SETGET(float, X, 0.0f);
-	SETGET(float, Y, 0.0f);
-	SETGET(uint, ID, 0);
-	SETGET(float, ScaleRatio, 0.0f);
-	SETGET(float, SpeedAngle, 0.0f);
-	SETGET(float, SpeedMagnitude, 0.0f);
-
 public:
+	float SpeedX = 0.0f;
+	float SpeedY = 0.0f;
+	float X = 0.0f;
+	float Y = 0.0f;
+	uint ID = 0;
+	float ScaleRatio = 0.0f;
+	float SpeedAngle = 0.0f;
+	float SpeedMagnitude = 0.0f;
+
 	CWeatherEffect();
 	virtual ~CWeatherEffect() {}
 };

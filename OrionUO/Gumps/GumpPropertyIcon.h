@@ -12,9 +12,12 @@
 //----------------------------------------------------------------------------------
 class CGumpPropertyIcon : public CGump
 {
-	SETGETE(wstring, Text, L"No Data");
-	SETGETP(CRenderObject*, Object, NULL);
-
+protected:
+    wstring m_Text = L"No Data";
+public:
+    wstring GetText() { return m_Text; };
+    void SetText(const wstring& val);
+	CRenderObject* Object = NULL;
 private:
 	static const int ID_GPI_LOCK_MOVING = 1;
 	static const int ID_GPI_MINIMIZE = 2;
@@ -22,7 +25,7 @@ private:
 	CGLTextTexture m_Texture;
 
 public:
-	CGumpPropertyIcon(const int &x, const int &y);
+	CGumpPropertyIcon(int x, int y);
 	virtual ~CGumpPropertyIcon();
 
 	virtual void PrepareContent();

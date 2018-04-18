@@ -11,12 +11,12 @@
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
 //----------------------------------------------------------------------------------
-CGUIShopItem::CGUIShopItem(const uint &serial, const ushort &graphic, const ushort &color, const uint &count, const uint &price, const string &name, const int &x, const int &y)
-: CBaseGUI(GOT_SHOPITEM, serial, graphic, color, x, y), m_Count(count), m_Price(price),
-m_Name(name)
+CGUIShopItem::CGUIShopItem(int serial, ushort graphic, ushort color, int count, int price, const string &name, int x, int y)
+: CBaseGUI(GOT_SHOPITEM, serial, graphic, color, x, y), Count(count), Price(price),
+Name(name)
 {
 	WISPFUN_DEBUG("c73_f1");
-	m_MoveOnDrag = true;
+	MoveOnDrag = true;
 
 	CreateCountText(0);
 	CreateNameText();
@@ -32,9 +32,9 @@ CGUIShopItem::~CGUIShopItem()
 //----------------------------------------------------------------------------------
 void CGUIShopItem::UpdateOffsets()
 {
-	if (m_Serial >= 0x40000000)
+	if (Serial >= 0x40000000)
 	{
-		CGLTexture *th = g_Orion.ExecuteStaticArt(m_Graphic);
+		CGLTexture *th = g_Orion.ExecuteStaticArt(Graphic);
 
 		if (th != NULL)
 			m_MaxOffset = th->Height;
@@ -43,7 +43,7 @@ void CGUIShopItem::UpdateOffsets()
 	{
 		uchar group = 0;
 
-		switch (g_AnimationManager.GetGroupIndex(m_Graphic))
+		switch (g_AnimationManager.GetGroupIndex(Graphic))
 		{
 			case AG_LOW:
 			{
@@ -64,7 +64,7 @@ void CGUIShopItem::UpdateOffsets()
 				break;
 		}
 
-		ANIMATION_DIMENSIONS dims = g_AnimationManager.GetAnimationDimensions(0, m_Graphic, 1, group, false);
+		ANIMATION_DIMENSIONS dims = g_AnimationManager.GetAnimationDimensions(0, Graphic, 1, group, false);
 
 		if (dims.Height)
 		{
@@ -87,7 +87,7 @@ void CGUIShopItem::UpdateOffsets()
 void CGUIShopItem::OnClick()
 {
 	WISPFUN_DEBUG("c73_f3");
-	m_Selected = false;
+	Selected = false;
 
 	for (CBaseGUI *item = this; item != NULL; item = (CBaseGUI*)item->m_Next)
 	{
@@ -107,7 +107,7 @@ void CGUIShopItem::OnClick()
 		}
 	}
 
-	m_Selected = true;
+	Selected = true;
 	CreateNameText();
 }
 //----------------------------------------------------------------------------------
@@ -116,35 +116,35 @@ void CGUIShopItem::CreateNameText()
 	WISPFUN_DEBUG("c73_f4");
 	ushort textColor = 0x021F;
 
-	if (m_Selected)
+	if (Selected)
 		textColor = 0x0021;
 
-	string str = m_Name + " at " + std::to_string(m_Price) + "gp";
+	string str = Name + " at " + std::to_string(Price) + "gp";
 	g_FontManager.GenerateA(9, m_NameText, str, textColor, 90);
 }
 //----------------------------------------------------------------------------------
-void CGUIShopItem::CreateCountText(const int &lostCount)
+void CGUIShopItem::CreateCountText(int lostCount)
 {
 	WISPFUN_DEBUG("c73_f5");
 	ushort textColor = 0x021F;
 
-	if (m_Selected)
+	if (Selected)
 		textColor = 0x0021;
 
-	g_FontManager.GenerateA(9, m_CountText, std::to_string(m_Count - lostCount), textColor);
+	g_FontManager.GenerateA(9, m_CountText, std::to_string(Count - lostCount), textColor);
 }
 //----------------------------------------------------------------------------------
 void CGUIShopItem::PrepareTextures()
 {
 	WISPFUN_DEBUG("c73_f6");
 
-	if (m_Serial >= 0x40000000)
-		g_Orion.ExecuteStaticArt(m_Graphic);
+	if (Serial >= 0x40000000)
+		g_Orion.ExecuteStaticArt(Graphic);
 	else
 	{
 		uchar group = 0;
 
-		switch (g_AnimationManager.GetGroupIndex(m_Graphic))
+		switch (g_AnimationManager.GetGroupIndex(Graphic))
 		{
 			case AG_LOW:
 			{
@@ -165,9 +165,9 @@ void CGUIShopItem::PrepareTextures()
 				break;
 		}
 
-		CTextureAnimationDirection &direction = g_AnimationManager.m_DataIndex[m_Graphic].m_Groups[group].m_Direction[1];
+		CTextureAnimationDirection &direction = g_AnimationManager.m_DataIndex[Graphic].m_Groups[group].m_Direction[1];
 		direction.LastAccessTime = GetTickCount() + 60000;
-		g_AnimationManager.AnimID = m_Graphic;
+		g_AnimationManager.AnimID = Graphic;
 		g_AnimationManager.AnimGroup = group;
 		g_AnimationManager.Direction = 1;
 
@@ -184,20 +184,20 @@ void CGUIShopItem::SetShaderMode()
 {
 	WISPFUN_DEBUG("c73_f7");
 
-	if (m_Color != 0)
+	if (Color != 0)
 	{
-		if (m_PartialHue)
+		if (PartialHue)
 			glUniform1iARB(g_ShaderDrawMode, SDM_PARTIAL_HUE);
 		else
 			glUniform1iARB(g_ShaderDrawMode, SDM_COLORED);
 
-		g_ColorManager.SendColorsToShader(m_Color);
+		g_ColorManager.SendColorsToShader(Color);
 	}
 	else
 		glUniform1iARB(g_ShaderDrawMode, SDM_NO_COLOR);
 }
 //----------------------------------------------------------------------------------
-void CGUIShopItem::Draw(const bool &checktrans)
+void CGUIShopItem::Draw(bool checktrans)
 {
 	WISPFUN_DEBUG("c73_f8");
 	CGLTexture *th = NULL;
@@ -211,9 +211,9 @@ void CGUIShopItem::Draw(const bool &checktrans)
 
 	SetShaderMode();
 
-	if (m_Serial >= 0x40000000)
+	if (Serial >= 0x40000000)
 	{
-		th = g_Orion.ExecuteStaticArt(m_Graphic);
+		th = g_Orion.ExecuteStaticArt(Graphic);
 
 		if (th != NULL)
 			th->Draw(2, m_ImageOffset, checktrans);
@@ -222,7 +222,7 @@ void CGUIShopItem::Draw(const bool &checktrans)
 	{
 		uchar group = 0;
 
-		switch (g_AnimationManager.GetGroupIndex(m_Graphic))
+		switch (g_AnimationManager.GetGroupIndex(Graphic))
 		{
 			case AG_LOW:
 			{
@@ -243,7 +243,7 @@ void CGUIShopItem::Draw(const bool &checktrans)
 				break;
 		}
 
-		CTextureAnimationDirection &direction = g_AnimationManager.m_DataIndex[m_Graphic].m_Groups[group].m_Direction[1];
+		CTextureAnimationDirection &direction = g_AnimationManager.m_DataIndex[Graphic].m_Groups[group].m_Direction[1];
 
 		if (direction.FrameCount != 0)
 		{

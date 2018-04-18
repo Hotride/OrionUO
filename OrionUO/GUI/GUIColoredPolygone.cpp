@@ -11,11 +11,11 @@
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
 //----------------------------------------------------------------------------------
-CGUIColoredPolygone::CGUIColoredPolygone(const uint &serial, const ushort &color, const int &x, const int &y, const int &width, const int &height, const uint &polygoneColor)
+CGUIColoredPolygone::CGUIColoredPolygone(int serial, ushort color, int x, int y, int width, int height, int polygoneColor)
 : CGUIPolygonal(GOT_COLOREDPOLYGONE, x, y, width, height)
 {
 	WISPFUN_DEBUG("c48_f1");
-	m_Serial = serial;
+	Serial = serial;
 	UpdateColor(color, polygoneColor);
 }
 //----------------------------------------------------------------------------------
@@ -23,54 +23,54 @@ CGUIColoredPolygone::~CGUIColoredPolygone()
 {
 }
 //----------------------------------------------------------------------------------
-void CGUIColoredPolygone::UpdateColor(const ushort &color, const uint &polygoneColor)
+void CGUIColoredPolygone::UpdateColor(ushort color, int polygoneColor)
 {
 	WISPFUN_DEBUG("c48_f2");
-	m_Color = color;
+	Color = color;
 
-	m_ColorR = GetRValue(polygoneColor);
-	m_ColorG = GetGValue(polygoneColor);
-	m_ColorB = GetBValue(polygoneColor);
-	m_ColorA = polygoneColor >> 24;
+	ColorR = GetRValue(polygoneColor);
+	ColorG = GetGValue(polygoneColor);
+	ColorB = GetBValue(polygoneColor);
+	ColorA = polygoneColor >> 24;
 
-	if (!m_ColorA)
-		m_ColorA = 0xFF;
+	if (!ColorA)
+		ColorA = 0xFF;
 }
 //----------------------------------------------------------------------------------
-void CGUIColoredPolygone::Draw(const bool &checktrans)
+void CGUIColoredPolygone::Draw(bool checktrans)
 {
 	WISPFUN_DEBUG("c48_f3");
-	glColor4ub(m_ColorR, m_ColorG, m_ColorB, m_ColorA);
+	glColor4ub(ColorR, ColorG, ColorB, ColorA);
 
-	if (m_ColorA < 0xFF)
+	if (ColorA < 0xFF)
 	{
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-		g_GL.DrawPolygone(m_X, m_Y, m_Width, m_Height);
+		g_GL.DrawPolygone(m_X, m_Y, Width, Height);
 
 		glDisable(GL_BLEND);
 	}
 	else
-		g_GL.DrawPolygone(m_X, m_Y, m_Width, m_Height);
+		g_GL.DrawPolygone(m_X, m_Y, Width, Height);
 
 	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 
-	if (m_Focused || (m_DrawDot && g_GumpSelectedElement == this))
-		g_GL.DrawPolygone(m_X + (m_Width / 2) - 1, m_Y + (m_Height / 2) - 1, 2, 2);
+	if (Focused || (DrawDot && g_GumpSelectedElement == this))
+		g_GL.DrawPolygone(m_X + (Width / 2) - 1, m_Y + (Height / 2) - 1, 2, 2);
 }
 //----------------------------------------------------------------------------------
 void CGUIColoredPolygone::OnMouseEnter()
 {
 	WISPFUN_DEBUG("c48_f4");
-	if (m_DrawDot && g_SelectedObject.Gump != NULL)
+	if (DrawDot && g_SelectedObject.Gump != NULL)
 		g_SelectedObject.Gump->WantRedraw = true;
 }
 //----------------------------------------------------------------------------------
 void CGUIColoredPolygone::OnMouseExit()
 {
 	WISPFUN_DEBUG("c48_f5");
-	if (m_DrawDot && g_LastSelectedObject.Gump != NULL)
+	if (DrawDot && g_LastSelectedObject.Gump != NULL)
 		g_LastSelectedObject.Gump->WantRedraw = true;
 }
 //----------------------------------------------------------------------------------

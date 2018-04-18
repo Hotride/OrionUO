@@ -13,17 +13,16 @@
 //Класс для хранения информации о текстуре текста
 class CTextData : public CRenderTextObject
 {
-	SETGET(bool, Unicode, false);
-	SETGET(TEXT_TYPE, Type, TT_CLIENT);
-	SETGET(uchar, Font, 0);
-	SETGET(uint, Timer, 0);
-	SETGET(uint, MoveTimer, 0);
-	SETGET(string, Text, "");
-	SETGET(wstring, UnicodeText, L"");
-	SETGET(uchar, Alpha, 0xFF);
-	SETGETP(CRenderWorldObject*, Owner, NULL);
-
 public:
+	bool Unicode = false;
+	TEXT_TYPE Type = TT_CLIENT;
+	uchar Font = 0;
+	uint Timer = 0;
+	uint MoveTimer = 0;
+	string Text = "";
+	wstring UnicodeText = L"";
+	uchar Alpha = 0xFF;
+	CRenderWorldObject* Owner = NULL;
 	CTextData();
 	CTextData(CTextData *obj);
 	virtual ~CTextData();
@@ -36,7 +35,7 @@ public:
 	CGLTextTexture m_Texture;
 
 	//Генерация текстуры текста
-	void GenerateTexture(const int &maxWidth, const ushort &flags = 0, const TEXT_ALIGN_TYPE &align = TS_LEFT, const uchar &cell = 30, int font = -1);
+	void GenerateTexture(int maxWidth, ushort flags = 0, TEXT_ALIGN_TYPE align = TS_LEFT, uchar cell = 30, int font = -1);
 };
 //----------------------------------------------------------------------------------
 #endif

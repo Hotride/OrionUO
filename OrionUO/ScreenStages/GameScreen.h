@@ -104,13 +104,14 @@ struct OBJECT_HITS_INFO
 //----------------------------------------------------------------------------------
 class CGameScreen : public CBaseScreen
 {
+public:
 	//!Использовать ли освещение при перерисовке текущего кадра
-	SETGET(bool, UseLight, false);
+	bool UseLight = false;
 	//!Флаг, определяющий инициализацию списка рендера
-	SETGET(bool, RenderListInitalized, false);
+	bool RenderListInitalized = false;
 	//!Принудительно обновлять позицию отрисовки
-	SETGET(bool, UpdateDrawPos, false);
-	SETGET(int, RenderIndex, 1);
+	bool UpdateDrawPos = false;
+	int RenderIndex = 1;
 
 private:
 	//!Список объектов для вывода
@@ -143,7 +144,7 @@ private:
 	@param [__in] mode true - отрисовка, false - выбор
 	@return 
 	*/
-	void DrawGameWindow(const bool &mode);
+	void DrawGameWindow(bool mode);
 
 	/*!
 	Отображение источников света
@@ -156,7 +157,7 @@ private:
 	@param [__in] mode true - отрисовка, false - выбор
 	@return 
 	*/
-	void DrawGameWindowText(const bool &mode);
+	void DrawGameWindowText(bool mode);
 
 	/*!
 	Применение прозрачности крон деревьев в указанных координатах
@@ -166,7 +167,7 @@ private:
 	@param [__in] z Координата Z дерева
 	@return 
 	*/
-	void ApplyTransparentFoliageToUnion(const ushort &graphic, const int &x, const int &y, const int &z);
+	void ApplyTransparentFoliageToUnion(ushort graphic, int x, int y, int z);
 
 	/*!
 	Проверка принадлежности кроны к группе крон (с последующим применением прозрачности всей группе)
@@ -178,9 +179,9 @@ private:
 	*/
 	void CheckFoliageUnion(ushort graphic, int x, int y, int z);
 
-	void AddTileToRenderList(class CRenderWorldObject *obj, const int &worldX, const int &worldY, const bool &useObjectHandles, const int &maxZ = 150);
+	void AddTileToRenderList(class CRenderWorldObject *obj, int worldX, int worldY, bool useObjectHandles, int maxZ = 150);
 
-	void AddOffsetCharacterTileToRenderList(class CGameObject *obj, const bool &useObjectHandles);
+	void AddOffsetCharacterTileToRenderList(class CGameObject *obj, bool useObjectHandles);
 
 	class CGumpScreenGame m_GameScreenGump;
 
@@ -237,7 +238,7 @@ public:
 	@param [__in] y Экранная координата Y
 	@return 
 	*/
-	void AddLight(class CRenderWorldObject *rwo, class CRenderWorldObject *lightObject, const int &x, const int &y);
+	void AddLight(class CRenderWorldObject *rwo, class CRenderWorldObject *lightObject, int x, int y);
 
 	virtual void PrepareContent();
 
@@ -246,7 +247,7 @@ public:
 	@param [__in] mode true - отрисовка, false - выбор
 	@return При выборе объектов - идентификатор выбранного объекта
 	*/
-	virtual void Render(const bool &mode);
+	virtual void Render(bool mode);
 
 
 
@@ -259,7 +260,7 @@ public:
 	virtual void OnMidMouseButtonDown() {}
 	virtual void OnMidMouseButtonUp() {}
 	virtual bool OnMidMouseButtonDoubleClick() { return false; }
-	virtual void OnMidMouseButtonScroll(const bool &up);
+	virtual void OnMidMouseButtonScroll(bool up);
 	virtual void OnDragging();
 	virtual void OnCharPress(const WPARAM &wParam, const LPARAM &lParam);
 	virtual void OnKeyDown(const WPARAM &wParam, const LPARAM &lParam);

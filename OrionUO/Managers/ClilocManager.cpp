@@ -19,15 +19,15 @@ CCliloc::CCliloc(const string &lang)
 : CBaseQueueItem()
 {
 	WISPFUN_DEBUG("c135_f1");
-	m_Loaded = false;
-	m_Language = lang;
+	Loaded = false;
+	Language = lang;
 
-	if (m_Language.length())
+	if (Language.length())
 	{
 		string path = g_App.UOFilesPath((string("cliloc.") + lang).c_str());
 
 		if (m_File.Load(path))
-			m_Loaded = true;
+			Loaded = true;
 	}
 }
 //----------------------------------------------------------------------------------
@@ -51,7 +51,7 @@ string CCliloc::Load(uint &id)
 	WISPFUN_DEBUG("c135_f3");
 	string result = "";
 
-	if (m_Loaded)
+	if (Loaded)
 	{
 		m_File.ResetPtr();
 		m_File.Move(6);
@@ -88,7 +88,7 @@ string CCliloc::Load(uint &id)
 	return result;
 }
 //----------------------------------------------------------------------------------
-wstring CCliloc::CamelCaseTest(const bool &toCamelCase, const string &result)
+wstring CCliloc::CamelCaseTest(bool toCamelCase, const string &result)
 {
 	if (toCamelCase)
 		return ToCamelCaseW(DecodeUTF8(result));
@@ -102,7 +102,7 @@ wstring CCliloc::CamelCaseTest(const bool &toCamelCase, const string &result)
 @param [__in] result Стандартное сообщение, если клилок не был найден
 @return Полученный результат, замена или сообщение с ошибкой
 */
-wstring CCliloc::Get(const uint &id, const bool &toCamelCase, string result)
+wstring CCliloc::Get(int id, bool toCamelCase, string result)
 {
 	WISPFUN_DEBUG("c135_f4");
 	if (id >= 3000000)
@@ -132,7 +132,7 @@ wstring CCliloc::Get(const uint &id, const bool &toCamelCase, string result)
 		return CamelCaseTest(toCamelCase, loadStr);
 	if (tmpID == id && !loadStr.length())
 		return L"";
-	if (m_Language != "ENU" && this->Language != "enu")
+	if (Language != "ENU" && this->Language != "enu")
 		return g_ClilocManager.Cliloc("enu")->Get(id, toCamelCase, result);
 	if (!result.length())
 	{
@@ -146,7 +146,7 @@ wstring CCliloc::Get(const uint &id, const bool &toCamelCase, string result)
 	return CamelCaseTest(toCamelCase, result);
 }
 //----------------------------------------------------------------------------------
-string CCliloc::GetA(const uint &id, const bool &toCamelCase, string result)
+string CCliloc::GetA(int id, bool toCamelCase, string result)
 {
 	WISPFUN_DEBUG("c135_f4_1");
 	return ToString(Get(id, toCamelCase, result));
@@ -158,7 +158,7 @@ string CCliloc::GetA(const uint &id, const bool &toCamelCase, string result)
 @param [__in] result Стандартное сообщение, если клилок не был найден
 @return Полученный результат, замена или сообщение с ошибкой
 */
-wstring CCliloc::GetW(const uint &id, const bool &toCamelCase, string result)
+wstring CCliloc::GetW(int id, bool toCamelCase, string result)
 {
 	WISPFUN_DEBUG("c135_f5");
 	return Get(id, toCamelCase, result);
@@ -228,7 +228,7 @@ CCliloc *CClilocManager::Cliloc(const string &lang)
 	return obj;
 }
 //----------------------------------------------------------------------------------
-wstring CClilocManager::ParseArgumentsToClilocString(const uint &cliloc, const bool &toCamelCase, wstring args)
+wstring CClilocManager::ParseArgumentsToClilocString(int cliloc, bool toCamelCase, wstring args)
 {
 	WISPFUN_DEBUG("c136_f2");
 	while (args.length() && args[0] == L'\t')

@@ -14,14 +14,14 @@
 //----------------------------------------------------------------------------------
 class CGUIAlphaBlending : public CGUIBlending
 {
-	//!Значение для установки альфа-канала
-	SETGET(float, Alpha, 0.0f);
-
 public:
-	CGUIAlphaBlending(const bool &enabled, const float &alpha);
+	//!Значение для установки альфа-канала
+	float Alpha = 0.0f;
+
+	CGUIAlphaBlending(bool enabled, float alpha);
 	virtual ~CGUIAlphaBlending();
 
-	virtual void Draw(const bool &checktrans = false);
+	virtual void Draw(bool checktrans = false);
 };
 //----------------------------------------------------------------------------------
 #endif

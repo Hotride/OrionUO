@@ -31,7 +31,7 @@ public:
 	*/
 	CGLTexture *ReadGump(CIndexObject &io);
 
-	USHORT_LIST GetArtPixels(const ushort &id, CIndexObject &io, const bool &run, short &width, short &height);
+	USHORT_LIST GetArtPixels(ushort id, CIndexObject &io, bool run, short &width, short &height);
 
 	/*!
 	Прочитать арт и сгенерировать текстуру
@@ -39,7 +39,7 @@ public:
 	@param [__in] io Ссылка на данные о арте
 	@return Ссылка на данные о текстуре
 	*/
-	CGLTexture *ReadArt(const ushort &id, CIndexObject &io, const bool &run);
+	CGLTexture *ReadArt(ushort id, CIndexObject &io, bool run);
 
 	/*!
 	Прочитать текстуру ландшафта и сгенерировать тексруту

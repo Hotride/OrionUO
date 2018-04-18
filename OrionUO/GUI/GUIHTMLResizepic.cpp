@@ -11,7 +11,7 @@
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
 //----------------------------------------------------------------------------------
-CGUIHTMLResizepic::CGUIHTMLResizepic(class CGUIHTMLGump *htmlGump, const uint &serial, const ushort &graphic, const int &x, const int &y, const int &width, const int &height)
+CGUIHTMLResizepic::CGUIHTMLResizepic(class CGUIHTMLGump *htmlGump, int serial, ushort graphic, int x, int y, int width, int height)
 : CGUIResizepic(serial, graphic, x, y, width, height), m_HTMLGump(htmlGump)
 {
 }
@@ -20,7 +20,7 @@ CGUIHTMLResizepic::~CGUIHTMLResizepic()
 {
 }
 //----------------------------------------------------------------------------------
-void CGUIHTMLResizepic::Scroll(const bool &up, const uint &delay)
+void CGUIHTMLResizepic::Scroll(bool up, int delay)
 {
 	WISPFUN_DEBUG("c62_f1");
 	if (m_HTMLGump != NULL)

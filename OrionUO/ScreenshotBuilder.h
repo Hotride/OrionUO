@@ -18,9 +18,9 @@ public:
 
 	void SaveScreen();
 
-	void SaveScreen(const int &x, const int &y, const int &width, const int &height);
+	void SaveScreen(int x, int y, int width, int height);
 
-	UINT_LIST GetScenePixels(const int &x, const int &y, const int &width, const int &height);
+	UINT_LIST GetScenePixels(int x, int y, int width, int height);
 };
 //----------------------------------------------------------------------------------
 extern CScreenshotBuilder g_ScreenshotBuilder;

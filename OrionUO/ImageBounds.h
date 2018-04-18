@@ -14,13 +14,13 @@ class CRenderTextObject;
 //----------------------------------------------------------------------------------
 class CImageBounds
 {
-	SETGET(int, X, 0);
-	SETGET(int, Y, 0);
-	SETGET(int, Width, 0);
-	SETGET(int, Height, 0);
-
 public:
-	CImageBounds(const int &x, const int &y, const int &width, const int &height);
+	int X = 0;
+	int Y = 0;
+	int Width = 0;
+	int Height = 0;
+
+	CImageBounds(int x, int y, int width, int height);
 	virtual ~CImageBounds();
 
 	bool InRect(const CImageBounds &ib);
@@ -29,11 +29,11 @@ public:
 class CTextImageBounds : public CImageBounds
 {
 public:
-	CTextImageBounds(const int &x, const int &y, const int &width, const int &height, CRenderTextObject *text);
+	CTextImageBounds(int x, int y, int width, int height, CRenderTextObject *text);
 	CTextImageBounds(class CTextData *text);
 	virtual ~CTextImageBounds();
 
-	CRenderTextObject *m_Text{ NULL };
+	CRenderTextObject *Text{ NULL };
 };
 //----------------------------------------------------------------------------------
 extern CImageBounds g_PlayerRect;

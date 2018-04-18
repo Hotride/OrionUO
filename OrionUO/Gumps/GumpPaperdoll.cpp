@@ -46,13 +46,13 @@ CGumpPaperdoll::CGumpPaperdoll(uint serial, short x, short y, bool minimized)
 
 	if (minimized)
 	{
-		m_Minimized = true;
-		m_MinimizedX = x;
-		m_MinimizedY = y;
-		m_Page = 1;
+		Minimized = true;
+		MinimizedX = x;
+		MinimizedY = y;
+		Page = 1;
 	}
 	else
-		m_Page = 2;
+		Page = 2;
 
 	int partyManifestX = 37;
 	int profileX = 23;
@@ -63,7 +63,7 @@ CGumpPaperdoll::CGumpPaperdoll(uint serial, short x, short y, bool minimized)
 
 	Add(new CGUIPage(2));
 
-	if (m_Serial == g_PlayerSerial)
+	if (Serial == g_PlayerSerial)
 	{
 		Add(new CGUIGumppic(0x07D0, 0, 0));
 
@@ -71,14 +71,14 @@ CGumpPaperdoll::CGumpPaperdoll(uint serial, short x, short y, bool minimized)
 		Add(new CGUIButton(ID_GP_BUTTON_OPTIONS, 0x07D6, 0x07D8, 0x07D7, 185, 71));
 		Add(new CGUIButton(ID_GP_BUTTON_LOGOUT, 0x07D9, 0x07DB, 0x07DA, 185, 98));
 
-		if (g_PacketManager.ClientVersion >= CV_500A)
+		if (g_PacketManager.GetClientVersion() >= CV_500A)
 			Add(new CGUIButton(ID_GP_BUTTON_JOURNAL_OR_QUESTS, 0x57B5, 0x57B6, 0x57B7, 185, 125));
 		else
 			Add(new CGUIButton(ID_GP_BUTTON_JOURNAL_OR_QUESTS, 0x07DC, 0x07DE, 0x07DD, 185, 125));
 
 		Add(new CGUIButton(ID_GP_BUTTON_SKILLS, 0x07DF, 0x07E1, 0x07E0, 185, 152));
 
-		if (g_PacketManager.ClientVersion >= CV_500A)
+		if (g_PacketManager.GetClientVersion() >= CV_500A)
 			Add(new CGUIButton(ID_GP_BUTTON_CHAT_OR_GUILD, 0x57B2, 0x57B3, 0x57B4, 185, 179));
 		else
 		{
@@ -104,7 +104,7 @@ CGumpPaperdoll::CGumpPaperdoll(uint serial, short x, short y, bool minimized)
 		{
 			Add(new CGUIButton(ID_GP_COMBAT_BOOK, 0x2B34, 0x2B34, 0x2B34, 156, 200));
 
-			if (g_PacketManager.ClientVersion >= CV_7000)
+			if (g_PacketManager.GetClientVersion() >= CV_7000)
 			{
 				Add(new CGUIButton(ID_GP_RACIAL_ABILITIES_BOOK, 0x2B28, 0x2B28, 0x2B28, 23, 200));
 				profileX += SCROLLS_STEP;
@@ -146,10 +146,10 @@ void CGumpPaperdoll::CalculateGumpState()
 	{
 		g_GumpMovingOffset.Reset();
 
-		if (m_Minimized)
+		if (Minimized)
 		{
-			g_GumpTranslate.X = (float)m_MinimizedX;
-			g_GumpTranslate.Y = (float)m_MinimizedY;
+			g_GumpTranslate.X = (float)MinimizedX;
+			g_GumpTranslate.Y = (float)MinimizedY;
 		}
 		else
 		{
@@ -164,7 +164,7 @@ void CGumpPaperdoll::InitToolTip()
 	WISPFUN_DEBUG("c105_f3");
 	uint id = g_SelectedObject.Serial;
 
-	if (!m_Minimized)
+	if (!Minimized)
 	{
 		switch (id)
 		{
@@ -185,7 +185,7 @@ void CGumpPaperdoll::InitToolTip()
 			}
 			case ID_GP_BUTTON_JOURNAL_OR_QUESTS:
 			{
-				if (g_PacketManager.ClientVersion >= CV_500A)
+				if (g_PacketManager.GetClientVersion() >= CV_500A)
 					g_ToolTip.Set(L"Open the quests gump");
 				else
 					g_ToolTip.Set(L"Open the journal gump");
@@ -199,7 +199,7 @@ void CGumpPaperdoll::InitToolTip()
 			}
 			case ID_GP_BUTTON_CHAT_OR_GUILD:
 			{
-				if (g_PacketManager.ClientVersion >= CV_500A)
+				if (g_PacketManager.GetClientVersion() >= CV_500A)
 					g_ToolTip.Set(L"Open the guild gump");
 				else
 					g_ToolTip.Set(L"Open the chat gump");
@@ -271,15 +271,15 @@ void CGumpPaperdoll::DelayedClick(CRenderObject *obj)
 		td->Color = 0x038F;
 		td->Timer = g_Ticks;
 		td->Type = TT_CLIENT;
-		td->X = g_MouseManager.Position.X - m_X;
-		td->Y = g_MouseManager.Position.Y - m_Y;
+		td->SetX(g_MouseManager.Position.X - m_X);
+		td->SetY(g_MouseManager.Position.Y - m_Y);
 
 		string text = "Party Manifest";
 
 		if (obj->Serial == ID_GP_PROFILE_SCROLL)
 			text = "Character Profile";
 
-		td->SetText(text);
+		td->Text = text;
 
 		int width = g_FontManager.GetWidthA(3, text);
 
@@ -298,12 +298,12 @@ void CGumpPaperdoll::DelayedClick(CRenderObject *obj)
 void CGumpPaperdoll::PrepareContent()
 {
 	WISPFUN_DEBUG("c105_f5");
-	CGameCharacter *obj = g_World->FindWorldCharacter(m_Serial);
+	CGameCharacter *obj = g_World->FindWorldCharacter(Serial);
 
 	if (obj == NULL)
 		return;
 
-	if (!g_Player->Dead() && (m_CanLift || m_Serial == g_PlayerSerial) && g_PressedObject.LeftGump == this && !g_ObjectInHand.Enabled && g_PressedObject.LeftSerial != 0xFFFFFFFF && g_MouseManager.LastLeftButtonClickTimer < g_Ticks)
+	if (!g_Player->Dead() && (CanLift || Serial == g_PlayerSerial) && g_PressedObject.LeftGump == this && !g_ObjectInHand.Enabled && g_PressedObject.LeftSerial != 0xFFFFFFFF && g_MouseManager.LastLeftButtonClickTimer < g_Ticks)
 	{
 		WISP_GEOMETRY::CPoint2Di offset = g_MouseManager.LeftDroppedOffset();
 
@@ -340,7 +340,7 @@ void CGumpPaperdoll::PrepareContent()
 		{
 			if (!m_WantTransparentContent)
 			{
-				m_WantUpdateContent = true;
+				WantUpdateContent = true;
 				m_WantTransparentContent = true;
 			}
 
@@ -350,12 +350,12 @@ void CGumpPaperdoll::PrepareContent()
 
 	if (m_WantTransparentContent && !wantTransparent)
 	{
-		m_WantUpdateContent = true;
+		WantUpdateContent = true;
 		m_WantTransparentContent = false;
 	}
 
-	if (!m_Minimized && m_TextRenderer.CalculatePositions(false))
-		m_WantRedraw = true;
+	if (!Minimized && m_TextRenderer.CalculatePositions(false))
+		WantRedraw = true;
 }
 //----------------------------------------------------------------------------------
 void CGumpPaperdoll::UpdateContent()
@@ -363,7 +363,7 @@ void CGumpPaperdoll::UpdateContent()
 	WISPFUN_DEBUG("c105_f6");
 	//Clear();
 
-	CGameCharacter *obj = g_World->FindWorldCharacter(m_Serial);
+	CGameCharacter *obj = g_World->FindWorldCharacter(Serial);
 
 	if (obj == NULL)
 		return;
@@ -438,7 +438,7 @@ void CGumpPaperdoll::UpdateContent()
 
 	//if (obj->IsHuman())
 	{
-		bool useSlots = g_ConfigManager.PaperdollSlots;
+		bool useSlots = g_ConfigManager.GetPaperdollSlots();
 
 		static const int maxPaperdollSlots = 6;
 		CGameItem *slotObjects[maxPaperdollSlots] = { 0 };
@@ -547,7 +547,7 @@ void CGumpPaperdoll::UpdateContent()
 		{
 			int yPtr = 75;
 
-			bool scaleImages = g_ConfigManager.ScaleImagesInPaperdollSlots;
+			bool scaleImages = g_ConfigManager.GetScaleImagesInPaperdollSlots();
 
 			IFOR(i, 0, maxPaperdollSlots)
 			{
@@ -661,7 +661,7 @@ void CGumpPaperdoll::UpdateContent()
 
 		if (obj->IsPlayer())
 		{
-			switch (g_ConfigManager.CharacterBackpackStyle)
+			switch (g_ConfigManager.GetCharacterBackpackStyle())
 			{
 				case CBS_SUEDE:
 					backpackGraphic = 0x777B;
@@ -702,14 +702,14 @@ void CGumpPaperdoll::UpdateDescription(const string &text)
 	{
 		m_Description->CreateTextureA(1, text, 185);
 
-		m_WantRedraw = true;
+		WantRedraw = true;
 	}
 }
 //----------------------------------------------------------------------------------
 void CGumpPaperdoll::Draw()
 {
 	WISPFUN_DEBUG("c105_f8");
-	CGameCharacter *obj = g_World->FindWorldCharacter(m_Serial);
+	CGameCharacter *obj = g_World->FindWorldCharacter(Serial);
 
 	if (obj == NULL)
 		return;
@@ -719,7 +719,7 @@ void CGumpPaperdoll::Draw()
 
 	CGump::Draw();
 
-	if (!m_Minimized)
+	if (!Minimized)
 	{
 		glTranslatef(g_GumpTranslate.X, g_GumpTranslate.Y, 0.0f);
 
@@ -736,14 +736,14 @@ void CGumpPaperdoll::Draw()
 CRenderObject *CGumpPaperdoll::Select()
 {
 	WISPFUN_DEBUG("c105_f9");
-	CGameCharacter *obj = g_World->FindWorldCharacter(m_Serial);
+	CGameCharacter *obj = g_World->FindWorldCharacter(Serial);
 
 	if (obj == NULL)
 		return NULL;
 
 	CRenderObject *selected = CGump::Select();
 
-	if (!m_Minimized)
+	if (!Minimized)
 	{
 		WISP_GEOMETRY::CPoint2Di oldPos = g_MouseManager.Position;
 		g_MouseManager.Position = WISP_GEOMETRY::CPoint2Di(oldPos.X - (int)g_GumpTranslate.X, oldPos.Y - (int)g_GumpTranslate.Y);
@@ -778,7 +778,7 @@ void CGumpPaperdoll::GUMP_BUTTON_EVENT_C
 		}
 		case ID_GP_BUTTON_JOURNAL_OR_QUESTS: //Paperdoll button Journal
 		{
-			if (g_PacketManager.ClientVersion >= CV_500A)
+			if (g_PacketManager.GetClientVersion() >= CV_500A)
 				CPacketQuestMenuRequest().Send();
 			else
 				g_Orion.OpenJournal();
@@ -791,7 +791,7 @@ void CGumpPaperdoll::GUMP_BUTTON_EVENT_C
 		}
 		case ID_GP_BUTTON_CHAT_OR_GUILD: //Paperdoll button Chat
 		{
-			if (g_PacketManager.ClientVersion >= CV_500A)
+			if (g_PacketManager.GetClientVersion() >= CV_500A)
 				CPacketGuildMenuRequest().Send();
 			else
 				g_Orion.OpenChat();
@@ -804,18 +804,18 @@ void CGumpPaperdoll::GUMP_BUTTON_EVENT_C
 		}
 		case ID_GP_BUTTON_STATUS: //Paperdoll button Status
 		{
-			g_Orion.OpenStatus(m_Serial);
+			g_Orion.OpenStatus(Serial);
 			g_MouseManager.LastLeftButtonClickTimer = 0;
 			break;
 		}
 		case ID_GP_BUTTON_MINIMIZE: //Paperdoll button Minimize
 		{
-			m_Minimized = true;
+			Minimized = true;
 			break;
 		}
 		case ID_GP_LOCK_MOVING:
 		{
-			m_LockMoving = !m_LockMoving;
+			LockMoving = !LockMoving;
 			g_MouseManager.CancelDoubleClick = true;
 			break;
 		}
@@ -847,7 +847,7 @@ void CGumpPaperdoll::OnLeftMouseButtonUp()
 
 	uint serial = g_SelectedObject.Serial;
 
-	CGameCharacter *container = g_World->FindWorldCharacter(m_Serial);
+	CGameCharacter *container = g_World->FindWorldCharacter(Serial);
 
 	if (container == NULL && serial >= ID_GP_ITEMS)
 		return;
@@ -858,7 +858,7 @@ void CGumpPaperdoll::OnLeftMouseButtonUp()
 		int layer = serial - ID_GP_ITEMS;
 		bool canWear = true;
 
-		if (layer != OL_BACKPACK && m_Serial != g_PlayerSerial && GetDistance(g_Player, container) >= DRAG_ITEMS_DISTANCE)
+		if (layer != OL_BACKPACK && Serial != g_PlayerSerial && GetDistance(g_Player, container) >= DRAG_ITEMS_DISTANCE)
 			canWear = false;
 
 		if (canWear && container != NULL)
@@ -869,7 +869,7 @@ void CGumpPaperdoll::OnLeftMouseButtonUp()
 
 				if (equipment != NULL)
 				{
-					if (m_Serial != g_PlayerSerial)
+					if (Serial != g_PlayerSerial)
 						g_Orion.DropItem(container->Serial, 0xFFFF, 0xFFFF, 0);
 					else
 						g_Orion.DropItem(equipment->Serial, 0xFFFF, 0xFFFF, 0);
@@ -877,7 +877,7 @@ void CGumpPaperdoll::OnLeftMouseButtonUp()
 					g_MouseManager.LeftDropPosition = g_MouseManager.Position;
 					g_MouseManager.CancelDoubleClick = true;
 
-					m_FrameCreated = false;
+					FrameCreated = false;
 
 					return;
 				}
@@ -888,7 +888,7 @@ void CGumpPaperdoll::OnLeftMouseButtonUp()
 
 				if (equipment == NULL) //На этом слое ничего нет
 				{
-					if (m_Serial != g_PlayerSerial)
+					if (Serial != g_PlayerSerial)
 						g_Orion.EquipItem(container->Serial);
 					else
 						g_Orion.EquipItem();
@@ -896,7 +896,7 @@ void CGumpPaperdoll::OnLeftMouseButtonUp()
 					g_MouseManager.LeftDropPosition = g_MouseManager.Position;
 					g_MouseManager.CancelDoubleClick = true;
 
-					m_FrameCreated = false;
+					FrameCreated = false;
 
 					return;
 				}
@@ -924,8 +924,8 @@ void CGumpPaperdoll::OnLeftMouseButtonUp()
 				{
 					g_ClickObject.Init(equipment);
 					g_ClickObject.Timer = g_Ticks + g_MouseManager.DoubleClickDelay;
-					g_ClickObject.X = g_MouseManager.Position.X - X;
-					g_ClickObject.Y = g_MouseManager.Position.Y - Y;
+					g_ClickObject.X = g_MouseManager.Position.X - m_X;
+					g_ClickObject.Y = g_MouseManager.Position.Y - m_Y;
 				}
 			}
 		}
@@ -935,11 +935,11 @@ void CGumpPaperdoll::OnLeftMouseButtonUp()
 bool CGumpPaperdoll::OnLeftMouseButtonDoubleClick()
 {
 	WISPFUN_DEBUG("c105_f12");
-	if (m_Minimized)
+	if (Minimized)
 	{
-		m_Minimized = false;
-		m_Page = 2;
-		m_WantRedraw = true;
+		Minimized = false;
+		Page = 2;
+		WantRedraw = true;
 
 		return true;
 	}
@@ -951,7 +951,7 @@ bool CGumpPaperdoll::OnLeftMouseButtonDoubleClick()
 	{
 		if (serial == ID_GP_PROFILE_SCROLL)
 		{
-			g_Orion.OpenProfile(m_Serial);
+			g_Orion.OpenProfile(Serial);
 
 			result = true;
 		}
@@ -982,7 +982,7 @@ bool CGumpPaperdoll::OnLeftMouseButtonDoubleClick()
 	}
 	else
 	{
-		CGameCharacter *container = g_World->FindWorldCharacter(m_Serial);
+		CGameCharacter *container = g_World->FindWorldCharacter(Serial);
 
 		if (container != NULL)
 		{

@@ -11,31 +11,31 @@
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
 //----------------------------------------------------------------------------------
-CGUICheckbox::CGUICheckbox(const uint &serial, const ushort &graphic, const ushort &graphicChecked, const ushort &graphicDisabled, const int &x, const int &y)
-: CGUIDrawObject(GOT_CHECKBOX, serial, graphic, 0, x, y), m_GraphicChecked(graphicChecked),
-m_GraphicSelected(graphic), m_GraphicDisabled(graphicDisabled)
+CGUICheckbox::CGUICheckbox(int serial, ushort graphic, ushort graphicChecked, ushort graphicDisabled, int x, int y)
+: CGUIDrawObject(GOT_CHECKBOX, serial, graphic, 0, x, y), GraphicChecked(graphicChecked),
+GraphicSelected(graphic), GraphicDisabled(graphicDisabled)
 {
 }
 //----------------------------------------------------------------------------------
 CGUICheckbox::~CGUICheckbox()
 {
 	WISPFUN_DEBUG("c46_f1");
-	m_Text.Clear();
+	Text.Clear();
 }
 //----------------------------------------------------------------------------------
-void CGUICheckbox::SetTextParameters(const uchar &font, const wstring &text, const ushort &color, const SLIDER_TEXT_POSITION &textPosition, const int &textWidth, const TEXT_ALIGN_TYPE &align, const ushort &textFlags)
+void CGUICheckbox::SetTextParameters(uchar font, const wstring &text, ushort color, SLIDER_TEXT_POSITION textPosition, int textWidth, TEXT_ALIGN_TYPE align, ushort textFlags)
 {
 	WISPFUN_DEBUG("c46_f2");
-	m_TextPosition = textPosition;
-	g_FontManager.GenerateW(font, m_Text, text, color, 30, textWidth, align, textFlags);
+	TextPosition = textPosition;
+	g_FontManager.GenerateW(font, Text, text, color, 30, textWidth, align, textFlags);
 	UpdateTextPosition();
 }
 //----------------------------------------------------------------------------------
-void CGUICheckbox::SetTextParameters(const uchar &font, const string &text, const ushort &color, const SLIDER_TEXT_POSITION &textPosition, const int &textWidth, const TEXT_ALIGN_TYPE &align, const ushort &textFlags)
+void CGUICheckbox::SetTextParameters(uchar font, const string &text, ushort color, SLIDER_TEXT_POSITION textPosition, int textWidth, TEXT_ALIGN_TYPE align, ushort textFlags)
 {
 	WISPFUN_DEBUG("c46_f3");
-	m_TextPosition = textPosition;
-	g_FontManager.GenerateA(font, m_Text, text, color, textWidth, align, textFlags);
+	TextPosition = textPosition;
+	g_FontManager.GenerateA(font, Text, text, color, textWidth, align, textFlags);
 	UpdateTextPosition();
 }
 //----------------------------------------------------------------------------------
@@ -45,23 +45,23 @@ void CGUICheckbox::UpdateTextPosition()
 	int textX = m_X;
 	int textY = m_Y;
 
-	CGLTexture *th = g_Orion.ExecuteGump(m_Graphic);
+	CGLTexture *th = g_Orion.ExecuteGump(Graphic);
 
 	if (th != NULL)
 	{
-		switch (m_TextPosition)
+		switch (TextPosition)
 		{
 			case STP_TOP:
 			case STP_TOP_CENTER:
 			{
-				textY -= m_Text.Height - m_DefaultTextOffset;
+				textY -= Text.Height - DefaultTextOffset;
 
 				break;
 			}
 			case STP_BOTTOM:
 			case STP_BOTTOM_CENTER:
 			{
-				textY += th->Height + m_DefaultTextOffset;
+				textY += th->Height + DefaultTextOffset;
 
 				break;
 			}
@@ -69,7 +69,7 @@ void CGUICheckbox::UpdateTextPosition()
 				//textY -= 4;
 			case STP_LEFT_CENTER:
 			{
-				textX -= m_Text.Width - m_DefaultTextOffset;
+				textX -= Text.Width - DefaultTextOffset;
 
 				break;
 			}
@@ -77,7 +77,7 @@ void CGUICheckbox::UpdateTextPosition()
 				//textY -= 4;
 			case STP_RIGHT_CENTER:
 			{
-				textX += th->Width + m_DefaultTextOffset;
+				textX += th->Width + DefaultTextOffset;
 
 				break;
 			}
@@ -85,12 +85,12 @@ void CGUICheckbox::UpdateTextPosition()
 				break;
 		}
 
-		switch (m_TextPosition)
+		switch (TextPosition)
 		{
 			case STP_TOP_CENTER:
 			case STP_BOTTOM_CENTER:
 			{
-				int textWidth = m_Text.Width;
+				int textWidth = Text.Width;
 				int sliderWidth = th->Width;
 
 				int deltaX = abs(sliderWidth - textWidth) / 2;
@@ -105,7 +105,7 @@ void CGUICheckbox::UpdateTextPosition()
 			case STP_LEFT_CENTER:
 			case STP_RIGHT_CENTER:
 			{
-				int textHeight = m_Text.Height;
+				int textHeight = Text.Height;
 				int sliderHeight = th->Height;
 
 				int deltaY = abs(sliderHeight - textHeight) / 2;
@@ -122,39 +122,39 @@ void CGUICheckbox::UpdateTextPosition()
 		}
 	}
 
-	m_TextX = textX;
-	m_TextY = textY;
+	TextX = textX;
+	TextY = textY;
 }
 //----------------------------------------------------------------------------------
 void CGUICheckbox::PrepareTextures()
 {
 	WISPFUN_DEBUG("c46_f5");
-	g_Orion.ExecuteGump(m_Graphic);
-	g_Orion.ExecuteGump(m_GraphicChecked);
-	g_Orion.ExecuteGump(m_GraphicDisabled);
+	g_Orion.ExecuteGump(Graphic);
+	g_Orion.ExecuteGump(GraphicChecked);
+	g_Orion.ExecuteGump(GraphicDisabled);
 }
 //----------------------------------------------------------------------------------
 ushort CGUICheckbox::GetDrawGraphic()
 {
 	WISPFUN_DEBUG("c46_f6");
-	ushort graphic = m_Graphic;
+	ushort graphic = Graphic;
 
-	if (!m_Enabled)
-		graphic = m_GraphicDisabled;
-	else if (m_Checked)
-		graphic = m_GraphicChecked;
+	if (!Enabled)
+		graphic = GraphicDisabled;
+	else if (Checked)
+		graphic = GraphicChecked;
 	else if (g_SelectedObject.Object == this)
-		graphic = m_GraphicSelected;
+		graphic = GraphicSelected;
 
 	return graphic;
 }
 //----------------------------------------------------------------------------------
-void CGUICheckbox::Draw(const bool &checktrans)
+void CGUICheckbox::Draw(bool checktrans)
 {
 	WISPFUN_DEBUG("c46_f7");
 	CGUIDrawObject::Draw(checktrans);
 
-	m_Text.Draw(m_TextX, m_TextY, checktrans);
+	Text.Draw(TextX, TextY, checktrans);
 }
 //----------------------------------------------------------------------------------
 bool CGUICheckbox::Select()
@@ -162,12 +162,12 @@ bool CGUICheckbox::Select()
 	WISPFUN_DEBUG("c46_f8");
 	bool result = CGUIDrawObject::Select();
 
-	if (!result && !m_Text.Empty())
+	if (!result && !Text.Empty())
 	{
-		int x = g_MouseManager.Position.X - m_TextX;
-		int y = g_MouseManager.Position.Y - m_TextY;
+		int x = g_MouseManager.Position.X - TextX;
+		int y = g_MouseManager.Position.Y - TextY;
 
-		result = (x >= 0 && y >= 0 && x < m_Text.Width && y < m_Text.Height);
+		result = (x >= 0 && y >= 0 && x < Text.Width && y < Text.Height);
 	}
 
 	return result;
@@ -176,14 +176,14 @@ bool CGUICheckbox::Select()
 void CGUICheckbox::OnMouseEnter()
 {
 	WISPFUN_DEBUG("c46_f9");
-	if (m_Graphic != m_GraphicSelected && g_SelectedObject.Gump != NULL)
+	if (Graphic != GraphicSelected && g_SelectedObject.Gump != NULL)
 		g_SelectedObject.Gump->WantRedraw = true;
 }
 //----------------------------------------------------------------------------------
 void CGUICheckbox::OnMouseExit()
 {
 	WISPFUN_DEBUG("c46_f10");
-	if (m_Graphic != m_GraphicSelected && g_LastSelectedObject.Gump != NULL)
+	if (Graphic != GraphicSelected && g_LastSelectedObject.Gump != NULL)
 		g_LastSelectedObject.Gump->WantRedraw = true;
 }
 //----------------------------------------------------------------------------------

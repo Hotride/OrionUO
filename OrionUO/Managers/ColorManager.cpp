@@ -126,7 +126,7 @@ void CColorManager::SendColorsToShader(ushort color)
 @param [__in] c 16-битный цвет
 @return 32-битный цвет
 */
-uint CColorManager::Color16To32(const ushort &c)
+uint CColorManager::Color16To32(ushort c)
 {
 	const uchar table[32] =
 	{
@@ -156,7 +156,7 @@ uint CColorManager::Color16To32(const ushort &c)
 @param [__in] c 32-битный цвет
 @return 16-битный цвет
 */
-ushort CColorManager::Color32To16(const uint &c)
+ushort CColorManager::Color32To16(int c)
 {
 	return
 	(
@@ -171,7 +171,7 @@ ushort CColorManager::Color32To16(const uint &c)
 @param [__in] c 16-битный цвет
 @return 16-битный цвет
 */
-ushort CColorManager::ConvertToGray(const ushort &c)
+ushort CColorManager::ConvertToGray(ushort c)
 {
 	return ((c & 0x1F) * 299 + ((c >> 5) & 0x1F) * 587 + ((c >> 10) & 0x1F) * 114) / 1000;
 }
@@ -182,7 +182,7 @@ ushort CColorManager::ConvertToGray(const ushort &c)
 @param [__in] color Индекс цвета в палитре
 @return 16-битный цвет
 */
-ushort CColorManager::GetColor16(const ushort &c, ushort color)
+ushort CColorManager::GetColor16(ushort c, ushort color)
 {
 	WISPFUN_DEBUG("c137_f5");
 	if (color != 0 && color < m_HuesCount)
@@ -202,7 +202,7 @@ ushort CColorManager::GetColor16(const ushort &c, ushort color)
 @param [__in] c Исходный 16-битный цвет
 @return 16-битный цвет
 */
-ushort CColorManager::GetRadarColorData(const uint &c)
+ushort CColorManager::GetRadarColorData(int c)
 {
 	WISPFUN_DEBUG("c137_f6");
 	if (c < m_Radarcol.size())
@@ -300,7 +300,7 @@ uint CColorManager::GetPartialHueColor(ushort &c, ushort color)
 	return Color16To32(c);
 }
 //----------------------------------------------------------------------------------
-ushort CColorManager::FixColor(const ushort &color, const ushort &defaultColor)
+ushort CColorManager::FixColor(ushort color, ushort defaultColor)
 {
 	ushort fixedColor = color & 0x3FFF;
 

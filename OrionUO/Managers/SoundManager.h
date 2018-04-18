@@ -37,7 +37,8 @@ struct WaveHeader
 //----------------------------------------------------------------------------------
 class CSoundManager
 {
-	SETGET(int, CurrentMusicIndex, -1);
+public:
+	int CurrentMusicIndex = -1;
 private:
 	static const int MIDI_MUSIC_COUNT = 57;
 	static const MidiInfoStruct MidiInfo[MIDI_MUSIC_COUNT];

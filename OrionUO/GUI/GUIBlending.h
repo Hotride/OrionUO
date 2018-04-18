@@ -15,16 +15,16 @@
 class CGUIBlending : public CBaseGUI
 {
 	//!Функция для исходных пикселей
-	SETGET(GLenum, SFactor, GL_SRC_ALPHA);
+	GLenum SFactor = GL_SRC_ALPHA;
 
 	//!Функция для входных пикселей
-	SETGET(GLenum, DFactor, GL_ONE_MINUS_SRC_ALPHA);
+	GLenum DFactor = GL_ONE_MINUS_SRC_ALPHA;
 
 public:
-	CGUIBlending(const bool &enabled, const GLenum &sFactor, const GLenum &dFactor);
+	CGUIBlending(bool enabled, GLenum sFactor, GLenum dFactor);
 	virtual ~CGUIBlending();
 
-	virtual void Draw(const bool &checktrans = false);
+	virtual void Draw(bool checktrans = false);
 };
 //----------------------------------------------------------------------------------
 #endif

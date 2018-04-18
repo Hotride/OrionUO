@@ -15,19 +15,19 @@
 class CGUIScissor : public CGUIPolygonal
 {
 	//!Координата компоненты по оси X контейнера, в котором находится элемент, относительно начала гампа
-	SETGET(int, BaseX, 0);
+	int BaseX = 0;
 
 	//!Координата компоненты по оси Y контейнера, в котором находится элемент, относительно начала гампа
-	SETGET(int, BaseY, 0);
-
-	//!Гамп-родитель
-	SETGETP(CGump*, GumpParent, NULL);
+	int BaseY = 0;
 
 public:
-	CGUIScissor(const bool &enabled, const int &baseX = 0, const int &baseY = 0, const int &x = 0, const int &y = 0, const int &width = 0, const int &height = 0);
+	//!Гамп-родитель
+	CGump* GumpParent = NULL;
+
+	CGUIScissor(bool enabled, int baseX = 0, int baseY = 0, int x = 0, int y = 0, int width = 0, int height = 0);
 	virtual ~CGUIScissor();
 
-	virtual void Draw(const bool &checktrans = false);
+	virtual void Draw(bool checktrans = false);
 };
 //----------------------------------------------------------------------------------
 #endif

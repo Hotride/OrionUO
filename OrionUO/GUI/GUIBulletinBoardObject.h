@@ -12,18 +12,18 @@
 //----------------------------------------------------------------------------------
 class CGUIBulletinBoardObject : public CBaseGUI
 {
-	SETGET(wstring, Text, L"");
+	wstring Text = L"";
 
 private:
 	CGLTextTexture m_Texture;
 
 public:
-	CGUIBulletinBoardObject(const uint &serial, const int &x, const int &y, const wstring &text);
+	CGUIBulletinBoardObject(int serial, int x, int y, const wstring &text);
 	virtual ~CGUIBulletinBoardObject();
 
 	virtual void PrepareTextures();
 
-	virtual void Draw(const bool &checktrans = false);
+	virtual void Draw(bool checktrans = false);
 	virtual bool Select();
 };
 //----------------------------------------------------------------------------------

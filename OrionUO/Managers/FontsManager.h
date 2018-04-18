@@ -94,15 +94,16 @@ typedef vector<HTML_DATA_INFO> HTMLINFO_LIST;
 //!Класс менеджера шрифтов
 class CFontsManager
 {
-	SETGET(bool, RecalculateWidthByInfo, false);
-	SETGET(bool, UnusePartialHue, false);
+public:
+	bool RecalculateWidthByInfo = false;
+	bool UnusePartialHue = false;
 
 	//!Количество ASCII ширфтов
-	SETGET(int, FontCount, 0);
+	int FontCount = 0;
 
 private:
 	//!Список ASCII шрифтов
-	FONT_DATA *m_Font{ NULL };
+	FONT_DATA *Font{ NULL };
 
 	//!Список ссылок
 	WEBLINK_MAP m_WebLink;
@@ -165,7 +166,7 @@ private:
 
 	uint GetHTMLColorFromText(string &str);
 
-	HTML_TAG_TYPE ParseHTMLTag(const wchar_t *str, const int &len, intptr_t &i, bool &endTag, HTML_DATA_INFO &info);
+	HTML_TAG_TYPE ParseHTMLTag(const wchar_t *str, int len, intptr_t &i, bool &endTag, HTML_DATA_INFO &info);
 
 	HTMLCHAR_LIST GetHTMLDataOld(uchar font, const wchar_t *str, int &len, TEXT_ALIGN_TYPE align, ushort flags);
 
@@ -192,7 +193,7 @@ private:
 	@param [__in] flags Эффекты текста
 	@return true при успешной генерации
 	*/
-	bool GenerateABase(const uchar &font, CGLTextTexture &th, const string &str, const ushort &color, const int &width, const TEXT_ALIGN_TYPE &align, const ushort &flags);
+	bool GenerateABase(uchar font, CGLTextTexture &th, const string &str, ushort color, int width, TEXT_ALIGN_TYPE align, ushort flags);
 
 	/*!
 	Создание Unicode текстуры
@@ -206,7 +207,7 @@ private:
 	@param [__in] flags Эффекты текста
 	@return true при успешной генерации
 	*/
-	bool GenerateWBase(const uchar &font, CGLTextTexture &th, const wstring &str, const ushort &color, const uchar &cell, const int &width, const TEXT_ALIGN_TYPE &align, const ushort &flags);
+	bool GenerateWBase(uchar font, CGLTextTexture &th, const wstring &str, ushort color, uchar cell, int width, TEXT_ALIGN_TYPE align, ushort flags);
 
 public:
 	CFontsManager();
@@ -218,7 +219,7 @@ public:
 	@param [__in_opt] htmlStartColor Начальный цвет
 	@return
 	*/
-	void SetUseHTML(const bool &val, const uint &htmlStartColor = 0xFFFFFFFF, const bool backgroundCanBeColored = false) { m_UseHTML = val; m_HTMLColor = htmlStartColor; m_HTMLBackgroundCanBeColored = backgroundCanBeColored; }
+	void SetUseHTML(bool val, int htmlStartColor = 0xFFFFFFFF, const bool backgroundCanBeColored = false) { m_UseHTML = val; m_HTMLColor = htmlStartColor; m_HTMLBackgroundCanBeColored = backgroundCanBeColored; }
 	bool GetUseHTML() const { return m_UseHTML; }
 	__declspec(property(get = GetUseHTML)) bool UseHTML;
 
@@ -228,7 +229,7 @@ public:
 	*/
 	bool LoadFonts();
 
-	bool UnicodeFontExists(const uchar &font);
+	bool UnicodeFontExists(uchar font);
 
 	/*!
 	Переход по ссылке по индексу
@@ -248,7 +249,7 @@ public:
 	@param [__in] index Индекс символа
 	@return true если это печатаемый символ
 	*/
-	inline bool IsPrintASCII(const uchar &index) { return (m_FontIndex[index] != 0xFF); }
+	inline bool IsPrintASCII(uchar index) { return (m_FontIndex[index] != 0xFF); }
 
 	/*!
 	Получить смещение символа ширифта
@@ -256,7 +257,7 @@ public:
 	@param [__in] index Индекс символа
 	@return Смещение в пикселях
 	*/
-	int GetFontOffsetY(const uchar &font, const uchar &index);
+	int GetFontOffsetY(uchar font, uchar index);
 
 	/*!
 	Получить позицию каретки в тексте
@@ -268,7 +269,7 @@ public:
 	@param [__in] flags Эффекты текста
 	@return Координаты каретки
 	*/
-	WISP_GEOMETRY::CPoint2Di GetCaretPosA(const uchar &font, const string &str, int pos, int width, const TEXT_ALIGN_TYPE &align, const ushort &flags);
+	WISP_GEOMETRY::CPoint2Di GetCaretPosA(uchar font, const string &str, int pos, int width, TEXT_ALIGN_TYPE align, ushort flags);
 
 	/*!
 	Вычислить положение каретки
@@ -281,7 +282,7 @@ public:
 	@param [__in] flags Эффекты текста
 	@return Позиция каретки в строке
 	*/
-	int CalculateCaretPosA(const uchar &font, const string &str, const int &x, const int &y, int width, const TEXT_ALIGN_TYPE &align, const ushort &flags);
+	int CalculateCaretPosA(uchar font, const string &str, int x, int y, int width, TEXT_ALIGN_TYPE align, ushort flags);
 
 	/*!
 	Получить ширину текста
@@ -289,7 +290,7 @@ public:
 	@param [__in] str Текст
 	@return Ширина текста в пикселях
 	*/
-	int GetWidthA(const uchar &font, const string &str);
+	int GetWidthA(uchar font, const string &str);
 
 	/*!
 	Получить ширину текста (с учетом параметров отрисовки)
@@ -301,7 +302,7 @@ public:
 	@param [__in] flags Эффекты текста
 	@return Ширина текста в пикселях
 	*/
-	int GetWidthExA(const uchar &font, const string &str, const int &maxWidth, const TEXT_ALIGN_TYPE &align, const ushort &flags);
+	int GetWidthExA(uchar font, const string &str, int maxWidth, TEXT_ALIGN_TYPE align, ushort flags);
 
 
 	/*!
@@ -313,7 +314,7 @@ public:
 	@param [__in_opt] flags Эффекты текста
 	@return Высота текста в пикселях
 	*/
-	int GetHeightA(const uchar &font, const string &str, int width = 0, const TEXT_ALIGN_TYPE &align = TS_LEFT, const ushort &flags = 0);
+	int GetHeightA(uchar font, const string &str, int width = 0, TEXT_ALIGN_TYPE align = TS_LEFT, ushort flags = 0);
 
 	/*!
 	Получить высоту текста по списку строк
@@ -331,7 +332,7 @@ public:
 	@param [__in] IsCropped Ограниченный текст, вышедшая за доступные пределы часть обрезается и заменяется на многоточие
 	@return Результирующий текст
 	*/
-	string GetTextByWidthA(const uchar &font, const string &str, int width, const bool &isCropped);
+	string GetTextByWidthA(uchar font, const string &str, int width, bool isCropped);
 
 	/*!
 	Получить информацию о тексте (в мультистрочном виде)
@@ -356,7 +357,7 @@ public:
 	@param [__in] flags Эффекты текста
 	@return Ссылка на массив пикселей
 	*/
-	UINT_LIST GeneratePixelsA(const uchar &font, CGLTextTexture &th, const char *str, const ushort &color, int width, const TEXT_ALIGN_TYPE &align, const ushort &flags);
+	UINT_LIST GeneratePixelsA(uchar font, CGLTextTexture &th, const char *str, ushort color, int width, TEXT_ALIGN_TYPE align, ushort flags);
 
 	/*!
 	Сгенерировать текстуру текста
@@ -369,7 +370,7 @@ public:
 	@param [__in_opt] flags Эффекты текста
 	@return true при успешной генерации
 	*/
-	bool GenerateA(const uchar &font, CGLTextTexture &th, const string &str, const ushort &color = 0, const int &width = 0, const TEXT_ALIGN_TYPE &align = TS_LEFT, const ushort &flags = 0);
+	bool GenerateA(uchar font, CGLTextTexture &th, const string &str, ushort color = 0, int width = 0, TEXT_ALIGN_TYPE align = TS_LEFT, ushort flags = 0);
 
 	/*!
 	Отрисовать текст
@@ -383,7 +384,7 @@ public:
 	@param [__in_opt] flags Эффекты текста
 	@return 
 	*/
-	void DrawA(const uchar &font, const string &str, const ushort &color, const int &x, const int &y, const int &width = 0, const TEXT_ALIGN_TYPE &align = TS_LEFT, const ushort &flags = 0);
+	void DrawA(uchar font, const string &str, ushort color, int x, int y, int width = 0, TEXT_ALIGN_TYPE align = TS_LEFT, ushort flags = 0);
 
 
 
@@ -401,7 +402,7 @@ public:
 	@param [__in] flags Эффекты текста
 	@return Координаты каретки
 	*/
-	WISP_GEOMETRY::CPoint2Di GetCaretPosW(const uchar &font, const wstring &str, int pos, int width, const TEXT_ALIGN_TYPE &align, const ushort &flags);
+	WISP_GEOMETRY::CPoint2Di GetCaretPosW(uchar font, const wstring &str, int pos, int width, TEXT_ALIGN_TYPE align, ushort flags);
 
 	/*!
 	Вычислить положение каретки
@@ -414,7 +415,7 @@ public:
 	@param [__in] flags Эффекты текста
 	@return Позиция каретки в строке
 	*/
-	int CalculateCaretPosW(const uchar &font, const wstring &str, const int &x, const int &y, int width, const TEXT_ALIGN_TYPE &align, const ushort &flags);
+	int CalculateCaretPosW(uchar font, const wstring &str, int x, int y, int width, TEXT_ALIGN_TYPE align, ushort flags);
 
 	/*!
 	Получить ширину текста
@@ -423,7 +424,7 @@ public:
 	@param [__in_opt] len Длина текста
 	@return Ширина текста в пикселях
 	*/
-	int GetWidthW(const uchar &font, const wstring &str);
+	int GetWidthW(uchar font, const wstring &str);
 
 	/*!
 	Получить ширину текста (с учетом параметров отрисовки)
@@ -435,7 +436,7 @@ public:
 	@param [__in] flags Эффекты текста
 	@return Ширина текста в пикселях
 	*/
-	int GetWidthExW(const uchar &font, const wstring &str, const int &maxWidth, const TEXT_ALIGN_TYPE &align, const ushort &flags);
+	int GetWidthExW(uchar font, const wstring &str, int maxWidth, TEXT_ALIGN_TYPE align, ushort flags);
 
 	/*!
 	Получить высоту текста
@@ -446,7 +447,7 @@ public:
 	@param [__in_opt] flags Эффекты текста
 	@return Высота текста в пикселях
 	*/
-	int GetHeightW(const uchar &font, const wstring &str, int width = 0, const TEXT_ALIGN_TYPE &align = TS_LEFT, const ushort &flags = 0);
+	int GetHeightW(uchar font, const wstring &str, int width = 0, TEXT_ALIGN_TYPE align = TS_LEFT, ushort flags = 0);
 
 	/*!
 	Получить высоту текста по списку строк
@@ -464,7 +465,7 @@ public:
 	@param [__in] IsCropped Ограниченный текст, вышедшая за доступные пределы часть обрезается и заменяется на многоточие
 	@return Результирующий текст
 	*/
-	wstring GetTextByWidthW(const uchar &font, const wstring &str, int width, const bool &isCropped);
+	wstring GetTextByWidthW(uchar font, const wstring &str, int width, bool isCropped);
 
 	/*!
 	Получить информацию о тексте (в мультистрочном виде)
@@ -490,7 +491,7 @@ public:
 	@param [__in] flags Эффекты текста
 	@return Ссылка на массив пикселей
 	*/
-	UINT_LIST GeneratePixelsW(const uchar &font, CGLTextTexture &th, const wchar_t *str, const ushort &color, const uchar &cell, int width, const TEXT_ALIGN_TYPE &align, const ushort &flags);
+	UINT_LIST GeneratePixelsW(uchar font, CGLTextTexture &th, const wchar_t *str, ushort color, uchar cell, int width, TEXT_ALIGN_TYPE align, ushort flags);
 
 	/*!
 	Сгенерировать текстуру текста
@@ -504,7 +505,7 @@ public:
 	@param [__in_opt] flags Эффекты текста
 	@return true при успешной генерации
 	*/
-	bool GenerateW(const uchar &font, CGLTextTexture &th, const wstring &str, const ushort &color = 0, const uchar &cell = 30, const int &width = 0, const TEXT_ALIGN_TYPE &align = TS_LEFT, const ushort &flags = 0);
+	bool GenerateW(uchar font, CGLTextTexture &th, const wstring &str, ushort color = 0, uchar cell = 30, int width = 0, TEXT_ALIGN_TYPE align = TS_LEFT, ushort flags = 0);
 
 	/*!
 	Отрисовать текст
@@ -519,7 +520,7 @@ public:
 	@param [__in_opt] flags Эффекты текста
 	@return
 	*/
-	void DrawW(const uchar &font, const wstring &str, const ushort &color, const int &x, const int &y, const uchar &cell = 30, const int &width = 0, const TEXT_ALIGN_TYPE &align = TS_LEFT, const ushort &flags = 0);
+	void DrawW(uchar font, const wstring &str, ushort color, int x, int y, uchar cell = 30, int width = 0, TEXT_ALIGN_TYPE align = TS_LEFT, ushort flags = 0);
 };
 //--------------------------------------------------------------------------
 //!Ссылка на менеджер шрифтов

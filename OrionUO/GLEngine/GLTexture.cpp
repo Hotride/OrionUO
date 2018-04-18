@@ -21,7 +21,7 @@ CGLTexture::~CGLTexture()
 	Clear();
 }
 //----------------------------------------------------------------------------------
-void CGLTexture::Draw(const int &x, const int &y, const bool &checktrans)
+void CGLTexture::Draw(int x, int y, bool checktrans)
 {
 	WISPFUN_DEBUG("c36_f2");
 	if (Texture != 0)
@@ -46,16 +46,16 @@ void CGLTexture::Draw(const int &x, const int &y, const bool &checktrans)
 	}
 }
 //----------------------------------------------------------------------------------
-void CGLTexture::Draw(const int &x, const int &y, int width, int height, const bool &checktrans)
+void CGLTexture::Draw(int x, int y, int width, int height, bool checktrans)
 {
 	WISPFUN_DEBUG("c36_f3");
 	if (Texture != 0)
 	{
 		if (!width)
-			width = m_Width;
+			width = Width;
 
 		if (!height)
-			height = m_Height;
+			height = Height;
 
 		if (checktrans)
 		{
@@ -77,14 +77,14 @@ void CGLTexture::Draw(const int &x, const int &y, int width, int height, const b
 	}
 }
 //----------------------------------------------------------------------------------
-void CGLTexture::DrawRotated(const int &x, const int &y, const float &angle)
+void CGLTexture::DrawRotated(int x, int y, float angle)
 {
 	WISPFUN_DEBUG("c36_f4");
 	if (Texture != 0)
 		g_GL_DrawRotated(*this, x, y, angle);
 }
 //----------------------------------------------------------------------------------
-void CGLTexture::DrawTransparent(const int &x, const int &y, const bool &stencil)
+void CGLTexture::DrawTransparent(int x, int y, bool stencil)
 {
 	WISPFUN_DEBUG("c36_f5");
 	if (Texture != 0)
@@ -111,8 +111,8 @@ void CGLTexture::DrawTransparent(const int &x, const int &y, const bool &stencil
 void CGLTexture::Clear()
 {
 	WISPFUN_DEBUG("c36_f6");
-	m_Width = 0;
-	m_Height = 0;
+	Width = 0;
+	Height = 0;
 	m_HitMap.clear();
 
 	if (Texture != 0)
@@ -121,30 +121,30 @@ void CGLTexture::Clear()
 		Texture = 0;
 	}
 
-	if (m_VertexBuffer != 0)
+	if (VertexBuffer != 0)
 	{
-		glDeleteBuffers(1, &m_VertexBuffer);
-		m_VertexBuffer = 0;
+		glDeleteBuffers(1, &VertexBuffer);
+		VertexBuffer = 0;
 	}
 
-	if (m_MirroredVertexBuffer != 0)
+	if (MirroredVertexBuffer != 0)
 	{
-		glDeleteBuffers(1, &m_MirroredVertexBuffer);
-		m_MirroredVertexBuffer = 0;
+		glDeleteBuffers(1, &MirroredVertexBuffer);
+		MirroredVertexBuffer = 0;
 	}
 }
 //----------------------------------------------------------------------------------
-bool CGLTexture::Select(int x, int y, const bool &pixelCheck)
+bool CGLTexture::Select(int x, int y, bool pixelCheck)
 {
 	x = g_MouseManager.Position.X - x;
 	y = g_MouseManager.Position.Y - y;
 
-	if (x >= 0 && y >= 0 && x < m_Width && y < m_Height)
+	if (x >= 0 && y >= 0 && x < Width && y < Height)
 	{
 		if (!pixelCheck)
 			return true;
 
-		int pos = (y * m_Width) + x;
+		int pos = (y * Width) + x;
 
 		if (pos < (int)m_HitMap.size())
 			return (m_HitMap[pos] != 0);

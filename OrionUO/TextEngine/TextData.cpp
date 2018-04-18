@@ -18,22 +18,22 @@ CTextData::CTextData()
 }
 //---------------------------------------------------------------------------
 CTextData::CTextData(CTextData *obj)
-: m_Unicode(obj->Unicode), m_Type(obj->Type), m_Font(obj->Font), m_Timer(obj->Timer),
-m_Alpha(obj->Alpha)
+: Unicode(obj->Unicode), Type(obj->Type), Font(obj->Font), Timer(obj->Timer),
+Alpha(obj->Alpha)
 {
 	WISPFUN_DEBUG("c174_f2");
-	m_RealDrawX = obj->RealDrawX;
-	m_RealDrawY = obj->RealDrawY;
-	m_Color = obj->Color;
-	m_Text = obj->GetText();
-	m_UnicodeText = obj->GetUnicodeText();
+	RealDrawX = obj->RealDrawX;
+	RealDrawY = obj->RealDrawY;
+	Color = obj->Color;
+	Text = obj->Text;
+	UnicodeText = obj->UnicodeText;
 }
 //---------------------------------------------------------------------------
 CTextData::~CTextData()
 {
 	WISPFUN_DEBUG("c174_f3");
 	m_Texture.Clear();
-	m_Owner = NULL;
+	Owner = NULL;
 }
 //---------------------------------------------------------------------------
 bool CTextData::CanBeDrawedInJournalGump()
@@ -41,7 +41,7 @@ bool CTextData::CanBeDrawedInJournalGump()
 	WISPFUN_DEBUG("c174_f4");
 	bool result = true;
 
-	switch (m_Type)
+	switch (Type)
 	{
 		case TT_SYSTEM:
 			result = g_JournalShowSystem;
@@ -59,27 +59,27 @@ bool CTextData::CanBeDrawedInJournalGump()
 	return result;
 }
 //---------------------------------------------------------------------------
-void CTextData::GenerateTexture(const int &maxWidth, const ushort &flags, const  TEXT_ALIGN_TYPE &align, const uchar &cell, int font)
+void CTextData::GenerateTexture(int maxWidth, ushort flags, TEXT_ALIGN_TYPE align, uchar cell, int font)
 {
 	WISPFUN_DEBUG("c174_f5");
-	if (m_Unicode)
+	if (Unicode)
 	{
 		if (font == -1)
-			font = m_Font;
+			font = Font;
 
-		g_FontManager.GenerateW((uchar)font, m_Texture, m_UnicodeText, m_Color, cell, maxWidth, align, flags);
+		g_FontManager.GenerateW((uchar)font, m_Texture, UnicodeText, Color, cell, maxWidth, align, flags);
 	}
 	else
-		g_FontManager.GenerateA((uchar)m_Font, m_Texture, m_Text, m_Color, maxWidth, align, flags);
+		g_FontManager.GenerateA((uchar)Font, m_Texture, Text, Color, maxWidth, align, flags);
 
 	if (!m_Texture.Empty())
 	{
 		if (g_ConfigManager.ScaleSpeechDelay)
-			m_Timer += (((4000 * m_Texture.LinesCount) * g_ConfigManager.SpeechDelay) / 100);
+			Timer += (((4000 * m_Texture.LinesCount) * g_ConfigManager.SpeechDelay) / 100);
 		else
 		{
 			uint delay = ((__int64)((__int64)5497558140000 * g_ConfigManager.SpeechDelay) >> 32) >> 5;
-			m_Timer += (uint)((delay >> 31) + delay);
+			Timer += (uint)((delay >> 31) + delay);
 		}
 	}
 }

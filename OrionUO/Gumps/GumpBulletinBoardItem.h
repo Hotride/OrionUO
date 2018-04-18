@@ -33,7 +33,7 @@ protected:
 	virtual void UpdateHeight();
 
 public:
-	CGumpBulletinBoardItem(const uint &serial, const int &x, const int &y, const uchar &variant, const uint &id, const wstring &poster, const wstring &subject, const wstring &dataTime, const wstring &data);
+	CGumpBulletinBoardItem(int serial, int x, int y, uchar variant, int id, const wstring &poster, const wstring &subject, const wstring &dataTime, const wstring &data);
 	virtual ~CGumpBulletinBoardItem();
 
 	CGUITextEntry *m_EntrySubject{ NULL };

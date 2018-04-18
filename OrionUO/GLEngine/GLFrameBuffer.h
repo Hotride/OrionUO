@@ -36,7 +36,7 @@ public:
 	@param [__in] height Высота буфера
 	@return true в случае успеха
 	*/
-	bool Init(const int &width, const int &height);
+	bool Init(int width, int height);
 
 	bool Init(const WISP_GEOMETRY::CSize &size) { return Init(size.Width, size.Height); }
 
@@ -64,11 +64,11 @@ public:
 	@param [__in] height Высота буфера
 	@return true в случае готовности
 	*/
-	bool Ready(const int &width, const int &height);
+	bool Ready(int width, int height);
 
 	bool Ready(const WISP_GEOMETRY::CSize &size) { return Ready(size.Width, size.Height); }
 
-	bool ReadyMinSize(const int &width, const int &height);
+	bool ReadyMinSize(int width, int height);
 
 	bool ReadyMinSize(const WISP_GEOMETRY::CSize &size) { return Ready(size.Width, size.Height); }
 
@@ -84,7 +84,7 @@ public:
 	@param [__in] y Экранная координата Y
 	@return 
 	*/
-	void Draw(const int &x, const int &y);
+	void Draw(int x, int y);
 };
 //----------------------------------------------------------------------------------
 #endif

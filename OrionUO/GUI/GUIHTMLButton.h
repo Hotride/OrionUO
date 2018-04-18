@@ -19,13 +19,13 @@ private:
 	class CGUIHTMLGump *m_HTMLGump{ NULL };
 
 public:
-	CGUIHTMLButton(class CGUIHTMLGump *htmlGump, const uint &serial, const ushort &graphic, const ushort &graphicSelected, const ushort &graphicPressed, const int &x, const int &y);
+	CGUIHTMLButton(class CGUIHTMLGump *htmlGump, int serial, ushort graphic, ushort graphicSelected, ushort graphicPressed, int x, int y);
 	virtual ~CGUIHTMLButton();
 
 	virtual void SetShaderMode();
 
 	//!Обработка прокрутки
-	void Scroll(const bool &up, const uint &delay);
+	void Scroll(bool up, int delay);
 
 	virtual bool IsControlHTML() { return true; }
 };

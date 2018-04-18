@@ -29,7 +29,7 @@ CConnectionScreen::~CConnectionScreen()
 void CConnectionScreen::Init()
 {
 	WISPFUN_DEBUG("c161_f1");
-	m_Message = "";
+	m_Text = "";
 	m_ConnectionFailed = false;
 	m_Connected = false;
 	m_Completed= false;
@@ -37,45 +37,45 @@ void CConnectionScreen::Init()
 	m_Type = CST_LOGIN;
 
 	g_ScreenEffectManager.UseSunrise();
-	m_SmoothScreenAction = 0;
+	SmoothScreenAction = 0;
 
 	m_Gump.PrepareTextures();
 	m_Gump.WantUpdateContent = true;
 }
 //----------------------------------------------------------------------------------
-void CConnectionScreen::SetConnectionFailed(const bool &val)
+void CConnectionScreen::SetConnectionFailed(bool val)
 {
 	m_ConnectionFailed = val;
 	m_Gump.WantUpdateContent = true;
 }
 //----------------------------------------------------------------------------------
-void CConnectionScreen::SetConnected(const bool &val)
+void CConnectionScreen::SetConnected(bool val)
 {
 	m_Connected = val;
 	m_Gump.WantUpdateContent = true;
 }
 //----------------------------------------------------------------------------------
-void CConnectionScreen::SetCompleted(const bool &val)
+void CConnectionScreen::SetCompleted(bool val)
 {
 	m_Completed = val;
 	m_Gump.WantUpdateContent = true;
 }
 //----------------------------------------------------------------------------------
-void CConnectionScreen::SetErrorCode(const int &val)
+void CConnectionScreen::SetErrorCode(int val)
 {
 	m_ErrorCode = val;
 	m_Gump.WantUpdateContent = true;
 }
 //----------------------------------------------------------------------------------
-void CConnectionScreen::SetType(const CONNECTION_SCREEN_TYPE &val)
+void CConnectionScreen::SetType(CONNECTION_SCREEN_TYPE val)
 {
 	m_Type = val;
 	m_Gump.WantUpdateContent = true;
 }
 //----------------------------------------------------------------------------------
-void CConnectionScreen::SetMessage(const string &val)
+void CConnectionScreen::SetText(const string &val)
 {
-	m_Message = val;
+	m_Text = val;
 	m_Gump.WantUpdateContent = true;
 }
 //----------------------------------------------------------------------------------
@@ -88,7 +88,7 @@ void CConnectionScreen::ProcessSmoothAction(uchar action)
 {
 	WISPFUN_DEBUG("c161_f2");
 	if (action == 0xFF)
-		action = m_SmoothScreenAction;
+		action = SmoothScreenAction;
 
 	if (action == ID_SMOOTH_CS_GO_SCREEN_MAIN)
 		g_Orion.InitScreen(GS_MAIN);

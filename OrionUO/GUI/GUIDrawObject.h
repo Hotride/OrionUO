@@ -15,7 +15,7 @@
 class CGUIDrawObject : public CBaseGUI
 {
 public:
-	CGUIDrawObject(const GUMP_OBJECT_TYPE &type, const uint &serial, const ushort &graphic, const ushort &color, const int &x, const int &y);
+	CGUIDrawObject(GUMP_OBJECT_TYPE type, int serial, ushort graphic, ushort color, int x, int y);
 	virtual ~CGUIDrawObject();
 
 	virtual WISP_GEOMETRY::CSize GetSize();
@@ -23,7 +23,7 @@ public:
 	virtual void SetShaderMode();
 	virtual void PrepareTextures();
 
-	virtual void Draw(const bool &checktrans = false);
+	virtual void Draw(bool checktrans = false);
 	virtual bool Select();
 };
 //----------------------------------------------------------------------------------

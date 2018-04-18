@@ -13,137 +13,222 @@
 //!Класс менеджера конфига
 class CConfigManager
 {
-	SETGETE(bool, Sound, true);
-	SETGETE(bool, Music, false);
-	SETGET(bool, FootstepsSound, true);
-	SETGET(bool, CombatMusic, true);
-	SETGETE(uchar, SoundVolume, 255);
-	SETGETE(uchar, MusicVolume, 255);
-	SETGET(bool, BackgroundSound, false);
+protected:
+    bool m_Sound = true;
+	bool m_Music = false;
+	uchar m_SoundVolume = 255;
+	uchar m_MusicVolume = 255;
+	uchar m_ClientFPS = 32;
+	bool m_UseScaling = false;
+	uchar m_DrawStatusState = 0;
+	bool m_DrawStumps = false;
+	bool m_MarkingCaves = false;
+	bool m_NoVegetation = false;
+	bool m_NoAnimateFields = false;
+	bool m_ReduceFPSUnactiveWindow = false;
+	bool m_ConsoleNeedEnter = false;
+	uchar m_SpellIconAlpha = 0;
+	bool m_OldStyleStatusbar = false;
+	bool m_OriginalPartyStatusbar = false;
+	bool m_ApplyStateColorOnCharacters = false;
+	bool m_ChangeFieldsGraphic = false;
+	bool m_PaperdollSlots = false;
+	uchar m_DrawAuraState = 0;
+	bool m_ScaleImagesInPaperdollSlots = false;
+	bool m_UseGlobalMapLayer = false;
+	bool m_NoDrawRoofs = false;
+	bool m_UseGLListsForInterface = false;
+	uchar m_PingTimer = 10;
+	uchar m_ItemPropertiesMode = OPM_FOLLOW_MOUSE;
+	bool m_ItemPropertiesIcon = false;
+	uchar m_CharacterBackpackStyle = CBS_DEFAULT;
 
-	SETGETE(uchar, ClientFPS, 32);
-	SETGETE(bool, UseScaling, false);
-	SETGET(bool, RemoveTextWithBlending, false);
-	SETGETE(uchar, DrawStatusState, 0);
-	SETGET(uchar, DrawStatusConditionState, 0);
-	SETGET(uchar, DrawStatusConditionValue, 0);
-	SETGETE(bool, DrawStumps, false);
-	SETGETE(bool, MarkingCaves, false);
-	SETGETE(bool, NoVegetation, false);
-	SETGETE(bool, NoAnimateFields, false);
-	SETGETE(bool, ReduceFPSUnactiveWindow, false);
-	SETGET(bool, StandartCharactersAnimationDelay, false);
-	SETGET(bool, StandartItemsAnimationDelay, false);
-	SETGET(bool, LockGumpsMoving, false);
-	SETGETE(bool, ConsoleNeedEnter, false);
-	SETGET(uchar, HiddenCharactersRenderMode, 0);
-	SETGET(uchar, HiddenAlpha, 0);
-	SETGET(bool, UseHiddenModeOnlyForSelf, false);
-	SETGET(uchar, TransparentSpellIcons, 0);
-	SETGETE(uchar, SpellIconAlpha, 0);
-	SETGETE(bool, OldStyleStatusbar, false);
-	SETGETE(bool, OriginalPartyStatusbar, false);
-	SETGETE(bool, ApplyStateColorOnCharacters, false);
-	SETGETE(bool, ChangeFieldsGraphic, false);
-	SETGETE(bool, PaperdollSlots, false);
-	SETGET(bool, RemoveStatusbarsWithoutObjects, false);
-	SETGET(bool, ShowDefaultConsoleEntryMode, false);
-	SETGETE(uchar, DrawAuraState, 0);
-	SETGET(bool, DrawAuraWithCtrlPressed, false);
-	SETGET(uchar, ScreenshotFormat, 0);
-	SETGETE(bool, ScaleImagesInPaperdollSlots, false);
-	SETGET(bool, RemoveOrCreateObjectsWithBlending, false);
-	SETGET(bool, DrawHelmetsOnShroud, false);
-	SETGETE(bool, UseGlobalMapLayer, false);
-	SETGETE(bool, NoDrawRoofs, false);
-	SETGET(bool, HighlightTargetByType, true);
-	SETGET(bool, AutoDisplayWorldMap, false);
-	SETGETE(bool, UseGLListsForInterface, false);
-	SETGET(bool, CheckPing, true);
-	SETGETE(uchar, PingTimer, 10);
-	SETGET(bool, CancelNewTargetSystemOnShiftEsc, false);
-	SETGET(bool, DrawStatusForHumanoids, true);
+public:
+	bool FootstepsSound = true;
+	bool CombatMusic = true;
+	bool BackgroundSound = false;
+	bool RemoveTextWithBlending = false;
+	uchar DrawStatusConditionState = 0;
+	uchar DrawStatusConditionValue = 0;
+	bool StandartCharactersAnimationDelay = false;
+	bool StandartItemsAnimationDelay = false;
+	bool LockGumpsMoving = false;
+	uchar HiddenCharactersRenderMode = 0;
+	uchar HiddenAlpha = 0;
+	bool UseHiddenModeOnlyForSelf = false;
+	uchar TransparentSpellIcons = 0;
+	bool RemoveStatusbarsWithoutObjects = false;
+	bool ShowDefaultConsoleEntryMode = false;
+	bool DrawAuraWithCtrlPressed = false;
+	uchar ScreenshotFormat = 0;
+	bool RemoveOrCreateObjectsWithBlending = false;
+	bool DrawHelmetsOnShroud = false;
+	bool HighlightTargetByType = true;
+	bool AutoDisplayWorldMap = false;
+	bool CheckPing = true;
+	bool CancelNewTargetSystemOnShiftEsc = false;
+	bool DrawStatusForHumanoids = true;
 
-	SETGET(bool, UseToolTips, false);
-	SETGET(ushort, ToolTipsTextColor, 0);
-	SETGET(ushort, ToolTipsTextFont, 0);
-	SETGET(ushort, ToolTipsDelay, 0);
+	bool UseToolTips = false;
+	ushort ToolTipsTextColor = 0;
+	ushort ToolTipsTextFont = 0;
+	ushort ToolTipsDelay = 0;
 
-	SETGET(ushort, ChatColorInputText, 0);
-	SETGET(ushort, ChatColorMenuOption, 0);
-	SETGET(ushort, ChatColorPlayerInMemberList, 0);
-	SETGET(ushort, ChatColorText, 0);
-	SETGET(ushort, ChatColorPlayerNameWithout, 0);
-	SETGET(ushort, ChatColorMuted, 0);
-	SETGET(ushort, ChatColorChannelModeratorName, 0);
-	SETGET(ushort, ChatColorChannelModeratorText, 0);
-	SETGET(ushort, ChatColorMyName, 0);
-	SETGET(ushort, ChatColorMyText, 0);
-	SETGET(ushort, ChatColorSystemMessage, 0);
-	SETGET(ushort, ChatFont, 0);
-	SETGET(ushort, ChatColorBGOutputText, 0);
-	SETGET(ushort, ChatColorBGInputText, 0);
-	SETGET(ushort, ChatColorBGUserList, 0);
-	SETGET(ushort, ChatColorBGConfList, 0);
-	SETGET(ushort, ChatColorBGCommandList, 0);
+	ushort ChatColorInputText = 0;
+	ushort ChatColorMenuOption = 0;
+	ushort ChatColorPlayerInMemberList = 0;
+	ushort ChatColorText = 0;
+	ushort ChatColorPlayerNameWithout = 0;
+	ushort ChatColorMuted = 0;
+	ushort ChatColorChannelModeratorName = 0;
+	ushort ChatColorChannelModeratorText = 0;
+	ushort ChatColorMyName = 0;
+	ushort ChatColorMyText = 0;
+	ushort ChatColorSystemMessage = 0;
+	ushort ChatFont = 0;
+	ushort ChatColorBGOutputText = 0;
+	ushort ChatColorBGInputText = 0;
+	ushort ChatColorBGUserList = 0;
+	ushort ChatColorBGConfList = 0;
+	ushort ChatColorBGCommandList = 0;
 
-	SETGET(bool, EnablePathfind, false);
-	SETGET(bool, HoldTabForCombat, false);
-	SETGET(bool, OffsetInterfaceWindows, false);
-	SETGET(bool, AutoArrange, false);
-	SETGET(bool, AlwaysRun, false);
-	SETGET(bool, DisableMenubar, false);
-	SETGET(bool, GrayOutOfRangeObjects, false);
-	SETGET(bool, DisableNewTargetSystem, false);
-	SETGETE(uchar, ItemPropertiesMode, OPM_FOLLOW_MOUSE);
-	SETGETE(bool, ItemPropertiesIcon, false);
-	SETGET(bool, ObjectHandles, false);
-	SETGET(bool, HoldShiftForContextMenus, false);
-	SETGET(bool, HoldShiftForEnablePathfind, false);
-	SETGETE(uchar, CharacterBackpackStyle, CBS_DEFAULT);
+	bool EnablePathfind = false;
+	bool HoldTabForCombat = false;
+	bool OffsetInterfaceWindows = false;
+	bool AutoArrange = false;
+	bool AlwaysRun = false;
+	bool DisableMenubar = false;
+	bool GrayOutOfRangeObjects = false;
+	bool DisableNewTargetSystem = false;
+	bool ObjectHandles = false;
+	bool HoldShiftForContextMenus = false;
+	bool HoldShiftForEnablePathfind = false;
+	int GameWindowWidth = 0;
+	int GameWindowHeight = 0;
+	ushort SpeechDelay = 0;
+	bool ScaleSpeechDelay = false;
+	ushort SpeechColor = 0;
+	ushort EmoteColor = 0;
+	ushort PartyMessageColor = 0;
+	ushort GuildMessageColor = 0;
+	ushort AllianceMessageColor = 0;
+	bool IgnoreGuildMessage = false;
+	bool IgnoreAllianceMessage = false;
+	bool DarkNights = false;
+	bool ColoredLighting = false;
+	bool LockResizingGameWindow = false;
 
-	SETGET(int, GameWindowWidth, 0);
-	SETGET(int, GameWindowHeight, 0);
-	SETGET(ushort, SpeechDelay, 0);
-	SETGET(bool, ScaleSpeechDelay, false);
-	SETGET(ushort, SpeechColor, 0);
-	SETGET(ushort, EmoteColor, 0);
-	SETGET(ushort, PartyMessageColor, 0);
-	SETGET(ushort, GuildMessageColor, 0);
-	SETGET(ushort, AllianceMessageColor, 0);
-	SETGET(bool, IgnoreGuildMessage, false);
-	SETGET(bool, IgnoreAllianceMessage, false);
-	SETGET(bool, DarkNights, false);
-	SETGET(bool, ColoredLighting, false);
-	SETGET(bool, LockResizingGameWindow, false);
+	ushort InnocentColor = 0;
+	ushort FriendlyColor = 0;
+	ushort SomeoneColor = 0;
+	ushort CriminalColor = 0;
+	ushort EnemyColor = 0;
+	ushort MurdererColor = 0;
+	bool CriminalActionsQuery = false;
 
-	SETGET(ushort, InnocentColor, 0);
-	SETGET(ushort, FriendlyColor, 0);
-	SETGET(ushort, SomeoneColor, 0);
-	SETGET(ushort, CriminalColor, 0);
-	SETGET(ushort, EnemyColor, 0);
-	SETGET(ushort, MurdererColor, 0);
-	SETGET(bool, CriminalActionsQuery, false);
+	bool ShowIncomingNames = false;
+	bool UseCircleTrans = false;
+	bool StatReport = false;
+	uchar CircleTransRadius = 0;
+	uchar SkillReport = 0;
+	ushort SpeechFont = 0;
 
-	SETGET(bool, ShowIncomingNames, false);
-	SETGET(bool, UseCircleTrans, false);
-	SETGET(bool, StatReport, false);
-	SETGET(uchar, CircleTransRadius, 0);
-	SETGET(uchar, SkillReport, 0);
-	SETGET(ushort, SpeechFont, 0);
+	bool FilterPWOn = false;
+	bool ObscenityFilter = false;
+	string FilterPassword = "";
 
-	SETGET(bool, FilterPWOn, false);
-	SETGET(bool, ObscenityFilter, false);
-	SETGET(string, FilterPassword, "");
-
-	SETGET(bool, ToggleBufficonWindow, false);
-	SETGET(int, GameWindowX, 0);
-	SETGET(int, GameWindowY, 0);
-	SETGET(int, UpdateRange, g_MaxViewRange);
+	bool ToggleBufficonWindow = false;
+	int GameWindowX = 0;
+	int GameWindowY = 0;
+	int UpdateRange = g_MaxViewRange;
 
 public:
 	CConfigManager();
 	~CConfigManager() {}
+
+	bool GetSound() { return m_Sound; };
+	void SetSound(bool val);
+
+	bool GetMusic() { return m_Music; };
+	void SetMusic(bool val);
+
+	uchar GetSoundVolume() { return m_SoundVolume; };
+	void SetSoundVolume(uchar val);
+
+	uchar GetMusicVolume() { return m_MusicVolume; };
+	void SetMusicVolume(uchar val);
+
+	uchar GetClientFPS() { return m_ClientFPS; };
+	void SetClientFPS(uchar val);
+
+	bool GetUseScaling() { return m_UseScaling; };
+	void SetUseScaling(bool val);
+
+	uchar GetDrawStatusState() { return m_DrawStatusState; };
+	void SetDrawStatusState(uchar val);
+
+	bool GetDrawStumps() { return m_DrawStumps; };
+	void SetDrawStumps(bool val);
+
+	bool GetMarkingCaves() { return m_MarkingCaves; };
+	void SetMarkingCaves(bool val);
+
+	bool GetNoVegetation() { return m_NoVegetation; };
+	void SetNoVegetation(bool val);
+
+	bool GetNoAnimateFields() { return m_NoAnimateFields; };
+	void SetNoAnimateFields(bool val);
+
+	bool GetReduceFPSUnactiveWindow() { return m_ReduceFPSUnactiveWindow; };
+	void SetReduceFPSUnactiveWindow(bool val);
+
+	bool GetConsoleNeedEnter() { return m_ConsoleNeedEnter; };
+	void SetConsoleNeedEnter(bool val);
+
+	uchar GetSpellIconAlpha() { return m_SpellIconAlpha; };
+	void SetSpellIconAlpha(uchar val);
+
+	bool GetOldStyleStatusbar() { return m_OldStyleStatusbar; };
+	void SetOldStyleStatusbar(bool val);
+
+	bool GetOriginalPartyStatusbar() { return m_OriginalPartyStatusbar; };
+	void SetOriginalPartyStatusbar(bool val);
+
+	bool GetApplyStateColorOnCharacters() { return m_ApplyStateColorOnCharacters; };
+	void SetApplyStateColorOnCharacters(bool val);
+
+	bool GetChangeFieldsGraphic() { return m_ChangeFieldsGraphic; };
+	void SetChangeFieldsGraphic(bool val);
+
+	bool GetPaperdollSlots() { return m_PaperdollSlots; };
+	void SetPaperdollSlots(bool val);
+
+	uchar GetDrawAuraState() { return m_DrawAuraState; };
+	void SetDrawAuraState(uchar val);
+
+	bool GetScaleImagesInPaperdollSlots() { return m_ScaleImagesInPaperdollSlots; };
+	void SetScaleImagesInPaperdollSlots(bool val);
+
+	bool GetUseGlobalMapLayer() { return m_UseGlobalMapLayer; };
+	void SetUseGlobalMapLayer(bool val);
+
+	bool GetNoDrawRoofs() { return m_NoDrawRoofs; };
+	void SetNoDrawRoofs(bool val);
+
+	bool GetUseGLListsForInterface() { return m_UseGLListsForInterface; };
+	void SetUseGLListsForInterface(bool val);
+
+	uchar GetPingTimer() { return m_PingTimer; };
+	void SetPingTimer(uchar val);
+
+	bool GetItemPropertiesIcon() { return m_ItemPropertiesIcon; };
+	void SetItemPropertiesIcon(bool val);
+
+	uchar GetItemPropertiesMode() { return m_ItemPropertiesMode; };
+	void SetItemPropertiesMode(uchar val);
+
+	uchar GetCharacterBackpackStyle() { return m_CharacterBackpackStyle; };
+	void SetCharacterBackpackStyle(uchar val);
 
 	/*!
 	Инициализация

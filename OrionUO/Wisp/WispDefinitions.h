@@ -64,7 +64,7 @@ typedef __int64 *pint64;
 #if DEBUGGIND_OUTPUT == 1
 void DebugMsg(const char *format, ...);
 void DebugMsg(const wchar_t *format, ...);
-void DebugDump(puchar data, const int &size);
+void DebugDump(puchar data, int size);
 #else
 #define DebugMsg(...)
 #define DebugDump(buf, size)
@@ -84,32 +84,5 @@ if (ptr != NULL) \
 //----------------------------------------------------------------------------------
 #define IN_RANGE(name, id1, id2) ((name) >= (id1) && (name) <= (id2))
 #define OUT_RANGE(name, id1, id2) ((name) < (id1) || (name) > (id2))
-//----------------------------------------------------------------------------------
-//!Set/Get ordinary class property
-#define SETGET(type, name, defaultValue) \
-	protected: \
-	type m_##name = defaultValue; \
-	public: \
-	inline void __fastcall Set##name(const type &val) { m_##name = val; } \
-	inline type Get##name() const { return m_##name; } \
-	__declspec(property(get = Get##name, put = Set##name)) type name
-//----------------------------------------------------------------------------------
-//!Set/Get ordinary class property with event
-#define SETGETE(type, name, defaultValue) \
-	protected: \
-	type m_##name = defaultValue; \
-	public: \
-	void Set##name(const type &val); \
-	inline type Get##name() const { return m_##name; } \
-	__declspec(property(get = Get##name, put = Set##name)) type name
-//----------------------------------------------------------------------------------
-//!Set/Get ordinary class property for pointers
-#define SETGETP(type, name, defaultValue) \
-	protected: \
-	type m_##name = defaultValue; \
-	public: \
-	inline void __fastcall Set##name(type val) { m_##name = val; } \
-	inline type Get##name() const { return m_##name; } \
-	__declspec(property(get = Get##name, put = Set##name)) type name
 //----------------------------------------------------------------------------------
 #endif

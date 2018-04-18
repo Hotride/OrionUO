@@ -14,18 +14,19 @@
 //----------------------------------------------------------------------------------
 class CGUIShopResult : public CBaseGUI
 {
+public:
 	//!Стоимость
-	SETGET(uint, Price, 0);
+	uint Price = 0;
 
 	//!Название
-	SETGET(string, Name, "");
+	string Name = "";
 
 private:
 	//!Текстура названия
 	CGLTextTexture m_NameText{ CGLTextTexture() };
 
 public:
-	CGUIShopResult(class CGUIShopItem *shopItem, const int &x, const int &y);
+	CGUIShopResult(class CGUIShopItem *shopItem, int x, int y);
 	virtual ~CGUIShopResult();
 
 	//!Компонента кнопок MinMax
@@ -38,7 +39,7 @@ public:
 
 	virtual void PrepareTextures();
 
-	virtual void Draw(const bool &checktrans = false);
+	virtual void Draw(bool checktrans = false);
 	virtual bool Select();
 };
 //----------------------------------------------------------------------------------
