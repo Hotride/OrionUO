@@ -79,6 +79,12 @@
     <Filter Include="Header Files\Gumps">
       <UniqueIdentifier>{31762e39-25e9-4297-a40d-5b9aee64720e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Crypt">
+      <UniqueIdentifier>{d218a80e-61cb-4a81-abf8-c71f68047ffb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Crypt">
+      <UniqueIdentifier>{55b7ef4a-7d6e-4491-93da-a11de46abb58}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -840,6 +846,24 @@
     <ClInclude Include="GUI\GUIBulletinBoardObject.h">
       <Filter>Header Files\GUI</Filter>
     </ClInclude>
+    <ClInclude Include="Crypt\GameCrypt.h">
+      <Filter>Header Files\Crypt</Filter>
+    </ClInclude>
+    <ClInclude Include="Crypt\LoginCrypt.h">
+      <Filter>Header Files\Crypt</Filter>
+    </ClInclude>
+    <ClInclude Include="Crypt\MD5.h">
+      <Filter>Header Files\Crypt</Filter>
+    </ClInclude>
+    <ClInclude Include="Crypt\Platform.h">
+      <Filter>Header Files\Crypt</Filter>
+    </ClInclude>
+    <ClInclude Include="Crypt\Table.h">
+      <Filter>Header Files\Crypt</Filter>
+    </ClInclude>
+    <ClInclude Include="Crypt\AES.h">
+      <Filter>Header Files\Crypt</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="OrionUO.cpp">
@@ -1558,6 +1582,18 @@
     </ClCompile>
     <ClCompile Include="Utility\PingThread.cpp">
       <Filter>Source Files\Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="Crypt\GameCrypt.cpp">
+      <Filter>Source Files\Crypt</Filter>
+    </ClCompile>
+    <ClCompile Include="Crypt\LoginCrypt.cpp">
+      <Filter>Source Files\Crypt</Filter>
+    </ClCompile>
+    <ClCompile Include="Crypt\MD5.cpp">
+      <Filter>Source Files\Crypt</Filter>
+    </ClCompile>
+    <ClCompile Include="Crypt\TwoFish.cpp">
+      <Filter>Source Files\Crypt</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

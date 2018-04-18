@@ -233,8 +233,9 @@ UCHAR_LIST CSocket::Decompression(UCHAR_LIST data)
 	{
 		intptr_t inSize = (intptr_t)data.size();
 
-		if (g_NetworkPostAction != NULL)
-			g_NetworkPostAction(&data[0], &data[0], (int)inSize);
+		if (g_EncryptionType == ET_TFISH) {
+			g_TwofishCrypt.Decrypt(&data[0], &data[0], inSize);
+		}
 
 		UCHAR_LIST decBuf(inSize * 4 + 2);
 

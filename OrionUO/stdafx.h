@@ -144,6 +144,13 @@ class CGump;
 #include "Network/PluginPackets.h"
 #include "Network/Connection.h"
 
+#include "Crypt/AES.h"
+#include "Crypt/LoginCrypt.h"
+#include "Crypt/GameCrypt.h"
+#include "Crypt/MD5.h"
+#include "Crypt/Platform.h"
+#include "Crypt/Table.h"
+
 #include "ToolTip.h"
 
 #include "TextEngine/EntryText.h"
