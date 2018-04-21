@@ -13,12 +13,21 @@
 
 --------------
 
-* Build it (preferably) with MVS 2013, platform toolset (v120_xp).
+## Building
 
+This project requires CMake 3.7 to build. It currently supports Visual Studio 2015, 2017, GCC 7.0 and Clang 6.
+
+On Windows, to generate the Visual Studio solution, go inside OrionUO folder and do:
+
+```bat
+md build
+cd build
+cmake -G "Visual Studio 2017 Win64" .. -DCMAKE_BUILD_TYPE=Release
 ```
-   If you want to build Orion Client with MVS 2015 or 2017, you need Orion.dll built with v140/v141 toolset.
-   These can be found in bin and debug_bin or build Orion.dll yourself
-```
+
+Or use CMake-GUI to configure and generate the solution.
+
+## Binaries
 
 * Download [Orion Launcher](https://orion-client.online/index.php?pages/downloads/) to set everything up and play!
 
