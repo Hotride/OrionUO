@@ -1219,7 +1219,6 @@ void CGameScreen::DrawGameWindow(bool mode)
 							y -= (dims.Height + dims.CenterY) + 24;
 
 							gc->UpdateHitsTexture(width);
-							width = (int)&gc->m_HitsTexture;
 
 							x -= (gc->m_HitsTexture.Width / 2) - 3;
 						}
@@ -1241,7 +1240,7 @@ void CGameScreen::DrawGameWindow(bool mode)
 								
 						}
 
-						OBJECT_HITS_INFO hitsInfo = { x, y, color, width, healthColor};
+						OBJECT_HITS_INFO hitsInfo = { x, y, color, width, healthColor, &gc->m_HitsTexture };
 						m_HitsStack.push_back(hitsInfo);
 					}
 				}
@@ -1381,7 +1380,7 @@ void CGameScreen::DrawGameWindowText(bool mode)
 			{
 				for (vector<OBJECT_HITS_INFO>::iterator it = m_HitsStack.begin(); it != m_HitsStack.end(); ++it)
 				{
-					CGLTextTexture *texture = (CGLTextTexture*)it->Width;
+					CGLTextTexture *texture = it->HitsTexture;
 					texture->Draw(it->X, it->Y);
 				}
 			}
@@ -2074,9 +2073,9 @@ void CGameScreen::OnLeftMouseButtonUp()
 							if (str.length())
 							{
 								if (g_PacketManager.GetClientVersion() >= CV_6000)
-									g_Orion.CreateUnicodeTextMessage(TT_CLIENT, (uint)rwo, 1, 0x03B2, str);
+									g_Orion.CreateUnicodeTextMessage(TT_CLIENT, 0, 1, 0x03B2, str, rwo);
 								else
-									g_Orion.CreateTextMessage(TT_CLIENT, (uint)rwo, 3, 0x03B2, ToString(str));
+									g_Orion.CreateTextMessage(TT_CLIENT, 0, 3, 0x03B2, ToString(str), rwo);
 							}
 						}
 					}

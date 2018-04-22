@@ -43,6 +43,8 @@ public:
 
 	uint ClilocID = 0;
 
+	CTextData *TextData = nullptr;
+
 	CBaseGUI(GUMP_OBJECT_TYPE type, int serial, ushort graphic, ushort color, int x, int y);
 	virtual ~CBaseGUI();
 

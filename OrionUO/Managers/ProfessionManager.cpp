@@ -408,7 +408,7 @@ void CProfessionManager::LoadProfessionDescription()
 	if (file.Load(g_App.UOFilesPath("professn.enu")))
 	{
 		char *ptr = (char*)file.Start;
-		char *end = (char*)((uint)file.Start + file.Size);
+		char *end = (char*)((uintptr_t)file.Start + file.Size);
 
 		vector<string> list;
 
