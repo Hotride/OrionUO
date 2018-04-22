@@ -649,7 +649,7 @@ bool CWindow::OnWindowProc(SDL_Event &ev)
 		}
 		break;
 
-		case SDL_MOUSEWHEEL_NORMAL:
+		case SDL_MOUSEWHEEL:
 		{
 			WISP_MOUSE::g_WispMouse->Update();
 

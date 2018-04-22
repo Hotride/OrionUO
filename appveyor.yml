@@ -1,6 +1,4 @@
 version: 1.0.{build}
-image:
-- Visual Studio 2017
 pull_requests:
   do_not_increment_build_number: true
 branches:
@@ -9,7 +7,7 @@ branches:
 skip_tags: true
 clone_folder: c:\projects\orion
 image:
-#- Visual Studio 2013
+#- Visual Studio 2013 # Need remove constexpr to struct enum so it will compile with 2013 again
 - Visual Studio 2015
 - Visual Studio 2017
 configuration:
@@ -26,7 +24,7 @@ matrix:
 init:
 - set arch=
 - if "%arch%"=="Win64" ( set arch= Win64)
-- if "%arch%"=="Win32" ( set arch= )
+- if "%arch%"=="Win32" ( set arch=)
 - echo %arch%
 - echo %APPVEYOR_BUILD_WORKER_IMAGE%
 - if "%APPVEYOR_BUILD_WORKER_IMAGE%"=="Visual Studio 2017" ( set generator="Visual Studio 15 2017%arch%" )
