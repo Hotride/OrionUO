@@ -7,7 +7,7 @@ branches:
 skip_tags: true
 clone_folder: c:\projects\orion
 image:
-- Visual Studio 2013
+#- Visual Studio 2013 # Need remove constexpr to struct enum so it will compile with 2013 again
 - Visual Studio 2015
 - Visual Studio 2017
 configuration:
