@@ -5,18 +5,19 @@
 
 #include <thread>
 #include <SDL_timer.h>
+#include <SDL_thread.h>
 #define THREAD_USE_CLOCK 0
 
-#if defined(ORION_WINDOWS)
-#define ORION_API __stdcall
+#if USE_WISP
+#define THREADCALL __stdcall
 #else
-#define ORION_API
+#define THREADCALL SDLCALL
 #endif
 
 namespace WISP_THREAD
 {
 //----------------------------------------------------------------------------------
-unsigned ORION_API CThreadLoop(void *arg)
+int THREADCALL CThreadLoop(void *arg)
 {
 	WISPFUN_DEBUG("c_trdlp");
 	CThread *parent = (CThread*)arg;
@@ -46,16 +47,17 @@ unsigned ORION_API CThreadLoop(void *arg)
 	parent->OnDestroy();
 	delete parent;
 
+#if USE_WISP
 	_endthreadex(0);
+#endif
 
 	return 0;
 };
 //----------------------------------------------------------------------------------
-unsigned ORION_API CThreadLoopSynchronizedDelay(void *arg)
+int THREADCALL CThreadLoopSynchronizedDelay(void *arg)
 {
 	WISPFUN_DEBUG("c_trdlpsd");
 	CThread *parent = (CThread*)arg;
-	//timeBeginPeriod(1);
 
 	while (parent->IsActive())
 	{
@@ -84,12 +86,12 @@ unsigned ORION_API CThreadLoopSynchronizedDelay(void *arg)
 		}
 	}
 
-	//timeEndPeriod(1);
-
 	parent->OnDestroy();
 	delete parent;
 
+#if USE_WISP
 	_endthreadex(0);
+#endif
 
 	return 0;
 };
@@ -107,12 +109,18 @@ CThread::~CThread()
 	//DebugMsg("~CThread\n");
 	DeleteCriticalSection(&m_CriticalSection);
 
+#if USE_WISP
 	if (m_Handle != 0)
 	{
 		::CloseHandle(m_Handle);
 		m_Handle = 0;
 	}
-
+#else
+	int ret = 0;
+	if (m_Handle)
+		SDL_WaitThread(m_Handle, &ret);
+	m_Handle = nullptr;
+#endif
 	ID = 0;
 }
 //----------------------------------------------------------------------------------
@@ -125,10 +133,17 @@ void CThread::Run(bool cycled, int delay, bool synchronizedDelay)
 		m_Delay = delay;
 		m_Active = true;
 
+#if USE_WISP
 		if (synchronizedDelay)
 			m_Handle = (HANDLE)_beginthreadex(NULL, 0, CThreadLoopSynchronizedDelay, this, 0, &ID);
 		else
 			m_Handle = (HANDLE)_beginthreadex(NULL, 0, CThreadLoop, this, 0, &ID);
+#else
+		if (synchronizedDelay)
+			m_Handle = SDL_CreateThread(CThreadLoopSynchronizedDelay, "CThreadLoopSynchronizedDelay", (void *)this);
+		else
+			m_Handle = SDL_CreateThread(CThreadLoop, "CThreadLoop", (void *)this);
+#endif
 	}
 }
 //----------------------------------------------------------------------------------

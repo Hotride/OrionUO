@@ -3,6 +3,7 @@
 #define WISPWINDOW_H
 //----------------------------------------------------------------------------------
 #include <SDL_video.h>
+#include <SDL_events.h>
 
 namespace WISP_WINDOW
 {
@@ -72,6 +73,7 @@ public:
 	void SetTitle(const string &text) { ::SetWindowTextA(Handle, text.c_str()); }
 	//void SetTitle(const wstring &text) { ::SetWindowTextW(Handle, text.c_str()); }
 
+	// May be done using: SDL_AddTimer / SDL_RemoveTimer
 	void CreateTimer(uint id, int delay) { ::SetTimer(Handle, id, delay, NULL); }
 	void RemoveTimer(uint id) { ::KillTimer(Handle, id); }
 

@@ -18,7 +18,7 @@ int APIENTRY _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCm
 	SYSTEMTIME st;
 	GetLocalTime(&st);
 
-	char buf[100] = { 0 };
+	char buf[100] = {0};
 
 	sprintf_s(buf, "/crash_%i_%i_%i___%i_%i_%i_%i.txt", st.wYear, st.wMonth, st.wDay, st.wHour, st.wMinute, st.wSecond, st.wMilliseconds);
 
@@ -28,7 +28,7 @@ int APIENTRY _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCm
 
 	g_OrionWindow.hInstance = hInstance;
 	if (!g_OrionWindow.Create("Orion UO Client", "Ultima Online", true, 640, 480))
-			return 0;
+		return 0;
 
 	g_OrionWindow.ShowWindow(true);
 	g_OrionWindow.NoResize = true;
@@ -40,6 +40,10 @@ int APIENTRY _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCm
 
 #else
 
+#if USE_ORIONDLL
+ENCRYPTION_TYPE g_EncryptionType;
+#endif
+
 static bool g_isHeadless = false;
 extern ENCRYPTION_TYPE g_EncryptionType;
 
@@ -47,32 +51,32 @@ extern COrionWindow g_OrionWindow;
 
 int main(int argc, char **argv)
 {
-  WISPFUN_DEBUG();
+	WISPFUN_DEBUG();
 
-  // TODO: good cli parsing api
-  // keep this simple for now just for travis-ci
-  for (int i =0; i < argc; i++)
-  {
-    if (!strcmp(argv[i], "--headless"))
-      g_isHeadless = true;
-    else if (!strcmp(argv[i], "--nocrypt"))
-      g_EncryptionType = ET_NOCRYPT;
-  }
+	// TODO: good cli parsing api
+	// keep this simple for now just for travis-ci
+	for (int i = 0; i < argc; i++)
+	{
+		if (!strcmp(argv[i], "--headless"))
+			g_isHeadless = true;
+		else if (!strcmp(argv[i], "--nocrypt"))
+			g_EncryptionType = ET_NOCRYPT;
+	}
 
-  if (SDL_Init(SDL_INIT_TIMER) < 0)
-  {
-    SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Unable to initialize SDL: %s\n", SDL_GetError());
-    return EXIT_FAILURE;
-  }
-  SDL_Log("SDL Initialized.");
+	if (SDL_Init(SDL_INIT_TIMER) < 0)
+	{
+		SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Unable to initialize SDL: %s\n", SDL_GetError());
+		return EXIT_FAILURE;
+	}
+	SDL_Log("SDL Initialized.");
 
 
-  INITLOGGER("uolog.txt");
+	INITLOGGER("uolog.txt");
 	auto path = g_App.ExeFilePath("crashlogs");
 	fs_path_create(path);
 
-  // FIXME: log stuff
-/*
+	// FIXME: log stuff
+	/*
 	SYSTEMTIME st;
 	GetLocalTime(&st);
 
@@ -83,26 +87,26 @@ int main(int argc, char **argv)
 	path += buf;
 
 	INITCRASHLOGGER(path.c_str());
-*/
+	*/
 
-  if (!g_isHeadless)
-  {
-    if (!g_OrionWindow.Create("Orion UO Client", "Ultima Online", true, 640, 480))
-    {
-      SDL_LogWarn(SDL_LOG_CATEGORY_APPLICATION, "Failed to create OrionUO client window. Fallbacking to headless mode.\n");
-      g_isHeadless = true;
-    }
-  }
+	if (!g_isHeadless)
+	{
+		if (!g_OrionWindow.Create("Orion UO Client", "Ultima Online", true, 640, 480))
+		{
+			SDL_LogWarn(SDL_LOG_CATEGORY_APPLICATION, "Failed to create OrionUO client window. Fallbacking to headless mode.\n");
+			g_isHeadless = true;
+		}
+	}
 
-  // FIXME: headless: lets end here so we can run on travis for now
-  if (g_isHeadless)
-    return EXIT_SUCCESS;
+	// FIXME: headless: lets end here so we can run on travis for now
+	if (g_isHeadless)
+		return EXIT_SUCCESS;
 
 	g_Orion.LoadPluginConfig();
 
-  auto ret = g_App.Run(nullptr);
-  SDL_Quit();
-  return ret;
+	auto ret = g_App.Run(nullptr);
+	SDL_Quit();
+	return ret;
 }
 
 #endif
