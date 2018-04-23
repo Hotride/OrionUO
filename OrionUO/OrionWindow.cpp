@@ -47,6 +47,7 @@ bool COrionWindow::OnCreate()
 
 	g_GL.UpdateRect();
 
+	// TODO: Render and Update events may be done using SDL_AddTimer / SDL_RemoveTimer
 	CreateThreadedTimer(RENDER_TIMER_ID, FRAME_DELAY_ACTIVE_WINDOW, false, true, true);
 	//CreateThreadedTimer(UPDATE_TIMER_ID, 10);
 	CreateTimer(UPDATE_TIMER_ID, 10);

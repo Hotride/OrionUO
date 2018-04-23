@@ -3,6 +3,7 @@
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
 #include "WispWindow.h"
+#include <SDL.h>
 #include <SDL_syswm.h>
 
 namespace WISP_WINDOW
@@ -181,6 +182,8 @@ bool CWindow::Create(const char *className, const char *title, bool showCursor, 
 	if (SDL_InitSubSystem(SDL_INIT_VIDEO) < 0)
 		return false;
 
+	m_Size.Width = width;
+	m_Size.Height = height;
 	m_window = SDL_CreateWindow(title, 0, 0, width, height, SDL_WINDOW_OPENGL);
 	if (!m_window)
 	{
@@ -197,30 +200,30 @@ bool CWindow::Create(const char *className, const char *title, bool showCursor, 
 		const char *subsystem = "Unknown";
 		switch(info.subsystem)
 		{
-      case SDL_SYSWM_UNKNOWN:   break;
-      case SDL_SYSWM_WINDOWS:   subsystem = "Microsoft Windows(TM)";  break;
-      case SDL_SYSWM_X11:       subsystem = "X Window System";        break;
+			case SDL_SYSWM_UNKNOWN:   break;
+			case SDL_SYSWM_WINDOWS:   subsystem = "Microsoft Windows(TM)";  break;
+			case SDL_SYSWM_X11:       subsystem = "X Window System";        break;
 #if SDL_VERSION_ATLEAST(2, 0, 3)
-      case SDL_SYSWM_WINRT:     subsystem = "WinRT";                  break;
+			case SDL_SYSWM_WINRT:     subsystem = "WinRT";                  break;
 #endif
-      case SDL_SYSWM_DIRECTFB:  subsystem = "DirectFB";               break;
-      case SDL_SYSWM_COCOA:     subsystem = "Apple OS X";             break;
-      case SDL_SYSWM_UIKIT:     subsystem = "UIKit";                  break;
+			case SDL_SYSWM_DIRECTFB:  subsystem = "DirectFB";               break;
+			case SDL_SYSWM_COCOA:     subsystem = "Apple OS X";             break;
+			case SDL_SYSWM_UIKIT:     subsystem = "UIKit";                  break;
 #if SDL_VERSION_ATLEAST(2, 0, 2)
-      case SDL_SYSWM_WAYLAND:   subsystem = "Wayland";                break;
-      case SDL_SYSWM_MIR:       subsystem = "Mir";                    break;
+			case SDL_SYSWM_WAYLAND:   subsystem = "Wayland";                break;
+			case SDL_SYSWM_MIR:       subsystem = "Mir";                    break;
 #endif
 #if SDL_VERSION_ATLEAST(2, 0, 4)
-      case SDL_SYSWM_ANDROID:   subsystem = "Android";                break;
+			case SDL_SYSWM_ANDROID:   subsystem = "Android";                break;
 #endif
 #if SDL_VERSION_ATLEAST(2, 0, 5)
-      case SDL_SYSWM_VIVANTE:   subsystem = "Vivante";                break;
+			case SDL_SYSWM_VIVANTE:   subsystem = "Vivante";                break;
 #endif
 		}
 
 		SDL_Log("System: %s\n", subsystem);
 #if defined(ORION_WINDOWS)
-	m_Handle = info.info.win.window;
+		Handle = info.info.win.window;
 #endif
 	}
 
@@ -595,9 +598,15 @@ bool CWindow::OnWindowProc(SDL_Event &ev)
 			break;
 		}
 
+		case SDL_WINDOWEVENT_SHOWN: OnActivate(); break;
+		case SDL_WINDOWEVENT_HIDDEN: OnDeactivate(); break;
+
 		default:
 			break;
 	}
+
+	g_Orion.Process(true);
+	g_Orion.Process(false);
 
 	return false;
 }

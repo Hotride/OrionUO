@@ -1,6 +1,6 @@
 ﻿//----------------------------------------------------------------------------------
-#ifndef WISPTHREAD_H
-#define WISPTHREAD_H
+#pragma once
+#include <SDL_thread.h>
 //----------------------------------------------------------------------------------
 namespace WISP_THREAD
 {
@@ -8,7 +8,11 @@ namespace WISP_THREAD
 class CThread
 {
 private:
+#if USE_WISP
 	HANDLE m_Handle{ 0 };
+#else
+	SDL_Thread *m_Handle = nullptr;
+#endif
 	UINT ID{ 0 };
 	CRITICAL_SECTION m_CriticalSection;
 	bool m_Paused{ false };
@@ -41,5 +45,3 @@ public:
 //----------------------------------------------------------------------------------
 }; //namespace
 //----------------------------------------------------------------------------------
-#endif
-

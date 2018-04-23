@@ -29,7 +29,7 @@ CApplication::~CApplication()
 int CApplication::Run(HINSTANCE hinstance)
 {
 	// WISPFUN_DEBUG("c1_f3");
-#if USE_WISP	
+#if USE_WISP
 	timeBeginPeriod(1);
 	Hinstance = hinstance;
 
