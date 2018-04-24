@@ -1,4 +1,4 @@
-﻿/***********************************************************************************
+/***********************************************************************************
 **
 ** OrionUO.h
 **
@@ -99,7 +99,7 @@ public:
 	COrion();
 	~COrion();
 
-	static unsigned long long CreateHash(string s);
+	static uint64_t CreateHash(const char *s);
 
 	//Данные из тайлдаты по ландшафту
 	vector<LAND_TILES> m_LandData;
