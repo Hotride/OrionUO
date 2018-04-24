@@ -858,7 +858,7 @@ PACKET_HANDLER(EnterWorld)
 	Move(4); //unused
 
 	if (strlen(g_SelectedCharName))
-		g_Player->GetName() = g_SelectedCharName;
+		g_Player->SetName(g_SelectedCharName);
 
 	g_Player->Graphic = ReadUInt16BE();
 	g_Player->OnGraphicChange();
@@ -1098,7 +1098,7 @@ PACKET_HANDLER(CharacterStatus)
 		return;
 
 	string name = ReadString(30);
-	obj->GetName() = name;
+	obj->SetName(name);
 
 	obj->Hits = ReadInt16BE();
 	obj->MaxHits = ReadInt16BE();
@@ -2782,7 +2782,7 @@ PACKET_HANDLER(Talk)
 			{
 				Ptr = Start + 44;
 				g_ConnectionScreen.SetConnectionFailed(true);
-				g_ConnectionScreen.GetText() = ReadString(0);
+				g_ConnectionScreen.SetText(ReadString(0));
 			}
 		}
 
@@ -2843,7 +2843,7 @@ PACKET_HANDLER(Talk)
 			obj->JournalPrefix = "";
 			if (!obj->GetName().length())
 			{
-				obj->GetName() = name;
+				obj->SetName(name);
 
 				if (obj->NPC)
 					g_GumpManager.UpdateContent(serial, 0, GT_STATUSBAR);
@@ -2879,7 +2879,7 @@ PACKET_HANDLER(UnicodeTalk)
 			{
 				Ptr = Start + 48;
 				g_ConnectionScreen.SetConnectionFailed(true);
-				g_ConnectionScreen.GetText() = ToString(ReadWString((Size - 48) / 2));
+				g_ConnectionScreen.SetText(ToString(ReadWString((Size - 48) / 2)));
 			}
 		}
 
@@ -2950,7 +2950,7 @@ PACKET_HANDLER(UnicodeTalk)
 
 			if (!obj->GetName().length())
 			{
-				obj->GetName() = name;
+				obj->SetName(name);
 
 				if (obj->NPC)
 					g_GumpManager.UpdateContent(serial, 0, GT_STATUSBAR);
@@ -3564,7 +3564,7 @@ PACKET_HANDLER(DisplayClilocString)
 			else
 			{
 				obj->JournalPrefix = name + ": ";
-				obj->GetName() = name;
+				obj->SetName(name);
 
 				if (obj->NPC)
 					g_GumpManager.UpdateContent(serial, 0, GT_STATUSBAR);
@@ -3659,7 +3659,7 @@ PACKET_HANDLER(MegaCliloc)
 
 				if (obj != NULL && !obj->NPC)
 				{
-					obj->GetName() = ToString(str);
+					obj->SetName(ToString(str));
 					obj->GenerateObjectHandlesTexture(str);
 				}
 

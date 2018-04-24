@@ -468,8 +468,8 @@ void CGameScreen::CalculateRenderList()
 			if (mb == NULL)
 			{
 				mb = g_MapManager->AddBlock(blockIndex);
-				mb->GetX() = bx;
-				mb->GetY() = by;
+				mb->SetX(bx);
+				mb->SetY(by);
 				g_MapManager->LoadBlock(mb);
 			}
 
