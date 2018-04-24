@@ -3305,20 +3305,20 @@ void COrion::ReadUOPIndexFile(size_t indexMaxCount, std::function<CIndexObject*(
 	}
 }
 //----------------------------------------------------------------------------------
-unsigned long long COrion::CreateHash(string s)
+uint64_t COrion::CreateHash(const char *s)
 {
-	unsigned long eax, ecx, edx, ebx, esi, edi;
+	const auto l = (int)strlen(s);
+	uint32_t eax, ecx, edx, ebx, esi, edi;
 
 	eax = ecx = edx = ebx = esi = edi = 0;
-	ebx = edi = esi = (int)s.length() + 0xDEADBEEF;
+	ebx = edi = esi = l + 0xDEADBEEF;
 
-	unsigned long i = 0;
-
-	for (i = 0; i + 12 < s.length(); i += 12)
+	uint32_t i = 0;
+	for (i = 0; i + 12 < l; i += 12)
 	{
-		edi = (uint)((s[i + 7] << 24) | (s[i + 6] << 16) | (s[i + 5] << 8) | s[i + 4]) + edi;
-		esi = (uint)((s[i + 11] << 24) | (s[i + 10] << 16) | (s[i + 9] << 8) | s[i + 8]) + esi;
-		edx = (uint)((s[i + 3] << 24) | (s[i + 2] << 16) | (s[i + 1] << 8) | s[i]) - esi;
+		edi = (uint32_t)((s[i + 7] << 24) | (s[i + 6] << 16) | (s[i + 5] << 8) | s[i + 4]) + edi;
+		esi = (uint32_t)((s[i + 11] << 24) | (s[i + 10] << 16) | (s[i + 9] << 8) | s[i + 8]) + esi;
+		edx = (uint32_t)((s[i + 3] << 24) | (s[i + 2] << 16) | (s[i + 1] << 8) | s[i]) - esi;
 
 		edx = (edx + ebx) ^ (esi >> 28) ^ (esi << 4);
 		esi += edi;
@@ -3334,22 +3334,22 @@ unsigned long long COrion::CreateHash(string s)
 		edi += ebx;
 	}
 
-	if (s.length() - i > 0)
+	if (l - i > 0)
 	{
-		switch (s.length() - i)
+		switch (l - i)
 		{
 		case 12:
-			esi += static_cast<unsigned long>(s[i + 11]) << 24;
+			esi += static_cast<uint32_t>(s[i + 11]) << 24;
 			goto  case_11;
 			break;
 		case 11:
 		case_11 :
-			esi += static_cast<unsigned long>(s[i + 10]) << 16;
+			esi += static_cast<uint32_t>(s[i + 10]) << 16;
 				goto  case_10;
 				break;
 		case 10:
 		case_10 :
-			esi += static_cast<unsigned long>(s[i + 9]) << 8;
+			esi += static_cast<uint32_t>(s[i + 9]) << 8;
 				goto  case_9;
 				break;
 		case 9:
@@ -3359,17 +3359,17 @@ unsigned long long COrion::CreateHash(string s)
 			   break;
 		case 8:
 		case_8 :
-			edi += static_cast<unsigned long>(s[i + 7]) << 24;
+			edi += static_cast<uint32_t>(s[i + 7]) << 24;
 			   goto case_7;
 			   break;
 		case 7:
 		case_7 :
-			edi += static_cast<unsigned long>(s[i + 6]) << 16;
+			edi += static_cast<uint32_t>(s[i + 6]) << 16;
 			   goto case_6;
 			   break;
 		case 6:
 		case_6 :
-			edi += static_cast<unsigned long>(s[i + 5]) << 8;
+			edi += static_cast<uint32_t>(s[i + 5]) << 8;
 			   goto case_5;
 			   break;
 		case 5:
@@ -3379,17 +3379,17 @@ unsigned long long COrion::CreateHash(string s)
 			   break;
 		case 4:
 		case_4 :
-			ebx += static_cast<unsigned long>(s[i + 3]) << 24;
+			ebx += static_cast<uint32_t>(s[i + 3]) << 24;
 			   goto case_3;
 			   break;
 		case 3:
 		case_3 :
-			ebx += static_cast<unsigned long>(s[i + 2]) << 16;
+			ebx += static_cast<uint32_t>(s[i + 2]) << 16;
 			   goto case_2;
 			   break;
 		case 2:
 		case_2 :
-			ebx += static_cast<unsigned long>(s[i + 1]) << 8;
+			ebx += static_cast<uint32_t>(s[i + 1]) << 8;
 			   goto case_1;
 		case 1:
 		case_1 :
@@ -3405,10 +3405,10 @@ unsigned long long COrion::CreateHash(string s)
 		edi = (edi ^ edx) - ((edx >> 18) ^ (edx << 14));
 		eax = (esi ^ edi) - ((edi >> 8) ^ (edi << 24));
 
-		return (static_cast<unsigned long long>(edi) << 32) | eax;
+		return (static_cast<uint64_t>(edi) << 32) | eax;
 	}
 
-	return (static_cast<unsigned long long>(esi) << 32) | eax;
+	return (static_cast<uint64_t>(esi) << 32) | eax;
 }
 //----------------------------------------------------------------------------------
 void COrion::LoadIndexFiles()

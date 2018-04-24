@@ -1,4 +1,4 @@
-﻿// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 /***********************************************************************************
 **
@@ -426,7 +426,7 @@ void CFileManager::TryReadUOPAnimations()
 //----------------------------------------------------------------------------------
 void CFileManager::ReadTask()
 {
-	std::unordered_map<unsigned long long, UOPAnimationData> hashes;
+	std::unordered_map<uint64_t, UOPAnimationData> hashes;
 	IFOR(i, 1, 5)
 	{
 		char magic[4];
@@ -449,8 +449,7 @@ void CFileManager::ReadTask()
 		animFile->read(version, 4);
 		animFile->read(signature, 4);
 		animFile->read(nextBlock, 8);
-
-		animFile->seekg(*reinterpret_cast<unsigned long long*>(nextBlock), std::ios::beg);
+		animFile->seekg(*reinterpret_cast<uint64_t*>(nextBlock), std::ios::beg);
 
 		do
 		{
@@ -476,8 +475,8 @@ void CFileManager::ReadTask()
 				animFile->read(skip1, 4);
 				animFile->read(skip2, 2);
 
-				auto hashVal = *reinterpret_cast<unsigned long long*>(hash);
-				auto offsetVal = *reinterpret_cast<unsigned long long*>(offset);
+				auto hashVal = *reinterpret_cast<uint64_t*>(hash);
+				auto offsetVal = *reinterpret_cast<uint64_t*>(offset);
 				if (offsetVal == 0)
 				{
 					continue;
@@ -493,8 +492,8 @@ void CFileManager::ReadTask()
 				hashes[hashVal] = dataStruct;
 			}
 
-			animFile->seekg(*reinterpret_cast<unsigned long long*>(nextBlock), std::ios::beg);
-		} while (*reinterpret_cast<unsigned long long*>(nextBlock) != 0);
+			animFile->seekg(*reinterpret_cast<uint64_t*>(nextBlock), std::ios::beg);
+		} while (*reinterpret_cast<uint64_t*>(nextBlock) != 0);
 	}
 
 	int maxGroup = 0;
