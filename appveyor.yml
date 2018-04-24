@@ -15,7 +15,6 @@ configuration:
 - Debug
 platform:
 - x64
-- Win32
 environment:
   matrix:
   - arch: Win64
