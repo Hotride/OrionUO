@@ -10,14 +10,16 @@
 
 #if USE_WISP
 #define THREADCALL __stdcall
+typedef unsigned thread_int;
 #else
 #define THREADCALL SDLCALL
+typedef int thread_int;
 #endif
 
 namespace WISP_THREAD
 {
 //----------------------------------------------------------------------------------
-int THREADCALL CThreadLoop(void *arg)
+thread_int THREADCALL CThreadLoop(void *arg)
 {
 	WISPFUN_DEBUG("c_trdlp");
 	CThread *parent = (CThread*)arg;
@@ -54,7 +56,7 @@ int THREADCALL CThreadLoop(void *arg)
 	return 0;
 };
 //----------------------------------------------------------------------------------
-int THREADCALL CThreadLoopSynchronizedDelay(void *arg)
+thread_int THREADCALL CThreadLoopSynchronizedDelay(void *arg)
 {
 	WISPFUN_DEBUG("c_trdlpsd");
 	CThread *parent = (CThread*)arg;
