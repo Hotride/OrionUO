@@ -110,7 +110,7 @@ void CGameEffect::Update(CGameObject *parent)
 ushort CGameEffect::CalculateCurrentGraphic()
 {
 	WISPFUN_DEBUG("c16_f3");
-	uint addressAnimData = (uint)g_FileManager.m_AnimdataMul.Start;
+	uintptr_t addressAnimData = (uintptr_t)g_FileManager.m_AnimdataMul.Start;
 
 	if (addressAnimData)
 	{

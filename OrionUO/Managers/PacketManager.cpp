@@ -3123,7 +3123,7 @@ PACKET_HANDLER(GraphicEffect)
 		effect->DestZ = destZ;
 	}
 
-	uint addressAnimData = (uint)g_FileManager.m_AnimdataMul.Start;
+	uintptr_t addressAnimData = (uintptr_t)g_FileManager.m_AnimdataMul.Start;
 
 	if (addressAnimData)
 	{
@@ -3277,7 +3277,7 @@ PACKET_HANDLER(DragAnimation)
 	effect->DestZ = destZ;
 	effect->Duration = g_Ticks + 5000;
 
-	uint addressAnimData = (uint)g_FileManager.m_AnimdataMul.Start;
+	uintptr_t addressAnimData = (uintptr_t)g_FileManager.m_AnimdataMul.Start;
 
 	if (addressAnimData)
 	{

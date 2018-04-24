@@ -330,10 +330,10 @@ public:
 	void CreateUnicodeTextMessageF(uchar font, ushort color, const char *format, ...);
 
 	//Создать текстовое сообщение (ASCII)
-	void CreateTextMessage(const TEXT_TYPE &type, int serial, uchar font, ushort color, const string &text);
+	void CreateTextMessage(const TEXT_TYPE &type, int serial, uchar font, ushort color, const string &text, class CRenderWorldObject *clientObj = nullptr);
 
 	//Создать текстовое сообщение (Unicode)
-	void CreateUnicodeTextMessage(const TEXT_TYPE &type, int serial, uchar font, ushort color, const wstring &text);
+	void CreateUnicodeTextMessage(const TEXT_TYPE &type, int serial, uchar font, ushort color, const wstring &text, class CRenderWorldObject *clientObj = nullptr);
 
 	//Добавить сообщение в систем чат
 	void AddSystemMessage(class CTextData *msg);

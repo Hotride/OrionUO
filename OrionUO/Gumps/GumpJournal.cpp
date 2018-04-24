@@ -169,7 +169,8 @@ void CGumpJournal::AddText(CTextData *obj)
 	WISPFUN_DEBUG("c98_f5");
 	CGUIText *text = (CGUIText*)m_HTMLGump->Add(new CGUIText(obj->Color, 4, RecalculateHeight()));
 	text->MoveOnDrag = true;
-	text->Serial = (uint)obj;
+	text->Serial = 0;
+	text->TextData = obj;
 	text->Graphic = (ushort)obj->Type;
 	
 	ushort flags = UOFONT_INDENTION;
@@ -196,7 +197,7 @@ void CGumpJournal::DeleteText(CTextData *obj)
 	WISPFUN_DEBUG("c98_f6");
 	QFOR(item, m_HTMLGump->m_Items, CBaseGUI*)
 	{
-		if (item->Type == GOT_TEXT && item->Serial == (uint)obj)
+		if (item->Type == GOT_TEXT && item->TextData == obj)
 		{
 			m_HTMLGump->Delete(item);
 			m_HTMLGump->CalculateDataSize();

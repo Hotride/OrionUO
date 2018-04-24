@@ -3285,7 +3285,7 @@ void COrion::ReadUOPIndexFile(size_t indexMaxCount, std::function<CIndexObject*(
 		if (block != NULL)
 		{
 			CIndexObject *obj = getIdxObj((int)i);
-			obj->Address = (uint)uopFile.Start + (uint)block->Offset;
+			obj->Address = (uintptr_t)uopFile.Start + (uint)block->Offset;
 			obj->DataSize = block->DecompressedSize;
 			obj->UopBlock = block;
 			obj->ID = -1;
@@ -3540,7 +3540,7 @@ void COrion::InitStaticAnimList()
 	WISPFUN_DEBUG("c194_f51");
 	if (m_AnimData.size())
 	{
-		uint lastElement = (uint)(&m_AnimData[0] + m_AnimData.size() - sizeof(ANIM_DATA));
+		uintptr_t lastElement = (uintptr_t)(&m_AnimData[0] + m_AnimData.size() - sizeof(ANIM_DATA));
 
 		IFOR(i, 0, (int)m_StaticData.size())
 		{
@@ -3567,8 +3567,8 @@ void COrion::InitStaticAnimList()
 
 			if (IsAnimated(m_StaticData[i].Flags))
 			{
-				uint addr = (uint)((i * 68) + 4 * ((i / 8) + 1));
-				uint offset = (uint)(&m_AnimData[0] + addr);
+				uintptr_t addr = (uintptr_t)((i * 68) + 4 * ((i / 8) + 1));
+				uintptr_t offset = (uintptr_t)(&m_AnimData[0] + addr);
 
 				if (offset <= lastElement)
 					m_StaticAnimList.push_back(&m_StaticDataIndex[i]);
@@ -5387,7 +5387,7 @@ void COrion::CreateUnicodeTextMessageF(uchar font, ushort color, const char *for
 	va_end(arg);
 }
 //----------------------------------------------------------------------------------
-void COrion::CreateTextMessage(const TEXT_TYPE &type, int serial, uchar font, ushort color, const string &text)
+void COrion::CreateTextMessage(const TEXT_TYPE &type, int serial, uchar font, ushort color, const string &text, CRenderWorldObject *clientObj)
 {
 	WISPFUN_DEBUG("c194_f98");
 	CTextData *td = new CTextData();
@@ -5494,7 +5494,7 @@ void COrion::CreateTextMessage(const TEXT_TYPE &type, int serial, uchar font, us
 			else
 				td->GenerateTexture(0, 0, TS_CENTER);
 
-			((CRenderWorldObject*)serial)->AddText(td);
+			clientObj->AddText(td);
 			g_WorldTextRenderer.AddText(td);
 
 			break;
@@ -5502,7 +5502,7 @@ void COrion::CreateTextMessage(const TEXT_TYPE &type, int serial, uchar font, us
 	}
 }
 //----------------------------------------------------------------------------------
-void COrion::CreateUnicodeTextMessage(const TEXT_TYPE &type, int serial, uchar font, ushort color, const wstring &text)
+void COrion::CreateUnicodeTextMessage(const TEXT_TYPE &type, int serial, uchar font, ushort color, const wstring &text, CRenderWorldObject *clientObj)
 {
 	WISPFUN_DEBUG("c194_f99");
 	CTextData *td = new CTextData();
@@ -5606,7 +5606,7 @@ void COrion::CreateUnicodeTextMessage(const TEXT_TYPE &type, int serial, uchar f
 			else
 				td->GenerateTexture(0, UOFONT_BLACK_BORDER, TS_LEFT);
 
-			((CRenderWorldObject*)serial)->AddText(td);
+			clientObj->AddText(td);
 			g_WorldTextRenderer.AddText(td);
 
 			break;
