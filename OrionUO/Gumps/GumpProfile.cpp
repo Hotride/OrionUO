@@ -10,9 +10,10 @@
 */
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
+#include "GumpProfile.h"
 //----------------------------------------------------------------------------------
 CGumpProfile::CGumpProfile(uint serial, short x, short y, wstring topText, wstring bottomText, wstring dataText)
-: CGumpBaseScroll(GT_PROFILE, serial, 0x0820, 250, x, y, true)
+	: CGumpBaseScroll(GT_PROFILE, serial, 0x0820, 250, x, y, true)
 {
 	WISPFUN_DEBUG("c108_f1");
 	Changed = false;
@@ -126,6 +127,7 @@ bool CGumpProfile::OnLeftMouseButtonDoubleClick()
 	return false;
 }
 //----------------------------------------------------------------------------
+#if USE_WISP
 void CGumpProfile::OnCharPress(const WPARAM &wParam, const LPARAM &lParam)
 {
 	WISPFUN_DEBUG("c108_f6");
@@ -155,4 +157,13 @@ void CGumpProfile::OnKeyDown(const WPARAM &wParam, const LPARAM &lParam)
 			RecalculateHeight();
 	}
 }
-//----------------------------------------------------------------------------
+#else
+void CGumpProfile::OnTextInput(const SDL_TextInputEvent &ev)
+{
+  NOT_IMPLEMENTED; // FIXME
+}
+void CGumpProfile::OnKeyDown(const SDL_KeyboardEvent &ev)
+{
+  NOT_IMPLEMENTED; // FIXME
+}
+#endif

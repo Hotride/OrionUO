@@ -10,11 +10,12 @@
 */
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
+#include "CreateCharacterScreen.h"
 //----------------------------------------------------------------------------------
 CCreateCharacterScreen g_CreateCharacterScreen;
 //----------------------------------------------------------------------------------
 CCreateCharacterScreen::CCreateCharacterScreen()
-: CBaseScreen(m_CreateCharacterGump)
+	: CBaseScreen(m_CreateCharacterGump)
 {
 }
 //----------------------------------------------------------------------------------
@@ -99,6 +100,7 @@ void CCreateCharacterScreen::OnLeftMouseButtonDown()
 	}
 }
 //----------------------------------------------------------------------------------
+#if USE_WISP
 /*!
 Обработка нажатия клавиши
 @param [__in] wparam не подписанный параметр
@@ -137,4 +139,13 @@ void CCreateCharacterScreen::OnKeyDown(const WPARAM &wParam, const LPARAM &lPara
 		m_Gump.WantRedraw = true;
 	}
 }
-//----------------------------------------------------------------------------------
+#else
+void CCreateCharacterScreen::OnTextInput(const SDL_TextInputEvent &ev)
+{
+  NOT_IMPLEMENTED; // FIXME
+}
+void CCreateCharacterScreen::OnKeyDown(const SDL_KeyboardEvent &ev)
+{
+  NOT_IMPLEMENTED; // FIXME
+}
+#endif

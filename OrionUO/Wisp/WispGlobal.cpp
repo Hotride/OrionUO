@@ -253,7 +253,11 @@ void DebugMsg(const char *format, ...)
 	char buf[512] = { 0 };
 	vsprintf_s(buf, format, arg);
 
+#if USE_WISP
 	OutputDebugStringA(buf);
+#else
+	fprintf(stdout, "%s", buf);
+#endif
 
 	va_end(arg);
 }
@@ -266,7 +270,11 @@ void DebugMsg(const wchar_t *format, ...)
 	wchar_t buf[512] = { 0 };
 	vswprintf_s(buf, format, arg);
 
+#if USE_WISP
 	OutputDebugStringW(buf);
+#else
+	fprintf(stdout, "%s", buf);
+#endif
 
 	va_end(arg);
 }

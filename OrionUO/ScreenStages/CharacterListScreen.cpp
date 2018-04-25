@@ -10,11 +10,12 @@
 */
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
+#include "CharacterListScreen.h"
 //----------------------------------------------------------------------------------
 CCharacterListScreen g_CharacterListScreen;
 //----------------------------------------------------------------------------------
 CCharacterListScreen::CCharacterListScreen()
-: CBaseScreen(m_CharacterListGump)
+	: CBaseScreen(m_CharacterListGump)
 {
 }
 //----------------------------------------------------------------------------------
@@ -82,6 +83,7 @@ void CCharacterListScreen::ProcessSmoothAction(uchar action)
 	}
 }
 //----------------------------------------------------------------------------------
+#if USE_WISP
 /*!
 Обработка нажатия клавиши
 @param [__in] wparam не подписанный параметр
@@ -96,4 +98,9 @@ void CCharacterListScreen::OnKeyDown(const WPARAM &wParam, const LPARAM &lParam)
 	if (wParam == VK_RETURN)
 		CreateSmoothAction(ID_SMOOTH_CLS_SELECT_CHARACTER);
 }
-//----------------------------------------------------------------------------------
+#else
+void CCharacterListScreen::OnKeyDown(const SDL_KeyboardEvent &ev)
+{
+  NOT_IMPLEMENTED; // FIXME
+}
+#endif

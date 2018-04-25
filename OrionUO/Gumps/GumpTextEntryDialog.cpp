@@ -10,10 +10,14 @@
 */
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
+#include "GumpTextEntryDialog.h"
 //----------------------------------------------------------------------------------
 CGumpTextEntryDialog::CGumpTextEntryDialog(uint serial, short x, short y, uchar variant, int maxLength, string text, string description)
-: CGump(GT_TEXT_ENTRY_DIALOG, serial, x, y), Text(text), m_Description(description),
-Variant(variant), m_MaxLength(maxLength)
+	: CGump(GT_TEXT_ENTRY_DIALOG, serial, x, y)
+	, Text(text)
+	, m_Description(description)
+	, Variant(variant)
+	, m_MaxLength(maxLength)
 {
 	WISPFUN_DEBUG("c130_f1");
 	NoMove = true;
@@ -94,6 +98,7 @@ void CGumpTextEntryDialog::GUMP_BUTTON_EVENT_C
 		SendTextEntryDialogResponse(false);
 }
 //----------------------------------------------------------------------------------
+#if USE_WISP
 void CGumpTextEntryDialog::OnCharPress(const WPARAM &wParam, const LPARAM &lParam)
 {
 	WISPFUN_DEBUG("c130_f5");
@@ -149,6 +154,16 @@ void CGumpTextEntryDialog::OnKeyDown(const WPARAM &wParam, const LPARAM &lParam)
 			break;
 	}
 }
+#else
+void CGumpTextEntryDialog::OnTextInput(const SDL_TextInputEvent &ev)
+{
+  NOT_IMPLEMENTED; // FIXME
+}
+void CGumpTextEntryDialog::OnKeyDown(const SDL_KeyboardEvent &ev)
+{
+  NOT_IMPLEMENTED; // FIXME
+}
+#endif
 //----------------------------------------------------------------------------------
 void CGumpTextEntryDialog::SendTextEntryDialogResponse(bool mode)
 {

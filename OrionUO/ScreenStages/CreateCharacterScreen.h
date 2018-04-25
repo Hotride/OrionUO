@@ -7,8 +7,8 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#ifndef CREATECHARACTERSCREEN_H
-#define CREATECHARACTERSCREEN_H
+#pragma once
+#include <SDL_events.h>
 //----------------------------------------------------------------------------------
 class CCreateCharacterScreen : public CBaseScreen
 {
@@ -57,24 +57,14 @@ public:
 
 	virtual void OnLeftMouseButtonDown();
 
-	/*!
-	Обработка нажатия клавиши
-	@param [__in] wparam не подписанный параметр
-	@param [__in] lparam не подписанный параметр
-	@return 
-	*/
+#if USE_WISP
 	void OnCharPress(const WPARAM &wParam, const LPARAM &lParam);
-
-	/*!
-	Обработка нажатия клавиши
-	@param [__in] wparam не подписанный параметр
-	@param [__in] lparam не подписанный параметр
-	@return 
-	*/
 	void OnKeyDown(const WPARAM &wParam, const LPARAM &lParam);
+#else
+	virtual void OnTextInput(const SDL_TextInputEvent &ev) override;
+	virtual void OnKeyDown(const SDL_KeyboardEvent &ev) override;
+#endif	
+	
 };
 //----------------------------------------------------------------------------------
 extern CCreateCharacterScreen g_CreateCharacterScreen;
-//----------------------------------------------------------------------------------
-#endif
-//----------------------------------------------------------------------------------

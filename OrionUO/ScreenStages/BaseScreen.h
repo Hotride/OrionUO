@@ -7,8 +7,8 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#ifndef BASESCREEN_H
-#define BASESCREEN_H
+#pragma once
+#include <SDL_events.h>
 //----------------------------------------------------------------------------------
 //Базовый класс стадий окна клиента
 class CBaseScreen : public CBaseQueue
@@ -87,13 +87,17 @@ public:
 	virtual bool OnMidMouseButtonDoubleClick() { return m_Gump.OnMidMouseButtonDoubleClick(); }
 	virtual void OnMidMouseButtonScroll(bool up) { m_Gump.OnMidMouseButtonScroll(up); }
 	virtual void OnDragging() { m_Gump.OnDragging(); }
+#if USE_WISP
 	virtual void OnCharPress(const WPARAM &wParam, const LPARAM &lParam) { m_Gump.OnCharPress(wParam, lParam); }
 	virtual void OnKeyDown(const WPARAM &wParam, const LPARAM &lParam) { m_Gump.OnKeyDown(wParam, lParam); }
 	virtual void OnKeyUp(const WPARAM &wParam, const LPARAM &lParam) { m_Gump.OnKeyUp(wParam, lParam); }
+#else
+	virtual void OnTextInput(const SDL_TextInputEvent &ev) { m_Gump.OnTextInput(ev); }
+	virtual void OnKeyDown(const SDL_KeyboardEvent &ev) { m_Gump.OnKeyDown(ev); }
+	virtual void OnKeyUp(const SDL_KeyboardEvent &ev) { m_Gump.OnKeyUp(ev); }
+#endif
 };
 //----------------------------------------------------------------------------------
 //!Указатель на текущий экран
 extern CBaseScreen *g_CurrentScreen;
-//----------------------------------------------------------------------------------
-#endif
 //----------------------------------------------------------------------------------

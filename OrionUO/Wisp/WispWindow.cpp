@@ -174,7 +174,7 @@ bool CWindow::Create(const char *className, const char *title, bool showCursor, 
 	m_Size.Width = r.right - r.left;
 	m_Size.Height = r.bottom - r.top;
 
-	ShowCursor(showCursor);
+	SDL_ShowCursor(showCursor);
 
 	::ShowWindow(Handle, FALSE);
 	UpdateWindow(Handle);
@@ -624,25 +624,20 @@ bool CWindow::OnWindowProc(SDL_Event &ev)
 
 		case SDL_KEYDOWN:
 		{
-			// FIXME
-			// SDL Manages ALT+F4 into a SDL_WINDOWEVENT_CLOSE
-			//OnKeyDown(wParam, lParam);
+			OnKeyDown(ev.key);
 		}
 		break;
 
 		case SDL_KEYUP:
 		{
-			// FIXME
-			//OnKeyUp(wParam, lParam);
+			OnKeyUp(ev.key);
 		}
 		break;
 
 		// https://wiki.libsdl.org/Tutorials/TextInput
 		case SDL_TEXTINPUT: // WM_CHAR
 		{
-			// FIXME
-			// event.text.text
-			//OnCharPress(wParam, lParam);
+			OnTextInput(ev.text);
 		}
 		break;
 

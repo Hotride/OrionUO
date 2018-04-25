@@ -10,9 +10,10 @@
 */
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
+#include "GumpSkills.h"
 //----------------------------------------------------------------------------------
 CGumpSkills::CGumpSkills(short x, short y, bool minimized, int height)
-: CGumpBaseScroll(GT_SKILLS, 0, 0x1F40, height, x, y, true, 0, true, 15)
+	: CGumpBaseScroll(GT_SKILLS, 0, 0x1F40, height, x, y, true, 0, true, 15)
 {
 	WISPFUN_DEBUG("c125_f1");
 	m_Locker.Serial = ID_GS_LOCK_MOVING;
@@ -668,6 +669,7 @@ bool CGumpSkills::OnLeftMouseButtonDoubleClick()
 	return false;
 }
 //----------------------------------------------------------------------------------
+#if USE_WISP
 void CGumpSkills::OnCharPress(const WPARAM &wParam, const LPARAM &lParam)
 {
 	WISPFUN_DEBUG("c125_f21");
@@ -680,7 +682,6 @@ void CGumpSkills::OnCharPress(const WPARAM &wParam, const LPARAM &lParam)
 	else
 		WantRedraw = true;
 }
-//----------------------------------------------------------------------------------
 void CGumpSkills::OnKeyDown(const WPARAM &wParam, const LPARAM &lParam)
 {
 	WISPFUN_DEBUG("c125_f22");
@@ -778,4 +779,13 @@ void CGumpSkills::OnKeyDown(const WPARAM &wParam, const LPARAM &lParam)
 			break;
 	}
 }
-//----------------------------------------------------------------------------------
+#else
+void CGumpSkills::OnTextInput(const SDL_TextInputEvent &ev)
+{
+  NOT_IMPLEMENTED; // FIXME
+}
+void CGumpSkills::OnKeyDown(const SDL_KeyboardEvent &ev)
+{
+  NOT_IMPLEMENTED; // FIXME
+}
+#endif

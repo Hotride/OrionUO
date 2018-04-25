@@ -7,8 +7,8 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#ifndef CHARACTERLISTSCREEN_H
-#define CHARACTERLISTSCREEN_H
+#pragma once
+#include <SDL_events.h>
 //----------------------------------------------------------------------------------
 class CCharacterListScreen : public CBaseScreen
 {
@@ -40,11 +40,11 @@ public:
 	void ProcessSmoothAction(uchar action = 0xFF);
 
 
-
+#if USE_WISP
 	virtual void OnKeyDown(const WPARAM &wParam, const LPARAM &lParam);
+#else
+	virtual void OnKeyDown(const SDL_KeyboardEvent &ev) override;
+#endif			
 };
 //----------------------------------------------------------------------------------
 extern CCharacterListScreen g_CharacterListScreen;
-//----------------------------------------------------------------------------------
-#endif
-//----------------------------------------------------------------------------------

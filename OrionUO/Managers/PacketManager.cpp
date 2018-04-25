@@ -3199,7 +3199,7 @@ PACKET_HANDLER(PlayMusic)
 	ushort index = ReadUInt16BE();
 
 	//LOG("Play midi music 0x%04X\n", index);
-	if (!g_ConfigManager.GetMusic() || GetForegroundWindow() != g_OrionWindow.Handle || g_ConfigManager.GetMusicVolume() < 1)
+	if (!g_ConfigManager.GetMusic() || !g_OrionWindow.IsActive() || g_ConfigManager.GetMusicVolume() < 1)
 		return;
 
 	g_Orion.PlayMusic(index);

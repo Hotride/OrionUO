@@ -10,12 +10,13 @@
 */
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
+#include "GameScreen.h"
 //----------------------------------------------------------------------------------
 CGameScreen g_GameScreen;
 RENDER_VARIABLES_FOR_GAME_WINDOW g_RenderBounds;
 //----------------------------------------------------------------------------------
 CGameScreen::CGameScreen()
-: CBaseScreen(m_GameScreenGump)
+	: CBaseScreen(m_GameScreenGump)
 {
 	WISPFUN_DEBUG("c164_f1");
 	m_RenderList.resize(1000);
@@ -2270,6 +2271,7 @@ void CGameScreen::OnDragging()
 		g_GumpManager.OnDragging(false);
 }
 //----------------------------------------------------------------------------------
+#if USE_WISP
 /*!
 Обработка нажатия клавиши
 @param [__in] wparam не подписанный параметр
@@ -2462,4 +2464,22 @@ void CGameScreen::OnKeyUp(const WPARAM &wParam, const LPARAM &lParam)
 			g_Orion.ChangeWarmode(0);
 	}
 }
-//----------------------------------------------------------------------------------
+#else
+void CGameScreen::OnTextInput(const SDL_TextInputEvent &ev)
+{
+	NOT_IMPLEMENTED; // FIXME
+}
+void CGameScreen::OnKeyDown(const SDL_KeyboardEvent &ev)
+{
+	NOT_IMPLEMENTED; // FIXME
+}
+void CGameScreen::OnKeyUp(const SDL_KeyboardEvent &ev)
+{
+	WISPFUN_DEBUG("c164_f30");
+	if (ev.keysym.sym == SDLK_TAB && g_GameState == GS_GAME)
+	{
+		if (g_ConfigManager.HoldTabForCombat)
+			g_Orion.ChangeWarmode(0);
+	}
+}
+#endif

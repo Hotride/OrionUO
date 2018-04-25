@@ -62,6 +62,7 @@ typedef char *pchar;
 typedef short *pshort;
 typedef int *pint;
 typedef int64_t *pint64;
+#define NOT_IMPLEMENTED	fprintf(stdout, "NOT_IMPLEMENTED: %s:%d: %s\n", __FILE__, __LINE__, __FUNCTION__);
 //----------------------------------------------------------------------------------
 #define DEBUGGING_OUTPUT 1
 

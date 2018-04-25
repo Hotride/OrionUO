@@ -10,6 +10,7 @@
 */
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
+#include "GumpManager.h"
 //----------------------------------------------------------------------------------
 CGumpManager g_GumpManager;
 //----------------------------------------------------------------------------------
@@ -1034,6 +1035,7 @@ void CGumpManager::OnDragging(bool blocked)
 	}
 }
 //----------------------------------------------------------------------------------
+#if USE_WISP
 /*!
 Обработка нажатия клавиши
 @param [__in] wparam не подписанный параметр
@@ -1127,6 +1129,18 @@ bool CGumpManager::OnKeyDown(const WPARAM &wParam, const LPARAM &lParam, bool bl
 
 	return result;
 }
+#else
+bool CGumpManager::OnTextInput(const SDL_TextInputEvent &ev, bool blocked)
+{
+  NOT_IMPLEMENTED; // FIXME
+	return false;
+}
+bool CGumpManager::OnKeyDown(const SDL_KeyboardEvent &ev, bool blocked)
+{
+  NOT_IMPLEMENTED; // FIXME
+	return false;
+}
+#endif
 //----------------------------------------------------------------------------------
 /*!
 Загрузка гампов из конфига
