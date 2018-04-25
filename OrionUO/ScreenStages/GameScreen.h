@@ -100,6 +100,8 @@ struct OBJECT_HITS_INFO
 
 	//!Цвет самой полоски с хп в зависимости от статуса ( отравлен/желтый/обычный(синий) )
 	ushort HealthColor;
+
+	CGLTextTexture *HitsTexture;
 };
 //----------------------------------------------------------------------------------
 class CGameScreen : public CBaseScreen

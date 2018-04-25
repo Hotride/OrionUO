@@ -71,7 +71,7 @@ public:
 	@param [__in] gumpID ID гампа (в памяти)
 	@return 
 	*/
-	CGump *GumpExists(uint gumpID);
+	CGump *GumpExists(uintptr_t gumpID);
 
 	/*!
 	Закрыть все гампы с указанными параметрами

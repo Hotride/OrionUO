@@ -47,12 +47,12 @@ void CServerList::ParsePacket(WISP_DATASTREAM::CDataReader &reader)
 
 	reader.Move(1);
 
-	uint numServers = reader.ReadUInt16BE();
+	uint16_t numServers = reader.ReadUInt16BE();
 
 	if (numServers == 0)
 		LOG("Warning!!! Empty server list\n");
 
-	IFOR(i, 0, (int)numServers)
+	for (uint16_t i = 0; i < numServers; i++)
 	{
 		ushort id = reader.ReadUInt16BE();
 		string name = reader.ReadString(32);

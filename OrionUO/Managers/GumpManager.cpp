@@ -230,12 +230,12 @@ CGump *CGumpManager::GetTextEntryOwner()
 @param [__in] gumpID ID гампа (в памяти)
 @return
 */
-CGump *CGumpManager::GumpExists(uint gumpID)
+CGump *CGumpManager::GumpExists(uintptr_t gumpID)
 {
 	WISPFUN_DEBUG("c144_f4");
 	QFOR(gump, m_Items, CGump*)
 	{
-		if (gumpID == (uint)gump)
+		if (gumpID == (uintptr_t)gump)
 			return gump;
 	}
 
