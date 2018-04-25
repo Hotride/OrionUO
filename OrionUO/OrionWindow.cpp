@@ -291,6 +291,7 @@ void COrionWindow::OnDeactivate()
 		g_PluginManager.WindowProc(Handle, WM_NCACTIVATE, 0, 0);
 }
 //----------------------------------------------------------------------------------
+#if USE_WISP
 void COrionWindow::OnCharPress(const WPARAM &wParam, const LPARAM &lParam)
 {
 	WISPFUN_DEBUG("c195_f19");
@@ -332,6 +333,50 @@ void COrionWindow::OnKeyUp(const WPARAM &wParam, const LPARAM &lParam)
 	if (wParam == 0x2C) //Print Screen
 		g_ScreenshotBuilder.SaveScreen();
 }
+#else
+void COrionWindow::OnTextInput(const SDL_TextInputEvent &ev)
+{
+	WISPFUN_DEBUG("c195_f19");
+	//if (g_PluginManager.WindowProc(Handle, WM_CHAR, wParam, lParam))
+	//	return;
+
+	if (g_CurrentScreen != nullptr && g_ScreenEffectManager.Mode == SEM_NONE)
+	{
+		g_CurrentScreen->OnTextInput(ev);
+	}
+}
+//----------------------------------------------------------------------------------
+void COrionWindow::OnKeyDown(const SDL_KeyboardEvent &ev)
+{
+	WISPFUN_DEBUG("c195_f20");
+	//if (g_PluginManager.WindowProc(Handle, WM_KEYDOWN, wParam, lParam))
+	//	return;
+	
+	const bool isCtrl = (SDL_GetModState() & KMOD_CTRL) != 0;
+	if (isCtrl && ev.keysym.sym == SDLK_v && g_EntryPointer != nullptr)
+	{
+		if (g_GameState == GS_MAIN)
+			g_MainScreen.Paste();
+		else
+			g_EntryPointer->Paste();
+	}
+	else if (/*ev.keysym.sym != SDLK_RETURN &&*/ g_CurrentScreen != nullptr && g_ScreenEffectManager.Mode == SEM_NONE)
+		g_CurrentScreen->OnKeyDown(ev);
+}
+//----------------------------------------------------------------------------------
+void COrionWindow::OnKeyUp(const SDL_KeyboardEvent &ev)
+{
+	WISPFUN_DEBUG("c195_f21");
+	//if (g_PluginManager.WindowProc(Handle, WM_KEYUP, wParam, lParam))
+	//	return;
+
+	if (g_CurrentScreen != nullptr && g_ScreenEffectManager.Mode == SEM_NONE)
+		g_CurrentScreen->OnKeyUp(ev);
+
+	if (ev.keysym.sym == SDLK_PRINTSCREEN)
+		g_ScreenshotBuilder.SaveScreen();
+}
+#endif
 //----------------------------------------------------------------------------------
 HRESULT COrionWindow::OnRepaint(const WPARAM &wParam, const LPARAM &lParam)
 {

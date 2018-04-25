@@ -10,11 +10,12 @@
 */
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
+#include "ServerScreen.h"
 //----------------------------------------------------------------------------------
 CServerScreen g_ServerScreen;
 //----------------------------------------------------------------------------------
 CServerScreen::CServerScreen()
-: CBaseScreen(m_ServerGump)
+	: CBaseScreen(m_ServerGump)
 {
 }
 //----------------------------------------------------------------------------------
@@ -38,6 +39,7 @@ void CServerScreen::Init()
 	m_Gump.WantUpdateContent = true;
 }
 //----------------------------------------------------------------------------------
+#if USE_WISP
 /*!
 Обработка нажатия клавиши
 @param [__in] wparam не подписанный параметр
@@ -55,6 +57,12 @@ void CServerScreen::OnKeyDown(const WPARAM &wParam, const LPARAM &lParam)
 		CreateSmoothAction(ID_SMOOTH_SS_SELECT_SERVER);
 	}
 }
+#else
+void CServerScreen::OnKeyDown(const SDL_KeyboardEvent &ev)
+{
+  NOT_IMPLEMENTED; // FIXME
+}
+#endif
 //----------------------------------------------------------------------------------
 /*!
 Обработка события после плавного затемнения экрана

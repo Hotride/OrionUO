@@ -9,26 +9,16 @@
 int GetLastError() { return errno; }
 
 // Bad and very ugly "API" stuff
-void *GetForegroundWindow() { assert(false && __func__ ); return nullptr; }
-void ShowWindow(void *, bool) { assert(false && __func__ ); }
-void ShowCursor(bool) { assert(false && __func__ ); }
-void SetWindowTextA(void *, const char *) { assert(false && __func__ ); }
-void SetWindowTextW(void *, const wchar_t *) { assert(false && __func__ ); }
 bool IsZoomed(void *) { assert(false && __func__ ); return false; }
 int GetSystemMetrics(int) { assert(false && __func__ ); return 0; }
 int DefWindowProc(void *, unsigned int, uintptr_t, uintptr_t) { assert(false && __func__ ); return 0; }
 bool PtInRect(const RECT *, POINT) { assert(false && __func__ ); return false; }
 int GetAsyncKeyState(int) { assert(false && __func__ ); return 0; }
-void OutputDebugStringA(void *) { assert(false && __func__ ); }
-void OutputDebugStringW(void *) { assert(false && __func__ ); }
 int GetACP() { assert(false && __func__ ); return 0; }
 int WideCharToMultiByte(int, int, const wchar_t*, int, char*, int, void*, void*) { assert(false && __func__ ); return 0; }
 int MultiByteToWideChar(int, int, const char*, int, wchar_t*, int) { assert(false && __func__ ); return 0; }
-void ScreenToClient(void *, POINT*) { assert(false && __func__ ); }
-void GetCursorPos(POINT*) { assert(false && __func__ ); }
 bool GetWindowRect(void*,RECT*) { assert(false && __func__ ); return false; }
 int GetWindowLongA(void*,int) { assert(false && __func__ ); return 0; }
-int RegisterClassEx(const WNDCLASSEX*) { assert(false && __func__ ); return 0; }
 bool SetWindowPos(void *, void*, int, int, int, int, int) { assert(false && __func__ ); return false; }
 bool IsIconic(void*) { assert(false && __func__ ); return false; }
 bool GetClientRect(void*, RECT*) { assert(false && __func__ ); return false; }
@@ -48,13 +38,10 @@ void* GetClipboardData(unsigned)  { assert(false && __func__ ); return nullptr;}
 bool CloseClipboard()  { assert(false && __func__ ); return false;}
 wchar_t* GetCommandLineW() { assert(false && __func__ ); return nullptr; }
 const wchar_t** CommandLineToArgvW(wchar_t*,int*) { assert(false && __func__ ); return nullptr; }
-void ExitProcess(unsigned) { assert(false && __func__ ); }
 int GetSystemDefaultLangID() { assert(false && __func__ ); return 0; }
 bool BringWindowToTop(void *) { assert(false && __func__ ); return false; }
-void* LoadIcon(void*, int) { assert(false && __func__ ); return nullptr; }
 void* ShellExecuteA(void*, const char*, const char*, const char*, const char*, int) { assert(false && __func__ ); return nullptr; }
 void *LocalFree(void*p) { free(p); /*wtf*/ return nullptr;}
-void *LoadCursor(void*, int){ assert(false && __func__ ); return nullptr; }
 void* GlobalLock(void*){ assert(false && __func__ ); return nullptr; }
 bool GlobalUnlock(void*){ assert(false && __func__ ); return false; }
 int GetProfileStringA(const char*, const char*, const char*, char*, int){ assert(false && __func__ ); return 0; }

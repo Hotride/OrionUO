@@ -10,12 +10,12 @@
 */
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
-
+#include "GumpStatusbar.h"
 int CGumpStatusbar::m_StatusbarDefaultWidth = 154;
 int CGumpStatusbar::m_StatusbarDefaultHeight = 59;
 //----------------------------------------------------------------------------------
 CGumpStatusbar::CGumpStatusbar(uint serial, short x, short y, bool minimized)
-: CGump(GT_STATUSBAR, serial, x, y)
+	: CGump(GT_STATUSBAR, serial, x, y)
 {
 	WISPFUN_DEBUG("c128_f1");
 	if (minimized)
@@ -1222,6 +1222,7 @@ bool CGumpStatusbar::OnLeftMouseButtonDoubleClick()
 	return false;
 }
 //----------------------------------------------------------------------------------
+#if USE_WISP
 void CGumpStatusbar::OnCharPress(const WPARAM &wParam, const LPARAM &lParam)
 {
 	WISPFUN_DEBUG("c128_f16");
@@ -1303,6 +1304,16 @@ void CGumpStatusbar::OnKeyDown(const WPARAM &wParam, const LPARAM &lParam)
 			break;
 	}
 }
+#else
+void CGumpStatusbar::OnTextInput(const SDL_TextInputEvent &ev)
+{
+  NOT_IMPLEMENTED; // FIXME
+}
+void CGumpStatusbar::OnKeyDown(const SDL_KeyboardEvent &ev)
+{
+  NOT_IMPLEMENTED; // FIXME
+}
+#endif
 //----------------------------------------------------------------------------------
 void CGumpStatusbar::SendRenameRequest()
 {

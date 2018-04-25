@@ -7,8 +7,8 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#ifndef GUMPBULLETINBOARDITEM_H
-#define GUMPBULLETINBOARDITEM_H
+#pragma once
+#include <SDL_events.h>
 //----------------------------------------------------------------------------------
 class CGumpBulletinBoardItem : public CGumpBaseScroll
 {
@@ -41,9 +41,11 @@ public:
 
 	GUMP_BUTTON_EVENT_H;
 
+#if USE_WISP
 	virtual void OnCharPress(const WPARAM &wParam, const LPARAM &lParam);
 	virtual void OnKeyDown(const WPARAM &wParam, const LPARAM &lParam);
+#else
+	virtual void OnTextInput(const SDL_TextInputEvent &ev) override;
+	virtual void OnKeyDown(const SDL_KeyboardEvent &ev) override;
+#endif	
 };
-//----------------------------------------------------------------------------------
-#endif
-//----------------------------------------------------------------------------------

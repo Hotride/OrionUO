@@ -10,13 +10,17 @@
 */
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
+#include "MainScreen.h"
 #include "FileSystem.h"
 //----------------------------------------------------------------------------------
 CMainScreen g_MainScreen;
 //----------------------------------------------------------------------------------
 CMainScreen::CMainScreen()
-: CBaseScreen(m_MainGump), m_Account(NULL), m_Password(NULL), m_SavePassword(NULL),
-m_AutoLogin(NULL)
+	: CBaseScreen(m_MainGump)
+	, m_Account(NULL)
+	, m_Password(NULL)
+	, m_SavePassword(NULL)
+	, m_AutoLogin(NULL)
 {
 	WISPFUN_DEBUG("c165_f1");
 	m_Password = new CEntryText(32, 0, 300);
@@ -114,6 +118,7 @@ void CMainScreen::Paste()
 		g_EntryPointer->Paste();
 }
 //----------------------------------------------------------------------------------
+#if USE_WISP
 /*!
 Обработка нажатия клавиши
 @param [__in] wparam не подписанный параметр
@@ -184,6 +189,16 @@ void CMainScreen::OnKeyDown(const WPARAM &wParam, const LPARAM &lParam)
 
 	m_Gump.WantRedraw = true;
 }
+#else
+void CMainScreen::OnTextInput(const SDL_TextInputEvent &ev)
+{
+  NOT_IMPLEMENTED; // FIXME
+}
+void CMainScreen::OnKeyDown(const SDL_KeyboardEvent &ev)
+{
+  NOT_IMPLEMENTED; // FIXME
+}
+#endif
 //----------------------------------------------------------------------------------
 /*!
 Получить код конфига по ключу

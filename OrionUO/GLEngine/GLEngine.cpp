@@ -219,7 +219,8 @@ void CGLEngine::Uninstall()
 		RC = 0;
 	}
 #else
-	SDL_GL_DeleteContext(m_context);
+	if (m_context)
+		SDL_GL_DeleteContext(m_context);
 #endif
 }
 //----------------------------------------------------------------------------------

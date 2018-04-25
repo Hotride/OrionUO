@@ -7,8 +7,8 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#ifndef ORIONWINDOW_H
-#define ORIONWINDOW_H
+#pragma once
+#include <SDL_events.h>
 //----------------------------------------------------------------------------------
 class COrionWindow : public WISP_WINDOW::CWindow
 {
@@ -45,18 +45,22 @@ protected:
 	virtual void OnDragging();
 	virtual void OnActivate();
 	virtual void OnDeactivate();
-	virtual void OnCharPress(const WPARAM &wParam, const LPARAM &lParam);
-	virtual void OnKeyDown(const WPARAM &wParam, const LPARAM &lParam);
-	virtual void OnKeyUp(const WPARAM &wParam, const LPARAM &lParam);
-	virtual HRESULT OnRepaint(const WPARAM &wParam, const LPARAM &lParam);
 	virtual void OnShow(bool show);
 	virtual void OnSetText(const LPARAM &lParam);
 	virtual void OnTimer(uint id);
 	virtual void OnThreadedTimer(uint nowTime, WISP_THREADED_TIMER::CThreadedTimer *timer);
+	virtual HRESULT OnRepaint(const WPARAM &wParam, const LPARAM &lParam);
 	virtual LRESULT OnUserMessages(int message, const WPARAM &wParam, const LPARAM &lParam);
+#if USE_WISP
+	virtual void OnCharPress(const WPARAM &wParam, const LPARAM &lParam);
+	virtual void OnKeyDown(const WPARAM &wParam, const LPARAM &lParam);
+	virtual void OnKeyUp(const WPARAM &wParam, const LPARAM &lParam);
+#else
+	virtual void OnTextInput(const SDL_TextInputEvent &ev) override;
+	virtual void OnKeyDown(const SDL_KeyboardEvent &ev) override;
+	virtual void OnKeyUp(const SDL_KeyboardEvent &ev) override;
+#endif
 };
 //----------------------------------------------------------------------------------
 extern COrionWindow g_OrionWindow;
-//----------------------------------------------------------------------------------
-#endif
 //----------------------------------------------------------------------------------

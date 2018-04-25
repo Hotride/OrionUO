@@ -7,8 +7,8 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#ifndef GUMPBOOK_H
-#define GUMPBOOK_H
+#pragma once
+#include <SDL_events.h>
 //----------------------------------------------------------------------------------
 class CGumpBook : public CGump
 {
@@ -58,9 +58,11 @@ public:
 
 	bool OnLeftMouseButtonDoubleClick();
 
+#if USE_WISP
 	void OnCharPress(const WPARAM &wParam, const LPARAM &lParam);
 	void OnKeyDown(const WPARAM &wParam, const LPARAM &lParam);
+#else
+	virtual void OnTextInput(const SDL_TextInputEvent &ev) override;
+	virtual void OnKeyDown(const SDL_KeyboardEvent &ev) override;
+#endif	
 };
-//----------------------------------------------------------------------------------
-#endif
-//----------------------------------------------------------------------------------

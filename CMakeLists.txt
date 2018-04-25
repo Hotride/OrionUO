@@ -49,8 +49,10 @@ if(ORION_WINDOWS)
 
 	if(NOT "${CMAKE_GENERATOR}" MATCHES "(Win64|IA64)")
 		set(_WIN_TARGET "Win32")
+		set(ORION_64BITS 0)
 	else()
 		set(_WIN_TARGET "x64")
+		set(ORION_64BITS 1)
 	endif()
 
 	set(DEP_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/OrionUO/Dependencies/include")

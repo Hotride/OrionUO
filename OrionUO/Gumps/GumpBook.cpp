@@ -10,10 +10,13 @@
 */
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
+#include "GumpBook.h"
 //----------------------------------------------------------------------------------
 CGumpBook::CGumpBook(uint serial, short x, short y, short pageCount, bool writable, bool unicode)
-: CGump(GT_BOOK, serial, x, y), PageCount(pageCount), Writable(writable),
-Unicode(unicode)
+	: CGump(GT_BOOK, serial, x, y)
+	, PageCount(pageCount)
+	, Writable(writable)
+	, Unicode(unicode)
 {
 	WISPFUN_DEBUG("c87_f1");
 	m_ChangedPage = new bool[pageCount + 1];
@@ -417,6 +420,7 @@ void CGumpBook::InsertInContent(const WPARAM &wparam, bool isCharPress)
 	}
 }
 //----------------------------------------------------------------------------------
+#if USE_WISP
 void CGumpBook::OnCharPress(const WPARAM &wParam, const LPARAM &lParam)
 {
 	WISPFUN_DEBUG("c87_f10");
@@ -483,6 +487,16 @@ void CGumpBook::OnKeyDown(const WPARAM &wParam, const LPARAM &lParam)
 			break;
 	}
 }
+#else
+void CGumpBook::OnTextInput(const SDL_TextInputEvent &ev)
+{
+	NOT_IMPLEMENTED; // FIXME
+}
+void CGumpBook::OnKeyDown(const SDL_KeyboardEvent &ev)
+{
+	NOT_IMPLEMENTED; // FIXME
+}
+#endif
 //----------------------------------------------------------------------------------
 void CGumpBook::SetPagePos(int val, int page)
 {

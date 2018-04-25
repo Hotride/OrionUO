@@ -7,8 +7,8 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#ifndef GUMP_H
-#define GUMP_H
+#pragma once
+#include <SDL_events.h>
 //----------------------------------------------------------------------------------
 class CBaseGUI;
 //----------------------------------------------------------------------------------
@@ -152,14 +152,18 @@ public:
 	virtual bool OnMidMouseButtonDoubleClick() { return false; }
 	virtual void OnMidMouseButtonScroll(bool up);
 	virtual void OnDragging();
+#if USE_WISP
 	virtual void OnCharPress(const WPARAM &wParam, const LPARAM &lParam) {}
 	virtual void OnKeyDown(const WPARAM &wParam, const LPARAM &lParam) {}
 	virtual void OnKeyUp(const WPARAM &wParam, const LPARAM &lParam) {}
+#else
+	virtual void OnTextInput(const SDL_TextInputEvent &ev) {};
+	virtual void OnKeyDown(const SDL_KeyboardEvent &ev) {};
+	virtual void OnKeyUp(const SDL_KeyboardEvent &ev) {};
+#endif
  };
  //----------------------------------------------------------------------------------
 //!Ссылка на гамп, который в данный момент изменяет высоту
  extern CGump *g_ResizedGump;
  extern CGump *g_CurrentCheckGump;
  //----------------------------------------------------------------------------------
-#endif
-//----------------------------------------------------------------------------------

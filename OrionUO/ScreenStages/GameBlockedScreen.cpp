@@ -10,11 +10,12 @@
 */
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
+#include "GameBlockedScreen.h"
 //----------------------------------------------------------------------------------
 CGameBlockedScreen g_GameBlockedScreen;
 //----------------------------------------------------------------------------------
 CGameBlockedScreen::CGameBlockedScreen()
-: CBaseScreen(m_GameBlockedScreenGump)
+	: CBaseScreen(m_GameBlockedScreenGump)
 {
 }
 //----------------------------------------------------------------------------------
@@ -88,6 +89,7 @@ void CGameBlockedScreen::OnLeftMouseButtonUp()
 		g_GumpManager.OnLeftMouseButtonUp(true);
 }
 //----------------------------------------------------------------------------------
+#if USE_WISP
 /*!
 Обработка нажатия клавиши
 @param [__in] wparam не подписанный параметр
@@ -130,3 +132,13 @@ void CGameBlockedScreen::OnKeyDown(const WPARAM &wParam, const LPARAM &lParam)
 	}
 }
 //----------------------------------------------------------------------------------
+#else
+void CGameBlockedScreen::OnTextInput(const SDL_TextInputEvent &ev)
+{
+  NOT_IMPLEMENTED; // FIXME
+}
+void CGameBlockedScreen::OnKeyDown(const SDL_KeyboardEvent &ev)
+{
+  NOT_IMPLEMENTED; // FIXME
+}
+#endif

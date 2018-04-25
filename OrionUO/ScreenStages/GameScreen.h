@@ -7,8 +7,8 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#ifndef GAMESCREEN_H
-#define GAMESCREEN_H
+#pragma once
+#include <SDL_events.h>
 //----------------------------------------------------------------------------------
 //!Структура с данными о параметрах и возможностях игрового окна
 struct RENDER_VARIABLES_FOR_GAME_WINDOW
@@ -264,16 +264,18 @@ public:
 	virtual bool OnMidMouseButtonDoubleClick() { return false; }
 	virtual void OnMidMouseButtonScroll(bool up);
 	virtual void OnDragging();
+#if USE_WISP
 	virtual void OnCharPress(const WPARAM &wParam, const LPARAM &lParam);
 	virtual void OnKeyDown(const WPARAM &wParam, const LPARAM &lParam);
 	virtual void OnKeyUp(const WPARAM &wParam, const LPARAM &lParam);
+#else
+	virtual void OnTextInput(const SDL_TextInputEvent &ev) override;
+	virtual void OnKeyDown(const SDL_KeyboardEvent &ev) override;
+	virtual void OnKeyUp(const SDL_KeyboardEvent &ev) override;
+#endif
 };
 //----------------------------------------------------------------------------------
 //!Ссылка на экран
 extern CGameScreen g_GameScreen;
-
 //!Структура с данными о параметрах и возможностях игрового окна
 extern RENDER_VARIABLES_FOR_GAME_WINDOW g_RenderBounds;
-//----------------------------------------------------------------------------------
-#endif
-//----------------------------------------------------------------------------------

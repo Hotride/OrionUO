@@ -320,20 +320,6 @@ struct WSADATA {
   char          *lpVendorInfo;
 };
 typedef LRESULT (CALLBACK* WNDPROC)(HWND, UINT, WPARAM, LPARAM);
-struct WNDCLASSEX {
-  UINT      cbSize;
-  UINT      style;
-  WNDPROC   lpfnWndProc;
-  int       cbClsExtra;
-  int       cbWndExtra;
-  HINSTANCE hInstance;
-  HICON     hIcon;
-  HCURSOR   hCursor;
-  HBRUSH    hbrBackground;
-  const wchar_t*   lpszMenuName;
-  const wchar_t*   lpszClassName;
-  HICON     hIconSm;
-};
 
 struct MINMAXINFO {
   POINT ptReserved;
@@ -359,27 +345,17 @@ struct SECURITY_ATTRIBUTES {
 };
 
 // Bad and very ugly "API" stuff
-void *GetForegroundWindow() ;
-void ShowWindow(void *, bool) ;
-void ShowCursor(bool) ;
-void SetWindowTextA(void *, const char *) ;
-void SetWindowTextW(void *, const wchar_t *) ;
 bool IsZoomed(void *) ;
 int GetSystemMetrics(int) ;
 int DefWindowProc(void *, unsigned int, uintptr_t, uintptr_t) ;
 bool PtInRect(const RECT *, POINT) ;
 int GetAsyncKeyState(int) ;
 int GetLastError() ;
-void OutputDebugStringA(void *) ;
-void OutputDebugStringW(void *) ;
 int GetACP() ;
 int WideCharToMultiByte(int, int, const wchar_t*, int, char*, int, void*, void*) ;
 int MultiByteToWideChar(int, int, const char*, int, wchar_t*, int) ;
-void ScreenToClient(void *, POINT*) ;
-void GetCursorPos(POINT*) ;
 bool GetWindowRect(void*,RECT*) ;
 int GetWindowLongA(void*,int) ;
-int RegisterClassEx(const WNDCLASSEX*) ;
 bool SetWindowPos(void *, void*, int, int, int, int, int) ;
 bool IsIconic(void*) ;
 bool GetClientRect(void*, RECT*) ;
@@ -399,13 +375,10 @@ void* GetClipboardData(unsigned)  ;
 bool CloseClipboard()  ;
 wchar_t* GetCommandLineW() ;
 const wchar_t** CommandLineToArgvW(wchar_t*,int*) ;
-void ExitProcess(unsigned) ;
 int GetSystemDefaultLangID() ;
 bool BringWindowToTop(void *) ;
-void* LoadIcon(void*, int) ;
 void* ShellExecuteA(void*, const char*, const char*, const char*, const char*, int) ;
 void *LocalFree(void*p) ;
-void *LoadCursor(void*, int);
 void* GlobalLock(void*);
 bool GlobalUnlock(void*);
 int GetProfileStringA(const char*, const char*, const char*, char*, int);

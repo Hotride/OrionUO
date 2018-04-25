@@ -10,12 +10,13 @@
 */
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
+#include "GumpOptions.h"
 //----------------------------------------------------------------------------------
 const ushort g_OptionsTextColor = 0;
 const int g_OptionsPolygoneColorOffset = 12;
 //----------------------------------------------------------------------------------
 CGumpOptions::CGumpOptions(short x, short y)
-: CGump(GT_OPTIONS, 0, x, y)
+	: CGump(GT_OPTIONS, 0, x, y)
 {
 	Page = 2;
 }
@@ -2882,6 +2883,7 @@ void CGumpOptions::GUMP_COMBOBOX_SELECTION_EVENT_C
 	}
 }
 //----------------------------------------------------------------------------
+#if USE_WISP
 void CGumpOptions::OnCharPress(const WPARAM &wParam, const LPARAM &lParam)
 {
 	WISPFUN_DEBUG("c104_f24");
@@ -3035,6 +3037,16 @@ void CGumpOptions::OnKeyDown(const WPARAM &wParam, const LPARAM &lParam)
 		}
 	}
 }
+#else
+void CGumpOptions::OnTextInput(const SDL_TextInputEvent &ev)
+{
+  NOT_IMPLEMENTED; // FIXME
+}
+void CGumpOptions::OnKeyDown(const SDL_KeyboardEvent &ev)
+{
+  NOT_IMPLEMENTED; // FIXME
+}
+#endif
 //----------------------------------------------------------------------------
 void CGumpOptions::ApplyPageChanges()
 {

@@ -10,9 +10,10 @@
 */
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
+#include "GumpDrag.h"
 //----------------------------------------------------------------------------------
 CGumpDrag::CGumpDrag(uint serial, short x, short y)
-: CGump(GT_DRAG, serial, x, y)
+	: CGump(GT_DRAG, serial, x, y)
 {
 }
 //----------------------------------------------------------------------------------
@@ -74,6 +75,24 @@ void CGumpDrag::GUMP_SLIDER_MOVE_EVENT_C
 		m_Entry->m_Entry.SetText(std::to_wstring(m_Slider->Value));
 }
 //----------------------------------------------------------------------------------
+void CGumpDrag::OnOkayPressed()
+{
+	WISPFUN_DEBUG("c94_f7");
+	if (!g_ObjectInHand.Enabled)
+	{
+		RemoveMark = true;
+
+		if (m_Slider->Value)
+		{
+			CGameItem *obj = g_World->FindWorldItem(Serial);
+
+			if (obj != NULL)
+				g_Orion.PickupItem(obj, m_Slider->Value);
+		}
+	}
+}
+//----------------------------------------------------------------------------------
+#if USE_WISP
 void CGumpDrag::OnCharPress(const WPARAM &wParam, const LPARAM &lParam)
 {
 	WISPFUN_DEBUG("c94_f5");
@@ -158,21 +177,13 @@ void CGumpDrag::OnKeyDown(const WPARAM &wParam, const LPARAM &lParam)
 		}
 	}
 }
-//----------------------------------------------------------------------------------
-void CGumpDrag::OnOkayPressed()
+#else
+void CGumpDrag::OnTextInput(const SDL_TextInputEvent &ev)
 {
-	WISPFUN_DEBUG("c94_f7");
-	if (!g_ObjectInHand.Enabled)
-	{
-		RemoveMark = true;
-
-		if (m_Slider->Value)
-		{
-			CGameItem *obj = g_World->FindWorldItem(Serial);
-
-			if (obj != NULL)
-				g_Orion.PickupItem(obj, m_Slider->Value);
-		}
-	}
+	NOT_IMPLEMENTED; // FIXME
 }
-//----------------------------------------------------------------------------------
+void CGumpDrag::OnKeyDown(const SDL_KeyboardEvent &ev)
+{
+	NOT_IMPLEMENTED; // FIXME
+}
+#endif

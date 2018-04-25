@@ -10,10 +10,11 @@
 */
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
+#include "GumpBulletinBoardItem.h"
 //----------------------------------------------------------------------------------
 CGumpBulletinBoardItem::CGumpBulletinBoardItem(int serial, int x, int y, uchar variant, int id, const wstring &poster, const wstring &subject, const wstring &dataTime, const wstring &data)
-: CGumpBaseScroll(GT_BULLETIN_BOARD_ITEM, serial, 0x0820, 250, x, y, false, 70),
-m_Variant(variant)
+	: CGumpBaseScroll(GT_BULLETIN_BOARD_ITEM, serial, 0x0820, 250, x, y, false, 70)
+	, m_Variant(variant)
 {
 	WISPFUN_DEBUG("c90_f1");
 	ID = id;
@@ -193,6 +194,7 @@ void CGumpBulletinBoardItem::GUMP_BUTTON_EVENT_C
 	}
 }
 //----------------------------------------------------------------------------------
+#if USE_WISP
 void CGumpBulletinBoardItem::OnCharPress(const WPARAM &wParam, const LPARAM &lParam)
 {
 	WISPFUN_DEBUG("c90_f5");
@@ -220,4 +222,13 @@ void CGumpBulletinBoardItem::OnKeyDown(const WPARAM &wParam, const LPARAM &lPara
 			RecalculateHeight();
 	}
 }
-//----------------------------------------------------------------------------------
+#else
+void CGumpBulletinBoardItem::OnTextInput(const SDL_TextInputEvent &ev)
+{
+	NOT_IMPLEMENTED; // FIXME
+}
+void CGumpBulletinBoardItem::OnKeyDown(const SDL_KeyboardEvent &ev)
+{
+	NOT_IMPLEMENTED; // FIXME
+}
+#endif

@@ -10,9 +10,10 @@
 */
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
+#include "GumpGeneric.h"
 //----------------------------------------------------------------------------------
 CGumpGeneric::CGumpGeneric(uint serial, short x, short y, uint id)
-: CGump(GT_GENERIC, serial, x, y)
+	: CGump(GT_GENERIC, serial, x, y)
 {
 	Page = 1;
 	ID = id;
@@ -171,6 +172,7 @@ bool CGumpGeneric::OnLeftMouseButtonDoubleClick()
 	return false;
 }
 //----------------------------------------------------------------------------------
+#if USE_WISP
 void CGumpGeneric::OnCharPress(const WPARAM &wParam, const LPARAM &lParam)
 {
 	WISPFUN_DEBUG("c96_f6");
@@ -193,4 +195,13 @@ void CGumpGeneric::OnKeyDown(const WPARAM &wParam, const LPARAM &lParam)
 	else
 		g_EntryPointer->OnKey(this, wParam);
 }
-//----------------------------------------------------------------------------------
+#else
+void CGumpGeneric::OnTextInput(const SDL_TextInputEvent &ev)
+{
+  NOT_IMPLEMENTED; // FIXME
+}
+void CGumpGeneric::OnKeyDown(const SDL_KeyboardEvent &ev)
+{
+  NOT_IMPLEMENTED; // FIXME
+}
+#endif

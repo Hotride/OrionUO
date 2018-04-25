@@ -1,10 +1,7 @@
 ﻿//----------------------------------------------------------------------------------
-#ifndef WISPWINDOW_H
-#define WISPWINDOW_H
-//----------------------------------------------------------------------------------
+#pragma once
 #include <SDL_video.h>
 #include <SDL_events.h>
-
 namespace WISP_WINDOW
 {
 //----------------------------------------------------------------------------------
@@ -61,17 +58,18 @@ public:
 #endif
 	}
 
-	bool IsActive() { return (::GetForegroundWindow() == Handle); }
-
-	void ShowCursor(bool show = true) { ::ShowCursor(show ? TRUE : FALSE); }
+	void ShowCursor(bool show = true) { SDL_ShowCursor(show ? SDL_TRUE : SDL_FALSE); }
 #if USE_WISP
+	bool IsActive() { return (::GetForegroundWindow() == Handle); }
+	void SetTitle(const string &text) { ::SetWindowTextA(Handle, text.c_str()); }
 	void ShowWindow(bool show) { ::ShowWindow(Handle, show ? TRUE : FALSE); }
+#else
+	bool IsActive() { return SDL_GetGrabbedWindow() == m_window; } // TODO: check
+	void SetTitle(const string &text) { SDL_SetWindowTitle(m_window, text.c_str()); }
+	void ShowWindow(bool show) { show ? SDL_ShowWindow(m_window) : SDL_HideWindow(m_window); }
 #endif
 
 	bool Zoomed() { return (::IsZoomed(Handle) != FALSE); }
-
-	void SetTitle(const string &text) { ::SetWindowTextA(Handle, text.c_str()); }
-	//void SetTitle(const wstring &text) { ::SetWindowTextW(Handle, text.c_str()); }
 
 	// May be done using: SDL_AddTimer / SDL_RemoveTimer
 	void CreateTimer(uint id, int delay) { ::SetTimer(Handle, id, delay, NULL); }
@@ -99,20 +97,25 @@ protected:
 	virtual void OnDragging() {}
 	virtual void OnActivate() {}
 	virtual void OnDeactivate() {}
+	virtual void OnShow(bool show) {}
+
+	virtual void OnTimer(uint id) {}
+	virtual void OnThreadedTimer(uint nowTime, WISP_THREADED_TIMER::CThreadedTimer *timer) {}
+	virtual void OnSetText(const LPARAM &lParam) {}
+	virtual HRESULT OnRepaint(const WPARAM &wParam, const LPARAM &lParam) { return (HRESULT)DefWindowProc(Handle, WM_NCPAINT, wParam, lParam); }
+	virtual LRESULT OnUserMessages(int message, const WPARAM &wParam, const LPARAM &lParam) { return S_OK; }
+#if USE_WISP
 	virtual void OnCharPress(const WPARAM &wParam, const LPARAM &lParam) {}
 	virtual void OnKeyDown(const WPARAM &wParam, const LPARAM &lParam) {}
 	virtual void OnKeyUp(const WPARAM &wParam, const LPARAM &lParam) {}
-	virtual HRESULT OnRepaint(const WPARAM &wParam, const LPARAM &lParam) { return (HRESULT)DefWindowProc(Handle, WM_NCPAINT, wParam, lParam); }
-	virtual void OnShow(bool show) {}
-	virtual void OnSetText(const LPARAM &lParam) {}
-	virtual void OnTimer(uint id) {}
-	virtual void OnThreadedTimer(uint nowTime, WISP_THREADED_TIMER::CThreadedTimer *timer) {}
-	virtual LRESULT OnUserMessages(int message, const WPARAM &wParam, const LPARAM &lParam) { return S_OK; }
+#else
+	virtual void OnTextInput(const SDL_TextInputEvent &ev) {}
+	virtual void OnKeyDown(const SDL_KeyboardEvent &ev) {}
+	virtual void OnKeyUp(const SDL_KeyboardEvent &ev) {}
+#endif
 };
 //----------------------------------------------------------------------------------
 extern CWindow *g_WispWindow;
 //----------------------------------------------------------------------------------
 }; //namespace
 //----------------------------------------------------------------------------------
-#endif
-

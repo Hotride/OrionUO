@@ -27,7 +27,7 @@ int APIENTRY _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCm
 	INITCRASHLOGGER(path);
 
 	g_OrionWindow.hInstance = hInstance;
-	if (!g_OrionWindow.Create("Orion UO Client", "Ultima Online", true, 640, 480))
+	if (!g_OrionWindow.Create("Orion UO Client", "Ultima Online", false, 640, 480))
 		return 0;
 
 	g_OrionWindow.ShowWindow(true);
@@ -91,7 +91,7 @@ int main(int argc, char **argv)
 
 	if (!g_isHeadless)
 	{
-		if (!g_OrionWindow.Create("Orion UO Client", "Ultima Online", true, 640, 480))
+		if (!g_OrionWindow.Create("Orion UO Client", "Ultima Online", false, 640, 480))
 		{
 			SDL_LogWarn(SDL_LOG_CATEGORY_APPLICATION, "Failed to create OrionUO client window. Fallbacking to headless mode.\n");
 			g_isHeadless = true;

@@ -334,6 +334,7 @@ if(ORION_WINDOWS)
     VMQuery.cpp                 # FIXME: windows only, rap, coredump
     StackWalker.cpp             # FIXME: windows only, wrap, use backtrace
     ExceptionFilter.cpp         # FIXME: exception handler, wrap, use signals
+    OrionUO.rc
   )
 endif()
 
@@ -394,11 +395,19 @@ else()
   add_executable(OrionUO ${SRCS} ${headers})
 endif()
 
-target_link_libraries(OrionUO PUBLIC ${SDL2_LIBRARIES} ${SDL2_IMAGE_LIBRARIES} ${ZLIB_LIBRARIES} ${OPENGL_LIBRARIES} ${FREEIMAGE_LIBRARIES} ${GLEW_LIBRARIES} ${THREAD} -lm)
+target_link_libraries(OrionUO PUBLIC ${SDL2_LIBRARIES} ${SDL2_IMAGE_LIBRARIES} ${ZLIB_LIBRARIES} ${OPENGL_LIBRARIES} ${FREEIMAGE_LIBRARIES} ${GLEW_LIBRARIES} ${THREAD})
 
 set_target_properties(OrionUO PROPERTIES COTIRE_CXX_PREFIX_HEADER_INIT "stdafx.h")
 cotire(OrionUO)
+
 if(ORION_WINDOWS)
   set_target_properties(OrionUO PROPERTIES LINK_FLAGS "/SUBSYSTEM:WINDOWS")
   set_target_properties(OrionUO_unity PROPERTIES LINK_FLAGS "/SUBSYSTEM:WINDOWS")
+  if(ORION_64BITS)
+    add_custom_command(TARGET OrionUO POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_directory "${PROJECT_SOURCE_DIR}/test_bin64" $<TARGET_FILE_DIR:OrionUO>)
+    add_custom_command(TARGET OrionUO_unity POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_directory "${PROJECT_SOURCE_DIR}/test_bin64" $<TARGET_FILE_DIR:OrionUO_unity>)
+  else()
+    add_custom_command(TARGET OrionUO POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_directory "${PROJECT_SOURCE_DIR}/bin" $<TARGET_FILE_DIR:OrionUO>)
+    add_custom_command(TARGET OrionUO_unity POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_directory "${PROJECT_SOURCE_DIR}/bin" $<TARGET_FILE_DIR:OrionUO_unity>)
+  endif()
 endif()

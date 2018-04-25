@@ -7,8 +7,8 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#ifndef GUMPMANAGER_H
-#define GUMPMANAGER_H
+#pragma once
+#include <SDL_events.h>
 //----------------------------------------------------------------------------------
 //!Класс менеджера гампов
 class CGumpManager : public CBaseQueue
@@ -137,15 +137,17 @@ public:
 
 	void OnDragging(bool blocked);
 
-	bool OnCharPress(const WPARAM &wParam, const LPARAM &lParam, bool blocked);
-	bool OnKeyDown(const WPARAM &wParam, const LPARAM &lParam, bool blocked);
-
 	void Load(const os_path &path);
 	void Save(const os_path &path);
+
+#if USE_WISP
+	bool OnCharPress(const WPARAM &wParam, const LPARAM &lParam, bool blocked);
+	bool OnKeyDown(const WPARAM &wParam, const LPARAM &lParam, bool blocked);
+#else
+	virtual bool OnTextInput(const SDL_TextInputEvent &ev, bool blocked);
+	virtual bool OnKeyDown(const SDL_KeyboardEvent &ev,  bool blocked);	
+#endif	
 };
 //----------------------------------------------------------------------------------
 //!Ссылка на менеджер гампов
 extern CGumpManager g_GumpManager;
-//----------------------------------------------------------------------------------
-#endif
-//----------------------------------------------------------------------------------
