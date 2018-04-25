@@ -116,7 +116,7 @@ string CApplication::GetFileVersion(uint *numericVerion) const
 
 	return "unknown";
 #else
-	return "(other)";
+	return " Linux";
 #endif
 }
 //---------------------------------------------------------------------------

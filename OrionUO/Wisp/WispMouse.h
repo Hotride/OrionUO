@@ -1,6 +1,6 @@
 ﻿//----------------------------------------------------------------------------------
-#ifndef WISPMOUSE_H
-#define WISPMOUSE_H
+#pragma once
+#include <SDL_events.h>
 //----------------------------------------------------------------------------------
 namespace WISP_MOUSE
 {
@@ -18,7 +18,7 @@ public:
 	bool RightButtonPressed = false;
 	bool MidButtonPressed = false;
 	bool Dragging = false;
-	int DoubleClickDelay = 350 /*GetDoubleClickTime()*/;
+	int DoubleClickDelay = 350;
 	bool CancelDoubleClick = false;
 
 	uint LastLeftButtonClickTimer = 0;
@@ -29,8 +29,8 @@ public:
 	virtual ~CMouse();
 
 	void Update();
-	void Update(WPARAM wParam, LPARAM lParam);
-	void ReleaseCapture();
+	void Release() const;
+	void Capture() const;
 
 	WISP_GEOMETRY::CPoint2Di LeftDroppedOffset();
 	WISP_GEOMETRY::CPoint2Di RightDroppedOffset();
@@ -41,4 +41,3 @@ extern CMouse *g_WispMouse;
 //----------------------------------------------------------------------------------
 }; //namespace
 //----------------------------------------------------------------------------------
-#endif

@@ -12,8 +12,11 @@
 #include "stdafx.h"
 //----------------------------------------------------------------------------------
 CGameCharacter::CGameCharacter(int serial)
-: CGameObject(serial), Hits(0), MaxHits(0), LastStepSoundTime(GetTickCount()),
-TimeToRandomFidget(GetTickCount() + RANDOM_FIDGET_ANIMATION_DELAY)
+	: CGameObject(serial)
+	, Hits(0)
+	, MaxHits(0)
+	, LastStepSoundTime(SDL_GetTicks())
+	, TimeToRandomFidget(SDL_GetTicks() + RANDOM_FIDGET_ANIMATION_DELAY)
 {
 	NPC = true;
 	NoDrawTile = false;

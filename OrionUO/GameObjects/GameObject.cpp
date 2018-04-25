@@ -10,10 +10,11 @@
 */
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
+#include <SDL_timer.h>
 //----------------------------------------------------------------------------------
 CGameObject::CGameObject(int serial)
-: CRenderStaticObject(ROT_GAME_OBJECT, serial, 0, 0, 0, 0, 0),
-LastAnimationChangeTime(GetTickCount())
+	: CRenderStaticObject(ROT_GAME_OBJECT, serial, 0, 0, 0, 0, 0)
+	, LastAnimationChangeTime(SDL_GetTicks())
 {
 	WISPFUN_DEBUG("c20_f1");
 	memset(&m_FrameInfo, 0, sizeof(DRAW_FRAME_INFORMATION));

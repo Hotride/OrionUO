@@ -10,9 +10,12 @@
 */
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
+#include <SDL_timer.h>
 //----------------------------------------------------------------------------------
 CMapBlock::CMapBlock(int index)
-: CBaseQueueItem(), Index(index), LastAccessTime(GetTickCount())
+	: CBaseQueueItem()
+	, Index(index)
+	, LastAccessTime(SDL_GetTicks())
 {
 	WISPFUN_DEBUG("c24_f1");
 	//Обнуляем блок
