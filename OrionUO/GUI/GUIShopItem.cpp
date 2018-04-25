@@ -10,10 +10,13 @@
 */
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
+#include <SDL_timer.h>
 //----------------------------------------------------------------------------------
 CGUIShopItem::CGUIShopItem(int serial, ushort graphic, ushort color, int count, int price, const string &name, int x, int y)
-: CBaseGUI(GOT_SHOPITEM, serial, graphic, color, x, y), Count(count), Price(price),
-Name(name)
+	: CBaseGUI(GOT_SHOPITEM, serial, graphic, color, x, y)
+	, Count(count)
+	, Price(price)
+	, Name(name)
 {
 	WISPFUN_DEBUG("c73_f1");
 	MoveOnDrag = true;
@@ -166,7 +169,7 @@ void CGUIShopItem::PrepareTextures()
 		}
 
 		CTextureAnimationDirection &direction = g_AnimationManager.m_DataIndex[Graphic].m_Groups[group].m_Direction[1];
-		direction.LastAccessTime = GetTickCount() + 60000;
+		direction.LastAccessTime = SDL_GetTicks() + 60000;
 		g_AnimationManager.AnimID = Graphic;
 		g_AnimationManager.AnimGroup = group;
 		g_AnimationManager.Direction = 1;

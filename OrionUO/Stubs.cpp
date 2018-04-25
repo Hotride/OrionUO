@@ -19,7 +19,6 @@ int GetSystemMetrics(int) { assert(false && __func__ ); return 0; }
 int DefWindowProc(void *, unsigned int, uintptr_t, uintptr_t) { assert(false && __func__ ); return 0; }
 bool PtInRect(const RECT *, POINT) { assert(false && __func__ ); return false; }
 int GetAsyncKeyState(int) { assert(false && __func__ ); return 0; }
-void ReleaseCapture() { assert(false && __func__ ); }
 void OutputDebugStringA(void *) { assert(false && __func__ ); }
 void OutputDebugStringW(void *) { assert(false && __func__ ); }
 int GetACP() { assert(false && __func__ ); return 0; }
@@ -44,7 +43,6 @@ bool SendMessage(void*, int, int, int) { assert(false && __func__ ); return fals
 void PostMessage(void*, int, int, int) { assert(false && __func__ ); }
 void* GetDC(void*) { assert(false && __func__ ); return nullptr; }
 void PostQuitMessage(int) { assert(false && __func__ ); }
-void* SetCapture(void*) { assert(false && __func__ ); return nullptr;}
 bool OpenClipboard(void*)  { assert(false && __func__ ); return false;}
 void* GetClipboardData(unsigned)  { assert(false && __func__ ); return nullptr;}
 bool CloseClipboard()  { assert(false && __func__ ); return false;}
@@ -65,7 +63,6 @@ int GetProfileStringA(const char*, const char*, const char*, char*, int){ assert
 void CloseHandle(void *) { assert(false && __func__ ); }
 void KillTimer(void *, unsigned int) { assert(false && __func__ ); }
 void SetTimer(void *, unsigned int, unsigned int, void *) { assert(false && __func__ ); }
-int GetTickCount() { assert(false && __func__ ); return 0; }
 int timeBeginPeriod(int) { assert(false && __func__ ); return 0; }
 void EnterCriticalSection(void*) { assert(false && __func__ ); }
 void LeaveCriticalSection(void*) { assert(false && __func__ ); }
