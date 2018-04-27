@@ -86,6 +86,11 @@ else()
 	find_package(SDL2_image REQUIRED)
 	find_package(FreeImage REQUIRED)
 	find_package(GLEW REQUIRED)
+	# Set the preferred opengl library to GLVND if there is GLVND and Legacy.
+	# Only if there is no GLVND Legacy will be used.
+	# The that is the default with cmake-3.11. Legacy is deprecated.
+	# See cmake --help-policy CMP0072
+	set (OpenGL_GL_PREFERENCE GLVND)
 endif()
 
 find_package(OpenGL REQUIRED)
