@@ -57,7 +57,7 @@ Or, you can use CMake-GUI to configure and generate the solution.
 $ mkdir build
 $ cd build
 $ cmake -G Ninja .. -DCMAKE_BUILD_TYPE=Release
-$ ninja Orion_unity -j 8
+$ ninja OrionUO_unity -j8
 $ ./OrionUO/unity/OrionUO
 ```
 
