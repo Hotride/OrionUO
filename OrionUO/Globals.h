@@ -31,8 +31,8 @@ extern bool g_Asmut;
 #include "OrionApplication.h"
 #include "GLEngine/GLFrameBuffer.h"
 #include "GLEngine/GLTexture.h"
-#include <gl/gl.h>
-#include <gl/glu.h>
+#include <GL/gl.h>
+#include <GL/glu.h>
 #include "EnumList.h"
 #include "DefinitionMacro.h"
 #include "Constants.h"

@@ -527,7 +527,7 @@ void CAnimationManager::InitIndexReplaces(puint verdata)
 	WISP_FILE::CTextFileParser bodyconvParser(g_App.UOFilesPath("Bodyconv.def").c_str(), " \t", "#;//", "");
 	WISP_FILE::CTextFileParser corpseParser(g_App.UOFilesPath("Corpse.def").c_str(), " \t", "#;//", "{}");
 
-	WISP_FILE::CTextFileParser equipConvParser(g_App.UOFilesPath("EquipConv.def"), " \t", "#;//", "");
+	WISP_FILE::CTextFileParser equipConvParser(g_App.UOFilesPath("Equipconv.def"), " \t", "#;//", "");
 
 	while (!equipConvParser.IsEOF())
 	{
