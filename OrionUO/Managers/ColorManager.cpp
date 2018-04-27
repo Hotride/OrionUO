@@ -291,7 +291,7 @@ uint CColorManager::GetPartialHueColor(ushort &c, ushort color)
 
 		uint cl = Color16To32(c);
 
-		if (GetRValue(cl) == GetGValue(cl) && GetBValue(cl) == GetGValue(cl))
+		if (ToColorR(cl) == ToColorG(cl) && ToColorB(cl) == ToColorG(cl))
 			return Color16To32(m_HuesRange[g].Entries[e].ColorTable[(c >> 10) & 0x1F]);
 
 		return cl;

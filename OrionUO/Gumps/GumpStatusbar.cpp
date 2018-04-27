@@ -11,6 +11,7 @@
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
 #include "GumpStatusbar.h"
+#include <SDL_rect.h>
 int CGumpStatusbar::m_StatusbarDefaultWidth = 154;
 int CGumpStatusbar::m_StatusbarDefaultHeight = 59;
 //----------------------------------------------------------------------------------
@@ -448,7 +449,7 @@ void CGumpStatusbar::UpdateContent()
 	{
 		if (!Minimized) //Если это "полная" версия статусбара
 		{
-			POINT p = { 0, 0 };
+			SDL_Point p = { 0, 0 };
 
 			if (g_PacketManager.GetClientVersion() >= CV_308D && !g_ConfigManager.GetOldStyleStatusbar())
 				Add(new CGUIGumppic(0x2A6C, 0, 0));

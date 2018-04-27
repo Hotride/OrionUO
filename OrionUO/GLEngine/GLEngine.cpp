@@ -107,7 +107,7 @@ bool CGLEngine::Install()
 #endif
 
 	int glewInitResult = glewInit();
-	LOG("glewInit() = %i rt=%i fb=%i v(%s) (shader: %i)\n", glewInitResult, WGLEW_ARB_render_texture, GL_ARB_framebuffer_object, glGetString(GL_VERSION), GL_ARB_shader_objects);
+	LOG("glewInit() = %i fb=%i v(%s) (shader: %i)\n", glewInitResult, GL_ARB_framebuffer_object, glGetString(GL_VERSION), GL_ARB_shader_objects);
 	if (glewInitResult)
 		return false;
 

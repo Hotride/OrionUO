@@ -94,7 +94,11 @@ private:
 
 	deque<UCHAR_LIST> m_PluginData;
 
+#if USE_WISP
 	CRITICAL_SECTION m_CSPluginNetwork;
+#else
+	SDL_mutex *m_Mutex = nullptr;
+#endif
 
 protected:
 	virtual void OnPacket();

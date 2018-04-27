@@ -38,7 +38,7 @@ bool COrionWindow::OnCreate()
 	if (!g_GL.Install())
 	{
 		LOG("Error install OpenGL\n");
-		ShowMessage("Error install OpenGL", "Error install OpenGL!", MB_OK);
+		ShowMessage("Error install OpenGL", "Error install OpenGL!");
 		return false;
 	}
 

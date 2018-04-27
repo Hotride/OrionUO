@@ -6,10 +6,11 @@
 #include <locale>
 #include <codecvt>
 #include <string>
+#include <SDL_thread.h>
 
 #include "WispThread.h"
 //----------------------------------------------------------------------------------
-std::thread::id g_MainThread;
+SDL_threadID g_MainThread;
 deque<string> g_WispDebugFunStack;
 #if USE_WISP_DEBUG_FUNCTION_NAMES == 2
 char *g_WispCurrentFunctionName = NULL;

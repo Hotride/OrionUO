@@ -70,21 +70,21 @@ void CDECL FUNCBODY_PopScissor()
 //----------------------------------------------------------------------------------
 void CDECL FUNCBODY_DrawLine(unsigned int color, int x, int y, int width, int height)
 {
-	glColor4ub(GetRValue(color), GetGValue(color), GetBValue(color), (color >> 24) & 0xFF);
+	glColor4ub(ToColorR(color), ToColorG(color), ToColorB(color), ToColorA(color));
 	g_GL.DrawLine(x, y, width, height);
 	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 }
 //----------------------------------------------------------------------------------
 void CDECL FUNCBODY_DrawPolygone(unsigned int color, int x, int y, int width, int height)
 {
-	glColor4ub(GetRValue(color), GetGValue(color), GetBValue(color), (color >> 24) & 0xFF);
+	glColor4ub(ToColorR(color), ToColorG(color), ToColorB(color), ToColorA(color));
 	g_GL.DrawPolygone(x, y, width, height);
 	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 }
 //----------------------------------------------------------------------------------
 void CDECL FUNCBODY_DrawCircle(unsigned int color, float x, float y, float radius, int gradientMode)
 {
-	glColor4ub(GetRValue(color), GetGValue(color), GetBValue(color), (color >> 24) & 0xFF);
+	glColor4ub(ToColorR(color), ToColorG(color), ToColorB(color), ToColorA(color));
 	g_GL.DrawCircle(x, y, radius, gradientMode);
 	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 }

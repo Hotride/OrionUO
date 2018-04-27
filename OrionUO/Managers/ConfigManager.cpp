@@ -1985,7 +1985,7 @@ void CConfigManager::Save(const os_path &path)
 		writter.WriteInt("GameWindowX", GameWindowX);
 		writter.WriteInt("GameWindowY", GameWindowY);
 
-		writter.WriteBool("Zoomed", g_OrionWindow.Zoomed());
+		writter.WriteBool("Zoomed", g_OrionWindow.IsMaximized());
 
 		RECT rect = { 0 };
 		GetWindowRect(g_OrionWindow.Handle, &rect);

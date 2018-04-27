@@ -423,7 +423,7 @@ void CMouseManager::Draw(ushort id)
 					glEnable(GL_BLEND);
 					glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 
-					glColor4ub(GetRValue(auraColor), GetGValue(auraColor), GetBValue(auraColor), 0xFF);
+					glColor4ub(ToColorR(auraColor), ToColorG(auraColor), ToColorB(auraColor), 0xFF);
 
 					glUniform1iARB(g_ShaderDrawMode, SDM_NO_COLOR);
 

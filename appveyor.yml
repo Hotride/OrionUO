@@ -18,13 +18,12 @@ platform:
 environment:
   matrix:
   - arch: Win64
-  # - arch: #does not work, Release|x64 not a valid target
+  - Win32
 matrix:
   fast_finish: true
 init:
 - set arch=
 - if "%arch%"=="Win64" ( set arch= Win64)
-- if "%arch%"=="Win32" ( set arch=)
 - echo %arch%
 - echo %APPVEYOR_BUILD_WORKER_IMAGE%
 - if "%APPVEYOR_BUILD_WORKER_IMAGE%"=="Visual Studio 2017" ( set generator="Visual Studio 15 2017%arch%" )

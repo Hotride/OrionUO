@@ -99,14 +99,9 @@ typedef const char* LPTSTR;
 typedef const char* LPSTR;
 typedef wchar_t WCHAR;
 typedef unsigned int UINT;
-struct RECT { int left; int top; int right; int bottom; };
-struct POINT { int x; int y; };
 
-#define INVALID_HANDLE_VALUE ((void*)-1)
-#define MB_OK 0x0L
 #define S_OK 0x0L
 #define WM_USER 0x0400
-#define WM_GETMINMAXINFO 0
 #define WM_MOUSEWHEEL 1
 #define WM_MBUTTONUP 2
 #define WM_MBUTTONDOWN 3
@@ -114,11 +109,8 @@ struct POINT { int x; int y; };
 #define WM_RBUTTONDOWN 5
 #define WM_LBUTTONUP 6
 #define WM_LBUTTONDOWN 7
-#define WM_DESTROY 8
-#define WM_SIZE 9
 #define WM_CLOSE 10
 #define WM_XBUTTONDOWN 11
-#define WM_TIMER 12
 #define WM_SETTEXT 13
 #define WM_SHOWWINDOW 14
 #define WM_NCACTIVATE 15
@@ -126,13 +118,8 @@ struct POINT { int x; int y; };
 #define WM_KEYUP 17
 #define WM_SYSKEYDOWN 18
 #define WM_KEYDOWN 19
-#define WM_CHAR 20
 #define WM_MOUSEMOVE 21
-#define WM_NCDESTROY 22
-#define WM_QUIT 23
-#define WM_SYSCHAR 24
 #define WM_SYSCOMMAND 25
-
 #define SC_MAXIMIZE 0
 #define SC_RESTORE 0
 
@@ -223,26 +210,7 @@ const unsigned int WM_NCPAINT = 0x85;
 
 #define CF_TEXT 0
 
-//#undef NULL
-//#define NULL nullptr
-//#define FALSE false
-//#define TRUE true
-
 #define MAX_PATH 256
-#define PFD_SUPPORT_OPENGL 0
-#define PFD_DOUBLEBUFFER 0
-#define PFD_TYPE_RGBA 0
-#define PFD_MAIN_PLANE 0
-#define MEM_RESERVE 0
-#define PAGE_GUARD 0
-#define MEM_PRIVATE 0
-#define PAGE_NOACCESS 0
-#define PAGE_READWRITE 0
-#define WINAPI
-#define APIENTRY
-
-struct fake {};
-typedef fake CRITICAL_SECTION;
 
 struct SYSTEMTIME {
   WORD wYear;
@@ -254,62 +222,43 @@ struct SYSTEMTIME {
   WORD wSecond;
   WORD wMilliseconds;
 } ;
+struct RECT { int left; int top; int right; int bottom; };
 
-struct SYSTEM_INFO {
-  union {
-    DWORD  dwOemId;
-    struct {
-      WORD wProcessorArchitecture;
-      WORD wReserved;
-    };
-  };
-  DWORD     dwPageSize;
-  LPVOID    lpMinimumApplicationAddress;
-  LPVOID    lpMaximumApplicationAddress;
-  DWORD* dwActiveProcessorMask;
-  DWORD     dwNumberOfProcessors;
-  DWORD     dwProcessorType;
-  DWORD     dwAllocationGranularity;
-  WORD      wProcessorLevel;
-  WORD      wProcessorRevision;
-};
+// Bad and very ugly "API" stuff
+bool GetWindowRect(void*,RECT*) ;
+bool SetWindowPos(void *, void*, int, int, int, int, int) ;
+int GetSystemMetrics(int) ;
+int DefWindowProc(void *, unsigned int, uintptr_t, uintptr_t) ;
+bool SendMessage(void*, int, int, int) ;
+void PostMessage(void*, int, int, int) ;
+#define LOBYTE(x) (int)(x&0xff)
+int GetSystemDefaultLangID() ;
+int GetProfileStringA(const char*, const char*, const char*, char*, int);
+void* GlobalLock(void*);
+bool GlobalUnlock(void*);
 
-struct VS_FIXEDFILEINFO {
-  DWORD dwSignature;
-  DWORD dwStrucVersion;
-  DWORD dwFileVersionMS;
-  DWORD dwFileVersionLS;
-  DWORD dwProductVersionMS;
-  DWORD dwProductVersionLS;
-  DWORD dwFileFlagsMask;
-  DWORD dwFileFlags;
-  DWORD dwFileOS;
-  DWORD dwFileType;
-  DWORD dwFileSubtype;
-  DWORD dwFileDateMS;
-  DWORD dwFileDateLS;
-};
+// cmd line
+wchar_t* GetCommandLineW() ;
+const wchar_t** CommandLineToArgvW(wchar_t*,int*) ;
+void* ShellExecuteA(void*, const char*, const char*, const char*, const char*, int) ;
+void *LocalFree(void*p) ;
 
-struct VS_VERSIONINFO {
-  WORD             wLength;
-  WORD             wValueLength;
-  WORD             wType;
-  WCHAR            szKey;
-  WORD             Padding1;
-  VS_FIXEDFILEINFO Value;
-  WORD             Padding2;
-  WORD             Children;
-};
+// Input
+bool OpenClipboard(void*)  ;
+void* GetClipboardData(unsigned)  ;
+bool CloseClipboard()  ;
 
-struct MSG {
-  HWND   hwnd;
-  UINT   message;
-  WPARAM wParam;
-  LPARAM lParam;
-  DWORD  time;
-  POINT  pt;
-};
+// Thread
+void CloseHandle(void *) ; // WispThread.cpp
+void KillTimer(void *, unsigned int) ;
+void SetTimer(void *, unsigned int, unsigned int, void *) ;
+int timeBeginPeriod(int) ;
+void* _beginthreadex(void *, unsigned, unsigned (*)( void * ), void *, unsigned, unsigned *) ;
+void _endthreadex(int) ;
+int timeEndPeriod(int) ;
+void GetLocalTime(SYSTEMTIME*) ;
 
+// Socket
 struct WSADATA {
   WORD           wVersion;
   WORD           wHighVersion;
@@ -319,90 +268,14 @@ struct WSADATA {
   unsigned short iMaxUdpDg;
   char          *lpVendorInfo;
 };
-typedef LRESULT (CALLBACK* WNDPROC)(HWND, UINT, WPARAM, LPARAM);
-
-struct MINMAXINFO {
-  POINT ptReserved;
-  POINT ptMaxSize;
-  POINT ptMaxPosition;
-  POINT ptMinTrackSize;
-  POINT ptMaxTrackSize;
-};
-
-struct MEMORY_BASIC_INFORMATION {
-  PVOID  BaseAddress;
-  PVOID  AllocationBase;
-  DWORD  AllocationProtect;
-  SIZE_T RegionSize;
-  DWORD  State;
-  DWORD  Protect;
-  DWORD  Type;
-};
-struct SECURITY_ATTRIBUTES {
-  DWORD  nLength;
-  LPVOID lpSecurityDescriptor;
-  BOOL   bInheritHandle;
-};
-
-// Bad and very ugly "API" stuff
-bool IsZoomed(void *) ;
-int GetSystemMetrics(int) ;
-int DefWindowProc(void *, unsigned int, uintptr_t, uintptr_t) ;
-bool PtInRect(const RECT *, POINT) ;
-int GetAsyncKeyState(int) ;
-int GetLastError() ;
-int GetACP() ;
-int WideCharToMultiByte(int, int, const wchar_t*, int, char*, int, void*, void*) ;
-int MultiByteToWideChar(int, int, const char*, int, wchar_t*, int) ;
-bool GetWindowRect(void*,RECT*) ;
-int GetWindowLongA(void*,int) ;
-bool SetWindowPos(void *, void*, int, int, int, int, int) ;
-bool IsIconic(void*) ;
-bool GetClientRect(void*, RECT*) ;
-bool AdjustWindowRectEx(RECT*, int, bool, int) ;
-void* CreateWindowEx(int, const wchar_t*, const wchar_t*, int, int, int, int, int, void*, void*, void*, void*) ;
-bool VerQueryValue(void*, const wchar_t*,void*,unsigned*) ;
-int GetModuleFileName(void*,const wchar_t*,int) ;
-int DispatchMessage(const MSG*) ;
-bool TranslateMessage(const MSG*) ;
-bool PeekMessage(const MSG*, void*, int, int, int) ;
-bool SendMessage(void*, int, int, int) ;
-void PostMessage(void*, int, int, int) ;
-void* GetDC(void*) ;
-void PostQuitMessage(int) ;
-bool OpenClipboard(void*)  ;
-void* GetClipboardData(unsigned)  ;
-bool CloseClipboard()  ;
-wchar_t* GetCommandLineW() ;
-const wchar_t** CommandLineToArgvW(wchar_t*,int*) ;
-int GetSystemDefaultLangID() ;
-bool BringWindowToTop(void *) ;
-void* ShellExecuteA(void*, const char*, const char*, const char*, const char*, int) ;
-void *LocalFree(void*p) ;
-void* GlobalLock(void*);
-bool GlobalUnlock(void*);
-int GetProfileStringA(const char*, const char*, const char*, char*, int);
-
-// Thread
-void CloseHandle(void *) ; // WispThread.cpp
-void KillTimer(void *, unsigned int) ;
-void SetTimer(void *, unsigned int, unsigned int, void *) ;
-int timeBeginPeriod(int) ;
-void EnterCriticalSection(void*) ;
-void LeaveCriticalSection(void*) ;
-void DeleteCriticalSection(void*) ;
-void InitializeCriticalSection(void*) ;
-void* _beginthreadex(void *, unsigned, unsigned (*)( void * ), void *, unsigned, unsigned *) ;
-void _endthreadex(int) ;
-int timeEndPeriod(int) ;
-void GetLocalTime(SYSTEMTIME*) ;
-
-// Socket
 bool WSAStartup(int, void *) ;
 void WSASetLastError(int) ;
 int WSACleanup(void) ;
 int recvfrom(int, const char*, int, int, const struct sockaddr*, int*) ;
-
+#define closesocket close
+#define INVALID_SOCKET -1
+#define SOCKET_ERROR -1
+#define MAKEWORD(x, y) (int)(x)
 typedef struct hostent HOSTENT;
 typedef HOSTENT* LPHOSTENT;
 #define SOCKADDR struct sockaddr
@@ -410,11 +283,22 @@ typedef HOSTENT* LPHOSTENT;
 #define LPIN_ADDR struct in_addr*
 #define LPSOCKADDR const SOCKADDR*
 
-// OpenGL
-#define WGLEW_ARB_render_texture 0
-#define GetRValue(x) (x&0xff)
-#define GetGValue(x) (x>>8&0xff)
-#define GetBValue(x) (x>>16&0xff)
+// String
+#define strncpy_s strncpy
+#define lstrlenW wcslen
+#define sprintf_s sprintf
+#define sscanf_s sscanf
+#define vsprintf_s vsprintf
+#define vswprintf_s(a,b,c) vswprintf(a,0,b,c)
+int WideCharToMultiByte(int, int, const wchar_t*, int, char*, int, void*, void*) ;
+int MultiByteToWideChar(int, int, const char*, int, wchar_t*, int) ;
+
+// http://en.cppreference.com/w/cpp/locale/codecvt_utf8
+inline int _wtoi(const wchar_t *a) { return std::stoi(wstring(a)); }
+char* _strlwr(char* s);
+char* _strupr(char* s);
+wchar_t* _wcslwr(wchar_t* s);
+wchar_t* _wcsupr(wchar_t* s);
 
 // BASS
 #define BASS_OK 0
@@ -482,33 +366,5 @@ typedef HOSTENT* LPHOSTENT;
 #define BASS_MIDI_StreamCreateFile(a, b, c, d, e, f) nullptr
 #define BASS_SetConfigPtr(a,b) false
 #define mciGetErrorString(a, b, c) false
-
-#define HIWORD(x) (int)(x)
-#define LOWORD(x) (int)(x)
-#define LOBYTE(x) (int)(x&0xff)
-#define MAKEWORD(x, y) (int)(x)
-
-#define strncpy_s strncpy
-#define lstrlenW wcslen
-#define sprintf_s sprintf
-#define sscanf_s sscanf
-#define vsprintf_s vsprintf
-#define vswprintf_s(a,b,c) vswprintf(a,0,b,c)
-//#define wsprintf(a,b, c, d) vswprintf(a,0,b,c,d)
-#define closesocket close
-
-#define INVALID_SOCKET -1
-#define SOCKET_ERROR -1
-
-inline int max(int a, int b) { return a > b ? a : b; }
-inline int min(int a, int b) { return a > b ? b : a; }
-inline int _wtoi(const wchar_t *a) { return std::stoi(wstring(a)); }
-inline void ZeroMemory(void *p, int l) { memset(p, '\0', l); }
-inline void MoveMemory(void*d, void*s,size_t l) { memmove(d,s,l); }
-
-char* _strlwr(char* s);
-char* _strupr(char* s);
-wchar_t* _wcslwr(wchar_t* s);
-wchar_t* _wcsupr(wchar_t* s);
 
 #endif

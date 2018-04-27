@@ -7,8 +7,8 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#ifndef GUMPCUSTOMHOUSE_H
-#define GUMPCUSTOMHOUSE_H
+#pragma once
+#include <SDL_rect.h>
 //----------------------------------------------------------------------------------
 enum CUSTOM_HOUSE_GUMP_STATE
 {
@@ -184,7 +184,7 @@ public:
 
 	bool CanBuildHere(vector<CBuildObject> &list, CRenderWorldObject *place, CUSTOM_HOUSE_BUILD_TYPE &type);
 
-	bool ValidateItemPlace(const RECT &rect, ushort graphic, int x, int y);
+	bool ValidateItemPlace(const SDL_Rect &rect, ushort graphic, int x, int y);
 
 	bool ValidateItemPlace(CGameItem *foundationItem, CMultiObject *item, int minZ, int maxZ, vector<WISP_GEOMETRY::CPoint2Di> &validatedFloors);
 
@@ -199,6 +199,3 @@ public:
 };
 //----------------------------------------------------------------------------------
 extern CGumpCustomHouse *g_CustomHouseGump;
-//----------------------------------------------------------------------------------
-#endif //GUMPCUSTOMHOUSE_H
-//----------------------------------------------------------------------------------

@@ -41,8 +41,8 @@ public:
 	bool Create(const char *className, const char *title, bool showCursor = false, int width = 800, int height = 600);
 	void Destroy();
 
-	void ShowMessage(const string &text, const string &title, int buttons = MB_OK);
-	void ShowMessage(const wstring &text, const wstring &title, int buttons = MB_OK);
+	void ShowMessage(const string &text, const string &title);
+	void ShowMessage(const wstring &text, const wstring &title);
 
 #if USE_WISP
 	HINSTANCE hInstance = 0;
@@ -59,17 +59,20 @@ public:
 	}
 
 	void ShowCursor(bool show = true) { SDL_ShowCursor(show ? SDL_TRUE : SDL_FALSE); }
-#if USE_WISP
-	bool IsActive() { return (::GetForegroundWindow() == Handle); }
-	void SetTitle(const string &text) { ::SetWindowTextA(Handle, text.c_str()); }
-	void ShowWindow(bool show) { ::ShowWindow(Handle, show ? TRUE : FALSE); }
-#else
-	bool IsActive() { return SDL_GetGrabbedWindow() == m_window; } // TODO: check
-	void SetTitle(const string &text) { SDL_SetWindowTitle(m_window, text.c_str()); }
-	void ShowWindow(bool show) { show ? SDL_ShowWindow(m_window) : SDL_HideWindow(m_window); }
-#endif
 
-	bool Zoomed() { return (::IsZoomed(Handle) != FALSE); }
+#if USE_WISP
+	bool IsActive() const { return (::GetForegroundWindow() == Handle); }
+	void SetTitle(const string &text) const { ::SetWindowTextA(Handle, text.c_str()); }
+	void ShowWindow(bool show) const { ::ShowWindow(Handle, show ? TRUE : FALSE); }
+	bool IsMinimized() const { return ::IsIconic(Handle); }
+	bool IsMaximized() const { return (::IsZoomed(Handle) != FALSE); }
+#else
+	bool IsActive() const { return SDL_GetGrabbedWindow() == m_window; } // TODO: check
+	void SetTitle(const string &text) const { SDL_SetWindowTitle(m_window, text.c_str()); }
+	void ShowWindow(bool show) const { show ? SDL_ShowWindow(m_window) : SDL_HideWindow(m_window); }
+	bool IsMinimized() const { return (SDL_GetWindowFlags(m_window) & SDL_WINDOW_MINIMIZED) != 0; }
+	bool IsMaximized() const { return (SDL_GetWindowFlags(m_window) & SDL_WINDOW_MAXIMIZED) != 0; }	
+#endif
 
 	// May be done using: SDL_AddTimer / SDL_RemoveTimer
 	void CreateTimer(uint id, int delay) { ::SetTimer(Handle, id, delay, NULL); }

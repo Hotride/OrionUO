@@ -10,6 +10,8 @@
 #endif
 #include <stdio.h>
 
+#include <SDL_thread.h>
+
 #define _USE_MATH_DEFINES
 #include <math.h>
 #include <thread>
@@ -40,7 +42,7 @@ public:
 	~CWispFunDebug();
 };
 //----------------------------------------------------------------------------------
-extern std::thread::id g_MainThread;
+extern SDL_threadID g_MainThread;
 extern deque<string> g_WispDebugFunStack;
 //----------------------------------------------------------------------------------
 typedef vector<uchar> UCHAR_LIST;

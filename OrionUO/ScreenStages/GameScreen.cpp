@@ -10,6 +10,7 @@
 */
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
+#include <SDL_rect.h>
 #include "GameScreen.h"
 //----------------------------------------------------------------------------------
 CGameScreen g_GameScreen;
@@ -551,10 +552,10 @@ void CGameScreen::AddTileToRenderList(CRenderWorldObject *obj, int worldX, int w
 
 	if (g_CustomHouseGump != NULL)
 	{
-		RECT rect = { g_CustomHouseGump->StartPos.X, g_CustomHouseGump->StartPos.Y, g_CustomHouseGump->EndPos.X, g_CustomHouseGump->EndPos.Y + 1 };
-		POINT pos = { worldX, worldY };
+		SDL_Rect rect = { g_CustomHouseGump->StartPos.X, g_CustomHouseGump->StartPos.Y, g_CustomHouseGump->EndPos.X, g_CustomHouseGump->EndPos.Y + 1 };
+		SDL_Point pos = { worldX, worldY };
 
-		if (!PtInRect(&rect, pos))
+		if (!SDL_PointInRect(&pos, &rect))
 			grayColor = 0x038E;
 	}
 
@@ -2290,10 +2291,17 @@ void CGameScreen::OnCharPress(const WPARAM &wParam, const LPARAM &lParam)
 			return;
 	}
 
+#if USE_WISP
 	bool altGR = (GetAsyncKeyState(VK_RMENU) & 0x80000000);
 	bool altPressed = (GetAsyncKeyState(VK_MENU) & 0x80000000);
 	bool ctrlPressed = (GetAsyncKeyState(VK_CONTROL) & 0x80000000);
 	//bool shiftPressed = GetAsyncKeyState(VK_SHIFT) & 0x80000000;
+#else
+	const auto mod = SDL_GetModState();
+	const bool altGR = mod & KMOD_RALT;
+	const bool altPressed = mod & KMOD_ALT;
+	const bool ctrlPressed = mod & KMOD_CTRL;
+#endif
 
 	if (g_EntryPointer == &g_GameConsole && (wParam == 0x00000011 || wParam == 0x00000017) && ctrlPressed)
 		g_GameConsole.ChangeConsoleMessage(wParam == 0x00000017);
@@ -2438,9 +2446,16 @@ void CGameScreen::OnKeyDown(const WPARAM &wParam, const LPARAM &lParam)
 
 	//if (g_MacroPointer == NULL)
 	{
+#if USE_WISP
 		bool altPressed = GetAsyncKeyState(VK_MENU) & 0x80000000;
 		bool ctrlPressed = GetAsyncKeyState(VK_CONTROL) & 0x80000000;
 		bool shiftPressed = GetAsyncKeyState(VK_SHIFT) & 0x80000000;
+#else
+		const auto mod = SDL_GetModState();
+		const bool altPressed = mod & KMOD_ALT;
+		const bool ctrlPressed = mod & KMOD_CTRL;
+		const bool shiftPressed = mod & KMOD_SHIFT;
+#endif
 
 		CMacro *macro = g_MacroManager.FindMacro((ushort)wParam, altPressed, ctrlPressed, shiftPressed);
 

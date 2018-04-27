@@ -76,7 +76,9 @@ See the project planning [here](https://github.com/Hotride/OrionUO/projects) to 
 ## Contributors
 
 [Hotride](https://github.com/Hotride/) (Author)
+
 [AimedNuu](https://github.com/AimedNuu)
+
 and [Others](https://github.com/Hotride/OrionUO/graphs/contributors)
 
 --------------

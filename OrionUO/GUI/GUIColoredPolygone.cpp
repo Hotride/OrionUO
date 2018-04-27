@@ -28,10 +28,10 @@ void CGUIColoredPolygone::UpdateColor(ushort color, int polygoneColor)
 	WISPFUN_DEBUG("c48_f2");
 	Color = color;
 
-	ColorR = GetRValue(polygoneColor);
-	ColorG = GetGValue(polygoneColor);
-	ColorB = GetBValue(polygoneColor);
-	ColorA = polygoneColor >> 24;
+	ColorR = ToColorR(polygoneColor);
+	ColorG = ToColorG(polygoneColor);
+	ColorB = ToColorB(polygoneColor);
+	ColorA = ToColorA(polygoneColor);
 
 	if (!ColorA)
 		ColorA = 0xFF;

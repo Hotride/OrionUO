@@ -10,6 +10,8 @@
 */
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
+#include <SDL_rect.h>
+#include "GumpMap.h"
 //----------------------------------------------------------------------------------
 CGumpMap::CGumpMap(uint serial, ushort graphic, int startX, int startY, int endX, int endY, int width, int height)
 : CGump(GT_MAP, serial, 0, 0), StartX(startX), StartY(startY),
@@ -94,7 +96,7 @@ int CGumpMap::LineUnderMouse(int &x1, int &y1, int x2, int y2)
 	offsX = (int)((tempX * cosA) - (tempY * sinA));
 	offsY = (int)((tempX * sinA) + (tempY * cosA));
 
-	POINT mousePoint = {x1 + offsX, y1 + offsY};
+	SDL_Point mousePoint = {x1 + offsX, y1 + offsY};
 
 	const int polyOffset = 5;
 
@@ -102,9 +104,9 @@ int CGumpMap::LineUnderMouse(int &x1, int &y1, int x2, int y2)
 
 	if (!inverseCheck)
 	{
-		RECT lineRect = {x1 - polyOffset, y1 - polyOffset, endX2 + polyOffset, endY2 + polyOffset};
+		SDL_Rect lineRect = {x1 - polyOffset, y1 - polyOffset, endX2 + polyOffset, endY2 + polyOffset};
 
-		if (PtInRect(&lineRect, mousePoint))
+		if (SDL_PointInRect(&mousePoint, &lineRect))
 		{
 			x1 = x1 + ((x2 - x1) / 2);
 			y1 = y1 + ((y2 - y1) / 2);
@@ -114,9 +116,9 @@ int CGumpMap::LineUnderMouse(int &x1, int &y1, int x2, int y2)
 	}
 	else
 	{		
-		RECT lineRect = {endX2 - polyOffset, endY2 - polyOffset, x1 + polyOffset, y1 + polyOffset};
+		SDL_Rect lineRect = {endX2 - polyOffset, endY2 - polyOffset, x1 + polyOffset, y1 + polyOffset};
 
-		if (PtInRect(&lineRect, mousePoint))
+		if (SDL_PointInRect(&mousePoint, &lineRect))
 		{
 			x1 = x2 + ((x1 - x2) / 2);
 			y1 = y2 + ((y1 - y2) / 2);

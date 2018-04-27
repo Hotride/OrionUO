@@ -88,7 +88,12 @@ bool CMappedFile::Load(const os_path &path)
 
 	if (!result)
 	{
-		LOG("Failed to memory map, error code: %i\n", GetLastError());
+#if USE_WISP
+		auto errorCode = GetLastError();
+#else
+		auto errorCode = errno;
+#endif		
+		LOG("Failed to memory map, error code: %i\n", errorCode);
 		g_WispMappedFileError = CStringFromPath(path);
 	}
 		

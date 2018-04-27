@@ -10,6 +10,8 @@
 */
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
+#include <SDL_rect.h>
+#include "GumpCustomHouse.h"
 #include "FileSystem.h"
 CGumpCustomHouse *g_CustomHouseGump = NULL;
 //----------------------------------------------------------------------------------
@@ -1422,7 +1424,7 @@ bool CGumpCustomHouse::CanBuildHere(vector<CBuildObject> &list, CRenderWorldObje
 		int maxZ = minZ + 20;
 
 		int boundsOffset = (int)(State != CHGS_WALL);
-		RECT rect = { StartPos.X + boundsOffset, StartPos.Y + boundsOffset, EndPos.X, EndPos.Y };
+		SDL_Rect rect = { StartPos.X + boundsOffset, StartPos.Y + boundsOffset, EndPos.X, EndPos.Y };
 
 		for (const CBuildObject &item : list)
 		{
@@ -1479,11 +1481,11 @@ bool CGumpCustomHouse::CanBuildHere(vector<CBuildObject> &list, CRenderWorldObje
 	return true;
 }
 //----------------------------------------------------------------------------------
-bool CGumpCustomHouse::ValidateItemPlace(const RECT &rect, ushort graphic, int x, int y)
+bool CGumpCustomHouse::ValidateItemPlace(const SDL_Rect &rect, ushort graphic, int x, int y)
 {
-	POINT pos = { x, y };
+	SDL_Point pos = { x, y };
 
-	if (!PtInRect(&rect, pos))
+	if (!SDL_PointInRect(&pos, &rect))
 		return false;
 
 	pair<int, int> infoCheck = SeekGraphicInCustomHouseObjectList<CCustomHouseObjectPlaceInfo>(m_ObjectsInfo, graphic);

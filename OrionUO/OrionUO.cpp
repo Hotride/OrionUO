@@ -12,7 +12,7 @@
 
 #include "stdafx.h"
 #include <SDL_loadso.h>
-
+#include <SDL_keyboard.h>
 #include "Wisp/WispGlobal.h"
 #include "FileSystem.h"
 #include "Crypt/CryptEntry.h"
@@ -1263,9 +1263,16 @@ void COrion::Process(bool rendering)
 	bool oldCtrl = g_CtrlPressed;
 	bool oldShift = g_ShiftPressed;
 
+#if USE_WISP
 	g_AltPressed = GetAsyncKeyState(VK_MENU) & 0x80000000;
 	g_CtrlPressed = GetAsyncKeyState(VK_CONTROL) & 0x80000000;
 	g_ShiftPressed = GetAsyncKeyState(VK_SHIFT) & 0x80000000;
+#else
+	auto mod = SDL_GetModState();
+	g_AltPressed = mod & KMOD_ALT;
+	g_CtrlPressed = mod & KMOD_CTRL;
+	g_ShiftPressed = mod & KMOD_SHIFT;
+#endif
 
 	if (g_GameState >= GS_GAME) // || g_GameState == GS_GAME_BLOCKED)
 	{
@@ -1359,7 +1366,7 @@ void COrion::Process(bool rendering)
 				g_SelectedObject.Clear();
 				g_SelectedGameObjectHandle = 0;
 
-				if (!IsIconic(g_OrionWindow.Handle))
+				if (!g_OrionWindow.IsMinimized())
 				{
 					if (canRenderSelect)
 						g_GameScreen.Render(false);
@@ -1424,7 +1431,7 @@ void COrion::Process(bool rendering)
 	{
 		g_SelectedObject.Clear();
 
-		if (!IsIconic(g_OrionWindow.Handle))
+		if (!g_OrionWindow.IsMinimized())
 		{
 			g_CurrentScreen->Render(false);
 
@@ -1522,7 +1529,11 @@ void COrion::LoadPlugin(const os_path &libpath, const string &function, int flag
 	}
 	else
 	{
+#if USE_WISP
 		auto errorCode = GetLastError();
+#else
+		auto errorCode = errno;
+#endif
 		LOG("Failed to LoadLibrary %s\n", CStringFromPath(libpath));
 		LOG("Error code: %i\n", errorCode);
 	}
@@ -1599,7 +1610,11 @@ void COrion::LoadPluginConfig()
 		CPluginPacketFilesTransfered().SendToPlugin();*/
 	}
 
+#if USE_WISP
 	BringWindowToTop(g_OrionWindow.Handle);
+#else
+	SDL_RaiseWindow(g_OrionWindow.m_window);
+#endif
 }
 //----------------------------------------------------------------------------------
 string COrion::FixServerName(string name)
@@ -3378,7 +3393,7 @@ void COrion::ReadUOPIndexFile(size_t indexMaxCount, std::function<CIndexObject*(
 		if (block != NULL)
 		{
 			CIndexObject *obj = getIdxObj((int)i);
-			obj->Address = (uint)uopFile.Start + (uint)block->Offset;
+			obj->Address = (uintptr_t)uopFile.Start + (uint)block->Offset;
 			obj->DataSize = block->DecompressedSize;
 			obj->UopBlock = block;
 			obj->ID = -1;
@@ -3633,7 +3648,7 @@ void COrion::InitStaticAnimList()
 	WISPFUN_DEBUG("c194_f51");
 	if (m_AnimData.size())
 	{
-		uint lastElement = (uint)(&m_AnimData[0] + m_AnimData.size() - sizeof(ANIM_DATA));
+		uintptr_t lastElement = (uintptr_t)(&m_AnimData[0] + m_AnimData.size() - sizeof(ANIM_DATA));
 
 		IFOR(i, 0, (int)m_StaticData.size())
 		{
@@ -3660,8 +3675,8 @@ void COrion::InitStaticAnimList()
 
 			if (IsAnimated(m_StaticData[i].Flags))
 			{
-				uint addr = (uint)((i * 68) + 4 * ((i / 8) + 1));
-				uint offset = (uint)(&m_AnimData[0] + addr);
+				uintptr_t addr = (uintptr_t)((i * 68) + 4 * ((i / 8) + 1));
+				uintptr_t offset = (uintptr_t)(&m_AnimData[0] + addr);
 
 				if (offset <= lastElement)
 					m_StaticAnimList.push_back(&m_StaticDataIndex[i]);
@@ -5481,7 +5496,7 @@ void COrion::CreateUnicodeTextMessageF(uchar font, ushort color, const char *for
 	va_end(arg);
 }
 //----------------------------------------------------------------------------------
-void COrion::CreateTextMessage(const TEXT_TYPE &type, int serial, uchar font, ushort color, const string &text)
+void COrion::CreateTextMessage(const TEXT_TYPE &type, int serial, uchar font, ushort color, const string &text, CRenderWorldObject *clientObj)
 {
 	WISPFUN_DEBUG("c194_f98");
 	CTextData *td = new CTextData();
@@ -5588,7 +5603,7 @@ void COrion::CreateTextMessage(const TEXT_TYPE &type, int serial, uchar font, us
 			else
 				td->GenerateTexture(0, 0, TS_CENTER);
 
-			((CRenderWorldObject*)serial)->AddText(td);
+			clientObj->AddText(td);
 			g_WorldTextRenderer.AddText(td);
 
 			break;
@@ -5596,7 +5611,7 @@ void COrion::CreateTextMessage(const TEXT_TYPE &type, int serial, uchar font, us
 	}
 }
 //----------------------------------------------------------------------------------
-void COrion::CreateUnicodeTextMessage(const TEXT_TYPE &type, int serial, uchar font, ushort color, const wstring &text)
+void COrion::CreateUnicodeTextMessage(const TEXT_TYPE &type, int serial, uchar font, ushort color, const wstring &text, CRenderWorldObject *clientObj)
 {
 	WISPFUN_DEBUG("c194_f99");
 	CTextData *td = new CTextData();
@@ -5700,7 +5715,7 @@ void COrion::CreateUnicodeTextMessage(const TEXT_TYPE &type, int serial, uchar f
 			else
 				td->GenerateTexture(0, UOFONT_BLACK_BORDER, TS_LEFT);
 
-			((CRenderWorldObject*)serial)->AddText(td);
+			clientObj->AddText(td);
 			g_WorldTextRenderer.AddText(td);
 
 			break;

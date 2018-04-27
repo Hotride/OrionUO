@@ -867,7 +867,7 @@ UINT_LIST CFontsManager::GeneratePixelsA(uchar font, CGLTextTexture &th, const c
 
 						int block = (testY * width) + ((int)x + w);
 
-						pData[block] = pcl << 8 | 0xFF; // (0xFF << 24) | (GetBValue(pcl) << 16) | (GetGValue(pcl) << 8) | GetRValue(pcl);
+						pData[block] = pcl << 8 | 0xFF;
 					}
 				}
 			}

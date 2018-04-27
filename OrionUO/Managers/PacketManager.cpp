@@ -10,6 +10,7 @@
 */
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
+#include "PacketManager.h"
 //----------------------------------------------------------------------------------
 CPacketManager g_PacketManager;
 //----------------------------------------------------------------------------------
@@ -288,14 +289,24 @@ CPacketInfo CPacketManager::m_Packets[0x100] =
 };
 //----------------------------------------------------------------------------------
 CPacketManager::CPacketManager()
-: WISP_NETWORK::CPacketReader()
+	: WISP_NETWORK::CPacketReader()
 {
+#if USE_WISP
 	InitializeCriticalSection(&m_CSPluginNetwork);
+#else
+	m_Mutex = SDL_CreateMutex();
+#endif
 }
 //----------------------------------------------------------------------------------
 CPacketManager::~CPacketManager()
 {
+#if USE_WISP
 	DeleteCriticalSection(&m_CSPluginNetwork);
+#else
+	if (!m_Mutex)
+		SDL_DestroyMutex(m_Mutex);
+	m_Mutex = nullptr;
+#endif
 }
 //---------------------------------------------------------------------------
 bool CPacketManager::AutoLoginNameExists(const string &name)
@@ -607,15 +618,30 @@ void CPacketManager::SavePluginReceivePacket(puchar buf, int size)
 
 	memcpy(&packet[0], &buf[0], size);
 
+#if USE_WISP
 	EnterCriticalSection(&m_CSPluginNetwork);
+#else
+	SDL_LockMutex(m_Mutex);
+#endif
+
 	m_PluginData.push_front(packet);
+
+#if USE_WISP
 	LeaveCriticalSection(&m_CSPluginNetwork);
+#else
+	SDL_UnlockMutex(m_Mutex);
+#endif
 }
 //----------------------------------------------------------------------------------
 void CPacketManager::ProcessPluginPackets()
 {
 	WISPFUN_DEBUG("c150_f10");
+#if USE_WISP
 	EnterCriticalSection(&m_CSPluginNetwork);
+#else
+	SDL_LockMutex(m_Mutex);
+#endif
+
 	while (!m_PluginData.empty())
 	{
 		UCHAR_LIST &packet = m_PluginData.back();
@@ -625,7 +651,12 @@ void CPacketManager::ProcessPluginPackets()
 
 		m_PluginData.pop_back();
 	}
+
+#if USE_WISP
 	LeaveCriticalSection(&m_CSPluginNetwork);
+#else
+	SDL_UnlockMutex(m_Mutex);
+#endif
 }
 //----------------------------------------------------------------------------------
 void CPacketManager::PluginReceiveHandler(puchar buf, int size)

@@ -15,10 +15,10 @@ CGUILine::CGUILine(int startX, int startY, int targetX, int targetY, int polygon
 : CBaseGUI(GOT_LINE, 0, 0, 0, startX, startY), TargetX(targetX), TargetY(targetY)
 {
 	WISPFUN_DEBUG("c65_f1");
-	ColorR = GetRValue(polygoneColor);
-	ColorG = GetGValue(polygoneColor);
-	ColorB = GetBValue(polygoneColor);
-	ColorA = polygoneColor >> 24;
+	ColorR = ToColorR(polygoneColor);
+	ColorG = ToColorG(polygoneColor);
+	ColorB = ToColorB(polygoneColor);
+	ColorA = ToColorA(polygoneColor);
 
 	if (!ColorA)
 		ColorA = 0xFF;

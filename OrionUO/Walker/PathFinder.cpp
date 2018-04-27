@@ -10,6 +10,8 @@
 */
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
+#include <SDL_rect.h>
+#include "PathFinder.h"
 //----------------------------------------------------------------------------------
 CPathFinder g_PathFinder;
 //----------------------------------------------------------------------------------
@@ -263,10 +265,10 @@ bool CPathFinder::CalculateNewZ(int x, int y, char &z, int direction)
 
 	if (g_CustomHouseGump != NULL)
 	{
-		RECT rect = { g_CustomHouseGump->StartPos.X, g_CustomHouseGump->StartPos.Y, g_CustomHouseGump->EndPos.X, g_CustomHouseGump->EndPos.Y };
-		POINT pos = { x, y };
+		SDL_Rect rect = { g_CustomHouseGump->StartPos.X, g_CustomHouseGump->StartPos.Y, g_CustomHouseGump->EndPos.X, g_CustomHouseGump->EndPos.Y };
+		SDL_Point pos = { x, y };
 
-		if (!PtInRect(&rect, pos))
+		if (!SDL_PointInRect(&pos, &rect))
 			return false;
 	}
 

@@ -43,26 +43,26 @@ void CGUITextEntry::SetGlobalColor(bool use, int color, int selected, int focuse
 
 	if (use)
 	{
-		GlobalColorR = GetRValue(color);
-		GlobalColorG = GetGValue(color);
-		GlobalColorB = GetBValue(color);
-		GlobalColorA = color >> 24;
+		GlobalColorR = ToColorR(color);
+		GlobalColorG = ToColorG(color);
+		GlobalColorB = ToColorB(color);
+		GlobalColorA = ToColorA(color);
 
 		if (!GlobalColorA)
 			GlobalColorA = 0xFF;
 
-		GlobalColorSelectedR = GetRValue(selected);
-		GlobalColorSelectedG = GetGValue(selected);
-		GlobalColorSelectedB = GetBValue(selected);
-		GlobalColorSelectedA = selected >> 24;
+		GlobalColorSelectedR = ToColorR(selected);
+		GlobalColorSelectedG = ToColorG(selected);
+		GlobalColorSelectedB = ToColorB(selected);
+		GlobalColorSelectedA = ToColorA(selected);
 
 		if (!GlobalColorSelectedA)
 			GlobalColorSelectedA = 0xFF;
 
-		GlobalColorFocusedR = GetRValue(focused);
-		GlobalColorFocusedG = GetGValue(focused);
-		GlobalColorFocusedB = GetBValue(focused);
-		GlobalColorFocusedA = focused >> 24;
+		GlobalColorFocusedR = ToColorR(focused);
+		GlobalColorFocusedG = ToColorG(focused);
+		GlobalColorFocusedB = ToColorB(focused);
+		GlobalColorFocusedA = ToColorA(focused);
 
 		if (!GlobalColorFocusedA)
 			GlobalColorFocusedA = 0xFF;

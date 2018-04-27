@@ -33,6 +33,7 @@ CWindow::~CWindow()
 //----------------------------------------------------------------------------------
 void CWindow::SetSize(const WISP_GEOMETRY::CSize &size)
 {
+#if USE_WISP
 	WISPFUN_DEBUG("c14_f2");
 	RECT pos = { 0, 0, 0, 0 };
 	GetWindowRect(Handle, &pos);
@@ -49,13 +50,19 @@ void CWindow::SetSize(const WISP_GEOMETRY::CSize &size)
 		r.bottom += -r.top;
 
 	SetWindowPos(Handle, HWND_TOP, pos.left, pos.top, r.right, r.bottom, 0);
-
+#else
+	// SDL_GetWindowPosition
+	// SDL_GetWindowSize
+	// SDL_SetWindowPosition
+	NOT_IMPLEMENTED;
+#endif
 	m_Size = size;
 }
 //----------------------------------------------------------------------------------
 void CWindow::SetMinSize(const WISP_GEOMETRY::CSize &newMinSize)
 {
 	WISPFUN_DEBUG("c14_f3");
+#if USE_WISP
 	if (m_Size.Width < newMinSize.Width || m_Size.Height < newMinSize.Height)
 	{
 		int width = m_Size.Width;
@@ -83,13 +90,18 @@ void CWindow::SetMinSize(const WISP_GEOMETRY::CSize &newMinSize)
 
 		SetWindowPos(Handle, HWND_TOP, pos.left, pos.top, r.right, r.bottom, 0);
 	}
-
+#else
+	// SDL_GetWindowPosition
+	// SDL_GetWindowSize
+	NOT_IMPLEMENTED;
+#endif
 	m_MinSize = newMinSize;
 }
 //----------------------------------------------------------------------------------
 void CWindow::SetMaxSize(const WISP_GEOMETRY::CSize &newMaxSize)
 {
 	WISPFUN_DEBUG("c14_f4");
+#if USE_WISP	
 	if (m_Size.Width > newMaxSize.Width || m_Size.Height > newMaxSize.Height)
 	{
 		int width = m_Size.Width;
@@ -117,7 +129,11 @@ void CWindow::SetMaxSize(const WISP_GEOMETRY::CSize &newMaxSize)
 
 		SetWindowPos(Handle, HWND_TOP, pos.left, pos.top, r.right, r.bottom, 0);
 	}
-
+#else
+	// SDL_GetWindowPosition
+	// SDL_GetWindowSize
+	NOT_IMPLEMENTED;
+#endif
 	m_MaxSize = newMaxSize;
 }
 //----------------------------------------------------------------------------------
@@ -245,24 +261,22 @@ void CWindow::Destroy()
 #endif
 }
 //----------------------------------------------------------------------------------
-void CWindow::ShowMessage(const string &text, const string &title, int buttons)
+void CWindow::ShowMessage(const string &text, const string &title)
 {
 	WISPFUN_DEBUG("c14_f7");
 #if USE_WISP	
-	MessageBoxA(Handle, text.c_str(), title.c_str(), buttons);
+	MessageBoxA(Handle, text.c_str(), title.c_str(), MB_OK);
 #else
-	UNUSED(buttons);
 	SDL_Log("%s: %s\n", title.c_str(), text.c_str());
 #endif
 }
 //----------------------------------------------------------------------------------
-void CWindow::ShowMessage(const wstring &text, const wstring &title, int buttons)
+void CWindow::ShowMessage(const wstring &text, const wstring &title)
 {
 	WISPFUN_DEBUG("c14_f8");
 #if USE_WISP
-	MessageBoxW(Handle, text.c_str(), title.c_str(), buttons);
+	MessageBoxW(Handle, text.c_str(), title.c_str(), MB_OK);
 #else
-	UNUSED(buttons);
 	SDL_Log("%s: %s\n", title.c_str(), text.c_str());
 #endif
 }
@@ -282,7 +296,7 @@ LRESULT CWindow::OnWindowProc(HWND &hWnd, UINT &message, WPARAM &wParam, LPARAM 
 		case WM_GETMINMAXINFO:
 		case WM_SIZE:
 		{
-			if (IsIconic(Handle))
+			if (IsMinimized())
 				return DefWindowProc(hWnd, message, wParam, lParam);
 
 			if (message == WM_GETMINMAXINFO)

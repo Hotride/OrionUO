@@ -102,22 +102,28 @@ CThread::CThread()
 {
 	WISPFUN_DEBUG("c12_f1");
 	//DebugMsg("CThread\n");
+#if USE_WISP
 	InitializeCriticalSection(&m_CriticalSection);
+#else
+	m_Mutex = SDL_CreateMutex();
+#endif
 }
 //----------------------------------------------------------------------------------
 CThread::~CThread()
 {
 	WISPFUN_DEBUG("c12_f2");
 	//DebugMsg("~CThread\n");
+#if USE_WISP
 	DeleteCriticalSection(&m_CriticalSection);
 
-#if USE_WISP
 	if (m_Handle != 0)
-	{
 		::CloseHandle(m_Handle);
-		m_Handle = 0;
-	}
+	m_Handle = 0;
 #else
+	if (!m_Mutex)
+		SDL_DestroyMutex(m_Mutex);
+	m_Mutex = nullptr;
+
 	int ret = 0;
 	if (m_Handle)
 		SDL_WaitThread(m_Handle, &ret);
@@ -152,27 +158,44 @@ void CThread::Run(bool cycled, int delay, bool synchronizedDelay)
 bool CThread::IsActive()
 {
 	WISPFUN_DEBUG("c12_f4");
+#if USE_WISP
 	EnterCriticalSection(&m_CriticalSection);
 	bool result = m_Active;
 	LeaveCriticalSection(&m_CriticalSection);
-
+#else
+	SDL_LockMutex(m_Mutex);
+	bool result = m_Active;
+	SDL_UnlockMutex(m_Mutex);	
+#endif
 	return result;
 }
 //----------------------------------------------------------------------------------
 void CThread::Stop()
 {
 	WISPFUN_DEBUG("c12_f5");
+#if USE_WISP
 	EnterCriticalSection(&m_CriticalSection);
 	m_Active = false;
 	LeaveCriticalSection(&m_CriticalSection);
+#else
+	SDL_LockMutex(m_Mutex);
+	m_Active = false;
+	SDL_UnlockMutex(m_Mutex);	
+#endif
 }
 //----------------------------------------------------------------------------------
 bool CThread::Cycled()
 {
 	WISPFUN_DEBUG("c12_f6");
+#if USE_WISP
 	EnterCriticalSection(&m_CriticalSection);
 	bool result = m_Cycled;
 	LeaveCriticalSection(&m_CriticalSection);
+#else
+	SDL_LockMutex(m_Mutex);
+	bool result = m_Cycled;
+	SDL_UnlockMutex(m_Mutex);	
+#endif
 
 	return result;
 }
@@ -180,25 +203,43 @@ bool CThread::Cycled()
 void CThread::Pause()
 {
 	WISPFUN_DEBUG("c12_f7");
+#if USE_WISP
 	EnterCriticalSection(&m_CriticalSection);
 	m_Paused = true;
 	LeaveCriticalSection(&m_CriticalSection);
+#else
+	SDL_LockMutex(m_Mutex);
+	m_Paused = true;
+	SDL_UnlockMutex(m_Mutex);	
+#endif
 }
 //----------------------------------------------------------------------------------
 void CThread::Resume()
 {
 	WISPFUN_DEBUG("c12_f8");
+#if USE_WISP
 	EnterCriticalSection(&m_CriticalSection);
 	m_Paused = false;
 	LeaveCriticalSection(&m_CriticalSection);
+#else
+	SDL_LockMutex(m_Mutex);
+	m_Paused = false;
+	SDL_UnlockMutex(m_Mutex);	
+#endif
 }
 //----------------------------------------------------------------------------------
 bool CThread::Paused()
 {
 	WISPFUN_DEBUG("c12_f9");
+#if USE_WISP
 	EnterCriticalSection(&m_CriticalSection);
 	bool result = m_Paused;
 	LeaveCriticalSection(&m_CriticalSection);
+#else
+	SDL_LockMutex(m_Mutex);
+	bool result = m_Paused;
+	SDL_UnlockMutex(m_Mutex);	
+#endif
 
 	return result;
 }
@@ -206,9 +247,15 @@ bool CThread::Paused()
 int CThread::Delay()
 {
 	WISPFUN_DEBUG("c12_f10");
+#if USE_WISP
 	EnterCriticalSection(&m_CriticalSection);
 	int result = m_Delay;
 	LeaveCriticalSection(&m_CriticalSection);
+#else
+	SDL_LockMutex(m_Mutex);
+	int result = m_Delay;
+	SDL_UnlockMutex(m_Mutex);	
+#endif
 
 	return result;
 }
@@ -216,15 +263,22 @@ int CThread::Delay()
 void CThread::ChangeDelay(int newDelay)
 {
 	WISPFUN_DEBUG("c12_f11");
+#if USE_WISP
 	EnterCriticalSection(&m_CriticalSection);
 	m_Delay = newDelay;
 	LeaveCriticalSection(&m_CriticalSection);
+#else
+	SDL_LockMutex(m_Mutex);
+	m_Delay = newDelay;
+	SDL_UnlockMutex(m_Mutex);	
+#endif
 }
 //----------------------------------------------------------------------------------
-std::thread::id CThread::GetCurrentThreadId()
+SDL_threadID CThread::GetCurrentThreadId()
 {
 	//return GetCurrentThreadId();
-	return std::this_thread::get_id();
+	//return std::this_thread::get_id();
+	return SDL_GetThreadID(nullptr);
 }
 //----------------------------------------------------------------------------------
 }; //namespace
