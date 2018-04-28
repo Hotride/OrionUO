@@ -15,10 +15,11 @@ configuration:
 - Debug
 platform:
 - x64
+- Win32
 environment:
   matrix:
   - arch: Win64
-  - Win32
+  - other: Win32
 matrix:
   fast_finish: true
 init:
