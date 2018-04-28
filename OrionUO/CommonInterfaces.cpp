@@ -124,12 +124,12 @@ void __cdecl FUNCBODY_DrawGumppic(int x, int y, unsigned short graphic, unsigned
 //----------------------------------------------------------------------------------
 //IUltimaOnline
 //----------------------------------------------------------------------------------
-unsigned __int64 __cdecl FUNCBODY_GetLandFlags(unsigned short graphic)
+uint64_t __cdecl FUNCBODY_GetLandFlags(unsigned short graphic)
 {
 	return g_Orion.GetLandFlags(graphic);
 }
 //----------------------------------------------------------------------------------
-unsigned __int64 __cdecl FUNCBODY_GetStaticFlags(unsigned short graphic)
+uint64_t __cdecl FUNCBODY_GetStaticFlags(unsigned short graphic)
 {
 	return g_Orion.GetStaticFlags(graphic);
 }
@@ -558,8 +558,8 @@ void __cdecl FUNCBODY_GetFileInfo(unsigned int index, ORION_RAW_FILE_INFO &info)
 
 	if (file != NULL)
 	{
-		info.Address = (unsigned __int64)file->Start;
-		info.Size = (unsigned __int64)file->Size;
+		info.Address = (uint64_t)file->Start;
+		info.Size = (uint64_t)file->Size;
 		info.Extra = extra;
 	}
 	else
@@ -578,11 +578,11 @@ void __cdecl FUNCBODY_GetLandArtInfo(unsigned short index, ORION_RAW_ART_INFO &i
 
 		if (landData.Address != NULL)
 		{
-			info.Address = (unsigned __int64)landData.Address;
-			info.Size = (unsigned __int64)landData.DataSize;
+			info.Address = (uint64_t)landData.Address;
+			info.Size = (uint64_t)landData.DataSize;
 
 			if (landData.UopBlock != NULL)
-				info.CompressedSize = (unsigned __int64)landData.UopBlock->CompressedSize;
+				info.CompressedSize = (uint64_t)landData.UopBlock->CompressedSize;
 			else
 				info.CompressedSize = 0;
 
@@ -603,11 +603,11 @@ void __cdecl FUNCBODY_GetStaticArtInfo(unsigned short index, ORION_RAW_ART_INFO 
 
 		if (staticData.Address != NULL)
 		{
-			info.Address = (unsigned __int64)staticData.Address;
-			info.Size = (unsigned __int64)staticData.DataSize;
+			info.Address = (uint64_t)staticData.Address;
+			info.Size = (uint64_t)staticData.DataSize;
 
 			if (staticData.UopBlock != NULL)
-				info.CompressedSize = (unsigned __int64)staticData.UopBlock->CompressedSize;
+				info.CompressedSize = (uint64_t)staticData.UopBlock->CompressedSize;
 			else
 				info.CompressedSize = 0;
 
@@ -628,13 +628,13 @@ void __cdecl FUNCBODY_GetGumpArtInfo(unsigned short index, ORION_RAW_GUMP_INFO &
 
 		if (gumpData.Address != NULL)
 		{
-			info.Address = (unsigned __int64)gumpData.Address;
-			info.Size = (unsigned __int64)gumpData.DataSize;
+			info.Address = (uint64_t)gumpData.Address;
+			info.Size = (uint64_t)gumpData.DataSize;
 			info.Width = gumpData.Width;
 			info.Height = gumpData.Height;
 
 			if (gumpData.UopBlock != NULL)
-				info.CompressedSize = (unsigned __int64)gumpData.UopBlock->CompressedSize;
+				info.CompressedSize = (uint64_t)gumpData.UopBlock->CompressedSize;
 			else
 				info.CompressedSize = 0;
 

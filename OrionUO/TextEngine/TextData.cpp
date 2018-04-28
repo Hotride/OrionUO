@@ -78,7 +78,7 @@ void CTextData::GenerateTexture(int maxWidth, ushort flags, TEXT_ALIGN_TYPE alig
 			Timer += (((4000 * m_Texture.LinesCount) * g_ConfigManager.SpeechDelay) / 100);
 		else
 		{
-			uint delay = ((__int64)((__int64)5497558140000 * g_ConfigManager.SpeechDelay) >> 32) >> 5;
+			uint delay = ((int64_t)((int64_t)5497558140000 * g_ConfigManager.SpeechDelay) >> 32) >> 5;
 			Timer += (uint)((delay >> 31) + delay);
 		}
 	}

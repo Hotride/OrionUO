@@ -32,23 +32,23 @@ public:
 //----------------------------------------------------------------------------------
 struct ORION_RAW_FILE_INFO
 {
-	unsigned __int64 Address;
-	unsigned __int64 Size;
+	uint64_t Address;
+	uint64_t Size;
 	unsigned int Extra;
 };
 //----------------------------------------------------------------------------------
 struct ORION_RAW_ART_INFO
 {
-	unsigned __int64 Address;
-	unsigned __int64 Size;
-	unsigned __int64 CompressedSize;
+	uint64_t Address;
+	uint64_t Size;
+	uint64_t CompressedSize;
 };
 //----------------------------------------------------------------------------------
 struct ORION_RAW_GUMP_INFO
 {
-	unsigned __int64 Address;
-	unsigned __int64 Size;
-	unsigned __int64 CompressedSize;
+	uint64_t Address;
+	uint64_t Size;
+	uint64_t CompressedSize;
 	int Width;
 	int Height;
 };
@@ -68,8 +68,8 @@ typedef void __cdecl FUNCDEF_DRAW_GUMP(int, int, unsigned short, unsigned short)
 typedef void __cdecl FUNCDEF_DRAW_GUMPPIC(int, int, unsigned short, unsigned short, int, int);
 
 //IUltimaOnline
-typedef unsigned __int64 __cdecl FUNCDEF_GET_LAND_FLAGS(unsigned short);
-typedef unsigned __int64 __cdecl FUNCDEF_GET_STATIC_FLAGS(unsigned short);
+typedef uint64_t __cdecl FUNCDEF_GET_LAND_FLAGS(unsigned short);
+typedef uint64_t __cdecl FUNCDEF_GET_STATIC_FLAGS(unsigned short);
 typedef int __cdecl FUNCDEF_GET_VALUE_INT(VALUE_KEY_INT, int);
 typedef void __cdecl FUNCDEF_SET_VALUE_INT(VALUE_KEY_INT, int);
 typedef IOrionString *__cdecl FUNCDEF_GET_VALUE_STRING(VALUE_KEY_STRING, const char*);

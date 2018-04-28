@@ -49,7 +49,7 @@
 typedef unsigned char uchar;
 typedef unsigned short ushort;
 typedef unsigned int uint;
-typedef unsigned __int64 uint64;
+typedef uint64_t uint64;
 typedef uchar *puchar;
 typedef ushort *pushort;
 typedef uint *puint;
@@ -57,7 +57,7 @@ typedef uint64 *puint64;
 typedef char *pchar;
 typedef short *pshort;
 typedef int *pint;
-typedef __int64 *pint64;
+typedef int64_t *pint64;
 //----------------------------------------------------------------------------------
 #define DEBUGGIND_OUTPUT 1
 

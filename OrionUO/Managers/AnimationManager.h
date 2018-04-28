@@ -165,7 +165,7 @@ public:
 	@param [__in] SizeIdx Размер файла с таблицей адресов
 	@return 
 	*/
-	void Init(int graphic, const size_t &addressIdx, const size_t &sizeIdx)
+	void Init(int graphic, size_t addressIdx, size_t sizeIdx)
 	{
 		m_AddressIdx[graphic] = addressIdx;
 		m_SizeIdx[graphic] = sizeIdx;

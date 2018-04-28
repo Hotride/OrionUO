@@ -78,7 +78,7 @@ private:
 	//Очистка неиспользуемых текстур
 	void ClearUnusedTextures();
 
-	void ReadMulIndexFile(size_t indexMaxCount, std::function<CIndexObject*(int index)> getIdxObj, const size_t &address, PBASE_IDX_BLOCK ptr, std::function<PBASE_IDX_BLOCK()> getNewPtrValue);
+	void ReadMulIndexFile(size_t indexMaxCount, std::function<CIndexObject*(int index)> getIdxObj, size_t address, PBASE_IDX_BLOCK ptr, std::function<PBASE_IDX_BLOCK()> getNewPtrValue);
 	void ReadUOPIndexFile(size_t indexMaxCount, std::function<CIndexObject*(int index)> getIdxObj, const char *uopFileName, int padding, const char *extesion, CUopMappedFile &uopFile, int startIndex = 0);
 
 	void GetCurrentLocale();

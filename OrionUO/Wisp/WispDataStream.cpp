@@ -12,7 +12,7 @@ CDataWritter::CDataWritter()
 {
 }
 //----------------------------------------------------------------------------------
-CDataWritter::CDataWritter(const size_t &size, bool autoResize)
+CDataWritter::CDataWritter(size_t size, bool autoResize)
 : AutoResize(autoResize)
 {
 	WISPFUN_DEBUG("c4_f1");
@@ -27,7 +27,7 @@ CDataWritter::~CDataWritter()
 	Ptr = NULL;
 }
 //----------------------------------------------------------------------------------
-void CDataWritter::Resize(const size_t &newSize, bool resetPtr)
+void CDataWritter::Resize(size_t newSize, bool resetPtr)
 {
 	WISPFUN_DEBUG("c4_f3");
 	m_Data.resize(newSize, 0);
@@ -48,7 +48,7 @@ void CDataWritter::Move(const intptr_t &offset)
 		Ptr += offset;
 }
 //----------------------------------------------------------------------------------
-void CDataWritter::WriteDataBE(const puchar data, const size_t &size, const intptr_t &offset)
+void CDataWritter::WriteDataBE(const puchar data, size_t size, const intptr_t &offset)
 {
 	WISPFUN_DEBUG("c4_f5");
 	if (AutoResize)
@@ -67,7 +67,7 @@ void CDataWritter::WriteDataBE(const puchar data, const size_t &size, const intp
 	}
 }
 //----------------------------------------------------------------------------------
-void CDataWritter::WriteDataLE(const puchar data, const size_t &size, const intptr_t &offset)
+void CDataWritter::WriteDataLE(const puchar data, size_t size, const intptr_t &offset)
 {
 	WISPFUN_DEBUG("c4_f6");
 	if (AutoResize)
@@ -160,7 +160,7 @@ CDataReader::CDataReader()
 {
 }
 //----------------------------------------------------------------------------------
-CDataReader::CDataReader(puchar start, const size_t &size)
+CDataReader::CDataReader(puchar start, size_t size)
 : Start(start), Size(size), End(Start + size)
 {
 	WISPFUN_DEBUG("c5_f1");
@@ -176,7 +176,7 @@ CDataReader::~CDataReader()
 	Ptr = NULL;
 }
 //----------------------------------------------------------------------------------
-void CDataReader::SetData(puchar start, const size_t &size, const intptr_t &offset)
+void CDataReader::SetData(puchar start, size_t size, const intptr_t &offset)
 {
 	WISPFUN_DEBUG("c5_f3");
 	Start = start;
@@ -185,7 +185,7 @@ void CDataReader::SetData(puchar start, const size_t &size, const intptr_t &offs
 	Ptr = Start + offset;
 }
 //----------------------------------------------------------------------------------
-void CDataReader::ReadDataBE(puchar data, const size_t &size, const intptr_t &offset)
+void CDataReader::ReadDataBE(puchar data, size_t size, const intptr_t &offset)
 {
 	WISPFUN_DEBUG("c5_f4");
 	if (Ptr != NULL)
@@ -202,7 +202,7 @@ void CDataReader::ReadDataBE(puchar data, const size_t &size, const intptr_t &of
 	}
 }
 //----------------------------------------------------------------------------------
-void CDataReader::ReadDataLE(puchar data, const size_t &size, const intptr_t &offset)
+void CDataReader::ReadDataLE(puchar data, size_t size, const intptr_t &offset)
 {
 	WISPFUN_DEBUG("c5_f5");
 	if (Ptr != NULL)

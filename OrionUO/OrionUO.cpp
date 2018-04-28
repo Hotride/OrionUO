@@ -18,7 +18,7 @@ typedef struct PLUGIN_INFO
 {
 	char FileName[MAX_PATH];
 	char FunctionName[100];
-	unsigned __int64 Flags;
+	uint64_t Flags;
 } *PPLUGIN_INFO;
 
 #pragma pack (pop)
@@ -760,7 +760,7 @@ void COrion::CheckStaticTileFilterFiles()
 
 		IFOR(i, 0, vegetationTilesCount)
 		{
-			__int64 flags = g_Orion.GetStaticFlags(vegetationTiles[i]);
+			int64_t flags = g_Orion.GetStaticFlags(vegetationTiles[i]);
 			if (flags & 0x00000040)
 			{
 				continue;
@@ -824,7 +824,7 @@ void COrion::CheckStaticTileFilterFiles()
 					break;
 			}
 
-			__int64 flags = g_Orion.GetStaticFlags(graphic);
+			int64_t flags = g_Orion.GetStaticFlags(graphic);
 
 			if (!(flags & 0x00000040))
 			{
@@ -3258,7 +3258,7 @@ void COrion::LoadTiledata(int landSize, int staticsSize)
 	}
 }
 //----------------------------------------------------------------------------------
-void COrion::ReadMulIndexFile(size_t indexMaxCount, std::function<CIndexObject*(int index)> getIdxObj, const size_t &address, PBASE_IDX_BLOCK ptr, std::function<PBASE_IDX_BLOCK()> getNewPtrValue)
+void COrion::ReadMulIndexFile(size_t indexMaxCount, std::function<CIndexObject*(int index)> getIdxObj, size_t address, PBASE_IDX_BLOCK ptr, std::function<PBASE_IDX_BLOCK()> getNewPtrValue)
 {
 	IFOR(i, 0, indexMaxCount)
 	{

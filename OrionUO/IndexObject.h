@@ -23,7 +23,7 @@ public:
 	CUopBlockHeader* UopBlock = NULL;
 	CIndexObject();
 	virtual ~CIndexObject();
-	virtual void ReadIndexFile(const size_t &address, PBASE_IDX_BLOCK ptr, const ushort id);
+	virtual void ReadIndexFile(size_t address, PBASE_IDX_BLOCK ptr, const ushort id);
 	CGLTexture *Texture{ NULL };
 };
 //----------------------------------------------------------------------------------
@@ -69,7 +69,7 @@ public:
 
 	CIndexMulti();
 	virtual ~CIndexMulti();
-	virtual void ReadIndexFile(const size_t &address, PBASE_IDX_BLOCK ptr, const ushort id) override;
+	virtual void ReadIndexFile(size_t address, PBASE_IDX_BLOCK ptr, const ushort id) override;
 };
 //----------------------------------------------------------------------------------
 class CIndexGump : public CIndexObject
@@ -77,7 +77,7 @@ class CIndexGump : public CIndexObject
 public:
 	CIndexGump();
 	virtual ~CIndexGump();
-	virtual void ReadIndexFile(const size_t &address, PBASE_IDX_BLOCK ptr, const ushort id) override;
+	virtual void ReadIndexFile(size_t address, PBASE_IDX_BLOCK ptr, const ushort id) override;
 };
 //----------------------------------------------------------------------------------
 class CIndexLight : public CIndexObject
@@ -85,7 +85,7 @@ class CIndexLight : public CIndexObject
 public:
 	CIndexLight();
 	virtual ~CIndexLight();
-	virtual void ReadIndexFile(const size_t &address, PBASE_IDX_BLOCK ptr, const ushort id) override;
+	virtual void ReadIndexFile(size_t address, PBASE_IDX_BLOCK ptr, const ushort id) override;
 };
 //---------------------------------------------------------------------------
 class CIndexAnimation

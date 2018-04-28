@@ -16,9 +16,9 @@
 
 // special defines for VC5/6 (if no actual PSDK is installed):
 #if _MSC_VER < 1300
-typedef unsigned __int64 DWORD64, *PDWORD64;
+typedef uint64_t DWORD64, *PDWORD64;
 #if defined(_WIN64)
-typedef unsigned __int64 SIZE_T, *PSIZE_T;
+typedef uint64_t SIZE_T, *PSIZE_T;
 #else
 typedef unsigned long SIZE_T, *PSIZE_T;
 #endif

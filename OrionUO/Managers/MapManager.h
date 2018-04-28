@@ -72,7 +72,7 @@ public:
 	*/
 	int GetActualMap();
 
-	void SetPatchedMapBlock(const size_t &block, const size_t &address);
+	void SetPatchedMapBlock(size_t block, size_t address);
 
 	/*!
 	Загрузить блок

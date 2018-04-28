@@ -146,7 +146,7 @@ void CMapManager::CreateBlockTable(int map)
 	}
 }
 //----------------------------------------------------------------------------------
-void CMapManager::SetPatchedMapBlock(const size_t &block, const size_t &address)
+void CMapManager::SetPatchedMapBlock(size_t block, size_t address)
 {
 	WISPFUN_DEBUG("c146_f4");
 	MAP_INDEX_LIST &list = m_BlockData[0];
