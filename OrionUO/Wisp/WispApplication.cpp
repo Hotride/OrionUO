@@ -16,7 +16,6 @@ CApplication::CApplication()
 	WISPFUN_DEBUG("c1_f1");
 	g_WispApplication = this;
 	m_UOPath = m_ExePath = fs_path_current();
-	g_MainScreen.LoadCustomPath();
 }
 //----------------------------------------------------------------------------------
 CApplication::~CApplication()

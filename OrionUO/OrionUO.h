@@ -40,7 +40,12 @@ private:
 
 	string m_GameServerIP = "";
 
+	bool LoadOrionDLL();
+	bool LoadClientConfigOld();
+
 	bool LoadClientConfig();
+	void SaveClientConfig();
+
 	void LoadAutoLoginNames();
 
 	void LoadTiledata(int landSize, int staticsSize);
@@ -107,7 +112,7 @@ public:
 	//Данные из тайлдаты по статике
 	vector<STATIC_TILES> m_StaticData;
 
-#if defined(ORION_WINDOWS) 
+#if defined(ORION_WINDOWS)
 	static UINT_LIST FindPattern(puchar ptr, int size, const UCHAR_LIST &pattern);
 #endif
 
@@ -152,7 +157,7 @@ public:
 	static string FixServerName(string name);
 
 
-	
+
 	//Подключиться к логин сокету
 	void Connect();
 
