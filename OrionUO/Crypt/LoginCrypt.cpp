@@ -33,7 +33,7 @@ void CLoginCrypt::Encrypt(puchar in, puchar out, int size)
 {
 	for (int i = 0; i < size; i++)
 	{
-		out[i] = in[i] ^ static_cast<u8>(m_key[0]);
+		out[i] = in[i] ^ static_cast<uint8_t>(m_key[0]);
 
 		uint table0 = m_key[0];
 		uint table1 = m_key[1];
