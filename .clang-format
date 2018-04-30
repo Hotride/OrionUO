@@ -3,8 +3,10 @@ Language: Cpp
 Standard: Cpp11
 TabWidth: 4
 IndentWidth: 4
-UseTab: Always
+UseTab: Never
+ColumnLimit: 100
 
+IndentCaseLabels: true
 AlignAfterOpenBracket: AlwaysBreak
 AlignConsecutiveAssignments: false
 AlignConsecutiveDeclarations: false
@@ -28,9 +30,10 @@ BreakBeforeTernaryOperators: false
 BreakConstructorInitializersBeforeComma: true
 BreakStringLiterals: false
 ConstructorInitializerAllOnOneLineOrOnePerLine: false
-Cpp11BracedListStyle: true
+Cpp11BracedListStyle: false
 DerivePointerAlignment: false
 DisableFormat: false
+BinPackParameters: false
 ExperimentalAutoDetectBinPacking: false
 KeepEmptyLinesAtTheStartOfBlocks: false
 NamespaceIndentation: Inner
@@ -47,3 +50,4 @@ SpacesInContainerLiterals: false
 SpacesInParentheses: false
 SpacesInSquareBrackets: false
 AccessModifierOffset: -4
+ForEachMacros: [ IFOR, DFOR, BQFOR ]
