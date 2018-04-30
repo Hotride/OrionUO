@@ -43,6 +43,7 @@ void CMultiMap::LoadMap(CGumpMap *gump, CGUIExternalTexture *mapObject)
 		return;
 	}
 
+
 	int mapSize = gump->Width * gump->Height;
 	UCHAR_LIST byteMap(mapSize, 0);
 
@@ -108,12 +109,10 @@ void CMultiMap::LoadMap(CGumpMap *gump, CGUIExternalTexture *mapObject)
 				posY = gump->Width * ((currentHeight - startHeight) >> 8);
 			}
 
-			//if (y >= Height)
-			//	break;
+			
 		}
 
-		//if (y >= Height)
-		//	break;
+		
 	}
 
 	if (maxPixelValue >= 1)
@@ -165,7 +164,7 @@ bool CMultiMap::LoadFacet(CGumpMap *gump, CGUIExternalTexture *mapObject, int fa
 	int mapWidth = file.ReadInt16LE();
 	int mapHeight = file.ReadInt16LE();
 
-	//DebugMsg("Facet w:%i h:%i\n", mapWidth, mapHeight);
+	
 
 	int startX = gump->StartX;
 	int endX = gump->EndX;
