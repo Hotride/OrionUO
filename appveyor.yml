@@ -1,9 +1,6 @@
 version: 1.0.{build}
 pull_requests:
   do_not_increment_build_number: true
-branches:
-  only:
-  - linux-port
 skip_tags: true
 clone_folder: c:\projects\orion
 image:
