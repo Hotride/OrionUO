@@ -22,6 +22,8 @@ public:
 private:
 	uint m_CRC_Table[256];
 
+	std::list<std::tuple<std::string, std::string, uint32_t>> m_Plugins;
+
 	uchar m_StaticTilesFilterFlags[0x10000];
 
 	USHORT_LIST m_StumpTiles;

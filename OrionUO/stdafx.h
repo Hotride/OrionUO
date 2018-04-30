@@ -29,6 +29,7 @@
 #include <algorithm>
 #include <functional>
 #include <cassert>
+#include <list>
 
 #define UNUSED(x) (void)x
 #define ToColorR(x) ((x    )&0xff)
@@ -104,6 +105,9 @@ using namespace std;
 #undef IsMaximized
 
 #define strcasecmp _stricmp
+
+#undef IsMinimized
+#undef IsMaximized
 
 #else
 #include "Stubs.h"

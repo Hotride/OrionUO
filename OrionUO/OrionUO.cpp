@@ -1151,6 +1151,18 @@ bool COrion::LoadClientConfigOld()
 		LOG("\tMaps Count: %d\n", mapsCount);
 		LOG("\tUse Verdata: %d\n", g_FileManager.UseVerdata);
 
+		size_t pluginsInfoCount = GetPluginsCount();
+		if (pluginsInfoCount) {
+			PLUGIN_INFO *pluginsInfo = new PLUGIN_INFO[pluginsInfoCount];
+			g_PluginInitNew(pluginsInfo);
+
+			for (int i = 0; i < pluginsInfoCount; i++) {
+				m_Plugins.push_back({pluginsInfo[i].FileName, pluginsInfo[i].FunctionName, pluginsInfo[i].Flags});
+			}
+
+			delete[] pluginsInfo;
+		}
+
 		return true;
 	}
 
@@ -1272,6 +1284,36 @@ bool COrion::LoadOrionDLL()
 
 		g_CharacterList.ClientFlag = file.ReadInt8();
 		g_FileManager.UseVerdata = (file.ReadInt8() != 0);
+
+		STRING_LIST libName;
+		STRING_LIST functions;
+		UINT_LIST flags;
+
+		if (g_PluginInitOld != NULL)
+		{
+			g_PluginInitOld(libName, functions, flags);
+		}
+		else
+		{
+			size_t pluginsInfoCount = GetPluginsCount();
+			if (pluginsInfoCount) {
+				PLUGIN_INFO *pluginsInfo = new PLUGIN_INFO[pluginsInfoCount];
+				g_PluginInitNew(pluginsInfo);
+
+				IFOR(i, 0, pluginsInfoCount)
+				{
+					libName.push_back(pluginsInfo[i].FileName);
+					functions.push_back(pluginsInfo[i].FunctionName);
+					flags.push_back((uint)pluginsInfo[i].Flags);
+				}
+
+				delete[] pluginsInfo;
+			}
+		}
+
+		for (size_t i = 0; i < libName.size(); i++) {
+			m_Plugins.push_back({ libName[i], functions[i], flags[i] });
+		}
 	}
 
 	return true;
@@ -1333,6 +1375,12 @@ bool COrion::LoadClientConfig()
 			{
 				g_OrionWindow.ShowMessage("Invalid MapSize (no 'x')", "Error!");
 			}
+		} else if (strcasecmp("plugin", strings[0].c_str()) == 0) {
+			uint32_t flags = ~0;
+			if (strings.size() == 4) {
+				flags = std::stoi(strings[3]);
+			}
+			m_Plugins.push_back({strings[1], strings[2], flags});
 		}
 	}
 
@@ -1762,35 +1810,9 @@ void COrion::LoadPluginConfig()
 	g_PluginClientInterface.PathFinder = &g_Interface_PathFinder;
 	g_PluginClientInterface.FileManager = &g_Interface_FileManager;
 
-	STRING_LIST libName;
-	STRING_LIST functions;
-	UINT_LIST flags;
-
-	if (g_PluginInitOld != NULL)
-	{
-		g_PluginInitOld(libName, functions, flags);
+	for (auto& plugin : m_Plugins) {
+		LoadPlugin(g_App.ExeFilePath(get<0>(plugin).c_str()), get<1>(plugin), get<2>(plugin));
 	}
-	else
-	{
-		size_t pluginsInfoCount = GetPluginsCount();
-		if (!pluginsInfoCount)
-			return;
-
-		PLUGIN_INFO *pluginsInfo = new PLUGIN_INFO[pluginsInfoCount];
-		g_PluginInitNew(pluginsInfo);
-
-		IFOR(i, 0, pluginsInfoCount)
-		{
-			libName.push_back(pluginsInfo[i].FileName);
-			functions.push_back(pluginsInfo[i].FunctionName);
-			flags.push_back((uint)pluginsInfo[i].Flags);
-		}
-
-		delete[] pluginsInfo;
-	}
-
-	IFOR(i, 0, (int)libName.size())
-		LoadPlugin(g_App.ExeFilePath(libName[i].c_str()), functions[i], flags[i]);
 
 	ParseCommandLine();
 
@@ -1799,25 +1821,6 @@ void COrion::LoadPluginConfig()
 		CPluginPacketSkillsList().SendToPlugin();
 		CPluginPacketSpellsList().SendToPlugin();
 		CPluginPacketMacrosList().SendToPlugin();
-
-		/*g_FileManager.SendFilesInfo();
-
-		IFOR(i, 0, 0x10000)
-		{
-			CIndexObjectStatic &staticObj = m_StaticDataIndex[i];
-
-			if (staticObj.Address)
-			{
-				uint64 compressedSize = 0;
-
-				if (staticObj.UopBlock)
-					compressedSize = staticObj.UopBlock->CompressedSize;
-
-				CPluginPacketStaticArtGraphicDataInfo(i, staticObj.Address, staticObj.DataSize, compressedSize).SendToPlugin();
-			}
-		}
-
-		CPluginPacketFilesTransfered().SendToPlugin();*/
 	}
 
 #if USE_WISP
