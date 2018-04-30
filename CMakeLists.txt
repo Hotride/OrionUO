@@ -55,8 +55,8 @@ if(ORION_WINDOWS)
 		set(ORION_64BITS 1)
 	endif()
 
-	set(DEP_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/OrionUO/Dependencies/include")
-	set(DEP_LIB_DIR "${CMAKE_SOURCE_DIR}/OrionUO/Dependencies/lib/${_WIN_TARGET}/")
+	set(DEP_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/Dependencies/include")
+	set(DEP_LIB_DIR "${CMAKE_SOURCE_DIR}/Dependencies/lib/${_WIN_TARGET}/")
 
 	set(ZLIB_INCLUDE_DIRS "${DEP_INCLUDE_DIR}")
 	set(ZLIB_LIBRARIES "${DEP_LIB_DIR}zlib.lib")
