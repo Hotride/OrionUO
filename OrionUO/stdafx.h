@@ -100,6 +100,9 @@ using namespace std;
 #include "targetver.h"
 #include "Resource.h"
 
+#undef IsMinimized
+#undef IsMaximized
+
 #else
 #include "Stubs.h"
 #endif
