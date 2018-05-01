@@ -44,8 +44,22 @@ GAME_STATE g_GameState = GS_MAIN;
 
 CGLTexture g_TextureGumpState[2];
 
-WISP_GEOMETRY::CSize g_MapSize[MAX_MAPS_COUNT];
-WISP_GEOMETRY::CSize g_MapBlockSize[MAX_MAPS_COUNT];
+WISP_GEOMETRY::CSize g_MapSize[MAX_MAPS_COUNT] = {};
+WISP_GEOMETRY::CSize g_MapBlockSize[MAX_MAPS_COUNT] = {};
+
+/* The map files are linear lists of blocks, which are 8x8
+ * sets of tiles. You have to just know the x/y dimensions
+ * to correctly interpret them. Initialize this arrays
+ * with the default sizes.
+ */
+WISP_GEOMETRY::CSize g_DefaultMapSize[MAX_MAPS_COUNT] = {
+	{ 7168, 4096 },
+	{ 7168, 4096 },
+	{ 2304, 1600 },
+	{ 2560, 2048 },
+	{ 1448, 1448 },
+	{ 1280, 4096 },
+};
 
 int g_MultiIndexCount = 0;
 

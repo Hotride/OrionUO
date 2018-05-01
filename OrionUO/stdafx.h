@@ -29,6 +29,7 @@
 #include <algorithm>
 #include <functional>
 #include <cassert>
+#include <list>
 
 #define UNUSED(x) (void)x
 #define ToColorR(x) ((x    )&0xff)
@@ -100,6 +101,14 @@ using namespace std;
 #include "targetver.h"
 #include "Resource.h"
 
+#undef IsMinimized
+#undef IsMaximized
+
+#define strcasecmp _stricmp
+
+#undef IsMinimized
+#undef IsMaximized
+
 #else
 #include "Stubs.h"
 #endif
@@ -120,6 +129,10 @@ using namespace std;
 #include "Wisp/WispThread.h"
 #include "Wisp/WispThreadedTimer.h"
 #include "Wisp/WispWindow.h"
+
+#include "Crypt/CryptEntry.h"
+#include "Crypt/GameCrypt.h"
+#include "Crypt/LoginCrypt.h"
 
 #include "DefinitionMacro.h"
 #include "EnumList.h"

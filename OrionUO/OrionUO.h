@@ -16,11 +16,13 @@ public:
 	string ClientVersionText = "2.0.3";
 	int TexturesDataCount = 0;
 	string DefaultLogin = "";
-	int DefaultPort = 0;
+	int DefaultPort = 2593;
 	uint OrionVersionNumeric = 0;
 
 private:
 	uint m_CRC_Table[256];
+
+	std::list<std::tuple<std::string, std::string, uint32_t>> m_Plugins;
 
 	uchar m_StaticTilesFilterFlags[0x10000];
 
@@ -40,7 +42,15 @@ private:
 
 	string m_GameServerIP = "";
 
+	CLIENT_VERSION ParseVersion(std::string& version);
+	bool ParseMapSize(std::string& mapName, std::string& dimensions);
+
+	bool LoadOrionDLL();
+	bool LoadClientConfigOld();
+
 	bool LoadClientConfig();
+	void SaveClientConfig();
+
 	void LoadAutoLoginNames();
 
 	void LoadTiledata(int landSize, int staticsSize);
@@ -107,7 +117,7 @@ public:
 	//Данные из тайлдаты по статике
 	vector<STATIC_TILES> m_StaticData;
 
-#if defined(ORION_WINDOWS) 
+#if defined(ORION_WINDOWS)
 	static UINT_LIST FindPattern(puchar ptr, int size, const UCHAR_LIST &pattern);
 #endif
 
@@ -152,7 +162,7 @@ public:
 	static string FixServerName(string name);
 
 
-	
+
 	//Подключиться к логин сокету
 	void Connect();
 
