@@ -48,10 +48,9 @@ CGameCharacter::~CGameCharacter()
 	if (g_ConfigManager.RemoveStatusbarsWithoutObjects)
 		g_GumpManager.CloseGump(serial, 0, GT_STATUSBAR);
 	else
-	{
 		//!Если стянут статусбар - обновим его
 		g_GumpManager.UpdateContent(serial, 0, GT_STATUSBAR);
-	}
+	
 	
 	//!Если стянут статусбар таргет системы - обновим его
 	g_GumpManager.UpdateContent(serial, 0, GT_TARGET_SYSTEM);

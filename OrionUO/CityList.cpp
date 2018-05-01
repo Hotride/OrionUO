@@ -16,7 +16,7 @@ CCityList g_CityList;
 //--------------------------------------CCityItem-----------------------------------
 //----------------------------------------------------------------------------------
 CCityItem::CCityItem()
-: m_City("", L"")
+    : m_City("", L"")
 {
 }
 //----------------------------------------------------------------------------------
@@ -30,15 +30,15 @@ CCityItem::~CCityItem()
 */
 void CCityItem::InitCity()
 {
-	WISPFUN_DEBUG("c183_f1");
-	//!Линкуем город
-	m_City = g_CityManager.GetCity(Name);
+    WISPFUN_DEBUG("c183_f1");
+    //!Линкуем город
+    m_City = g_CityManager.GetCity(Name);
 }
 //----------------------------------------------------------------------------------
 //-------------------------------------CCityItemNew---------------------------------
 //----------------------------------------------------------------------------------
 CCityItemNew::CCityItemNew()
-: CCityItem()
+    : CCityItem()
 {
 }
 //----------------------------------------------------------------------------------
@@ -54,8 +54,8 @@ CCityList::CCityList()
 //---------------------------------------------------------------------------
 CCityList::~CCityList()
 {
-	WISPFUN_DEBUG("c184_f1");
-	Clear();
+    WISPFUN_DEBUG("c184_f1");
+    Clear();
 }
 //---------------------------------------------------------------------------
 /*!
@@ -63,14 +63,14 @@ CCityList::~CCityList()
 @param [__in] index Индекс города
 @return
 */
-CCityItem *CCityList::GetCity(int index)
+CCityItem* CCityList::GetCity(int index)
 {
-	WISPFUN_DEBUG("c184_f2");
+    WISPFUN_DEBUG("c184_f2");
 
-	if (index < m_CityList.size())
-		return m_CityList[index];
+    if (index < m_CityList.size())
+        return m_CityList[index];
 
-	return NULL;
+    return NULL;
 }
 //---------------------------------------------------------------------------
 /*!
@@ -80,10 +80,10 @@ CCityItem *CCityList::GetCity(int index)
 */
 void CCityList::Clear()
 {
-	WISPFUN_DEBUG("c184_f3");
-	for (vector<CCityItem*>::iterator i = m_CityList.begin(); i != m_CityList.end(); ++i)
-		delete *i;
+    WISPFUN_DEBUG("c184_f3");
+    for (vector<CCityItem*>::iterator i = m_CityList.begin(); i != m_CityList.end(); ++i)
+        delete *i;
 
-	m_CityList.clear();
+    m_CityList.clear();
 }
 //---------------------------------------------------------------------------
