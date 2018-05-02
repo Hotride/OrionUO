@@ -5,8 +5,8 @@ compiler: clang
 os: 
     - linux
 env:
-  - CXX=/usr/bin/clang++-6.0 CC=/usr/bin/clang-6.0
-  - CXX=gcc++-7 CC=gcc-7
+  - CXX_COMPILER=/usr/bin/clang++-6.0 CC_COMPILER=/usr/bin/clang-6.0
+  - CXX_COMPILER=gcc++-7 CC_COMPILER=gcc-7
 addons:
   apt:
     sources:
@@ -30,4 +30,6 @@ addons:
       - libfreeimage-dev
       - libglew-dev
 script:
+    - export CC=${CC_COMPILER}
+    - export CXX=${CXX_COMPILER}
     - ./travis.sh

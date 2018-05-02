@@ -1,9 +1,9 @@
 #!/bin/bash
 
-clang-format --version
+clang-format-6.0 --version
 echo Validating code formatting.
 
-clang-format --style=file -i OrionUO/*.{h,cpp} OrionUO/*/*.{h,cpp}
+clang-format-6.0 --style=file -i OrionUO/*.{h,cpp} OrionUO/*/*.{h,cpp}
 dirty=$(git ls-files --modified)
 if [[ $dirty ]]; then
 	echo Failed. The following files are incorrectly formatted:
