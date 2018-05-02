@@ -13,19 +13,19 @@
 class CGumpRacialAbility : public CGump
 {
 private:
-	const int ID_GS_LOCK_MOVING = 1;
+    const int ID_GS_LOCK_MOVING = 1;
 
 public:
-	CGumpRacialAbility(int serial, int x, int y);
-	virtual ~CGumpRacialAbility();
+    CGumpRacialAbility(int serial, int x, int y);
+    virtual ~CGumpRacialAbility();
 
-	static void OnAbilityUse(ushort index);
+    static void OnAbilityUse(ushort index);
 
-	virtual void InitToolTip();
+    virtual void InitToolTip();
 
-	GUMP_BUTTON_EVENT_H;
+    GUMP_BUTTON_EVENT_H;
 
-	virtual bool OnLeftMouseButtonDoubleClick();
+    virtual bool OnLeftMouseButtonDoubleClick();
 };
 //----------------------------------------------------------------------------------
 #endif

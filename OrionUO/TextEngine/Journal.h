@@ -13,17 +13,17 @@
 //Класс для хранения и учета сообщений в журнале
 class CJournal : public CBaseQueue
 {
-	int MaxSize = 0;
-	int Size = 0;
+    int MaxSize = 0;
+    int Size = 0;
 
 public:
-	CJournal(int maxSize);
-	~CJournal();
+    CJournal(int maxSize);
+    ~CJournal();
 
-	//Добавить сообщение в журнал
-	void Add(CTextData *obj);
+    //Добавить сообщение в журнал
+    void Add(CTextData *obj);
 
-	virtual void Clear();
+    virtual void Clear();
 };
 //----------------------------------------------------------------------------------
 extern CJournal g_Journal;

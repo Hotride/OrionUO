@@ -14,175 +14,190 @@
 //----------------------------------------------------------------------------------
 typedef struct tagICMPHDR
 {
-	u_char Type;
-	u_char Code;
-	u_short Checksum;
-	u_short ID;
-	u_short Seq;
-	char Data;
+    u_char Type;
+    u_char Code;
+    u_short Checksum;
+    u_short ID;
+    u_short Seq;
+    char Data;
 } ICMPHDR, *PICMPHDR;
 //----------------------------------------------------------------------------------
 typedef struct tagECHOREQUEST
 {
-	ICMPHDR icmpHdr;
-	DWORD dwTime;
-	char cData[64];
+    ICMPHDR icmpHdr;
+    DWORD dwTime;
+    char cData[64];
 } ECHOREQUEST, *PECHOREQUEST;
 //----------------------------------------------------------------------------------
 typedef struct tagIPHDR
 {
-	u_char VIHL;
-	u_char TOS;
-	short TotLen;
-	short ID;
-	short FlagOff;
-	u_char TTL;
-	u_char Protocol;
-	u_short Checksum;
-	struct in_addr iaSrc;
-	struct in_addr iaDst;
+    u_char VIHL;
+    u_char TOS;
+    short TotLen;
+    short ID;
+    short FlagOff;
+    u_char TTL;
+    u_char Protocol;
+    u_short Checksum;
+    struct in_addr iaSrc;
+    struct in_addr iaDst;
 } IPHDR, *PIPHDR;
 //----------------------------------------------------------------------------------
 typedef struct tagECHOREPLY
 {
-	IPHDR ipHdr;
-	ECHOREQUEST echoRequest;
-	char cFiller[256];
+    IPHDR ipHdr;
+    ECHOREQUEST echoRequest;
+    char cFiller[256];
 } ECHOREPLY, *PECHOREPLY;
 //----------------------------------------------------------------------------------
 CPingThread::CPingThread(int serverID, const string &serverIP, int requestsCount)
-: WISP_THREAD::CThread(), ServerID(serverID), ServerIP(serverIP),
-RequestsCount(requestsCount)
+    : WISP_THREAD::CThread()
+    , ServerID(serverID)
+    , ServerIP(serverIP)
+    , RequestsCount(requestsCount)
 {
-	LOG("CPingThread => %s\n", serverIP.c_str());
-	WISPFUN_DEBUG("");
+    LOG("CPingThread => %s\n", serverIP.c_str());
+    WISPFUN_DEBUG("");
 }
 //----------------------------------------------------------------------------------
 CPingThread::~CPingThread()
 {
-	WISPFUN_DEBUG("");
+    WISPFUN_DEBUG("");
 }
 //----------------------------------------------------------------------------------
 ushort CPingThread::CalculateChecksum(pushort addr, int count)
 {
-	uint checksum = 0;
+    uint checksum = 0;
 
-	while (count > 1)
-	{
-		checksum += *addr++;
-		count -= 2;
-	}
+    while (count > 1)
+    {
+        checksum += *addr++;
+        count -= 2;
+    }
 
-	if (count > 0)
-		checksum += *(puchar)addr;
+    if (count > 0)
+        checksum += *(puchar)addr;
 
-	while (checksum >> 16)
-		checksum = (checksum & 0xffff) + (checksum >> 16);
+    while (checksum >> 16)
+        checksum = (checksum & 0xffff) + (checksum >> 16);
 
-	return ~checksum;
+    return ~checksum;
 }
 //----------------------------------------------------------------------------------
 int CPingThread::CalculatePing()
 {
-	int result = 0;
+    int result = 0;
 
-	WSADATA wsa;
+    WSADATA wsa;
 
-	if (!::WSAStartup(MAKEWORD(2, 2), &wsa))
-	{
-		SOCKET socket = ::socket(AF_INET, SOCK_RAW, IPPROTO_ICMP);
+    if (!::WSAStartup(MAKEWORD(2, 2), &wsa))
+    {
+        SOCKET socket = ::socket(AF_INET, SOCK_RAW, IPPROTO_ICMP);
 
-		if (socket != SOCKET_ERROR)
-		{
-			LPHOSTENT lpHost = gethostbyname(ServerIP.c_str());
+        if (socket != SOCKET_ERROR)
+        {
+            LPHOSTENT lpHost = gethostbyname(ServerIP.c_str());
 
-			if (lpHost != NULL)
-			{
-				sockaddr_in destAddress;
+            if (lpHost != NULL)
+            {
+                sockaddr_in destAddress;
 
-				destAddress.sin_addr.s_addr = ((in_addr*)lpHost->h_addr_list[0])->s_addr;
-				destAddress.sin_family = AF_INET;
-				destAddress.sin_port = 0;
+                destAddress.sin_addr.s_addr = ((in_addr *)lpHost->h_addr_list[0])->s_addr;
+                destAddress.sin_family = AF_INET;
+                destAddress.sin_port = 0;
 
-				const int ICMP_ECHOREQ = 8;
+                const int ICMP_ECHOREQ = 8;
 
-				ECHOREQUEST request = { 0 };
+                ECHOREQUEST request = { 0 };
 
-				request.icmpHdr.Type = ICMP_ECHOREQ;
-				request.dwTime = SDL_GetTicks();
-				memset(request.cData, 80, 64);
-				request.icmpHdr.Checksum = CalculateChecksum((pushort)&request, sizeof(ECHOREQUEST));
+                request.icmpHdr.Type = ICMP_ECHOREQ;
+                request.dwTime = SDL_GetTicks();
+                memset(request.cData, 80, 64);
+                request.icmpHdr.Checksum =
+                    CalculateChecksum((pushort)&request, sizeof(ECHOREQUEST));
 
-				::sendto(socket, (LPSTR)&request, sizeof(ECHOREQUEST), 0, (LPSOCKADDR)&destAddress, sizeof(SOCKADDR_IN));
+                ::sendto(
+                    socket,
+                    (LPSTR)&request,
+                    sizeof(ECHOREQUEST),
+                    0,
+                    (LPSOCKADDR)&destAddress,
+                    sizeof(SOCKADDR_IN));
 
-				timeval tomeoutInfo;
-				fd_set readfds = {};
+                timeval tomeoutInfo;
+                fd_set readfds = {};
 #if !defined(ORION_LINUX)
-				readfds.fd_count = 1;
-				readfds.fd_array[0] = socket;
+                readfds.fd_count = 1;
+                readfds.fd_array[0] = socket;
 #endif
-				tomeoutInfo.tv_sec = 1;
-				tomeoutInfo.tv_usec = 0;
+                tomeoutInfo.tv_sec = 1;
+                tomeoutInfo.tv_usec = 0;
 
-				if (::select(1, &readfds, NULL, NULL, &tomeoutInfo))
-				{
-					ECHOREPLY answer;
-					sockaddr_in sourceAddress;
-					int length = sizeof(sockaddr_in);
+                if (::select(1, &readfds, NULL, NULL, &tomeoutInfo))
+                {
+                    ECHOREPLY answer;
+                    sockaddr_in sourceAddress;
+                    int length = sizeof(sockaddr_in);
 
-					if (::recvfrom(socket, (LPSTR)&answer, sizeof(ECHOREPLY), 0, (LPSOCKADDR)&sourceAddress, &length) != SOCKET_ERROR)
-						result = SDL_GetTicks() - answer.echoRequest.dwTime;
-					else
-						result = -1;
-				}
-				else
-					result = -2;
-			}
-			else
-				result = - 3;
+                    if (::recvfrom(
+                            socket,
+                            (LPSTR)&answer,
+                            sizeof(ECHOREPLY),
+                            0,
+                            (LPSOCKADDR)&sourceAddress,
+                            &length) != SOCKET_ERROR)
+                        result = SDL_GetTicks() - answer.echoRequest.dwTime;
+                    else
+                        result = -1;
+                }
+                else
+                    result = -2;
+            }
+            else
+                result = -3;
 
-			closesocket(socket);
-		}
-		else
-			result = - 4;
+            closesocket(socket);
+        }
+        else
+            result = -4;
 
-		WSACleanup();
-	}
-	else
-		result = - 5;
+        WSACleanup();
+    }
+    else
+        result = -5;
 
-	return result;
+    return result;
 }
 //----------------------------------------------------------------------------------
 void CPingThread::OnExecute(uint nowTime)
 {
-	WISPFUN_DEBUG("");
+    WISPFUN_DEBUG("");
 
-	if (ServerIP.empty() || RequestsCount < 1)
-		return;
+    if (ServerIP.empty() || RequestsCount < 1)
+        return;
 
-	PING_INFO_DATA info = { ServerID, 9999, 0, 0, 0 };
+    PING_INFO_DATA info = { ServerID, 9999, 0, 0, 0 };
 
-	IFOR(i, 0, RequestsCount)
-	{
-		int ping = CalculatePing();
+    IFOR (i, 0, RequestsCount)
+    {
+        int ping = CalculatePing();
 
-		if (ping < 0)
-		{
-			if (ping == -1)
-				info.Lost++;
+        if (ping < 0)
+        {
+            if (ping == -1)
+                info.Lost++;
 
-			continue;
-		}
+            continue;
+        }
 
-		info.Min = min(info.Min, ping);
-		info.Max = max(info.Max, ping);
+        info.Min = min(info.Min, ping);
+        info.Max = max(info.Max, ping);
 
-		info.Average += (info.Max - info.Min);
-	}
+        info.Average += (info.Max - info.Min);
+    }
 
-	info.Average = info.Min + (info.Average / RequestsCount);
+    info.Average = info.Min + (info.Average / RequestsCount);
 
-	SendMessage(g_OrionWindow.Handle, MessageID, (WPARAM)&info, 0);
+    SendMessage(g_OrionWindow.Handle, MessageID, (WPARAM)&info, 0);
 }
 //----------------------------------------------------------------------------------

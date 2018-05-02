@@ -14,41 +14,41 @@
 class CSkillGroupObject
 {
 public:
-	int Count = 0;
-	bool Maximized = false;
-	string Name = "No Name";
+    int Count = 0;
+    bool Maximized = false;
+    string Name = "No Name";
 
 private:
-	//Номера навыков
-	uchar m_Items[60];
+    //Номера навыков
+    uchar m_Items[60];
 
 public:
-	//Ссылки на следующую и предыдущую группы
-	CSkillGroupObject *m_Next{ NULL };
-	CSkillGroupObject *m_Prev{ NULL };
+    //Ссылки на следующую и предыдущую группы
+    CSkillGroupObject *m_Next{ NULL };
+    CSkillGroupObject *m_Prev{ NULL };
 
-	CSkillGroupObject();
-	~CSkillGroupObject();
+    CSkillGroupObject();
+    ~CSkillGroupObject();
 
-	uchar GetItem(intptr_t index);
+    uchar GetItem(intptr_t index);
 
-	//Добавить навык в группу	
-	void Add(uchar index);
+    //Добавить навык в группу
+    void Add(uchar index);
 
-	//Добавить навык и отсортировать
-	void AddSorted(uchar index);
+    //Добавить навык и отсортировать
+    void AddSorted(uchar index);
 
-	//Удалить навык
-	void Remove(uchar index);
+    //Удалить навык
+    void Remove(uchar index);
 
-	//Проверка, содержит ли группа навык
-	bool Contains(uchar index);
+    //Проверка, содержит ли группа навык
+    bool Contains(uchar index);
 
-	//Сортировать навыки
-	void Sort();
+    //Сортировать навыки
+    void Sort();
 
-	//Передать навык другой группе
-	void TransferTo(CSkillGroupObject *group);
+    //Передать навык другой группе
+    void TransferTo(CSkillGroupObject *group);
 };
 //----------------------------------------------------------------------------------
 #endif

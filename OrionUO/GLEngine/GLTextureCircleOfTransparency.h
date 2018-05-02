@@ -13,24 +13,24 @@
 class CGLTextureCircleOfTransparency : public CGLTexture
 {
 public:
-	int Radius = 0;
-	int X = 0;
-	int Y = 0;
+    int Radius = 0;
+    int X = 0;
+    int Y = 0;
 
-	CGLTextureCircleOfTransparency();
-	virtual ~CGLTextureCircleOfTransparency();
+    CGLTextureCircleOfTransparency();
+    virtual ~CGLTextureCircleOfTransparency();
 
-	//Создать текстуру
-	static void CreatePixels(int radius, short &width, short &height, UINT_LIST &pixels);
+    //Создать текстуру
+    static void CreatePixels(int radius, short &width, short &height, UINT_LIST &pixels);
 
-	//Создать текстуру
-	bool Create(int radius);
+    //Создать текстуру
+    bool Create(int radius);
 
-	//Отрисовать текстуру
-	virtual void Draw(int x, int y, bool checktrans = false);
+    //Отрисовать текстуру
+    virtual void Draw(int x, int y, bool checktrans = false);
 
-	//Отрисовать текстуру
-	void Redraw();
+    //Отрисовать текстуру
+    void Redraw();
 };
 //----------------------------------------------------------------------------------
 extern CGLTextureCircleOfTransparency g_CircleOfTransparency;

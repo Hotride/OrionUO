@@ -15,19 +15,26 @@
 class CGUIHTMLButton : public CGUIButton
 {
 private:
-	//!Ссылка на гамп-родитель
-	class CGUIHTMLGump *m_HTMLGump{ NULL };
+    //!Ссылка на гамп-родитель
+    class CGUIHTMLGump *m_HTMLGump{ NULL };
 
 public:
-	CGUIHTMLButton(class CGUIHTMLGump *htmlGump, int serial, ushort graphic, ushort graphicSelected, ushort graphicPressed, int x, int y);
-	virtual ~CGUIHTMLButton();
+    CGUIHTMLButton(
+        class CGUIHTMLGump *htmlGump,
+        int serial,
+        ushort graphic,
+        ushort graphicSelected,
+        ushort graphicPressed,
+        int x,
+        int y);
+    virtual ~CGUIHTMLButton();
 
-	virtual void SetShaderMode();
+    virtual void SetShaderMode();
 
-	//!Обработка прокрутки
-	void Scroll(bool up, int delay);
+    //!Обработка прокрутки
+    void Scroll(bool up, int delay);
 
-	virtual bool IsControlHTML() { return true; }
+    virtual bool IsControlHTML() { return true; }
 };
 //----------------------------------------------------------------------------------
 #endif

@@ -42,128 +42,137 @@ class CBaseGUI;
 class CGump : public CRenderObject
 {
 public:
-	GUMP_TYPE GumpType = GT_NONE;
-	uint ID = 0;
-	int MinimizedX = 0;
-	int MinimizedY = 0;
-	bool NoMove = false;
-	bool NoClose = false;
-	bool Minimized = false;
-	bool FrameCreated = false;
-	bool WantRedraw = false;
-	bool WantUpdateContent = true;
-	bool Blocked = false;
-	bool LockMoving = false;
-	int Page = 0;
-	int Draw2Page = 0;
-	bool Transparent = false;
-	bool RemoveMark = false;
-	bool NoProcess = false;
-	bool Visible = true;
-	WISP_GEOMETRY::CRect GumpRect = WISP_GEOMETRY::CRect();
+    GUMP_TYPE GumpType = GT_NONE;
+    uint ID = 0;
+    int MinimizedX = 0;
+    int MinimizedY = 0;
+    bool NoMove = false;
+    bool NoClose = false;
+    bool Minimized = false;
+    bool FrameCreated = false;
+    bool WantRedraw = false;
+    bool WantUpdateContent = true;
+    bool Blocked = false;
+    bool LockMoving = false;
+    int Page = 0;
+    int Draw2Page = 0;
+    bool Transparent = false;
+    bool RemoveMark = false;
+    bool NoProcess = false;
+    bool Visible = true;
+    WISP_GEOMETRY::CRect GumpRect = WISP_GEOMETRY::CRect();
 
 protected:
-	CGUIButton m_Locker{ CGUIButton(0, 0, 0, 0, 0, 0) };
+    CGUIButton m_Locker{ CGUIButton(0, 0, 0, 0, 0, 0) };
 
-	CGLFrameBuffer m_FrameBuffer{ CGLFrameBuffer() };
+    CGLFrameBuffer m_FrameBuffer{ CGLFrameBuffer() };
 
-	virtual void CalculateGumpState();
+    virtual void CalculateGumpState();
 
-	virtual void RecalculateSize();
+    virtual void RecalculateSize();
 
 public:
-	CGump();
-	CGump(GUMP_TYPE type, uint serial, int x, int y);
-	virtual ~CGump();
+    CGump();
+    CGump(GUMP_TYPE type, uint serial, int x, int y);
+    virtual ~CGump();
 
-	virtual void PasteClipboardData(wstring &data);
+    virtual void PasteClipboardData(wstring &data);
 
-	static void ProcessListing();
+    static void ProcessListing();
 
-	static bool ApplyTransparent(CBaseGUI *item, int page, int currentPage, const int draw2Page = 0);
+    static bool
+    ApplyTransparent(CBaseGUI *item, int page, int currentPage, const int draw2Page = 0);
 
-	static void DrawItems(CBaseGUI *start, int currentPage, int draw2Page = 0);
+    static void DrawItems(CBaseGUI *start, int currentPage, int draw2Page = 0);
 
-	static class CRenderObject *SelectItems(CBaseGUI *start, int currentPage, int draw2Page = 0);
+    static class CRenderObject *SelectItems(CBaseGUI *start, int currentPage, int draw2Page = 0);
 
-	static void GetItemsSize(CGump *gump, CBaseGUI *start, WISP_GEOMETRY::CPoint2Di &minPosition, WISP_GEOMETRY::CPoint2Di &maxPosition, WISP_GEOMETRY::CPoint2Di &offset, int count, int currentPage, int draw2Page);
-	static void TestItemsLeftMouseDown(CGump *gump, CBaseGUI *start, int currentPage, int draw2Page = 0, int count = -1);
-	static void TestItemsLeftMouseUp(CGump *gump, CBaseGUI *start, int currentPage, int draw2Page = 0);
-	static void TestItemsDragging(CGump *gump, CBaseGUI *start, int currentPage, int draw2Page = 0, int count = -1);
-	static void TestItemsScrolling(CGump *gump, CBaseGUI *start, bool up, int currentPage, int draw2Page = 0);
+    static void GetItemsSize(
+        CGump *gump,
+        CBaseGUI *start,
+        WISP_GEOMETRY::CPoint2Di &minPosition,
+        WISP_GEOMETRY::CPoint2Di &maxPosition,
+        WISP_GEOMETRY::CPoint2Di &offset,
+        int count,
+        int currentPage,
+        int draw2Page);
+    static void TestItemsLeftMouseDown(
+        CGump *gump, CBaseGUI *start, int currentPage, int draw2Page = 0, int count = -1);
+    static void
+    TestItemsLeftMouseUp(CGump *gump, CBaseGUI *start, int currentPage, int draw2Page = 0);
+    static void TestItemsDragging(
+        CGump *gump, CBaseGUI *start, int currentPage, int draw2Page = 0, int count = -1);
+    static void
+    TestItemsScrolling(CGump *gump, CBaseGUI *start, bool up, int currentPage, int draw2Page = 0);
 
-	virtual void DelayedClick(class CRenderObject *obj) {}
+    virtual void DelayedClick(class CRenderObject *obj) {}
 
-	virtual void PrepareContent() {}
+    virtual void PrepareContent() {}
 
-	virtual void UpdateContent() {}
+    virtual void UpdateContent() {}
 
-	virtual class CTextRenderer *GetTextRenderer() { return NULL; }
+    virtual class CTextRenderer *GetTextRenderer() { return NULL; }
 
-	virtual void PrepareTextures();
+    virtual void PrepareTextures();
 
-	virtual void GenerateFrame(bool stop);
+    virtual void GenerateFrame(bool stop);
 
-	virtual bool CanBeDisplayed() { return true; }
+    virtual bool CanBeDisplayed() { return true; }
 
-	void FixCoordinates();
+    void FixCoordinates();
 
-	bool CanBeMoved();
+    bool CanBeMoved();
 
-	void DrawLocker();
+    void DrawLocker();
 
-	bool SelectLocker();
+    bool SelectLocker();
 
-	bool TestLockerClick();
+    bool TestLockerClick();
 
-	virtual bool EntryPointerHere();
+    virtual bool EntryPointerHere();
 
-	virtual void Draw();
+    virtual void Draw();
 
-	virtual class CRenderObject *Select();
+    virtual class CRenderObject *Select();
 
-	virtual void InitToolTip() {}
+    virtual void InitToolTip() {}
 
+    GUMP_BUTTON_EVENT_H { DebugMsg("OnButton(%i)\n", serial); }
+    GUMP_CHECKBOX_EVENT_H { DebugMsg("OnCheckbox(%i, %i)\n", serial, state); }
+    GUMP_RADIO_EVENT_H { DebugMsg("OnRadio(%i, %i)\n", serial, state); }
+    GUMP_TEXT_ENTRY_EVENT_H { DebugMsg("OnTextEntry(%i)\n", serial); }
+    GUMP_SLIDER_CLICK_EVENT_H { DebugMsg("OnSliderClick(%i)\n", serial); }
+    GUMP_SLIDER_MOVE_EVENT_H { DebugMsg("OnSliderMove(%i)\n", serial); }
+    GUMP_RESIZE_START_EVENT_H { DebugMsg("OnResizeStart(%i)\n", serial); }
+    GUMP_RESIZE_EVENT_H { DebugMsg("OnResize(%i)\n", serial); }
+    GUMP_RESIZE_END_EVENT_H { DebugMsg("OnResizeEnd(%i)\n", serial); }
+    GUMP_DIRECT_HTML_LINK_EVENT_H;
+    GUMP_COMBOBOX_SELECTION_EVENT_H { DebugMsg("OnComboboxSelection(%i)\n", serial); }
+    GUMP_SCROLL_BUTTON_EVENT_H { DebugMsg("OnScrollButton()\n"); }
 
-
-	GUMP_BUTTON_EVENT_H { DebugMsg("OnButton(%i)\n", serial); }
-	GUMP_CHECKBOX_EVENT_H { DebugMsg("OnCheckbox(%i, %i)\n", serial, state); }
-	GUMP_RADIO_EVENT_H { DebugMsg("OnRadio(%i, %i)\n", serial, state); }
-	GUMP_TEXT_ENTRY_EVENT_H { DebugMsg("OnTextEntry(%i)\n", serial); }
-	GUMP_SLIDER_CLICK_EVENT_H { DebugMsg("OnSliderClick(%i)\n", serial); }
-	GUMP_SLIDER_MOVE_EVENT_H { DebugMsg("OnSliderMove(%i)\n", serial); }
-	GUMP_RESIZE_START_EVENT_H { DebugMsg("OnResizeStart(%i)\n", serial); }
-	GUMP_RESIZE_EVENT_H { DebugMsg("OnResize(%i)\n", serial); }
-	GUMP_RESIZE_END_EVENT_H { DebugMsg("OnResizeEnd(%i)\n", serial); }
-	GUMP_DIRECT_HTML_LINK_EVENT_H;
-	GUMP_COMBOBOX_SELECTION_EVENT_H { DebugMsg("OnComboboxSelection(%i)\n", serial); }
-	GUMP_SCROLL_BUTTON_EVENT_H{ DebugMsg("OnScrollButton()\n"); }
-
-
-
-	virtual void OnLeftMouseButtonDown();
-	virtual void OnLeftMouseButtonUp();
-	virtual bool OnLeftMouseButtonDoubleClick() { return false; }
-	virtual void OnRightMouseButtonDown() {}
-	virtual void OnRightMouseButtonUp() {}
-	virtual bool OnRightMouseButtonDoubleClick() { return false; }
-	virtual void OnMidMouseButtonDown() {}
-	virtual void OnMidMouseButtonUp() {}
-	virtual bool OnMidMouseButtonDoubleClick() { return false; }
-	virtual void OnMidMouseButtonScroll(bool up);
-	virtual void OnDragging();
+    virtual void OnLeftMouseButtonDown();
+    virtual void OnLeftMouseButtonUp();
+    virtual bool OnLeftMouseButtonDoubleClick() { return false; }
+    virtual void OnRightMouseButtonDown() {}
+    virtual void OnRightMouseButtonUp() {}
+    virtual bool OnRightMouseButtonDoubleClick() { return false; }
+    virtual void OnMidMouseButtonDown() {}
+    virtual void OnMidMouseButtonUp() {}
+    virtual bool OnMidMouseButtonDoubleClick() { return false; }
+    virtual void OnMidMouseButtonScroll(bool up);
+    virtual void OnDragging();
 #if USE_WISP
-	virtual void OnCharPress(const WPARAM &wParam, const LPARAM &lParam) {}
-	virtual void OnKeyDown(const WPARAM &wParam, const LPARAM &lParam) {}
-	virtual void OnKeyUp(const WPARAM &wParam, const LPARAM &lParam) {}
+    virtual void OnCharPress(const WPARAM &wParam, const LPARAM &lParam) {}
+    virtual void OnKeyDown(const WPARAM &wParam, const LPARAM &lParam) {}
+    virtual void OnKeyUp(const WPARAM &wParam, const LPARAM &lParam) {}
 #else
-	virtual void OnTextInput(const SDL_TextInputEvent &ev) {};
-	virtual void OnKeyDown(const SDL_KeyboardEvent &ev) {};
-	virtual void OnKeyUp(const SDL_KeyboardEvent &ev) {};
+    virtual void OnTextInput(const SDL_TextInputEvent &ev){};
+    virtual void OnKeyDown(const SDL_KeyboardEvent &ev){};
+    virtual void OnKeyUp(const SDL_KeyboardEvent &ev){};
 #endif
- };
- //----------------------------------------------------------------------------------
+};
+//----------------------------------------------------------------------------------
 //!Ссылка на гамп, который в данный момент изменяет высоту
- extern CGump *g_ResizedGump;
- extern CGump *g_CurrentCheckGump;
- //----------------------------------------------------------------------------------
+extern CGump *g_ResizedGump;
+extern CGump *g_CurrentCheckGump;
+//----------------------------------------------------------------------------------

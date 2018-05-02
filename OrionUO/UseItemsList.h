@@ -12,20 +12,20 @@
 //----------------------------------------------------------------------------------
 class CUseItemActions
 {
-	uint Timer = 0;
+    uint Timer = 0;
 
 private:
-	deque<uint> m_List;
+    deque<uint> m_List;
 
 public:
-	CUseItemActions() {}
-	~CUseItemActions() {}
+    CUseItemActions() {}
+    ~CUseItemActions() {}
 
-	void Add(int serial);
+    void Add(int serial);
 
-	void Clear() { m_List.clear(); }
+    void Clear() { m_List.clear(); }
 
-	void Process();
+    void Process();
 };
 //----------------------------------------------------------------------------------
 extern CUseItemActions g_UseItemActions;

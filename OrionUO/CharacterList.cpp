@@ -15,9 +15,9 @@ CCharacterList g_CharacterList;
 //----------------------------------------------------------------------------------
 CCharacterList::CCharacterList()
 {
-	WISPFUN_DEBUG("c182_f1");
-	//!Чистим при создании
-	Clear();
+    WISPFUN_DEBUG("c182_f1");
+    //!Чистим при создании
+    Clear();
 }
 //----------------------------------------------------------------------------------
 /*!
@@ -26,14 +26,14 @@ CCharacterList::CCharacterList()
 */
 void CCharacterList::Clear()
 {
-	WISPFUN_DEBUG("c182_f2");
-	IFOR(i, 0, 7)
-		m_Name[i] = "";
+    WISPFUN_DEBUG("c182_f2");
+    IFOR (i, 0, 7)
+        m_Name[i] = "";
 
-	Selected = 0;
-	OnePerson = false;
-	Have6Slot = false;
-	Have7Slot = false;
+    Selected = 0;
+    OnePerson = false;
+    Have6Slot = false;
+    Have7Slot = false;
 }
 //----------------------------------------------------------------------------------
 /*!
@@ -44,10 +44,10 @@ void CCharacterList::Clear()
 */
 void CCharacterList::SetName(intptr_t pos, const string &name)
 {
-	WISPFUN_DEBUG("c182_f3");
-	//!При корректной позиции записываем имя
-	if (pos >= 0 && pos < Count)
-		m_Name[pos] = name;
+    WISPFUN_DEBUG("c182_f3");
+    //!При корректной позиции записываем имя
+    if (pos >= 0 && pos < Count)
+        m_Name[pos] = name;
 }
 //----------------------------------------------------------------------------------
 /*!
@@ -57,14 +57,14 @@ void CCharacterList::SetName(intptr_t pos, const string &name)
 */
 string CCharacterList::GetName(intptr_t pos) const
 {
-	WISPFUN_DEBUG("c182_f4");
-	string result = "";
+    WISPFUN_DEBUG("c182_f4");
+    string result = "";
 
-	//!При корректной позиции возвращаем имя
-	if (pos >= 0 && pos < Count)
-		result = m_Name[pos];
+    //!При корректной позиции возвращаем имя
+    if (pos >= 0 && pos < Count)
+        result = m_Name[pos];
 
-	return result;
+    return result;
 }
 //----------------------------------------------------------------------------------
 /*!
@@ -73,13 +73,13 @@ string CCharacterList::GetName(intptr_t pos) const
 */
 string CCharacterList::GetSelectedName() const
 {
-	WISPFUN_DEBUG("c182_f5");
-	string result = "";
+    WISPFUN_DEBUG("c182_f5");
+    string result = "";
 
-	//!При корректной позиции возвращаем имя
-	if (Selected >= 0 && Selected < Count)
-		result = m_Name[Selected];
+    //!При корректной позиции возвращаем имя
+    if (Selected >= 0 && Selected < Count)
+        result = m_Name[Selected];
 
-	return result;
+    return result;
 }
 //----------------------------------------------------------------------------------

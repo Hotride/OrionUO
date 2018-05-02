@@ -14,27 +14,29 @@ class CGumpPropertyIcon : public CGump
 {
 protected:
     wstring m_Text = L"No Data";
+
 public:
     wstring GetText() { return m_Text; };
-    void SetText(const wstring& val);
-	CRenderObject* Object = NULL;
-private:
-	const int ID_GPI_LOCK_MOVING = 1;
-	const int ID_GPI_MINIMIZE = 2;
+    void SetText(const wstring &val);
+    CRenderObject *Object = NULL;
 
-	CGLTextTexture m_Texture;
+private:
+    const int ID_GPI_LOCK_MOVING = 1;
+    const int ID_GPI_MINIMIZE = 2;
+
+    CGLTextTexture m_Texture;
 
 public:
-	CGumpPropertyIcon(int x, int y);
-	virtual ~CGumpPropertyIcon();
+    CGumpPropertyIcon(int x, int y);
+    virtual ~CGumpPropertyIcon();
 
-	virtual void PrepareContent();
+    virtual void PrepareContent();
 
-	virtual void UpdateContent();
+    virtual void UpdateContent();
 
-	GUMP_BUTTON_EVENT_H;
+    GUMP_BUTTON_EVENT_H;
 
-	virtual bool OnLeftMouseButtonDoubleClick();
+    virtual bool OnLeftMouseButtonDoubleClick();
 };
 //----------------------------------------------------------------------------------
 #endif //GUMPPROPERTYICON_H

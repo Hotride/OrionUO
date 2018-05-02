@@ -15,63 +15,71 @@
 class CGUIHTMLGump : public CGUIPolygonal
 {
 public:
-	//!Имеет фон
-	bool HaveBackground = false;
+    //!Имеет фон
+    bool HaveBackground = false;
 
-	//!Имеет скроллер с кнопками
-	bool HaveScrollbar = false;
+    //!Имеет скроллер с кнопками
+    bool HaveScrollbar = false;
 
-	//!Размер данных, хранимых внутри компоненты
-	WISP_GEOMETRY::CSize DataSize = WISP_GEOMETRY::CSize();
+    //!Размер данных, хранимых внутри компоненты
+    WISP_GEOMETRY::CSize DataSize = WISP_GEOMETRY::CSize();
 
-	//!Смещение к данным
-	WISP_GEOMETRY::CPoint2Di DataOffset = WISP_GEOMETRY::CPoint2Di();
+    //!Смещение к данным
+    WISP_GEOMETRY::CPoint2Di DataOffset = WISP_GEOMETRY::CPoint2Di();
 
-	//!Текущее смещение к данным
-	WISP_GEOMETRY::CPoint2Di CurrentOffset = WISP_GEOMETRY::CPoint2Di();
+    //!Текущее смещение к данным
+    WISP_GEOMETRY::CPoint2Di CurrentOffset = WISP_GEOMETRY::CPoint2Di();
 
-	//!Доступное смещение для скроллинга
-	WISP_GEOMETRY::CPoint2Di AvailableOffset = WISP_GEOMETRY::CPoint2Di();
+    //!Доступное смещение для скроллинга
+    WISP_GEOMETRY::CPoint2Di AvailableOffset = WISP_GEOMETRY::CPoint2Di();
 
 private:
-	void CalculateDataSize(CBaseGUI *item, int &startX, int &startY, int &endX, int &endY);
+    void CalculateDataSize(CBaseGUI *item, int &startX, int &startY, int &endX, int &endY);
 
 public:
-	CGUIHTMLGump(int serial, ushort graphic, int x, int y, int width, int height, bool haveBackground, bool haveScrollbar);
-	virtual ~CGUIHTMLGump();
+    CGUIHTMLGump(
+        int serial,
+        ushort graphic,
+        int x,
+        int y,
+        int width,
+        int height,
+        bool haveBackground,
+        bool haveScrollbar);
+    virtual ~CGUIHTMLGump();
 
-	//!Ссылки на компоненты
-	CGUIHTMLResizepic *m_Background{ NULL };
-	CGUIHTMLButton *m_ButtonUp{ NULL };
-	CGUIHTMLButton *m_ButtonDown{ NULL };
-	CGUIHTMLHitBox *m_HitBoxLeft{ NULL };
-	CGUIHTMLHitBox *m_HitBoxRight{ NULL };
-	CGUIHTMLSlider *m_Slider{ NULL };
-	CGUIScissor *m_Scissor{ NULL };
+    //!Ссылки на компоненты
+    CGUIHTMLResizepic *m_Background{ NULL };
+    CGUIHTMLButton *m_ButtonUp{ NULL };
+    CGUIHTMLButton *m_ButtonDown{ NULL };
+    CGUIHTMLHitBox *m_HitBoxLeft{ NULL };
+    CGUIHTMLHitBox *m_HitBoxRight{ NULL };
+    CGUIHTMLSlider *m_Slider{ NULL };
+    CGUIScissor *m_Scissor{ NULL };
 
-	//!Инициализация
-	//!			menu - флаг инициализации для гампа CGumpMenu
-	void Initalize(bool menu = false);
+    //!Инициализация
+    //!			menu - флаг инициализации для гампа CGumpMenu
+    void Initalize(bool menu = false);
 
-	//!Обновление высота гампа
-	void UpdateHeight(int height);
+    //!Обновление высота гампа
+    void UpdateHeight(int height);
 
-	//!Сброс смещений
-	void ResetDataOffset();
+    //!Сброс смещений
+    void ResetDataOffset();
 
-	//!Пересчет смещений
-	void CalculateDataSize();
+    //!Пересчет смещений
+    void CalculateDataSize();
 
-	virtual void PrepareTextures();
-	
-	virtual bool EntryPointerHere();
+    virtual void PrepareTextures();
 
-	virtual bool Select();
+    virtual bool EntryPointerHere();
 
-	//!Функция прокрутки
-	virtual void Scroll(bool up, int delay);
+    virtual bool Select();
 
-	virtual bool IsHTMLGump() { return true; }
+    //!Функция прокрутки
+    virtual void Scroll(bool up, int delay);
+
+    virtual bool IsHTMLGump() { return true; }
 };
 //----------------------------------------------------------------------------------
 #endif

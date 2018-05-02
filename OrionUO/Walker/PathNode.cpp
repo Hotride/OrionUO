@@ -19,13 +19,13 @@ CPathNode::CPathNode()
 //----------------------------------------------------------------------------------
 CPathNode::~CPathNode()
 {
-	m_Parent = NULL;
+    m_Parent = NULL;
 }
 //----------------------------------------------------------------------------------
 void CPathNode::Reset()
 {
-	m_Parent = NULL;
-	Used = false;
-	X = Y = Z = Direction = Cost = DistFromStartCost = DistFromGoalCost = 0;
+    m_Parent = NULL;
+    Used = false;
+    X = Y = Z = Direction = Cost = DistFromStartCost = DistFromGoalCost = 0;
 }
 //----------------------------------------------------------------------------------

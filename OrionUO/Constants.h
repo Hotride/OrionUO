@@ -208,22 +208,17 @@ const int WALKING_DELAY = 750;
 const int PLAYER_WALKING_DELAY = 150;
 
 //!Таблица задержек перемещений
-const int CHARACTER_ANIMATION_DELAY_TABLE[2][2] =
-{
-	//!Пешком
-	{
-		//!Идет
-		STEP_DELAY_WALK,
-		//!Бежит
-		STEP_DELAY_RUN
-	},
-	//Верхом
-	{
-		//!Идет
-		STEP_DELAY_MOUNT_WALK,
-		//!Бежит
-		STEP_DELAY_MOUNT_RUN
-	}
+const int CHARACTER_ANIMATION_DELAY_TABLE[2][2] = {
+    //!Пешком
+    { //!Идет
+      STEP_DELAY_WALK,
+      //!Бежит
+      STEP_DELAY_RUN },
+    //Верхом
+    { //!Идет
+      STEP_DELAY_MOUNT_WALK,
+      //!Бежит
+      STEP_DELAY_MOUNT_RUN }
 };
 
 //!Задержка на двойное нажатие мышки
@@ -263,66 +258,32 @@ const int WEATHER_TIMER = (6 * 60 * 1000);
 const int WAIT_FOR_TARGET_DELAY = 5000;
 
 //!Список слоев, защищенных от дропа
-static const bool LAYER_UNSAFE[30] =
-{
-	false,   //0
-	true,
-	true,
-	true,
-	true,
-	true,
-	true,
-	true,
-	true,
-	true,
-	true,
-	false,
-	true,
-	true,
-	true,
-	false,
-	false,
-	true,
-	true,
-	true,
-	true,
-	false, //0x15
-	true,
-	true,
-	true,
-	false,
-	false,
-	false,
-	false,
-	false
-};
+static const bool LAYER_UNSAFE[30] = { false, //0
+                                       true,  true, true,  true,  true,  true,  true,  true,
+                                       true,  true, false, true,  true,  true,  false, false,
+                                       true,  true, true,  true,
+                                       false, //0x15
+                                       true,  true, true,  false, false, false, false, false };
 
 //!Структура с данными о объединениях крон деревьев
 struct TREE_UNIONS
 {
-	//!Индекс начала объединения
-	ushort GraphicStart;
+    //!Индекс начала объединения
+    ushort GraphicStart;
 
-	//!Индекс завершения объединения
-	ushort GraphicEnd;
+    //!Индекс завершения объединения
+    ushort GraphicEnd;
 };
 
 //!Количество деревьев, имеющих состаные кроны
 const int TREE_COUNT = 9;
 
 //!Данные о составных кронах (индексы картинок из клиента 7.0.45.0)
-static const TREE_UNIONS TREE_INFO[TREE_COUNT] =
-{
-	{ 0x0D45, 0x0D4C },
-	{ 0x0D4D, 0x0D53 },
-	{ 0x0D5C, 0x0D62 },
-	{ 0x0D63, 0x0D69 },
-	{ 0x0D73, 0x0D79 },
-	{ 0x0D7A, 0x0D7F },
-	{ 0x0D87, 0x0D8B },
-	{ 0x0D8C, 0x0D90 },
-	{ 0x12BE, 0x12C7 }
-};
+static const TREE_UNIONS TREE_INFO[TREE_COUNT] = { { 0x0D45, 0x0D4C }, { 0x0D4D, 0x0D53 },
+                                                   { 0x0D5C, 0x0D62 }, { 0x0D63, 0x0D69 },
+                                                   { 0x0D73, 0x0D79 }, { 0x0D7A, 0x0D7F },
+                                                   { 0x0D87, 0x0D8B }, { 0x0D8C, 0x0D90 },
+                                                   { 0x12BE, 0x12C7 } };
 
 //!Смещение для анимации сидячего персонажа по оси X
 const int SITTING_OFFSET_X = 8;
@@ -330,30 +291,30 @@ const int SITTING_OFFSET_X = 8;
 //!Структура данных о предметах, на которых можно сидеть и возможные направления
 struct SITTING_INFO_DATA
 {
-	//!Индекс картинки предмета
-	ushort Graphic;
+    //!Индекс картинки предмета
+    ushort Graphic;
 
-	//!Направления анимации для направлени персонажа:
-	//!Для 7, 0
-	char Direction1; //0
+    //!Направления анимации для направлени персонажа:
+    //!Для 7, 0
+    char Direction1; //0
 
-	//!Для 1, 2
-	char Direction2; //2
-	
-	//!Для 3, 4
-	char Direction3; //4
-	
-	//!Для 5, 6
-	char Direction4; //6
-	
-	//!Смещение по оси Y
-	char OffsetY;
-	
-	//!Смещение по оси Y при зеркальном отображении персонажа
-	char MirrorOffsetY;
+    //!Для 1, 2
+    char Direction2; //2
 
-	//!Рисуем спинку или нет?
-	bool DrawBack;
+    //!Для 3, 4
+    char Direction3; //4
+
+    //!Для 5, 6
+    char Direction4; //6
+
+    //!Смещение по оси Y
+    char OffsetY;
+
+    //!Смещение по оси Y при зеркальном отображении персонажа
+    char MirrorOffsetY;
+
+    //!Рисуем спинку или нет?
+    bool DrawBack;
 };
 
 //!Количество объектов, на которых можно сидеть
@@ -369,108 +330,107 @@ const int SITTING_ITEMS_COUNT = 98;
 #define SITTING_UNKNOWN 0, 2, 4, 6
 
 //!Данные о предметах, на которых можно сидеть (индексы картинок из клиента 7.0.45.0)
-static const SITTING_INFO_DATA SITTING_INFO[SITTING_ITEMS_COUNT] =
-{
-	{ 0x0459, SITTING_N_S, 2, 2, false },
-	{ 0x045A, SITTING_E_W, 2, 2, false },
-	{ 0x045B, SITTING_N_S, 2, 2, false },
-	{ 0x045C, SITTING_E_W, 2, 2, false },
-	{ 0x0A2A, SITTING_ALL, -4, -4, false },
-	{ 0x0A2B, SITTING_ALL, -8, -8, false },
-	{ 0x0B2C, SITTING_E_W, 2, 2, false },
-	{ 0x0B2D, SITTING_N_S, 2, 2, false },
-	{ 0x0B2E, SITTING_S, 0, 0, false },
-	{ 0x0B2F, SITTING_E, 6, 6, false },
-	{ 0x0B30, SITTING_W, -8, 8, true },
-	{ 0x0B31, SITTING_N, 0, 4, true },
-	{ 0x0B32, SITTING_S, 0, 0, false },
-	{ 0x0B33, SITTING_E, 0, 0, false },
-	{ 0x0B4E, SITTING_E, 0, 0, false },
-	{ 0x0B4F, SITTING_S, 0, 0, false },
-	{ 0x0B50, SITTING_N, 0, 0, true },
-	{ 0x0B51, SITTING_W, 0, 0, true },
-	{ 0x0B52, SITTING_E, 0, 0, false },
-	{ 0x0B53, SITTING_S, 0, 0, false },
-	{ 0x0B54, SITTING_N, 0, 0, true },
-	{ 0x0B55, SITTING_W, 0, 0, true },
-	{ 0x0B56, SITTING_E, 4, 4, false },
-	{ 0x0B57, SITTING_S, 4, 4, false },
-	{ 0x0B58, SITTING_W, 0, 8, true },
-	{ 0x0B59, SITTING_N, 0, 8, true },
-	{ 0x0B5A, SITTING_E, 8, 8, false },
-	{ 0x0B5B, SITTING_S, 8, 8, false },
-	{ 0x0B5C, SITTING_N, 0, 8, true },
-	{ 0x0B5D, SITTING_W, 0, 8, true },
-	{ 0x0B5E, SITTING_ALL, -8, -8, false },
-	{ 0x0B5F, SITTING_E_W, 3, 14, false },
-	{ 0x0B60, SITTING_E_W, 3, 14, false },
-	{ 0x0B61, SITTING_E_W, 3, 14, false },
-	{ 0x0B62, SITTING_E_W, 3, 10, false },
-	{ 0x0B63, SITTING_E_W, 3, 10, false },
-	{ 0x0B64, SITTING_E_W, 3, 10, false },
-	{ 0x0B65, SITTING_N_S, 3, 10, false },
-	{ 0x0B66, SITTING_N_S, 3, 10, false },
-	{ 0x0B67, SITTING_N_S, 3, 10, false },
-	{ 0x0B68, SITTING_N_S, 3, 10, false },
-	{ 0x0B69, SITTING_N_S, 3, 10, false },
-	{ 0x0B6A, SITTING_N_S, 3, 10, false },
-	{ 0x0B91, SITTING_S, 6, 6, false },
-	{ 0x0B92, SITTING_S, 6, 6, false },
-	{ 0x0B93, SITTING_E, 6, 6, false },
-	{ 0x0B94, SITTING_E, 6, 6, false },
-	{ 0x0CF3, SITTING_E_W, 2, 8, false },
-	{ 0x0CF4, SITTING_E_W, 2, 8, false },
-	{ 0x0CF6, SITTING_N_S, 2, 8, false },
-	{ 0x0CF7, SITTING_N_S, 2, 8, false },
-	{ 0x11FC, SITTING_ALL, 2, 7, false },
-	{ 0x1218, SITTING_S, 4, 4, false },
-	{ 0x1219, SITTING_E, 4, 4, false },
-	{ 0x121A, SITTING_N, 0, 8, true },
-	{ 0x121B, SITTING_W, 0, 8, true },
-	{ 0x1527, SITTING_E, 0, 0, false },
-	{ 0x1771, SITTING_ALL, 0, 0, false },
-	{ 0x1776, SITTING_ALL, 0, 0, false },
-	{ 0x1779, SITTING_ALL, 0, 0, false },
-	{ 0x1DC7, SITTING_E_W, 3, 10, false },
-	{ 0x1DC8, SITTING_E_W, 3, 10, false },
-	{ 0x1DC9, SITTING_E_W, 3, 10, false },
-	{ 0x1DCA, SITTING_N_S, 3, 10, false },
-	{ 0x1DCB, SITTING_N_S, 3, 10, false },
-	{ 0x1DCC, SITTING_N_S, 3, 10, false },
-	{ 0x1DCD, SITTING_E_W, 3, 10, false },
-	{ 0x1DCE, SITTING_E_W, 3, 10, false },
-	{ 0x1DCF, SITTING_E_W, 3, 10, false },
-	{ 0x1DD0, SITTING_N_S, 3, 10, false },
-	{ 0x1DD1, SITTING_N_S, 3, 10, false },
-	{ 0x1DD2, SITTING_E_W, 3, 10, false },
-	//!Нет данных
-	{ 0x2A58, SITTING_S, 0, 0, false },
-	{ 0x2A59, SITTING_E, 0, 0, false },
-	{ 0x2A5A, SITTING_UNKNOWN, 0, 0, false },
-	{ 0x2A5B, SITTING_UNKNOWN, 10, 10, false },
-	{ 0x2A7F, SITTING_UNKNOWN, 0, 0, false },
-	{ 0x2A80, SITTING_UNKNOWN, 0, 0, false },
-	{ 0x2DDF, SITTING_UNKNOWN, 2, 2, false },
-	{ 0x2DE0, SITTING_UNKNOWN, 2, 2, false },
-	{ 0x2DE3, SITTING_E, 4, 4, false },
-	{ 0x2DE4, SITTING_S, 4, 4, false },
-	{ 0x2DE5, SITTING_W, 4, 4, false },
-	{ 0x2DE6, SITTING_N, 4, 4, false },
-	{ 0x2DEB, SITTING_N, 4, 4, false },
-	{ 0x2DEC, SITTING_S, 4, 4, false },
-	{ 0x2DED, SITTING_E, 4, 4, false },
-	{ 0x2DEE, SITTING_W, 4, 4, false },
-	{ 0x2DF5, SITTING_UNKNOWN, 4, 4, false },
-	{ 0x2DF6, SITTING_UNKNOWN, 4, 4, false },
-	{ 0x3088, SITTING_UNKNOWN, 4, 4, false },
-	{ 0x3089, SITTING_UNKNOWN, 4, 4, false },
-	{ 0x308A, SITTING_UNKNOWN, 4, 4, false },
-	{ 0x308B, SITTING_UNKNOWN, 4, 4, false },
-	{ 0x35ED, SITTING_UNKNOWN, 0, 0, false },
-	{ 0x35EE, SITTING_UNKNOWN, 0, 0, false },
-	//
-	{ 0x3DFF, SITTING_N_S, 2, 2, false },
-	{ 0x3E00, SITTING_E_W, 2, 2, false }
+static const SITTING_INFO_DATA SITTING_INFO[SITTING_ITEMS_COUNT] = {
+    { 0x0459, SITTING_N_S, 2, 2, false },
+    { 0x045A, SITTING_E_W, 2, 2, false },
+    { 0x045B, SITTING_N_S, 2, 2, false },
+    { 0x045C, SITTING_E_W, 2, 2, false },
+    { 0x0A2A, SITTING_ALL, -4, -4, false },
+    { 0x0A2B, SITTING_ALL, -8, -8, false },
+    { 0x0B2C, SITTING_E_W, 2, 2, false },
+    { 0x0B2D, SITTING_N_S, 2, 2, false },
+    { 0x0B2E, SITTING_S, 0, 0, false },
+    { 0x0B2F, SITTING_E, 6, 6, false },
+    { 0x0B30, SITTING_W, -8, 8, true },
+    { 0x0B31, SITTING_N, 0, 4, true },
+    { 0x0B32, SITTING_S, 0, 0, false },
+    { 0x0B33, SITTING_E, 0, 0, false },
+    { 0x0B4E, SITTING_E, 0, 0, false },
+    { 0x0B4F, SITTING_S, 0, 0, false },
+    { 0x0B50, SITTING_N, 0, 0, true },
+    { 0x0B51, SITTING_W, 0, 0, true },
+    { 0x0B52, SITTING_E, 0, 0, false },
+    { 0x0B53, SITTING_S, 0, 0, false },
+    { 0x0B54, SITTING_N, 0, 0, true },
+    { 0x0B55, SITTING_W, 0, 0, true },
+    { 0x0B56, SITTING_E, 4, 4, false },
+    { 0x0B57, SITTING_S, 4, 4, false },
+    { 0x0B58, SITTING_W, 0, 8, true },
+    { 0x0B59, SITTING_N, 0, 8, true },
+    { 0x0B5A, SITTING_E, 8, 8, false },
+    { 0x0B5B, SITTING_S, 8, 8, false },
+    { 0x0B5C, SITTING_N, 0, 8, true },
+    { 0x0B5D, SITTING_W, 0, 8, true },
+    { 0x0B5E, SITTING_ALL, -8, -8, false },
+    { 0x0B5F, SITTING_E_W, 3, 14, false },
+    { 0x0B60, SITTING_E_W, 3, 14, false },
+    { 0x0B61, SITTING_E_W, 3, 14, false },
+    { 0x0B62, SITTING_E_W, 3, 10, false },
+    { 0x0B63, SITTING_E_W, 3, 10, false },
+    { 0x0B64, SITTING_E_W, 3, 10, false },
+    { 0x0B65, SITTING_N_S, 3, 10, false },
+    { 0x0B66, SITTING_N_S, 3, 10, false },
+    { 0x0B67, SITTING_N_S, 3, 10, false },
+    { 0x0B68, SITTING_N_S, 3, 10, false },
+    { 0x0B69, SITTING_N_S, 3, 10, false },
+    { 0x0B6A, SITTING_N_S, 3, 10, false },
+    { 0x0B91, SITTING_S, 6, 6, false },
+    { 0x0B92, SITTING_S, 6, 6, false },
+    { 0x0B93, SITTING_E, 6, 6, false },
+    { 0x0B94, SITTING_E, 6, 6, false },
+    { 0x0CF3, SITTING_E_W, 2, 8, false },
+    { 0x0CF4, SITTING_E_W, 2, 8, false },
+    { 0x0CF6, SITTING_N_S, 2, 8, false },
+    { 0x0CF7, SITTING_N_S, 2, 8, false },
+    { 0x11FC, SITTING_ALL, 2, 7, false },
+    { 0x1218, SITTING_S, 4, 4, false },
+    { 0x1219, SITTING_E, 4, 4, false },
+    { 0x121A, SITTING_N, 0, 8, true },
+    { 0x121B, SITTING_W, 0, 8, true },
+    { 0x1527, SITTING_E, 0, 0, false },
+    { 0x1771, SITTING_ALL, 0, 0, false },
+    { 0x1776, SITTING_ALL, 0, 0, false },
+    { 0x1779, SITTING_ALL, 0, 0, false },
+    { 0x1DC7, SITTING_E_W, 3, 10, false },
+    { 0x1DC8, SITTING_E_W, 3, 10, false },
+    { 0x1DC9, SITTING_E_W, 3, 10, false },
+    { 0x1DCA, SITTING_N_S, 3, 10, false },
+    { 0x1DCB, SITTING_N_S, 3, 10, false },
+    { 0x1DCC, SITTING_N_S, 3, 10, false },
+    { 0x1DCD, SITTING_E_W, 3, 10, false },
+    { 0x1DCE, SITTING_E_W, 3, 10, false },
+    { 0x1DCF, SITTING_E_W, 3, 10, false },
+    { 0x1DD0, SITTING_N_S, 3, 10, false },
+    { 0x1DD1, SITTING_N_S, 3, 10, false },
+    { 0x1DD2, SITTING_E_W, 3, 10, false },
+    //!Нет данных
+    { 0x2A58, SITTING_S, 0, 0, false },
+    { 0x2A59, SITTING_E, 0, 0, false },
+    { 0x2A5A, SITTING_UNKNOWN, 0, 0, false },
+    { 0x2A5B, SITTING_UNKNOWN, 10, 10, false },
+    { 0x2A7F, SITTING_UNKNOWN, 0, 0, false },
+    { 0x2A80, SITTING_UNKNOWN, 0, 0, false },
+    { 0x2DDF, SITTING_UNKNOWN, 2, 2, false },
+    { 0x2DE0, SITTING_UNKNOWN, 2, 2, false },
+    { 0x2DE3, SITTING_E, 4, 4, false },
+    { 0x2DE4, SITTING_S, 4, 4, false },
+    { 0x2DE5, SITTING_W, 4, 4, false },
+    { 0x2DE6, SITTING_N, 4, 4, false },
+    { 0x2DEB, SITTING_N, 4, 4, false },
+    { 0x2DEC, SITTING_S, 4, 4, false },
+    { 0x2DED, SITTING_E, 4, 4, false },
+    { 0x2DEE, SITTING_W, 4, 4, false },
+    { 0x2DF5, SITTING_UNKNOWN, 4, 4, false },
+    { 0x2DF6, SITTING_UNKNOWN, 4, 4, false },
+    { 0x3088, SITTING_UNKNOWN, 4, 4, false },
+    { 0x3089, SITTING_UNKNOWN, 4, 4, false },
+    { 0x308A, SITTING_UNKNOWN, 4, 4, false },
+    { 0x308B, SITTING_UNKNOWN, 4, 4, false },
+    { 0x35ED, SITTING_UNKNOWN, 0, 0, false },
+    { 0x35EE, SITTING_UNKNOWN, 0, 0, false },
+    //
+    { 0x3DFF, SITTING_N_S, 2, 2, false },
+    { 0x3E00, SITTING_E_W, 2, 2, false }
 };
 //----------------------------------------------------------------------------------
 #endif

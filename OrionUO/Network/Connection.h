@@ -14,24 +14,24 @@
 class CSocket : public WISP_NETWORK::CConnection
 {
 public:
-	bool GameSocket = false;
-	bool UseProxy = false;
-	string ProxyAddress = "";
-	int ProxyPort = 0;
-	bool ProxySocks5 = false;
-	string ProxyAccount = "";
-	string ProxyPassword = "";
+    bool GameSocket = false;
+    bool UseProxy = false;
+    string ProxyAddress = "";
+    int ProxyPort = 0;
+    bool ProxySocks5 = false;
+    string ProxyAccount = "";
+    string ProxyPassword = "";
 
 private:
-	CDecompressingCopier m_Decompressor;
+    CDecompressingCopier m_Decompressor;
 
 public:
-	CSocket(bool gameSocket);
-	~CSocket();
+    CSocket(bool gameSocket);
+    ~CSocket();
 
-	virtual bool Connect(const string &address, int port);
+    virtual bool Connect(const string &address, int port);
 
-	virtual UCHAR_LIST Decompression(UCHAR_LIST data);
+    virtual UCHAR_LIST Decompression(UCHAR_LIST data);
 };
 //---------------------------------------------------------------------------
 #endif

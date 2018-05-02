@@ -31,10 +31,10 @@
 #include <cassert>
 
 #define UNUSED(x) (void)x
-#define ToColorR(x) ((x    )&0xff)
-#define ToColorG(x) ((x>>8 )&0xff)
-#define ToColorB(x) ((x>>16)&0xff)
-#define ToColorA(x) ((x>>24)&0xff)
+#define ToColorR(x) ((x)&0xff)
+#define ToColorG(x) ((x >> 8) & 0xff)
+#define ToColorB(x) ((x >> 16) & 0xff)
+#define ToColorA(x) ((x >> 24) & 0xff)
 
 #if defined(ORION_WINDOWS)
 

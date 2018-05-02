@@ -14,139 +14,140 @@
 class CGumpManager : public CBaseQueue
 {
 private:
-	/*!
+    /*!
 	Вычислить количество статусбаров без пати
 	@return Количество non-party статусбыров
 	*/
-	int GetNonpartyStatusbarsCount();
+    int GetNonpartyStatusbarsCount();
 
-	void SaveDefaultGumpProperties(WISP_FILE::CBinaryFileWritter &writer, CGump *gump, int size);
+    void SaveDefaultGumpProperties(WISP_FILE::CBinaryFileWritter &writer, CGump *gump, int size);
 
 public:
-	CGumpManager() : CBaseQueue() {}
-	virtual ~CGumpManager() {}
+    CGumpManager()
+        : CBaseQueue()
+    {
+    }
+    virtual ~CGumpManager() {}
 
-	/*!
+    /*!
 	Добавить гамп
 	@param [__in] obj Ссылка на гамп
 	@return 
 	*/
-	void AddGump(CGump *obj);
+    void AddGump(CGump *obj);
 
-	/*!
+    /*!
 	Обновить содержимое гампа
 	@param [__in] serial Серийник гампа
 	@param [__in] ID ID гампа
 	@param [__in] Type Тип гампа
 	@return Ссылку на обновленный гамп или NULL
 	*/
-	CGump *UpdateContent(int serial, int id, const GUMP_TYPE &type);
+    CGump *UpdateContent(int serial, int id, const GUMP_TYPE &type);
 
-	/*!
+    /*!
 	Обновить гамп
 	@param [__in] serial Серийник гампа
 	@param [__in] ID ID гампа
 	@param [__in] Type Тип гампа
 	@return Ссылку на обновленный гамп или NULL
 	*/
-	CGump *UpdateGump(int serial, int id, const GUMP_TYPE &type);
+    CGump *UpdateGump(int serial, int id, const GUMP_TYPE &type);
 
-	/*!
+    /*!
 	Найти гамп
 	@param [__in] serial Серийник гампа
 	@param [__in] ID ID гампа
 	@param [__in] Type Тип гампа
 	@return Ссылку на гамп или NULL
 	*/
-	CGump *GetGump(int serial, int id, const GUMP_TYPE &type);
+    CGump *GetGump(int serial, int id, const GUMP_TYPE &type);
 
-	/*!
+    /*!
 	Получить гамп-владелец текущей активной TEntryText
 	@return Ссылку на гамп или NULL
 	*/
-	CGump *GetTextEntryOwner();
+    CGump *GetTextEntryOwner();
 
-	/*!
+    /*!
 	Проверить, существует ли гамп
 	@param [__in] gumpID ID гампа (в памяти)
 	@return 
 	*/
-	CGump *GumpExists(uintptr_t gumpID);
+    CGump *GumpExists(uintptr_t gumpID);
 
-	/*!
+    /*!
 	Закрыть все гампы с указанными параметрами
 	@param [__in] serial Серийник гампа
 	@param [__in] ID ID гампа
 	@param [__in] Type Тип гампа
 	@return 
 	*/
-	void CloseGump(uint serial, uint ID, GUMP_TYPE Type);
+    void CloseGump(uint serial, uint ID, GUMP_TYPE Type);
 
-	/*!
+    /*!
 	Удалить гамп
 	@param [__in] obj Ссылка на гамп
 	@return 
 	*/
-	void RemoveGump(CGump *obj);
+    void RemoveGump(CGump *obj);
 
-	/*!
+    /*!
 	Перерисовать все гампы
 	@return 
 	*/
-	void RedrawAll();
+    void RedrawAll();
 
-	/*!
+    /*!
 	Событие удаления менеджера (вызывается перед удалением)
 	@return
 	*/
-	void OnDelete();
+    void OnDelete();
 
-	/*!
+    /*!
 	Удалить гампы, которые не могут быть досягаемы из-за изменения дистанции до объекта
 	@return
 	*/
-	void RemoveRangedGumps();
+    void RemoveRangedGumps();
 
-	void PrepareContent();
+    void PrepareContent();
 
-	void RemoveMarked();
+    void RemoveMarked();
 
-	/*!
+    /*!
 	Подготовка текстур
 	@return 
 	*/
-	void PrepareTextures();
+    void PrepareTextures();
 
-	void Draw(bool blocked);
+    void Draw(bool blocked);
 
-	void Select(bool blocked);
+    void Select(bool blocked);
 
-	void InitToolTip();
+    void InitToolTip();
 
+    void OnLeftMouseButtonDown(bool blocked);
+    bool OnLeftMouseButtonUp(bool blocked);
+    bool OnLeftMouseButtonDoubleClick(bool blocked);
 
+    void OnRightMouseButtonDown(bool blocked);
+    void OnRightMouseButtonUp(bool blocked);
+    bool OnRightMouseButtonDoubleClick(bool blocked) { return false; }
 
-	void OnLeftMouseButtonDown(bool blocked);
-	bool OnLeftMouseButtonUp(bool blocked);
-	bool OnLeftMouseButtonDoubleClick(bool blocked);
+    void OnMidMouseButtonScroll(bool up, bool blocked);
 
-	void OnRightMouseButtonDown(bool blocked);
-	void OnRightMouseButtonUp(bool blocked);
-	bool OnRightMouseButtonDoubleClick(bool blocked) { return false; }
+    void OnDragging(bool blocked);
 
-	void OnMidMouseButtonScroll(bool up, bool blocked);
-
-	void OnDragging(bool blocked);
-
-	void Load(const os_path &path);
-	void Save(const os_path &path);
+    void Load(const os_path &path);
+    void Save(const os_path &path);
 
 #if USE_WISP
-	bool OnCharPress(const WPARAM &wParam, const LPARAM &lParam, bool blocked);
-	bool OnKeyDown(const WPARAM &wParam, const LPARAM &lParam, bool blocked);
+    bool OnCharPress(const WPARAM &wParam, const LPARAM &lParam, bool blocked);
+    bool OnKeyDown(const WPARAM &wParam, const LPARAM &lParam, bool blocked);
 #else
-	virtual bool OnTextInput(const SDL_TextInputEvent &ev, bool blocked);
-	virtual bool OnKeyDown(const SDL_KeyboardEvent &ev,  bool blocked);	
-#endif	
+    virtual bool OnTextInput(const SDL_TextInputEvent &ev, bool blocked);
+    virtual bool OnKeyDown(const SDL_KeyboardEvent &ev, bool blocked);
+#endif
 };
 //----------------------------------------------------------------------------------
 //!Ссылка на менеджер гампов

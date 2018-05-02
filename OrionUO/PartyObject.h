@@ -14,12 +14,12 @@
 class CPartyObject
 {
 public:
-	uint Serial = 0;
+    uint Serial = 0;
 
-	CPartyObject();
-	~CPartyObject() {}
-	class CGameCharacter *Character{ NULL };
-	string GetName(int index);
+    CPartyObject();
+    ~CPartyObject() {}
+    class CGameCharacter *Character{ NULL };
+    string GetName(int index);
 };
 //----------------------------------------------------------------------------------
 #endif

@@ -13,591 +13,594 @@
 class CPacket : public WISP_DATASTREAM::CDataWritter
 {
 public:
-	CPacket(size_t size, bool autoResize = false);
+    CPacket(size_t size, bool autoResize = false);
 
-	void Send();
+    void Send();
 };
 //----------------------------------------------------------------------------------
 class CPacketFirstLogin : public CPacket
 {
 public:
-	CPacketFirstLogin();
+    CPacketFirstLogin();
 };
 //----------------------------------------------------------------------------------
 class CPacketSelectServer : public CPacket
 {
 public:
-	CPacketSelectServer(uchar index);
+    CPacketSelectServer(uchar index);
 };
 //----------------------------------------------------------------------------------
 class CPacketSecondLogin : public CPacket
 {
 public:
-	CPacketSecondLogin();
+    CPacketSecondLogin();
 };
 //----------------------------------------------------------------------------------
 class CPacketCreateCharacter : public CPacket
 {
 public:
-	CPacketCreateCharacter(const string &name);
+    CPacketCreateCharacter(const string &name);
 };
 //----------------------------------------------------------------------------------
 class CPacketDeleteCharacter : public CPacket
 {
 public:
-	CPacketDeleteCharacter(int charIndex);
+    CPacketDeleteCharacter(int charIndex);
 };
 //----------------------------------------------------------------------------------
 class CPacketSelectCharacter : public CPacket
 {
 public:
-	CPacketSelectCharacter(int index, const string &name);
+    CPacketSelectCharacter(int index, const string &name);
 };
 //----------------------------------------------------------------------------------
 class CPacketPickupRequest : public CPacket
 {
 public:
-	CPacketPickupRequest(uint serial, ushort count);
+    CPacketPickupRequest(uint serial, ushort count);
 };
 //----------------------------------------------------------------------------------
 class CPacketDropRequestOld : public CPacket
 {
 public:
-	CPacketDropRequestOld(uint serial, ushort x, ushort y, char z, uint container);
+    CPacketDropRequestOld(uint serial, ushort x, ushort y, char z, uint container);
 };
 //----------------------------------------------------------------------------------
 class CPacketDropRequestNew : public CPacket
 {
 public:
-	CPacketDropRequestNew(uint serial, ushort x, ushort y, char z, uchar slot, uint container);
+    CPacketDropRequestNew(uint serial, ushort x, ushort y, char z, uchar slot, uint container);
 };
 //----------------------------------------------------------------------------------
 class CPacketEquipRequest : public CPacket
 {
 public:
-	CPacketEquipRequest(uint serial, uchar layer, uint container);
+    CPacketEquipRequest(uint serial, uchar layer, uint container);
 };
 //----------------------------------------------------------------------------------
 class CPacketChangeWarmode : public CPacket
 {
 public:
-	CPacketChangeWarmode(uchar state);
+    CPacketChangeWarmode(uchar state);
 };
 //----------------------------------------------------------------------------------
 class CPacketHelpRequest : public CPacket
 {
 public:
-	CPacketHelpRequest();
+    CPacketHelpRequest();
 };
 //----------------------------------------------------------------------------------
 class CPacketStatusRequest : public CPacket
 {
 public:
-	CPacketStatusRequest(uint serial);
+    CPacketStatusRequest(uint serial);
 };
 //----------------------------------------------------------------------------------
 class CPacketSkillsRequest : public CPacket
 {
 public:
-	CPacketSkillsRequest(uint serial);
+    CPacketSkillsRequest(uint serial);
 };
 //----------------------------------------------------------------------------------
 class CPacketSkillsStatusChangeRequest : public CPacket
 {
 public:
-	CPacketSkillsStatusChangeRequest(uchar skill, uchar state);
+    CPacketSkillsStatusChangeRequest(uchar skill, uchar state);
 };
 //----------------------------------------------------------------------------------
 class CPacketClickRequest : public CPacket
 {
 public:
-	CPacketClickRequest(uint serial);
+    CPacketClickRequest(uint serial);
 };
 //----------------------------------------------------------------------------------
 class CPacketDoubleClickRequest : public CPacket
 {
 public:
-	CPacketDoubleClickRequest(uint serial);
+    CPacketDoubleClickRequest(uint serial);
 };
 //----------------------------------------------------------------------------------
 class CPacketAttackRequest : public CPacket
 {
 public:
-	CPacketAttackRequest(uint serial);
+    CPacketAttackRequest(uint serial);
 };
 //----------------------------------------------------------------------------------
 class CPacketClientVersion : public CPacket
 {
 public:
-	CPacketClientVersion(string version);
+    CPacketClientVersion(string version);
 };
 //----------------------------------------------------------------------------------
 class CPacketASCIISpeechRequest : public CPacket
 {
 public:
-	CPacketASCIISpeechRequest(const char *text, SPEECH_TYPE type, ushort font, ushort color);
+    CPacketASCIISpeechRequest(const char *text, SPEECH_TYPE type, ushort font, ushort color);
 };
 //----------------------------------------------------------------------------------
 class CPacketUnicodeSpeechRequest : public CPacket
 {
 public:
-	CPacketUnicodeSpeechRequest(const wchar_t *text, SPEECH_TYPE type, ushort font, ushort color, puchar language);
+    CPacketUnicodeSpeechRequest(
+        const wchar_t *text, SPEECH_TYPE type, ushort font, ushort color, puchar language);
 };
 //----------------------------------------------------------------------------------
 class CPacketCastSpell : public CPacket
 {
 public:
-	CPacketCastSpell(int index);
+    CPacketCastSpell(int index);
 };
 //----------------------------------------------------------------------------------
 class CPacketCastSpellFromBook : public CPacket
 {
 public:
-	CPacketCastSpellFromBook(int index, uint serial);
+    CPacketCastSpellFromBook(int index, uint serial);
 };
 //----------------------------------------------------------------------------------
 class CPacketUseSkill : public CPacket
 {
 public:
-	CPacketUseSkill(int index);
+    CPacketUseSkill(int index);
 };
 //----------------------------------------------------------------------------------
 class CPacketOpenDoor : public CPacket
 {
 public:
-	CPacketOpenDoor();
+    CPacketOpenDoor();
 };
 //----------------------------------------------------------------------------------
 class CPacketOpenSpellbook : public CPacket
 {
 public:
-	CPacketOpenSpellbook(SPELLBOOK_TYPE type);
+    CPacketOpenSpellbook(SPELLBOOK_TYPE type);
 };
 //----------------------------------------------------------------------------------
 class CPacketEmoteAction : public CPacket
 {
 public:
-	CPacketEmoteAction(const char *action);
+    CPacketEmoteAction(const char *action);
 };
 //----------------------------------------------------------------------------------
 class CPacketGumpResponse : public CPacket
 {
 public:
-	CPacketGumpResponse(class CGumpGeneric *gump, int code);
+    CPacketGumpResponse(class CGumpGeneric *gump, int code);
 };
 //----------------------------------------------------------------------------------
 class CPacketVirtureGumpResponse : public CPacket
 {
 public:
-	CPacketVirtureGumpResponse(class CGump *gump, int code);
+    CPacketVirtureGumpResponse(class CGump *gump, int code);
 };
 //----------------------------------------------------------------------------------
 class CPacketMenuResponse : public CPacket
 {
 public:
-	CPacketMenuResponse(class CGump *gump, int code);
+    CPacketMenuResponse(class CGump *gump, int code);
 };
 //----------------------------------------------------------------------------------
 class CPacketGrayMenuResponse : public CPacket
 {
 public:
-	CPacketGrayMenuResponse(class CGump *gump, int code);
+    CPacketGrayMenuResponse(class CGump *gump, int code);
 };
 //----------------------------------------------------------------------------------
 class CPacketTradeResponse : public CPacket
 {
 public:
-	CPacketTradeResponse(class CGumpSecureTrading *gump, int code);
+    CPacketTradeResponse(class CGumpSecureTrading *gump, int code);
 };
 //----------------------------------------------------------------------------------
 class CPacketLogoutNotification : public CPacket
 {
 public:
-	CPacketLogoutNotification();
+    CPacketLogoutNotification();
 };
 //----------------------------------------------------------------------------------
 class CPacketTextEntryDialogResponse : public CPacket
 {
 public:
-	CPacketTextEntryDialogResponse(class CGumpTextEntryDialog *gump, class CEntryText *entry, bool code);
+    CPacketTextEntryDialogResponse(
+        class CGumpTextEntryDialog *gump, class CEntryText *entry, bool code);
 };
 //----------------------------------------------------------------------------------
 class CPacketRenameRequest : public CPacket
 {
 public:
-	CPacketRenameRequest(uint serial, string newName);
+    CPacketRenameRequest(uint serial, string newName);
 };
 //----------------------------------------------------------------------------------
 class CPacketTipRequest : public CPacket
 {
 public:
-	CPacketTipRequest(ushort id, uchar flag);
+    CPacketTipRequest(ushort id, uchar flag);
 };
 //----------------------------------------------------------------------------------
 class CPacketASCIIPromptResponse : public CPacket
 {
 public:
-	CPacketASCIIPromptResponse(const char *text, size_t len, bool cancel);
+    CPacketASCIIPromptResponse(const char *text, size_t len, bool cancel);
 };
 //----------------------------------------------------------------------------------
 class CPacketUnicodePromptResponse : public CPacket
 {
 public:
-	CPacketUnicodePromptResponse(const wchar_t *text, size_t len, const string &lang, bool cancel);
+    CPacketUnicodePromptResponse(const wchar_t *text, size_t len, const string &lang, bool cancel);
 };
 //----------------------------------------------------------------------------------
 class CPacketDyeDataResponse : public CPacket
 {
 public:
-	CPacketDyeDataResponse(uint serial, ushort graphic, ushort color);
+    CPacketDyeDataResponse(uint serial, ushort graphic, ushort color);
 };
 //----------------------------------------------------------------------------------
 class CPacketProfileRequest : public CPacket
 {
 public:
-	CPacketProfileRequest(uint serial);
+    CPacketProfileRequest(uint serial);
 };
 //----------------------------------------------------------------------------------
 class CPacketProfileUpdate : public CPacket
 {
 public:
-	CPacketProfileUpdate(uint serial, const wchar_t *text, size_t len);
+    CPacketProfileUpdate(uint serial, const wchar_t *text, size_t len);
 };
 //----------------------------------------------------------------------------------
 class CPacketCloseStatusbarGump : public CPacket
 {
 public:
-	CPacketCloseStatusbarGump(uint serial);
+    CPacketCloseStatusbarGump(uint serial);
 };
 //----------------------------------------------------------------------------------
 class CPacketPartyInviteRequest : public CPacket
 {
 public:
-	CPacketPartyInviteRequest();
+    CPacketPartyInviteRequest();
 };
 //----------------------------------------------------------------------------------
 class CPacketPartyRemoveRequest : public CPacket
 {
 public:
-	CPacketPartyRemoveRequest(uint serial);
+    CPacketPartyRemoveRequest(uint serial);
 };
 //----------------------------------------------------------------------------------
 class CPacketPartyChangeLootTypeRequest : public CPacket
 {
 public:
-	CPacketPartyChangeLootTypeRequest(uchar type);
+    CPacketPartyChangeLootTypeRequest(uchar type);
 };
 //----------------------------------------------------------------------------------
 class CPacketPartyAccept : public CPacket
 {
 public:
-	CPacketPartyAccept(uint serial);
+    CPacketPartyAccept(uint serial);
 };
 //----------------------------------------------------------------------------------
 class CPacketPartyDecline : public CPacket
 {
 public:
-	CPacketPartyDecline(uint serial);
+    CPacketPartyDecline(uint serial);
 };
 //----------------------------------------------------------------------------------
 class CPacketPartyMessage : public CPacket
 {
 public:
-	CPacketPartyMessage(const wchar_t *text, size_t len, uint serial = 0x00000000);
+    CPacketPartyMessage(const wchar_t *text, size_t len, uint serial = 0x00000000);
 };
 //----------------------------------------------------------------------------------
 class CPacketGameWindowSize : public CPacket
 {
 public:
-	CPacketGameWindowSize();
+    CPacketGameWindowSize();
 };
 //----------------------------------------------------------------------------------
 class CPacketClientViewRange : public CPacket
 {
 public:
-	CPacketClientViewRange(uchar range);
+    CPacketClientViewRange(uchar range);
 };
 //----------------------------------------------------------------------------------
 class CPacketBulletinBoardRequestMessage : public CPacket
 {
 public:
-	CPacketBulletinBoardRequestMessage(uint serial, uint msgSerial);
+    CPacketBulletinBoardRequestMessage(uint serial, uint msgSerial);
 };
 //----------------------------------------------------------------------------------
 class CPacketBulletinBoardRequestMessageSummary : public CPacket
 {
 public:
-	CPacketBulletinBoardRequestMessageSummary(uint serial, uint msgSerial);
+    CPacketBulletinBoardRequestMessageSummary(uint serial, uint msgSerial);
 };
 //----------------------------------------------------------------------------------
 class CPacketBulletinBoardPostMessage : public CPacket
 {
 public:
-	CPacketBulletinBoardPostMessage(uint serial, uint replySerial, const char *subject, const char *message);
+    CPacketBulletinBoardPostMessage(
+        uint serial, uint replySerial, const char *subject, const char *message);
 };
 //----------------------------------------------------------------------------------
 class CPacketBulletinBoardRemoveMessage : public CPacket
 {
 public:
-	CPacketBulletinBoardRemoveMessage(uint serial, uint msgSerial);
+    CPacketBulletinBoardRemoveMessage(uint serial, uint msgSerial);
 };
 //----------------------------------------------------------------------------------
 class CPacketAssistVersion : public CPacket
 {
 public:
-	CPacketAssistVersion(uint version, string clientVersion);
+    CPacketAssistVersion(uint version, string clientVersion);
 };
 //----------------------------------------------------------------------------------
 class CPacketRazorAnswer : public CPacket
 {
 public:
-	CPacketRazorAnswer();
+    CPacketRazorAnswer();
 };
 //----------------------------------------------------------------------------------
 class CPacketLanguage : public CPacket
 {
 public:
-	CPacketLanguage(const string &lang);
+    CPacketLanguage(const string &lang);
 };
 //----------------------------------------------------------------------------------
 class CPacketClientType : public CPacket
 {
 public:
-	CPacketClientType();
+    CPacketClientType();
 };
 //----------------------------------------------------------------------------------
 class CPacketRequestPopupMenu : public CPacket
 {
 public:
-	CPacketRequestPopupMenu(uint serial);
+    CPacketRequestPopupMenu(uint serial);
 };
 //----------------------------------------------------------------------------------
 class CPacketPopupMenuSelection : public CPacket
 {
 public:
-	CPacketPopupMenuSelection(uint serial, ushort menuID);
+    CPacketPopupMenuSelection(uint serial, ushort menuID);
 };
 //----------------------------------------------------------------------------------
 class CPacketOpenChat : public CPacket
 {
 public:
-	CPacketOpenChat(const wstring &name);
+    CPacketOpenChat(const wstring &name);
 };
 //----------------------------------------------------------------------------------
 class CPacketMapMessage : public CPacket
 {
 public:
-	CPacketMapMessage(uint serial, MAP_MESSAGE action, uchar pin = 0, short x = -24, short y = -31);
+    CPacketMapMessage(uint serial, MAP_MESSAGE action, uchar pin = 0, short x = -24, short y = -31);
 };
 //----------------------------------------------------------------------------------
 class CPacketGuildMenuRequest : public CPacket
 {
 public:
-	CPacketGuildMenuRequest();
+    CPacketGuildMenuRequest();
 };
 //----------------------------------------------------------------------------------
 class CPacketQuestMenuRequest : public CPacket
 {
 public:
-	CPacketQuestMenuRequest();
+    CPacketQuestMenuRequest();
 };
 //----------------------------------------------------------------------------------
 class CPacketEquipLastWeapon : public CPacket
 {
 public:
-	CPacketEquipLastWeapon();
+    CPacketEquipLastWeapon();
 };
 //----------------------------------------------------------------------------------
 class CPacketVirtureRequest : public CPacket
 {
 public:
-	CPacketVirtureRequest(int buttonID);
+    CPacketVirtureRequest(int buttonID);
 };
 //----------------------------------------------------------------------------------
 class CPacketInvokeVirtureRequest : public CPacket
 {
 public:
-	CPacketInvokeVirtureRequest(uchar id);
+    CPacketInvokeVirtureRequest(uchar id);
 };
 //----------------------------------------------------------------------------------
 class CPacketMegaClilocRequestOld : public CPacket
 {
 public:
-	CPacketMegaClilocRequestOld(int serial);
+    CPacketMegaClilocRequestOld(int serial);
 };
 //----------------------------------------------------------------------------------
 class CPacketMegaClilocRequest : public CPacket
 {
 public:
-	CPacketMegaClilocRequest(UINT_LIST &list);
+    CPacketMegaClilocRequest(UINT_LIST &list);
 };
 //----------------------------------------------------------------------------------
 class CPacketChangeStatLockStateRequest : public CPacket
 {
 public:
-	CPacketChangeStatLockStateRequest(uchar stat, uchar state);
+    CPacketChangeStatLockStateRequest(uchar stat, uchar state);
 };
 //----------------------------------------------------------------------------------
 class CPacketBookPageData : public CPacket
 {
 public:
-	CPacketBookPageData(class CGumpBook *gump, int page);
+    CPacketBookPageData(class CGumpBook *gump, int page);
 };
 //----------------------------------------------------------------------------------
 class CPacketBookPageDataRequest : public CPacket
 {
 public:
-	CPacketBookPageDataRequest(int serial, int page);
+    CPacketBookPageDataRequest(int serial, int page);
 };
 //----------------------------------------------------------------------------------
 class CPacketBuyRequest : public CPacket
 {
 public:
-	CPacketBuyRequest(class CGumpShop *gump);
+    CPacketBuyRequest(class CGumpShop *gump);
 };
 //----------------------------------------------------------------------------------
 class CPacketSellRequest : public CPacket
 {
 public:
-	CPacketSellRequest(class CGumpShop *gump);
+    CPacketSellRequest(class CGumpShop *gump);
 };
 //----------------------------------------------------------------------------------
 class CPacketUseCombatAbility : public CPacket
 {
 public:
-	CPacketUseCombatAbility(uchar index);
+    CPacketUseCombatAbility(uchar index);
 };
 //----------------------------------------------------------------------------------
 class CPacketTargetSelectedObject : public CPacket
 {
 public:
-	CPacketTargetSelectedObject(int useObjectSerial, int targetObjectSerial);
+    CPacketTargetSelectedObject(int useObjectSerial, int targetObjectSerial);
 };
 //----------------------------------------------------------------------------------
 class CPacketToggleGargoyleFlying : public CPacket
 {
 public:
-	CPacketToggleGargoyleFlying();
+    CPacketToggleGargoyleFlying();
 };
 //----------------------------------------------------------------------------------
 class CPacketCustomHouseDataReq : public CPacket
 {
 public:
-	CPacketCustomHouseDataReq(int serial);
+    CPacketCustomHouseDataReq(int serial);
 };
 //----------------------------------------------------------------------------------
 class CPacketStunReq : public CPacket
 {
 public:
-	CPacketStunReq();
+    CPacketStunReq();
 };
 //----------------------------------------------------------------------------------
 class CPacketDisarmReq : public CPacket
 {
 public:
-	CPacketDisarmReq();
+    CPacketDisarmReq();
 };
 //----------------------------------------------------------------------------------
 class CPacketResend : public CPacket
 {
 public:
-	CPacketResend();
+    CPacketResend();
 };
 //----------------------------------------------------------------------------------
 class CPacketWalkRequest : public CPacket
 {
 public:
-	CPacketWalkRequest(uchar direction, uchar sequence, int fastWalkKey);
+    CPacketWalkRequest(uchar direction, uchar sequence, int fastWalkKey);
 };
 //----------------------------------------------------------------------------------
 class CPacketCustomHouseBackup : public CPacket
 {
 public:
-	CPacketCustomHouseBackup();
+    CPacketCustomHouseBackup();
 };
 //----------------------------------------------------------------------------------
 class CPacketCustomHouseRestore : public CPacket
 {
 public:
-	CPacketCustomHouseRestore();
+    CPacketCustomHouseRestore();
 };
 //----------------------------------------------------------------------------------
 class CPacketCustomHouseCommit : public CPacket
 {
 public:
-	CPacketCustomHouseCommit();
+    CPacketCustomHouseCommit();
 };
 //----------------------------------------------------------------------------------
 class CPacketCustomHouseBuildingExit : public CPacket
 {
 public:
-	CPacketCustomHouseBuildingExit();
+    CPacketCustomHouseBuildingExit();
 };
 //----------------------------------------------------------------------------------
 class CPacketCustomHouseGoToFloor : public CPacket
 {
 public:
-	CPacketCustomHouseGoToFloor(uchar floor);
+    CPacketCustomHouseGoToFloor(uchar floor);
 };
 //----------------------------------------------------------------------------------
 class CPacketCustomHouseSync : public CPacket
 {
 public:
-	CPacketCustomHouseSync();
+    CPacketCustomHouseSync();
 };
 //----------------------------------------------------------------------------------
 class CPacketCustomHouseClear : public CPacket
 {
 public:
-	CPacketCustomHouseClear();
+    CPacketCustomHouseClear();
 };
 //----------------------------------------------------------------------------------
 class CPacketCustomHouseRevert : public CPacket
 {
 public:
-	CPacketCustomHouseRevert();
+    CPacketCustomHouseRevert();
 };
 //----------------------------------------------------------------------------------
 class CPacketCustomHouseResponse : public CPacket
 {
 public:
-	CPacketCustomHouseResponse();
+    CPacketCustomHouseResponse();
 };
 //----------------------------------------------------------------------------------
 class CPacketCustomHouseAddItem : public CPacket
 {
 public:
-	CPacketCustomHouseAddItem(ushort graphic, int x, int y);
+    CPacketCustomHouseAddItem(ushort graphic, int x, int y);
 };
 //----------------------------------------------------------------------------------
 class CPacketCustomHouseDeleteItem : public CPacket
 {
 public:
-	CPacketCustomHouseDeleteItem(ushort graphic, int x, int y, int z);
+    CPacketCustomHouseDeleteItem(ushort graphic, int x, int y, int z);
 };
 //----------------------------------------------------------------------------------
 class CPacketCustomHouseAddRoof : public CPacket
 {
 public:
-	CPacketCustomHouseAddRoof(ushort graphic, int x, int y, int z);
+    CPacketCustomHouseAddRoof(ushort graphic, int x, int y, int z);
 };
 //----------------------------------------------------------------------------------
 class CPacketCustomHouseDeleteRoof : public CPacket
 {
 public:
-	CPacketCustomHouseDeleteRoof(ushort graphic, int x, int y, int z);
+    CPacketCustomHouseDeleteRoof(ushort graphic, int x, int y, int z);
 };
 //----------------------------------------------------------------------------------
 class CPacketCustomHouseAddStair : public CPacket
 {
 public:
-	CPacketCustomHouseAddStair(ushort graphic, int x, int y);
+    CPacketCustomHouseAddStair(ushort graphic, int x, int y);
 };
 //----------------------------------------------------------------------------------
 class CPacketOrionVersion : public CPacket
 {
 public:
-	CPacketOrionVersion(int version);
+    CPacketOrionVersion(int version);
 };
 //----------------------------------------------------------------------------------
 #endif

@@ -13,22 +13,20 @@
 class CGumpScreenConnection : public CGump
 {
 private:
-	//!Идентификаторы кнопок
-	static const int ID_CS_OK = 1;
-	static const int ID_CS_CANCEL = 2;
+    //!Идентификаторы кнопок
+    static const int ID_CS_OK = 1;
+    static const int ID_CS_CANCEL = 2;
 
-	void CreateText(int x, int y, string str, uchar font);
+    void CreateText(int x, int y, string str, uchar font);
 
 public:
-	CGumpScreenConnection();
-	virtual ~CGumpScreenConnection();
+    CGumpScreenConnection();
+    virtual ~CGumpScreenConnection();
 
-	virtual void UpdateContent();
+    virtual void UpdateContent();
 
-
-
-	GUMP_BUTTON_EVENT_H;
- };
- //----------------------------------------------------------------------------------
+    GUMP_BUTTON_EVENT_H;
+};
+//----------------------------------------------------------------------------------
 #endif
 //----------------------------------------------------------------------------------

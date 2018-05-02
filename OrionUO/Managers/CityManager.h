@@ -14,32 +14,32 @@
 class CCity
 {
 public:
-	string Name = "";
-	wstring Description = L"";
+    string Name = "";
+    wstring Description = L"";
 
-	CCity(const string &name, const wstring &description);
-	virtual ~CCity();
+    CCity(const string &name, const wstring &description);
+    virtual ~CCity();
 };
 //---------------------------------------------------------------------------
 //!Класс менеджера списка городов
 class CCityManager
 {
 public:
-	CCityManager();
-	virtual ~CCityManager();
+    CCityManager();
+    virtual ~CCityManager();
 
-	void Init();
+    void Init();
 
-	deque<CCity> m_CityList;
+    deque<CCity> m_CityList;
 
-	/*!
+    /*!
 	Получить указатель на город
 	@param [__in] name Имя города
 	@return Ссылка на город или NULL
 	*/
-	CCity GetCity(const string &name);
+    CCity GetCity(const string &name);
 
-	void Clear();
+    void Clear();
 };
 //---------------------------------------------------------------------------
 //!Ссылка на менеджер городов

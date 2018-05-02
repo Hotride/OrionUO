@@ -14,14 +14,14 @@
 class COptionsMacroManager : public CBaseQueue
 {
 public:
-	COptionsMacroManager();
-	virtual ~COptionsMacroManager();
+    COptionsMacroManager();
+    virtual ~COptionsMacroManager();
 
-	/*!
+    /*!
 	Загрузить из списка макросов
 	@return 
 	*/
-	void LoadFromMacro();
+    void LoadFromMacro();
 };
 //----------------------------------------------------------------------------------
 //!Ссылка на менеджер макросов для опций

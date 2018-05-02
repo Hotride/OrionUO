@@ -13,15 +13,18 @@
 class COrionApplication : public WISP_APPLICATION::CApplication
 {
 public:
-	uint NextRenderTime = 0;
-	uint NextUpdateTime = 0;
+    uint NextRenderTime = 0;
+    uint NextUpdateTime = 0;
 
 protected:
-	virtual void OnMainLoop();
+    virtual void OnMainLoop();
 
 public:
-	COrionApplication() : WISP_APPLICATION::CApplication() {}
-	virtual ~COrionApplication() {}
+    COrionApplication()
+        : WISP_APPLICATION::CApplication()
+    {
+    }
+    virtual ~COrionApplication() {}
 };
 //----------------------------------------------------------------------------------
 extern COrionApplication g_App;

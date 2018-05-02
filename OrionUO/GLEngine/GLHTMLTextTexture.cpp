@@ -12,31 +12,32 @@
 #include "stdafx.h"
 //----------------------------------------------------------------------------------
 CGLHTMLTextTexture::CGLHTMLTextTexture()
-: CGLTextTexture()
+    : CGLTextTexture()
 {
 }
 //----------------------------------------------------------------------------------
 CGLHTMLTextTexture::~CGLHTMLTextTexture()
 {
-	WISPFUN_DEBUG("c31_f1");
-	m_WebLinkRect.clear();
+    WISPFUN_DEBUG("c31_f1");
+    m_WebLinkRect.clear();
 }
 //----------------------------------------------------------------------------------
 ushort CGLHTMLTextTexture::WebLinkUnderMouse(int x, int y)
 {
-	WISPFUN_DEBUG("c31_f2");
-	x = g_MouseManager.Position.X - x;
-	y = g_MouseManager.Position.Y - y;
+    WISPFUN_DEBUG("c31_f2");
+    x = g_MouseManager.Position.X - x;
+    y = g_MouseManager.Position.Y - y;
 
-	for (std::deque<WEB_LINK_RECT>::iterator it = m_WebLinkRect.begin(); it != m_WebLinkRect.end(); ++it)
-	{
-		if (y >= (*it).StartY && y < (*it).StartY + (*it).EndY)
-		{
-			if (x >= (*it).StartX && x < (*it).StartX + (*it).EndX)
-				return it->LinkID;
-		}
-	}
+    for (std::deque<WEB_LINK_RECT>::iterator it = m_WebLinkRect.begin(); it != m_WebLinkRect.end();
+         ++it)
+    {
+        if (y >= (*it).StartY && y < (*it).StartY + (*it).EndY)
+        {
+            if (x >= (*it).StartX && x < (*it).StartX + (*it).EndX)
+                return it->LinkID;
+        }
+    }
 
-	return 0;
+    return 0;
 }
 //----------------------------------------------------------------------------------

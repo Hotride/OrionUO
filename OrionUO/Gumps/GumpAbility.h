@@ -13,24 +13,24 @@
 class CGumpAbility : public CGump
 {
 private:
-	const int ID_GS_LOCK_MOVING = 1;
+    const int ID_GS_LOCK_MOVING = 1;
 
-	CGUIGumppic *m_Body{ NULL };
-	CGUIGlobalColor *m_Colorizer{ NULL };
+    CGUIGumppic *m_Body{ NULL };
+    CGUIGlobalColor *m_Colorizer{ NULL };
 
 public:
-	CGumpAbility(int serial, int x, int y);
-	virtual ~CGumpAbility();
+    CGumpAbility(int serial, int x, int y);
+    virtual ~CGumpAbility();
 
-	static void OnAbilityUse(int index);
+    static void OnAbilityUse(int index);
 
-	virtual void UpdateContent();
+    virtual void UpdateContent();
 
-	virtual void InitToolTip();
+    virtual void InitToolTip();
 
-	GUMP_BUTTON_EVENT_H;
+    GUMP_BUTTON_EVENT_H;
 
-	virtual bool OnLeftMouseButtonDoubleClick();
+    virtual bool OnLeftMouseButtonDoubleClick();
 };
 //----------------------------------------------------------------------------------
 #endif

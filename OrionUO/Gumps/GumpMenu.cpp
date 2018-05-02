@@ -12,9 +12,9 @@
 #include "stdafx.h"
 //----------------------------------------------------------------------------------
 CGumpMenu::CGumpMenu(uint serial, uint id, short x, short y)
-: CGump(GT_MENU, serial, x, y)
+    : CGump(GT_MENU, serial, x, y)
 {
-	ID = id;
+    ID = id;
 }
 //----------------------------------------------------------------------------------
 CGumpMenu::~CGumpMenu()
@@ -23,52 +23,52 @@ CGumpMenu::~CGumpMenu()
 //----------------------------------------------------------------------------------
 void CGumpMenu::CalculateGumpState()
 {
-	WISPFUN_DEBUG("c100_f1");
-	CGump::CalculateGumpState();
+    WISPFUN_DEBUG("c100_f1");
+    CGump::CalculateGumpState();
 
-	if (g_GumpPressed)
-		FrameCreated = false;
+    if (g_GumpPressed)
+        FrameCreated = false;
 }
 //----------------------------------------------------------------------------------
 void CGumpMenu::PrepareContent()
 {
-	WISPFUN_DEBUG("c100_f2");
-	if (TextChanged)
-	{
-		TextChanged = false;
+    WISPFUN_DEBUG("c100_f2");
+    if (TextChanged)
+    {
+        TextChanged = false;
 
-		if (m_TextObject != NULL)
-		{
-			if (Text.length())
-				m_TextObject->CreateTextureA(1, Text, 200, TS_LEFT, UOFONT_FIXED);
-			else
-				m_TextObject->m_Texture.Clear();
+        if (m_TextObject != NULL)
+        {
+            if (Text.length())
+                m_TextObject->CreateTextureA(1, Text, 200, TS_LEFT, UOFONT_FIXED);
+            else
+                m_TextObject->m_Texture.Clear();
 
-			WantRedraw = true;
-		}
-	}
+            WantRedraw = true;
+        }
+    }
 }
 //----------------------------------------------------------------------------------
 bool CGumpMenu::OnLeftMouseButtonDoubleClick()
 {
-	WISPFUN_DEBUG("c100_f3");
-	if (g_PressedObject.LeftSerial && g_PressedObject.LeftSerial != ID_GM_HTMLGUMP)
-	{
-		SendMenuResponse(g_PressedObject.LeftSerial);
+    WISPFUN_DEBUG("c100_f3");
+    if (g_PressedObject.LeftSerial && g_PressedObject.LeftSerial != ID_GM_HTMLGUMP)
+    {
+        SendMenuResponse(g_PressedObject.LeftSerial);
 
-		return true;
-	}
+        return true;
+    }
 
-	return false;
+    return false;
 }
 //----------------------------------------------------------------------------------
 void CGumpMenu::SendMenuResponse(int index)
 {
-	WISPFUN_DEBUG("c100_f4");
-	//Ответ на меню
-	CPacketMenuResponse(this, index).Send();
+    WISPFUN_DEBUG("c100_f4");
+    //Ответ на меню
+    CPacketMenuResponse(this, index).Send();
 
-	//Удаляем использованный гамп
-	RemoveMark = true;
+    //Удаляем использованный гамп
+    RemoveMark = true;
 }
 //----------------------------------------------------------------------------------

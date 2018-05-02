@@ -15,24 +15,24 @@
 class CGUIWorldMapTexture : public CBaseGUI
 {
 public:
-	//!Индекс карты мира
-	int Index = 0;
-	//!Ширина
-	int Width = 0;
-	//!Высота
-	int Height = 0;
-	//!Смещение по оси X
-	int OffsetX = 0;
-	//!Смещение по оси Y
-	int OffsetY = 0;
+    //!Индекс карты мира
+    int Index = 0;
+    //!Ширина
+    int Width = 0;
+    //!Высота
+    int Height = 0;
+    //!Смещение по оси X
+    int OffsetX = 0;
+    //!Смещение по оси Y
+    int OffsetY = 0;
 
-	CGUIWorldMapTexture(int x, int y);
-	virtual ~CGUIWorldMapTexture();
+    CGUIWorldMapTexture(int x, int y);
+    virtual ~CGUIWorldMapTexture();
 
-	//virtual WISP_GEOMETRY::CSize GetSize() { return WISP_GEOMETRY::CSize(Width, Height); }
+    //virtual WISP_GEOMETRY::CSize GetSize() { return WISP_GEOMETRY::CSize(Width, Height); }
 
-	virtual void Draw(bool checktrans = false);
-	virtual bool Select();
+    virtual void Draw(bool checktrans = false);
+    virtual bool Select();
 };
 //----------------------------------------------------------------------------------
 #endif

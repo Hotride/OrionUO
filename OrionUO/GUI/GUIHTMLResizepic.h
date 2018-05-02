@@ -15,17 +15,24 @@
 class CGUIHTMLResizepic : public CGUIResizepic
 {
 private:
-	//!Гамп-родитель
-	class CGUIHTMLGump *m_HTMLGump{ NULL };
+    //!Гамп-родитель
+    class CGUIHTMLGump *m_HTMLGump{ NULL };
 
 public:
-	CGUIHTMLResizepic(class CGUIHTMLGump *htmlGump, int serial, ushort graphic, int x, int y, int width, int height);
-	virtual ~CGUIHTMLResizepic();
+    CGUIHTMLResizepic(
+        class CGUIHTMLGump *htmlGump,
+        int serial,
+        ushort graphic,
+        int x,
+        int y,
+        int width,
+        int height);
+    virtual ~CGUIHTMLResizepic();
 
-	//!Функция прокрутки
-	void Scroll(bool up, int delay);
+    //!Функция прокрутки
+    void Scroll(bool up, int delay);
 
-	virtual bool IsControlHTML() { return true; }
+    virtual bool IsControlHTML() { return true; }
 };
 //----------------------------------------------------------------------------------
 #endif

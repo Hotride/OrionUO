@@ -21,10 +21,10 @@ CWeather g_Weather;
 /// <returns>Значение от -range до +range для данного тика</returns>
 float SinOscillate(float freq, int range, DWORD current_tick)
 {
-	//float anglef = int((current_tick / (1000.0f / 360.0f)) * freq) % 360;
+    //float anglef = int((current_tick / (1000.0f / 360.0f)) * freq) % 360;
 
-	float anglef = (float)(int((current_tick / 2.7777f) * freq) % 360);
-	return sinf(deg2radf(anglef)) * range;
+    float anglef = (float)(int((current_tick / 2.7777f) * freq) % 360);
+    return sinf(deg2radf(anglef)) * range;
 }
 //----------------------------------------------------------------------------------
 CWeather::CWeather()
@@ -33,247 +33,249 @@ CWeather::CWeather()
 //---------------------------------------------------------------------------
 void CWeather::Reset()
 {
-	WISPFUN_DEBUG("c214_f1");
-	Type = 0;
-	Count = 0;
-	CurrentCount = 0;
-	Temperature = 0;
+    WISPFUN_DEBUG("c214_f1");
+    Type = 0;
+    Count = 0;
+    CurrentCount = 0;
+    Temperature = 0;
 
-	Wind = 0;
-	WindTimer = 0;
+    Wind = 0;
+    WindTimer = 0;
 
-	Timer = 0;
-	
-	m_Effects.clear();
+    Timer = 0;
+
+    m_Effects.clear();
 }
 //---------------------------------------------------------------------------
 void CWeather::Generate()
 {
-	WISPFUN_DEBUG("c214_f2");
-	LastTick = g_Ticks;
+    WISPFUN_DEBUG("c214_f2");
+    LastTick = g_Ticks;
 
-	if (Type == 0xFF || Type == 0xFE)
-		return;
+    if (Type == 0xFF || Type == 0xFE)
+        return;
 
-	int drawX = g_ConfigManager.GameWindowX;
-	int drawY = g_ConfigManager.GameWindowY;
+    int drawX = g_ConfigManager.GameWindowX;
+    int drawY = g_ConfigManager.GameWindowY;
 
-	if (Count > 70)
-		Count = 70;
+    if (Count > 70)
+        Count = 70;
 
-	WindTimer = 0;
-	
-	while (CurrentCount < Count)
-	{
-		CWeatherEffect effect;
+    WindTimer = 0;
 
-		effect.X = (float)(drawX + RandomInt(g_ConfigManager.GameWindowWidth));
-		effect.Y = (float)(drawY + RandomInt(g_ConfigManager.GameWindowHeight));
+    while (CurrentCount < Count)
+    {
+        CWeatherEffect effect;
 
-		m_Effects.push_back(effect);
+        effect.X = (float)(drawX + RandomInt(g_ConfigManager.GameWindowWidth));
+        effect.Y = (float)(drawY + RandomInt(g_ConfigManager.GameWindowHeight));
 
-		CurrentCount++;
-	}
+        m_Effects.push_back(effect);
+
+        CurrentCount++;
+    }
 }
 //---------------------------------------------------------------------------
 void CWeather::Draw(int x, int y)
-{    
-	WISPFUN_DEBUG("c214_f3");
-	bool removeEffects = false;
+{
+    WISPFUN_DEBUG("c214_f3");
+    bool removeEffects = false;
 
-	if (Timer < g_Ticks)
-	{
-		//if (CurrentCount) Reset();
-		if (!CurrentCount)
-			return;
+    if (Timer < g_Ticks)
+    {
+        //if (CurrentCount) Reset();
+        if (!CurrentCount)
+            return;
 
-		removeEffects = true;
-	}
-	else if (Type == 0xFF || Type == 0xFE)
-		return;
+        removeEffects = true;
+    }
+    else if (Type == 0xFF || Type == 0xFE)
+        return;
 
-	uint passed = g_Ticks - LastTick;
+    uint passed = g_Ticks - LastTick;
 
-	if (passed > 7000) // если времени слишком много прошло со старой симуляции
-	{
-		LastTick = g_Ticks;
-		passed = 25;
-	}
+    if (passed > 7000) // если времени слишком много прошло со старой симуляции
+    {
+        LastTick = g_Ticks;
+        passed = 25;
+    }
 
-	bool windChanged = false;
+    bool windChanged = false;
 
-	if (WindTimer < g_Ticks)
-	{
-		if (!WindTimer)
-			windChanged = true; //Для установки стартовых значений снежинок
+    if (WindTimer < g_Ticks)
+    {
+        if (!WindTimer)
+            windChanged = true; //Для установки стартовых значений снежинок
 
-		WindTimer = g_Ticks + (RandomIntMinMax(7, 13) * 1000);
+        WindTimer = g_Ticks + (RandomIntMinMax(7, 13) * 1000);
 
-		char lastWind = Wind;
+        char lastWind = Wind;
 
-		Wind = RandomInt(4);
+        Wind = RandomInt(4);
 
-		if (RandomInt(2))
-			Wind *= (-1);
-		
-		if (Wind < 0 && lastWind > 0)
-			Wind = 0;
-		else if (Wind > 0 && lastWind < 0)
-			Wind = 0;
+        if (RandomInt(2))
+            Wind *= (-1);
 
-		if (lastWind != Wind)
-			windChanged = true;
-	}
-	
-	switch (Type)
-	{
-		case WT_RAIN:
-		case WT_FIERCE_STORM:
-		{
-			glColor4f(0.0f, 0.0f, 1.0f, 1.0f);
+        if (Wind < 0 && lastWind > 0)
+            Wind = 0;
+        else if (Wind > 0 && lastWind < 0)
+            Wind = 0;
 
-			break;
-		}
-		case WT_SNOW:
-		case WT_STORM:
-		{
-			glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+        if (lastWind != Wind)
+            windChanged = true;
+    }
 
-			break;
-		}
-		default:
-			break;
-	}
+    switch (Type)
+    {
+        case WT_RAIN:
+        case WT_FIERCE_STORM:
+        {
+            glColor4f(0.0f, 0.0f, 1.0f, 1.0f);
 
-	for (deque<CWeatherEffect>::iterator effect = m_Effects.begin(); effect != m_Effects.end();)
-	{
-		if ((effect->X < x || effect->X > (x + g_ConfigManager.GameWindowWidth)) || (effect->Y < y || effect->Y > (y + g_ConfigManager.GameWindowHeight)))
-		{
-			if (removeEffects)
-			{
-				effect = m_Effects.erase(effect);
+            break;
+        }
+        case WT_SNOW:
+        case WT_STORM:
+        {
+            glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 
-				if (CurrentCount > 0)
-					CurrentCount--;
-				else
-					CurrentCount = 0;
+            break;
+        }
+        default:
+            break;
+    }
 
-				continue;
-			}
-			else
-			{
-				effect->X = (float)(x + RandomInt(g_ConfigManager.GameWindowWidth));
-				effect->Y = (float)(y + RandomInt(g_ConfigManager.GameWindowHeight));
-			}
-		}        
+    for (deque<CWeatherEffect>::iterator effect = m_Effects.begin(); effect != m_Effects.end();)
+    {
+        if ((effect->X < x || effect->X > (x + g_ConfigManager.GameWindowWidth)) ||
+            (effect->Y < y || effect->Y > (y + g_ConfigManager.GameWindowHeight)))
+        {
+            if (removeEffects)
+            {
+                effect = m_Effects.erase(effect);
 
-		switch (Type)
-		{
-			case WT_RAIN:
-			{
-				float scaleRatio = effect->ScaleRatio;
-				effect->SpeedX = -4.5f - scaleRatio;
-				effect->SpeedY = 5.0f + scaleRatio;
-				break;
-			}
-			case WT_FIERCE_STORM:
-			{
-				effect->SpeedX = Wind;
-				effect->SpeedY = 6.0f;
-				break;
-			}
-			case WT_SNOW:
-			case WT_STORM:
-			{
-				if (Type == WT_SNOW)
-				{
-					effect->SpeedX = Wind;
-					effect->SpeedY = 1.0f;
-				}
-				else
-				{
-					effect->SpeedX = (Wind * 1.5f);
-					effect->SpeedY = 1.5f;
-				}
+                if (CurrentCount > 0)
+                    CurrentCount--;
+                else
+                    CurrentCount = 0;
 
-				if (windChanged)
-				{
-					// вычисление угла скорости в градусах
-					effect->SpeedAngle = rad2degf(atan2f(effect->SpeedX, effect->SpeedY));
-					// числинное значение скорости
-					effect->SpeedMagnitude = sqrtf(powf(effect->SpeedX, 2) + powf(effect->SpeedY, 2));
-				}
+                continue;
+            }
+            else
+            {
+                effect->X = (float)(x + RandomInt(g_ConfigManager.GameWindowWidth));
+                effect->Y = (float)(y + RandomInt(g_ConfigManager.GameWindowHeight));
+            }
+        }
 
-				float speed_angle = effect->SpeedAngle;
-				float speed_magnitude = effect->SpeedMagnitude;
+        switch (Type)
+        {
+            case WT_RAIN:
+            {
+                float scaleRatio = effect->ScaleRatio;
+                effect->SpeedX = -4.5f - scaleRatio;
+                effect->SpeedY = 5.0f + scaleRatio;
+                break;
+            }
+            case WT_FIERCE_STORM:
+            {
+                effect->SpeedX = Wind;
+                effect->SpeedY = 6.0f;
+                break;
+            }
+            case WT_SNOW:
+            case WT_STORM:
+            {
+                if (Type == WT_SNOW)
+                {
+                    effect->SpeedX = Wind;
+                    effect->SpeedY = 1.0f;
+                }
+                else
+                {
+                    effect->SpeedX = (Wind * 1.5f);
+                    effect->SpeedY = 1.5f;
+                }
 
-				// коэффицент скейлирования (используеться для рандомизации скорости снега)
-				speed_magnitude += effect->ScaleRatio;
+                if (windChanged)
+                {
+                    // вычисление угла скорости в градусах
+                    effect->SpeedAngle = rad2degf(atan2f(effect->SpeedX, effect->SpeedY));
+                    // числинное значение скорости
+                    effect->SpeedMagnitude =
+                        sqrtf(powf(effect->SpeedX, 2) + powf(effect->SpeedY, 2));
+                }
 
-				// тут движение УГЛА силы по синусоиде, ID() снежинки добавляется для смещения фазы
-				// хотя там можно заюзать любое постоянное число, например, порядковый номер снежинки
-				speed_angle += SinOscillate(0.4f, 20, g_Ticks + effect->ID);
+                float speed_angle = effect->SpeedAngle;
+                float speed_magnitude = effect->SpeedMagnitude;
 
-				// обратная проекция на оси X, Y из угла и (скалярного) значения
-				effect->SpeedX = speed_magnitude * sinf(deg2radf(speed_angle));
-				effect->SpeedY = speed_magnitude * cosf(deg2radf(speed_angle));
+                // коэффицент скейлирования (используеться для рандомизации скорости снега)
+                speed_magnitude += effect->ScaleRatio;
 
-				break;
-			}
-			default:
-				break;
-		}
+                // тут движение УГЛА силы по синусоиде, ID() снежинки добавляется для смещения фазы
+                // хотя там можно заюзать любое постоянное число, например, порядковый номер снежинки
+                speed_angle += SinOscillate(0.4f, 20, g_Ticks + effect->ID);
 
-		float speedOffset = passed / SimulationRatio;
+                // обратная проекция на оси X, Y из угла и (скалярного) значения
+                effect->SpeedX = speed_magnitude * sinf(deg2radf(speed_angle));
+                effect->SpeedY = speed_magnitude * cosf(deg2radf(speed_angle));
 
-		switch (Type)
-		{
-			case WT_RAIN:
-			case WT_FIERCE_STORM:
-			{
-				int oldX = (int)effect->X;
-				int oldY = (int)effect->Y;
+                break;
+            }
+            default:
+                break;
+        }
 
-				float ofsx = (effect->SpeedX * speedOffset);
-				float ofsy = (effect->SpeedY * speedOffset);
+        float speedOffset = passed / SimulationRatio;
 
-				effect->X += ofsx;
-				effect->Y += ofsy;
+        switch (Type)
+        {
+            case WT_RAIN:
+            case WT_FIERCE_STORM:
+            {
+                int oldX = (int)effect->X;
+                int oldY = (int)effect->Y;
 
-				const float maxOffsetXY = 5.0f;
+                float ofsx = (effect->SpeedX * speedOffset);
+                float ofsy = (effect->SpeedY * speedOffset);
 
-				if (ofsx >= maxOffsetXY)
-					oldX = (int)(effect->X - maxOffsetXY);
-				else if (ofsx <= -maxOffsetXY)
-					oldX = (int)(effect->X + maxOffsetXY);
+                effect->X += ofsx;
+                effect->Y += ofsy;
 
-				if (ofsy >= maxOffsetXY)
-					oldY = (int)(effect->Y - maxOffsetXY);
-				else if (ofsy <= -maxOffsetXY)
-					oldY = (int)(effect->Y + maxOffsetXY);
+                const float maxOffsetXY = 5.0f;
 
-				g_GL.DrawLine(x + oldX, y + oldY, x + (int)effect->X, y + (int)effect->Y);
+                if (ofsx >= maxOffsetXY)
+                    oldX = (int)(effect->X - maxOffsetXY);
+                else if (ofsx <= -maxOffsetXY)
+                    oldX = (int)(effect->X + maxOffsetXY);
 
-				break;
-			}
-			case WT_SNOW:
-			case WT_STORM:
-			{
-				effect->X += (effect->SpeedX * speedOffset);
-				effect->Y += (effect->SpeedY * speedOffset);
+                if (ofsy >= maxOffsetXY)
+                    oldY = (int)(effect->Y - maxOffsetXY);
+                else if (ofsy <= -maxOffsetXY)
+                    oldY = (int)(effect->Y + maxOffsetXY);
 
-				g_GL.DrawPolygone(x + (int)effect->X, y + (int)effect->Y, 2, 2);
+                g_GL.DrawLine(x + oldX, y + oldY, x + (int)effect->X, y + (int)effect->Y);
 
-				break;
-			}
-			default:
-				break;
-		}
+                break;
+            }
+            case WT_SNOW:
+            case WT_STORM:
+            {
+                effect->X += (effect->SpeedX * speedOffset);
+                effect->Y += (effect->SpeedY * speedOffset);
 
-		++effect;
-	}
+                g_GL.DrawPolygone(x + (int)effect->X, y + (int)effect->Y, 2, 2);
 
-	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-	LastTick = g_Ticks;
+                break;
+            }
+            default:
+                break;
+        }
+
+        ++effect;
+    }
+
+    glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+    LastTick = g_Ticks;
 }
 //---------------------------------------------------------------------------

@@ -14,36 +14,36 @@
 class CGameEffectDrag : public CGameEffect
 {
 public:
-	//!Offset on screen X
-	int OffsetX = 0;
+    //!Offset on screen X
+    int OffsetX = 0;
 
-	//!Offset on screen Y
-	int OffsetY = 0;
+    //!Offset on screen Y
+    int OffsetY = 0;
 
-	//!Last move time stamp
-	uint LastMoveTime = 0;
+    //!Last move time stamp
+    uint LastMoveTime = 0;
 
-	//!Delay for moving
-	uchar MoveDelay = 20;
+    //!Delay for moving
+    uchar MoveDelay = 20;
 
-	/*!
+    /*!
 	Constructor
 	@return
 	*/
-	CGameEffectDrag();
+    CGameEffectDrag();
 
-	/*!
+    /*!
 	Destructor
 	@return
 	*/
-	virtual ~CGameEffectDrag();
+    virtual ~CGameEffectDrag();
 
-	/*!
+    /*!
 	Update effect data
 	@param [__in] parent Parent object
 	@return
 	*/
-	virtual void Update(class CGameObject *parent);
+    virtual void Update(class CGameObject *parent);
 };
 //----------------------------------------------------------------------------------
 #endif

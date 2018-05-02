@@ -14,50 +14,49 @@
 class CCharacterList
 {
 public:
-	int Count = 5;
-	int Selected = 0;
-	bool OnePerson = false;
-	bool Have6Slot = false;
-	bool Have7Slot = false;
-	ushort ClientFlag = 0;
+    int Count = 5;
+    int Selected = 0;
+    bool OnePerson = false;
+    bool Have6Slot = false;
+    bool Have7Slot = false;
+    ushort ClientFlag = 0;
 
-	string LastCharacterName = "";
+    string LastCharacterName = "";
 
 private:
-	//!Память под 7 персонажей
-	string m_Name[7];
+    //!Память под 7 персонажей
+    string m_Name[7];
 
 public:
-	CCharacterList();
-	virtual ~CCharacterList() {}
+    CCharacterList();
+    virtual ~CCharacterList() {}
 
-	/*!
+    /*!
 	Очистка списка
 	@return 
 	*/
-	void Clear();
+    void Clear();
 
-
-	/*!
+    /*!
 	Установить имя персонажа в указанном слоте
 	@param [__in] pos Позиция в списке
 	@param [__in] name Новое имя
 	@return 
 	*/
-	void SetName(intptr_t pos, const string &name);
+    void SetName(intptr_t pos, const string &name);
 
-	/*!
+    /*!
 	Получить имя персонажа в указанном слоте
 	@param [__in] pos Позиция в списке
 	@return Имя персонажа
 	*/
-	string GetName(intptr_t pos) const;
+    string GetName(intptr_t pos) const;
 
-	/*!
+    /*!
 	Получить имя выбранного персонажа
 	@return Имя персонажа
 	*/
-	string GetSelectedName() const;
+    string GetSelectedName() const;
 };
 //----------------------------------------------------------------------------------
 //!Указатель на список персонажей

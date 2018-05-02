@@ -16,7 +16,7 @@
 //----------------------------------------------------------------------------------
 string GetBuildDateTimeStamp()
 {
-	return string(__DATE__);
+    return string(__DATE__);
 }
 //----------------------------------------------------------------------------------
 
@@ -25,7 +25,7 @@ string GetBuildDateTimeStamp()
 #include "GitRevision.h"
 string GetBuildDateTimeStamp()
 {
-	return string(__DATE__ " " __TIME__ " (" GIT_REV_STR ")");
+    return string(__DATE__ " " __TIME__ " (" GIT_REV_STR ")");
 }
 
 #endif

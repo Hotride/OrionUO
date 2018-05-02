@@ -15,17 +15,24 @@
 class CGUIHTMLHitBox : public CGUIHitBox
 {
 private:
-	//!Гамп-родитель
-	class CGUIHTMLGump *m_HTMLGump{ NULL };
+    //!Гамп-родитель
+    class CGUIHTMLGump *m_HTMLGump{ NULL };
 
 public:
-	CGUIHTMLHitBox(class CGUIHTMLGump *htmlGump, int serial, int x, int y, int width, int height, bool callOnMouseUp = false);
-	virtual ~CGUIHTMLHitBox();
+    CGUIHTMLHitBox(
+        class CGUIHTMLGump *htmlGump,
+        int serial,
+        int x,
+        int y,
+        int width,
+        int height,
+        bool callOnMouseUp = false);
+    virtual ~CGUIHTMLHitBox();
 
-	//!Функция прокрутки
-	void Scroll(bool up, int delay);
+    //!Функция прокрутки
+    void Scroll(bool up, int delay);
 
-	virtual bool IsControlHTML() { return true; }
+    virtual bool IsControlHTML() { return true; }
 };
 //----------------------------------------------------------------------------------
 #endif

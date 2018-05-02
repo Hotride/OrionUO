@@ -14,13 +14,13 @@
 class CMultiMap
 {
 public:
-	CMultiMap();
-	~CMultiMap();
+    CMultiMap();
+    ~CMultiMap();
 
-	//Загрузить карту
-	void LoadMap(class CGumpMap *gump, class CGUIExternalTexture *map);
+    //Загрузить карту
+    void LoadMap(class CGumpMap *gump, class CGUIExternalTexture *map);
 
-	bool LoadFacet(class CGumpMap *gump, class CGUIExternalTexture *map, int facet);
+    bool LoadFacet(class CGumpMap *gump, class CGUIExternalTexture *map, int facet);
 };
 //----------------------------------------------------------------------------------
 extern CMultiMap g_MultiMap;

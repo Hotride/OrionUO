@@ -7,51 +7,50 @@ namespace WISP_FILE
 {
 //----------------------------------------------------------------------------------
 CBinaryFileWritter::CBinaryFileWritter()
-: WISP_DATASTREAM::CDataWritter()
+    : WISP_DATASTREAM::CDataWritter()
 {
 }
 //----------------------------------------------------------------------------------
 CBinaryFileWritter::~CBinaryFileWritter()
 {
-	Close();
+    Close();
 }
 //----------------------------------------------------------------------------------
 bool CBinaryFileWritter::Open(const os_path &path)
 {
-	WISPFUN_DEBUG("c2_f1");
-	bool result = false;
+    WISPFUN_DEBUG("c2_f1");
+    bool result = false;
 
-	//if (fs_path_exists(path))
-	{
-		m_File = fs_open(path, FS_WRITE);
-		result = (m_File != nullptr);
+    //if (fs_path_exists(path))
+    {
+        m_File = fs_open(path, FS_WRITE);
+        result = (m_File != nullptr);
+    }
 
-	}
-
-	return result;
+    return result;
 }
 //----------------------------------------------------------------------------------
 void CBinaryFileWritter::Close()
 {
-	WISPFUN_DEBUG("c2_f3");
-	WriteBuffer();
+    WISPFUN_DEBUG("c2_f3");
+    WriteBuffer();
 
-	if (m_File != nullptr)
-	{
-		fs_close(m_File);
-		m_File = nullptr;
-	}
+    if (m_File != nullptr)
+    {
+        fs_close(m_File);
+        m_File = nullptr;
+    }
 }
 //----------------------------------------------------------------------------------
 void CBinaryFileWritter::WriteBuffer()
 {
-	WISPFUN_DEBUG("c2_f4");
-	if (m_File != nullptr && m_Data.size() > 0)
-	{
-		fwrite(&m_Data[0], m_Data.size(), 1, m_File);
-		m_Data.clear();
-	}
+    WISPFUN_DEBUG("c2_f4");
+    if (m_File != nullptr && m_Data.size() > 0)
+    {
+        fwrite(&m_Data[0], m_Data.size(), 1, m_File);
+        m_Data.clear();
+    }
 }
 //----------------------------------------------------------------------------------
-}; //namespace
+}; // namespace WISP_FILE
 //----------------------------------------------------------------------------------

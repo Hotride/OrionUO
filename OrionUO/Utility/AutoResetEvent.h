@@ -9,19 +9,19 @@
 class AutoResetEvent
 {
 public:
-	explicit AutoResetEvent(bool initial = false);
+    explicit AutoResetEvent(bool initial = false);
 
-	void Set();
-	void Reset();
+    void Set();
+    void Reset();
 
-	bool WaitOne();
+    bool WaitOne();
 
 private:
-	AutoResetEvent(const AutoResetEvent&);
-	AutoResetEvent& operator=(const AutoResetEvent&); // non-copyable
-	bool flag_;
-	std::mutex protect_;
-	std::condition_variable signal_;
+    AutoResetEvent(const AutoResetEvent &);
+    AutoResetEvent &operator=(const AutoResetEvent &); // non-copyable
+    bool flag_;
+    std::mutex protect_;
+    std::condition_variable signal_;
 };
 //----------------------------------------------------------------------------------
 #endif

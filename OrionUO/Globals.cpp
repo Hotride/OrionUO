@@ -142,40 +142,15 @@ uint g_Ping = 0;
 
 bool g_DrawAura = false;
 
-ushort g_AbilityList[MAX_ABILITIES_COUNT] =
-{
-	AT_ARMOR_IGNORE,
-	AT_BLEED_ATTACK,
-	AT_CONCUSSION_BLOW,
-	AT_CRUSHING_BLOW,
-	AT_DISARM,
-	AT_DISMOUNT,
-	AT_DOUBLE_STRIKE,
-	AT_INFECTING,
-	AT_MORTAL_STRIKE,
-	AT_MOVING_SHOT,
-	AT_PARALYZING_BLOW,
-	AT_SHADOW_STRIKE,
-	AT_WHIRLWIND_ATTACK,
-	AT_RIDING_SWIPE,
-	AT_FRENZIED_WHIRLWIND,
-	AT_BLOCK,
-	AT_DEFENSE_MASTERY,
-	AT_NERVE_STRIKE,
-	AT_TALON_STRIKE,
-	AT_FEINT,
-	AT_DUAL_WIELD,
-	AT_DOUBLE_SHOT,
-	AT_ARMOR_PIERCE,
-	AT_BLADEWEAVE,
-	AT_FORCE_ARROW,
-	AT_LIGHTNING_ARROW,
-	AT_PSYCHIC_ATTACK,
-	AT_SERPENT_ARROW,
-	AT_FORCE_OF_NATURE,
-	AT_INFUSED_THROW,
-	AT_MYSTIC_ARC,
-	AT_DISROBE
+ushort g_AbilityList[MAX_ABILITIES_COUNT] = {
+    AT_ARMOR_IGNORE,     AT_BLEED_ATTACK,    AT_CONCUSSION_BLOW,    AT_CRUSHING_BLOW,
+    AT_DISARM,           AT_DISMOUNT,        AT_DOUBLE_STRIKE,      AT_INFECTING,
+    AT_MORTAL_STRIKE,    AT_MOVING_SHOT,     AT_PARALYZING_BLOW,    AT_SHADOW_STRIKE,
+    AT_WHIRLWIND_ATTACK, AT_RIDING_SWIPE,    AT_FRENZIED_WHIRLWIND, AT_BLOCK,
+    AT_DEFENSE_MASTERY,  AT_NERVE_STRIKE,    AT_TALON_STRIKE,       AT_FEINT,
+    AT_DUAL_WIELD,       AT_DOUBLE_SHOT,     AT_ARMOR_PIERCE,       AT_BLADEWEAVE,
+    AT_FORCE_ARROW,      AT_LIGHTNING_ARROW, AT_PSYCHIC_ATTACK,     AT_SERPENT_ARROW,
+    AT_FORCE_OF_NATURE,  AT_INFUSED_THROW,   AT_MYSTIC_ARC,         AT_DISROBE
 };
 
 uchar g_Ability[2] = { AT_DISARM, AT_PARALYZING_BLOW };
@@ -196,214 +171,219 @@ uint g_PingTimer = 0;
 //----------------------------------------------------------------------------------
 bool CanBeDraggedByOffset(const WISP_GEOMETRY::CPoint2Di &point)
 {
-	if (g_Target.IsTargeting())
-		return (abs(point.X) >= DRAG_PIXEL_RANGE_WITH_TARGET || abs(point.Y) >= DRAG_PIXEL_RANGE_WITH_TARGET);
+    if (g_Target.IsTargeting())
+        return (
+            abs(point.X) >= DRAG_PIXEL_RANGE_WITH_TARGET ||
+            abs(point.Y) >= DRAG_PIXEL_RANGE_WITH_TARGET);
 
-	return (abs(point.X) >= DRAG_ITEMS_PIXEL_RANGE || abs(point.Y) >= DRAG_ITEMS_PIXEL_RANGE);
+    return (abs(point.X) >= DRAG_ITEMS_PIXEL_RANGE || abs(point.Y) >= DRAG_ITEMS_PIXEL_RANGE);
 }
 //----------------------------------------------------------------------------------
 void TileOffsetOnMonitorToXY(int &ofsX, int &ofsY, int &x, int &y)
 {
-	if (!ofsX)
-		x = y = ofsY / 2;
-	else if (!ofsY)
-	{
-		x = ofsX / 2;
-		y = -x;
-	}
-	else //if (ofsX && ofsY)
-	{
-		int absX = abs(ofsX);
-		int absY = abs(ofsY);
-		x = ofsX;
+    if (!ofsX)
+        x = y = ofsY / 2;
+    else if (!ofsY)
+    {
+        x = ofsX / 2;
+        y = -x;
+    }
+    else //if (ofsX && ofsY)
+    {
+        int absX = abs(ofsX);
+        int absY = abs(ofsY);
+        x = ofsX;
 
-		if (ofsY > ofsX)
-		{
-			if (ofsX < 0 && ofsY < 0)
-				y = absX - absY;
-			else if (ofsX > 0 && ofsY > 0)
-				y = absY - absX;
-		}
-		else if (ofsX > ofsY)
-		{
-			if (ofsX < 0 && ofsY < 0)
-				y = -(absY - absX);
-			else if (ofsX > 0 && ofsY > 0)
-				y = -(absX - absY);
-		}
+        if (ofsY > ofsX)
+        {
+            if (ofsX < 0 && ofsY < 0)
+                y = absX - absY;
+            else if (ofsX > 0 && ofsY > 0)
+                y = absY - absX;
+        }
+        else if (ofsX > ofsY)
+        {
+            if (ofsX < 0 && ofsY < 0)
+                y = -(absY - absX);
+            else if (ofsX > 0 && ofsY > 0)
+                y = -(absX - absY);
+        }
 
-		if (!y && ofsY != ofsX)
-		{
-			if (ofsY < 0)
-				y = -(absX + absY);
-			else
-				y = absX + absY;
-		}
+        if (!y && ofsY != ofsX)
+        {
+            if (ofsY < 0)
+                y = -(absX + absY);
+            else
+                y = absX + absY;
+        }
 
-		y /= 2;
-		x += y;
-	}
+        y /= 2;
+        x += y;
+    }
 }
 //----------------------------------------------------------------------------------
 string ToCamelCase(string text)
 {
-	bool lastSpace = true;
+    bool lastSpace = true;
 
-	for (char &c : text)
-	{
-		if (lastSpace && (c >= 'a' && c <= 'z'))
-			c = 'A' + (c - 'a');
+    for (char &c : text)
+    {
+        if (lastSpace && (c >= 'a' && c <= 'z'))
+            c = 'A' + (c - 'a');
 
-		lastSpace = (c == ' ');
-	}
+        lastSpace = (c == ' ');
+    }
 
-	return text;
+    return text;
 }
 //----------------------------------------------------------------------------------
 int GetDistance(CGameObject *current, CGameObject *target)
 {
-	if (current != NULL && target != NULL)
-	{
-		int distx = abs(target->GetX() - current->GetX());
-		int disty = abs(target->GetY() - current->GetY());
+    if (current != NULL && target != NULL)
+    {
+        int distx = abs(target->GetX() - current->GetX());
+        int disty = abs(target->GetY() - current->GetY());
 
-		if (disty > distx)
-			distx = disty;
+        if (disty > distx)
+            distx = disty;
 
-		return distx;
-	}
+        return distx;
+    }
 
-	return 100500;
+    return 100500;
 }
 //----------------------------------------------------------------------------------
 int GetDistance(CGameObject *current, const WISP_GEOMETRY::CPoint2Di &target)
 {
-	if (current != NULL)
-	{
-		int distx = abs(target.X - current->GetX());
-		int disty = abs(target.Y - current->GetY());
+    if (current != NULL)
+    {
+        int distx = abs(target.X - current->GetX());
+        int disty = abs(target.Y - current->GetY());
 
-		if (disty > distx)
-			distx = disty;
+        if (disty > distx)
+            distx = disty;
 
-		return distx;
-	}
+        return distx;
+    }
 
-	return 100500;
+    return 100500;
 }
 //----------------------------------------------------------------------------------
 int GetDistance(const WISP_GEOMETRY::CPoint2Di &current, CGameObject *target)
 {
-	if (target != NULL)
-	{
-		int distx = abs(target->GetX() - current.X);
-		int disty = abs(target->GetY() - current.Y);
+    if (target != NULL)
+    {
+        int distx = abs(target->GetX() - current.X);
+        int disty = abs(target->GetY() - current.Y);
 
-		if (disty > distx)
-			distx = disty;
+        if (disty > distx)
+            distx = disty;
 
-		return distx;
-	}
+        return distx;
+    }
 
-	return 100500;
+    return 100500;
 }
 //----------------------------------------------------------------------------------
 int GetRemoveDistance(const WISP_GEOMETRY::CPoint2Di &current, CGameObject *target)
 {
-	if (target != NULL)
-	{
-		WISP_GEOMETRY::CPoint2Di targetPoint(target->GetX(), target->GetY());
+    if (target != NULL)
+    {
+        WISP_GEOMETRY::CPoint2Di targetPoint(target->GetX(), target->GetY());
 
-		if (target->NPC && !((CGameCharacter*)target)->m_Steps.empty())
-		{
-			CWalkData &wd = ((CGameCharacter*)target)->m_Steps.back();
+        if (target->NPC && !((CGameCharacter *)target)->m_Steps.empty())
+        {
+            CWalkData &wd = ((CGameCharacter *)target)->m_Steps.back();
 
-			targetPoint = WISP_GEOMETRY::CPoint2Di(wd.X, wd.Y);
-		}
+            targetPoint = WISP_GEOMETRY::CPoint2Di(wd.X, wd.Y);
+        }
 
-		int distx = abs(targetPoint.X - current.X);
-		int disty = abs(targetPoint.Y - current.Y);
+        int distx = abs(targetPoint.X - current.X);
+        int disty = abs(targetPoint.Y - current.Y);
 
-		if (disty > distx)
-			distx = disty;
+        if (disty > distx)
+            distx = disty;
 
-		return distx;
-	}
+        return distx;
+    }
 
-	return 100500;
+    return 100500;
 }
 //----------------------------------------------------------------------------------
-bool CheckMultiDistance(const WISP_GEOMETRY::CPoint2Di &current, CGameObject *target, int maxDistance)
+bool CheckMultiDistance(
+    const WISP_GEOMETRY::CPoint2Di &current, CGameObject *target, int maxDistance)
 {
-	bool result = false;
+    bool result = false;
 
-	if (target != NULL)
-	{
-		maxDistance += ((CGameItem*)target)->MultiDistanceBonus;
+    if (target != NULL)
+    {
+        maxDistance += ((CGameItem *)target)->MultiDistanceBonus;
 
-		result = ((abs(target->GetX() - current.X) <= maxDistance) && (abs(target->GetY() - current.Y) <= maxDistance));
-	}
+        result =
+            ((abs(target->GetX() - current.X) <= maxDistance) &&
+             (abs(target->GetY() - current.Y) <= maxDistance));
+    }
 
-	return result;
+    return result;
 }
 //----------------------------------------------------------------------------------
 int GetDistance(const WISP_GEOMETRY::CPoint2Di &current, const WISP_GEOMETRY::CPoint2Di &target)
 {
-	int distx = abs(target.X - current.X);
-	int disty = abs(target.Y - current.Y);
+    int distx = abs(target.X - current.X);
+    int disty = abs(target.Y - current.Y);
 
-	if (disty > distx)
-		distx = disty;
+    if (disty > distx)
+        distx = disty;
 
-	return distx;
+    return distx;
 }
 //----------------------------------------------------------------------------------
 int GetTopObjDistance(CGameObject *current, CGameObject *target)
 {
-	if (current != NULL && target != NULL)
-	{
-		while (target != NULL && target->Container != 0xFFFFFFFF)
-			target = g_World->FindWorldObject(target->Container);
+    if (current != NULL && target != NULL)
+    {
+        while (target != NULL && target->Container != 0xFFFFFFFF)
+            target = g_World->FindWorldObject(target->Container);
 
-		if (target != NULL)
-		{
-			int distx = abs(target->GetX() - current->GetX());
-			int disty = abs(target->GetY() - current->GetY());
+        if (target != NULL)
+        {
+            int distx = abs(target->GetX() - current->GetX());
+            int disty = abs(target->GetY() - current->GetY());
 
-			if (disty > distx)
-				distx = disty;
+            if (disty > distx)
+                distx = disty;
 
-			return distx;
-		}
-	}
+            return distx;
+        }
+    }
 
-	return 100500;
+    return 100500;
 }
 //---------------------------------------------------------------------------
 const char *GetReagentName(ushort id)
 {
-	switch (id)
-	{
-		case 0x0F7A:
-			return "Black pearl";
-		case 0x0F7B:
-			return "Bloodmoss";
-		case 0x0F84:
-			return "Garlic";
-		case 0x0F85:
-			return "Ginseng";
-		case 0x0F86:
-			return "Mandrake root";
-		case 0x0F88:
-			return "Nightshade";
-		case 0x0F8C:
-			return "Sulfurous ash";
-		case 0x0F8D:
-			return "Spiders silk";
-		default:
-			break;
-	}
+    switch (id)
+    {
+        case 0x0F7A:
+            return "Black pearl";
+        case 0x0F7B:
+            return "Bloodmoss";
+        case 0x0F84:
+            return "Garlic";
+        case 0x0F85:
+            return "Ginseng";
+        case 0x0F86:
+            return "Mandrake root";
+        case 0x0F88:
+            return "Nightshade";
+        case 0x0F8C:
+            return "Sulfurous ash";
+        case 0x0F8D:
+            return "Spiders silk";
+        default:
+            break;
+    }
 
-	return "";
+    return "";
 }
 //----------------------------------------------------------------------------------

@@ -7,7 +7,7 @@ namespace WISP_NETWORK
 {
 //----------------------------------------------------------------------------------
 CPacketReader::CPacketReader()
-:WISP_DATASTREAM::CDataReader()
+    : WISP_DATASTREAM::CDataReader()
 {
 }
 //----------------------------------------------------------------------------------
@@ -17,38 +17,38 @@ CPacketReader::~CPacketReader()
 //----------------------------------------------------------------------------------
 void CPacketReader::Read(class CConnection *connection)
 {
-	WISPFUN_DEBUG("c10_f1");
-	if (connection->ReadyRead())
-	{
-		if (!connection->Read())
-		{
-			OnReadFailed();
-			return;
-		}
+    WISPFUN_DEBUG("c10_f1");
+    if (connection->ReadyRead())
+    {
+        if (!connection->Read())
+        {
+            OnReadFailed();
+            return;
+        }
 
-		WISP_NETWORK::CPacketMessage *parser = connection->m_MessageParser;
+        WISP_NETWORK::CPacketMessage *parser = connection->m_MessageParser;
 
-		while (true)
-		{
-			int offset = 0;
-			UCHAR_LIST packet = parser->Read(this, offset);
+        while (true)
+        {
+            int offset = 0;
+            UCHAR_LIST packet = parser->Read(this, offset);
 
-			if (!packet.size())
-				break;
+            if (!packet.size())
+                break;
 
-			if (MaxPacketStackSize)
-			{
-				m_PacketsStack.push_back(packet);
+            if (MaxPacketStackSize)
+            {
+                m_PacketsStack.push_back(packet);
 
-				if ((int)m_PacketsStack.size() > MaxPacketStackSize)
-					m_PacketsStack.pop_front();
-			}
+                if ((int)m_PacketsStack.size() > MaxPacketStackSize)
+                    m_PacketsStack.pop_front();
+            }
 
-			SetData((puchar)&packet[0], packet.size(), offset);
-			OnPacket();
-		}
-	}
+            SetData((puchar)&packet[0], packet.size(), offset);
+            OnPacket();
+        }
+    }
 }
 //----------------------------------------------------------------------------------
-}; //namespace
+}; // namespace WISP_NETWORK
 //----------------------------------------------------------------------------------

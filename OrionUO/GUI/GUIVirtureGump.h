@@ -15,10 +15,10 @@
 class CGUIVirtureGump : public CGUIDrawObject
 {
 public:
-	CGUIVirtureGump(ushort graphic, int x, int y);
-	virtual ~CGUIVirtureGump();
+    CGUIVirtureGump(ushort graphic, int x, int y);
+    virtual ~CGUIVirtureGump();
 
-	virtual bool Select();
+    virtual bool Select();
 };
 //----------------------------------------------------------------------------------
 #endif

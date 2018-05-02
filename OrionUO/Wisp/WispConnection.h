@@ -12,36 +12,35 @@ namespace WISP_NETWORK
 class CConnection
 {
 public:
-	SOCKET m_Socket;
+    SOCKET m_Socket;
 
-	int DataReady = 0;
-	int Port = 0;
+    int DataReady = 0;
+    int Port = 0;
 
-	int Af = 0;
-	int Type = 0;
-	int Protocol = 0;
+    int Af = 0;
+    int Type = 0;
+    int Protocol = 0;
 
-	bool Connected = 0;
+    bool Connected = 0;
 
-	CConnection(int af = AF_INET, int type = SOCK_STREAM, int protocol = IPPROTO_IP);
-	virtual ~CConnection();
+    CConnection(int af = AF_INET, int type = SOCK_STREAM, int protocol = IPPROTO_IP);
+    virtual ~CConnection();
 
-	class CPacketMessage *m_MessageParser;
+    class CPacketMessage *m_MessageParser;
 
-	virtual bool Connect(const string &address, int port);
-	void Disconnect();
+    virtual bool Connect(const string &address, int port);
+    void Disconnect();
 
-	bool ReadyRead();
+    bool ReadyRead();
 
-	virtual UCHAR_LIST Decompression(UCHAR_LIST data) { return data; }
+    virtual UCHAR_LIST Decompression(UCHAR_LIST data) { return data; }
 
-	bool Read(int maxSize = 0x1000);
+    bool Read(int maxSize = 0x1000);
 
-	int Send(puchar data, int size);
-	int Send(const UCHAR_LIST &data);
+    int Send(puchar data, int size);
+    int Send(const UCHAR_LIST &data);
 };
 //----------------------------------------------------------------------------------
-}; //namespace
+}; // namespace WISP_NETWORK
 //----------------------------------------------------------------------------------
 #endif
-

@@ -15,11 +15,11 @@
 class CGUIPage : public CBaseGUI
 {
 public:
-	//!Индекс страницы
-	int Index = 0;
+    //!Индекс страницы
+    int Index = 0;
 
-	CGUIPage(int index);
-	virtual ~CGUIPage();
+    CGUIPage(int index);
+    virtual ~CGUIPage();
 };
 //----------------------------------------------------------------------------------
 #endif

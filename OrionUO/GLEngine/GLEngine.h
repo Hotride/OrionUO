@@ -14,17 +14,19 @@ typedef deque<WISP_GEOMETRY::CRect> SCISSOR_LIST;
 //----------------------------------------------------------------------------------
 class CGLEngine;
 //----------------------------------------------------------------------------------
-typedef void (CGLEngine::*BIND_TEXTURE_16_FUNCTION)(CGLTexture&, int, int, pushort);
-typedef void (CGLEngine::*BIND_TEXTURE_32_FUNCTION)(CGLTexture&, int, int, puint);
+typedef void (CGLEngine::*BIND_TEXTURE_16_FUNCTION)(CGLTexture &, int, int, pushort);
+typedef void (CGLEngine::*BIND_TEXTURE_32_FUNCTION)(CGLTexture &, int, int, puint);
 
-typedef void (CGLEngine::*DRAW_LAND_TEXTURE_FUNCTION)(const CGLTexture&, int, int, class CLandObject*);
-typedef void (CGLEngine::*DRAW_TEXTURE_FUNCTION)(const CGLTexture&, int, int);
-typedef void (CGLEngine::*DRAW_TEXTURE_ROTATED_FUNCTION)(const CGLTexture&, int, int, float);
-typedef void (CGLEngine::*DRAW_TEXTURE_MIRRORED_FUNCTION)(const CGLTexture&, int, int, bool);
-typedef void (CGLEngine::*DRAW_TEXTURE_SITTING_FUNCTION)(const CGLTexture&, int, int, bool, float, float, float);
-typedef void (CGLEngine::*DRAW_TEXTURE_SHADOW_FUNCTION)(const CGLTexture&, int, int, bool);
-typedef void (CGLEngine::*DRAW_TEXTURE_STRETCHED_FUNCTION)(const CGLTexture&, int, int, int, int);
-typedef void (CGLEngine::*DRAW_TEXTURE_RESIZEPIC_FUNCTION)(CGLTexture**, int, int, int, int);
+typedef void (CGLEngine::*DRAW_LAND_TEXTURE_FUNCTION)(
+    const CGLTexture &, int, int, class CLandObject *);
+typedef void (CGLEngine::*DRAW_TEXTURE_FUNCTION)(const CGLTexture &, int, int);
+typedef void (CGLEngine::*DRAW_TEXTURE_ROTATED_FUNCTION)(const CGLTexture &, int, int, float);
+typedef void (CGLEngine::*DRAW_TEXTURE_MIRRORED_FUNCTION)(const CGLTexture &, int, int, bool);
+typedef void (CGLEngine::*DRAW_TEXTURE_SITTING_FUNCTION)(
+    const CGLTexture &, int, int, bool, float, float, float);
+typedef void (CGLEngine::*DRAW_TEXTURE_SHADOW_FUNCTION)(const CGLTexture &, int, int, bool);
+typedef void (CGLEngine::*DRAW_TEXTURE_STRETCHED_FUNCTION)(const CGLTexture &, int, int, int, int);
+typedef void (CGLEngine::*DRAW_TEXTURE_RESIZEPIC_FUNCTION)(CGLTexture **, int, int, int, int);
 //----------------------------------------------------------------------------------
 //Указатели на функции рисования, в соответствии с текущим контекстом устройства
 //Загрузка текстур 16 и 32 бит
@@ -70,145 +72,154 @@ extern DRAW_TEXTURE_RESIZEPIC_FUNCTION g_GL_DrawResizepic_Ptr;
 class CGLEngine
 {
 public:
-	HDC DC = 0;
-	HGLRC RC = 0;
-	GLuint OldTexture = 0;
-	bool Drawing = false;
-	bool CanUseFrameBuffer = false;
-	bool CanUseBuffer = false;
-	float SittingCharacterOffset = 8.0f;
-	GLuint PositionBuffer = 0;
-	bool IgnoreHitMap = false;
+    HDC DC = 0;
+    HGLRC RC = 0;
+    GLuint OldTexture = 0;
+    bool Drawing = false;
+    bool CanUseFrameBuffer = false;
+    bool CanUseBuffer = false;
+    float SittingCharacterOffset = 8.0f;
+    GLuint PositionBuffer = 0;
+    bool IgnoreHitMap = false;
 
-	SDL_GLContext m_context;
+    SDL_GLContext m_context;
+
 private:
-	bool GLSetupPixelFormat();
+    bool GLSetupPixelFormat();
 
-	SCISSOR_LIST m_ScissorList;
+    SCISSOR_LIST m_ScissorList;
 
 public:
-	CGLEngine();
-	virtual ~CGLEngine();
-	
-	//Инициализация OpenGL
-	bool Install();
+    CGLEngine();
+    virtual ~CGLEngine();
 
-	//Завершение работы с OpenGL
-	void Uninstall();
+    //Инициализация OpenGL
+    bool Install();
 
-	//Обновление области вывода
-	void UpdateRect();
+    //Завершение работы с OpenGL
+    void Uninstall();
 
-	//Очистить экран и начать рисование
-	void BeginDraw();
+    //Обновление области вывода
+    void UpdateRect();
 
-	//Завершить рисование и вывести все нарисованное на экран
-	void EndDraw();
+    //Очистить экран и начать рисование
+    void BeginDraw();
 
-	//Включить буфер трафарета
-	void BeginStencil();
+    //Завершить рисование и вывести все нарисованное на экран
+    void EndDraw();
 
-	//Выключить буфер трафарета
-	void EndStencil();
+    //Включить буфер трафарета
+    void BeginStencil();
 
-	//Указать область рисования
-	void ViewPortScaled(int x, int y, int width, int height);
+    //Выключить буфер трафарета
+    void EndStencil();
 
-	//Указать область рисования
-	void ViewPort(int x, int y, int width, int height);
+    //Указать область рисования
+    void ViewPortScaled(int x, int y, int width, int height);
 
-	//Восстановить стандартную область рисования
-	void RestorePort();
+    //Указать область рисования
+    void ViewPort(int x, int y, int width, int height);
 
-	//Указать область рисования (ножницами, сохраняет мартицу)
-	void PushScissor(int x, int y, int width, int height);
-	void PushScissor(const WISP_GEOMETRY::CPoint2Di &position, int width, int height);
-	void PushScissor(int x, int y, const WISP_GEOMETRY::CSize &size);
-	void PushScissor(const WISP_GEOMETRY::CPoint2Di &position, const WISP_GEOMETRY::CSize &size);
-	void PushScissor(const WISP_GEOMETRY::CRect &rect);
+    //Восстановить стандартную область рисования
+    void RestorePort();
 
-	void PopScissor();
+    //Указать область рисования (ножницами, сохраняет мартицу)
+    void PushScissor(int x, int y, int width, int height);
+    void PushScissor(const WISP_GEOMETRY::CPoint2Di &position, int width, int height);
+    void PushScissor(int x, int y, const WISP_GEOMETRY::CSize &size);
+    void PushScissor(const WISP_GEOMETRY::CPoint2Di &position, const WISP_GEOMETRY::CSize &size);
+    void PushScissor(const WISP_GEOMETRY::CRect &rect);
 
-	void ClearScissorList();
+    void PopScissor();
 
-	inline void BindTexture(GLuint texture);
+    void ClearScissorList();
 
+    inline void BindTexture(GLuint texture);
 
+    //Нарисовать линию
+    void DrawLine(int x, int y, int targetX, int targetY);
 
-	//Нарисовать линию
-	void DrawLine(int x, int y, int targetX, int targetY);
+    //Нарисовать прямоугольник
+    void DrawPolygone(int x, int y, int width, int height);
 
-	//Нарисовать прямоугольник
-	void DrawPolygone(int x, int y, int width, int height);
+    //Нарисовать круг
+    void DrawCircle(float x, float y, float radius, int gradientMode = 0);
 
-	//Нарисовать круг
-	void DrawCircle(float x, float y, float radius, int gradientMode = 0);
+    //Функции OpenGL 1x
 
+    //Загрузка текстур 16 и 32 бит
+    void GL1_BindTexture16(CGLTexture &texture, int width, int height, pushort pixels);
+    void GL1_BindTexture32(CGLTexture &texture, int width, int height, puint pixels);
 
+    //Нарисовать текстуру ландшафта
+    void GL1_DrawLandTexture(const CGLTexture &texture, int x, int y, CLandObject *land);
 
-	//Функции OpenGL 1x
+    //Нарисовать текстуру
+    void GL1_Draw(const CGLTexture &texture, int x, int y);
 
-	//Загрузка текстур 16 и 32 бит
-	void GL1_BindTexture16(CGLTexture &texture, int width, int height, pushort pixels);
-	void GL1_BindTexture32(CGLTexture &texture, int width, int height, puint pixels);
+    //Нарисовать повернутую текстуру
+    void GL1_DrawRotated(const CGLTexture &texture, int x, int y, float angle);
 
-	//Нарисовать текстуру ландшафта
-	void GL1_DrawLandTexture(const CGLTexture &texture, int x, int y, CLandObject *land);
+    //Нарисовать текстуру с возможностью зеркального отражения
+    void GL1_DrawMirrored(const CGLTexture &texture, int x, int y, bool mirror);
 
-	//Нарисовать текстуру
-	void GL1_Draw(const CGLTexture &texture, int x, int y);
+    //Нарисовать текстуру сидячего персонажа
+    void GL1_DrawSitting(
+        const CGLTexture &texture,
+        int x,
+        int y,
+        bool mirror,
+        float h3mod,
+        float h6mod,
+        float h9mod);
 
-	//Нарисовать повернутую текстуру
-	void GL1_DrawRotated(const CGLTexture &texture, int x, int y, float angle);
+    //Нарисовать тень
+    void GL1_DrawShadow(const CGLTexture &texture, int x, int y, bool mirror);
 
-	//Нарисовать текстуру с возможностью зеркального отражения
-	void GL1_DrawMirrored(const CGLTexture &texture, int x, int y, bool mirror);
+    //Замостить текстуру на заданные габариты
+    void GL1_DrawStretched(const CGLTexture &texture, int x, int y, int drawWidth, int drawHeight);
 
-	//Нарисовать текстуру сидячего персонажа
-	void GL1_DrawSitting(const CGLTexture &texture, int x, int y, bool mirror, float h3mod, float h6mod, float h9mod);
+    //Нарисовать фон
+    void GL1_DrawResizepic(CGLTexture **th, int x, int y, int width, int height);
 
-	//Нарисовать тень
-	void GL1_DrawShadow(const CGLTexture &texture, int x, int y, bool mirror);
+    //Функции OpenGL 2x
 
-	//Замостить текстуру на заданные габариты
-	void GL1_DrawStretched(const CGLTexture &texture, int x, int y, int drawWidth, int drawHeight);
+    void GL2_CreateArrays(CGLTexture &texture, int width, int height);
 
-	//Нарисовать фон
-	void GL1_DrawResizepic(CGLTexture **th, int x, int y, int width, int height);
+    //Загрузка текстур 16 и 32 бит
+    void GL2_BindTexture16(CGLTexture &texture, int width, int height, pushort pixels);
+    void GL2_BindTexture32(CGLTexture &texture, int width, int height, puint pixels);
 
+    //Нарисовать текстуру ландшафта
+    void GL2_DrawLandTexture(const CGLTexture &texture, int x, int y, CLandObject *land);
 
+    //Нарисовать текстуру
+    void GL2_Draw(const CGLTexture &texture, int x, int y);
 
-	//Функции OpenGL 2x
+    //Нарисовать повернутую текстуру
+    void GL2_DrawRotated(const CGLTexture &texture, int x, int y, float angle);
 
-	void GL2_CreateArrays(CGLTexture &texture, int width, int height);
+    //Нарисовать текстуру с возможностью зеркального отражения
+    void GL2_DrawMirrored(const CGLTexture &texture, int x, int y, bool mirror);
 
-	//Загрузка текстур 16 и 32 бит
-	void GL2_BindTexture16(CGLTexture &texture, int width, int height, pushort pixels);
-	void GL2_BindTexture32(CGLTexture &texture, int width, int height, puint pixels);
+    //Нарисовать текстуру сидячего персонажа
+    void GL2_DrawSitting(
+        const CGLTexture &texture,
+        int x,
+        int y,
+        bool mirror,
+        float h3mod,
+        float h6mod,
+        float h9mod);
 
-	//Нарисовать текстуру ландшафта
-	void GL2_DrawLandTexture(const CGLTexture &texture, int x, int y, CLandObject *land);
+    //Нарисовать тень
+    void GL2_DrawShadow(const CGLTexture &texture, int x, int y, bool mirror);
 
-	//Нарисовать текстуру
-	void GL2_Draw(const CGLTexture &texture, int x, int y);
+    //Замостить текстуру на заданные габариты
+    void GL2_DrawStretched(const CGLTexture &texture, int x, int y, int drawWidth, int drawHeight);
 
-	//Нарисовать повернутую текстуру
-	void GL2_DrawRotated(const CGLTexture &texture, int x, int y, float angle);
-
-	//Нарисовать текстуру с возможностью зеркального отражения
-	void GL2_DrawMirrored(const CGLTexture &texture, int x, int y, bool mirror);
-
-	//Нарисовать текстуру сидячего персонажа
-	void GL2_DrawSitting(const CGLTexture &texture, int x, int y, bool mirror, float h3mod, float h6mod, float h9mod);
-
-	//Нарисовать тень
-	void GL2_DrawShadow(const CGLTexture &texture, int x, int y, bool mirror);
-
-	//Замостить текстуру на заданные габариты
-	void GL2_DrawStretched(const CGLTexture &texture, int x, int y, int drawWidth, int drawHeight);
-
-	//Нарисовать фон
-	void GL2_DrawResizepic(CGLTexture **th, int x, int y, int width, int height);
+    //Нарисовать фон
+    void GL2_DrawResizepic(CGLTexture **th, int x, int y, int width, int height);
 };
 //---------------------------------------------------------------------------
 extern CGLEngine g_GL;

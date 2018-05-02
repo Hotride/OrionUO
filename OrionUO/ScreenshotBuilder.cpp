@@ -24,77 +24,94 @@ CScreenshotBuilder::~CScreenshotBuilder()
 //---------------------------------------------------------------------------
 void CScreenshotBuilder::SaveScreen()
 {
-	WISPFUN_DEBUG("c204_f1");
-	SaveScreen(0, 0, g_OrionWindow.GetSize().Width, g_OrionWindow.GetSize().Height);
+    WISPFUN_DEBUG("c204_f1");
+    SaveScreen(0, 0, g_OrionWindow.GetSize().Width, g_OrionWindow.GetSize().Height);
 }
 //---------------------------------------------------------------------------
 void CScreenshotBuilder::SaveScreen(int x, int y, int width, int height)
 {
-	WISPFUN_DEBUG("c204_f2");
-	auto path = g_App.ExeFilePath("snapshots");
-	fs_path_create(path);
+    WISPFUN_DEBUG("c204_f2");
+    auto path = g_App.ExeFilePath("snapshots");
+    fs_path_create(path);
 
-	SYSTEMTIME st;
-	GetLocalTime(&st);
+    SYSTEMTIME st;
+    GetLocalTime(&st);
 
-	char buf[100] = { 0 };
+    char buf[100] = { 0 };
 
-	sprintf_s(buf, "/snapshot_d(%i.%i.%i)_t(%i.%i.%i_%i)", st.wYear, st.wMonth, st.wDay, st.wHour, st.wMinute, st.wSecond, st.wMilliseconds);
+    sprintf_s(
+        buf,
+        "/snapshot_d(%i.%i.%i)_t(%i.%i.%i_%i)",
+        st.wYear,
+        st.wMonth,
+        st.wDay,
+        st.wHour,
+        st.wMinute,
+        st.wSecond,
+        st.wMilliseconds);
 
-	path += ToPath(buf);
+    path += ToPath(buf);
 
-	UINT_LIST pixels = GetScenePixels(x, y, width, height);
+    UINT_LIST pixels = GetScenePixels(x, y, width, height);
 
-	FIBITMAP *fBmp = FreeImage_ConvertFromRawBits((puchar)&pixels[0], width, height, width * 4, 32, 0, 0, 0);
+    FIBITMAP *fBmp =
+        FreeImage_ConvertFromRawBits((puchar)&pixels[0], width, height, width * 4, 32, 0, 0, 0);
 
-	FREE_IMAGE_FORMAT format = FIF_BMP;
+    FREE_IMAGE_FORMAT format = FIF_BMP;
 
-	switch (g_ConfigManager.ScreenshotFormat)
-	{
-		case SF_PNG:
-		{
-			path += ToPath(".png");
-			format = FIF_PNG;
-			break;
-		}
-		case SF_TIFF:
-		{
-			path += ToPath(".tiff");
-			format = FIF_TIFF;
-			break;
-		}
-		case SF_JPEG:
-		{
-			path += ToPath(".jpeg");
-			format = FIF_JPEG;
-			break;
-		}
-		default:
-		{
-			path += ToPath(".bmp");
-			format = FIF_BMP;
-			break;
-		}
-	}
+    switch (g_ConfigManager.ScreenshotFormat)
+    {
+        case SF_PNG:
+        {
+            path += ToPath(".png");
+            format = FIF_PNG;
+            break;
+        }
+        case SF_TIFF:
+        {
+            path += ToPath(".tiff");
+            format = FIF_TIFF;
+            break;
+        }
+        case SF_JPEG:
+        {
+            path += ToPath(".jpeg");
+            format = FIF_JPEG;
+            break;
+        }
+        default:
+        {
+            path += ToPath(".bmp");
+            format = FIF_BMP;
+            break;
+        }
+    }
 
-	FreeImage_Save(format, fBmp, CStringFromPath(path));
+    FreeImage_Save(format, fBmp, CStringFromPath(path));
 
-	FreeImage_Unload(fBmp);
+    FreeImage_Unload(fBmp);
 
-	if (g_GameState >= GS_GAME)
-		g_Orion.CreateTextMessageF(3, 0, "Screenshot saved to: %s", CStringFromPath(path));
+    if (g_GameState >= GS_GAME)
+        g_Orion.CreateTextMessageF(3, 0, "Screenshot saved to: %s", CStringFromPath(path));
 }
 //---------------------------------------------------------------------------
 UINT_LIST CScreenshotBuilder::GetScenePixels(int x, int y, int width, int height)
 {
-	WISPFUN_DEBUG("c204_f3");
-	UINT_LIST pixels(width * height);
+    WISPFUN_DEBUG("c204_f3");
+    UINT_LIST pixels(width * height);
 
-	glReadPixels(x, g_OrionWindow.GetSize().Height - y - height, width, height, GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, &pixels[0]);
+    glReadPixels(
+        x,
+        g_OrionWindow.GetSize().Height - y - height,
+        width,
+        height,
+        GL_BGRA,
+        GL_UNSIGNED_INT_8_8_8_8_REV,
+        &pixels[0]);
 
-	for (uint &i : pixels)
-		i |= 0xFF000000;
+    for (uint &i : pixels)
+        i |= 0xFF000000;
 
-	return pixels;
+    return pixels;
 }
 //---------------------------------------------------------------------------

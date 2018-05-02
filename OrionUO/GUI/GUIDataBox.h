@@ -16,14 +16,14 @@
 class CGUIDataBox : public CGUIPolygonal
 {
 public:
-	CGUIDataBox();
-	virtual ~CGUIDataBox();
+    CGUIDataBox();
+    virtual ~CGUIDataBox();
 
-	virtual void PrepareTextures();
+    virtual void PrepareTextures();
 
-	virtual bool EntryPointerHere();
+    virtual bool EntryPointerHere();
 
-	virtual bool Select() { return true; }
+    virtual bool Select() { return true; }
 };
 //----------------------------------------------------------------------------------
 #endif

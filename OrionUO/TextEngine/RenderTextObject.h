@@ -14,19 +14,19 @@
 class CRenderTextObject : public CRenderObject
 {
 public:
-	bool Transparent = false;
+    bool Transparent = false;
 
-	CRenderTextObject();
-	virtual ~CRenderTextObject();
+    CRenderTextObject();
+    virtual ~CRenderTextObject();
 
-	CRenderTextObject *m_NextDraw{ NULL };
-	CRenderTextObject *m_PrevDraw{ NULL };
+    CRenderTextObject *m_NextDraw{ NULL };
+    CRenderTextObject *m_PrevDraw{ NULL };
 
-	//Вытащить из очереди
-	void UnlinkDraw();
+    //Вытащить из очереди
+    void UnlinkDraw();
 
-	//Наверх очереди
-	void ToTop();
+    //Наверх очереди
+    void ToTop();
 };
 //----------------------------------------------------------------------------------
 #endif

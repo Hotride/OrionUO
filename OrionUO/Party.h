@@ -13,27 +13,27 @@
 class CParty
 {
 public:
-	//Серийник лидера пати
-	uint Leader = 0;
-	//Серийник пригласившего в пати
-	uint Inviter = 0;
-	//Может ли группа лутать труп игрока
-	bool CanLoot = false;
+    //Серийник лидера пати
+    uint Leader = 0;
+    //Серийник пригласившего в пати
+    uint Inviter = 0;
+    //Может ли группа лутать труп игрока
+    bool CanLoot = false;
 
-	CParty();
-	~CParty();
+    CParty();
+    ~CParty();
 
-	//Члены группы
-	CPartyObject Member[10];
+    //Члены группы
+    CPartyObject Member[10];
 
-	//Обработка пакетов пати
-	void ParsePacketData(WISP_DATASTREAM::CDataReader &reader);
+    //Обработка пакетов пати
+    void ParsePacketData(WISP_DATASTREAM::CDataReader &reader);
 
-	//Содержит ли пати игрока с данным серийником
-	bool Contains(int serial);
+    //Содержит ли пати игрока с данным серийником
+    bool Contains(int serial);
 
-	//Очистить пати
-	void Clear();
+    //Очистить пати
+    void Clear();
 };
 //----------------------------------------------------------------------------------
 extern CParty g_Party;

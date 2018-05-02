@@ -14,30 +14,30 @@
 class CGameEffectMoving : public CGameEffectDrag
 {
 public:
-	//!Effect's angle
-	float Angle = 0.0f;
+    //!Effect's angle
+    float Angle = 0.0f;
 
-	//!Offset in the world Z
-	int OffsetZ = 0;
+    //!Offset in the world Z
+    int OffsetZ = 0;
 
-	/*!
+    /*!
 	Constructor
 	@return
 	*/
-	CGameEffectMoving();
+    CGameEffectMoving();
 
-	/*!
+    /*!
 	Destructor
 	@return
 	*/
-	virtual ~CGameEffectMoving();
+    virtual ~CGameEffectMoving();
 
-	/*!
+    /*!
 	Update effect data
 	@param [__in] parent Parent object
 	@return
 	*/
-	virtual void Update(class CGameObject *parent);
+    virtual void Update(class CGameObject *parent);
 };
 //----------------------------------------------------------------------------------
 #endif

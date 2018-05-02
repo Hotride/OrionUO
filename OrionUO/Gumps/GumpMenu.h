@@ -13,25 +13,25 @@
 class CGumpMenu : public CGump
 {
 public:
-	string Text = "";
-	bool TextChanged = false;
+    string Text = "";
+    bool TextChanged = false;
 
 protected:
-	virtual void CalculateGumpState();
+    virtual void CalculateGumpState();
 
 public:
-	CGumpMenu(uint serial, uint id, short x, short y);
-	virtual ~CGumpMenu();
+    CGumpMenu(uint serial, uint id, short x, short y);
+    virtual ~CGumpMenu();
 
-	static const int ID_GM_HTMLGUMP = 1000;
+    static const int ID_GM_HTMLGUMP = 1000;
 
-	CGUIText *m_TextObject{ NULL };
+    CGUIText *m_TextObject{ NULL };
 
-	void SendMenuResponse(int index);
-	
-	virtual void PrepareContent();
+    void SendMenuResponse(int index);
 
-	virtual bool OnLeftMouseButtonDoubleClick();
+    virtual void PrepareContent();
+
+    virtual bool OnLeftMouseButtonDoubleClick();
 };
 //----------------------------------------------------------------------------------
 #endif

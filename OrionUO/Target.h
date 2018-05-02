@@ -14,87 +14,87 @@
 class CTarget
 {
 public:
-	//Тип объекта прицела
-	uchar Type = 0;
-	//Тип прицела
-	uchar CursorType = 0;
-	//Мульти на таргете
-	ushort MultiGraphic = 0;
-	//Мульти на таргете X
-	ushort MultiX = 0;
-	//Мульти на таргете Y
-	ushort MultiY = 0;
-	//Серийник объекта, к которому привязан прицел
-	uint CursorID = 0;
-	//Флаг состояния прицела
-	bool Targeting = false;
+    //Тип объекта прицела
+    uchar Type = 0;
+    //Тип прицела
+    uchar CursorType = 0;
+    //Мульти на таргете
+    ushort MultiGraphic = 0;
+    //Мульти на таргете X
+    ushort MultiX = 0;
+    //Мульти на таргете Y
+    ushort MultiY = 0;
+    //Серийник объекта, к которому привязан прицел
+    uint CursorID = 0;
+    //Флаг состояния прицела
+    bool Targeting = false;
 
 private:
-	//Текущие и последний данные прицела
-	uchar m_Data[19];
-	uchar m_LastData[19];
+    //Текущие и последний данные прицела
+    uchar m_Data[19];
+    uchar m_LastData[19];
 
-	//Список объектов мульти на таргете
-	CMulti *m_Multi{ NULL };
+    //Список объектов мульти на таргете
+    CMulti *m_Multi{ NULL };
 
-	//Добавить мульти-объект
-	void AddMultiObject(CMultiObject *obj);
+    //Добавить мульти-объект
+    void AddMultiObject(CMultiObject *obj);
 
 public:
-	CTarget();
-	~CTarget() {}
+    CTarget();
+    ~CTarget() {}
 
-	//Послать таргет на объект
-	void SetLastTargetObject(int serial);
+    //Послать таргет на объект
+    void SetLastTargetObject(int serial);
 
-	//Установить данные прицела
-	void SetData(WISP_DATASTREAM::CDataReader &reader);
+    //Установить данные прицела
+    void SetData(WISP_DATASTREAM::CDataReader &reader);
 
-	//Установить данные мульти-таргета
-	void SetMultiData(WISP_DATASTREAM::CDataReader &reader);
+    //Установить данные мульти-таргета
+    void SetMultiData(WISP_DATASTREAM::CDataReader &reader);
 
-	bool IsTargeting() const { return Targeting; }
+    bool IsTargeting() const { return Targeting; }
 
-	//Очистить таргет
-	void Reset();
+    //Очистить таргет
+    void Reset();
 
-	void RequestFromCustomHouse();
+    void RequestFromCustomHouse();
 
-	//Послать таргет на объект
-	void SendTargetObject(int Serial);
+    //Послать таргет на объект
+    void SendTargetObject(int Serial);
 
-	//Послать таргет на тайл
-	void SendTargetTile(ushort tileID, short x, short Y, char z);
+    //Послать таргет на тайл
+    void SendTargetTile(ushort tileID, short x, short Y, char z);
 
-	//Послать отмену таргета
-	void SendCancelTarget();
+    //Послать отмену таргета
+    void SendCancelTarget();
 
-	//Послать таргет на объект
-	void Plugin_SendTargetObject(int Serial);
+    //Послать таргет на объект
+    void Plugin_SendTargetObject(int Serial);
 
-	//Послать таргет на тайл
-	void Plugin_SendTargetTile(ushort tileID, short x, short Y, char z);
+    //Послать таргет на тайл
+    void Plugin_SendTargetTile(ushort tileID, short x, short Y, char z);
 
-	//Послать отмену таргета
-	void Plugin_SendCancelTarget();
+    //Послать отмену таргета
+    void Plugin_SendCancelTarget();
 
-	//Послать таргет
-	void Plugin_SendTarget();
+    //Послать таргет
+    void Plugin_SendTarget();
 
-	//Послать таргет на последнюю цель
-	void SendLastTarget();
+    //Послать таргет на последнюю цель
+    void SendLastTarget();
 
-	//Послать таргет
-	void SendTarget();
+    //Послать таргет
+    void SendTarget();
 
-	//Загрузить мульти-объект
-	void LoadMulti(int offsetX, int offsetY, char offsetZ);
+    //Загрузить мульти-объект
+    void LoadMulti(int offsetX, int offsetY, char offsetZ);
 
-	//Выгрузить мульти-объект
-	void UnloadMulti();
+    //Выгрузить мульти-объект
+    void UnloadMulti();
 
-	//Получить объект мульти в координатах
-	CMulti *GetMultiAtXY(short x, short y);
+    //Получить объект мульти в координатах
+    CMulti *GetMultiAtXY(short x, short y);
 };
 //----------------------------------------------------------------------------------
 extern CTarget g_Target;

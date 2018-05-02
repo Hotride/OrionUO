@@ -13,45 +13,45 @@
 class CGumpSpell : public CGump
 {
 public:
-	bool BigIcon = false;
-	SPELLBOOK_TYPE SpellType = ST_MAGE;
+    bool BigIcon = false;
+    SPELLBOOK_TYPE SpellType = ST_MAGE;
 
 private:
-	static constexpr int ID_GS_LOCK_MOVING = 1;
-	static constexpr int ID_GS_BUTTON_REMOVE_FROM_GROUP = 2;
+    static constexpr int ID_GS_LOCK_MOVING = 1;
+    static constexpr int ID_GS_BUTTON_REMOVE_FROM_GROUP = 2;
 
-	void GetTooltipSpellInfo(int &tooltipOffset, int &spellIndexOffset);
+    void GetTooltipSpellInfo(int &tooltipOffset, int &spellIndexOffset);
 
 protected:
-	virtual void CalculateGumpState();
+    virtual void CalculateGumpState();
 
-	CGUIButton *m_SpellUnlocker{ NULL };
+    CGUIButton *m_SpellUnlocker{ NULL };
 
 public:
-	CGumpSpell(uint serial, short x, short y, ushort graphic, SPELLBOOK_TYPE spellType);
-	virtual ~CGumpSpell();
+    CGumpSpell(uint serial, short x, short y, ushort graphic, SPELLBOOK_TYPE spellType);
+    virtual ~CGumpSpell();
 
-	CGUIAlphaBlending *m_Blender{ NULL };
+    CGUIAlphaBlending *m_Blender{ NULL };
 
-	CGumpSpell *m_GroupNext{ NULL };
-	CGumpSpell *m_GroupPrev{ NULL };
+    CGumpSpell *m_GroupNext{ NULL };
+    CGumpSpell *m_GroupPrev{ NULL };
 
-	CGumpSpell *GetTopSpell();
-	CGumpSpell *GetNearSpell(int &x, int &y);
-	bool GetSpellGroupOffset(int &x, int &y);
-	void UpdateGroup(int x, int y);
-	void AddSpell(CGumpSpell *spell);
-	void RemoveFromGroup();
+    CGumpSpell *GetTopSpell();
+    CGumpSpell *GetNearSpell(int &x, int &y);
+    bool GetSpellGroupOffset(int &x, int &y);
+    void UpdateGroup(int x, int y);
+    void AddSpell(CGumpSpell *spell);
+    void RemoveFromGroup();
 
-	bool InGroup() { return (m_GroupNext != NULL || m_GroupPrev != NULL); }
+    bool InGroup() { return (m_GroupNext != NULL || m_GroupPrev != NULL); }
 
-	virtual void InitToolTip();
+    virtual void InitToolTip();
 
-	virtual void PrepareContent();
+    virtual void PrepareContent();
 
-	GUMP_BUTTON_EVENT_H;
+    GUMP_BUTTON_EVENT_H;
 
-	virtual bool OnLeftMouseButtonDoubleClick();
+    virtual bool OnLeftMouseButtonDoubleClick();
 };
 //----------------------------------------------------------------------------------
 #endif

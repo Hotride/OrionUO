@@ -13,48 +13,48 @@
 class CSkill
 {
 public:
-	bool Button = 0;
-	string Name = "";
-	float BaseValue = 0.0f;
-	float Value = 0.0f;
-	float Cap = 0.0f;
-	uchar Status = 0;
+    bool Button = 0;
+    string Name = "";
+    float BaseValue = 0.0f;
+    float Value = 0.0f;
+    float Cap = 0.0f;
+    uchar Status = 0;
 
-	CSkill() {}
-	CSkill(bool haveButton, const string &name);
-	~CSkill() {}
+    CSkill() {}
+    CSkill(bool haveButton, const string &name);
+    ~CSkill() {}
 };
 //----------------------------------------------------------------------------------
 class CSkillsManager
 {
 public:
-	int Count = 0;
-	bool SkillsRequested = false;
-	float SkillsTotal = 0.0f;
+    int Count = 0;
+    bool SkillsRequested = false;
+    float SkillsTotal = 0.0f;
 
 private:
-	vector<CSkill> m_Skills;
-	UCHAR_LIST m_SortedTable;
+    vector<CSkill> m_Skills;
+    UCHAR_LIST m_SortedTable;
 
-	bool CompareName(const string &str1, const string &str2);
+    bool CompareName(const string &str1, const string &str2);
 
 public:
-	CSkillsManager() {}
-	~CSkillsManager() {}
+    CSkillsManager() {}
+    ~CSkillsManager() {}
 
-	bool Load();
+    bool Load();
 
-	void Add(const CSkill &skill);
+    void Add(const CSkill &skill);
 
-	void Clear();
+    void Clear();
 
-	CSkill *Get(int index);
+    CSkill *Get(int index);
 
-	void Sort();
+    void Sort();
 
-	int GetSortedIndex(int index);
+    int GetSortedIndex(int index);
 
-	void UpdateSkillsSum();
+    void UpdateSkillsSum();
 };
 //----------------------------------------------------------------------------------
 extern CSkillsManager g_SkillsManager;

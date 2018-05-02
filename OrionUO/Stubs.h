@@ -23,25 +23,28 @@ using namespace std;
 #if defined(__clang__)
 // Enable these incrementally to cleanup bad code
 #pragma clang diagnostic ignored "-Wint-to-pointer-cast" // FIXME: CGLTextTexture
-#pragma clang diagnostic ignored "-Wtautological-constant-out-of-range-compare" // FIXME: always true expression
-#pragma clang diagnostic ignored "-Winconsistent-missing-override" // FIXME: OnCharPress, OnKeyDown, OnLeftMouse... etc.
-#pragma clang diagnostic ignored "-Woverloaded-virtual" // FIXME: CGameItem::GetLightID, CTextContainer::Add, CJournal::Add etc.
+#pragma clang diagnostic ignored                                                                   \
+    "-Wtautological-constant-out-of-range-compare" // FIXME: always true expression
+#pragma clang diagnostic ignored                                                                   \
+    "-Winconsistent-missing-override" // FIXME: OnCharPress, OnKeyDown, OnLeftMouse... etc.
+#pragma clang diagnostic ignored                                                                   \
+    "-Woverloaded-virtual" // FIXME: CGameItem::GetLightID, CTextContainer::Add, CJournal::Add etc.
 #pragma clang diagnostic ignored "-Wlogical-op-parentheses" // FIXME!!!!!!!!!!!!!!!!!!!!!!!!
-#pragma clang diagnostic ignored "-Wnull-conversion" // FIXME: NULL to bool m_CanProcessAlpha
-#pragma clang diagnostic ignored "-Wnull-arithmetic" // FIXME: comparing NULL to non-pointer
+#pragma clang diagnostic ignored "-Wnull-conversion"        // FIXME: NULL to bool m_CanProcessAlpha
+#pragma clang diagnostic ignored "-Wnull-arithmetic"        // FIXME: comparing NULL to non-pointer
 #pragma clang diagnostic ignored "-Wsign-compare"
-#pragma clang diagnostic ignored "-Wshadow" // FIXME: shadowing local variables
+#pragma clang diagnostic ignored "-Wshadow"  // FIXME: shadowing local variables
 #pragma clang diagnostic ignored "-Wreorder" // FIXME: Initialization order in class fields
 #pragma clang diagnostic ignored "-Wunused-variable"
 #pragma clang diagnostic ignored "-Wmissing-variable-declarations"
 #pragma clang diagnostic ignored "-Wmissing-braces"
 #pragma clang diagnostic ignored "-Wnon-pod-varargs" // FIXME: glshader
 #pragma clang diagnostic ignored "-Wswitch"
-#pragma clang diagnostic ignored "-Wformat" // %li
-#pragma clang diagnostic ignored "-Wstring-plus-char" // FIXME: PacketManager.cpp wtf
-#pragma clang diagnostic ignored "-Wmultichar" // FIXME: 'ENU'
-#pragma clang diagnostic ignored "-Wchar-subscripts" // FIXME: [' ']
-#pragma clang diagnostic ignored "-Wc++11-narrowing" // FIXME: ID_BGS_BUTTON_*
+#pragma clang diagnostic ignored "-Wformat"               // %li
+#pragma clang diagnostic ignored "-Wstring-plus-char"     // FIXME: PacketManager.cpp wtf
+#pragma clang diagnostic ignored "-Wmultichar"            // FIXME: 'ENU'
+#pragma clang diagnostic ignored "-Wchar-subscripts"      // FIXME: [' ']
+#pragma clang diagnostic ignored "-Wc++11-narrowing"      // FIXME: ID_BGS_BUTTON_*
 #pragma clang diagnostic ignored "-Wunused-private-field" // FIXME: m_FakeInsertionPin
 #pragma clang diagnostic ignored "-Wcomment"
 #elif defined(__GNUC__)
@@ -78,25 +81,25 @@ typedef uintptr_t WPARAM;
 typedef int32_t HRESULT;
 typedef int32_t LONG;
 typedef unsigned char BYTE;
-typedef unsigned char* PBYTE;
-typedef void* PVOID;
-typedef void* LPVOID;
-typedef void* HANDLE;
-typedef void* HWND;
-typedef void* HICON;
-typedef void* HBRUSH;
-typedef void* HCURSOR;
-typedef void* HINSTANCE;
-typedef void* HDC;
-typedef void* HMODULE;
-typedef void* HSTREAM;
-typedef void* HGLRC;
-typedef const void* LPCVOID;
+typedef unsigned char *PBYTE;
+typedef void *PVOID;
+typedef void *LPVOID;
+typedef void *HANDLE;
+typedef void *HWND;
+typedef void *HICON;
+typedef void *HBRUSH;
+typedef void *HCURSOR;
+typedef void *HINSTANCE;
+typedef void *HDC;
+typedef void *HMODULE;
+typedef void *HSTREAM;
+typedef void *HGLRC;
+typedef const void *LPCVOID;
 typedef size_t SIZE_T;
-typedef const char* LPCSTR;
-typedef const wchar_t* LPWSTR;
-typedef const char* LPTSTR;
-typedef const char* LPSTR;
+typedef const char *LPCSTR;
+typedef const wchar_t *LPWSTR;
+typedef const char *LPTSTR;
+typedef const char *LPSTR;
 typedef wchar_t WCHAR;
 typedef unsigned int UINT;
 
@@ -171,7 +174,6 @@ const unsigned int WM_NCPAINT = 0x85;
 #define VK_NUMPAD8 42
 #define VK_NUMPAD9 43
 
-
 #define PM_REMOVE 0x0001
 #define MK_MBUTTON 0
 #define MK_RBUTTON 1
@@ -212,76 +214,84 @@ const unsigned int WM_NCPAINT = 0x85;
 
 #define MAX_PATH 256
 
-struct SYSTEMTIME {
-  WORD wYear;
-  WORD wMonth;
-  WORD wDayOfWeek;
-  WORD wDay;
-  WORD wHour;
-  WORD wMinute;
-  WORD wSecond;
-  WORD wMilliseconds;
-} ;
-struct RECT { int left; int top; int right; int bottom; };
+struct SYSTEMTIME
+{
+    WORD wYear;
+    WORD wMonth;
+    WORD wDayOfWeek;
+    WORD wDay;
+    WORD wHour;
+    WORD wMinute;
+    WORD wSecond;
+    WORD wMilliseconds;
+};
+struct RECT
+{
+    int left;
+    int top;
+    int right;
+    int bottom;
+};
 
 // Bad and very ugly "API" stuff
-bool GetWindowRect(void*,RECT*) ;
-bool SetWindowPos(void *, void*, int, int, int, int, int) ;
-int GetSystemMetrics(int) ;
-int DefWindowProc(void *, unsigned int, uintptr_t, uintptr_t) ;
-bool SendMessage(void*, int, int, int) ;
-void PostMessage(void*, int, int, int) ;
-#define LOBYTE(x) (int)(x&0xff)
-int GetSystemDefaultLangID() ;
-int GetProfileStringA(const char*, const char*, const char*, char*, int);
-void* GlobalLock(void*);
-bool GlobalUnlock(void*);
+bool GetWindowRect(void *, RECT *);
+bool SetWindowPos(void *, void *, int, int, int, int, int);
+int GetSystemMetrics(int);
+int DefWindowProc(void *, unsigned int, uintptr_t, uintptr_t);
+bool SendMessage(void *, int, int, int);
+void PostMessage(void *, int, int, int);
+#define LOBYTE(x) (int)(x & 0xff)
+int GetSystemDefaultLangID();
+int GetProfileStringA(const char *, const char *, const char *, char *, int);
+void *GlobalLock(void *);
+bool GlobalUnlock(void *);
 
 // cmd line
-wchar_t* GetCommandLineW() ;
-const wchar_t** CommandLineToArgvW(wchar_t*,int*) ;
-void* ShellExecuteA(void*, const char*, const char*, const char*, const char*, int) ;
-void *LocalFree(void*p) ;
+wchar_t *GetCommandLineW();
+const wchar_t **CommandLineToArgvW(wchar_t *, int *);
+void *ShellExecuteA(void *, const char *, const char *, const char *, const char *, int);
+void *LocalFree(void *p);
 
 // Input
-bool OpenClipboard(void*)  ;
-void* GetClipboardData(unsigned)  ;
-bool CloseClipboard()  ;
+bool OpenClipboard(void *);
+void *GetClipboardData(unsigned);
+bool CloseClipboard();
 
 // Thread
-void CloseHandle(void *) ; // WispThread.cpp
-void KillTimer(void *, unsigned int) ;
-void SetTimer(void *, unsigned int, unsigned int, void *) ;
-int timeBeginPeriod(int) ;
-void* _beginthreadex(void *, unsigned, unsigned (*)( void * ), void *, unsigned, unsigned *) ;
-void _endthreadex(int) ;
-int timeEndPeriod(int) ;
-void GetLocalTime(SYSTEMTIME*) ;
+void CloseHandle(void *); // WispThread.cpp
+void KillTimer(void *, unsigned int);
+void SetTimer(void *, unsigned int, unsigned int, void *);
+int timeBeginPeriod(int);
+void *_beginthreadex(void *, unsigned, unsigned (*)(void *), void *, unsigned, unsigned *);
+void _endthreadex(int);
+int timeEndPeriod(int);
+void GetLocalTime(SYSTEMTIME *);
 
 // Socket
-struct WSADATA {
-  WORD           wVersion;
-  WORD           wHighVersion;
-  char           szDescription[256];
-  char           szSystemStatus[256];
-  unsigned short iMaxSockets;
-  unsigned short iMaxUdpDg;
-  char          *lpVendorInfo;
+struct WSADATA
+{
+    WORD wVersion;
+    WORD wHighVersion;
+    char szDescription[256];
+    char szSystemStatus[256];
+    unsigned short iMaxSockets;
+    unsigned short iMaxUdpDg;
+    char *lpVendorInfo;
 };
-bool WSAStartup(int, void *) ;
-void WSASetLastError(int) ;
-int WSACleanup(void) ;
-int recvfrom(int, const char*, int, int, const struct sockaddr*, int*) ;
+bool WSAStartup(int, void *);
+void WSASetLastError(int);
+int WSACleanup(void);
+int recvfrom(int, const char *, int, int, const struct sockaddr *, int *);
 #define closesocket close
 #define INVALID_SOCKET -1
 #define SOCKET_ERROR -1
 #define MAKEWORD(x, y) (int)(x)
 typedef struct hostent HOSTENT;
-typedef HOSTENT* LPHOSTENT;
+typedef HOSTENT *LPHOSTENT;
 #define SOCKADDR struct sockaddr
 #define SOCKADDR_IN struct in_addr
-#define LPIN_ADDR struct in_addr*
-#define LPSOCKADDR const SOCKADDR*
+#define LPIN_ADDR struct in_addr *
+#define LPSOCKADDR const SOCKADDR *
 
 // String
 #define strncpy_s strncpy
@@ -289,16 +299,19 @@ typedef HOSTENT* LPHOSTENT;
 #define sprintf_s sprintf
 #define sscanf_s sscanf
 #define vsprintf_s vsprintf
-#define vswprintf_s(a,b,c) vswprintf(a,0,b,c)
-int WideCharToMultiByte(int, int, const wchar_t*, int, char*, int, void*, void*) ;
-int MultiByteToWideChar(int, int, const char*, int, wchar_t*, int) ;
+#define vswprintf_s(a, b, c) vswprintf(a, 0, b, c)
+int WideCharToMultiByte(int, int, const wchar_t *, int, char *, int, void *, void *);
+int MultiByteToWideChar(int, int, const char *, int, wchar_t *, int);
 
 // http://en.cppreference.com/w/cpp/locale/codecvt_utf8
-inline int _wtoi(const wchar_t *a) { return std::stoi(wstring(a)); }
-char* _strlwr(char* s);
-char* _strupr(char* s);
-wchar_t* _wcslwr(wchar_t* s);
-wchar_t* _wcsupr(wchar_t* s);
+inline int _wtoi(const wchar_t *a)
+{
+    return std::stoi(wstring(a));
+}
+char *_strlwr(char *s);
+char *_strupr(char *s);
+wchar_t *_wcslwr(wchar_t *s);
+wchar_t *_wcsupr(wchar_t *s);
 
 // BASS
 #define BASS_OK 0
@@ -342,7 +355,7 @@ wchar_t* _wcsupr(wchar_t* s);
 #define BASS_SAMPLE_FLOAT 0
 #define BASS_SAMPLE_3D 0
 #define BASS_SAMPLE_SOFTWARE 0
-#define BASS_ChannelPlay(x,y) false
+#define BASS_ChannelPlay(x, y) false
 #define BASS_StreamFree(x) false
 #define BASS_ChannelIsActive(x) false
 #define BASS_ChannelStop(x)
@@ -364,7 +377,7 @@ wchar_t* _wcsupr(wchar_t* s);
 #define BASS_StreamCreateFile(a, b, c, d, e) nullptr
 #define BASS_ChannelSetAttribute(a, b, c)
 #define BASS_MIDI_StreamCreateFile(a, b, c, d, e, f) nullptr
-#define BASS_SetConfigPtr(a,b) false
+#define BASS_SetConfigPtr(a, b) false
 #define mciGetErrorString(a, b, c) false
 
 #endif

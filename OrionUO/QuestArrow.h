@@ -14,19 +14,19 @@
 class CQuestArrow
 {
 public:
-	uint Timer = 0;
-	ushort X = 0;
-	ushort Y = 0;
-	bool Enabled = false;
+    uint Timer = 0;
+    ushort X = 0;
+    ushort Y = 0;
+    bool Enabled = false;
 
-	CQuestArrow();
-	~CQuestArrow();
+    CQuestArrow();
+    ~CQuestArrow();
 
-	//Индекс начальной картинки стрелки
-	static const ushort m_Gump = 0x1194;
+    //Индекс начальной картинки стрелки
+    static const ushort m_Gump = 0x1194;
 
-	//Отрисовать стрелку
-	void Draw();
+    //Отрисовать стрелку
+    void Draw();
 };
 //----------------------------------------------------------------------------------
 extern CQuestArrow g_QuestArrow;

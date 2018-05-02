@@ -13,34 +13,34 @@
 class CPopupMenuItemInfo
 {
 public:
-	uint Cliloc = 0;
-	ushort Index = 0;
-	ushort Flags = 0;
-	ushort Color = 0;
-	ushort ReplaceColor = 0;
+    uint Cliloc = 0;
+    ushort Index = 0;
+    ushort Flags = 0;
+    ushort Color = 0;
+    ushort ReplaceColor = 0;
 
-	CPopupMenuItemInfo() {}
+    CPopupMenuItemInfo() {}
 };
 //----------------------------------------------------------------------------------
 class CGumpPopupMenu : public CGump
 {
-	int Width = 0;
-	int Height = 0;
+    int Width = 0;
+    int Height = 0;
 
 private:
-	CGUIColoredPolygone *m_Polygone{ NULL };
+    CGUIColoredPolygone *m_Polygone{ NULL };
 
 public:
-	CGumpPopupMenu(uint serial, short x, short y);
-	virtual ~CGumpPopupMenu();
+    CGumpPopupMenu(uint serial, short x, short y);
+    virtual ~CGumpPopupMenu();
 
-	static const int ID_GPM_MAXIMIZE = 0xDEADBEEF;
+    static const int ID_GPM_MAXIMIZE = 0xDEADBEEF;
 
-	virtual void PrepareContent();
+    virtual void PrepareContent();
 
-	static void Parse(WISP_NETWORK::CPacketReader &reader);
+    static void Parse(WISP_NETWORK::CPacketReader &reader);
 
-	GUMP_BUTTON_EVENT_H;
+    GUMP_BUTTON_EVENT_H;
 };
 //----------------------------------------------------------------------------------
 extern CGumpPopupMenu *g_PopupMenu;

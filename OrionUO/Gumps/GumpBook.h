@@ -13,56 +13,56 @@
 class CGumpBook : public CGump
 {
 public:
-	bool Writable = false;
-	short PageCount = 0;
-	bool Unicode = false;
+    bool Writable = false;
+    short PageCount = 0;
+    bool Unicode = false;
 
 private:
-	static const int ID_GB_TEXT_AREA_AUTHOR = 1;
-	static const int ID_GB_TEXT_AREA_TITLE = 2;
-	static const int ID_GB_TEXT_AREA_PAGE_LEFT = 3;
-	static const int ID_GB_TEXT_AREA_PAGE_RIGHT = 4;
-	static const int ID_GB_BUTTON_PREV = 5;
-	static const int ID_GB_BUTTON_NEXT = 6;
+    static const int ID_GB_TEXT_AREA_AUTHOR = 1;
+    static const int ID_GB_TEXT_AREA_TITLE = 2;
+    static const int ID_GB_TEXT_AREA_PAGE_LEFT = 3;
+    static const int ID_GB_TEXT_AREA_PAGE_RIGHT = 4;
+    static const int ID_GB_BUTTON_PREV = 5;
+    static const int ID_GB_BUTTON_NEXT = 6;
 
-	bool *m_ChangedPage{ NULL };
-	bool *m_PageDataReceived{ NULL };
+    bool *m_ChangedPage{ NULL };
+    bool *m_PageDataReceived{ NULL };
 
-	void InsertInContent(const WPARAM &wparam, bool isCharPress = true);
+    void InsertInContent(const WPARAM &wparam, bool isCharPress = true);
 
-	CGUIButton *m_PrevPage{ NULL };
-	CGUIButton *m_NextPage{ NULL };
+    CGUIButton *m_PrevPage{ NULL };
+    CGUIButton *m_NextPage{ NULL };
 
-	void SetPagePos(int val, int page);
+    void SetPagePos(int val, int page);
 
 public:
-	CGumpBook(uint serial, short x, short y, short pageCount, bool writable, bool unicode);
-	virtual ~CGumpBook();
+    CGumpBook(uint serial, short x, short y, short pageCount, bool writable, bool unicode);
+    virtual ~CGumpBook();
 
-	virtual void PasteClipboardData(wstring &data) override;
+    virtual void PasteClipboardData(wstring &data) override;
 
-	CGUITextEntry *m_EntryAuthor{ NULL };
-	CGUITextEntry *m_EntryTitle{ NULL };
+    CGUITextEntry *m_EntryAuthor{ NULL };
+    CGUITextEntry *m_EntryTitle{ NULL };
 
-	CGUITextEntry *GetEntry(int page);
+    CGUITextEntry *GetEntry(int page);
 
-	virtual void DelayedClick(CRenderObject *obj);
+    virtual void DelayedClick(CRenderObject *obj);
 
-	virtual void PrepareContent();
+    virtual void PrepareContent();
 
-	void SetPageData(int page, const wstring &data);
+    void SetPageData(int page, const wstring &data);
 
-	void ChangePage(int newPage, bool playSound = true);
+    void ChangePage(int newPage, bool playSound = true);
 
-	GUMP_BUTTON_EVENT_H;
+    GUMP_BUTTON_EVENT_H;
 
-	bool OnLeftMouseButtonDoubleClick();
+    bool OnLeftMouseButtonDoubleClick();
 
 #if USE_WISP
-	void OnCharPress(const WPARAM &wParam, const LPARAM &lParam);
-	void OnKeyDown(const WPARAM &wParam, const LPARAM &lParam);
+    void OnCharPress(const WPARAM &wParam, const LPARAM &lParam);
+    void OnKeyDown(const WPARAM &wParam, const LPARAM &lParam);
 #else
-	virtual void OnTextInput(const SDL_TextInputEvent &ev) override;
-	virtual void OnKeyDown(const SDL_KeyboardEvent &ev) override;
-#endif	
+    virtual void OnTextInput(const SDL_TextInputEvent &ev) override;
+    virtual void OnKeyDown(const SDL_KeyboardEvent &ev) override;
+#endif
 };

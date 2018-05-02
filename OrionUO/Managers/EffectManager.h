@@ -14,41 +14,41 @@
 class CEffectManager : public CBaseQueue
 {
 public:
-	CEffectManager();
-	virtual ~CEffectManager() {}
+    CEffectManager();
+    virtual ~CEffectManager() {}
 
-	/*!
+    /*!
 	Добавить эффект
 	@param [__in] effect Ссылка на эффект
 	@return 
 	*/
-	void AddEffect(CGameEffect *effect);
+    void AddEffect(CGameEffect *effect);
 
-	/*!
+    /*!
 	Удалить эффект
 	@param [__in] effect Ссылка на эффект
 	@return 
 	*/
-	void RemoveEffect(CGameEffect *effect);
+    void RemoveEffect(CGameEffect *effect);
 
-	/*!
+    /*!
 	Создать эффект взрыва
 	@param [__in] effect Ссылка на эффект
 	@return 
 	*/
-	void CreateExplodeEffect(CGameEffect *effect, const EFFECT_TYPE &type);
+    void CreateExplodeEffect(CGameEffect *effect, const EFFECT_TYPE &type);
 
-	/*!
+    /*!
 	Обновление эффектов
 	@return 
 	*/
-	void UpdateEffects();
+    void UpdateEffects();
 
-	/*!
+    /*!
 	Удаление эффектов, вышедших за пределы экрана
 	@return 
 	*/
-	void RemoveRangedEffects();
+    void RemoveRangedEffects();
 };
 //----------------------------------------------------------------------------------
 //!Ссылка на менеджер эффектов

@@ -4,7 +4,7 @@
 #include "stdafx.h"
 
 #if 0
-#define TEXTPARSER_DEBUG(x)	TEXTPARSER_DEBUG(x)
+#define TEXTPARSER_DEBUG(x) TEXTPARSER_DEBUG(x)
 #else
 #define TEXTPARSER_DEBUG(x)
 #endif
@@ -12,13 +12,14 @@
 namespace WISP_FILE
 {
 //----------------------------------------------------------------------------------
-CTextFileParser::CTextFileParser(const os_path &path, const char *delimiters, const char *comentaries, const char *quotes)
+CTextFileParser::CTextFileParser(
+    const os_path &path, const char *delimiters, const char *comentaries, const char *quotes)
 {
-	TEXTPARSER_DEBUG("c11_f1");
-	if (!path.empty())
-		m_File.Load(path);
+    TEXTPARSER_DEBUG("c11_f1");
+    if (!path.empty())
+        m_File.Load(path);
 
-	StartupInitalize(delimiters, comentaries, quotes);
+    StartupInitalize(delimiters, comentaries, quotes);
 }
 //----------------------------------------------------------------------------------
 /*CTextFileParser::CTextFileParser(const wstring &path, const char *delimiters, const char *comentaries, const char *quotes)
@@ -31,347 +32,349 @@ CTextFileParser::CTextFileParser(const os_path &path, const char *delimiters, co
 //----------------------------------------------------------------------------------
 CTextFileParser::~CTextFileParser()
 {
-	TEXTPARSER_DEBUG("c11_f3");
-	//Выгружаем файл из памяти
-	m_File.Unload();
+    TEXTPARSER_DEBUG("c11_f3");
+    //Выгружаем файл из памяти
+    m_File.Unload();
 }
 //----------------------------------------------------------------------------------
 //Проверка на конец файла
-void CTextFileParser::StartupInitalize(const char *delimiters, const char *comentaries, const char *quotes)
+void CTextFileParser::StartupInitalize(
+    const char *delimiters, const char *comentaries, const char *quotes)
 {
-	TEXTPARSER_DEBUG("c11_f4");
-	//Инициализация разделителей
-	memset(&m_Delimiters[0], 0, sizeof(m_Delimiters));
-	m_DelimitersSize = (int)strlen(delimiters);
+    TEXTPARSER_DEBUG("c11_f4");
+    //Инициализация разделителей
+    memset(&m_Delimiters[0], 0, sizeof(m_Delimiters));
+    m_DelimitersSize = (int)strlen(delimiters);
 
-	if (m_DelimitersSize)
-		memcpy(&m_Delimiters[0], &delimiters[0], m_DelimitersSize);
+    if (m_DelimitersSize)
+        memcpy(&m_Delimiters[0], &delimiters[0], m_DelimitersSize);
 
-	//Инициализация комментариев
-	memset(&m_Comentaries[0], 0, sizeof(m_Comentaries));
-	m_ComentariesSize = (int)strlen(comentaries);
+    //Инициализация комментариев
+    memset(&m_Comentaries[0], 0, sizeof(m_Comentaries));
+    m_ComentariesSize = (int)strlen(comentaries);
 
-	if (m_ComentariesSize)
-		memcpy(&m_Comentaries[0], &comentaries[0], m_ComentariesSize);
+    if (m_ComentariesSize)
+        memcpy(&m_Comentaries[0], &comentaries[0], m_ComentariesSize);
 
-	//Инициализация кавычек
-	memset(&m_Quotes[0], 0, sizeof(m_Quotes));
-	m_QuotesSize = (int)strlen(quotes);
+    //Инициализация кавычек
+    memset(&m_Quotes[0], 0, sizeof(m_Quotes));
+    m_QuotesSize = (int)strlen(quotes);
 
-	if (m_QuotesSize)
-		memcpy(&m_Quotes[0], &quotes[0], m_QuotesSize);
+    if (m_QuotesSize)
+        memcpy(&m_Quotes[0], &quotes[0], m_QuotesSize);
 
-	//Вычисляем конец файла
-	m_End = m_File.End;
+    //Вычисляем конец файла
+    m_End = m_File.End;
 }
 //----------------------------------------------------------------------------------
 //Проверка на конец файла
 void CTextFileParser::Restart()
 {
-	TEXTPARSER_DEBUG("c11_f5");
-	m_File.ResetPtr();
+    TEXTPARSER_DEBUG("c11_f5");
+    m_File.ResetPtr();
 }
 //----------------------------------------------------------------------------------
 //Проверка на конец файла
 bool CTextFileParser::IsEOF()
 {
-	TEXTPARSER_DEBUG("c11_f6");
-	return (m_File.Ptr >= m_End);
+    TEXTPARSER_DEBUG("c11_f6");
+    return (m_File.Ptr >= m_End);
 }
 //----------------------------------------------------------------------------------
 //Получить конец строки
 void CTextFileParser::GetEOL()
 {
-	TEXTPARSER_DEBUG("c11_f7");
-	//Конец строки равен текущему адресу
-	m_EOL = m_File.Ptr;
+    TEXTPARSER_DEBUG("c11_f7");
+    //Конец строки равен текущему адресу
+    m_EOL = m_File.Ptr;
 
-	//Если файл прочитан не до конца
-	if (!IsEOF())
-	{
-		//Ищем конец строки
-		while (m_EOL < m_End && *m_EOL)
-		{
-			if (*m_EOL == '\n')
-				break;
+    //Если файл прочитан не до конца
+    if (!IsEOF())
+    {
+        //Ищем конец строки
+        while (m_EOL < m_End && *m_EOL)
+        {
+            if (*m_EOL == '\n')
+                break;
 
-			m_EOL++;
-		}
-	}
+            m_EOL++;
+        }
+    }
 }
 //----------------------------------------------------------------------------------
 //Проверка на разделитель
 bool CTextFileParser::IsDelimiter()
 {
-	TEXTPARSER_DEBUG("c11_f8");
-	bool result = false;
+    TEXTPARSER_DEBUG("c11_f8");
+    bool result = false;
 
-	//Проход по всем разделителям
-	for (int i = 0; i < m_DelimitersSize&& !result; i++)
-		result = (*m_Ptr == m_Delimiters[i]);
+    //Проход по всем разделителям
+    for (int i = 0; i < m_DelimitersSize && !result; i++)
+        result = (*m_Ptr == m_Delimiters[i]);
 
-	return result;
+    return result;
 }
 //----------------------------------------------------------------------------------
 //Пропустить все до данных
 void CTextFileParser::SkipToData()
 {
-	TEXTPARSER_DEBUG("c11_f9");
-	//Если символ - разделитель, то проход по всем разделителям и смещение указателя
-	while (m_Ptr < m_EOL && *m_Ptr && IsDelimiter())
-		m_Ptr++;
+    TEXTPARSER_DEBUG("c11_f9");
+    //Если символ - разделитель, то проход по всем разделителям и смещение указателя
+    while (m_Ptr < m_EOL && *m_Ptr && IsDelimiter())
+        m_Ptr++;
 }
 //----------------------------------------------------------------------------------
 //Проверка на комментарий
 bool CTextFileParser::IsComment()
 {
-	TEXTPARSER_DEBUG("c11_f10");
-	bool result = (*m_Ptr == '\n');
+    TEXTPARSER_DEBUG("c11_f10");
+    bool result = (*m_Ptr == '\n');
 
-	//Проход по всем комментариям
-	for (int i = 0; i < m_ComentariesSize && !result; i++)
-	{
-		result = (*m_Ptr == m_Comentaries[i]);
+    //Проход по всем комментариям
+    for (int i = 0; i < m_ComentariesSize && !result; i++)
+    {
+        result = (*m_Ptr == m_Comentaries[i]);
 
-		if (result && i + 1 < m_ComentariesSize && m_Comentaries[i] == m_Comentaries[i + 1] && m_Ptr + 1 < m_EOL)
-		{
-			result = (m_Ptr[0] == m_Ptr[1]);
-			i++;
-		}
-	}
+        if (result && i + 1 < m_ComentariesSize && m_Comentaries[i] == m_Comentaries[i + 1] &&
+            m_Ptr + 1 < m_EOL)
+        {
+            result = (m_Ptr[0] == m_Ptr[1]);
+            i++;
+        }
+    }
 
-	return result;
+    return result;
 }
 //----------------------------------------------------------------------------------
 //Проверка на кавычку
 bool CTextFileParser::IsQuote()
 {
-	bool result = (*m_Ptr == '\n');
+    bool result = (*m_Ptr == '\n');
 
-	//Пройдемся по кавычкам, формат кавычек в наборе: openQuote, closeQuote (могут быть одинаковыми)
-	for (int i = 0; i < m_QuotesSize; i += 2)
-	{
-		//Если кавычка нашлась
-		if (*m_Ptr == m_Quotes[i] || *m_Ptr == m_Quotes[i + 1])
-		{
-			result = true;
-			break;
-		}
-	}
+    //Пройдемся по кавычкам, формат кавычек в наборе: openQuote, closeQuote (могут быть одинаковыми)
+    for (int i = 0; i < m_QuotesSize; i += 2)
+    {
+        //Если кавычка нашлась
+        if (*m_Ptr == m_Quotes[i] || *m_Ptr == m_Quotes[i + 1])
+        {
+            result = true;
+            break;
+        }
+    }
 
-	return result;
+    return result;
 }
 //----------------------------------------------------------------------------------
 //Проверка на закрывающую кавычку
 bool CTextFileParser::IsSecondQuote()
 {
-	bool result = (*m_Ptr == '\n');
+    bool result = (*m_Ptr == '\n');
 
-	//Пройдемся по кавычкам, формат кавычек в наборе: openQuote, closeQuote (могут быть одинаковыми)
-	for (int i = 0; i < m_QuotesSize; i += 2)
-	{
-		//Если кавычка нашлась
-		if (*m_Ptr == m_Quotes[i + 1])
-		{
-			result = true;
-			break;
-		}
-	}
+    //Пройдемся по кавычкам, формат кавычек в наборе: openQuote, closeQuote (могут быть одинаковыми)
+    for (int i = 0; i < m_QuotesSize; i += 2)
+    {
+        //Если кавычка нашлась
+        if (*m_Ptr == m_Quotes[i + 1])
+        {
+            result = true;
+            break;
+        }
+    }
 
-	return result;
+    return result;
 }
 //----------------------------------------------------------------------------------
 //Получить следующий токен
 string CTextFileParser::ObtainData()
 {
-	TEXTPARSER_DEBUG("c11_f11");
-	string result = "";
+    TEXTPARSER_DEBUG("c11_f11");
+    string result = "";
 
-	//Пока разделитель валиден - записываем данные и смещаем указатель
-	while (m_Ptr < m_End && *m_Ptr && *m_Ptr != '\n')
-	{
-		//Проверка на разделитель
-		if (IsDelimiter())
-			break;
-		//Проверка на комментарий
-		else if (IsComment())
-		{
-			m_Ptr = m_EOL;
-			break;
-		}
+    //Пока разделитель валиден - записываем данные и смещаем указатель
+    while (m_Ptr < m_End && *m_Ptr && *m_Ptr != '\n')
+    {
+        //Проверка на разделитель
+        if (IsDelimiter())
+            break;
+        //Проверка на комментарий
+        else if (IsComment())
+        {
+            m_Ptr = m_EOL;
+            break;
+        }
 
-		//Проверяем на перенос строки, при необходимости обрезаем пробелы
-		if (*m_Ptr != '\r' && (!m_Trim || (*m_Ptr != ' ' && *m_Ptr != '\t')))
-			result.push_back(*m_Ptr);
+        //Проверяем на перенос строки, при необходимости обрезаем пробелы
+        if (*m_Ptr != '\r' && (!m_Trim || (*m_Ptr != ' ' && *m_Ptr != '\t')))
+            result.push_back(*m_Ptr);
 
-		m_Ptr++;
-	}
+        m_Ptr++;
+    }
 
-	return result;
+    return result;
 }
 //----------------------------------------------------------------------------------
 //Получить следующий фрагмент строки или токен (если кавычки не обнаружены)
 string CTextFileParser::ObtainQuotedData()
 {
-	TEXTPARSER_DEBUG("c11_f12");
-	bool exit = false;
-	string result = "";
+    TEXTPARSER_DEBUG("c11_f12");
+    bool exit = false;
+    string result = "";
 
-	//Пройдемся по кавычкам, формат кавычек в наборе: openQuote, closeQuote (могут быть одинаковыми)
-	for (int i = 0; i < m_QuotesSize; i += 2)
-	{
-		//Если кавычка нашлась
-		if (*m_Ptr == m_Quotes[i])
-		{
-			//Запомним закрывающую кавычку
-			char endQuote = m_Quotes[i + 1];
-			exit = true;
+    //Пройдемся по кавычкам, формат кавычек в наборе: openQuote, closeQuote (могут быть одинаковыми)
+    for (int i = 0; i < m_QuotesSize; i += 2)
+    {
+        //Если кавычка нашлась
+        if (*m_Ptr == m_Quotes[i])
+        {
+            //Запомним закрывающую кавычку
+            char endQuote = m_Quotes[i + 1];
+            exit = true;
 
-			//Смещаем указатель, т.к. кавычку писать не нужно
-			m_Ptr++;
-			puchar ptr = m_Ptr;
+            //Смещаем указатель, т.к. кавычку писать не нужно
+            m_Ptr++;
+            puchar ptr = m_Ptr;
 
-			//Пропустим все до конца строки или до закрывающей кавычки
-			while (ptr < m_EOL && *ptr && *ptr != '\n' && *ptr != endQuote)
-				ptr++;
+            //Пропустим все до конца строки или до закрывающей кавычки
+            while (ptr < m_EOL && *ptr && *ptr != '\n' && *ptr != endQuote)
+                ptr++;
 
-			//Размер фрагмента
-			size_t size = ptr - m_Ptr;
+            //Размер фрагмента
+            size_t size = ptr - m_Ptr;
 
-			if (size > 0)
-			{
-				//Выделяем память под фрагмент
-				result.resize(size + 1);
+            if (size > 0)
+            {
+                //Выделяем память под фрагмент
+                result.resize(size + 1);
 
-				//Копируем фрагмент
-				memcpy(&result[0], &m_Ptr[0], size);
-				result[size] = 0;
+                //Копируем фрагмент
+                memcpy(&result[0], &m_Ptr[0], size);
+                result[size] = 0;
 
-				//Пройдемся по фрагменту с конца и затрем лишнее
-				for (int j = (int)size - 1; j >= 0 && result[j] == '\r'; j--)
-					result[j] = 0;
+                //Пройдемся по фрагменту с конца и затрем лишнее
+                for (int j = (int)size - 1; j >= 0 && result[j] == '\r'; j--)
+                    result[j] = 0;
 
-				//Указатель на конец фрагмена
-				m_Ptr = ptr;
+                //Указатель на конец фрагмена
+                m_Ptr = ptr;
 
-				if (m_Ptr < m_EOL && *m_Ptr == endQuote)
-					m_Ptr++;
-			}
+                if (m_Ptr < m_EOL && *m_Ptr == endQuote)
+                    m_Ptr++;
+            }
 
-			break;
-		}
-	}
+            break;
+        }
+    }
 
-	//Если это не кавычки - вычленим слово
-	if (!exit)
-		result = ObtainData();
+    //Если это не кавычки - вычленим слово
+    if (!exit)
+        result = ObtainData();
 
-	return result;
+    return result;
 }
 //----------------------------------------------------------------------------------
 //Прочитать токены из файла
 void CTextFileParser::SaveRawLine()
 {
-	TEXTPARSER_DEBUG("c11_f13");
-	size_t size = m_EOL - m_Ptr;
+    TEXTPARSER_DEBUG("c11_f13");
+    size_t size = m_EOL - m_Ptr;
 
-	if (size > 0)
-	{
-		RawLine.resize(size, 0);
-		memcpy(&RawLine[0], &m_Ptr[0], size);
+    if (size > 0)
+    {
+        RawLine.resize(size, 0);
+        memcpy(&RawLine[0], &m_Ptr[0], size);
 
-		while (RawLine.length() && (RawLine[size - 1] == '\r' || RawLine[size - 1] == '\n'))
-			RawLine.resize(RawLine.length() - 1);
-	}
-	else
-		RawLine = "";
+        while (RawLine.length() && (RawLine[size - 1] == '\r' || RawLine[size - 1] == '\n'))
+            RawLine.resize(RawLine.length() - 1);
+    }
+    else
+        RawLine = "";
 }
 //----------------------------------------------------------------------------------
 //Прочитать токены из файла
 STRING_LIST CTextFileParser::ReadTokens(bool trim)
 {
-	TEXTPARSER_DEBUG("c11_f14");
-	m_Trim = trim;
-	STRING_LIST result;
+    TEXTPARSER_DEBUG("c11_f14");
+    m_Trim = trim;
+    STRING_LIST result;
 
-	//Если не достигли конца файла
-	if (!IsEOF())
-	{
-		//Инициализация указателей
-		m_Ptr = m_File.Ptr;
-		GetEOL();
+    //Если не достигли конца файла
+    if (!IsEOF())
+    {
+        //Инициализация указателей
+        m_Ptr = m_File.Ptr;
+        GetEOL();
 
-		SaveRawLine();
+        SaveRawLine();
 
-		//Проход до конца строки
-		while (m_Ptr < m_EOL)
-		{
-			//Пропустить разделители
-			SkipToData();
+        //Проход до конца строки
+        while (m_Ptr < m_EOL)
+        {
+            //Пропустить разделители
+            SkipToData();
 
-			//Если это комментарий - выходим
-			if (IsComment())
-				break;
+            //Если это комментарий - выходим
+            if (IsComment())
+                break;
 
-			//Получаем токен
-			string buf = ObtainQuotedData();
+            //Получаем токен
+            string buf = ObtainQuotedData();
 
-			//Если токен не пуст - запишем его в стек
-			if (buf.length())
-				result.push_back(buf);
-			else if (IsSecondQuote())
-				m_Ptr++;
-		}
+            //Если токен не пуст - запишем его в стек
+            if (buf.length())
+                result.push_back(buf);
+            else if (IsSecondQuote())
+                m_Ptr++;
+        }
 
-		m_File.Ptr = m_EOL + 1;
-	}
+        m_File.Ptr = m_EOL + 1;
+    }
 
-	return result;
+    return result;
 }
 //----------------------------------------------------------------------------------
 //Прочитать токены из строки
 STRING_LIST CTextFileParser::GetTokens(const char *str, bool trim)
 {
-	TEXTPARSER_DEBUG("c11_f15");
-	m_Trim = trim;
-	STRING_LIST result;
+    TEXTPARSER_DEBUG("c11_f15");
+    m_Trim = trim;
+    STRING_LIST result;
 
-	//Сохраним предыдущее значения конца данных
-	puchar oldEnd = m_End;
+    //Сохраним предыдущее значения конца данных
+    puchar oldEnd = m_End;
 
-	m_Ptr = (puchar)str;
-	m_End = (puchar)str + strlen(str);
-	m_EOL = m_End;
+    m_Ptr = (puchar)str;
+    m_End = (puchar)str + strlen(str);
+    m_EOL = m_End;
 
-	SaveRawLine();
+    SaveRawLine();
 
-	//Пройдемся по строке
-	while (m_Ptr < m_EOL)
-	{
-		//Пропустить разделители
-		SkipToData();
+    //Пройдемся по строке
+    while (m_Ptr < m_EOL)
+    {
+        //Пропустить разделители
+        SkipToData();
 
-		//Если это комментарий - выходим
-		if (IsComment())
-			break;
+        //Если это комментарий - выходим
+        if (IsComment())
+            break;
 
-		//Получаем токен
-		string buf = ObtainQuotedData();
+        //Получаем токен
+        string buf = ObtainQuotedData();
 
-		//Если токен не пуст - запишем его в стек
-		if (buf.length())
-			result.push_back(buf);
-	}
+        //Если токен не пуст - запишем его в стек
+        if (buf.length())
+            result.push_back(buf);
+    }
 
-	//Восстановим предыдущее значения конца данных
-	m_End = oldEnd;
+    //Восстановим предыдущее значения конца данных
+    m_End = oldEnd;
 
-	return result;
+    return result;
 }
 //----------------------------------------------------------------------------------
 CTextFileWritter::CTextFileWritter(const os_path &path)
 {
-	m_File = fs_open(path, FS_WRITE);
+    m_File = fs_open(path, FS_WRITE);
 }
 //----------------------------------------------------------------------------------
 /*CTextFileWritter::CTextFileWritter(const wstring &path)
@@ -381,35 +384,35 @@ CTextFileWritter::CTextFileWritter(const os_path &path)
 //----------------------------------------------------------------------------------
 CTextFileWritter::~CTextFileWritter()
 {
-	Close();
+    Close();
 }
 //----------------------------------------------------------------------------------
 void CTextFileWritter::Close()
 {
-	if (m_File != nullptr)
-	{
-		fs_close(m_File);
-		m_File = nullptr;
-	}
+    if (m_File != nullptr)
+    {
+        fs_close(m_File);
+        m_File = nullptr;
+    }
 }
 //----------------------------------------------------------------------------------
 void CTextFileWritter::WriteString(const string &key, const string &value)
 {
-	if (m_File != nullptr)
-		fputs(string(key + "=" + value + "\n").c_str(), m_File);
+    if (m_File != nullptr)
+        fputs(string(key + "=" + value + "\n").c_str(), m_File);
 }
 //----------------------------------------------------------------------------------
 void CTextFileWritter::WriteInt(const string &key, int value)
 {
-	if (m_File != nullptr)
-		fputs(string(key + "=" + std::to_string(value) + "\n").c_str(), m_File);
+    if (m_File != nullptr)
+        fputs(string(key + "=" + std::to_string(value) + "\n").c_str(), m_File);
 }
 //----------------------------------------------------------------------------------
 void CTextFileWritter::WriteBool(const string &key, bool value)
 {
-	if (m_File != nullptr)
-		fputs(string(key + "=" + (value ? "yes" : "no") + "\n").c_str(), m_File);
+    if (m_File != nullptr)
+        fputs(string(key + "=" + (value ? "yes" : "no") + "\n").c_str(), m_File);
 }
 //----------------------------------------------------------------------------------
-}; //namespace
+}; // namespace WISP_FILE
 //----------------------------------------------------------------------------------

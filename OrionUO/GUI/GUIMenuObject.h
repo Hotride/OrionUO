@@ -14,17 +14,17 @@
 //----------------------------------------------------------------------------------
 class CGUIMenuObject : public CGUITilepic
 {
-	//!Текст объекта
-	string Text = "";
+    //!Текст объекта
+    string Text = "";
 
 public:
-	CGUIMenuObject(int serial, ushort graphic, ushort color, int x, int y, const string &text);
-	virtual ~CGUIMenuObject();
+    CGUIMenuObject(int serial, ushort graphic, ushort color, int x, int y, const string &text);
+    virtual ~CGUIMenuObject();
 
-	virtual bool Select();
+    virtual bool Select();
 
-	virtual void OnMouseEnter();
-	virtual void OnMouseExit();
+    virtual void OnMouseEnter();
+    virtual void OnMouseExit();
 };
 //----------------------------------------------------------------------------------
 #endif

@@ -14,16 +14,16 @@
 class CMultiObject : public CRenderStaticObject
 {
 public:
-	//!This object is temp object on mouse (when you placing a house)
-	bool OnTarget = false;
+    //!This object is temp object on mouse (when you placing a house)
+    bool OnTarget = false;
 
-	//!Original object's graphic
-	ushort OriginalGraphic = 0;
+    //!Original object's graphic
+    ushort OriginalGraphic = 0;
 
-	//!Object's state for custom houses buildings
-	int State = 0;
+    //!Object's state for custom houses buildings
+    int State = 0;
 
-	/*!
+    /*!
 	Constructor
 	@param [__in] graphic Multi object's graphic
 	@param [__in] x Coordinate X in the world
@@ -32,47 +32,47 @@ public:
 	@param [__in] flags Multi object flags
 	@return
 	*/
-	CMultiObject(ushort graphic, short x, short y, char z, int flags);
+    CMultiObject(ushort graphic, short x, short y, char z, int flags);
 
-	/*!
+    /*!
 	Destructor
 	@return
 	*/
-	virtual ~CMultiObject();
+    virtual ~CMultiObject();
 
-	/*!
+    /*!
 	Update draw graphic by current season
 	@return
 	*/
-	virtual void UpdateGraphicBySeason();
+    virtual void UpdateGraphicBySeason();
 
-	/*!
+    /*!
 	Draw object in the world
 	@param [__in] x Coordinate X on screen
 	@param [__in] y Coordinate Y on screen
 	@return
 	*/
-	virtual void Draw(int x, int y);
+    virtual void Draw(int x, int y);
 
-	/*!
+    /*!
 	Select object in the world
 	@param [__in] x Coordinate X on screen
 	@param [__in] y Coordinate Y on screen
 	@return
 	*/
-	virtual void Select(int x, int y);
+    virtual void Select(int x, int y);
 
-	/*!
+    /*!
 	Check on multi component object
 	@return Always true
 	*/
-	bool IsMultiObject() { return true; }
+    bool IsMultiObject() { return true; }
 
-	/*!
+    /*!
 	Check on custom house multi component object
 	@return Always false
 	*/
-	virtual bool IsCustomHouseMulti() { return false; }
+    virtual bool IsCustomHouseMulti() { return false; }
 };
 //----------------------------------------------------------------------------------
 #endif

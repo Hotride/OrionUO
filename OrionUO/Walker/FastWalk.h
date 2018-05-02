@@ -14,18 +14,18 @@
 class CFastWalkStack
 {
 private:
-	//fastwalk стек
-	uint m_Keys[MAX_FAST_WALK_STACK_SIZE];
+    //fastwalk стек
+    uint m_Keys[MAX_FAST_WALK_STACK_SIZE];
 
 public:
-	CFastWalkStack() { memset(m_Keys, 0, sizeof(m_Keys)); }
-	~CFastWalkStack() {}
+    CFastWalkStack() { memset(m_Keys, 0, sizeof(m_Keys)); }
+    ~CFastWalkStack() {}
 
-	void SetValue(int index, int value);
+    void SetValue(int index, int value);
 
-	void AddValue(int value);
+    void AddValue(int value);
 
-	uint GetValue();
+    uint GetValue();
 };
 //----------------------------------------------------------------------------------
 #endif

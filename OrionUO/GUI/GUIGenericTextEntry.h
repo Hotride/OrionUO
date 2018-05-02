@@ -15,11 +15,12 @@
 class CGUIGenericTextEntry : public CGUITextEntry
 {
 public:
-	//!Индекс текста
-	uint TextID = 0;
+    //!Индекс текста
+    uint TextID = 0;
 
-	CGUIGenericTextEntry(int serial, int index, ushort color, int x, int y, int maxWidth = 0, int maxLength = 0);
-	virtual ~CGUIGenericTextEntry();
+    CGUIGenericTextEntry(
+        int serial, int index, ushort color, int x, int y, int maxWidth = 0, int maxLength = 0);
+    virtual ~CGUIGenericTextEntry();
 };
 //----------------------------------------------------------------------------------
 #endif

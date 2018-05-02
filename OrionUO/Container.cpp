@@ -58,60 +58,60 @@ vector<CContainerOffset> g_ContainerOffset;
 */
 void CContainerRect::Calculate(ushort gumpID)
 {
-	WISPFUN_DEBUG("c187_f1");
-	//!Указатель на текстуру
-	CGLTexture *tex = g_Orion.ExecuteGump(gumpID);
+    WISPFUN_DEBUG("c187_f1");
+    //!Указатель на текстуру
+    CGLTexture *tex = g_Orion.ExecuteGump(gumpID);
 
-	//!Если текстура есть в памяти
-	if (tex != NULL)
-	{
-		//!Если выключено смещение - открываем гамп в правом верхнем углу клиента
-		if (!g_ConfigManager.OffsetInterfaceWindows)
-		{
-			X = DefaultX;
-			Y = DefaultY;
-		}
-		else //!Или вычисляем смещение и открываем в результируемых координатах
-		{
-			int passed = 0;
+    //!Если текстура есть в памяти
+    if (tex != NULL)
+    {
+        //!Если выключено смещение - открываем гамп в правом верхнем углу клиента
+        if (!g_ConfigManager.OffsetInterfaceWindows)
+        {
+            X = DefaultX;
+            Y = DefaultY;
+        }
+        else //!Или вычисляем смещение и открываем в результируемых координатах
+        {
+            int passed = 0;
 
-			//!Цикл в 4 итерации и пока не будут валидные координаты
-			IFOR(i, 0, 4 && !passed)
-			{
-				//!Пора изменять смещение по оси Y и обнулять по оси X
-				if (X + tex->Width + CONTAINERS_RECT_STEP > g_OrionWindow.GetSize().Width)
-				{
-					X = CONTAINERS_RECT_DEFAULT_POS;
+            //!Цикл в 4 итерации и пока не будут валидные координаты
+            IFOR (i, 0, 4 && !passed)
+            {
+                //!Пора изменять смещение по оси Y и обнулять по оси X
+                if (X + tex->Width + CONTAINERS_RECT_STEP > g_OrionWindow.GetSize().Width)
+                {
+                    X = CONTAINERS_RECT_DEFAULT_POS;
 
-					//!Если смещение по оси Y достигло максимума - выставим стандартное значение
-					if (Y + tex->Height + CONTAINERS_RECT_LINESTEP > g_OrionWindow.GetSize().Height)
-						Y = CONTAINERS_RECT_DEFAULT_POS;
-					else
-						Y += CONTAINERS_RECT_LINESTEP;
-				}
-				//!Пора изменять смещение по оси X и обнулять по оси Y
-				else if (Y + tex->Height + CONTAINERS_RECT_STEP > g_OrionWindow.GetSize().Height)
-				{
-					//!Если смещение по оси X достигло максимума - выставим стандартное значение
-					if (X + tex->Width + CONTAINERS_RECT_LINESTEP > g_OrionWindow.GetSize().Width)
-						X = CONTAINERS_RECT_DEFAULT_POS;
-					else
-						X += CONTAINERS_RECT_LINESTEP;
+                    //!Если смещение по оси Y достигло максимума - выставим стандартное значение
+                    if (Y + tex->Height + CONTAINERS_RECT_LINESTEP > g_OrionWindow.GetSize().Height)
+                        Y = CONTAINERS_RECT_DEFAULT_POS;
+                    else
+                        Y += CONTAINERS_RECT_LINESTEP;
+                }
+                //!Пора изменять смещение по оси X и обнулять по оси Y
+                else if (Y + tex->Height + CONTAINERS_RECT_STEP > g_OrionWindow.GetSize().Height)
+                {
+                    //!Если смещение по оси X достигло максимума - выставим стандартное значение
+                    if (X + tex->Width + CONTAINERS_RECT_LINESTEP > g_OrionWindow.GetSize().Width)
+                        X = CONTAINERS_RECT_DEFAULT_POS;
+                    else
+                        X += CONTAINERS_RECT_LINESTEP;
 
-					Y = CONTAINERS_RECT_DEFAULT_POS;
-				}
-				else //!Все отлично, пропускаем дальше
-					passed = (int)i + 1;
-			}
+                    Y = CONTAINERS_RECT_DEFAULT_POS;
+                }
+                else //!Все отлично, пропускаем дальше
+                    passed = (int)i + 1;
+            }
 
-			if (!passed) //!Смещение не вычислено. Выставим значение по-умолчанию
-				MakeDefault();
-			else if (passed == 1) //!Прошло с 1 раза, можно изменить смещение
-			{
-				X += CONTAINERS_RECT_STEP;
-				Y += CONTAINERS_RECT_STEP;
-			}
-		}
-	}
+            if (!passed) //!Смещение не вычислено. Выставим значение по-умолчанию
+                MakeDefault();
+            else if (passed == 1) //!Прошло с 1 раза, можно изменить смещение
+            {
+                X += CONTAINERS_RECT_STEP;
+                Y += CONTAINERS_RECT_STEP;
+            }
+        }
+    }
 }
 //----------------------------------------------------------------------------------

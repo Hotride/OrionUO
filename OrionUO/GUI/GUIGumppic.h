@@ -15,8 +15,8 @@
 class CGUIGumppic : public CGUIDrawObject
 {
 public:
-	CGUIGumppic(ushort graphic, int x, int y);
-	virtual ~CGUIGumppic();
+    CGUIGumppic(ushort graphic, int x, int y);
+    virtual ~CGUIGumppic();
 };
 //----------------------------------------------------------------------------------
 #endif

@@ -14,33 +14,34 @@ class CGumpMenubar : public CGump
 {
 protected:
     bool m_Opened = true;
+
 public:
     bool GetOpened() { return m_Opened; };
     void SetOpened(bool val);
 
 private:
-	static const int ID_GMB_MINIMIZE = 1;
-	static const int ID_GMB_MAP = 2;
-	static const int ID_GMB_PAPERDOLL = 3;
-	static const int ID_GMB_INVENTORY = 4;
-	static const int ID_GMB_JOURNAL = 5;
-	static const int ID_GMB_CHAT = 6;
-	static const int ID_GMB_HELP = 7;
-	static const int ID_GMB_WORLD_MAP = 8;
-	static const int ID_GMB_INFO = 9;
+    static const int ID_GMB_MINIMIZE = 1;
+    static const int ID_GMB_MAP = 2;
+    static const int ID_GMB_PAPERDOLL = 3;
+    static const int ID_GMB_INVENTORY = 4;
+    static const int ID_GMB_JOURNAL = 5;
+    static const int ID_GMB_CHAT = 6;
+    static const int ID_GMB_HELP = 7;
+    static const int ID_GMB_WORLD_MAP = 8;
+    static const int ID_GMB_INFO = 9;
 
 public:
-	CGumpMenubar(short x, short y);
-	virtual ~CGumpMenubar();
-	
-	virtual bool CanBeDisplayed() { return false; }
+    CGumpMenubar(short x, short y);
+    virtual ~CGumpMenubar();
 
-	virtual void InitToolTip();
+    virtual bool CanBeDisplayed() { return false; }
 
-	GUMP_BUTTON_EVENT_H;
-	GUMP_TEXT_ENTRY_EVENT_H;
+    virtual void InitToolTip();
 
-	virtual void OnLeftMouseButtonUp();
+    GUMP_BUTTON_EVENT_H;
+    GUMP_TEXT_ENTRY_EVENT_H;
+
+    virtual void OnLeftMouseButtonUp();
 };
 //----------------------------------------------------------------------------------
 #endif

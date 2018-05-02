@@ -13,490 +13,488 @@
 class COrion
 {
 public:
-	string ClientVersionText = "2.0.3";
-	int TexturesDataCount = 0;
-	string DefaultLogin = "";
-	int DefaultPort = 0;
-	uint OrionVersionNumeric = 0;
+    string ClientVersionText = "2.0.3";
+    int TexturesDataCount = 0;
+    string DefaultLogin = "";
+    int DefaultPort = 0;
+    uint OrionVersionNumeric = 0;
 
 private:
-	uint m_CRC_Table[256];
+    uint m_CRC_Table[256];
 
-	uchar m_StaticTilesFilterFlags[0x10000];
+    uchar m_StaticTilesFilterFlags[0x10000];
 
-	USHORT_LIST m_StumpTiles;
-	USHORT_LIST m_CaveTiles;
+    USHORT_LIST m_StumpTiles;
+    USHORT_LIST m_CaveTiles;
 
-	deque<CIndexObjectStatic*> m_StaticAnimList;
+    deque<CIndexObjectStatic *> m_StaticAnimList;
 
-	deque<CIndexObject*> m_UsedLandList;
-	deque<CIndexObject*> m_UsedStaticList;
-	deque<CIndexObject*> m_UsedGumpList;
-	deque<CIndexObject*> m_UsedTextureList;
-	deque<CIndexSound*> m_UsedSoundList;
-	deque<CIndexObject*> m_UsedLightList;
+    deque<CIndexObject *> m_UsedLandList;
+    deque<CIndexObject *> m_UsedStaticList;
+    deque<CIndexObject *> m_UsedGumpList;
+    deque<CIndexObject *> m_UsedTextureList;
+    deque<CIndexSound *> m_UsedSoundList;
+    deque<CIndexObject *> m_UsedLightList;
 
-	UCHAR_LIST m_AnimData;
+    UCHAR_LIST m_AnimData;
 
-	string m_GameServerIP = "";
+    string m_GameServerIP = "";
 
-	bool LoadClientConfig();
-	void LoadAutoLoginNames();
+    bool LoadClientConfig();
+    void LoadAutoLoginNames();
 
-	void LoadTiledata(int landSize, int staticsSize);
+    void LoadTiledata(int landSize, int staticsSize);
 
-	void LoadIndexFiles();
+    void LoadIndexFiles();
 
-	//Выгрузка индексных файлов
-	void UnloadIndexFiles();
+    //Выгрузка индексных файлов
+    void UnloadIndexFiles();
 
-	//Создание списка анимированных предметов
-	void InitStaticAnimList();
+    //Создание списка анимированных предметов
+    void InitStaticAnimList();
 
-	//Вычисление цвета света
-	ushort CalculateLightColor(ushort id);
+    //Вычисление цвета света
+    ushort CalculateLightColor(ushort id);
 
-	//Обработка списка анимированных предметов
-	void ProcessStaticAnimList();
+    //Обработка списка анимированных предметов
+    void ProcessStaticAnimList();
 
-	//Патч файлов
-	void PatchFiles();
+    //Патч файлов
+    void PatchFiles();
 
-	//Подмена индексов (согласно текстовым файлам)
-	void IndexReplaces();
+    //Подмена индексов (согласно текстовым файлам)
+    void IndexReplaces();
 
-	//Загрузка стартового конфига
-	void LoadClientStartupConfig();
+    //Загрузка стартового конфига
+    void LoadClientStartupConfig();
 
-	//Загрузка шейдеров
-	void LoadShaders();
+    //Загрузка шейдеров
+    void LoadShaders();
 
-	void CreateAuraTexture();
+    void CreateAuraTexture();
 
-	void CreateObjectHandlesBackground();
+    void CreateObjectHandlesBackground();
 
-	//Очистка неиспользуемых текстур
-	void ClearUnusedTextures();
+    //Очистка неиспользуемых текстур
+    void ClearUnusedTextures();
 
-	void ReadMulIndexFile(size_t indexMaxCount, std::function<CIndexObject*(int index)> getIdxObj, size_t address, PBASE_IDX_BLOCK ptr, std::function<PBASE_IDX_BLOCK()> getNewPtrValue);
-	void ReadUOPIndexFile(size_t indexMaxCount, std::function<CIndexObject*(int index)> getIdxObj, const char *uopFileName, int padding, const char *extesion, CUopMappedFile &uopFile, int startIndex = 0);
+    void ReadMulIndexFile(
+        size_t indexMaxCount,
+        std::function<CIndexObject *(int index)> getIdxObj,
+        size_t address,
+        PBASE_IDX_BLOCK ptr,
+        std::function<PBASE_IDX_BLOCK()> getNewPtrValue);
+    void ReadUOPIndexFile(
+        size_t indexMaxCount,
+        std::function<CIndexObject *(int index)> getIdxObj,
+        const char *uopFileName,
+        int padding,
+        const char *extesion,
+        CUopMappedFile &uopFile,
+        int startIndex = 0);
 
-	void GetCurrentLocale();
+    void GetCurrentLocale();
 
-	ushort TextToGraphic(const char *text);
+    ushort TextToGraphic(const char *text);
 
-	void CheckStaticTileFilterFiles();
+    void CheckStaticTileFilterFiles();
 
-	string DecodeArgumentString(const char *text, int length);
+    string DecodeArgumentString(const char *text, int length);
 
-	void ParseCommandLine();
+    void ParseCommandLine();
 
-	void LoadPlugin(const os_path &libpath, const string &function, int flags);
+    void LoadPlugin(const os_path &libpath, const string &function, int flags);
 
-	void LoadContainerOffsets();
+    void LoadContainerOffsets();
 
 public:
-	COrion();
-	~COrion();
+    COrion();
+    ~COrion();
 
-	static uint64_t CreateHash(const char *s);
+    static uint64_t CreateHash(const char *s);
 
-	//Данные из тайлдаты по ландшафту
-	vector<LAND_TILES> m_LandData;
+    //Данные из тайлдаты по ландшафту
+    vector<LAND_TILES> m_LandData;
 
-	//Данные из тайлдаты по статике
-	vector<STATIC_TILES> m_StaticData;
+    //Данные из тайлдаты по статике
+    vector<STATIC_TILES> m_StaticData;
 
-#if defined(ORION_WINDOWS) 
-	static UINT_LIST FindPattern(puchar ptr, int size, const UCHAR_LIST &pattern);
+#if defined(ORION_WINDOWS)
+    static UINT_LIST FindPattern(puchar ptr, int size, const UCHAR_LIST &pattern);
 #endif
 
-	bool Install();
-	void Uninstall();
+    bool Install();
+    void Uninstall();
 
-	//Инициализация экрана
-	void InitScreen(GAME_STATE state);
+    //Инициализация экрана
+    void InitScreen(GAME_STATE state);
 
-	//Обработка кликов мышки по истечении таймера ожидания даблклика
-	void ProcessDelayedClicks();
+    //Обработка кликов мышки по истечении таймера ожидания даблклика
+    void ProcessDelayedClicks();
 
-	void Process(bool rendering = false);
+    void Process(bool rendering = false);
 
-	//Загрузка стартового конфига
-	void LoadStartupConfig(int serial);
+    //Загрузка стартового конфига
+    void LoadStartupConfig(int serial);
 
-	//Загрузка плагинов
-	void LoadPluginConfig();
+    //Загрузка плагинов
+    void LoadPluginConfig();
 
-	//Загрузка конфига персонажа
-	void LoadLocalConfig(int serial);
+    //Загрузка конфига персонажа
+    void LoadLocalConfig(int serial);
 
-	//Сохранение конфига персонажа
-	void SaveLocalConfig(int serial);
+    //Сохранение конфига персонажа
+    void SaveLocalConfig(int serial);
 
-	CIndexObjectLand m_LandDataIndex[MAX_LAND_DATA_INDEX_COUNT];
-	CIndexObjectStatic m_StaticDataIndex[MAX_STATIC_DATA_INDEX_COUNT];
-	CIndexGump m_GumpDataIndex[MAX_GUMP_DATA_INDEX_COUNT];
-	CIndexObject m_TextureDataIndex[MAX_LAND_TEXTURES_DATA_INDEX_COUNT];
-	CIndexSound m_SoundDataIndex[MAX_SOUND_DATA_INDEX_COUNT];
-	CIndexMusic m_MP3Data[MAX_MUSIC_DATA_INDEX_COUNT];
-	CIndexMulti m_MultiDataIndex[MAX_MULTI_DATA_INDEX_COUNT];
-	CIndexLight m_LightDataIndex[MAX_LIGHTS_DATA_INDEX_COUNT];
+    CIndexObjectLand m_LandDataIndex[MAX_LAND_DATA_INDEX_COUNT];
+    CIndexObjectStatic m_StaticDataIndex[MAX_STATIC_DATA_INDEX_COUNT];
+    CIndexGump m_GumpDataIndex[MAX_GUMP_DATA_INDEX_COUNT];
+    CIndexObject m_TextureDataIndex[MAX_LAND_TEXTURES_DATA_INDEX_COUNT];
+    CIndexSound m_SoundDataIndex[MAX_SOUND_DATA_INDEX_COUNT];
+    CIndexMusic m_MP3Data[MAX_MUSIC_DATA_INDEX_COUNT];
+    CIndexMulti m_MultiDataIndex[MAX_MULTI_DATA_INDEX_COUNT];
+    CIndexLight m_LightDataIndex[MAX_LIGHTS_DATA_INDEX_COUNT];
 
-	ushort m_WinterTile[MAX_LAND_DATA_INDEX_COUNT];
+    ushort m_WinterTile[MAX_LAND_DATA_INDEX_COUNT];
 
-	vector<std::pair<ushort, ushort>> m_IgnoreInFilterTiles;
+    vector<std::pair<ushort, ushort>> m_IgnoreInFilterTiles;
 
-	bool InTileFilter(ushort graphic);
+    bool InTileFilter(ushort graphic);
 
-	static string FixServerName(string name);
+    static string FixServerName(string name);
 
+    //Подключиться к логин сокету
+    void Connect();
 
-	
-	//Подключиться к логин сокету
-	void Connect();
+    //Оборвать соединение
+    void Disconnect();
 
-	//Оборвать соединение
-	void Disconnect();
+    //Отправить пакет на сервер
+    int Send(puchar buf, int size);
 
-	//Отправить пакет на сервер
-	int Send(puchar buf, int size);
+    //Отправить пакет на сервер
+    int Send(const UCHAR_LIST &buf) { return Send((puchar)&buf[0], (int)buf.size()); }
 
-	//Отправить пакет на сервер
-	int Send(const UCHAR_LIST &buf) { return Send((puchar)&buf[0], (int)buf.size()); }
+    //Выбор сервера
+    void ServerSelection(int pos);
 
-	//Выбор сервера
-	void ServerSelection(int pos);
+    //Подключение к игровому сокету
+    void RelayServer(const char *ip, int port, puchar gameSeed);
 
-	//Подключение к игровому сокету
-	void RelayServer(const char *ip, int port, puchar gameSeed);
+    //Выбор персонажа
+    void CharacterSelection(int pos);
 
-	//Выбор персонажа
-	void CharacterSelection(int pos);
+    //Подтверждение о завершении логина (приходит от сервера)
+    void LoginComplete(bool reload);
 
-	//Подтверждение о завершении логина (приходит от сервера)
-	void LoginComplete(bool reload);
+    //!Изменить сезон
+    void ChangeSeason(const SEASON_TYPE &season, int music);
 
-	//!Изменить сезон
-	void ChangeSeason(const SEASON_TYPE &season, int music);
+    ushort GetLandSeasonGraphic(ushort graphic);
+    ushort GetSeasonGraphic(ushort graphic);
+    ushort GetSpringGraphic(ushort graphic);
+    ushort GetSummerGraphic(ushort graphic);
+    ushort GetFallGraphic(ushort graphic);
+    ushort GetWinterGraphic(ushort graphic);
+    ushort GetDesolationGraphic(ushort graphic);
 
-	ushort GetLandSeasonGraphic(ushort graphic);
-	ushort GetSeasonGraphic(ushort graphic);
-	ushort GetSpringGraphic(ushort graphic);
-	ushort GetSummerGraphic(ushort graphic);
-	ushort GetFallGraphic(ushort graphic);
-	ushort GetWinterGraphic(ushort graphic);
-	ushort GetDesolationGraphic(ushort graphic);
+    int ValueInt(const VALUE_KEY_INT &key, int value = -1);
+    string ValueString(const VALUE_KEY_STRING &key, string value = "");
 
-	int ValueInt(const VALUE_KEY_INT &key, int value = -1);
-	string ValueString(const VALUE_KEY_STRING &key, string value = "");
+    void ClearRemovedStaticsTextures();
 
-	void ClearRemovedStaticsTextures();
+    void ClearTreesTextures();
 
-	void ClearTreesTextures();
+    bool IsTreeTile(ushort graphic, int &index);
 
-	bool IsTreeTile(ushort graphic, int &index);
+    void ClearCaveTextures();
 
-	void ClearCaveTextures();
+    bool IsCaveTile(ushort graphic);
 
-	bool IsCaveTile(ushort graphic);
+    bool IsVegetation(ushort graphic);
 
-	bool IsVegetation(ushort graphic);
+    //Получить флаги ландшафта
+    uint64 GetLandFlags(ushort id);
 
+    //Получить флаги статики
+    uint64 GetStaticFlags(ushort id);
 
+    //Получить цвет света
+    ushort GetLightColor(ushort id) { return m_StaticDataIndex[id].LightColor; }
 
-	//Получить флаги ландшафта
-	uint64 GetLandFlags(ushort id);
+    //Получить габариты картинки статики
+    WISP_GEOMETRY::CSize GetStaticArtDimension(ushort id);
 
-	//Получить флаги статики
-	uint64 GetStaticFlags(ushort id);
+    //Получить габариты картинки гампа
+    WISP_GEOMETRY::CSize GetGumpDimension(ushort id);
 
-	//Получить цвет света
-	ushort GetLightColor(ushort id) { return m_StaticDataIndex[id].LightColor; }
+    //Загрузка текстуры гампа
+    CGLTexture *ExecuteGump(ushort id);
 
+    //Загрузка текстуры ландшафта из art.mul
+    CGLTexture *ExecuteLandArt(ushort id);
 
+    //Загрузка текстуры статики
+    CGLTexture *ExecuteStaticArt(ushort id);
 
-	//Получить габариты картинки статики
-	WISP_GEOMETRY::CSize GetStaticArtDimension(ushort id);
+    //Загрузка текстуры анимированной статики
+    CGLTexture *ExecuteStaticArtAnimated(ushort id);
 
-	//Получить габариты картинки гампа
-	WISP_GEOMETRY::CSize GetGumpDimension(ushort id);
+    //Загрузка текстуры ландшафта (из texmaps.mul)
+    CGLTexture *ExecuteTexture(ushort id);
 
+    //Загрузка текстуры света
+    CGLTexture *ExecuteLight(uchar &id);
 
+    //Загрузка элементов гампов
+    bool ExecuteGumpPart(ushort id, int count);
 
-	//Загрузка текстуры гампа
-	CGLTexture *ExecuteGump(ushort id);
+    //Загрузка элементов фона гампа
+    bool ExecuteResizepic(ushort id) { return ExecuteGumpPart(id, 9); }
 
-	//Загрузка текстуры ландшафта из art.mul
-	CGLTexture *ExecuteLandArt(ushort id);
+    //Загрузка элементов кнопки гампа
+    bool ExecuteButton(ushort id) { return ExecuteGumpPart(id, 3); }
 
-	//Загрузка текстуры статики
-	CGLTexture *ExecuteStaticArt(ushort id);
+    //Нарисовать гамп
+    void DrawGump(ushort id, ushort color, int x, int y, bool partialHue = false);
 
-	//Загрузка текстуры анимированной статики
-	CGLTexture *ExecuteStaticArtAnimated(ushort id);
+    //Нарисовать замощенный гамп
+    void
+    DrawGump(ushort id, ushort color, int x, int y, int width, int height, bool partialHue = false);
 
-	//Загрузка текстуры ландшафта (из texmaps.mul)
-	CGLTexture *ExecuteTexture(ushort id);
+    //Нарисовать фон гампа
+    void DrawResizepicGump(ushort id, int x, int y, int width, int height);
 
-	//Загрузка текстуры света
-	CGLTexture *ExecuteLight(uchar &id);
+    //Нарисовать ландшафт (из texmaps.mul)
+    void DrawLandTexture(class CLandObject *land, ushort color, int x, int y);
 
+    //Нарисовать ландшафт (из art.mul)
+    void DrawLandArt(ushort id, ushort color, int x, int y);
 
+    //Нарисовать статику
+    void DrawStaticArt(ushort id, ushort color, int x, int y, bool selection = false);
 
-	//Загрузка элементов гампов
-	bool ExecuteGumpPart(ushort id, int count);
+    //Нарисовать анимированную статику
+    void DrawStaticArtAnimated(ushort id, ushort color, int x, int y, bool selection = false);
 
-	//Загрузка элементов фона гампа
-	bool ExecuteResizepic(ushort id) { return ExecuteGumpPart(id, 9); }
+    //Нарисовать повернутую статику
+    void DrawStaticArtRotated(ushort id, ushort color, int x, int y, float angle);
 
-	//Загрузка элементов кнопки гампа
-	bool ExecuteButton(ushort id) { return ExecuteGumpPart(id, 3); }
+    //Нарисовать повернутую анимированную статику
+    void DrawStaticArtAnimatedRotated(ushort id, ushort color, int x, int y, float angle);
 
+    //Нарисовать прозрачную статику
+    void DrawStaticArtTransparent(ushort id, ushort color, int x, int y, bool selection = false);
 
+    //Нарисовать прозрачную анимированную статику
+    void
+    DrawStaticArtAnimatedTransparent(ushort id, ushort color, int x, int y, bool selection = false);
 
-	//Нарисовать гамп
-	void DrawGump(ushort id, ushort color, int x, int y, bool partialHue = false);
+    //Нарисовать статику в контейнере
+    void DrawStaticArtInContainer(
+        ushort id, ushort color, int x, int y, bool selection = false, bool onMouse = false);
 
-	//Нарисовать замощенный гамп
-	void DrawGump(ushort id, ushort color, int x, int y, int width, int height, bool partialHue = false);
+    //Нарисовать свет
+    void DrawLight(struct LIGHT_DATA &light);
 
-	//Нарисовать фон гампа
-	void DrawResizepicGump(ushort id, int x, int y, int width, int height);
+    //Проверка прямоугольника под курсором мышки
+    bool PolygonePixelsInXY(int x, int y, int width, int height);
 
-	//Нарисовать ландшафт (из texmaps.mul)
-	void DrawLandTexture(class CLandObject *land, ushort color, int x, int y);
+    //Проверка гампа под курсором мышки
+    bool GumpPixelsInXY(ushort id, int x, int y);
 
-	//Нарисовать ландшафт (из art.mul)
-	void DrawLandArt(ushort id, ushort color, int x, int y);
+    //Проверка замощенного гампа под курсором мышки
+    bool GumpPixelsInXY(ushort id, int x, int y, int width, int height);
 
-	//Нарисовать статику
-	void DrawStaticArt(ushort id, ushort color, int x, int y, bool selection = false);
+    //Проверка фона под курсором мышки
+    bool ResizepicPixelsInXY(ushort id, int x, int y, int width, int height);
 
-	//Нарисовать анимированную статику
-	void DrawStaticArtAnimated(ushort id, ushort color, int x, int y, bool selection = false);
+    //Проверка статики под курсором мышки
+    bool StaticPixelsInXY(ushort id, int x, int y);
 
-	//Нарисовать повернутую статику
-	void DrawStaticArtRotated(ushort id, ushort color, int x, int y, float angle);
+    //Проверка анимированной статики под курсором мышки
+    bool StaticPixelsInXYAnimated(ushort id, int x, int y);
 
-	//Нарисовать повернутую анимированную статику
-	void DrawStaticArtAnimatedRotated(ushort id, ushort color, int x, int y, float angle);
+    //Проверка статики в контейнере под курсором мышки
+    bool StaticPixelsInXYInContainer(ushort id, int x, int y);
 
-	//Нарисовать прозрачную статику
-	void DrawStaticArtTransparent(ushort id, ushort color, int x, int y, bool selection = false);
+    //Проверка ландшафта (из art.mul) под курсором мышки
+    bool LandPixelsInXY(ushort id, int x, int y);
 
-	//Нарисовать прозрачную анимированную статику
-	void DrawStaticArtAnimatedTransparent(ushort id, ushort color, int x, int y, bool selection = false);
+    //Проверка растянутого ландшафта (из texmaps.mul) под курсором мышки
+    bool LandTexturePixelsInXY(int x, int y, RECT &r);
 
-	//Нарисовать статику в контейнере
-	void DrawStaticArtInContainer(ushort id, ushort color, int x, int y, bool selection = false, bool onMouse = false);
+    //Создать текстовое сообщение с форматированным вводом
+    void CreateTextMessageF(uchar font, ushort color, const char *format, ...);
 
-	//Нарисовать свет
-	void DrawLight(struct LIGHT_DATA &light);
+    //Создать текстовое сообщение с форматированным вводом (Unicode)
+    void CreateUnicodeTextMessageF(uchar font, ushort color, const char *format, ...);
 
+    //Создать текстовое сообщение (ASCII)
+    void CreateTextMessage(
+        const TEXT_TYPE &type,
+        int serial,
+        uchar font,
+        ushort color,
+        const string &text,
+        class CRenderWorldObject *clientObj = nullptr);
 
+    //Создать текстовое сообщение (Unicode)
+    void CreateUnicodeTextMessage(
+        const TEXT_TYPE &type,
+        int serial,
+        uchar font,
+        ushort color,
+        const wstring &text,
+        class CRenderWorldObject *clientObj = nullptr);
 
-	//Проверка прямоугольника под курсором мышки
-	bool PolygonePixelsInXY(int x, int y, int width, int height);
+    //Добавить сообщение в систем чат
+    void AddSystemMessage(class CTextData *msg);
 
-	//Проверка гампа под курсором мышки
-	bool GumpPixelsInXY(ushort id, int x, int y);
+    //Добавить сообщение в журнал
+    void AddJournalMessage(class CTextData *msg, const string &name);
 
-	//Проверка замощенного гампа под курсором мышки
-	bool GumpPixelsInXY(ushort id, int x, int y, int width, int height);
+    //Изменение индекса карты
+    void ChangeMap(uchar newmap);
 
-	//Проверка фона под курсором мышки
-	bool ResizepicPixelsInXY(ushort id, int x, int y, int width, int height);
+    //Поднять предмет
+    void PickupItem(class CGameItem *obj, int count = 0, bool isGameFigure = false);
 
-	//Проверка статики под курсором мышки
-	bool StaticPixelsInXY(ushort id, int x, int y);
+    //Бросить предмет
+    void DropItem(int container, ushort x, ushort y, char z);
 
-	//Проверка анимированной статики под курсором мышки
-	bool StaticPixelsInXYAnimated(ushort id, int x, int y);
+    //Одеть предмет
+    void EquipItem(uint container = 0);
 
-	//Проверка статики в контейнере под курсором мышки
-	bool StaticPixelsInXYInContainer(ushort id, int x, int y);
+    //Изменить вармод
+    void ChangeWarmode(uchar status = 0xFF);
 
-	//Проверка ландшафта (из art.mul) под курсором мышки
-	bool LandPixelsInXY(ushort id, int x, int y);
+    //Кликнуть по объекту
+    void Click(uint serial);
 
-	//Проверка растянутого ландшафта (из texmaps.mul) под курсором мышки
-	bool LandTexturePixelsInXY(int x, int  y, RECT &r);
+    //Двойное нажатие на объект
+    void DoubleClick(uint serial);
 
+    //Запрос папердолла
+    void PaperdollReq(uint serial);
 
+    //Обработка атаки в клиенте
+    void Attack(uint serial);
 
-	//Создать текстовое сообщение с форматированным вводом
-	void CreateTextMessageF(uchar font, ushort color, const char *format, ...);
+    //Отправка пакета на сервер
+    void AttackReq(uint serial);
 
-	//Создать текстовое сообщение с форматированным вводом (Unicode)
-	void CreateUnicodeTextMessageF(uchar font, ushort color, const char *format, ...);
+    //Отправка ASCII текста
+    void SendASCIIText(const char *str, SPEECH_TYPE type);
 
-	//Создать текстовое сообщение (ASCII)
-	void CreateTextMessage(const TEXT_TYPE &type, int serial, uchar font, ushort color, const string &text, class CRenderWorldObject *clientObj = nullptr);
+    //Начать каст заклинания
+    void CastSpell(int index);
 
-	//Создать текстовое сообщение (Unicode)
-	void CreateUnicodeTextMessage(const TEXT_TYPE &type, int serial, uchar font, ushort color, const wstring &text, class CRenderWorldObject *clientObj = nullptr);
+    //Начать каст заклинания с книги
+    void CastSpellFromBook(int index, uint serial);
 
-	//Добавить сообщение в систем чат
-	void AddSystemMessage(class CTextData *msg);
+    //Использовать навык
+    void UseSkill(int index);
 
-	//Добавить сообщение в журнал
-	void AddJournalMessage(class CTextData *msg, const string &name);
+    //Открыть дверь
+    void OpenDoor();
 
+    //Запрос анимации эмоции
+    void EmoteAction(const char *action);
 
+    //Клик на всех персонажей в зоне видимости
+    void AllNames();
 
-	//Изменение индекса карты
-	void ChangeMap(uchar newmap);
+    //Получить хэш-код файла
+    uint GetFileHashCode(puchar ptr, size_t size);
 
+    //Загрузка логинсервера
+    void LoadLogin(string &login, int &port);
 
+    //Переход по веб-ссылке
+    void GoToWebLink(const string &url);
 
-	//Поднять предмет
-	void PickupItem(class CGameItem *obj, int count = 0, bool isGameFigure = false);
+    void ResumeSound();
 
-	//Бросить предмет
-	void DropItem(int container, ushort x, ushort y, char z);
+    void PauseSound();
 
-	//Одеть предмет
-	void EquipItem(uint container = 0);
+    //Проиграть музыку mp3 либо midi
+    void PlayMusic(int index, bool warmode = false);
 
+    //Проиграть звуковой эффект
+    void PlaySoundEffect(ushort index, float volume = -1);
 
+    //Удалить неиспользуемые звуковые эффекты
+    void AdjustSoundEffects(int ticks, float volume = -1);
 
-	//Изменить вармод
-	void ChangeWarmode(uchar status = 0xFF);
+    //Удаление объектов, вышедших за пределы g_UpdateRange
+    void RemoveRangedObjects();
 
-	//Кликнуть по объекту
-	void Click(uint serial);
+    //Очистить мир (удалить все объекты)
+    void ClearWorld();
 
-	//Двойное нажатие на объект
-	void DoubleClick(uint serial);
+    //Выход из игры на основной экран
+    void LogOut();
 
-	//Запрос папердолла
-	void PaperdollReq(uint serial);
+    //Отправить промпт
+    void ConsolePromptSend();
 
-	//Обработка атаки в клиенте
-	void Attack(uint serial);
+    //Отправить отмену промпта
+    void ConsolePromptCancel();
 
-	//Отправка пакета на сервер
-	void AttackReq(uint serial);
+    //--------------------------------------------
+    //---Обработка кнопок папердолла и менюбара---
+    //--------------------------------------------
 
-	//Отправка ASCII текста
-	void SendASCIIText(const char *str, SPEECH_TYPE type);
+    //Открыть гамп статуса
+    void OpenStatus(uint serial);
 
-	//Начать каст заклинания
-	void CastSpell(int index);
+    //Открыть или переместить гамп статуса
+    void DisplayStatusbarGump(int serial, int x, int y);
 
-	//Начать каст заклинания с книги
-	void CastSpellFromBook(int index, uint serial);
+    //Открыть гамп мини-карты
+    void OpenMinimap();
 
-	//Использовать навык
-	void UseSkill(int index);
+    //Открыть гамп карты мира
+    void OpenWorldMap();
 
-	//Открыть дверь
-	void OpenDoor();
+    //Открыть гамп журнала
+    void OpenJournal();
 
-	//Запрос анимации эмоции
-	void EmoteAction(const char *action);
+    //Открыть гамп навыков
+    void OpenSkills();
 
-	//Клик на всех персонажей в зоне видимости
-	void AllNames();
+    //Открыть рюкзак
+    void OpenBackpack();
 
-	//Получить хэш-код файла
-	uint GetFileHashCode(puchar ptr, size_t size);
+    //Открыть гамп логаута
+    void OpenLogOut();
 
-	//Загрузка логинсервера
-	void LoadLogin(string &login, int &port);
+    //Открыть гамп чата
+    void OpenChat();
 
-	//Переход по веб-ссылке
-	void GoToWebLink(const string &url);
+    //Открыть гамп опций
+    void OpenConfiguration();
 
-	void ResumeSound();
+    //Открыть гамп почти
+    void OpenMail();
 
-	void PauseSound();
+    //Открыть гамп пати-манифеста
+    void OpenPartyManifest();
 
-	//Проиграть музыку mp3 либо midi
-	void PlayMusic(int index, bool warmode = false);
+    //Открыть гамп профиля
+    void OpenProfile(uint serial = 0);
 
-	//Проиграть звуковой эффект
-	void PlaySoundEffect(ushort index, float volume = -1);
+    void DisconnectGump();
 
-	//Удалить неиспользуемые звуковые эффекты
-	void AdjustSoundEffects(int ticks, float volume = -1);
+    void OpenCombatBookGump();
 
+    void OpenRacialAbilitiesBookGump();
 
-
-	//Удаление объектов, вышедших за пределы g_UpdateRange
-	void RemoveRangedObjects();
-
-	//Очистить мир (удалить все объекты)
-	void ClearWorld();
-
-	//Выход из игры на основной экран
-	void LogOut();
-
-
-
-	//Отправить промпт
-	void ConsolePromptSend();
-
-	//Отправить отмену промпта
-	void ConsolePromptCancel();
-
-
-
-	//--------------------------------------------
-	//---Обработка кнопок папердолла и менюбара---
-	//--------------------------------------------
-
-	//Открыть гамп статуса
-	void OpenStatus(uint serial);
-
-	//Открыть или переместить гамп статуса
-	void DisplayStatusbarGump(int serial, int x, int y);
-
-	//Открыть гамп мини-карты
-	void OpenMinimap();
-
-	//Открыть гамп карты мира
-	void OpenWorldMap();
-
-	//Открыть гамп журнала
-	void OpenJournal();
-
-	//Открыть гамп навыков
-	void OpenSkills();
-
-	//Открыть рюкзак
-	void OpenBackpack();
-
-	//Открыть гамп логаута
-	void OpenLogOut();
-
-	//Открыть гамп чата
-	void OpenChat();
-
-	//Открыть гамп опций
-	void OpenConfiguration();
-
-	//Открыть гамп почти
-	void OpenMail();
-
-	//Открыть гамп пати-манифеста
-	void OpenPartyManifest();
-
-	//Открыть гамп профиля
-	void OpenProfile(uint serial = 0);
-
-	void DisconnectGump();
-
-	void OpenCombatBookGump();
-
-	void OpenRacialAbilitiesBookGump();
-
-	void StartReconnect();
+    void StartReconnect();
 };
 //----------------------------------------------------------------------------------
 extern COrion g_Orion;
 //----------------------------------------------------------------------------------
 #endif
 //----------------------------------------------------------------------------------
-

@@ -13,37 +13,37 @@
 class CTargetGump
 {
 public:
-	int X = 0;
-	int Y = 0;
-	int Hits = 0;
-	ushort Color = 0;
-	ushort HealthColor = 0;
-	CGameCharacter* TargetedCharacter = NULL;
-	CTargetGump();
-	~CTargetGump();
+    int X = 0;
+    int Y = 0;
+    int Hits = 0;
+    ushort Color = 0;
+    ushort HealthColor = 0;
+    CGameCharacter *TargetedCharacter = NULL;
+    CTargetGump();
+    ~CTargetGump();
 
-	void Draw();
+    void Draw();
 };
 //----------------------------------------------------------------------------------
 class CNewTargetSystem
 {
 public:
-	uint Serial = 0;
-	int X = 0;
-	int TopY = 0;
-	int BottomY = 0;
-	int GumpX = 20;
-	int GumpY = 20;
-	int Hits = 0;
-	ushort GumpTop = 0;
-	ushort GumpBottom = 0;
-	ushort ColorGump = 0;
-	ushort HealthColor = 0;
-	CGameCharacter* TargetedCharacter = NULL;
-	CNewTargetSystem();
-	~CNewTargetSystem();
+    uint Serial = 0;
+    int X = 0;
+    int TopY = 0;
+    int BottomY = 0;
+    int GumpX = 20;
+    int GumpY = 20;
+    int Hits = 0;
+    ushort GumpTop = 0;
+    ushort GumpBottom = 0;
+    ushort ColorGump = 0;
+    ushort HealthColor = 0;
+    CGameCharacter *TargetedCharacter = NULL;
+    CNewTargetSystem();
+    ~CNewTargetSystem();
 
-	void Draw();
+    void Draw();
 };
 //----------------------------------------------------------------------------------
 extern CTargetGump g_TargetGump;

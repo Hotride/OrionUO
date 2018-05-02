@@ -16,57 +16,57 @@ CIntlocManager g_IntlocManager;
 //--------------------------------------CIntloc-------------------------------------
 //----------------------------------------------------------------------------------
 CIntloc::CIntloc(int fileIndex, const string &lang)
-: CBaseQueueItem()
+    : CBaseQueueItem()
 {
-	WISPFUN_DEBUG("c135_f1");
-	Loaded = false;
-	Language = lang;
-	FileIndex = fileIndex;
+    WISPFUN_DEBUG("c135_f1");
+    Loaded = false;
+    Language = lang;
+    FileIndex = fileIndex;
 
-	if (Language.length())
-	{
-		if (m_File.Load(g_App.UOFilesPath("intloc%02i.%s", fileIndex, lang.c_str())))
-		{
-			while (!m_File.IsEOF())
-			{
-				uint code = m_File.ReadUInt32BE();
-				
-				if (code == 'TEXT')
-				{
-					int len = m_File.ReadInt32BE();
+    if (Language.length())
+    {
+        if (m_File.Load(g_App.UOFilesPath("intloc%02i.%s", fileIndex, lang.c_str())))
+        {
+            while (!m_File.IsEOF())
+            {
+                uint code = m_File.ReadUInt32BE();
 
-					puchar end = m_File.Ptr + len;
+                if (code == 'TEXT')
+                {
+                    int len = m_File.ReadInt32BE();
 
-					while (m_File.Ptr < end && !m_File.IsEOF())
-					{
-						m_Strings.push_back(DecodeUTF8(m_File.ReadString().c_str()));
-					}
-				}
-				else if(code == 'FORM')
-					m_File.Move(4);
-				else if (code == 'INFO')
-				{
-					int len = m_File.ReadInt32BE();
-					m_File.Move(len + 1);
-				}
-				else if (code == 'DATA' || code == 'LANG')
-				{
-				}
-				else
-					break;
-			}
+                    puchar end = m_File.Ptr + len;
 
-			Loaded = (m_Strings.size() != 0);
-		}
-	}
+                    while (m_File.Ptr < end && !m_File.IsEOF())
+                    {
+                        m_Strings.push_back(DecodeUTF8(m_File.ReadString().c_str()));
+                    }
+                }
+                else if (code == 'FORM')
+                    m_File.Move(4);
+                else if (code == 'INFO')
+                {
+                    int len = m_File.ReadInt32BE();
+                    m_File.Move(len + 1);
+                }
+                else if (code == 'DATA' || code == 'LANG')
+                {
+                }
+                else
+                    break;
+            }
+
+            Loaded = (m_Strings.size() != 0);
+        }
+    }
 }
 //----------------------------------------------------------------------------------
 CIntloc::~CIntloc()
 {
-	WISPFUN_DEBUG("c135_f2");
-	m_File.Unload();
+    WISPFUN_DEBUG("c135_f2");
+    m_File.Unload();
 
-	m_Strings.clear();
+    m_Strings.clear();
 }
 //----------------------------------------------------------------------------------
 /*!
@@ -77,22 +77,22 @@ CIntloc::~CIntloc()
 */
 wstring CIntloc::Get(int id, bool toCamelCase)
 {
-	WISPFUN_DEBUG("c135_f4");
-	if (id < m_Strings.size())
-	{
-		if (toCamelCase)
-			return ToCamelCaseW(m_Strings[id]);
+    WISPFUN_DEBUG("c135_f4");
+    if (id < m_Strings.size())
+    {
+        if (toCamelCase)
+            return ToCamelCaseW(m_Strings[id]);
 
-		return m_Strings[id];
-	}
+        return m_Strings[id];
+    }
 
-	return L"";
+    return L"";
 }
 //----------------------------------------------------------------------------------
 //-----------------------------------CIntlocManager---------------------------------
 //----------------------------------------------------------------------------------
 CIntlocManager::CIntlocManager()
-: CBaseQueue()
+    : CBaseQueue()
 {
 }
 //----------------------------------------------------------------------------------
@@ -102,62 +102,62 @@ CIntlocManager::~CIntlocManager()
 //----------------------------------------------------------------------------------
 CIntloc *CIntlocManager::Intloc(int fileIndex, const string &lang)
 {
-	WISPFUN_DEBUG("c136_f1");
-	QFOR(obj, m_Items, CIntloc*)
-	{
-		if (obj->Language == lang && obj->FileIndex == fileIndex)
-		{
-			if (!obj->Loaded)
-				return NULL;
+    WISPFUN_DEBUG("c136_f1");
+    QFOR(obj, m_Items, CIntloc *)
+    {
+        if (obj->Language == lang && obj->FileIndex == fileIndex)
+        {
+            if (!obj->Loaded)
+                return NULL;
 
-			return obj;
-		}
-	}
+            return obj;
+        }
+    }
 
-	CIntloc *obj = (CIntloc*)Add(new CIntloc(fileIndex, lang));
+    CIntloc *obj = (CIntloc *)Add(new CIntloc(fileIndex, lang));
 
-	if (obj->Loaded)
-		return obj;
+    if (obj->Loaded)
+        return obj;
 
-	QFOR(obj, m_Items, CIntloc*)
-	{
-		if (obj->Language == "enu" && obj->FileIndex == fileIndex)
-		{
-			if (obj->Loaded)
-				return obj;
+    QFOR(obj, m_Items, CIntloc *)
+    {
+        if (obj->Language == "enu" && obj->FileIndex == fileIndex)
+        {
+            if (obj->Loaded)
+                return obj;
 
-			break;
-		}
-	}
+            break;
+        }
+    }
 
-	return NULL;
+    return NULL;
 }
 //----------------------------------------------------------------------------------
 wstring CIntlocManager::Intloc(const string &lang, uint clilocID, bool isNewCliloc)
 {
-	WISPFUN_DEBUG("c136_f1");
-	string language = ToLowerA(lang).c_str();
+    WISPFUN_DEBUG("c136_f1");
+    string language = ToLowerA(lang).c_str();
 
-	if (!language.length())
-		language = "enu";
+    if (!language.length())
+        language = "enu";
 
-	wstring str = L"";
+    wstring str = L"";
 
-	if (!isNewCliloc && false)
-	{
-		int fileIndex = (clilocID / 1000) % 1000;
-		CIntloc *obj = Intloc(fileIndex, language);
+    if (!isNewCliloc && false)
+    {
+        int fileIndex = (clilocID / 1000) % 1000;
+        CIntloc *obj = Intloc(fileIndex, language);
 
-		if (obj == NULL && language != "enu")
-			obj = Intloc(fileIndex, "enu");
+        if (obj == NULL && language != "enu")
+            obj = Intloc(fileIndex, "enu");
 
-		if (obj != NULL)
-			str = obj->Get(clilocID % 1000, true);
-	}
-	
-	if (!str.length())
-		str = g_ClilocManager.Cliloc(lang)->GetW(clilocID, true);
+        if (obj != NULL)
+            str = obj->Get(clilocID % 1000, true);
+    }
 
-	return str;
+    if (!str.length())
+        str = g_ClilocManager.Cliloc(lang)->GetW(clilocID, true);
+
+    return str;
 }
 //----------------------------------------------------------------------------------

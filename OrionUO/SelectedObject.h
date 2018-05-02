@@ -13,16 +13,17 @@
 class CSelectedObject
 {
 public:
-	uint Serial = 0;
-	CRenderObject* Object = NULL;	CGump* Gump = NULL;
-	CSelectedObject();
-	virtual ~CSelectedObject();
+    uint Serial = 0;
+    CRenderObject *Object = NULL;
+    CGump *Gump = NULL;
+    CSelectedObject();
+    virtual ~CSelectedObject();
 
-	void Clear();
-	void Clear(CRenderObject *obj);
+    void Clear();
+    void Clear(CRenderObject *obj);
 
-	void Init(CRenderObject *obj, CGump *gump = NULL);
-	void Init(const CSelectedObject &obj);
+    void Init(CRenderObject *obj, CGump *gump = NULL);
+    void Init(const CSelectedObject &obj);
 };
 //----------------------------------------------------------------------------------
 extern CSelectedObject g_SelectedObject;

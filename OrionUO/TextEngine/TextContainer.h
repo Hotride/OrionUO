@@ -14,23 +14,23 @@
 class CTextContainer : public CBaseQueue
 {
 public:
-	int MaxSize = 0;
-	int Size = 0;
+    int MaxSize = 0;
+    int Size = 0;
 
-	CTextContainer(int maxSize);
-	~CTextContainer();
+    CTextContainer(int maxSize);
+    ~CTextContainer();
 
-	//Добавить текст
-	void Add(CTextData *obj);
+    //Добавить текст
+    void Add(CTextData *obj);
 
-	//Удалить текст
-	void Delete(CTextData *obj);
+    //Удалить текст
+    void Delete(CTextData *obj);
 
-	//Очистить контейнер
-	virtual void Clear();
+    //Очистить контейнер
+    virtual void Clear();
 
-	//Отрисовать системный чат
-	void DrawSystemChat(int x, int y, int height);
+    //Отрисовать системный чат
+    void DrawSystemChat(int x, int y, int height);
 };
 //----------------------------------------------------------------------------------
 extern CTextContainer g_SystemChat;

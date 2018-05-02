@@ -19,26 +19,26 @@ CWalker::CWalker()
 //---------------------------------------------------------------------------
 void CWalker::Reset()
 {
-	UnacceptedPacketsCount = 0;
-	StepsCount = 0;
-	WalkSequence = 0;
-	CurrentWalkSequence = 0;
-	WalkingFailed = false;
-	ResendPacketSended = false;
-	LastStepRequestTime = 0;
+    UnacceptedPacketsCount = 0;
+    StepsCount = 0;
+    WalkSequence = 0;
+    CurrentWalkSequence = 0;
+    WalkingFailed = false;
+    ResendPacketSended = false;
+    LastStepRequestTime = 0;
 }
 //----------------------------------------------------------------------------------
 void CWalker::DenyWalk(uchar sequence, int x, int y, char z)
 {
-	g_Player->m_Steps.clear();
+    g_Player->m_Steps.clear();
 
-	g_Player->OffsetX = 0;
-	g_Player->OffsetY = 0;
-	g_Player->OffsetZ = 0;
+    g_Player->OffsetX = 0;
+    g_Player->OffsetY = 0;
+    g_Player->OffsetZ = 0;
 
-	Reset();
+    Reset();
 
-	/*if (sequence == 0xFF)
+    /*if (sequence == 0xFF)
 	{
 	g_Player->GameObject.GameObject.X = g_PlayerX;
 	g_Player->GameObject.GameObject.Y = g_PlayerY;
@@ -48,80 +48,82 @@ void CWalker::DenyWalk(uchar sequence, int x, int y, char z)
 	result = UpdateMaxDrawZ();
 	}
 	else{...}*/
-	//UpdatePlayerCoordinates(x, y, z, g_ServerID);
+    //UpdatePlayerCoordinates(x, y, z, g_ServerID);
 
-	if (x != -1)
-	{
-		g_Player->SetX(x);
-		g_Player->SetY(y);
-		g_Player->SetZ(z);
+    if (x != -1)
+    {
+        g_Player->SetX(x);
+        g_Player->SetY(y);
+        g_Player->SetZ(z);
 
-		g_RemoveRangeXY.X = x;
-		g_RemoveRangeXY.Y = y;
+        g_RemoveRangeXY.X = x;
+        g_RemoveRangeXY.Y = y;
 
-		UOI_PLAYER_XYZ_DATA xyzData = { g_RemoveRangeXY.X, g_RemoveRangeXY.Y, 0 };
-		g_PluginManager.WindowProc(g_OrionWindow.Handle, UOMSG_UPDATE_REMOVE_POS, (WPARAM)&xyzData, 0);
-	}
+        UOI_PLAYER_XYZ_DATA xyzData = { g_RemoveRangeXY.X, g_RemoveRangeXY.Y, 0 };
+        g_PluginManager.WindowProc(
+            g_OrionWindow.Handle, UOMSG_UPDATE_REMOVE_POS, (WPARAM)&xyzData, 0);
+    }
 }
 //----------------------------------------------------------------------------------
 void CWalker::ConfirmWalk(uchar sequence)
 {
-	if (UnacceptedPacketsCount)
-		UnacceptedPacketsCount--;
+    if (UnacceptedPacketsCount)
+        UnacceptedPacketsCount--;
 
-	int stepIndex = 0;
+    int stepIndex = 0;
 
-	IFOR(i, 0, StepsCount)
-	{
-		if (m_Step[i].Sequence == sequence)
-			break;
+    IFOR (i, 0, StepsCount)
+    {
+        if (m_Step[i].Sequence == sequence)
+            break;
 
-		stepIndex++;
-	}
+        stepIndex++;
+    }
 
-	bool isBadStep = (stepIndex == StepsCount);
+    bool isBadStep = (stepIndex == StepsCount);
 
-	if (!isBadStep)
-	{
-		if (stepIndex >= CurrentWalkSequence)
-		{
-			m_Step[stepIndex].Accepted = true;
-			g_RemoveRangeXY.X = m_Step[stepIndex].X;
-			g_RemoveRangeXY.Y = m_Step[stepIndex].Y;
-		}
-		else if (!stepIndex)
-		{
-			g_RemoveRangeXY.X = m_Step[0].X;
-			g_RemoveRangeXY.Y = m_Step[0].Y;
+    if (!isBadStep)
+    {
+        if (stepIndex >= CurrentWalkSequence)
+        {
+            m_Step[stepIndex].Accepted = true;
+            g_RemoveRangeXY.X = m_Step[stepIndex].X;
+            g_RemoveRangeXY.Y = m_Step[stepIndex].Y;
+        }
+        else if (!stepIndex)
+        {
+            g_RemoveRangeXY.X = m_Step[0].X;
+            g_RemoveRangeXY.Y = m_Step[0].Y;
 
-			IFOR(i, 1, StepsCount)
-			{
-				m_Step[i - 1] = m_Step[i];
-			}
+            IFOR (i, 1, StepsCount)
+            {
+                m_Step[i - 1] = m_Step[i];
+            }
 
-			StepsCount--;
-			CurrentWalkSequence--;
-		}
-		else //if (stepIndex)
-			isBadStep = true;
-	}
+            StepsCount--;
+            CurrentWalkSequence--;
+        }
+        else //if (stepIndex)
+            isBadStep = true;
+    }
 
-	if (isBadStep)
-	{
-		if (!ResendPacketSended)
-		{
-			CPacketResend().Send();
-			ResendPacketSended = true;
-		}
+    if (isBadStep)
+    {
+        if (!ResendPacketSended)
+        {
+            CPacketResend().Send();
+            ResendPacketSended = true;
+        }
 
-		WalkingFailed = true;
-		StepsCount = 0;
-		CurrentWalkSequence = 0;
-	}
-	else
-	{
-		UOI_PLAYER_XYZ_DATA xyzData = { g_RemoveRangeXY.X, g_RemoveRangeXY.Y, 0 };
-		g_PluginManager.WindowProc(g_OrionWindow.Handle, UOMSG_UPDATE_REMOVE_POS, (WPARAM)&xyzData, 0);
-	}
+        WalkingFailed = true;
+        StepsCount = 0;
+        CurrentWalkSequence = 0;
+    }
+    else
+    {
+        UOI_PLAYER_XYZ_DATA xyzData = { g_RemoveRangeXY.X, g_RemoveRangeXY.Y, 0 };
+        g_PluginManager.WindowProc(
+            g_OrionWindow.Handle, UOMSG_UPDATE_REMOVE_POS, (WPARAM)&xyzData, 0);
+    }
 }
 //----------------------------------------------------------------------------------

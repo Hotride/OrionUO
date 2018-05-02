@@ -21,265 +21,266 @@ namespace WISP_THREAD
 //----------------------------------------------------------------------------------
 thread_int THREADCALL CThreadLoop(void *arg)
 {
-	WISPFUN_DEBUG("c_trdlp");
-	CThread *parent = (CThread*)arg;
+    WISPFUN_DEBUG("c_trdlp");
+    CThread *parent = (CThread *)arg;
 
-	while (parent->IsActive())
-	{
-		while (parent->Paused())
-			SDL_Delay(1);
+    while (parent->IsActive())
+    {
+        while (parent->Paused())
+            SDL_Delay(1);
 
 #if THREAD_USE_CLOCK == 1
-		parent->OnExecute(clock());
+        parent->OnExecute(clock());
 #else
-		parent->OnExecute(SDL_GetTicks());
+        parent->OnExecute(SDL_GetTicks());
 #endif
 
-		if (!parent->Cycled())
-			break;
-		else
-		{
-			int delay = parent->Delay();
+        if (!parent->Cycled())
+            break;
+        else
+        {
+            int delay = parent->Delay();
 
-			if (delay > 0)
-				SDL_Delay(delay);
-		}
-	}
+            if (delay > 0)
+                SDL_Delay(delay);
+        }
+    }
 
-	parent->OnDestroy();
-	delete parent;
+    parent->OnDestroy();
+    delete parent;
 
 #if USE_WISP
-	_endthreadex(0);
+    _endthreadex(0);
 #endif
 
-	return 0;
+    return 0;
 };
 //----------------------------------------------------------------------------------
 thread_int THREADCALL CThreadLoopSynchronizedDelay(void *arg)
 {
-	WISPFUN_DEBUG("c_trdlpsd");
-	CThread *parent = (CThread*)arg;
+    WISPFUN_DEBUG("c_trdlpsd");
+    CThread *parent = (CThread *)arg;
 
-	while (parent->IsActive())
-	{
-		while (parent->Paused())
-			SDL_Delay(1);
+    while (parent->IsActive())
+    {
+        while (parent->Paused())
+            SDL_Delay(1);
 
 #if THREAD_USE_CLOCK == 1
-		uint nowTime = clock();
+        uint nowTime = clock();
 #else
-		uint nowTime = SDL_GetTicks();
+        uint nowTime = SDL_GetTicks();
 #endif
 
-		parent->OnExecute(nowTime);
+        parent->OnExecute(nowTime);
 
-		if (!parent->Cycled())
-			break;
-		else
-		{
+        if (!parent->Cycled())
+            break;
+        else
+        {
 #if THREAD_USE_CLOCK == 1
-			int delay = (int)((nowTime + parent->Delay()) - clock());
+            int delay = (int)((nowTime + parent->Delay()) - clock());
 #else
-			int delay = (int)((nowTime + parent->Delay()) - SDL_GetTicks());
+            int delay = (int)((nowTime + parent->Delay()) - SDL_GetTicks());
 #endif
 
-			SDL_Delay(delay > 0 ? delay : 1);
-		}
-	}
+            SDL_Delay(delay > 0 ? delay : 1);
+        }
+    }
 
-	parent->OnDestroy();
-	delete parent;
+    parent->OnDestroy();
+    delete parent;
 
 #if USE_WISP
-	_endthreadex(0);
+    _endthreadex(0);
 #endif
 
-	return 0;
+    return 0;
 };
 //----------------------------------------------------------------------------------
 CThread::CThread()
 {
-	WISPFUN_DEBUG("c12_f1");
-	//DebugMsg("CThread\n");
+    WISPFUN_DEBUG("c12_f1");
+    //DebugMsg("CThread\n");
 #if USE_WISP
-	InitializeCriticalSection(&m_CriticalSection);
+    InitializeCriticalSection(&m_CriticalSection);
 #else
-	m_Mutex = SDL_CreateMutex();
+    m_Mutex = SDL_CreateMutex();
 #endif
 }
 //----------------------------------------------------------------------------------
 CThread::~CThread()
 {
-	WISPFUN_DEBUG("c12_f2");
-	//DebugMsg("~CThread\n");
+    WISPFUN_DEBUG("c12_f2");
+    //DebugMsg("~CThread\n");
 #if USE_WISP
-	DeleteCriticalSection(&m_CriticalSection);
+    DeleteCriticalSection(&m_CriticalSection);
 
-	if (m_Handle != 0)
-		::CloseHandle(m_Handle);
-	m_Handle = 0;
+    if (m_Handle != 0)
+        ::CloseHandle(m_Handle);
+    m_Handle = 0;
 #else
-	if (!m_Mutex)
-		SDL_DestroyMutex(m_Mutex);
-	m_Mutex = nullptr;
+    if (!m_Mutex)
+        SDL_DestroyMutex(m_Mutex);
+    m_Mutex = nullptr;
 
-	int ret = 0;
-	if (m_Handle)
-		SDL_WaitThread(m_Handle, &ret);
-	m_Handle = nullptr;
+    int ret = 0;
+    if (m_Handle)
+        SDL_WaitThread(m_Handle, &ret);
+    m_Handle = nullptr;
 #endif
-	ID = 0;
+    ID = 0;
 }
 //----------------------------------------------------------------------------------
 void CThread::Run(bool cycled, int delay, bool synchronizedDelay)
 {
-	WISPFUN_DEBUG("c12_f3");
-	if (!m_Active && m_Handle == 0)
-	{
-		m_Cycled = cycled;
-		m_Delay = delay;
-		m_Active = true;
+    WISPFUN_DEBUG("c12_f3");
+    if (!m_Active && m_Handle == 0)
+    {
+        m_Cycled = cycled;
+        m_Delay = delay;
+        m_Active = true;
 
 #if USE_WISP
-		if (synchronizedDelay)
-			m_Handle = (HANDLE)_beginthreadex(NULL, 0, CThreadLoopSynchronizedDelay, this, 0, &ID);
-		else
-			m_Handle = (HANDLE)_beginthreadex(NULL, 0, CThreadLoop, this, 0, &ID);
+        if (synchronizedDelay)
+            m_Handle = (HANDLE)_beginthreadex(NULL, 0, CThreadLoopSynchronizedDelay, this, 0, &ID);
+        else
+            m_Handle = (HANDLE)_beginthreadex(NULL, 0, CThreadLoop, this, 0, &ID);
 #else
-		if (synchronizedDelay)
-			m_Handle = SDL_CreateThread(CThreadLoopSynchronizedDelay, "CThreadLoopSynchronizedDelay", (void *)this);
-		else
-			m_Handle = SDL_CreateThread(CThreadLoop, "CThreadLoop", (void *)this);
+        if (synchronizedDelay)
+            m_Handle = SDL_CreateThread(
+                CThreadLoopSynchronizedDelay, "CThreadLoopSynchronizedDelay", (void *)this);
+        else
+            m_Handle = SDL_CreateThread(CThreadLoop, "CThreadLoop", (void *)this);
 #endif
-	}
+    }
 }
 //----------------------------------------------------------------------------------
 bool CThread::IsActive()
 {
-	WISPFUN_DEBUG("c12_f4");
+    WISPFUN_DEBUG("c12_f4");
 #if USE_WISP
-	EnterCriticalSection(&m_CriticalSection);
-	bool result = m_Active;
-	LeaveCriticalSection(&m_CriticalSection);
+    EnterCriticalSection(&m_CriticalSection);
+    bool result = m_Active;
+    LeaveCriticalSection(&m_CriticalSection);
 #else
-	SDL_LockMutex(m_Mutex);
-	bool result = m_Active;
-	SDL_UnlockMutex(m_Mutex);	
+    SDL_LockMutex(m_Mutex);
+    bool result = m_Active;
+    SDL_UnlockMutex(m_Mutex);
 #endif
-	return result;
+    return result;
 }
 //----------------------------------------------------------------------------------
 void CThread::Stop()
 {
-	WISPFUN_DEBUG("c12_f5");
+    WISPFUN_DEBUG("c12_f5");
 #if USE_WISP
-	EnterCriticalSection(&m_CriticalSection);
-	m_Active = false;
-	LeaveCriticalSection(&m_CriticalSection);
+    EnterCriticalSection(&m_CriticalSection);
+    m_Active = false;
+    LeaveCriticalSection(&m_CriticalSection);
 #else
-	SDL_LockMutex(m_Mutex);
-	m_Active = false;
-	SDL_UnlockMutex(m_Mutex);	
+    SDL_LockMutex(m_Mutex);
+    m_Active = false;
+    SDL_UnlockMutex(m_Mutex);
 #endif
 }
 //----------------------------------------------------------------------------------
 bool CThread::Cycled()
 {
-	WISPFUN_DEBUG("c12_f6");
+    WISPFUN_DEBUG("c12_f6");
 #if USE_WISP
-	EnterCriticalSection(&m_CriticalSection);
-	bool result = m_Cycled;
-	LeaveCriticalSection(&m_CriticalSection);
+    EnterCriticalSection(&m_CriticalSection);
+    bool result = m_Cycled;
+    LeaveCriticalSection(&m_CriticalSection);
 #else
-	SDL_LockMutex(m_Mutex);
-	bool result = m_Cycled;
-	SDL_UnlockMutex(m_Mutex);	
+    SDL_LockMutex(m_Mutex);
+    bool result = m_Cycled;
+    SDL_UnlockMutex(m_Mutex);
 #endif
 
-	return result;
+    return result;
 }
 //----------------------------------------------------------------------------------
 void CThread::Pause()
 {
-	WISPFUN_DEBUG("c12_f7");
+    WISPFUN_DEBUG("c12_f7");
 #if USE_WISP
-	EnterCriticalSection(&m_CriticalSection);
-	m_Paused = true;
-	LeaveCriticalSection(&m_CriticalSection);
+    EnterCriticalSection(&m_CriticalSection);
+    m_Paused = true;
+    LeaveCriticalSection(&m_CriticalSection);
 #else
-	SDL_LockMutex(m_Mutex);
-	m_Paused = true;
-	SDL_UnlockMutex(m_Mutex);	
+    SDL_LockMutex(m_Mutex);
+    m_Paused = true;
+    SDL_UnlockMutex(m_Mutex);
 #endif
 }
 //----------------------------------------------------------------------------------
 void CThread::Resume()
 {
-	WISPFUN_DEBUG("c12_f8");
+    WISPFUN_DEBUG("c12_f8");
 #if USE_WISP
-	EnterCriticalSection(&m_CriticalSection);
-	m_Paused = false;
-	LeaveCriticalSection(&m_CriticalSection);
+    EnterCriticalSection(&m_CriticalSection);
+    m_Paused = false;
+    LeaveCriticalSection(&m_CriticalSection);
 #else
-	SDL_LockMutex(m_Mutex);
-	m_Paused = false;
-	SDL_UnlockMutex(m_Mutex);	
+    SDL_LockMutex(m_Mutex);
+    m_Paused = false;
+    SDL_UnlockMutex(m_Mutex);
 #endif
 }
 //----------------------------------------------------------------------------------
 bool CThread::Paused()
 {
-	WISPFUN_DEBUG("c12_f9");
+    WISPFUN_DEBUG("c12_f9");
 #if USE_WISP
-	EnterCriticalSection(&m_CriticalSection);
-	bool result = m_Paused;
-	LeaveCriticalSection(&m_CriticalSection);
+    EnterCriticalSection(&m_CriticalSection);
+    bool result = m_Paused;
+    LeaveCriticalSection(&m_CriticalSection);
 #else
-	SDL_LockMutex(m_Mutex);
-	bool result = m_Paused;
-	SDL_UnlockMutex(m_Mutex);	
+    SDL_LockMutex(m_Mutex);
+    bool result = m_Paused;
+    SDL_UnlockMutex(m_Mutex);
 #endif
 
-	return result;
+    return result;
 }
 //----------------------------------------------------------------------------------
 int CThread::Delay()
 {
-	WISPFUN_DEBUG("c12_f10");
+    WISPFUN_DEBUG("c12_f10");
 #if USE_WISP
-	EnterCriticalSection(&m_CriticalSection);
-	int result = m_Delay;
-	LeaveCriticalSection(&m_CriticalSection);
+    EnterCriticalSection(&m_CriticalSection);
+    int result = m_Delay;
+    LeaveCriticalSection(&m_CriticalSection);
 #else
-	SDL_LockMutex(m_Mutex);
-	int result = m_Delay;
-	SDL_UnlockMutex(m_Mutex);	
+    SDL_LockMutex(m_Mutex);
+    int result = m_Delay;
+    SDL_UnlockMutex(m_Mutex);
 #endif
 
-	return result;
+    return result;
 }
 //----------------------------------------------------------------------------------
 void CThread::ChangeDelay(int newDelay)
 {
-	WISPFUN_DEBUG("c12_f11");
+    WISPFUN_DEBUG("c12_f11");
 #if USE_WISP
-	EnterCriticalSection(&m_CriticalSection);
-	m_Delay = newDelay;
-	LeaveCriticalSection(&m_CriticalSection);
+    EnterCriticalSection(&m_CriticalSection);
+    m_Delay = newDelay;
+    LeaveCriticalSection(&m_CriticalSection);
 #else
-	SDL_LockMutex(m_Mutex);
-	m_Delay = newDelay;
-	SDL_UnlockMutex(m_Mutex);	
+    SDL_LockMutex(m_Mutex);
+    m_Delay = newDelay;
+    SDL_UnlockMutex(m_Mutex);
 #endif
 }
 //----------------------------------------------------------------------------------
 SDL_threadID CThread::GetCurrentThreadId()
 {
-	//return GetCurrentThreadId();
-	//return std::this_thread::get_id();
-	return SDL_GetThreadID(nullptr);
+    //return GetCurrentThreadId();
+    //return std::this_thread::get_id();
+    return SDL_GetThreadID(nullptr);
 }
 //----------------------------------------------------------------------------------
-}; //namespace
+}; // namespace WISP_THREAD
 //----------------------------------------------------------------------------------

@@ -13,27 +13,25 @@
 class CGumpScreenGame : public CGump
 {
 private:
-	//!Идентификаторы кнопок
-	static const int ID_GS_RESIZE = 1;
+    //!Идентификаторы кнопок
+    static const int ID_GS_RESIZE = 1;
 
 public:
-	CGumpScreenGame();
-	virtual ~CGumpScreenGame();
+    CGumpScreenGame();
+    virtual ~CGumpScreenGame();
 
-	virtual void UpdateContent();
+    virtual void UpdateContent();
 
-	virtual void InitToolTip();
+    virtual void InitToolTip();
 
-	virtual void Draw();
+    virtual void Draw();
 
-	virtual CRenderObject *Select();
+    virtual CRenderObject *Select();
 
+    virtual void OnLeftMouseButtonDown();
 
-
-	virtual void OnLeftMouseButtonDown();
-
-	virtual void OnLeftMouseButtonUp();
- };
- //----------------------------------------------------------------------------------
+    virtual void OnLeftMouseButtonUp();
+};
+//----------------------------------------------------------------------------------
 #endif
 //----------------------------------------------------------------------------------

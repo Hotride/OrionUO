@@ -38,8 +38,8 @@ using std::pair;
 class CWispFunDebug
 {
 public:
-	CWispFunDebug(const char *str);
-	~CWispFunDebug();
+    CWispFunDebug(const char *str);
+    ~CWispFunDebug();
 };
 //----------------------------------------------------------------------------------
 extern SDL_threadID g_MainThread;
@@ -75,47 +75,46 @@ bool ToBool(const string &str);
 //----------------------------------------------------------------------------------
 inline float deg2radf(float degr)
 {
-	return degr * (float)(M_PI / 180.0f);
+    return degr * (float)(M_PI / 180.0f);
 }
 //----------------------------------------------------------------------------------
 inline float rad2degf(float radians)
 {
-	return (float)(radians * 180.0f / M_PI);
+    return (float)(radians * 180.0f / M_PI);
 }
 //----------------------------------------------------------------------------------
 inline int RandomInt(int n)
 {
-	return (rand() % n);
+    return (rand() % n);
 }
 //----------------------------------------------------------------------------------
 inline int RandomIntMinMax(int n, int m)
 {
-	return (rand() % (m - n) + n);
+    return (rand() % (m - n) + n);
 }
 //----------------------------------------------------------------------------------
 inline uint unpack32(puchar buf)
 {
-	return (buf[0] << 24) | (buf[1] << 16) | (buf[2] << 8) | buf[3];
+    return (buf[0] << 24) | (buf[1] << 16) | (buf[2] << 8) | buf[3];
 }
 //----------------------------------------------------------------------------------
 inline ushort unpack16(puchar buf)
 {
-	return (buf[0] << 8) | buf[1];
+    return (buf[0] << 8) | buf[1];
 }
 //----------------------------------------------------------------------------------
 inline void pack32(puchar buf, uint x)
 {
-	buf[0] = uchar(x >> 24);
-	buf[1] = uchar((x >> 16) & 0xff);
-	buf[2] = uchar((x >> 8) & 0xff);
-	buf[3] = uchar(x & 0xff);
+    buf[0] = uchar(x >> 24);
+    buf[1] = uchar((x >> 16) & 0xff);
+    buf[2] = uchar((x >> 8) & 0xff);
+    buf[3] = uchar(x & 0xff);
 }
 //----------------------------------------------------------------------------------
 inline void pack16(puchar buf, ushort x)
 {
-	buf[0] = x >> 8;
-	buf[1] = x & 0xff;
+    buf[0] = x >> 8;
+    buf[1] = x & 0xff;
 }
 //----------------------------------------------------------------------------------
 #endif
-

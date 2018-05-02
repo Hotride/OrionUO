@@ -13,65 +13,64 @@
 //!Класс менеджера групп навыков
 class CSkillGroupManager
 {
-	int Count = 0;
+    int Count = 0;
 
 private:
-	//!Выставление значение по-умолчанию для стандартных групп
-	void MakeDefaultMiscellaneous();
-	void MakeDefaultCombat();
-	void MakeDefaultTradeSkills();
-	void MakeDefaultMagic();
-	void MakeDefaultWilderness();
-	void MakeDefaultThieving();
-	void MakeDefaultBard();
+    //!Выставление значение по-умолчанию для стандартных групп
+    void MakeDefaultMiscellaneous();
+    void MakeDefaultCombat();
+    void MakeDefaultTradeSkills();
+    void MakeDefaultMagic();
+    void MakeDefaultWilderness();
+    void MakeDefaultThieving();
+    void MakeDefaultBard();
 
 public:
-	//!Указатель на список групп
-	CSkillGroupObject *m_Groups{ NULL };
+    //!Указатель на список групп
+    CSkillGroupObject *m_Groups{ NULL };
 
-	CSkillGroupManager();
-	~CSkillGroupManager();
+    CSkillGroupManager();
+    ~CSkillGroupManager();
 
-
-	/*!
+    /*!
 	Выставить группы по-умолчанию
 	@return
 	*/
-	void MakeDefault();
+    void MakeDefault();
 
-	/*!
+    /*!
 	Очистить список групп
 	@return 
 	*/
-	void Clear();
+    void Clear();
 
-	/*!
+    /*!
 	Добавить группу
 	@param [__in] group Ссылка на группу
 	@return 
 	*/
-	void Add(CSkillGroupObject *group);
+    void Add(CSkillGroupObject *group);
 
-	/*!
+    /*!
 	Удалить группу
 	@param [__in] group Ссылка на группу
 	@return 
 	*/
-	bool Remove(CSkillGroupObject *group);
+    bool Remove(CSkillGroupObject *group);
 
-	/*!
+    /*!
 	Загрузка групп из файла конфига
 	@param [__in] path Путь к файлу конфига
 	@return 
 	*/
-	bool Load(const os_path &path);
+    bool Load(const os_path &path);
 
-	/*!
+    /*!
 	Сохранение групп в файл конфиг
 	@param [__in] path Путьк  файлу конфига
 	@return 
 	*/
-	void Save(const os_path &path);
+    void Save(const os_path &path);
 };
 //----------------------------------------------------------------------------------
 //!Менеджер групп навыков

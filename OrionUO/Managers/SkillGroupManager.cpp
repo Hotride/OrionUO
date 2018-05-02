@@ -27,152 +27,161 @@ CSkillGroupManager::~CSkillGroupManager()
 */
 void CSkillGroupManager::MakeDefault()
 {
-	WISPFUN_DEBUG("c155_f1");
-	Clear();
+    WISPFUN_DEBUG("c155_f1");
+    Clear();
 
-	MakeDefaultMiscellaneous();
-	MakeDefaultCombat();
-	MakeDefaultTradeSkills();
-	MakeDefaultMagic();
-	MakeDefaultWilderness();
-	MakeDefaultThieving();
-	MakeDefaultBard();
+    MakeDefaultMiscellaneous();
+    MakeDefaultCombat();
+    MakeDefaultTradeSkills();
+    MakeDefaultMagic();
+    MakeDefaultWilderness();
+    MakeDefaultThieving();
+    MakeDefaultBard();
 
-	CSkillGroupObject *group = m_Groups;
+    CSkillGroupObject *group = m_Groups;
 
-	while (group != NULL)
-	{
-		group->Sort();
+    while (group != NULL)
+    {
+        group->Sort();
 
-		group = group->m_Next;
-	}
+        group = group->m_Next;
+    }
 }
 //----------------------------------------------------------------------------------
 void CSkillGroupManager::MakeDefaultMiscellaneous()
 {
-	WISPFUN_DEBUG("c155_f2");
-	CSkillGroupObject *group = new CSkillGroupObject();
-	group->Name = "Miscellaneous";
-	group->Add(4);
-	group->Add(6);
-	group->Add(10);
-	group->Add(12);
-	group->Add(19);
-	group->Add(3);
-	group->Add(36);
+    WISPFUN_DEBUG("c155_f2");
+    CSkillGroupObject *group = new CSkillGroupObject();
+    group->Name = "Miscellaneous";
+    group->Add(4);
+    group->Add(6);
+    group->Add(10);
+    group->Add(12);
+    group->Add(19);
+    group->Add(3);
+    group->Add(36);
 
-	Add(group);
+    Add(group);
 }
 //----------------------------------------------------------------------------------
 void CSkillGroupManager::MakeDefaultCombat()
 {
-	WISPFUN_DEBUG("c155_f3");
-	int cnt = g_SkillsManager.Count;
+    WISPFUN_DEBUG("c155_f3");
+    int cnt = g_SkillsManager.Count;
 
-	CSkillGroupObject *group = new CSkillGroupObject();
-	group->Name = "Combat";
-	group->Add(1);
-	group->Add(31);
-	group->Add(42);
-	group->Add(17);
-	group->Add(41);
-	group->Add(5);
-	group->Add(40);
-	group->Add(27);
+    CSkillGroupObject *group = new CSkillGroupObject();
+    group->Name = "Combat";
+    group->Add(1);
+    group->Add(31);
+    group->Add(42);
+    group->Add(17);
+    group->Add(41);
+    group->Add(5);
+    group->Add(40);
+    group->Add(27);
 
-	if (cnt > 57) group->Add(57); //Throving
-	group->Add(43);
-	
-	if (cnt > 50) group->Add(50); //Focus
-	if (cnt > 51) group->Add(51); //Chivalry
-	if (cnt > 52) group->Add(52); //Bushido
-	if (cnt > 53) group->Add(53); //Ninjitsu
+    if (cnt > 57)
+        group->Add(57); //Throving
+    group->Add(43);
 
-	Add(group);
+    if (cnt > 50)
+        group->Add(50); //Focus
+    if (cnt > 51)
+        group->Add(51); //Chivalry
+    if (cnt > 52)
+        group->Add(52); //Bushido
+    if (cnt > 53)
+        group->Add(53); //Ninjitsu
+
+    Add(group);
 }
 //----------------------------------------------------------------------------------
 void CSkillGroupManager::MakeDefaultTradeSkills()
 {
-	WISPFUN_DEBUG("c155_f4");
-	CSkillGroupObject *group = new CSkillGroupObject();
-	group->Name = "Trade Skills";
-	group->Add(0);
-	group->Add(7);
-	group->Add(8);
-	group->Add(11);
-	group->Add(13);
-	group->Add(23);
-	group->Add(44);
-	group->Add(45);
-	group->Add(34);
-	group->Add(37);
+    WISPFUN_DEBUG("c155_f4");
+    CSkillGroupObject *group = new CSkillGroupObject();
+    group->Name = "Trade Skills";
+    group->Add(0);
+    group->Add(7);
+    group->Add(8);
+    group->Add(11);
+    group->Add(13);
+    group->Add(23);
+    group->Add(44);
+    group->Add(45);
+    group->Add(34);
+    group->Add(37);
 
-	Add(group);
+    Add(group);
 }
 //----------------------------------------------------------------------------------
 void CSkillGroupManager::MakeDefaultMagic()
 {
-	WISPFUN_DEBUG("c155_f5");
-	int cnt = g_SkillsManager.Count;
+    WISPFUN_DEBUG("c155_f5");
+    int cnt = g_SkillsManager.Count;
 
-	CSkillGroupObject *group = new CSkillGroupObject();
-	group->Name = "Magic";
-	group->Add(16);
-	if (cnt > 56) group->Add(56); //Imbuing
-	group->Add(25);
-	group->Add(46);
-	if (cnt > 55) group->Add(55); //Mysticism
-	group->Add(26);
-	if (cnt > 54) group->Add(54); //Spellweaving
-	group->Add(32);
-	if (cnt > 49) group->Add(49); //Necromancy
-	
-	Add(group);
+    CSkillGroupObject *group = new CSkillGroupObject();
+    group->Name = "Magic";
+    group->Add(16);
+    if (cnt > 56)
+        group->Add(56); //Imbuing
+    group->Add(25);
+    group->Add(46);
+    if (cnt > 55)
+        group->Add(55); //Mysticism
+    group->Add(26);
+    if (cnt > 54)
+        group->Add(54); //Spellweaving
+    group->Add(32);
+    if (cnt > 49)
+        group->Add(49); //Necromancy
+
+    Add(group);
 }
 //----------------------------------------------------------------------------------
 void CSkillGroupManager::MakeDefaultWilderness()
 {
-	WISPFUN_DEBUG("c155_f6");
-	CSkillGroupObject *group = new CSkillGroupObject();
-	group->Name = "Wilderness";
-	group->Add(2);
-	group->Add(35);
-	group->Add(18);
-	group->Add(20);
-	group->Add(38);
-	group->Add(39);
-	
-	Add(group);
+    WISPFUN_DEBUG("c155_f6");
+    CSkillGroupObject *group = new CSkillGroupObject();
+    group->Name = "Wilderness";
+    group->Add(2);
+    group->Add(35);
+    group->Add(18);
+    group->Add(20);
+    group->Add(38);
+    group->Add(39);
+
+    Add(group);
 }
 //----------------------------------------------------------------------------------
 void CSkillGroupManager::MakeDefaultThieving()
 {
-	WISPFUN_DEBUG("c155_f7");
-	CSkillGroupObject *group = new CSkillGroupObject();
-	group->Name = "Thieving";
-	group->Add(14);
-	group->Add(21);
-	group->Add(24);
-	group->Add(30);
-	group->Add(48);
-	group->Add(28);
-	group->Add(33);
-	group->Add(47);
-	
-	Add(group);
+    WISPFUN_DEBUG("c155_f7");
+    CSkillGroupObject *group = new CSkillGroupObject();
+    group->Name = "Thieving";
+    group->Add(14);
+    group->Add(21);
+    group->Add(24);
+    group->Add(30);
+    group->Add(48);
+    group->Add(28);
+    group->Add(33);
+    group->Add(47);
+
+    Add(group);
 }
 //----------------------------------------------------------------------------------
 void CSkillGroupManager::MakeDefaultBard()
 {
-	WISPFUN_DEBUG("c155_f8");
-	CSkillGroupObject *group = new CSkillGroupObject();
-	group->Name = "Bard";
-	group->Add(15);
-	group->Add(29);
-	group->Add(9);
-	group->Add(22);
-	
-	Add(group);
+    WISPFUN_DEBUG("c155_f8");
+    CSkillGroupObject *group = new CSkillGroupObject();
+    group->Name = "Bard";
+    group->Add(15);
+    group->Add(29);
+    group->Add(9);
+    group->Add(22);
+
+    Add(group);
 }
 //----------------------------------------------------------------------------------
 /*!
@@ -181,20 +190,20 @@ void CSkillGroupManager::MakeDefaultBard()
 */
 void CSkillGroupManager::Clear()
 {
-	WISPFUN_DEBUG("c155_f9");
-	CSkillGroupObject *item = m_Groups;
+    WISPFUN_DEBUG("c155_f9");
+    CSkillGroupObject *item = m_Groups;
 
-	while (item != NULL)
-	{
-		CSkillGroupObject *next = item->m_Next;
+    while (item != NULL)
+    {
+        CSkillGroupObject *next = item->m_Next;
 
-		delete item;
+        delete item;
 
-		item = next;
-	}
+        item = next;
+    }
 
-	Count = 0;
-	m_Groups = NULL;
+    Count = 0;
+    m_Groups = NULL;
 }
 //----------------------------------------------------------------------------------
 /*!
@@ -204,27 +213,27 @@ void CSkillGroupManager::Clear()
 */
 void CSkillGroupManager::Add(CSkillGroupObject *group)
 {
-	WISPFUN_DEBUG("c155_f10");
-	if (m_Groups == NULL)
-	{
-		m_Groups = group;
-		m_Groups->m_Next = NULL;
-		m_Groups->m_Prev = NULL;
-		Count = 1;
+    WISPFUN_DEBUG("c155_f10");
+    if (m_Groups == NULL)
+    {
+        m_Groups = group;
+        m_Groups->m_Next = NULL;
+        m_Groups->m_Prev = NULL;
+        Count = 1;
 
-		return;
-	}
+        return;
+    }
 
-	CSkillGroupObject *item = m_Groups;
+    CSkillGroupObject *item = m_Groups;
 
-	while (item->m_Next != NULL)
-		item = item->m_Next;
+    while (item->m_Next != NULL)
+        item = item->m_Next;
 
-	item->m_Next = group;
-	group->m_Next = NULL;
-	group->m_Prev = item;
+    item->m_Next = group;
+    group->m_Next = NULL;
+    group->m_Prev = item;
 
-	Count++;
+    Count++;
 }
 //----------------------------------------------------------------------------------
 /*!
@@ -234,38 +243,39 @@ void CSkillGroupManager::Add(CSkillGroupObject *group)
 */
 bool CSkillGroupManager::Remove(CSkillGroupObject *group)
 {
-	WISPFUN_DEBUG("c155_f11");
-	if (group->m_Prev == NULL) //Miscellaneous
-	{
-		int x = g_ConfigManager.GameWindowX + (g_ConfigManager.GameWindowWidth / 2) - 100;
-		int y = g_ConfigManager.GameWindowY + (g_ConfigManager.GameWindowHeight / 2) - 62;
+    WISPFUN_DEBUG("c155_f11");
+    if (group->m_Prev == NULL) //Miscellaneous
+    {
+        int x = g_ConfigManager.GameWindowX + (g_ConfigManager.GameWindowWidth / 2) - 100;
+        int y = g_ConfigManager.GameWindowY + (g_ConfigManager.GameWindowHeight / 2) - 62;
 
-		CGumpNotify *gump = new CGumpNotify(x, y, CGumpNotify::ID_GN_STATE_NOTIFICATION, 200, 125, "Cannot delete this group.");
+        CGumpNotify *gump = new CGumpNotify(
+            x, y, CGumpNotify::ID_GN_STATE_NOTIFICATION, 200, 125, "Cannot delete this group.");
 
-		g_GumpManager.AddGump(gump);
-		
-		g_Orion.InitScreen(GS_GAME_BLOCKED);
-		g_GameBlockedScreen.Code = 4;
+        g_GumpManager.AddGump(gump);
 
-		return false;
-	}
-	else
-	{
-		Count--;
+        g_Orion.InitScreen(GS_GAME_BLOCKED);
+        g_GameBlockedScreen.Code = 4;
 
-		if (Count < 0)
-			Count = 0;
+        return false;
+    }
+    else
+    {
+        Count--;
 
-		if (group->m_Next != NULL)
-			group->m_Next->m_Prev = group->m_Prev;
+        if (Count < 0)
+            Count = 0;
 
-		group->m_Prev->m_Next = group->m_Next;
+        if (group->m_Next != NULL)
+            group->m_Next->m_Prev = group->m_Prev;
 
-		group->TransferTo(m_Groups);
-		delete group;
-	}
+        group->m_Prev->m_Next = group->m_Next;
 
-	return true;
+        group->TransferTo(m_Groups);
+        delete group;
+    }
+
+    return true;
 }
 //----------------------------------------------------------------------------------
 /*!
@@ -275,56 +285,56 @@ bool CSkillGroupManager::Remove(CSkillGroupObject *group)
 */
 bool CSkillGroupManager::Load(const os_path &path)
 {
-	WISPFUN_DEBUG("c155_f12");
-	bool result = false;
+    WISPFUN_DEBUG("c155_f12");
+    bool result = false;
 
-	Clear();
-	
-	WISP_FILE::CMappedFile file;
+    Clear();
 
-	if (file.Load(path))
-	{
-		BYTE version = file.ReadUInt8();
+    WISP_FILE::CMappedFile file;
 
-		short count = file.ReadUInt16LE();
+    if (file.Load(path))
+    {
+        BYTE version = file.ReadUInt8();
 
-		IFOR(i, 0, count)
-		{
-			PBYTE next = file.Ptr;
-			short size = file.ReadUInt16LE();
-			next += size;
+        short count = file.ReadUInt16LE();
 
-			CSkillGroupObject *group = new CSkillGroupObject();
+        IFOR (i, 0, count)
+        {
+            PBYTE next = file.Ptr;
+            short size = file.ReadUInt16LE();
+            next += size;
 
-			short length = file.ReadUInt16LE();
-			string str = file.ReadString(length);
-			group->Name = str;
+            CSkillGroupObject *group = new CSkillGroupObject();
 
-			short skills = file.ReadUInt16LE();
+            short length = file.ReadUInt16LE();
+            string str = file.ReadString(length);
+            group->Name = str;
 
-			IFOR(j, 0, skills)
-			{
-				BYTE skill = file.ReadUInt8();
+            short skills = file.ReadUInt16LE();
 
-				if (skill != 0xFF)
-					group->Add(skill);
-			}
+            IFOR (j, 0, skills)
+            {
+                BYTE skill = file.ReadUInt8();
 
-			group->Sort();
+                if (skill != 0xFF)
+                    group->Add(skill);
+            }
 
-			Add(group);
+            group->Sort();
 
-			file.Ptr = next;
-		}
+            Add(group);
 
-		file.Unload();
+            file.Ptr = next;
+        }
 
-		result = true;
-	}
-	else
-		MakeDefault();
+        file.Unload();
 
-	return result;
+        result = true;
+    }
+    else
+        MakeDefault();
+
+    return result;
 }
 //----------------------------------------------------------------------------------
 /*!
@@ -334,51 +344,51 @@ bool CSkillGroupManager::Load(const os_path &path)
 */
 void CSkillGroupManager::Save(const os_path &path)
 {
-	WISPFUN_DEBUG("c155_f13");
-	WISP_FILE::CBinaryFileWritter writter;
+    WISPFUN_DEBUG("c155_f13");
+    WISP_FILE::CBinaryFileWritter writter;
 
-	writter.Open(path);
-	
-	writter.WriteUInt8(0); //version
-	
-	Count = 0;
-	CSkillGroupObject *group = m_Groups;
-	while (group != NULL)
-	{
-		Count++;
-		group = group->m_Next;
-	}
-	
-	writter.WriteUInt16LE(Count); //Count
+    writter.Open(path);
 
-	group = m_Groups;
+    writter.WriteUInt8(0); //version
 
-	IFOR(i, 0, Count)
-	{
-		string str = group->Name;
-		size_t len = str.length() + 1;
+    Count = 0;
+    CSkillGroupObject *group = m_Groups;
+    while (group != NULL)
+    {
+        Count++;
+        group = group->m_Next;
+    }
 
-		short size = (short)len + 2 + 2 + 2 + group->Count;
-		writter.WriteUInt16LE(size); //Block size
-		
-		writter.WriteUInt16LE((short)len); //Name length
-		writter.WriteString(str, false); //Name
-		
-		short count = group->Count;
+    writter.WriteUInt16LE(Count); //Count
 
-		writter.WriteUInt16LE(count); //Skills count
+    group = m_Groups;
 
-		IFOR(j, 0, count)
-		{
-			BYTE skill = group->GetItem(j);
-			writter.WriteUInt8(skill); //Skill
-		}
-		
-		writter.WriteBuffer();
+    IFOR (i, 0, Count)
+    {
+        string str = group->Name;
+        size_t len = str.length() + 1;
 
-		group = group->m_Next;
-	}
+        short size = (short)len + 2 + 2 + 2 + group->Count;
+        writter.WriteUInt16LE(size); //Block size
 
-	writter.Close();
+        writter.WriteUInt16LE((short)len); //Name length
+        writter.WriteString(str, false);   //Name
+
+        short count = group->Count;
+
+        writter.WriteUInt16LE(count); //Skills count
+
+        IFOR (j, 0, count)
+        {
+            BYTE skill = group->GetItem(j);
+            writter.WriteUInt8(skill); //Skill
+        }
+
+        writter.WriteBuffer();
+
+        group = group->m_Next;
+    }
+
+    writter.Close();
 }
 //----------------------------------------------------------------------------------

@@ -13,15 +13,15 @@
 class CGumpSkill : public CGump
 {
 private:
-	const int ID_GS_LOCK_MOVING = 1;
+    const int ID_GS_LOCK_MOVING = 1;
 
 public:
-	CGumpSkill(int serial, int x, int y);
-	virtual ~CGumpSkill();
+    CGumpSkill(int serial, int x, int y);
+    virtual ~CGumpSkill();
 
-	GUMP_BUTTON_EVENT_H;
+    GUMP_BUTTON_EVENT_H;
 
-	virtual void OnLeftMouseButtonUp();
+    virtual void OnLeftMouseButtonUp();
 };
 //----------------------------------------------------------------------------------
 #endif

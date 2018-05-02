@@ -4,10 +4,15 @@
 class OrionStackWalker : public StackWalker
 {
 public:
-	OrionStackWalker() : StackWalker() {}
+    OrionStackWalker()
+        : StackWalker()
+    {
+    }
+
 protected:
-	virtual void OnOutput(LPCSTR szText)
-	{
-		CRASHLOG(szText); StackWalker::OnOutput(szText);
-	}
+    virtual void OnOutput(LPCSTR szText)
+    {
+        CRASHLOG(szText);
+        StackWalker::OnOutput(szText);
+    }
 };

@@ -16,29 +16,29 @@ CClilocManager g_ClilocManager;
 //--------------------------------------CCliloc-------------------------------------
 //----------------------------------------------------------------------------------
 CCliloc::CCliloc(const string &lang)
-: CBaseQueueItem()
+    : CBaseQueueItem()
 {
-	WISPFUN_DEBUG("c135_f1");
-	Loaded = false;
-	Language = lang;
+    WISPFUN_DEBUG("c135_f1");
+    Loaded = false;
+    Language = lang;
 
-	if (Language.length())
-	{
-		auto path = g_App.UOFilesPath((std::string("Cliloc.") + std::string(lang.c_str())).c_str());
+    if (Language.length())
+    {
+        auto path = g_App.UOFilesPath((std::string("Cliloc.") + std::string(lang.c_str())).c_str());
 
-		if (m_File.Load(path))
-			Loaded = true;
-	}
+        if (m_File.Load(path))
+            Loaded = true;
+    }
 }
 //----------------------------------------------------------------------------------
 CCliloc::~CCliloc()
 {
-	WISPFUN_DEBUG("c135_f2");
-	m_File.Unload();
+    WISPFUN_DEBUG("c135_f2");
+    m_File.Unload();
 
-	m_ClilocSystem.clear();
-	m_ClilocRegular.clear();
-	m_ClilocSupport.clear();
+    m_ClilocSystem.clear();
+    m_ClilocRegular.clear();
+    m_ClilocSupport.clear();
 }
 //----------------------------------------------------------------------------------
 /*!
@@ -48,52 +48,52 @@ CCliloc::~CCliloc()
 */
 string CCliloc::Load(uint &id)
 {
-	WISPFUN_DEBUG("c135_f3");
-	string result = "";
+    WISPFUN_DEBUG("c135_f3");
+    string result = "";
 
-	if (Loaded)
-	{
-		m_File.ResetPtr();
-		m_File.Move(6);
+    if (Loaded)
+    {
+        m_File.ResetPtr();
+        m_File.Move(6);
 
-		while (!m_File.IsEOF())
-		{
-			DWORD currentID = m_File.ReadUInt32LE();
+        while (!m_File.IsEOF())
+        {
+            DWORD currentID = m_File.ReadUInt32LE();
 
-			m_File.Move(1);
+            m_File.Move(1);
 
-			short len = m_File.ReadUInt16LE();
+            short len = m_File.ReadUInt16LE();
 
-			if (currentID == id)
-			{
-				if (len > 0)
-					result = m_File.ReadString(len);
+            if (currentID == id)
+            {
+                if (len > 0)
+                    result = m_File.ReadString(len);
 
-				if (id >= 3000000)
-					m_ClilocSupport[currentID] = result;
-				else if (id >= 1000000)
-					m_ClilocRegular[currentID] = result;
-				else
-					m_ClilocSystem[currentID] = result;
+                if (id >= 3000000)
+                    m_ClilocSupport[currentID] = result;
+                else if (id >= 1000000)
+                    m_ClilocRegular[currentID] = result;
+                else
+                    m_ClilocSystem[currentID] = result;
 
-				return result;
-			}
-			else
-				m_File.Move(len);
-		}
-	}
+                return result;
+            }
+            else
+                m_File.Move(len);
+        }
+    }
 
-	id = 0;
+    id = 0;
 
-	return result;
+    return result;
 }
 //----------------------------------------------------------------------------------
 wstring CCliloc::CamelCaseTest(bool toCamelCase, const string &result)
 {
-	if (toCamelCase)
-		return ToCamelCaseW(DecodeUTF8(result));
+    if (toCamelCase)
+        return ToCamelCaseW(DecodeUTF8(result));
 
-	return DecodeUTF8(result);
+    return DecodeUTF8(result);
 }
 //----------------------------------------------------------------------------------
 /*!
@@ -104,52 +104,50 @@ wstring CCliloc::CamelCaseTest(bool toCamelCase, const string &result)
 */
 wstring CCliloc::Get(int id, bool toCamelCase, string result)
 {
-	WISPFUN_DEBUG("c135_f4");
-	if (id >= 3000000)
-	{
-		CLILOC_MAP::iterator i = m_ClilocSupport.find(id);
-		if (i != m_ClilocSupport.end() && (*i).second.length())
-			return CamelCaseTest(toCamelCase, (*i).second);
-	}
-	else if (id >= 1000000)
-	{
-		CLILOC_MAP::iterator i = m_ClilocRegular.find(id);
-		if (i != m_ClilocRegular.end() && (*i).second.length())
-			return CamelCaseTest(toCamelCase, (*i).second);
-	}
-	else
-	{
-		CLILOC_MAP::iterator i = m_ClilocSystem.find(id);
-		if (i != m_ClilocSystem.end() && (*i).second.length())
-			return CamelCaseTest(toCamelCase, (*i).second);
-	}
+    WISPFUN_DEBUG("c135_f4");
+    if (id >= 3000000)
+    {
+        CLILOC_MAP::iterator i = m_ClilocSupport.find(id);
+        if (i != m_ClilocSupport.end() && (*i).second.length())
+            return CamelCaseTest(toCamelCase, (*i).second);
+    }
+    else if (id >= 1000000)
+    {
+        CLILOC_MAP::iterator i = m_ClilocRegular.find(id);
+        if (i != m_ClilocRegular.end() && (*i).second.length())
+            return CamelCaseTest(toCamelCase, (*i).second);
+    }
+    else
+    {
+        CLILOC_MAP::iterator i = m_ClilocSystem.find(id);
+        if (i != m_ClilocSystem.end() && (*i).second.length())
+            return CamelCaseTest(toCamelCase, (*i).second);
+    }
 
-	uint tmpID = id;
-	string loadStr = Load(tmpID);
+    uint tmpID = id;
+    string loadStr = Load(tmpID);
 
+    if (loadStr.length())
+        return CamelCaseTest(toCamelCase, loadStr);
+    if (tmpID == id && !loadStr.length())
+        return L"";
+    if (Language != "ENU" && this->Language != "enu")
+        return g_ClilocManager.Cliloc("enu")->Get(id, toCamelCase, result);
+    if (!result.length())
+    {
+        char str[50] = { 0 };
+        sprintf_s(str, "Unknown Cliloc #%i", id);
 
-	if (loadStr.length())
-		return CamelCaseTest(toCamelCase, loadStr);
-	if (tmpID == id && !loadStr.length())
-		return L"";
-	if (Language != "ENU" && this->Language != "enu")
-		return g_ClilocManager.Cliloc("enu")->Get(id, toCamelCase, result);
-	if (!result.length())
-	{
+        result = str;
+    }
 
-		char str[50] = { 0 };
-		sprintf_s(str, "Unknown Cliloc #%i", id);
-
-		result = str;
-	}
-
-	return CamelCaseTest(toCamelCase, result);
+    return CamelCaseTest(toCamelCase, result);
 }
 //----------------------------------------------------------------------------------
 string CCliloc::GetA(int id, bool toCamelCase, string result)
 {
-	WISPFUN_DEBUG("c135_f4_1");
-	return ToString(Get(id, toCamelCase, result));
+    WISPFUN_DEBUG("c135_f4_1");
+    return ToString(Get(id, toCamelCase, result));
 }
 //----------------------------------------------------------------------------------
 /*!
@@ -160,21 +158,21 @@ string CCliloc::GetA(int id, bool toCamelCase, string result)
 */
 wstring CCliloc::GetW(int id, bool toCamelCase, string result)
 {
-	WISPFUN_DEBUG("c135_f5");
-	return Get(id, toCamelCase, result);
+    WISPFUN_DEBUG("c135_f5");
+    return Get(id, toCamelCase, result);
 }
 //----------------------------------------------------------------------------------
 //-----------------------------------CClilocManager---------------------------------
 //----------------------------------------------------------------------------------
 CClilocManager::CClilocManager()
-: CBaseQueue()
+    : CBaseQueue()
 {
 }
 //----------------------------------------------------------------------------------
 CClilocManager::~CClilocManager()
 {
-	m_ENUCliloc = NULL;
-	m_LastCliloc = NULL;
+    m_ENUCliloc = NULL;
+    m_LastCliloc = NULL;
 }
 //----------------------------------------------------------------------------------
 /*!
@@ -184,100 +182,100 @@ CClilocManager::~CClilocManager()
 */
 CCliloc *CClilocManager::Cliloc(const string &lang)
 {
-	WISPFUN_DEBUG("c136_f1");
-	string language = ToLowerA(lang).c_str();
+    WISPFUN_DEBUG("c136_f1");
+    string language = ToLowerA(lang).c_str();
 
-	if (!language.length())
-		language = "enu";
+    if (!language.length())
+        language = "enu";
 
-	if (language == "enu")
-	{
-		if (m_ENUCliloc == NULL)
-			m_ENUCliloc = (CCliloc*)Add(new CCliloc(language));
+    if (language == "enu")
+    {
+        if (m_ENUCliloc == NULL)
+            m_ENUCliloc = (CCliloc *)Add(new CCliloc(language));
 
-		return m_ENUCliloc;
-	}
+        return m_ENUCliloc;
+    }
 
-	if (m_LastCliloc != NULL && m_LastCliloc->Language == language)
-	{
-		if (!m_LastCliloc->Loaded)
-			return m_ENUCliloc;
+    if (m_LastCliloc != NULL && m_LastCliloc->Language == language)
+    {
+        if (!m_LastCliloc->Loaded)
+            return m_ENUCliloc;
 
-		return m_LastCliloc;
-	}
+        return m_LastCliloc;
+    }
 
-	QFOR(obj, m_Items, CCliloc*)
-	{
-		if (obj->Language == language)
-		{
-			if (!obj->Loaded)
-				return m_ENUCliloc;
+    QFOR(obj, m_Items, CCliloc *)
+    {
+        if (obj->Language == language)
+        {
+            if (!obj->Loaded)
+                return m_ENUCliloc;
 
-			m_LastCliloc = obj;
-			return obj;
-		}
-	}
+            m_LastCliloc = obj;
+            return obj;
+        }
+    }
 
-	CCliloc *obj = (CCliloc*)Add(new CCliloc(language));
+    CCliloc *obj = (CCliloc *)Add(new CCliloc(language));
 
-	if (!obj->Loaded)
-		return Cliloc("enu");
+    if (!obj->Loaded)
+        return Cliloc("enu");
 
-	m_LastCliloc = obj;
+    m_LastCliloc = obj;
 
-	return obj;
+    return obj;
 }
 //----------------------------------------------------------------------------------
 wstring CClilocManager::ParseArgumentsToClilocString(int cliloc, bool toCamelCase, wstring args)
 {
-	WISPFUN_DEBUG("c136_f2");
-	while (args.length() && args[0] == L'\t')
-		args.erase(args.begin());
+    WISPFUN_DEBUG("c136_f2");
+    while (args.length() && args[0] == L'\t')
+        args.erase(args.begin());
 
-	wstring message = Cliloc(g_Language)->GetW(cliloc, toCamelCase).c_str();
+    wstring message = Cliloc(g_Language)->GetW(cliloc, toCamelCase).c_str();
 
-	vector<wstring> arguments;
+    vector<wstring> arguments;
 
-	while (true)
-	{
-		size_t pos = args.find(L"\t");
+    while (true)
+    {
+        size_t pos = args.find(L"\t");
 
-		if (pos != string::npos)
-		{
-			arguments.push_back(args.substr(0, pos));
-			args = args.substr(pos + 1);
-		}
-		else
-		{
-			arguments.push_back(args);
-			break;
-		}
-	}
+        if (pos != string::npos)
+        {
+            arguments.push_back(args.substr(0, pos));
+            args = args.substr(pos + 1);
+        }
+        else
+        {
+            arguments.push_back(args);
+            break;
+        }
+    }
 
-	IFOR(i, 0, (int)arguments.size())
-	{
-		size_t pos1 = message.find(L"~");
+    IFOR (i, 0, (int)arguments.size())
+    {
+        size_t pos1 = message.find(L"~");
 
-		if (pos1 == string::npos)
-			break;
+        if (pos1 == string::npos)
+            break;
 
-		size_t pos2 = message.find(L"~", pos1 + 1);
+        size_t pos2 = message.find(L"~", pos1 + 1);
 
-		if (pos2 == string::npos)
-			break;
+        if (pos2 == string::npos)
+            break;
 
-		if (arguments[i].length() > 1 && *arguments[i].c_str() == L'#')
-		{
-			uint id = _wtoi(arguments[i].c_str() + 1);
-			arguments[i] = Cliloc(g_Language)->GetW(id, toCamelCase).c_str();
-		}
+        if (arguments[i].length() > 1 && *arguments[i].c_str() == L'#')
+        {
+            uint id = _wtoi(arguments[i].c_str() + 1);
+            arguments[i] = Cliloc(g_Language)->GetW(id, toCamelCase).c_str();
+        }
 
-		message.replace(pos1, pos2 - pos1 + 1, arguments[i]);
-	}
+        message.replace(pos1, pos2 - pos1 + 1, arguments[i]);
+    }
 
-	if (toCamelCase)
-		return ToCamelCaseW(message);
+    if (toCamelCase)
+        return ToCamelCaseW(message);
 
-	return message;
+    return message;
 }
 //----------------------------------------------------------------------------------

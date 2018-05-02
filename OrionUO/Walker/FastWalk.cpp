@@ -13,40 +13,40 @@
 //----------------------------------------------------------------------------------
 void CFastWalkStack::SetValue(int index, int value)
 {
-	WISPFUN_DEBUG("c176_f1");
-	if (index >= 0 && index < 5)
-		m_Keys[index] = value;
+    WISPFUN_DEBUG("c176_f1");
+    if (index >= 0 && index < 5)
+        m_Keys[index] = value;
 }
 //----------------------------------------------------------------------------------
 void CFastWalkStack::AddValue(int value)
 {
-	WISPFUN_DEBUG("c176_f2");
+    WISPFUN_DEBUG("c176_f2");
 
-	IFOR(i, 0, 5)
-	{
-		if (!m_Keys[i])
-		{
-			m_Keys[i] = value;
-			break;
-		}
-	}
+    IFOR (i, 0, 5)
+    {
+        if (!m_Keys[i])
+        {
+            m_Keys[i] = value;
+            break;
+        }
+    }
 }
 //---------------------------------------------------------------------------
 uint CFastWalkStack::GetValue()
 {
-	WISPFUN_DEBUG("c176_f3");
+    WISPFUN_DEBUG("c176_f3");
 
-	IFOR(i, 0, 5)
-	{
-		uint key = m_Keys[i];
+    IFOR (i, 0, 5)
+    {
+        uint key = m_Keys[i];
 
-		if (key)
-		{
-			m_Keys[i] = 0;
-			return key;
-		}
-	}
+        if (key)
+        {
+            m_Keys[i] = 0;
+            return key;
+        }
+    }
 
-	return 0;
+    return 0;
 }
 //----------------------------------------------------------------------------------

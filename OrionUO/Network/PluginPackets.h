@@ -13,64 +13,71 @@
 class CPluginPacket : public WISP_DATASTREAM::CDataWritter
 {
 public:
-	CPluginPacket();
-	CPluginPacket(int size, bool autoResize = false);
+    CPluginPacket();
+    CPluginPacket(int size, bool autoResize = false);
 
-	void SendToPlugin();
+    void SendToPlugin();
 };
 //----------------------------------------------------------------------------------
 class CPluginPacketSkillsList : public CPluginPacket
 {
 public:
-	CPluginPacketSkillsList();
+    CPluginPacketSkillsList();
 };
 //----------------------------------------------------------------------------------
 class CPluginPacketSpellsList : public CPluginPacket
 {
 public:
-	CPluginPacketSpellsList();
+    CPluginPacketSpellsList();
 };
 //----------------------------------------------------------------------------------
 class CPluginPacketMacrosList : public CPluginPacket
 {
 public:
-	CPluginPacketMacrosList();
+    CPluginPacketMacrosList();
 };
 //----------------------------------------------------------------------------------
 class CPluginPacketFileInfo : public CPluginPacket
 {
 public:
-	CPluginPacketFileInfo(int index, uint64 address, uint64 size);
+    CPluginPacketFileInfo(int index, uint64 address, uint64 size);
 };
 //----------------------------------------------------------------------------------
 class CPluginPacketFileInfoLocalized : public CPluginPacket
 {
 public:
-	CPluginPacketFileInfoLocalized(int index, uint64 address, uint64 size, const string &language);
+    CPluginPacketFileInfoLocalized(int index, uint64 address, uint64 size, const string &language);
 };
 //----------------------------------------------------------------------------------
 class CPluginPacketStaticArtGraphicDataInfo : public CPluginPacket
 {
 public:
-	CPluginPacketStaticArtGraphicDataInfo(ushort graphic, uint64 address, uint64 size, uint64 compressedSize);
+    CPluginPacketStaticArtGraphicDataInfo(
+        ushort graphic, uint64 address, uint64 size, uint64 compressedSize);
 };
 //----------------------------------------------------------------------------------
 class CPluginPacketGumpArtGraphicDataInfo : public CPluginPacket
 {
 public:
-	CPluginPacketGumpArtGraphicDataInfo(ushort graphic, uint64 address, uint64 size, uint64 compressedSize, ushort width, ushort height);
+    CPluginPacketGumpArtGraphicDataInfo(
+        ushort graphic,
+        uint64 address,
+        uint64 size,
+        uint64 compressedSize,
+        ushort width,
+        ushort height);
 };
 //----------------------------------------------------------------------------------
 class CPluginPacketFilesTransfered : public CPluginPacket
 {
 public:
-	CPluginPacketFilesTransfered();
+    CPluginPacketFilesTransfered();
 };
 //----------------------------------------------------------------------------------
 class CPluginPacketOpenMap : public CPluginPacket
 {
 public:
-	CPluginPacketOpenMap();
+    CPluginPacketOpenMap();
 };
 //----------------------------------------------------------------------------------
 #endif //PLUGINPACKETS_H

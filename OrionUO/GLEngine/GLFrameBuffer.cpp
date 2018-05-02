@@ -13,13 +13,13 @@
 //----------------------------------------------------------------------------------
 CGLFrameBuffer::CGLFrameBuffer()
 {
-	WISPFUN_DEBUG("c30_f1");
+    WISPFUN_DEBUG("c30_f1");
 }
 //----------------------------------------------------------------------------------
 CGLFrameBuffer::~CGLFrameBuffer()
 {
-	WISPFUN_DEBUG("c30_f2");
-	Free();
+    WISPFUN_DEBUG("c30_f2");
+    Free();
 }
 //----------------------------------------------------------------------------------
 /*!
@@ -30,39 +30,41 @@ CGLFrameBuffer::~CGLFrameBuffer()
 */
 bool CGLFrameBuffer::Init(int width, int height)
 {
-	WISPFUN_DEBUG("c30_f3");
-	Free();
+    WISPFUN_DEBUG("c30_f3");
+    Free();
 
-	bool result = false;
+    bool result = false;
 
-	if (g_GL.CanUseFrameBuffer && width && height)
-	{
-		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-		glGenTextures(1, &Texture.Texture);
-		glBindTexture(GL_TEXTURE_2D, Texture.Texture);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_BGRA, GL_UNSIGNED_INT_8_8_8_8, NULL);
+    if (g_GL.CanUseFrameBuffer && width && height)
+    {
+        glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+        glGenTextures(1, &Texture.Texture);
+        glBindTexture(GL_TEXTURE_2D, Texture.Texture);
+        glTexImage2D(
+            GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_BGRA, GL_UNSIGNED_INT_8_8_8_8, NULL);
 
-		GLint currentFrameBuffer = 0;
-		glGetIntegerv(GL_FRAMEBUFFER_BINDING, &currentFrameBuffer);
+        GLint currentFrameBuffer = 0;
+        glGetIntegerv(GL_FRAMEBUFFER_BINDING, &currentFrameBuffer);
 
-		glGenFramebuffers(1, &m_FrameBuffer);
-		glBindFramebuffer(GL_FRAMEBUFFER, m_FrameBuffer);
+        glGenFramebuffers(1, &m_FrameBuffer);
+        glBindFramebuffer(GL_FRAMEBUFFER, m_FrameBuffer);
 
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, Texture.Texture, 0);
+        glFramebufferTexture2D(
+            GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, Texture.Texture, 0);
 
-		if (glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE)
-		{
-			Texture.Width = width;
-			Texture.Height = height;
+        if (glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE)
+        {
+            Texture.Width = width;
+            Texture.Height = height;
 
-			result = true;
-			m_Ready = true;
-		}
+            result = true;
+            m_Ready = true;
+        }
 
-		glBindFramebuffer(GL_FRAMEBUFFER, currentFrameBuffer);
-	}
+        glBindFramebuffer(GL_FRAMEBUFFER, currentFrameBuffer);
+    }
 
-	return result;
+    return result;
 }
 //----------------------------------------------------------------------------------
 /*!
@@ -71,16 +73,16 @@ bool CGLFrameBuffer::Init(int width, int height)
 */
 void CGLFrameBuffer::Free()
 {
-	WISPFUN_DEBUG("c30_f4");
-	Texture.Clear();
+    WISPFUN_DEBUG("c30_f4");
+    Texture.Clear();
 
-	if (g_GL.CanUseFrameBuffer && m_FrameBuffer != 0)
-	{
-		glDeleteFramebuffers(1, &m_FrameBuffer);
-		m_FrameBuffer = 0;
-	}
+    if (g_GL.CanUseFrameBuffer && m_FrameBuffer != 0)
+    {
+        glDeleteFramebuffers(1, &m_FrameBuffer);
+        m_FrameBuffer = 0;
+    }
 
-	m_OldFrameBuffer = 0;
+    m_OldFrameBuffer = 0;
 }
 //----------------------------------------------------------------------------------
 /*!
@@ -89,16 +91,16 @@ void CGLFrameBuffer::Free()
 */
 void CGLFrameBuffer::Release()
 {
-	WISPFUN_DEBUG("c30_f5");
-	if (g_GL.CanUseFrameBuffer)
-	{
-		glBindFramebuffer(GL_FRAMEBUFFER, m_OldFrameBuffer);
-	
-		glBindTexture(GL_TEXTURE_2D, Texture.Texture);
-		glGenerateMipmap(GL_TEXTURE_2D);
+    WISPFUN_DEBUG("c30_f5");
+    if (g_GL.CanUseFrameBuffer)
+    {
+        glBindFramebuffer(GL_FRAMEBUFFER, m_OldFrameBuffer);
 
-		g_GL.RestorePort();
-	}
+        glBindTexture(GL_TEXTURE_2D, Texture.Texture);
+        glGenerateMipmap(GL_TEXTURE_2D);
+
+        g_GL.RestorePort();
+    }
 }
 //----------------------------------------------------------------------------------
 /*!
@@ -109,14 +111,16 @@ void CGLFrameBuffer::Release()
 */
 bool CGLFrameBuffer::Ready(int width, int height)
 {
-	WISPFUN_DEBUG("c30_f6");
-	return (g_GL.CanUseFrameBuffer && m_Ready && Texture.Width == width && Texture.Height == height);
+    WISPFUN_DEBUG("c30_f6");
+    return (
+        g_GL.CanUseFrameBuffer && m_Ready && Texture.Width == width && Texture.Height == height);
 }
 //----------------------------------------------------------------------------------
 bool CGLFrameBuffer::ReadyMinSize(int width, int height)
 {
-	WISPFUN_DEBUG("c30_f6");
-	return (g_GL.CanUseFrameBuffer && m_Ready && Texture.Width >= width && Texture.Height >= height);
+    WISPFUN_DEBUG("c30_f6");
+    return (
+        g_GL.CanUseFrameBuffer && m_Ready && Texture.Width >= width && Texture.Height >= height);
 }
 //----------------------------------------------------------------------------------
 /*!
@@ -125,30 +129,30 @@ bool CGLFrameBuffer::ReadyMinSize(int width, int height)
 */
 bool CGLFrameBuffer::Use()
 {
-	WISPFUN_DEBUG("c30_f7");
-	bool result = false;
+    WISPFUN_DEBUG("c30_f7");
+    bool result = false;
 
-	if (g_GL.CanUseFrameBuffer && m_Ready)
-	{
-		glEnable(GL_TEXTURE_2D);
-		
-		glGetIntegerv(GL_FRAMEBUFFER_BINDING, &m_OldFrameBuffer);
-		glBindFramebuffer(GL_FRAMEBUFFER, m_FrameBuffer);
-		glBindTexture(GL_TEXTURE_2D, Texture.Texture);
+    if (g_GL.CanUseFrameBuffer && m_Ready)
+    {
+        glEnable(GL_TEXTURE_2D);
 
-		glViewport(0, 0, Texture.Width, Texture.Height);
+        glGetIntegerv(GL_FRAMEBUFFER_BINDING, &m_OldFrameBuffer);
+        glBindFramebuffer(GL_FRAMEBUFFER, m_FrameBuffer);
+        glBindTexture(GL_TEXTURE_2D, Texture.Texture);
 
-		glMatrixMode(GL_PROJECTION);
-		glLoadIdentity();
-		
-		glOrtho(0.0, Texture.Width, 0.0, Texture.Height, -150.0, 150.0);
+        glViewport(0, 0, Texture.Width, Texture.Height);
 
-		glMatrixMode(GL_MODELVIEW);
-		
-		result = true;
-	}
+        glMatrixMode(GL_PROJECTION);
+        glLoadIdentity();
 
-	return result;
+        glOrtho(0.0, Texture.Width, 0.0, Texture.Height, -150.0, 150.0);
+
+        glMatrixMode(GL_MODELVIEW);
+
+        result = true;
+    }
+
+    return result;
 }
 //----------------------------------------------------------------------------------
 /*!
@@ -159,12 +163,11 @@ bool CGLFrameBuffer::Use()
 */
 void CGLFrameBuffer::Draw(int x, int y)
 {
-	WISPFUN_DEBUG("c30_f8");
-	if (g_GL.CanUseFrameBuffer && m_Ready)
-	{
-		g_GL.OldTexture = 0;
-		g_GL.GL1_Draw(Texture, x, y);
-	}
+    WISPFUN_DEBUG("c30_f8");
+    if (g_GL.CanUseFrameBuffer && m_Ready)
+    {
+        g_GL.OldTexture = 0;
+        g_GL.GL1_Draw(Texture, x, y);
+    }
 }
 //----------------------------------------------------------------------------------
-

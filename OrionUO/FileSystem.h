@@ -19,8 +19,8 @@
 
 enum fs_mode
 {
-  FS_READ = 0x01,
-  FS_WRITE = 0x02,
+    FS_READ = 0x01,
+    FS_WRITE = 0x02,
 };
 
 FILE *fs_open(const os_path &path_str, fs_mode mode);

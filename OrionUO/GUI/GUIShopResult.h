@@ -15,32 +15,32 @@
 class CGUIShopResult : public CBaseGUI
 {
 public:
-	//!Стоимость
-	uint Price = 0;
+    //!Стоимость
+    uint Price = 0;
 
-	//!Название
-	string Name = "";
+    //!Название
+    string Name = "";
 
 private:
-	//!Текстура названия
-	CGLTextTexture m_NameText{ CGLTextTexture() };
+    //!Текстура названия
+    CGLTextTexture m_NameText{ CGLTextTexture() };
 
 public:
-	CGUIShopResult(class CGUIShopItem *shopItem, int x, int y);
-	virtual ~CGUIShopResult();
+    CGUIShopResult(class CGUIShopItem *shopItem, int x, int y);
+    virtual ~CGUIShopResult();
 
-	//!Компонента кнопок MinMax
-	class CGUIMinMaxButtons *m_MinMaxButtons{ NULL };
+    //!Компонента кнопок MinMax
+    class CGUIMinMaxButtons *m_MinMaxButtons{ NULL };
 
-	//!Получить ссылку на выбранную компоненту или ссылку на себя
-	CBaseGUI *SelectedItem();
+    //!Получить ссылку на выбранную компоненту или ссылку на себя
+    CBaseGUI *SelectedItem();
 
-	virtual WISP_GEOMETRY::CSize GetSize() { return WISP_GEOMETRY::CSize(200, m_NameText.Height); }
+    virtual WISP_GEOMETRY::CSize GetSize() { return WISP_GEOMETRY::CSize(200, m_NameText.Height); }
 
-	virtual void PrepareTextures();
+    virtual void PrepareTextures();
 
-	virtual void Draw(bool checktrans = false);
-	virtual bool Select();
+    virtual void Draw(bool checktrans = false);
+    virtual bool Select();
 };
 //----------------------------------------------------------------------------------
 #endif

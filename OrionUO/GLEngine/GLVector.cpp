@@ -12,75 +12,77 @@
 #include "stdafx.h"
 //----------------------------------------------------------------------------------
 CVector::CVector(double x, double y, double z)
-: X(x), Y(y), Z(z)
+    : X(x)
+    , Y(y)
+    , Z(z)
 {
 }
 //----------------------------------------------------------------------------------
 void CVector::Link(const CVector &v)
 {
-	X = v.X;
-	Y = v.Y;
-	Z = v.Z;
+    X = v.X;
+    Y = v.Y;
+    Z = v.Z;
 }
 //----------------------------------------------------------------------------------
 void CVector::Link(double x, double y, double z)
 {
-	X = x;
-	Y = y;
-	Z = z;
+    X = x;
+    Y = y;
+    Z = z;
 }
 //----------------------------------------------------------------------------------
 void CVector::Add(const CVector &v)
 {
-	X += v.X;
-	Y += v.Y;
-	Z += v.Z;
+    X += v.X;
+    Y += v.Y;
+    Z += v.Z;
 }
 //----------------------------------------------------------------------------------
 void CVector::Add(double x, double y, double z)
 {
-	X += x;
-	Y += y;
-	Z += z;
+    X += x;
+    Y += y;
+    Z += z;
 }
 //----------------------------------------------------------------------------------
 void CVector::Merge(const CVector &v)
 {
-	double newX = Y * v.Z - Z * v.Y;
-	double newY = Z * v.X - X * v.Z;
-	double newZ = X * v.Y - Y * v.X;
+    double newX = Y * v.Z - Z * v.Y;
+    double newY = Z * v.X - X * v.Z;
+    double newZ = X * v.Y - Y * v.X;
 
-	X = newX;
-	Y = newY;
-	Z = newZ;
+    X = newX;
+    Y = newY;
+    Z = newZ;
 }
 //----------------------------------------------------------------------------------
 void CVector::Merge(double x, double y, double z)
 {
-	double newX = Y * z - Z * y;
-	double newY = Z * x - X * z;
-	double newZ = X * y - Y * x;
+    double newX = Y * z - Z * y;
+    double newY = Z * x - X * z;
+    double newZ = X * y - Y * x;
 
-	X = newX;
-	Y = newY;
-	Z = newZ;
+    X = newX;
+    Y = newY;
+    Z = newZ;
 }
 //----------------------------------------------------------------------------------
 void CVector::Normalize()
 {
-	WISPFUN_DEBUG("c38_f1");
-	if (!X && !Y && !Z)
-			return;
+    WISPFUN_DEBUG("c38_f1");
+    if (!X && !Y && !Z)
+        return;
 
-	double result = X * X + Y * Y + Z * Z;
+    double result = X * X + Y * Y + Z * Z;
 
-	//if (result)
-	{
-		result = sqrtl(result);
-		
-		X /= result;
-		Y /= result;
-		Z /= result;
-	}
+    //if (result)
+    {
+        result = sqrtl(result);
+
+        X /= result;
+        Y /= result;
+        Z /= result;
+    }
 }
 //----------------------------------------------------------------------------------

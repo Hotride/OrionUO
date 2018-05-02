@@ -10,77 +10,78 @@
 #ifndef SOUNDMANAGER_H
 #define SOUNDMANAGER_H
 //----------------------------------------------------------------------------------
-#pragma pack (push,1)
+#pragma pack(push, 1)
 struct MidiInfoStruct
 {
-	const char* musicName;
-	bool loop;
+    const char *musicName;
+    bool loop;
 };
 struct WaveHeader
 {
-	char chunkId[4];
-	unsigned long chunkSize;
-	char format[4];
-	char subChunkId[4];
-	unsigned long subChunkSize;
-	unsigned short audioFormat;
-	unsigned short numChannels;
-	unsigned long sampleRate;
-	unsigned long bytesPerSecond;
-	unsigned short blockAlign;
-	unsigned short bitsPerSample;
-	char dataChunkId[4];
-	unsigned long dataSize;
-	//data;
+    char chunkId[4];
+    unsigned long chunkSize;
+    char format[4];
+    char subChunkId[4];
+    unsigned long subChunkSize;
+    unsigned short audioFormat;
+    unsigned short numChannels;
+    unsigned long sampleRate;
+    unsigned long bytesPerSecond;
+    unsigned short blockAlign;
+    unsigned short bitsPerSample;
+    char dataChunkId[4];
+    unsigned long dataSize;
+    //data;
 };
-#pragma pack (pop)
+#pragma pack(pop)
 //----------------------------------------------------------------------------------
 class CSoundManager
 {
 public:
-	int CurrentMusicIndex = -1;
+    int CurrentMusicIndex = -1;
+
 private:
-	static const int MIDI_MUSIC_COUNT = 57;
-	static const MidiInfoStruct MidiInfo[MIDI_MUSIC_COUNT];
-	HSTREAM m_Music{ NULL };
-	HSTREAM m_WarMusic{ NULL };
+    static const int MIDI_MUSIC_COUNT = 57;
+    static const MidiInfoStruct MidiInfo[MIDI_MUSIC_COUNT];
+    HSTREAM m_Music{ NULL };
+    HSTREAM m_WarMusic{ NULL };
 
-	void TraceMusicError(DWORD error);
-	//std::map<HSTREAM, BYTE*> streams;
+    void TraceMusicError(DWORD error);
+    //std::map<HSTREAM, BYTE*> streams;
 public:
-	CSoundManager();
-	~CSoundManager();
-	
-	bool Init();
-	void Free();
-	void ResumeSound();
-	void PauseSound();
+    CSoundManager();
+    ~CSoundManager();
 
-	//Mix_Chunk *LoadSoundEffect(TIndexSound &is);
+    bool Init();
+    void Free();
+    void ResumeSound();
+    void PauseSound();
 
-	bool FreeStream(HSTREAM hSteam);
+    //Mix_Chunk *LoadSoundEffect(TIndexSound &is);
 
-	bool IsPlayingNormalMusic();
+    bool FreeStream(HSTREAM hSteam);
 
-	//Метод расчета звука. При расчете учитываются: звук клиента, дистанция для эффектов.
-	float GetVolumeValue(int distance = -1, bool music = false);
+    bool IsPlayingNormalMusic();
 
-	HSTREAM LoadSoundEffect(CIndexSound &is);
+    //Метод расчета звука. При расчете учитываются: звук клиента, дистанция для эффектов.
+    float GetVolumeValue(int distance = -1, bool music = false);
 
-	UCHAR_LIST CreateWaveFile(CIndexSound &is);
+    HSTREAM LoadSoundEffect(CIndexSound &is);
 
-	//void PlaySoundEffect(Mix_Chunk *mix, int volume);
-	void PlaySoundEffect(HSTREAM stream, float volume);
+    UCHAR_LIST CreateWaveFile(CIndexSound &is);
 
-	void PlayMidi(int index, bool warmode);
+    //void PlaySoundEffect(Mix_Chunk *mix, int volume);
+    void PlaySoundEffect(HSTREAM stream, float volume);
 
-	void PlayMP3(const os_path &fileName, int index, bool loop, bool warmode = false);
+    void PlayMidi(int index, bool warmode);
 
-	void StopMusic();
+    void PlayMP3(const os_path &fileName, int index, bool loop, bool warmode = false);
 
-	void StopWarMusic();
+    void StopMusic();
 
-	void SetMusicVolume(float volume);
+    void StopWarMusic();
+
+    void SetMusicVolume(float volume);
 };
 //----------------------------------------------------------------------------------
 extern CSoundManager g_SoundManager;

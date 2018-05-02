@@ -13,37 +13,45 @@
 class CGumpMinimap : public CGump
 {
 public:
-	ushort LastX = 0;
-	ushort LastY = 0;
+    ushort LastX = 0;
+    ushort LastY = 0;
 
 private:
-	const int ID_GMM_LOCK_MOVING = 1;
+    const int ID_GMM_LOCK_MOVING = 1;
 
-	uchar m_Count{ 0 };
+    uchar m_Count{ 0 };
 
-	CGLTexture m_Texture{ CGLTexture() };
+    CGLTexture m_Texture{ CGLTexture() };
 
-	CGUIGumppic *m_Body{ NULL };
-	CGUIDataBox *m_DataBox{ NULL };
+    CGUIGumppic *m_Body{ NULL };
+    CGUIDataBox *m_DataBox{ NULL };
 
-	void GenerateMap();
+    void GenerateMap();
 
-	void CreatePixels(USHORT_LIST &data, int color, int x, int y, int width, int height, const WISP_GEOMETRY::CPoint2Di *table, int count);
+    void CreatePixels(
+        USHORT_LIST &data,
+        int color,
+        int x,
+        int y,
+        int width,
+        int height,
+        const WISP_GEOMETRY::CPoint2Di *table,
+        int count);
 
 protected:
-	virtual void CalculateGumpState();
+    virtual void CalculateGumpState();
 
 public:
-	CGumpMinimap(short x, short y, bool minimized);
-	virtual ~CGumpMinimap();
+    CGumpMinimap(short x, short y, bool minimized);
+    virtual ~CGumpMinimap();
 
-	virtual void PrepareContent();
+    virtual void PrepareContent();
 
-	virtual void UpdateContent();
+    virtual void UpdateContent();
 
-	GUMP_BUTTON_EVENT_H;
+    GUMP_BUTTON_EVENT_H;
 
-	virtual bool OnLeftMouseButtonDoubleClick();
+    virtual bool OnLeftMouseButtonDoubleClick();
 };
 //----------------------------------------------------------------------------------
 #endif

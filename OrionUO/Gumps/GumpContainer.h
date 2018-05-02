@@ -12,48 +12,48 @@
 //----------------------------------------------------------------------------------
 class CGumpContainer : public CGump
 {
-	bool IsGameBoard = false;
+    bool IsGameBoard = false;
 
 private:
-	uint m_CorpseEyesTicks{ 0 };
-	uchar m_CorpseEyesOffset{ 0 };
+    uint m_CorpseEyesTicks{ 0 };
+    uchar m_CorpseEyesOffset{ 0 };
 
-	CTextRenderer m_TextRenderer{ CTextRenderer() };
+    CTextRenderer m_TextRenderer{ CTextRenderer() };
 
-	CGUIGumppic *m_CorpseEyes{ NULL };
-	CGUIDataBox *m_DataBox{ NULL };
+    CGUIGumppic *m_CorpseEyes{ NULL };
+    CGUIDataBox *m_DataBox{ NULL };
 
 protected:
-	virtual void CalculateGumpState();
+    virtual void CalculateGumpState();
 
 public:
-	CGumpContainer(uint serial, uint id, short x, short y);
-	virtual ~CGumpContainer();
+    CGumpContainer(uint serial, uint id, short x, short y);
+    virtual ~CGumpContainer();
 
-	static const uint ID_GC_LOCK_MOVING;
-	static const uint ID_GC_MINIMIZE;
+    static const uint ID_GC_LOCK_MOVING;
+    static const uint ID_GC_MINIMIZE;
 
-	CGUIGumppic *m_BodyGump{ NULL };
-	
-	void UpdateItemCoordinates(class CGameObject *item);
+    CGUIGumppic *m_BodyGump{ NULL };
 
-	CTextRenderer *GetTextRenderer() { return &m_TextRenderer; }
+    void UpdateItemCoordinates(class CGameObject *item);
 
-	virtual void PrepareTextures();
+    CTextRenderer *GetTextRenderer() { return &m_TextRenderer; }
 
-	virtual void PrepareContent();
+    virtual void PrepareTextures();
 
-	virtual void UpdateContent();
+    virtual void PrepareContent();
 
-	virtual void InitToolTip();
+    virtual void UpdateContent();
 
-	virtual void Draw();
-	virtual CRenderObject *Select();
+    virtual void InitToolTip();
 
-	GUMP_BUTTON_EVENT_H;
+    virtual void Draw();
+    virtual CRenderObject *Select();
 
-	virtual void OnLeftMouseButtonUp();
-	virtual bool OnLeftMouseButtonDoubleClick();
+    GUMP_BUTTON_EVENT_H;
+
+    virtual void OnLeftMouseButtonUp();
+    virtual bool OnLeftMouseButtonDoubleClick();
 };
 //----------------------------------------------------------------------------------
 #endif

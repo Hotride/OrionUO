@@ -14,39 +14,39 @@
 class CGameEffect : public CRenderWorldObject
 {
 public:
-	//!Effect type
-	EFFECT_TYPE EffectType = EF_MOVING;
+    //!Effect type
+    EFFECT_TYPE EffectType = EF_MOVING;
 
-	//!Серийник назначения
-	uint DestSerial = 0;
-	//!Координата назначения по оси X
-	ushort DestX = 0;
-	//!Координата назначения по оси Y
-	ushort DestY = 0;
-	//!Координата назначения по оси Z
-	char DestZ = 0;
-	//!Скорость
-	uchar Speed = 0;
-	//!Время жизни
-	uint Duration = 0;
-	//!Изменять направление картинки при полете эффекта?
-	bool FixedDirection = false;
-	//!Взрывать по достижении цели?
-	bool Explode = false;
-	//!Режим отображения эффекта
-	uint RenderMode = 0;
+    //!Серийник назначения
+    uint DestSerial = 0;
+    //!Координата назначения по оси X
+    ushort DestX = 0;
+    //!Координата назначения по оси Y
+    ushort DestY = 0;
+    //!Координата назначения по оси Z
+    char DestZ = 0;
+    //!Скорость
+    uchar Speed = 0;
+    //!Время жизни
+    uint Duration = 0;
+    //!Изменять направление картинки при полете эффекта?
+    bool FixedDirection = false;
+    //!Взрывать по достижении цели?
+    bool Explode = false;
+    //!Режим отображения эффекта
+    uint RenderMode = 0;
 
-	//!Индекс картинки
-	int AnimIndex = 0;
-	//!Смещение от базового индекса
-	int Increment = 0;
-	//!Последнее время изменения картинки
-	uint LastChangeFrameTime = 0;
+    //!Индекс картинки
+    int AnimIndex = 0;
+    //!Смещение от базового индекса
+    int Increment = 0;
+    //!Последнее время изменения картинки
+    uint LastChangeFrameTime = 0;
 
-	CGameEffect();
-	virtual ~CGameEffect();
+    CGameEffect();
+    virtual ~CGameEffect();
 
-	/*!
+    /*!
 	Отрисовать эффект
 	@param [__in] mode Режим рисования. true - рисование, false - выбор объектов
 	@param [__in] drawX Экранная координата X объекта
@@ -54,43 +54,43 @@ public:
 	@param [__in] ticks Таймер рендера
 	@return При выборе объектов возвращает выбранный элемент
 	*/
-	virtual void Draw(int x, int y);
+    virtual void Draw(int x, int y);
 
-	/*!
+    /*!
 	Получить текущий индекс картинки
 	@return Индекс картинки
 	*/
-	ushort GetCurrentGraphic();
+    ushort GetCurrentGraphic();
 
-	/*!
+    /*!
 	Вычислить текущий индекс картинки
 	@return Индекс картинки
 	*/
-	ushort CalculateCurrentGraphic();
+    ushort CalculateCurrentGraphic();
 
-	/*!
+    /*!
 	Применение режима отображения
 	@return 
 	*/
-	void ApplyRenderMode();
+    void ApplyRenderMode();
 
-	/*!
+    /*!
 	Отмена режима отображения
 	@return 
 	*/
-	void RemoveRenderMode();
+    void RemoveRenderMode();
 
-	/*!
+    /*!
 	Проверка, эффект ли это
 	@return Эффект или нет
 	*/
-	bool IsEffectObject() {return true;}
+    bool IsEffectObject() { return true; }
 
-	/*!
+    /*!
 	Обновить эффект
 	@return 
 	*/
-	virtual void Update(class CGameObject *parent);
+    virtual void Update(class CGameObject *parent);
 };
 //----------------------------------------------------------------------------------
 #endif

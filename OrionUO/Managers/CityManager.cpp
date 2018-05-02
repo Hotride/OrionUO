@@ -16,7 +16,8 @@ CCityManager g_CityManager;
 //---------------------------------------CCity--------------------------------------
 //----------------------------------------------------------------------------------
 CCity::CCity(const string &name, const wstring &description)
-: Name(name), Description(description)
+    : Name(name)
+    , Description(description)
 {
 }
 //----------------------------------------------------------------------------------
@@ -32,89 +33,80 @@ CCityManager::CCityManager()
 //----------------------------------------------------------------------------------
 void CCityManager::Init()
 {
-	WISPFUN_DEBUG("c134_f1");
-	WISP_FILE::CMappedFile file;
+    WISPFUN_DEBUG("c134_f1");
+    WISP_FILE::CMappedFile file;
 
-	if (file.Load(g_App.UOFilesPath("citytext.enu")))
-	{
-		puchar end = file.Ptr + file.Size;
+    if (file.Load(g_App.UOFilesPath("citytext.enu")))
+    {
+        puchar end = file.Ptr + file.Size;
 
-		while (file.Ptr < end)
-		{
-			if (!memcmp(&file.Ptr[0], "END\0", 4))
-			{
-				file.Move(4);
+        while (file.Ptr < end)
+        {
+            if (!memcmp(&file.Ptr[0], "END\0", 4))
+            {
+                file.Move(4);
 
-				puchar startBlock = file.Ptr + 4;
-				puchar ptrBlock = startBlock;
-				string name = "";
+                puchar startBlock = file.Ptr + 4;
+                puchar ptrBlock = startBlock;
+                string name = "";
 
-				while (ptrBlock < end)
-				{
-					if (*ptrBlock == '<')
-					{
-						size_t len = ptrBlock - startBlock;
-						name.resize(len);
-						memcpy(&name[0], &startBlock[0], len);
+                while (ptrBlock < end)
+                {
+                    if (*ptrBlock == '<')
+                    {
+                        size_t len = ptrBlock - startBlock;
+                        name.resize(len);
+                        memcpy(&name[0], &startBlock[0], len);
 
-						break;
-					}
+                        break;
+                    }
 
-					ptrBlock++;
-				}
-				
-				string text = "";
+                    ptrBlock++;
+                }
 
-				while (file.Ptr < end)
-				{
-					string str = file.ReadString(0);
+                string text = "";
 
-					if (text.length())
-						text += "\n\n";
+                while (file.Ptr < end)
+                {
+                    string str = file.ReadString(0);
 
-					text += str;
+                    if (text.length())
+                        text += "\n\n";
 
-					if (*file.Ptr == 0x2E || !memcmp(&file.Ptr[0], "END\0", 4))
-						break;
-				}
+                    text += str;
 
-				m_CityList.push_back(CCity(name, ToWString(text)));
-			}
-			else
-				file.Move(1);
-		}
+                    if (*file.Ptr == 0x2E || !memcmp(&file.Ptr[0], "END\0", 4))
+                        break;
+                }
 
-		file.Unload();
-	}
-	else
-	{
-		//!Названия городов
-		static const string cityNames[9] =
-		{
-			"Yew",
-			"Minoc",
-			"Britain",
-			"Moonglow",
-			"Trinsic",
-			"Magincia",
-			"Jhelom",
-			"Skara Brae",
-			"Vesper"
-		};
+                m_CityList.push_back(CCity(name, ToWString(text)));
+            }
+            else
+                file.Move(1);
+        }
 
-		CCliloc *cliloc = g_ClilocManager.Cliloc(g_Language);
+        file.Unload();
+    }
+    else
+    {
+        //!Названия городов
+        static const string cityNames[9] = { "Yew",      "Minoc",      "Britain",
+                                             "Moonglow", "Trinsic",    "Magincia",
+                                             "Jhelom",   "Skara Brae", "Vesper" };
 
-		if (cliloc != NULL)
-		{
-			IFOR(i, 0, 9)
-				m_CityList.push_back(CCity(cityNames[i], cliloc->GetW(1075072 + (int)i)));
-		}
-	}
+        CCliloc *cliloc = g_ClilocManager.Cliloc(g_Language);
+
+        if (cliloc != NULL)
+        {
+            IFOR (i, 0, 9)
+                m_CityList.push_back(CCity(cityNames[i], cliloc->GetW(1075072 + (int)i)));
+        }
+    }
 }
 //---------------------------------------------------------------------------
 CCityManager::~CCityManager()
 {
-	Clear();
+    Clear();
 }
 //---------------------------------------------------------------------------
 /*!
@@ -124,19 +116,19 @@ CCityManager::~CCityManager()
 */
 CCity CCityManager::GetCity(const string &name)
 {
-	WISPFUN_DEBUG("c134_f2");
-	for (deque<CCity>::iterator i = m_CityList.begin(); i != m_CityList.end(); ++i)
-	{
-		if (i->Name == name)
-			return *i;
-	}
+    WISPFUN_DEBUG("c134_f2");
+    for (deque<CCity>::iterator i = m_CityList.begin(); i != m_CityList.end(); ++i)
+    {
+        if (i->Name == name)
+            return *i;
+    }
 
-	return CCity("", L"");
+    return CCity("", L"");
 }
 //---------------------------------------------------------------------------
 void CCityManager::Clear()
 {
-	WISPFUN_DEBUG("c134_f3");
-	m_CityList.clear();
+    WISPFUN_DEBUG("c134_f3");
+    m_CityList.clear();
 }
 //---------------------------------------------------------------------------

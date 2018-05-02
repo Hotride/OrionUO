@@ -13,46 +13,46 @@
 class CStepInfo
 {
 public:
-	uchar Direction = 0;
-	uchar OldDirection = 0;
-	uchar Sequence = 0;
-	bool Accepted = false;
-	bool Running = false;
-	bool NoRotation = false;
-	uint Timer = 0;
-	ushort X = 0;
-	ushort Y = 0;
-	uchar Z = 0;
+    uchar Direction = 0;
+    uchar OldDirection = 0;
+    uchar Sequence = 0;
+    bool Accepted = false;
+    bool Running = false;
+    bool NoRotation = false;
+    uint Timer = 0;
+    ushort X = 0;
+    ushort Y = 0;
+    uchar Z = 0;
 
-	CStepInfo() {}
-	~CStepInfo() {}
+    CStepInfo() {}
+    ~CStepInfo() {}
 };
 //----------------------------------------------------------------------------------
 //Класс для обработки шагов игрока
 class CWalker
 {
 public:
-	uint LastStepRequestTime = 0;
-	int UnacceptedPacketsCount = 0;
-	int StepsCount = 0;
-	uchar WalkSequence = 0;
-	uchar CurrentWalkSequence = 0;
-	bool ResendPacketSended = false;
-	bool WantChangeCoordinates = false;
-	bool WalkingFailed = false;
-	ushort CurrentPlayerZ = 0;
-	ushort NewPlayerZ = 0;
+    uint LastStepRequestTime = 0;
+    int UnacceptedPacketsCount = 0;
+    int StepsCount = 0;
+    uchar WalkSequence = 0;
+    uchar CurrentWalkSequence = 0;
+    bool ResendPacketSended = false;
+    bool WantChangeCoordinates = false;
+    bool WalkingFailed = false;
+    ushort CurrentPlayerZ = 0;
+    ushort NewPlayerZ = 0;
 
-	CWalker();
-	~CWalker() {}
+    CWalker();
+    ~CWalker() {}
 
-	CStepInfo m_Step[MAX_STEPS_COUNT];
+    CStepInfo m_Step[MAX_STEPS_COUNT];
 
-	void Reset();
+    void Reset();
 
-	void DenyWalk(uchar sequence, int x, int y, char z);
+    void DenyWalk(uchar sequence, int x, int y, char z);
 
-	void ConfirmWalk(uchar sequence);
+    void ConfirmWalk(uchar sequence);
 };
 //----------------------------------------------------------------------------------
 extern CWalker g_Walker;

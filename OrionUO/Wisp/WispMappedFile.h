@@ -9,25 +9,24 @@ class CMappedFile : public WISP_DATASTREAM::CDataReader
 {
 #if USE_WISP
 private:
-	HANDLE m_File{ nullptr };
-	void* m_Map{ nullptr };
+    HANDLE m_File{ nullptr };
+    void *m_Map{ nullptr };
 
-	bool Load();
+    bool Load();
 #endif
 
 public:
-	CMappedFile();
+    CMappedFile();
 
-	virtual ~CMappedFile();
+    virtual ~CMappedFile();
 
-	bool Load(const os_path &path);
+    bool Load(const os_path &path);
 
-	void Unload();
+    void Unload();
 };
 //----------------------------------------------------------------------------------
 extern string g_WispMappedFileError;
 //----------------------------------------------------------------------------------
-}; //namespace
+}; // namespace WISP_FILE
 //----------------------------------------------------------------------------------
 #endif
-

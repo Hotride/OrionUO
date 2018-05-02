@@ -15,128 +15,133 @@ CGump *g_ResizedGump = NULL;
 CGump *g_CurrentCheckGump = NULL;
 //----------------------------------------------------------------------------------
 CGump::CGump()
-: CGump(GT_NONE, 0, 0, 0)
+    : CGump(GT_NONE, 0, 0, 0)
 {
 }
 //----------------------------------------------------------------------------------
 CGump::CGump(GUMP_TYPE type, uint serial, int x, int y)
-: CRenderObject(serial, 0, 0, x, y), GumpType(type)
+    : CRenderObject(serial, 0, 0, x, y)
+    , GumpType(type)
 {
 }
 //----------------------------------------------------------------------------------
 CGump::~CGump()
 {
-	WISPFUN_DEBUG("c84_f1");
-	//Если это гамп, блокирующий игровое окно
-	if (Blocked)
-	{
-		//Уменьшаем счетчик блокирующих гампов
-		g_GrayMenuCount--;
+    WISPFUN_DEBUG("c84_f1");
+    //Если это гамп, блокирующий игровое окно
+    if (Blocked)
+    {
+        //Уменьшаем счетчик блокирующих гампов
+        g_GrayMenuCount--;
 
-		//Если таких гампов больше нет - восстанавливаем игровой экран
-		if (g_GrayMenuCount <= 0)
-		{
-			g_GrayMenuCount = 0;
-			g_GameState = GS_GAME;
-			g_CurrentScreen = &g_GameScreen;
-		}
-	}
+        //Если таких гампов больше нет - восстанавливаем игровой экран
+        if (g_GrayMenuCount <= 0)
+        {
+            g_GrayMenuCount = 0;
+            g_GameState = GS_GAME;
+            g_CurrentScreen = &g_GameScreen;
+        }
+    }
 
-	if (g_ClickObject.Gump == this)
-		g_ClickObject.Clear();
+    if (g_ClickObject.Gump == this)
+        g_ClickObject.Clear();
 
-	if (g_SelectedObject.Gump == this)
-		g_SelectedObject.Clear();
+    if (g_SelectedObject.Gump == this)
+        g_SelectedObject.Clear();
 
-	if (g_LastSelectedObject.Gump == this)
-		g_LastSelectedObject.Clear();
+    if (g_LastSelectedObject.Gump == this)
+        g_LastSelectedObject.Clear();
 
-	if (g_PressedObject.LeftGump == this)
-		g_PressedObject.ClearLeft();
-	if (g_PressedObject.RightGump == this)
-		g_PressedObject.ClearRight();
-	if (g_PressedObject.MidGump == this)
-		g_PressedObject.ClearMid();
+    if (g_PressedObject.LeftGump == this)
+        g_PressedObject.ClearLeft();
+    if (g_PressedObject.RightGump == this)
+        g_PressedObject.ClearRight();
+    if (g_PressedObject.MidGump == this)
+        g_PressedObject.ClearMid();
 }
 //---------------------------------------------------------------------------
 void CGump::GUMP_DIRECT_HTML_LINK_EVENT_C
 {
-	g_FontManager.GoToWebLink(link);
-	DebugMsg("OnDirectHTMLLink(%i)\n", link);
+    g_FontManager.GoToWebLink(link);
+    DebugMsg("OnDirectHTMLLink(%i)\n", link);
 }
 //---------------------------------------------------------------------------
 void CGump::FixCoordinates()
 {
-	const int gumpOffsetX = 40;
-	const int gumpOffsetY = 40;
-	int maxX = g_OrionWindow.GetSize().Width - gumpOffsetX;
-	int maxY = g_OrionWindow.GetSize().Height - gumpOffsetY;
+    const int gumpOffsetX = 40;
+    const int gumpOffsetY = 40;
+    int maxX = g_OrionWindow.GetSize().Width - gumpOffsetX;
+    int maxY = g_OrionWindow.GetSize().Height - gumpOffsetY;
 
-	if (Minimized && GumpType != GT_MINIMAP)
-	{
-		if (MinimizedX + GumpRect.Position.X > maxX)
-		{
-			WantRedraw = true;
-			MinimizedX = maxX;
-		}
+    if (Minimized && GumpType != GT_MINIMAP)
+    {
+        if (MinimizedX + GumpRect.Position.X > maxX)
+        {
+            WantRedraw = true;
+            MinimizedX = maxX;
+        }
 
-		if (MinimizedX < GumpRect.Position.X && MinimizedX + GumpRect.Position.X + GumpRect.Size.Width - gumpOffsetX < 0)
-		{
-			WantRedraw = true;
-			MinimizedX = gumpOffsetX - (GumpRect.Position.X + GumpRect.Size.Width);
-		}
+        if (MinimizedX < GumpRect.Position.X &&
+            MinimizedX + GumpRect.Position.X + GumpRect.Size.Width - gumpOffsetX < 0)
+        {
+            WantRedraw = true;
+            MinimizedX = gumpOffsetX - (GumpRect.Position.X + GumpRect.Size.Width);
+        }
 
-		if (MinimizedY + GumpRect.Position.Y > maxY)
-		{
-			WantRedraw = true;
-			MinimizedY = maxY;
-		}
+        if (MinimizedY + GumpRect.Position.Y > maxY)
+        {
+            WantRedraw = true;
+            MinimizedY = maxY;
+        }
 
-		if (MinimizedY < GumpRect.Position.Y && MinimizedY + GumpRect.Position.Y + GumpRect.Size.Height - gumpOffsetY < 0)
-		{
-			WantRedraw = true;
-			MinimizedY = gumpOffsetY - (GumpRect.Position.Y + GumpRect.Size.Height);
-		}
-	}
-	else
-	{
-		if (m_X + GumpRect.Position.X > maxX)
-		{
-			WantRedraw = true;
-			m_X = maxX;
-		}
+        if (MinimizedY < GumpRect.Position.Y &&
+            MinimizedY + GumpRect.Position.Y + GumpRect.Size.Height - gumpOffsetY < 0)
+        {
+            WantRedraw = true;
+            MinimizedY = gumpOffsetY - (GumpRect.Position.Y + GumpRect.Size.Height);
+        }
+    }
+    else
+    {
+        if (m_X + GumpRect.Position.X > maxX)
+        {
+            WantRedraw = true;
+            m_X = maxX;
+        }
 
-		if (m_X < GumpRect.Position.X && m_X + GumpRect.Position.X + GumpRect.Size.Width - gumpOffsetX < 0)
-		{
-			WantRedraw = true;
-			m_X = gumpOffsetX - (GumpRect.Position.X + GumpRect.Size.Width);
-		}
+        if (m_X < GumpRect.Position.X &&
+            m_X + GumpRect.Position.X + GumpRect.Size.Width - gumpOffsetX < 0)
+        {
+            WantRedraw = true;
+            m_X = gumpOffsetX - (GumpRect.Position.X + GumpRect.Size.Width);
+        }
 
-		if (m_Y + GumpRect.Position.Y > maxY)
-		{
-			WantRedraw = true;
-			m_Y = maxY;
-		}
+        if (m_Y + GumpRect.Position.Y > maxY)
+        {
+            WantRedraw = true;
+            m_Y = maxY;
+        }
 
-		if (m_Y < GumpRect.Position.Y && m_Y + GumpRect.Position.Y + GumpRect.Size.Height - gumpOffsetY < 0)
-		{
-			WantRedraw = true;
-			m_Y = gumpOffsetY - (GumpRect.Position.Y + GumpRect.Size.Height);
-		}
-	}
+        if (m_Y < GumpRect.Position.Y &&
+            m_Y + GumpRect.Position.Y + GumpRect.Size.Height - gumpOffsetY < 0)
+        {
+            WantRedraw = true;
+            m_Y = gumpOffsetY - (GumpRect.Position.Y + GumpRect.Size.Height);
+        }
+    }
 }
 //---------------------------------------------------------------------------
 bool CGump::CanBeMoved()
 {
-	WISPFUN_DEBUG("c84_f2");
-	bool result = true;
+    WISPFUN_DEBUG("c84_f2");
+    bool result = true;
 
-	if (NoMove)
-		result = false;
-	else if (g_ConfigManager.LockGumpsMoving)
-		result = !LockMoving;
+    if (NoMove)
+        result = false;
+    else if (g_ConfigManager.LockGumpsMoving)
+        result = !LockMoving;
 
-	return result;
+    return result;
 }
 //---------------------------------------------------------------------------
 /*!
@@ -145,1410 +150,1517 @@ bool CGump::CanBeMoved()
 */
 void CGump::DrawLocker()
 {
-	WISPFUN_DEBUG("c84_f3");
-	if (m_Locker.Serial && g_ShowGumpLocker)
-		g_TextureGumpState[LockMoving].Draw(m_Locker.GetX(), m_Locker.GetY());
+    WISPFUN_DEBUG("c84_f3");
+    if (m_Locker.Serial && g_ShowGumpLocker)
+        g_TextureGumpState[LockMoving].Draw(m_Locker.GetX(), m_Locker.GetY());
 }
 //---------------------------------------------------------------------------
 bool CGump::SelectLocker()
 {
-	WISPFUN_DEBUG("c84_f4");
-	return (m_Locker.Serial && g_ShowGumpLocker && g_Orion.PolygonePixelsInXY(m_Locker.GetX(), m_Locker.GetY(), 10, 14));
+    WISPFUN_DEBUG("c84_f4");
+    return (
+        m_Locker.Serial && g_ShowGumpLocker &&
+        g_Orion.PolygonePixelsInXY(m_Locker.GetX(), m_Locker.GetY(), 10, 14));
 }
 //---------------------------------------------------------------------------
 bool CGump::TestLockerClick()
 {
-	WISPFUN_DEBUG("c84_f5");
-	bool result = (m_Locker.Serial && g_ShowGumpLocker && g_PressedObject.LeftObject == &m_Locker);
+    WISPFUN_DEBUG("c84_f5");
+    bool result = (m_Locker.Serial && g_ShowGumpLocker && g_PressedObject.LeftObject == &m_Locker);
 
-	if (result)
-		OnButton(m_Locker.Serial);
+    if (result)
+        OnButton(m_Locker.Serial);
 
-	return result;
+    return result;
 }
 //---------------------------------------------------------------------------
 void CGump::CalculateGumpState()
 {
-	WISPFUN_DEBUG("c84_f6");
-	g_GumpPressed = (!g_ObjectInHand.Enabled && g_PressedObject.LeftGump == this /*&& g_SelectedObject.Gump() == this*/);
-	g_GumpSelectedElement = ((g_SelectedObject.Gump == this) ? g_SelectedObject.Object : NULL);
-	g_GumpPressedElement = NULL;
+    WISPFUN_DEBUG("c84_f6");
+    g_GumpPressed =
+        (!g_ObjectInHand.Enabled &&
+         g_PressedObject.LeftGump == this /*&& g_SelectedObject.Gump() == this*/);
+    g_GumpSelectedElement = ((g_SelectedObject.Gump == this) ? g_SelectedObject.Object : NULL);
+    g_GumpPressedElement = NULL;
 
-	CRenderObject *leftObj = g_PressedObject.LeftObject;
+    CRenderObject *leftObj = g_PressedObject.LeftObject;
 
-	if (g_GumpPressed && leftObj != NULL)
-	{
-		if (leftObj == g_SelectedObject.Object)
-			g_GumpPressedElement = leftObj;
-		else if (leftObj->IsGUI() && ((CBaseGUI*)leftObj)->IsPressedOuthit())
-			g_GumpPressedElement = leftObj;
-	}
+    if (g_GumpPressed && leftObj != NULL)
+    {
+        if (leftObj == g_SelectedObject.Object)
+            g_GumpPressedElement = leftObj;
+        else if (leftObj->IsGUI() && ((CBaseGUI *)leftObj)->IsPressedOuthit())
+            g_GumpPressedElement = leftObj;
+    }
 
-	if (CanBeMoved() && g_GumpPressed && !g_ObjectInHand.Enabled && (!g_PressedObject.LeftSerial || g_GumpPressedElement == NULL || g_PressedObject.TestMoveOnDrag()))
-		g_GumpMovingOffset = g_MouseManager.LeftDroppedOffset();
-	else
-		g_GumpMovingOffset.Reset();
+    if (CanBeMoved() && g_GumpPressed && !g_ObjectInHand.Enabled &&
+        (!g_PressedObject.LeftSerial || g_GumpPressedElement == NULL ||
+         g_PressedObject.TestMoveOnDrag()))
+        g_GumpMovingOffset = g_MouseManager.LeftDroppedOffset();
+    else
+        g_GumpMovingOffset.Reset();
 
-	if (Minimized)
-	{
-		g_GumpTranslate.X = (float)(MinimizedX + g_GumpMovingOffset.X);
-		g_GumpTranslate.Y = (float)(MinimizedY + g_GumpMovingOffset.Y);
-	}
-	else
-	{
-		g_GumpTranslate.X = (float)(m_X + g_GumpMovingOffset.X);
-		g_GumpTranslate.Y = (float)(m_Y + g_GumpMovingOffset.Y);
-	}
+    if (Minimized)
+    {
+        g_GumpTranslate.X = (float)(MinimizedX + g_GumpMovingOffset.X);
+        g_GumpTranslate.Y = (float)(MinimizedY + g_GumpMovingOffset.Y);
+    }
+    else
+    {
+        g_GumpTranslate.X = (float)(m_X + g_GumpMovingOffset.X);
+        g_GumpTranslate.Y = (float)(m_Y + g_GumpMovingOffset.Y);
+    }
 }
 //---------------------------------------------------------------------------
 void CGump::ProcessListing()
 {
-	WISPFUN_DEBUG("c84_f7");
-	if (g_PressedObject.LeftGump != NULL && !g_PressedObject.LeftGump->NoProcess && g_PressedObject.LeftObject != NULL && g_PressedObject.LeftObject->IsGUI())
-	{
-		CBaseGUI *item = (CBaseGUI*)g_PressedObject.LeftObject;
+    WISPFUN_DEBUG("c84_f7");
+    if (g_PressedObject.LeftGump != NULL && !g_PressedObject.LeftGump->NoProcess &&
+        g_PressedObject.LeftObject != NULL && g_PressedObject.LeftObject->IsGUI())
+    {
+        CBaseGUI *item = (CBaseGUI *)g_PressedObject.LeftObject;
 
-		if (item->IsControlHTML())
-		{
-			if (item->Type == GOT_BUTTON)
-			{
-				((CGUIHTMLButton*)item)->Scroll(item->Color != 0, SCROLL_LISTING_DELAY / 7);
-				g_PressedObject.LeftGump->WantRedraw = true;
-				g_PressedObject.LeftGump->OnScrollButton();
-			}
-			else if (item->Type == GOT_HITBOX)
-			{
-				((CGUIHTMLHitBox*)item)->Scroll(item->Color != 0, SCROLL_LISTING_DELAY / 7);
-				g_PressedObject.LeftGump->WantRedraw = true;
-				g_PressedObject.LeftGump->OnScrollButton();
-			}
-		}
-		else if (item->Type == GOT_BUTTON && ((CGUIButton*)item)->ProcessPressedState)
-		{
-			g_PressedObject.LeftGump->WantRedraw = true;
-			g_PressedObject.LeftGump->OnButton(item->Serial);
-		}
-		else if (item->Type == GOT_MINMAXBUTTONS)
-		{
-			((CGUIMinMaxButtons*)item)->Scroll(SCROLL_LISTING_DELAY / 2);
-			g_PressedObject.LeftGump->OnScrollButton();
-			g_PressedObject.LeftGump->WantRedraw = true;
-		}
-		else if (item->Type == GOT_COMBOBOX)
-		{
-			CGUIComboBox *combo = (CGUIComboBox*)item;
+        if (item->IsControlHTML())
+        {
+            if (item->Type == GOT_BUTTON)
+            {
+                ((CGUIHTMLButton *)item)->Scroll(item->Color != 0, SCROLL_LISTING_DELAY / 7);
+                g_PressedObject.LeftGump->WantRedraw = true;
+                g_PressedObject.LeftGump->OnScrollButton();
+            }
+            else if (item->Type == GOT_HITBOX)
+            {
+                ((CGUIHTMLHitBox *)item)->Scroll(item->Color != 0, SCROLL_LISTING_DELAY / 7);
+                g_PressedObject.LeftGump->WantRedraw = true;
+                g_PressedObject.LeftGump->OnScrollButton();
+            }
+        }
+        else if (item->Type == GOT_BUTTON && ((CGUIButton *)item)->ProcessPressedState)
+        {
+            g_PressedObject.LeftGump->WantRedraw = true;
+            g_PressedObject.LeftGump->OnButton(item->Serial);
+        }
+        else if (item->Type == GOT_MINMAXBUTTONS)
+        {
+            ((CGUIMinMaxButtons *)item)->Scroll(SCROLL_LISTING_DELAY / 2);
+            g_PressedObject.LeftGump->OnScrollButton();
+            g_PressedObject.LeftGump->WantRedraw = true;
+        }
+        else if (item->Type == GOT_COMBOBOX)
+        {
+            CGUIComboBox *combo = (CGUIComboBox *)item;
 
-			if (combo->ListingTimer < g_Ticks)
-			{
-				int index = combo->StartIndex;
-				int direction = combo->ListingDirection;
+            if (combo->ListingTimer < g_Ticks)
+            {
+                int index = combo->StartIndex;
+                int direction = combo->ListingDirection;
 
-				if (direction == 1 && index > 0)
-					index--;
-				else if (direction == 2 && index + 1 < combo->GetItemsCount())
-					index++;
+                if (direction == 1 && index > 0)
+                    index--;
+                else if (direction == 2 && index + 1 < combo->GetItemsCount())
+                    index++;
 
-				if (index != combo->StartIndex)
-				{
-					if (index < 0)
-						index = 0;
+                if (index != combo->StartIndex)
+                {
+                    if (index < 0)
+                        index = 0;
 
-					combo->StartIndex = index;
-					g_PressedObject.LeftGump->WantRedraw = true;
-				}
+                    combo->StartIndex = index;
+                    g_PressedObject.LeftGump->WantRedraw = true;
+                }
 
-				combo->ListingTimer = g_Ticks + 50;
-			}
-		}
-	}
+                combo->ListingTimer = g_Ticks + 50;
+            }
+        }
+    }
 }
 //---------------------------------------------------------------------------
 bool CGump::ApplyTransparent(CBaseGUI *item, int page, int currentPage, const int draw2Page)
 {
-	WISPFUN_DEBUG("c84_f8");
-	bool transparent = false;
+    WISPFUN_DEBUG("c84_f8");
+    bool transparent = false;
 
-	glClear(GL_STENCIL_BUFFER_BIT);
-	glEnable(GL_STENCIL_TEST);
+    glClear(GL_STENCIL_BUFFER_BIT);
+    glEnable(GL_STENCIL_TEST);
 
-	bool canDraw = ((page == -1) || ((page >= currentPage && page <= currentPage + draw2Page) || (!page && !draw2Page)));
+    bool canDraw =
+        ((page == -1) ||
+         ((page >= currentPage && page <= currentPage + draw2Page) || (!page && !draw2Page)));
 
-	for (; item != NULL; item = (CBaseGUI*)item->m_Next)
-	{
-		if (item->Type == GOT_PAGE)
-		{
-			page = ((CGUIPage*)item)->Index;
+    for (; item != NULL; item = (CBaseGUI *)item->m_Next)
+    {
+        if (item->Type == GOT_PAGE)
+        {
+            page = ((CGUIPage *)item)->Index;
 
-			//if (page >= 2 && page > currentPage + draw2Page)
-			//	break;
+            //if (page >= 2 && page > currentPage + draw2Page)
+            //	break;
 
-			canDraw = ((page == -1) || ((page >= currentPage && page <= currentPage + draw2Page) || (!page && !draw2Page)));
-		}
-		else if (canDraw && item->Visible && item->Type == GOT_CHECKTRANS)
-		{
-			item->Draw(transparent);
+            canDraw =
+                ((page == -1) || ((page >= currentPage && page <= currentPage + draw2Page) ||
+                                  (!page && !draw2Page)));
+        }
+        else if (canDraw && item->Visible && item->Type == GOT_CHECKTRANS)
+        {
+            item->Draw(transparent);
 
-			transparent = true;
-		}
-	}
+            transparent = true;
+        }
+    }
 
-	glDisable(GL_STENCIL_TEST);
+    glDisable(GL_STENCIL_TEST);
 
-	return transparent;
+    return transparent;
 }
 //----------------------------------------------------------------------------------
 void CGump::DrawItems(CBaseGUI *start, int currentPage, int draw2Page)
 {
-	WISPFUN_DEBUG("c84_f9");
-	float alpha[2] = { 1.0f, 0.7f };
-	CGUIComboBox *combo = NULL;
+    WISPFUN_DEBUG("c84_f9");
+    float alpha[2] = { 1.0f, 0.7f };
+    CGUIComboBox *combo = NULL;
 
-	bool transparent = ApplyTransparent(start, 0, currentPage, draw2Page);
-	glColor4f(1.0f, 1.0f, 1.0f, alpha[transparent]);
+    bool transparent = ApplyTransparent(start, 0, currentPage, draw2Page);
+    glColor4f(1.0f, 1.0f, 1.0f, alpha[transparent]);
 
-	int page = 0;
-	bool canDraw = (!draw2Page || (page >= currentPage && page <= currentPage + draw2Page));
+    int page = 0;
+    bool canDraw = (!draw2Page || (page >= currentPage && page <= currentPage + draw2Page));
 
-	QFOR(item, start, CBaseGUI*)
-	{
-		if (item->Type == GOT_PAGE)
-		{
-			page = ((CGUIPage*)item)->Index;
+    QFOR(item, start, CBaseGUI *)
+    {
+        if (item->Type == GOT_PAGE)
+        {
+            page = ((CGUIPage *)item)->Index;
 
-			//if (page >= 2 && page > currentPage + draw2Page)
-			//	break;
+            //if (page >= 2 && page > currentPage + draw2Page)
+            //	break;
 
-			canDraw = ((page == -1) || ((page >= currentPage && page <= currentPage + draw2Page) || (!page && !draw2Page)));
-		}
-		else if (canDraw && item->Visible && !item->SelectOnly)
-		{
-			switch (item->Type)
-			{
-				case GOT_DATABOX:
-				{
-					CGump::DrawItems((CBaseGUI*)item->m_Items, currentPage, draw2Page);
-					break;
-				}
-				case GOT_HTMLGUMP:
-				case GOT_XFMHTMLGUMP:
-				case GOT_XFMHTMLTOKEN:
-				{
-					CGUIHTMLGump *htmlGump = (CGUIHTMLGump*)item;
+            canDraw =
+                ((page == -1) || ((page >= currentPage && page <= currentPage + draw2Page) ||
+                                  (!page && !draw2Page)));
+        }
+        else if (canDraw && item->Visible && !item->SelectOnly)
+        {
+            switch (item->Type)
+            {
+                case GOT_DATABOX:
+                {
+                    CGump::DrawItems((CBaseGUI *)item->m_Items, currentPage, draw2Page);
+                    break;
+                }
+                case GOT_HTMLGUMP:
+                case GOT_XFMHTMLGUMP:
+                case GOT_XFMHTMLTOKEN:
+                {
+                    CGUIHTMLGump *htmlGump = (CGUIHTMLGump *)item;
 
-					GLfloat x = (GLfloat)htmlGump->GetX();
-					GLfloat y = (GLfloat)htmlGump->GetY();
+                    GLfloat x = (GLfloat)htmlGump->GetX();
+                    GLfloat y = (GLfloat)htmlGump->GetY();
 
-					glTranslatef(x, y, 0.0f);
+                    glTranslatef(x, y, 0.0f);
 
-					CBaseGUI *item = (CBaseGUI*)htmlGump->m_Items;
+                    CBaseGUI *item = (CBaseGUI *)htmlGump->m_Items;
 
-					IFOR(j, 0, 5)
-					{
-						if (item->Visible && !item->SelectOnly)
-							item->Draw(false);
+                    IFOR (j, 0, 5)
+                    {
+                        if (item->Visible && !item->SelectOnly)
+                            item->Draw(false);
 
-						item = (CBaseGUI*)item->m_Next;
-					}
+                        item = (CBaseGUI *)item->m_Next;
+                    }
 
-					GLfloat offsetX = (GLfloat)(htmlGump->DataOffset.X - htmlGump->CurrentOffset.X);
-					GLfloat offsetY = (GLfloat)(htmlGump->DataOffset.Y - htmlGump->CurrentOffset.Y);
+                    GLfloat offsetX = (GLfloat)(htmlGump->DataOffset.X - htmlGump->CurrentOffset.X);
+                    GLfloat offsetY = (GLfloat)(htmlGump->DataOffset.Y - htmlGump->CurrentOffset.Y);
 
-					glTranslatef(offsetX, offsetY, 0.0f);
+                    glTranslatef(offsetX, offsetY, 0.0f);
 
-					CGump::DrawItems(item, currentPage, draw2Page);
-					g_GL.PopScissor();
+                    CGump::DrawItems(item, currentPage, draw2Page);
+                    g_GL.PopScissor();
 
-					glTranslatef(-(x + offsetX), -(y + offsetY), 0.0f);
+                    glTranslatef(-(x + offsetX), -(y + offsetY), 0.0f);
 
-					break;
-				}
-				case GOT_CHECKTRANS:
-				{
-					transparent = ApplyTransparent((CBaseGUI*)item->m_Next, page/*Page*/, currentPage, draw2Page);
-						
-					glColor4f(1.0f, 1.0f, 1.0f, alpha[transparent]);
+                    break;
+                }
+                case GOT_CHECKTRANS:
+                {
+                    transparent = ApplyTransparent(
+                        (CBaseGUI *)item->m_Next, page /*Page*/, currentPage, draw2Page);
 
-					break;
-				}
-				case GOT_COMBOBOX:
-				{
-					if (g_PressedObject.LeftObject == item)
-					{
-						combo = (CGUIComboBox*)item;
-						break;
-					}
-				}
-				default:
-				{
-					item->Draw(transparent);
+                    glColor4f(1.0f, 1.0f, 1.0f, alpha[transparent]);
 
-					break;
-				}
-			}
-		}
-	}
+                    break;
+                }
+                case GOT_COMBOBOX:
+                {
+                    if (g_PressedObject.LeftObject == item)
+                    {
+                        combo = (CGUIComboBox *)item;
+                        break;
+                    }
+                }
+                default:
+                {
+                    item->Draw(transparent);
 
-	if (combo != NULL)
-		combo->Draw(false);
+                    break;
+                }
+            }
+        }
+    }
 
-	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+    if (combo != NULL)
+        combo->Draw(false);
+
+    glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 }
 //----------------------------------------------------------------------------------
 CRenderObject *CGump::SelectItems(CBaseGUI *start, int currentPage, int draw2Page)
 {
-	WISPFUN_DEBUG("c84_f10");
-	CRenderObject *selected = NULL;
+    WISPFUN_DEBUG("c84_f10");
+    CRenderObject *selected = NULL;
 
-	int page = 0;
-	bool canDraw = (!draw2Page || (page >= currentPage && page <= currentPage + draw2Page));
-	vector<bool> scissorList;
-	bool currentScissorState = true;
-	CGUIComboBox *combo = NULL;
+    int page = 0;
+    bool canDraw = (!draw2Page || (page >= currentPage && page <= currentPage + draw2Page));
+    vector<bool> scissorList;
+    bool currentScissorState = true;
+    CGUIComboBox *combo = NULL;
 
-	WISP_GEOMETRY::CPoint2Di oldPos = g_MouseManager.Position;
+    WISP_GEOMETRY::CPoint2Di oldPos = g_MouseManager.Position;
 
-	QFOR(item, start, CBaseGUI*)
-	{
-		if (item->Type == GOT_PAGE)
-		{
-			page = ((CGUIPage*)item)->Index;
+    QFOR(item, start, CBaseGUI *)
+    {
+        if (item->Type == GOT_PAGE)
+        {
+            page = ((CGUIPage *)item)->Index;
 
-			//if (page >= 2 && page > currentPage + draw2Page)
-			//	break;
+            //if (page >= 2 && page > currentPage + draw2Page)
+            //	break;
 
-			canDraw = ((page == -1) || ((page >= currentPage && page <= currentPage + draw2Page) || (!page && !draw2Page)));
-		}
-		else if (canDraw && item->Visible)
-		{
-			if (item->Type == GOT_SCISSOR)
-			{
-				if (item->Enabled)
-				{
-					currentScissorState = item->Select();
-					scissorList.push_back(currentScissorState);
-				}
-				else
-				{
-					scissorList.pop_back();
+            canDraw =
+                ((page == -1) || ((page >= currentPage && page <= currentPage + draw2Page) ||
+                                  (!page && !draw2Page)));
+        }
+        else if (canDraw && item->Visible)
+        {
+            if (item->Type == GOT_SCISSOR)
+            {
+                if (item->Enabled)
+                {
+                    currentScissorState = item->Select();
+                    scissorList.push_back(currentScissorState);
+                }
+                else
+                {
+                    scissorList.pop_back();
 
-					if (scissorList.size())
-						currentScissorState = scissorList.back();
-					else
-						currentScissorState = true;
-				}
+                    if (scissorList.size())
+                        currentScissorState = scissorList.back();
+                    else
+                        currentScissorState = true;
+                }
 
-				continue;
-			}
-			else if (!currentScissorState || !item->Enabled || (item->DrawOnly && selected != NULL) || !item->Select())
-				continue;
+                continue;
+            }
+            else if (
+                !currentScissorState || !item->Enabled || (item->DrawOnly && selected != NULL) ||
+                !item->Select())
+                continue;
 
-			switch (item->Type)
-			{
-				case GOT_HTMLGUMP:
-				case GOT_XFMHTMLGUMP:
-				case GOT_XFMHTMLTOKEN:
-				{
-					CGUIHTMLGump *htmlGump = (CGUIHTMLGump*)item;
+            switch (item->Type)
+            {
+                case GOT_HTMLGUMP:
+                case GOT_XFMHTMLGUMP:
+                case GOT_XFMHTMLTOKEN:
+                {
+                    CGUIHTMLGump *htmlGump = (CGUIHTMLGump *)item;
 
-					g_MouseManager.Position = WISP_GEOMETRY::CPoint2Di(oldPos.X - htmlGump->GetX(), oldPos.Y - htmlGump->GetY());
+                    g_MouseManager.Position = WISP_GEOMETRY::CPoint2Di(
+                        oldPos.X - htmlGump->GetX(), oldPos.Y - htmlGump->GetY());
 
-					CBaseGUI *item = (CBaseGUI*)htmlGump->m_Items;
+                    CBaseGUI *item = (CBaseGUI *)htmlGump->m_Items;
 
-					CRenderObject *selectedHTML = NULL;
+                    CRenderObject *selectedHTML = NULL;
 
-					IFOR(j, 0, 4)
-					{
-						if (item->Select())
-							selectedHTML = item;
+                    IFOR (j, 0, 4)
+                    {
+                        if (item->Select())
+                            selectedHTML = item;
 
-						item = (CBaseGUI*)item->m_Next;
-					}
+                        item = (CBaseGUI *)item->m_Next;
+                    }
 
-					//Scissor
-					if (item->Select())
-					{
-						int offsetX = htmlGump->DataOffset.X - htmlGump->CurrentOffset.X;
-						int offsetY = htmlGump->DataOffset.Y - htmlGump->CurrentOffset.Y;
+                    //Scissor
+                    if (item->Select())
+                    {
+                        int offsetX = htmlGump->DataOffset.X - htmlGump->CurrentOffset.X;
+                        int offsetY = htmlGump->DataOffset.Y - htmlGump->CurrentOffset.Y;
 
-						g_MouseManager.Position = WISP_GEOMETRY::CPoint2Di(g_MouseManager.Position.X - offsetX, g_MouseManager.Position.Y - offsetY);
+                        g_MouseManager.Position = WISP_GEOMETRY::CPoint2Di(
+                            g_MouseManager.Position.X - offsetX,
+                            g_MouseManager.Position.Y - offsetY);
 
-						selected = CGump::SelectItems((CBaseGUI*)item->m_Next, currentPage, draw2Page);
-					}
-					else
-						selected = NULL;
+                        selected =
+                            CGump::SelectItems((CBaseGUI *)item->m_Next, currentPage, draw2Page);
+                    }
+                    else
+                        selected = NULL;
 
-					if (selected == NULL)
-					{
-						selected = selectedHTML;
+                    if (selected == NULL)
+                    {
+                        selected = selectedHTML;
 
-						if (selected == NULL)
-							selected = item;
-					}
+                        if (selected == NULL)
+                            selected = item;
+                    }
 
-					g_MouseManager.Position = oldPos;
+                    g_MouseManager.Position = oldPos;
 
-					break;
-				}
-				case GOT_DATABOX:
-				{
-					CRenderObject *selectedBox = CGump::SelectItems((CBaseGUI*)item->m_Items, currentPage, draw2Page);
+                    break;
+                }
+                case GOT_DATABOX:
+                {
+                    CRenderObject *selectedBox =
+                        CGump::SelectItems((CBaseGUI *)item->m_Items, currentPage, draw2Page);
 
-					if (selectedBox)
-						selected = selectedBox;
+                    if (selectedBox)
+                        selected = selectedBox;
 
-					break;
-				}
-				case GOT_COMBOBOX:
-				{
-					//selected = ((CGUIComboBox*)item)->SelectedItem();
+                    break;
+                }
+                case GOT_COMBOBOX:
+                {
+                    //selected = ((CGUIComboBox*)item)->SelectedItem();
 
-					if (g_PressedObject.LeftObject == item)
-						combo = (CGUIComboBox*)item;
-					else
-						selected = item;
+                    if (g_PressedObject.LeftObject == item)
+                        combo = (CGUIComboBox *)item;
+                    else
+                        selected = item;
 
-					break;
-				}
-				case GOT_SHOPRESULT:
-				{
-					selected = ((CGUIShopResult*)item)->SelectedItem();
+                    break;
+                }
+                case GOT_SHOPRESULT:
+                {
+                    selected = ((CGUIShopResult *)item)->SelectedItem();
 
-					break;
-				}
-				case GOT_SKILLITEM:
-				{
-					selected = ((CGUISkillItem*)item)->SelectedItem();
+                    break;
+                }
+                case GOT_SKILLITEM:
+                {
+                    selected = ((CGUISkillItem *)item)->SelectedItem();
 
-					break;
-				}
-				case GOT_SKILLGROUP:
-				{
-					selected = ((CGUISkillGroup*)item)->SelectedItem();
+                    break;
+                }
+                case GOT_SKILLGROUP:
+                {
+                    selected = ((CGUISkillGroup *)item)->SelectedItem();
 
-					break;
-				}
-				default:
-				{
-					selected = item;
+                    break;
+                }
+                default:
+                {
+                    selected = item;
 
-					break;
-				}
-			}
-		}
-	}
+                    break;
+                }
+            }
+        }
+    }
 
-	if (combo != NULL)
-		selected = combo->SelectedItem();
+    if (combo != NULL)
+        selected = combo->SelectedItem();
 
-	return selected;
+    return selected;
 }
 //----------------------------------------------------------------------------------
-void CGump::TestItemsLeftMouseDown(CGump *gump, CBaseGUI *start, int currentPage, int draw2Page, int count)
+void CGump::TestItemsLeftMouseDown(
+    CGump *gump, CBaseGUI *start, int currentPage, int draw2Page, int count)
 {
-	WISPFUN_DEBUG("c84_f11");
-	int group = 0;
-	int page = 0;
-	bool canDraw = (!draw2Page || (page >= currentPage && page <= currentPage + draw2Page));
+    WISPFUN_DEBUG("c84_f11");
+    int group = 0;
+    int page = 0;
+    bool canDraw = (!draw2Page || (page >= currentPage && page <= currentPage + draw2Page));
 
-	static bool htmlTextBackgroundCanBeColored = false;
+    static bool htmlTextBackgroundCanBeColored = false;
 
-	if (!(start != NULL && start->m_Next == NULL && start->Type == GOT_HTMLTEXT))
-		htmlTextBackgroundCanBeColored = false;
+    if (!(start != NULL && start->m_Next == NULL && start->Type == GOT_HTMLTEXT))
+        htmlTextBackgroundCanBeColored = false;
 
-	QFOR(item, start, CBaseGUI*)
-	{
-		if (!count)
-			break;
+    QFOR(item, start, CBaseGUI *)
+    {
+        if (!count)
+            break;
 
-		count--;
+        count--;
 
-		if (item->Type == GOT_PAGE)
-		{
-			page = ((CGUIPage*)item)->Index;
+        if (item->Type == GOT_PAGE)
+        {
+            page = ((CGUIPage *)item)->Index;
 
-			//if (page >= 2 && page > currentPage + draw2Page)
-			//	break;
+            //if (page >= 2 && page > currentPage + draw2Page)
+            //	break;
 
-			canDraw = ((page == -1) || ((page >= currentPage && page <= currentPage + draw2Page) || (!page && !draw2Page)));
-		}
-		else if (canDraw && item->Enabled && item->Visible)
-		{
-			if (item->Type == GOT_GROUP)
-			{
-				group = ((CGUIGroup*)item)->Index;
-				continue;
-			}
-			else if (g_SelectedObject.Object != item && !item->IsHTMLGump())
-			{
-				if (item->Type == GOT_SHOPRESULT)
-				{
-					if (g_SelectedObject.Object == ((CGUIShopResult*)item)->m_MinMaxButtons)
-					{
-						WISP_GEOMETRY::CPoint2Di oldPos = g_MouseManager.Position;
-						g_MouseManager.Position = WISP_GEOMETRY::CPoint2Di(g_MouseManager.Position.X - item->GetX(), g_MouseManager.Position.Y - item->GetY());
+            canDraw =
+                ((page == -1) || ((page >= currentPage && page <= currentPage + draw2Page) ||
+                                  (!page && !draw2Page)));
+        }
+        else if (canDraw && item->Enabled && item->Visible)
+        {
+            if (item->Type == GOT_GROUP)
+            {
+                group = ((CGUIGroup *)item)->Index;
+                continue;
+            }
+            else if (g_SelectedObject.Object != item && !item->IsHTMLGump())
+            {
+                if (item->Type == GOT_SHOPRESULT)
+                {
+                    if (g_SelectedObject.Object == ((CGUIShopResult *)item)->m_MinMaxButtons)
+                    {
+                        WISP_GEOMETRY::CPoint2Di oldPos = g_MouseManager.Position;
+                        g_MouseManager.Position = WISP_GEOMETRY::CPoint2Di(
+                            g_MouseManager.Position.X - item->GetX(),
+                            g_MouseManager.Position.Y - item->GetY());
 
-						((CGUIShopResult*)item)->m_MinMaxButtons->OnClick();
+                        ((CGUIShopResult *)item)->m_MinMaxButtons->OnClick();
 
-						g_MouseManager.Position = oldPos;
-					}
+                        g_MouseManager.Position = oldPos;
+                    }
 
-					continue;
-				}
-				else if (item->Type != GOT_SKILLGROUP && item->Type != GOT_DATABOX /*&& item->Type != GOT_TEXTENTRY*/)
-					continue;
-			}
+                    continue;
+                }
+                else if (
+                    item->Type != GOT_SKILLGROUP &&
+                    item->Type != GOT_DATABOX /*&& item->Type != GOT_TEXTENTRY*/)
+                    continue;
+            }
 
-			switch (item->Type)
-			{
-				case GOT_HITBOX:
-				{
-					if (((CGUIPolygonal*)item)->CallOnMouseUp)
-						break;
+            switch (item->Type)
+            {
+                case GOT_HITBOX:
+                {
+                    if (((CGUIPolygonal *)item)->CallOnMouseUp)
+                        break;
 
-					CGUIHitBox *box = (CGUIHitBox*)item;
+                    CGUIHitBox *box = (CGUIHitBox *)item;
 
-					if (box->ToPage != -1)
-					{
-						gump->Page = box->ToPage;
+                    if (box->ToPage != -1)
+                    {
+                        gump->Page = box->ToPage;
 
-						//if (gump->Page < 1)
-						//	gump->Page = 1;
-					}
-				}
-				case GOT_COLOREDPOLYGONE:
-				{
-					if (((CGUIPolygonal*)item)->CallOnMouseUp)
-						break;
-				}
-				case GOT_RESIZEPIC:
-				{
-					uint serial = item->Serial;
+                        //if (gump->Page < 1)
+                        //	gump->Page = 1;
+                    }
+                }
+                case GOT_COLOREDPOLYGONE:
+                {
+                    if (((CGUIPolygonal *)item)->CallOnMouseUp)
+                        break;
+                }
+                case GOT_RESIZEPIC:
+                {
+                    uint serial = item->Serial;
 
-					if (!serial)
-						break;
+                    if (!serial)
+                        break;
 
-					int tempPage = -1;
-					bool tempCanDraw = true;
+                    int tempPage = -1;
+                    bool tempCanDraw = true;
 
-					QFOR(testItem, start, CBaseGUI*)
-					{
-						if (testItem->Type == GOT_PAGE)
-						{
-							tempPage = ((CGUIPage*)testItem)->Index;
+                    QFOR(testItem, start, CBaseGUI *)
+                    {
+                        if (testItem->Type == GOT_PAGE)
+                        {
+                            tempPage = ((CGUIPage *)testItem)->Index;
 
-							tempCanDraw = ((tempPage == -1) || ((tempPage >= page && tempPage <= page + draw2Page) || (!tempPage && !draw2Page)));
-						}
-						else if (tempCanDraw && testItem->Type == GOT_TEXTENTRY && testItem->Serial == serial && testItem->Enabled && testItem->Visible)
-						{
-							CGUITextEntry *entry = (CGUITextEntry*)testItem;
+                            tempCanDraw =
+                                ((tempPage == -1) ||
+                                 ((tempPage >= page && tempPage <= page + draw2Page) ||
+                                  (!tempPage && !draw2Page)));
+                        }
+                        else if (
+                            tempCanDraw && testItem->Type == GOT_TEXTENTRY &&
+                            testItem->Serial == serial && testItem->Enabled && testItem->Visible)
+                        {
+                            CGUITextEntry *entry = (CGUITextEntry *)testItem;
 
-							if (!entry->ReadOnly)
-							{
-								int x = g_MouseManager.Position.X - item->GetX();
-								int y = g_MouseManager.Position.Y - item->GetY();
+                            if (!entry->ReadOnly)
+                            {
+                                int x = g_MouseManager.Position.X - item->GetX();
+                                int y = g_MouseManager.Position.Y - item->GetY();
 
-								entry->OnClick(gump, x, y);
-							}
+                                entry->OnClick(gump, x, y);
+                            }
 
-							break;
-						}
-					}
+                            break;
+                        }
+                    }
 
-					gump->OnTextEntry(serial);
-					gump->WantRedraw = true;
+                    gump->OnTextEntry(serial);
+                    gump->WantRedraw = true;
 
-					return;
-				}
-				case GOT_SKILLGROUP:
-				{
-					CGUISkillGroup *skillGroup = (CGUISkillGroup*)item;
+                    return;
+                }
+                case GOT_SKILLGROUP:
+                {
+                    CGUISkillGroup *skillGroup = (CGUISkillGroup *)item;
 
-					if (g_SelectedObject.Object == skillGroup->m_Name)
-					{
-						gump->OnTextEntry(g_SelectedObject.Object->Serial);
-						gump->WantRedraw = true;
+                    if (g_SelectedObject.Object == skillGroup->m_Name)
+                    {
+                        gump->OnTextEntry(g_SelectedObject.Object->Serial);
+                        gump->WantRedraw = true;
 
-						return;
-					}
+                        return;
+                    }
 
-					break;
-				}
-				case GOT_RESIZEBUTTON:
-				{
-					gump->OnResizeStart(item->Serial);
-					gump->WantRedraw = true;
-					break;
-				}
-				case GOT_SHOPITEM:
-				{
-					((CGUIShopItem*)item)->OnClick();
-					gump->WantRedraw = true;
-					break;
-				}
-				case GOT_HTMLTEXT:
-				{
-					CGUIHTMLText *htmlText = (CGUIHTMLText*)item;
+                    break;
+                }
+                case GOT_RESIZEBUTTON:
+                {
+                    gump->OnResizeStart(item->Serial);
+                    gump->WantRedraw = true;
+                    break;
+                }
+                case GOT_SHOPITEM:
+                {
+                    ((CGUIShopItem *)item)->OnClick();
+                    gump->WantRedraw = true;
+                    break;
+                }
+                case GOT_HTMLTEXT:
+                {
+                    CGUIHTMLText *htmlText = (CGUIHTMLText *)item;
 
-					ushort link = htmlText->m_Texture.WebLinkUnderMouse(item->GetX(), item->GetY());
+                    ushort link = htmlText->m_Texture.WebLinkUnderMouse(item->GetX(), item->GetY());
 
-					if (link && link != 0xFFFF)
-					{
-						gump->OnDirectHTMLLink(link);
-						gump->WantRedraw = true;
+                    if (link && link != 0xFFFF)
+                    {
+                        gump->OnDirectHTMLLink(link);
+                        gump->WantRedraw = true;
 
-						htmlText->m_Texture.ClearWebLink();
-						htmlText->CreateTexture(htmlTextBackgroundCanBeColored);
-					}
+                        htmlText->m_Texture.ClearWebLink();
+                        htmlText->CreateTexture(htmlTextBackgroundCanBeColored);
+                    }
 
-					break;
-				}
-				case GOT_DATABOX:
-				{
-					CGump::TestItemsLeftMouseDown(gump, (CBaseGUI*)item->m_Items, currentPage, draw2Page);
-					break;
-				}
-				case GOT_BUTTON:
-				case GOT_BUTTONTILEART:
-				{
-					gump->WantRedraw = true;
-					break;
-				}
-				case GOT_TEXTENTRY:
-				{
-					CGUITextEntry *entry = (CGUITextEntry*)item;
+                    break;
+                }
+                case GOT_DATABOX:
+                {
+                    CGump::TestItemsLeftMouseDown(
+                        gump, (CBaseGUI *)item->m_Items, currentPage, draw2Page);
+                    break;
+                }
+                case GOT_BUTTON:
+                case GOT_BUTTONTILEART:
+                {
+                    gump->WantRedraw = true;
+                    break;
+                }
+                case GOT_TEXTENTRY:
+                {
+                    CGUITextEntry *entry = (CGUITextEntry *)item;
 
-					if (!entry->ReadOnly)
-					{
-						int x = g_MouseManager.Position.X - item->GetX();
-						int y = g_MouseManager.Position.Y - item->GetY();
+                    if (!entry->ReadOnly)
+                    {
+                        int x = g_MouseManager.Position.X - item->GetX();
+                        int y = g_MouseManager.Position.Y - item->GetY();
 
-						entry->OnClick(gump, x, y);
-					}
+                        entry->OnClick(gump, x, y);
+                    }
 
-					gump->OnTextEntry(item->Serial);
-					gump->WantRedraw = true;
+                    gump->OnTextEntry(item->Serial);
+                    gump->WantRedraw = true;
 
-					return;
-				}
-				case GOT_SLIDER:
-				{
-					int x = g_MouseManager.Position.X - item->GetX();
-					int y = g_MouseManager.Position.Y - item->GetY();
+                    return;
+                }
+                case GOT_SLIDER:
+                {
+                    int x = g_MouseManager.Position.X - item->GetX();
+                    int y = g_MouseManager.Position.Y - item->GetY();
 
-					((CGUISlider*)item)->OnClick(x, y);
+                    ((CGUISlider *)item)->OnClick(x, y);
 
-					gump->OnSliderClick(item->Serial);
-					gump->WantRedraw = true;
+                    gump->OnSliderClick(item->Serial);
+                    gump->WantRedraw = true;
 
-					return;
-				}
-				case GOT_MINMAXBUTTONS:
-				{
-					((CGUIMinMaxButtons*)item)->OnClick();
+                    return;
+                }
+                case GOT_MINMAXBUTTONS:
+                {
+                    ((CGUIMinMaxButtons *)item)->OnClick();
 
-					gump->WantRedraw = true;
+                    gump->WantRedraw = true;
 
-					return;
-				}
-				case GOT_COMBOBOX:
-				{
-					gump->WantRedraw = true;
+                    return;
+                }
+                case GOT_COMBOBOX:
+                {
+                    gump->WantRedraw = true;
 
-					return;
-				}
-				case GOT_HTMLGUMP:
-				case GOT_XFMHTMLGUMP:
-				case GOT_XFMHTMLTOKEN:
-				{
-					CGUIHTMLGump *htmlGump = (CGUIHTMLGump*)item;
+                    return;
+                }
+                case GOT_HTMLGUMP:
+                case GOT_XFMHTMLGUMP:
+                case GOT_XFMHTMLTOKEN:
+                {
+                    CGUIHTMLGump *htmlGump = (CGUIHTMLGump *)item;
 
-					htmlTextBackgroundCanBeColored = !htmlGump->HaveBackground;
+                    htmlTextBackgroundCanBeColored = !htmlGump->HaveBackground;
 
-					WISP_GEOMETRY::CPoint2Di oldPos = g_MouseManager.Position;
-					g_MouseManager.Position = WISP_GEOMETRY::CPoint2Di(oldPos.X - htmlGump->GetX(), oldPos.Y - htmlGump->GetY());
+                    WISP_GEOMETRY::CPoint2Di oldPos = g_MouseManager.Position;
+                    g_MouseManager.Position = WISP_GEOMETRY::CPoint2Di(
+                        oldPos.X - htmlGump->GetX(), oldPos.Y - htmlGump->GetY());
 
-					CBaseGUI *item = (CBaseGUI*)htmlGump->m_Items;
+                    CBaseGUI *item = (CBaseGUI *)htmlGump->m_Items;
 
-					TestItemsLeftMouseDown(gump, item, currentPage, draw2Page, 5);
+                    TestItemsLeftMouseDown(gump, item, currentPage, draw2Page, 5);
 
-					IFOR(j, 0, 5)
-						item = (CBaseGUI*)item->m_Next;
+                    IFOR (j, 0, 5)
+                        item = (CBaseGUI *)item->m_Next;
 
-					int offsetX = htmlGump->DataOffset.X - htmlGump->CurrentOffset.X;
-					int offsetY = htmlGump->DataOffset.Y - htmlGump->CurrentOffset.Y;
+                    int offsetX = htmlGump->DataOffset.X - htmlGump->CurrentOffset.X;
+                    int offsetY = htmlGump->DataOffset.Y - htmlGump->CurrentOffset.Y;
 
-					g_MouseManager.Position = WISP_GEOMETRY::CPoint2Di(g_MouseManager.Position.X - offsetX, g_MouseManager.Position.Y - offsetY);
+                    g_MouseManager.Position = WISP_GEOMETRY::CPoint2Di(
+                        g_MouseManager.Position.X - offsetX, g_MouseManager.Position.Y - offsetY);
 
-					TestItemsLeftMouseDown(gump, item, currentPage, draw2Page);
+                    TestItemsLeftMouseDown(gump, item, currentPage, draw2Page);
 
-					g_MouseManager.Position = oldPos;
+                    g_MouseManager.Position = oldPos;
 
-					break;
-				}
-				default:
-					break;
-			}
-		}
-	}
+                    break;
+                }
+                default:
+                    break;
+            }
+        }
+    }
 }
 //----------------------------------------------------------------------------------
 void CGump::TestItemsLeftMouseUp(CGump *gump, CBaseGUI *start, int currentPage, int draw2Page)
 {
-	WISPFUN_DEBUG("c84_f12");
-	int group = 0;
-	int page = 0;
-	bool canDraw = (!draw2Page || (page >= currentPage && page <= currentPage + draw2Page));
+    WISPFUN_DEBUG("c84_f12");
+    int group = 0;
+    int page = 0;
+    bool canDraw = (!draw2Page || (page >= currentPage && page <= currentPage + draw2Page));
 
-	QFOR(item, start, CBaseGUI*)
-	{
-		if (item->Type == GOT_PAGE)
-		{
-			page = ((CGUIPage*)item)->Index;
+    QFOR(item, start, CBaseGUI *)
+    {
+        if (item->Type == GOT_PAGE)
+        {
+            page = ((CGUIPage *)item)->Index;
 
-			//if (page >= 2 && page > currentPage + draw2Page)
-			//	break;
+            //if (page >= 2 && page > currentPage + draw2Page)
+            //	break;
 
-			canDraw = ((page == -1) || ((page >= currentPage && page <= currentPage + draw2Page) || (!page && !draw2Page)));
-		}
-		else if (canDraw && item->Enabled && item->Visible)
-		{
-			if (item->Type == GOT_GROUP)
-			{
-				group = ((CGUIGroup*)item)->Index;
-				continue;
-			}
-			else if (!item->IsHTMLGump())
-			{
-				if (item->Type != GOT_DATABOX && item->Type != GOT_COMBOBOX && item->Type != GOT_SKILLITEM && item->Type != GOT_SKILLGROUP)
-				{
-					if (g_PressedObject.LeftObject == item)
-					{
-						if (g_SelectedObject.Object != g_PressedObject.LeftObject && !item->IsPressedOuthit())
-							continue;
-					}
-					else
-						continue;
-				}
-			}
+            canDraw =
+                ((page == -1) || ((page >= currentPage && page <= currentPage + draw2Page) ||
+                                  (!page && !draw2Page)));
+        }
+        else if (canDraw && item->Enabled && item->Visible)
+        {
+            if (item->Type == GOT_GROUP)
+            {
+                group = ((CGUIGroup *)item)->Index;
+                continue;
+            }
+            else if (!item->IsHTMLGump())
+            {
+                if (item->Type != GOT_DATABOX && item->Type != GOT_COMBOBOX &&
+                    item->Type != GOT_SKILLITEM && item->Type != GOT_SKILLGROUP)
+                {
+                    if (g_PressedObject.LeftObject == item)
+                    {
+                        if (g_SelectedObject.Object != g_PressedObject.LeftObject &&
+                            !item->IsPressedOuthit())
+                            continue;
+                    }
+                    else
+                        continue;
+                }
+            }
 
-			switch (item->Type)
-			{
-				case GOT_HITBOX:
-				{
-					if (!((CGUIPolygonal*)item)->CallOnMouseUp)
-						break;
+            switch (item->Type)
+            {
+                case GOT_HITBOX:
+                {
+                    if (!((CGUIPolygonal *)item)->CallOnMouseUp)
+                        break;
 
-					CGUIHitBox *box = (CGUIHitBox*)item;
+                    CGUIHitBox *box = (CGUIHitBox *)item;
 
-					if (box->ToPage != -1)
-					{
-						gump->Page = box->ToPage;
+                    if (box->ToPage != -1)
+                    {
+                        gump->Page = box->ToPage;
 
-						//if (gump->Page < 1)
-						//	gump->Page = 1;
-					}
+                        //if (gump->Page < 1)
+                        //	gump->Page = 1;
+                    }
 
-					gump->OnButton(item->Serial);
-					gump->WantRedraw = true;
+                    gump->OnButton(item->Serial);
+                    gump->WantRedraw = true;
 
-					return;
-				}
-				case GOT_COLOREDPOLYGONE:
-				{
-					if (!((CGUIPolygonal*)item)->CallOnMouseUp)
-						break;
+                    return;
+                }
+                case GOT_COLOREDPOLYGONE:
+                {
+                    if (!((CGUIPolygonal *)item)->CallOnMouseUp)
+                        break;
 
-					gump->OnButton(item->Serial);
-					gump->WantRedraw = true;
+                    gump->OnButton(item->Serial);
+                    gump->WantRedraw = true;
 
-					return;
-				}
-				case GOT_RESIZEBUTTON:
-				{
-					gump->OnResizeEnd(item->Serial);
-					gump->WantRedraw = true;
-					break;
-				}
-				case GOT_SLIDER:
-				{
-					gump->WantRedraw = true;
-					break;
-				}
-				case GOT_DATABOX:
-				{
-					CGump::TestItemsLeftMouseUp(gump, (CBaseGUI*)item->m_Items, 0);
-					break;
-				}
-				case GOT_BUTTON:
-				case GOT_BUTTONTILEART:
-				{
-					if (item->IsControlHTML())
-						break;
+                    return;
+                }
+                case GOT_RESIZEBUTTON:
+                {
+                    gump->OnResizeEnd(item->Serial);
+                    gump->WantRedraw = true;
+                    break;
+                }
+                case GOT_SLIDER:
+                {
+                    gump->WantRedraw = true;
+                    break;
+                }
+                case GOT_DATABOX:
+                {
+                    CGump::TestItemsLeftMouseUp(gump, (CBaseGUI *)item->m_Items, 0);
+                    break;
+                }
+                case GOT_BUTTON:
+                case GOT_BUTTONTILEART:
+                {
+                    if (item->IsControlHTML())
+                        break;
 
-					CGUIButton *button = (CGUIButton*)item;
+                    CGUIButton *button = (CGUIButton *)item;
 
-					if (button->ToPage != -1)
-					{
-						gump->Page = button->ToPage;
+                    if (button->ToPage != -1)
+                    {
+                        gump->Page = button->ToPage;
 
-						if (gump->GumpType == GT_GENERIC)
-							gump->WantUpdateContent = true;
+                        if (gump->GumpType == GT_GENERIC)
+                            gump->WantUpdateContent = true;
 
-						//if (gump->Page < 1)
-						//	gump->Page = 1;
-					}
-					else
-						gump->OnButton(item->Serial);
+                        //if (gump->Page < 1)
+                        //	gump->Page = 1;
+                    }
+                    else
+                        gump->OnButton(item->Serial);
 
-					gump->WantRedraw = true;
+                    gump->WantRedraw = true;
 
-					return;
-				}
-				case GOT_TILEPICHIGHTLIGHTED:
-				case GOT_GUMPPICHIGHTLIGHTED:
-				{
-					gump->OnButton(item->Serial);
-					gump->WantRedraw = true;
+                    return;
+                }
+                case GOT_TILEPICHIGHTLIGHTED:
+                case GOT_GUMPPICHIGHTLIGHTED:
+                {
+                    gump->OnButton(item->Serial);
+                    gump->WantRedraw = true;
 
-					return;
-				}
-				case GOT_CHECKBOX:
-				{
-					CGUICheckbox *checkbox = (CGUICheckbox*)item;
-					checkbox->Checked = !checkbox->Checked;
+                    return;
+                }
+                case GOT_CHECKBOX:
+                {
+                    CGUICheckbox *checkbox = (CGUICheckbox *)item;
+                    checkbox->Checked = !checkbox->Checked;
 
-					gump->OnCheckbox(item->Serial, checkbox->Checked);
-					gump->WantRedraw = true;
+                    gump->OnCheckbox(item->Serial, checkbox->Checked);
+                    gump->WantRedraw = true;
 
-					return;
-				}
-				case GOT_RADIO:
-				{
-					CGUIRadio *radio = (CGUIRadio*)item;
+                    return;
+                }
+                case GOT_RADIO:
+                {
+                    CGUIRadio *radio = (CGUIRadio *)item;
 
-					int radioPage = 0;
-					int radioGroup = 0;
+                    int radioPage = 0;
+                    int radioGroup = 0;
 
-					QFOR(testRadio, start, CBaseGUI*)
-					{
-						if (testRadio->Type == GOT_PAGE)
-							radioPage = ((CGUIPage*)testRadio)->Index;
-						else if (testRadio->Type == GOT_GROUP)
-							radioGroup = ((CGUIGroup*)testRadio)->Index;
-						else if (testRadio->Type == GOT_RADIO)
-						{
-							if (page <= 1 && radioPage <= 1)
-							{
-								if (group == radioGroup)
-								{
-									if (((CGUIRadio*)testRadio)->Checked && testRadio != radio)
-										gump->OnRadio(testRadio->Serial, false);
+                    QFOR(testRadio, start, CBaseGUI *)
+                    {
+                        if (testRadio->Type == GOT_PAGE)
+                            radioPage = ((CGUIPage *)testRadio)->Index;
+                        else if (testRadio->Type == GOT_GROUP)
+                            radioGroup = ((CGUIGroup *)testRadio)->Index;
+                        else if (testRadio->Type == GOT_RADIO)
+                        {
+                            if (page <= 1 && radioPage <= 1)
+                            {
+                                if (group == radioGroup)
+                                {
+                                    if (((CGUIRadio *)testRadio)->Checked && testRadio != radio)
+                                        gump->OnRadio(testRadio->Serial, false);
 
-									((CGUIRadio*)testRadio)->Checked = false;
-								}
-							}
-							else if (page == radioPage)
-							{
-								if (group == radioGroup)
-								{
-									if (((CGUIRadio*)testRadio)->Checked && testRadio != radio)
-										gump->OnRadio(testRadio->Serial, false);
+                                    ((CGUIRadio *)testRadio)->Checked = false;
+                                }
+                            }
+                            else if (page == radioPage)
+                            {
+                                if (group == radioGroup)
+                                {
+                                    if (((CGUIRadio *)testRadio)->Checked && testRadio != radio)
+                                        gump->OnRadio(testRadio->Serial, false);
 
-									((CGUIRadio*)testRadio)->Checked = false;
-								}
-							}
-						}
-					}
+                                    ((CGUIRadio *)testRadio)->Checked = false;
+                                }
+                            }
+                        }
+                    }
 
-					radio->Checked = true;
+                    radio->Checked = true;
 
-					gump->OnRadio(item->Serial, true);
-					gump->WantRedraw = true;
+                    gump->OnRadio(item->Serial, true);
+                    gump->WantRedraw = true;
 
-					return;
-				}
-				case GOT_COMBOBOX:
-				{
-					CGUIComboBox *combo = (CGUIComboBox*)item;
+                    return;
+                }
+                case GOT_COMBOBOX:
+                {
+                    CGUIComboBox *combo = (CGUIComboBox *)item;
 
-					int selectedCombo = combo->IsSelectedItem();
+                    int selectedCombo = combo->IsSelectedItem();
 
-					if (selectedCombo != -1)
-					{
-						combo->SelectedIndex = selectedCombo;
-						gump->OnComboboxSelection(item->Serial + selectedCombo);
-						gump->WantRedraw = true;
-					}
+                    if (selectedCombo != -1)
+                    {
+                        combo->SelectedIndex = selectedCombo;
+                        gump->OnComboboxSelection(item->Serial + selectedCombo);
+                        gump->WantRedraw = true;
+                    }
 
-					break;
-				}
-				case GOT_SKILLITEM:
-				{
-					CGUISkillItem *skillItem = (CGUISkillItem*)item;
+                    break;
+                }
+                case GOT_SKILLITEM:
+                {
+                    CGUISkillItem *skillItem = (CGUISkillItem *)item;
 
-					if ((g_PressedObject.LeftObject == skillItem->m_ButtonUse && skillItem->m_ButtonUse != NULL) || g_PressedObject.LeftObject == skillItem->m_ButtonStatus)
-					{
-						gump->OnButton(g_PressedObject.LeftSerial);
-						gump->WantRedraw = true;
-					}
+                    if ((g_PressedObject.LeftObject == skillItem->m_ButtonUse &&
+                         skillItem->m_ButtonUse != NULL) ||
+                        g_PressedObject.LeftObject == skillItem->m_ButtonStatus)
+                    {
+                        gump->OnButton(g_PressedObject.LeftSerial);
+                        gump->WantRedraw = true;
+                    }
 
-					break;
-				}
-				case GOT_SKILLGROUP:
-				{
-					CGUISkillGroup *skillGroup = (CGUISkillGroup*)item;
+                    break;
+                }
+                case GOT_SKILLGROUP:
+                {
+                    CGUISkillGroup *skillGroup = (CGUISkillGroup *)item;
 
-					if (g_PressedObject.LeftObject == skillGroup->m_Minimizer)
-					{
-						gump->OnButton(g_PressedObject.LeftSerial);
-						gump->WantRedraw = true;
-					}
-					else
-						TestItemsLeftMouseUp(gump, (CBaseGUI*)skillGroup->m_Items, currentPage, draw2Page);
+                    if (g_PressedObject.LeftObject == skillGroup->m_Minimizer)
+                    {
+                        gump->OnButton(g_PressedObject.LeftSerial);
+                        gump->WantRedraw = true;
+                    }
+                    else
+                        TestItemsLeftMouseUp(
+                            gump, (CBaseGUI *)skillGroup->m_Items, currentPage, draw2Page);
 
-					break;
-				}
-				case GOT_HTMLGUMP:
-				case GOT_XFMHTMLGUMP:
-				case GOT_XFMHTMLTOKEN:
-				{
-					TestItemsLeftMouseUp(gump, (CBaseGUI*)item->m_Items, currentPage, draw2Page);
+                    break;
+                }
+                case GOT_HTMLGUMP:
+                case GOT_XFMHTMLGUMP:
+                case GOT_XFMHTMLTOKEN:
+                {
+                    TestItemsLeftMouseUp(gump, (CBaseGUI *)item->m_Items, currentPage, draw2Page);
 
-					break;
-				}
-				default:
-					break;
-			}
-		}
-	}
+                    break;
+                }
+                default:
+                    break;
+            }
+        }
+    }
 }
 //----------------------------------------------------------------------------------
-void CGump::TestItemsScrolling(CGump *gump, CBaseGUI *start, bool up, int currentPage, int draw2Page)
+void CGump::TestItemsScrolling(
+    CGump *gump, CBaseGUI *start, bool up, int currentPage, int draw2Page)
 {
-	WISPFUN_DEBUG("c84_f13");
-	const int delay = SCROLL_LISTING_DELAY / 7;
+    WISPFUN_DEBUG("c84_f13");
+    const int delay = SCROLL_LISTING_DELAY / 7;
 
-	int group = 0;
-	int page = 0;
-	bool canDraw = (!draw2Page || (page >= currentPage && page <= currentPage + draw2Page));
+    int group = 0;
+    int page = 0;
+    bool canDraw = (!draw2Page || (page >= currentPage && page <= currentPage + draw2Page));
 
-	QFOR(item, start, CBaseGUI*)
-	{
-		if (item->Type == GOT_PAGE)
-		{
-			page = ((CGUIPage*)item)->Index;
+    QFOR(item, start, CBaseGUI *)
+    {
+        if (item->Type == GOT_PAGE)
+        {
+            page = ((CGUIPage *)item)->Index;
 
-			//if (page >= 2 && page > currentPage + draw2Page)
-			//	break;
+            //if (page >= 2 && page > currentPage + draw2Page)
+            //	break;
 
-			canDraw = ((page == -1) || ((page >= currentPage && page <= currentPage + draw2Page) || (!page && !draw2Page)));
-		}
-		else if (canDraw && item->Enabled && item->Visible)
-		{
-			if (item->Type == GOT_GROUP)
-			{
-				group = ((CGUIGroup*)item)->Index;
-				continue;
-			}
-			else if (g_SelectedObject.Object != item && !item->IsHTMLGump())
-				continue;
+            canDraw =
+                ((page == -1) || ((page >= currentPage && page <= currentPage + draw2Page) ||
+                                  (!page && !draw2Page)));
+        }
+        else if (canDraw && item->Enabled && item->Visible)
+        {
+            if (item->Type == GOT_GROUP)
+            {
+                group = ((CGUIGroup *)item)->Index;
+                continue;
+            }
+            else if (g_SelectedObject.Object != item && !item->IsHTMLGump())
+                continue;
 
-			switch (item->Type)
-			{
-				case GOT_RESIZEPIC:
-				{
-					if (!item->IsControlHTML())
-						break;
+            switch (item->Type)
+            {
+                case GOT_RESIZEPIC:
+                {
+                    if (!item->IsControlHTML())
+                        break;
 
-					CGUIHTMLResizepic *resizepic = (CGUIHTMLResizepic*)item;
-					resizepic->Scroll(up, delay);
+                    CGUIHTMLResizepic *resizepic = (CGUIHTMLResizepic *)item;
+                    resizepic->Scroll(up, delay);
 
-					gump->OnSliderMove(item->Serial);
-					gump->WantRedraw = true;
+                    gump->OnSliderMove(item->Serial);
+                    gump->WantRedraw = true;
 
-					break;
-				}
-				case GOT_SLIDER:
-				{
-					((CGUISlider*)item)->OnScroll(up, delay);
+                    break;
+                }
+                case GOT_SLIDER:
+                {
+                    ((CGUISlider *)item)->OnScroll(up, delay);
 
-					gump->OnSliderMove(item->Serial);
-					gump->WantRedraw = true;
+                    gump->OnSliderMove(item->Serial);
+                    gump->WantRedraw = true;
 
-					return;
-				}
-				case GOT_DATABOX:
-				{
-					CGump::TestItemsScrolling(gump, (CBaseGUI*)item->m_Items, up, currentPage, draw2Page);
-					break;
-				}
-				case GOT_HTMLGUMP:
-				case GOT_XFMHTMLGUMP:
-				case GOT_XFMHTMLTOKEN:
-				{
-					if (item->Select())
-					{
-						CGUIHTMLGump *htmlGump = (CGUIHTMLGump*)item;
+                    return;
+                }
+                case GOT_DATABOX:
+                {
+                    CGump::TestItemsScrolling(
+                        gump, (CBaseGUI *)item->m_Items, up, currentPage, draw2Page);
+                    break;
+                }
+                case GOT_HTMLGUMP:
+                case GOT_XFMHTMLGUMP:
+                case GOT_XFMHTMLTOKEN:
+                {
+                    if (item->Select())
+                    {
+                        CGUIHTMLGump *htmlGump = (CGUIHTMLGump *)item;
 
-						WISP_GEOMETRY::CPoint2Di oldPos = g_MouseManager.Position;
-						g_MouseManager.Position = WISP_GEOMETRY::CPoint2Di(oldPos.X - htmlGump->GetX(), oldPos.Y - htmlGump->GetY());
+                        WISP_GEOMETRY::CPoint2Di oldPos = g_MouseManager.Position;
+                        g_MouseManager.Position = WISP_GEOMETRY::CPoint2Di(
+                            oldPos.X - htmlGump->GetX(), oldPos.Y - htmlGump->GetY());
 
-						CBaseGUI *item = (CBaseGUI*)htmlGump->m_Items;
+                        CBaseGUI *item = (CBaseGUI *)htmlGump->m_Items;
 
-						IFOR(j, 0, 5)
-						{
-							if (item->Type == GOT_SLIDER)
-							{
-								((CGUISlider*)item)->OnScroll(up, delay);
+                        IFOR (j, 0, 5)
+                        {
+                            if (item->Type == GOT_SLIDER)
+                            {
+                                ((CGUISlider *)item)->OnScroll(up, delay);
 
-								gump->OnSliderMove(item->Serial);
-							}
+                                gump->OnSliderMove(item->Serial);
+                            }
 
-							item = (CBaseGUI*)item->m_Next;
-						}
+                            item = (CBaseGUI *)item->m_Next;
+                        }
 
-						int offsetX = htmlGump->DataOffset.X - htmlGump->CurrentOffset.X;
-						int offsetY = htmlGump->DataOffset.Y - htmlGump->CurrentOffset.Y;
+                        int offsetX = htmlGump->DataOffset.X - htmlGump->CurrentOffset.X;
+                        int offsetY = htmlGump->DataOffset.Y - htmlGump->CurrentOffset.Y;
 
-						g_MouseManager.Position = WISP_GEOMETRY::CPoint2Di(g_MouseManager.Position.X - offsetX, g_MouseManager.Position.Y - offsetY);
+                        g_MouseManager.Position = WISP_GEOMETRY::CPoint2Di(
+                            g_MouseManager.Position.X - offsetX,
+                            g_MouseManager.Position.Y - offsetY);
 
-						TestItemsScrolling(gump, (CBaseGUI*)item, up, currentPage, draw2Page);
+                        TestItemsScrolling(gump, (CBaseGUI *)item, up, currentPage, draw2Page);
 
-						g_MouseManager.Position = oldPos;
+                        g_MouseManager.Position = oldPos;
 
-						gump->WantRedraw = true;
-					}
+                        gump->WantRedraw = true;
+                    }
 
-					break;
-				}
-				default:
-					break;
-			}
-		}
-	}
+                    break;
+                }
+                default:
+                    break;
+            }
+        }
+    }
 }
 //----------------------------------------------------------------------------------
-void CGump::TestItemsDragging(CGump *gump, CBaseGUI *start, int currentPage, int draw2Page, int count)
+void CGump::TestItemsDragging(
+    CGump *gump, CBaseGUI *start, int currentPage, int draw2Page, int count)
 {
-	WISPFUN_DEBUG("c84_f14");
-	int group = 0;
-	int page = 0;
-	bool canDraw = ((page == -1) || (!page && !draw2Page) || (page >= currentPage && page <= currentPage + draw2Page));
+    WISPFUN_DEBUG("c84_f14");
+    int group = 0;
+    int page = 0;
+    bool canDraw =
+        ((page == -1) || (!page && !draw2Page) ||
+         (page >= currentPage && page <= currentPage + draw2Page));
 
-	QFOR(item, start, CBaseGUI*)
-	{
-		if (!count)
-			break;
+    QFOR(item, start, CBaseGUI *)
+    {
+        if (!count)
+            break;
 
-		count--;
+        count--;
 
-		if (item->Type == GOT_PAGE)
-		{
-			page = ((CGUIPage*)item)->Index;
+        if (item->Type == GOT_PAGE)
+        {
+            page = ((CGUIPage *)item)->Index;
 
-			//if (page >= 2 && page > currentPage + draw2Page)
-			//	break;
+            //if (page >= 2 && page > currentPage + draw2Page)
+            //	break;
 
-			canDraw = ((page == -1) || ((page >= currentPage && page <= currentPage + draw2Page) || (!page && !draw2Page)));
-		}
-		else if (canDraw && item->Enabled && item->Visible)
-		{
-			if (item->Type == GOT_GROUP)
-			{
-				group = ((CGUIGroup*)item)->Index;
-				continue;
-			}
-			else if (g_PressedObject.LeftObject != item && !item->IsHTMLGump())
-				continue;
+            canDraw =
+                ((page == -1) || ((page >= currentPage && page <= currentPage + draw2Page) ||
+                                  (!page && !draw2Page)));
+        }
+        else if (canDraw && item->Enabled && item->Visible)
+        {
+            if (item->Type == GOT_GROUP)
+            {
+                group = ((CGUIGroup *)item)->Index;
+                continue;
+            }
+            else if (g_PressedObject.LeftObject != item && !item->IsHTMLGump())
+                continue;
 
-			switch (item->Type)
-			{
-				case GOT_SLIDER:
-				{
-					int x = g_MouseManager.Position.X - item->GetX();
-					int y = g_MouseManager.Position.Y - item->GetY();
+            switch (item->Type)
+            {
+                case GOT_SLIDER:
+                {
+                    int x = g_MouseManager.Position.X - item->GetX();
+                    int y = g_MouseManager.Position.Y - item->GetY();
 
-					((CGUISlider*)item)->OnClick(x, y);
+                    ((CGUISlider *)item)->OnClick(x, y);
 
-					gump->OnSliderMove(item->Serial);
-					gump->WantRedraw = true;
+                    gump->OnSliderMove(item->Serial);
+                    gump->WantRedraw = true;
 
-					return;
-				}
-				case GOT_DATABOX:
-				{
-					CGump::TestItemsDragging(gump, (CBaseGUI*)item->m_Items, currentPage, draw2Page);
-					break;
-				}
-				case GOT_RESIZEBUTTON:
-				{
-					gump->OnResize(item->Serial);
-					gump->WantRedraw = true;
+                    return;
+                }
+                case GOT_DATABOX:
+                {
+                    CGump::TestItemsDragging(
+                        gump, (CBaseGUI *)item->m_Items, currentPage, draw2Page);
+                    break;
+                }
+                case GOT_RESIZEBUTTON:
+                {
+                    gump->OnResize(item->Serial);
+                    gump->WantRedraw = true;
 
-					break;
-				}
-				case GOT_HTMLGUMP:
-				case GOT_XFMHTMLGUMP:
-				case GOT_XFMHTMLTOKEN:
-				{
-					CGUIHTMLGump *htmlGump = (CGUIHTMLGump*)item;
+                    break;
+                }
+                case GOT_HTMLGUMP:
+                case GOT_XFMHTMLGUMP:
+                case GOT_XFMHTMLTOKEN:
+                {
+                    CGUIHTMLGump *htmlGump = (CGUIHTMLGump *)item;
 
-					WISP_GEOMETRY::CPoint2Di oldPos = g_MouseManager.Position;
-					g_MouseManager.Position = WISP_GEOMETRY::CPoint2Di(oldPos.X - htmlGump->GetX(), oldPos.Y - htmlGump->GetY());
+                    WISP_GEOMETRY::CPoint2Di oldPos = g_MouseManager.Position;
+                    g_MouseManager.Position = WISP_GEOMETRY::CPoint2Di(
+                        oldPos.X - htmlGump->GetX(), oldPos.Y - htmlGump->GetY());
 
-					CBaseGUI *item = (CBaseGUI*)htmlGump->m_Items;
+                    CBaseGUI *item = (CBaseGUI *)htmlGump->m_Items;
 
-					TestItemsDragging(gump, item, currentPage, draw2Page, 5);
+                    TestItemsDragging(gump, item, currentPage, draw2Page, 5);
 
-					IFOR(j, 0, 5)
-						item = (CBaseGUI*)item->m_Next;
+                    IFOR (j, 0, 5)
+                        item = (CBaseGUI *)item->m_Next;
 
-					int offsetX = htmlGump->DataOffset.X - htmlGump->CurrentOffset.X;
-					int offsetY = htmlGump->DataOffset.Y - htmlGump->CurrentOffset.Y;
+                    int offsetX = htmlGump->DataOffset.X - htmlGump->CurrentOffset.X;
+                    int offsetY = htmlGump->DataOffset.Y - htmlGump->CurrentOffset.Y;
 
-					g_MouseManager.Position = WISP_GEOMETRY::CPoint2Di(g_MouseManager.Position.X - offsetX, g_MouseManager.Position.Y - offsetY);
+                    g_MouseManager.Position = WISP_GEOMETRY::CPoint2Di(
+                        g_MouseManager.Position.X - offsetX, g_MouseManager.Position.Y - offsetY);
 
-					TestItemsDragging(gump, item, currentPage, draw2Page);
+                    TestItemsDragging(gump, item, currentPage, draw2Page);
 
-					g_MouseManager.Position = oldPos;
+                    g_MouseManager.Position = oldPos;
 
-					gump->WantRedraw = true;
-					break;
-				}
-				default:
-					break;
-			}
-		}
-	}
+                    gump->WantRedraw = true;
+                    break;
+                }
+                default:
+                    break;
+            }
+        }
+    }
 }
 //----------------------------------------------------------------------------------
 void CGump::PrepareTextures()
 {
-	WISPFUN_DEBUG("c84_f15");
-	QFOR(item, m_Items, CBaseGUI*)
-		item->PrepareTextures();
+    WISPFUN_DEBUG("c84_f15");
+    QFOR(item, m_Items, CBaseGUI *)
+    item->PrepareTextures();
 }
 //----------------------------------------------------------------------------------
 bool CGump::EntryPointerHere()
 {
-	WISPFUN_DEBUG("c84_f16");
-	QFOR(item, m_Items, CBaseGUI*)
-	{
-		if (item->Visible && item->EntryPointerHere())
-			return true;
-	}
+    WISPFUN_DEBUG("c84_f16");
+    QFOR(item, m_Items, CBaseGUI *)
+    {
+        if (item->Visible && item->EntryPointerHere())
+            return true;
+    }
 
-	return false;
+    return false;
 }
 //----------------------------------------------------------------------------------
 void CGump::GenerateFrame(bool stop)
 {
-	WISPFUN_DEBUG("c84_f17");
-	if (!g_GL.Drawing)
-	{
-		FrameCreated = false;
-		WantRedraw = true;
+    WISPFUN_DEBUG("c84_f17");
+    if (!g_GL.Drawing)
+    {
+        FrameCreated = false;
+        WantRedraw = true;
 
-		return;
-	}
+        return;
+    }
 
-	CalculateGumpState();
+    CalculateGumpState();
 
-	PrepareTextures();
+    PrepareTextures();
 
-	if (g_ConfigManager.GetUseGLListsForInterface())
-	{
-		glNewList((GLuint)this, GL_COMPILE);
+    if (g_ConfigManager.GetUseGLListsForInterface())
+    {
+        glNewList((GLuint)this, GL_COMPILE);
 
-		DrawItems((CBaseGUI*)m_Items, Page, Draw2Page);
+        DrawItems((CBaseGUI *)m_Items, Page, Draw2Page);
 
-		if (stop)
-			glEndList();
-	}
-	else
-		DrawItems((CBaseGUI*)m_Items, Page, Draw2Page);
+        if (stop)
+            glEndList();
+    }
+    else
+        DrawItems((CBaseGUI *)m_Items, Page, Draw2Page);
 
-	WantRedraw = true;
-	FrameCreated = true;
+    WantRedraw = true;
+    FrameCreated = true;
 }
 //----------------------------------------------------------------------------------
 void CGump::Draw()
 {
-	WISPFUN_DEBUG("c84_f18");
-	CalculateGumpState();
+    WISPFUN_DEBUG("c84_f18");
+    CalculateGumpState();
 
-	if (WantUpdateContent)
-	{
-		UpdateContent();
-		RecalculateSize();
-		WantUpdateContent = false;
-		FrameCreated = false;
-	}
+    if (WantUpdateContent)
+    {
+        UpdateContent();
+        RecalculateSize();
+        WantUpdateContent = false;
+        FrameCreated = false;
+    }
 
-	if (!FrameCreated)
-	{
-		loc_create_frame:
+    if (!FrameCreated)
+    {
+    loc_create_frame:
 
-		if (!g_ConfigManager.GetUseGLListsForInterface())
-		{
-			if (!m_FrameBuffer.Ready(GumpRect.Size))
-				m_FrameBuffer.Init(GumpRect.Size);
+        if (!g_ConfigManager.GetUseGLListsForInterface())
+        {
+            if (!m_FrameBuffer.Ready(GumpRect.Size))
+                m_FrameBuffer.Init(GumpRect.Size);
 
-			if (m_FrameBuffer.Use())
-			{
-				glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-				glClear(GL_COLOR_BUFFER_BIT);
-				glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+            if (m_FrameBuffer.Use())
+            {
+                glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+                glClear(GL_COLOR_BUFFER_BIT);
+                glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
-				glTranslatef(-(GLfloat)GumpRect.Position.X, -(GLfloat)GumpRect.Position.Y, 0.0f);
+                glTranslatef(-(GLfloat)GumpRect.Position.X, -(GLfloat)GumpRect.Position.Y, 0.0f);
 
-				GenerateFrame(true);
+                GenerateFrame(true);
 
-				if (g_DeveloperMode == DM_DEBUGGING)
-				{
-					if (g_SelectedObject.Gump == this)
-						glColor4f(0.0f, 1.0f, 0.0f, 0.2f);
-					else
-						glColor4f(1.0f, 1.0f, 1.0f, 0.2f);
+                if (g_DeveloperMode == DM_DEBUGGING)
+                {
+                    if (g_SelectedObject.Gump == this)
+                        glColor4f(0.0f, 1.0f, 0.0f, 0.2f);
+                    else
+                        glColor4f(1.0f, 1.0f, 1.0f, 0.2f);
 
-					g_GL.DrawLine(GumpRect.Position.X + 1, GumpRect.Position.Y + 1, GumpRect.Position.X + GumpRect.Size.Width, GumpRect.Position.Y + 1);
-					g_GL.DrawLine(GumpRect.Position.X + GumpRect.Size.Width, GumpRect.Position.Y + 1, GumpRect.Position.X + GumpRect.Size.Width, GumpRect.Position.Y + GumpRect.Size.Height);
-					g_GL.DrawLine(GumpRect.Position.X + GumpRect.Size.Width, GumpRect.Position.Y + GumpRect.Size.Height, GumpRect.Position.X + 1, GumpRect.Position.Y + GumpRect.Size.Height);
-					g_GL.DrawLine(GumpRect.Position.X + 1, GumpRect.Position.Y + GumpRect.Size.Height, GumpRect.Position.X + 1, GumpRect.Position.Y + 1);
+                    g_GL.DrawLine(
+                        GumpRect.Position.X + 1,
+                        GumpRect.Position.Y + 1,
+                        GumpRect.Position.X + GumpRect.Size.Width,
+                        GumpRect.Position.Y + 1);
+                    g_GL.DrawLine(
+                        GumpRect.Position.X + GumpRect.Size.Width,
+                        GumpRect.Position.Y + 1,
+                        GumpRect.Position.X + GumpRect.Size.Width,
+                        GumpRect.Position.Y + GumpRect.Size.Height);
+                    g_GL.DrawLine(
+                        GumpRect.Position.X + GumpRect.Size.Width,
+                        GumpRect.Position.Y + GumpRect.Size.Height,
+                        GumpRect.Position.X + 1,
+                        GumpRect.Position.Y + GumpRect.Size.Height);
+                    g_GL.DrawLine(
+                        GumpRect.Position.X + 1,
+                        GumpRect.Position.Y + GumpRect.Size.Height,
+                        GumpRect.Position.X + 1,
+                        GumpRect.Position.Y + 1);
 
-					glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-				}
+                    glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+                }
 
-				glTranslatef((GLfloat)GumpRect.Position.X, (GLfloat)GumpRect.Position.Y, 0.0f);
+                glTranslatef((GLfloat)GumpRect.Position.X, (GLfloat)GumpRect.Position.Y, 0.0f);
 
-				m_FrameBuffer.Release();
-			}
-		}
-		else
-			GenerateFrame(true);
-	}
-	else if (WantRedraw)
-	{
-		WantRedraw = false;
-		goto loc_create_frame;
-	}
+                m_FrameBuffer.Release();
+            }
+        }
+        else
+            GenerateFrame(true);
+    }
+    else if (WantRedraw)
+    {
+        WantRedraw = false;
+        goto loc_create_frame;
+    }
 
-	GLfloat posX = g_GumpTranslate.X;
-	GLfloat posY = g_GumpTranslate.Y;
+    GLfloat posX = g_GumpTranslate.X;
+    GLfloat posY = g_GumpTranslate.Y;
 
-	if (!g_ConfigManager.GetUseGLListsForInterface())
-	{
-		posX += (GLfloat)GumpRect.Position.X;
-		posY += (GLfloat)GumpRect.Position.Y;
-	}
+    if (!g_ConfigManager.GetUseGLListsForInterface())
+    {
+        posX += (GLfloat)GumpRect.Position.X;
+        posY += (GLfloat)GumpRect.Position.Y;
+    }
 
-	glTranslatef(posX, posY, 0.0f);
+    glTranslatef(posX, posY, 0.0f);
 
-	if (!g_ConfigManager.GetUseGLListsForInterface())
-	{
-		glEnable(GL_BLEND);
-		//glBlendFunc(GL_DST_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    if (!g_ConfigManager.GetUseGLListsForInterface())
+    {
+        glEnable(GL_BLEND);
+        //glBlendFunc(GL_DST_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-		glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+        glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 
-		m_FrameBuffer.Draw(0, 0);
+        m_FrameBuffer.Draw(0, 0);
 
-		glDisable(GL_BLEND);
-	}
-	else
-	{
-		glCallList((GLuint)this);
-		g_GL.OldTexture = 0;
-	}
+        glDisable(GL_BLEND);
+    }
+    else
+    {
+        glCallList((GLuint)this);
+        g_GL.OldTexture = 0;
+    }
 
-	DrawLocker();
+    DrawLocker();
 
-	glTranslatef(-posX, -posY, 0.0f);
+    glTranslatef(-posX, -posY, 0.0f);
 }
 //----------------------------------------------------------------------------------
 CRenderObject *CGump::Select()
 {
-	WISPFUN_DEBUG("c84_f19");
-	g_CurrentCheckGump = this;
-	CalculateGumpState();
+    WISPFUN_DEBUG("c84_f19");
+    g_CurrentCheckGump = this;
+    CalculateGumpState();
 
-	if (WantUpdateContent)
-	{
-		UpdateContent();
-		RecalculateSize();
-		WantUpdateContent = false;
-		FrameCreated = false;
-	}
+    if (WantUpdateContent)
+    {
+        UpdateContent();
+        RecalculateSize();
+        WantUpdateContent = false;
+        FrameCreated = false;
+    }
 
-	WISP_GEOMETRY::CPoint2Di oldPos = g_MouseManager.Position;
-	g_MouseManager.Position = WISP_GEOMETRY::CPoint2Di(oldPos.X - (int)g_GumpTranslate.X, oldPos.Y - (int)g_GumpTranslate.Y);
+    WISP_GEOMETRY::CPoint2Di oldPos = g_MouseManager.Position;
+    g_MouseManager.Position = WISP_GEOMETRY::CPoint2Di(
+        oldPos.X - (int)g_GumpTranslate.X, oldPos.Y - (int)g_GumpTranslate.Y);
 
-	CRenderObject *selected = NULL;
+    CRenderObject *selected = NULL;
 
-	if (SelectLocker())
-		selected = &m_Locker;
-	else if (g_MouseManager.Position.X >= GumpRect.Position.X && g_MouseManager.Position.X < GumpRect.Position.X + GumpRect.Size.Width &&
-		g_MouseManager.Position.Y >= GumpRect.Position.Y && g_MouseManager.Position.Y < GumpRect.Position.Y + GumpRect.Size.Height)
-		selected = SelectItems((CBaseGUI*)m_Items, Page, Draw2Page);
+    if (SelectLocker())
+        selected = &m_Locker;
+    else if (
+        g_MouseManager.Position.X >= GumpRect.Position.X &&
+        g_MouseManager.Position.X < GumpRect.Position.X + GumpRect.Size.Width &&
+        g_MouseManager.Position.Y >= GumpRect.Position.Y &&
+        g_MouseManager.Position.Y < GumpRect.Position.Y + GumpRect.Size.Height)
+        selected = SelectItems((CBaseGUI *)m_Items, Page, Draw2Page);
 
-	if (selected != NULL)
-	{
-		CBaseGUI *sel = (CBaseGUI*)selected;
-		g_SelectedObject.Init(selected, this);
-	}
+    if (selected != NULL)
+    {
+        CBaseGUI *sel = (CBaseGUI *)selected;
+        g_SelectedObject.Init(selected, this);
+    }
 
-	g_MouseManager.Position = oldPos;
-	g_CurrentCheckGump = NULL;
+    g_MouseManager.Position = oldPos;
+    g_CurrentCheckGump = NULL;
 
-	return selected;
+    return selected;
 }
 //----------------------------------------------------------------------------------
 void CGump::RecalculateSize()
 {
-	WISPFUN_DEBUG("c84_f19_1");
+    WISPFUN_DEBUG("c84_f19_1");
 
-	WISP_GEOMETRY::CPoint2Di minPosition(999, 999);
-	WISP_GEOMETRY::CPoint2Di maxPosition;
-	WISP_GEOMETRY::CPoint2Di offset;
+    WISP_GEOMETRY::CPoint2Di minPosition(999, 999);
+    WISP_GEOMETRY::CPoint2Di maxPosition;
+    WISP_GEOMETRY::CPoint2Di offset;
 
-	GetItemsSize(this, (CBaseGUI*)m_Items, minPosition, maxPosition, offset, -1, Page, Draw2Page);
+    GetItemsSize(this, (CBaseGUI *)m_Items, minPosition, maxPosition, offset, -1, Page, Draw2Page);
 
-	WISP_GEOMETRY::CSize size(maxPosition.X - minPosition.X, maxPosition.Y - minPosition.Y);
+    WISP_GEOMETRY::CSize size(maxPosition.X - minPosition.X, maxPosition.Y - minPosition.Y);
 
-	GumpRect = WISP_GEOMETRY::CRect(minPosition, size);
+    GumpRect = WISP_GEOMETRY::CRect(minPosition, size);
 }
 //----------------------------------------------------------------------------------
-void CGump::GetItemsSize(CGump *gump, CBaseGUI *start, WISP_GEOMETRY::CPoint2Di &minPosition, WISP_GEOMETRY::CPoint2Di &maxPosition, WISP_GEOMETRY::CPoint2Di &offset, int count, int currentPage, int draw2Page)
+void CGump::GetItemsSize(
+    CGump *gump,
+    CBaseGUI *start,
+    WISP_GEOMETRY::CPoint2Di &minPosition,
+    WISP_GEOMETRY::CPoint2Di &maxPosition,
+    WISP_GEOMETRY::CPoint2Di &offset,
+    int count,
+    int currentPage,
+    int draw2Page)
 {
-	WISPFUN_DEBUG("c84_f19_2");
+    WISPFUN_DEBUG("c84_f19_2");
 
-	int page = 0;
-	bool canDraw = (!draw2Page || (page >= currentPage && page <= currentPage + draw2Page));
+    int page = 0;
+    bool canDraw = (!draw2Page || (page >= currentPage && page <= currentPage + draw2Page));
 
-	QFOR(item, start, CBaseGUI*)
-	{
-		if (!count)
-			break;
+    QFOR(item, start, CBaseGUI *)
+    {
+        if (!count)
+            break;
 
-		count--;
+        count--;
 
-		if (item->Type == GOT_PAGE)
-		{
-			page = ((CGUIPage*)item)->Index;
+        if (item->Type == GOT_PAGE)
+        {
+            page = ((CGUIPage *)item)->Index;
 
-			//if (page >= 2 && page > currentPage + draw2Page)
-			//	break;
+            //if (page >= 2 && page > currentPage + draw2Page)
+            //	break;
 
-			canDraw = ((page == -1) || ((page >= currentPage && page <= currentPage + draw2Page) || (!page && !draw2Page)));
+            canDraw =
+                ((page == -1) || ((page >= currentPage && page <= currentPage + draw2Page) ||
+                                  (!page && !draw2Page)));
 
-			continue;
-		}
+            continue;
+        }
 
-		if (!canDraw || !item->Visible)
-			continue;
+        if (!canDraw || !item->Visible)
+            continue;
 
-		switch (item->Type)
-		{
-			case GOT_PAGE:
-			case GOT_GROUP:
-			case GOT_NONE:
-			case GOT_MASTERGUMP:
-			case GOT_CHECKTRANS:
-			case GOT_SHADER:
-			case GOT_BLENDING:
-			case GOT_GLOBAL_COLOR:
-			case GOT_TOOLTIP:
-				break;
-			case GOT_DATABOX:
-			{
-				CGump::GetItemsSize(gump, (CBaseGUI*)item->m_Items, minPosition, maxPosition, offset, count, currentPage, draw2Page);
-				break;
-			}
-			case GOT_HTMLGUMP:
-			case GOT_XFMHTMLGUMP:
-			case GOT_XFMHTMLTOKEN:
-			{
-				WISP_GEOMETRY::CPoint2Di htmlOffset(offset.X + item->GetX(), offset.X + item->GetY());
-				CGump::GetItemsSize(gump, (CBaseGUI*)item->m_Items, minPosition, maxPosition, htmlOffset, 5, currentPage, draw2Page);
-				break;
-			}
-			case GOT_SCISSOR:
-				((CGUIScissor*)item)->GumpParent = gump;
-			default:
-			{
-				int x = item->GetX() + offset.X;
-				int y = item->GetY() + offset.Y;
+        switch (item->Type)
+        {
+            case GOT_PAGE:
+            case GOT_GROUP:
+            case GOT_NONE:
+            case GOT_MASTERGUMP:
+            case GOT_CHECKTRANS:
+            case GOT_SHADER:
+            case GOT_BLENDING:
+            case GOT_GLOBAL_COLOR:
+            case GOT_TOOLTIP:
+                break;
+            case GOT_DATABOX:
+            {
+                CGump::GetItemsSize(
+                    gump,
+                    (CBaseGUI *)item->m_Items,
+                    minPosition,
+                    maxPosition,
+                    offset,
+                    count,
+                    currentPage,
+                    draw2Page);
+                break;
+            }
+            case GOT_HTMLGUMP:
+            case GOT_XFMHTMLGUMP:
+            case GOT_XFMHTMLTOKEN:
+            {
+                WISP_GEOMETRY::CPoint2Di htmlOffset(
+                    offset.X + item->GetX(), offset.X + item->GetY());
+                CGump::GetItemsSize(
+                    gump,
+                    (CBaseGUI *)item->m_Items,
+                    minPosition,
+                    maxPosition,
+                    htmlOffset,
+                    5,
+                    currentPage,
+                    draw2Page);
+                break;
+            }
+            case GOT_SCISSOR:
+                ((CGUIScissor *)item)->GumpParent = gump;
+            default:
+            {
+                int x = item->GetX() + offset.X;
+                int y = item->GetY() + offset.Y;
 
-				if (x < minPosition.X)
-					minPosition.X = x;
+                if (x < minPosition.X)
+                    minPosition.X = x;
 
-				if (y < minPosition.Y)
-					minPosition.Y = y;
+                if (y < minPosition.Y)
+                    minPosition.Y = y;
 
-				WISP_GEOMETRY::CSize itemSize = item->GetSize();
+                WISP_GEOMETRY::CSize itemSize = item->GetSize();
 
-				x += itemSize.Width;
-				y += itemSize.Height;
+                x += itemSize.Width;
+                y += itemSize.Height;
 
-				if (x > maxPosition.X)
-					maxPosition.X = x;
+                if (x > maxPosition.X)
+                    maxPosition.X = x;
 
-				if (y > maxPosition.Y)
-					maxPosition.Y = y;
+                if (y > maxPosition.Y)
+                    maxPosition.Y = y;
 
-				break;
-			}
-		}
-	}
+                break;
+            }
+        }
+    }
 }
 //----------------------------------------------------------------------------------
 void CGump::OnLeftMouseButtonDown()
 {
-	WISPFUN_DEBUG("c84_f20");
-	g_CurrentCheckGump = this;
-	WISP_GEOMETRY::CPoint2Di oldPos = g_MouseManager.Position;
-	g_MouseManager.Position = WISP_GEOMETRY::CPoint2Di(oldPos.X - m_X, oldPos.Y - m_Y);
+    WISPFUN_DEBUG("c84_f20");
+    g_CurrentCheckGump = this;
+    WISP_GEOMETRY::CPoint2Di oldPos = g_MouseManager.Position;
+    g_MouseManager.Position = WISP_GEOMETRY::CPoint2Di(oldPos.X - m_X, oldPos.Y - m_Y);
 
-	TestItemsLeftMouseDown(this, (CBaseGUI*)m_Items, Page, Draw2Page);
+    TestItemsLeftMouseDown(this, (CBaseGUI *)m_Items, Page, Draw2Page);
 
-	g_MouseManager.Position = oldPos;
-	g_CurrentCheckGump = NULL;
+    g_MouseManager.Position = oldPos;
+    g_CurrentCheckGump = NULL;
 }
 //----------------------------------------------------------------------------------
 void CGump::OnLeftMouseButtonUp()
 {
-	WISPFUN_DEBUG("c84_f21");
-	g_CurrentCheckGump = this;
-	TestItemsLeftMouseUp(this, (CBaseGUI*)m_Items, Page, Draw2Page);
-	TestLockerClick();
-	g_CurrentCheckGump = NULL;
+    WISPFUN_DEBUG("c84_f21");
+    g_CurrentCheckGump = this;
+    TestItemsLeftMouseUp(this, (CBaseGUI *)m_Items, Page, Draw2Page);
+    TestLockerClick();
+    g_CurrentCheckGump = NULL;
 }
 //----------------------------------------------------------------------------------
 void CGump::OnMidMouseButtonScroll(bool up)
 {
-	WISPFUN_DEBUG("c84_f22");
-	g_CurrentCheckGump = this;
-	WISP_GEOMETRY::CPoint2Di oldPos = g_MouseManager.Position;
-	g_MouseManager.Position = WISP_GEOMETRY::CPoint2Di(oldPos.X - m_X, oldPos.Y - m_Y);
+    WISPFUN_DEBUG("c84_f22");
+    g_CurrentCheckGump = this;
+    WISP_GEOMETRY::CPoint2Di oldPos = g_MouseManager.Position;
+    g_MouseManager.Position = WISP_GEOMETRY::CPoint2Di(oldPos.X - m_X, oldPos.Y - m_Y);
 
-	TestItemsScrolling(this, (CBaseGUI*)m_Items, up, Page, Draw2Page);
+    TestItemsScrolling(this, (CBaseGUI *)m_Items, up, Page, Draw2Page);
 
-	g_MouseManager.Position = oldPos;
-	g_CurrentCheckGump = NULL;
+    g_MouseManager.Position = oldPos;
+    g_CurrentCheckGump = NULL;
 }
 //----------------------------------------------------------------------------------
 void CGump::OnDragging()
 {
-	WISPFUN_DEBUG("c84_f23");
-	g_CurrentCheckGump = this;
-	WISP_GEOMETRY::CPoint2Di oldPos = g_MouseManager.Position;
-	g_MouseManager.Position = WISP_GEOMETRY::CPoint2Di(oldPos.X - m_X, oldPos.Y - m_Y);
+    WISPFUN_DEBUG("c84_f23");
+    g_CurrentCheckGump = this;
+    WISP_GEOMETRY::CPoint2Di oldPos = g_MouseManager.Position;
+    g_MouseManager.Position = WISP_GEOMETRY::CPoint2Di(oldPos.X - m_X, oldPos.Y - m_Y);
 
-	TestItemsDragging(this, (CBaseGUI*)m_Items, Page, Draw2Page);
+    TestItemsDragging(this, (CBaseGUI *)m_Items, Page, Draw2Page);
 
-	g_MouseManager.Position = oldPos;
-	g_CurrentCheckGump = NULL;
+    g_MouseManager.Position = oldPos;
+    g_CurrentCheckGump = NULL;
 }
 //----------------------------------------------------------------------------------
 void CGump::PasteClipboardData(wstring &data)

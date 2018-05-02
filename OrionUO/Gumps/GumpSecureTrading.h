@@ -13,43 +13,43 @@
 class CGumpSecureTrading : public CGump
 {
 public:
-	uint ID2 = 0;
-	bool StateMy = false;
-	bool StateOpponent = false;
-	string Text = "";
+    uint ID2 = 0;
+    bool StateMy = false;
+    bool StateOpponent = false;
+    string Text = "";
 
 private:
-	static const int ID_GST_CHECKBOX = 1;
+    static const int ID_GST_CHECKBOX = 1;
 
-	CTextRenderer m_TextRenderer{ CTextRenderer() };
+    CTextRenderer m_TextRenderer{ CTextRenderer() };
 
-	CGUIButton *m_MyCheck{ NULL };
-	CGUIGumppic *m_OpponentCheck{ NULL };
+    CGUIButton *m_MyCheck{ NULL };
+    CGUIGumppic *m_OpponentCheck{ NULL };
 
-	CGUIDataBox *m_MyDataBox{ NULL };
-	CGUIDataBox *m_OpponentDataBox{ NULL };
-	
+    CGUIDataBox *m_MyDataBox{ NULL };
+    CGUIDataBox *m_OpponentDataBox{ NULL };
+
 protected:
-	virtual void CalculateGumpState();
+    virtual void CalculateGumpState();
 
 public:
-	CGumpSecureTrading(uint serial, short x, short y, uint id, uint id2);
-	virtual ~CGumpSecureTrading();
+    CGumpSecureTrading(uint serial, short x, short y, uint id, uint id2);
+    virtual ~CGumpSecureTrading();
 
-	void SendTradingResponse(int code);
-	
-	CTextRenderer *GetTextRenderer() {return &m_TextRenderer;}
+    void SendTradingResponse(int code);
 
-	virtual void PrepareContent();
+    CTextRenderer *GetTextRenderer() { return &m_TextRenderer; }
 
-	virtual void UpdateContent();
+    virtual void PrepareContent();
 
-	virtual void Draw();
-	virtual CRenderObject *Select();
+    virtual void UpdateContent();
 
-	GUMP_BUTTON_EVENT_H;
+    virtual void Draw();
+    virtual CRenderObject *Select();
 
-	virtual void OnLeftMouseButtonUp();
+    GUMP_BUTTON_EVENT_H;
+
+    virtual void OnLeftMouseButtonUp();
 };
 //----------------------------------------------------------------------------------
 #endif

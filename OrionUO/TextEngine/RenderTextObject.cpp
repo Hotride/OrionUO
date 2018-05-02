@@ -12,43 +12,43 @@
 #include "stdafx.h"
 //----------------------------------------------------------------------------------
 CRenderTextObject::CRenderTextObject()
-: CRenderObject(0, 0, 0, 0, 0)
+    : CRenderObject(0, 0, 0, 0, 0)
 {
 }
 //---------------------------------------------------------------------------
 CRenderTextObject::~CRenderTextObject()
 {
-	WISPFUN_DEBUG("c172_f1");
-	UnlinkDraw();
+    WISPFUN_DEBUG("c172_f1");
+    UnlinkDraw();
 }
 //---------------------------------------------------------------------------
 void CRenderTextObject::UnlinkDraw()
 {
-	WISPFUN_DEBUG("c172_f2");
-	if (m_NextDraw != NULL)
-		m_NextDraw->m_PrevDraw = m_PrevDraw;
+    WISPFUN_DEBUG("c172_f2");
+    if (m_NextDraw != NULL)
+        m_NextDraw->m_PrevDraw = m_PrevDraw;
 
-	if (m_PrevDraw != NULL)
-		m_PrevDraw->m_NextDraw = m_NextDraw;
+    if (m_PrevDraw != NULL)
+        m_PrevDraw->m_NextDraw = m_NextDraw;
 
-	m_NextDraw = NULL;
-	m_PrevDraw = NULL;
+    m_NextDraw = NULL;
+    m_PrevDraw = NULL;
 }
 //---------------------------------------------------------------------------
 void CRenderTextObject::ToTop()
 {
-	WISPFUN_DEBUG("c172_f3");
-	CRenderTextObject *obj = this;
+    WISPFUN_DEBUG("c172_f3");
+    CRenderTextObject *obj = this;
 
-	while (obj != NULL)
-	{
-		if (obj->m_PrevDraw == NULL)
-			break;
+    while (obj != NULL)
+    {
+        if (obj->m_PrevDraw == NULL)
+            break;
 
-		obj = obj->m_PrevDraw;
-	}
+        obj = obj->m_PrevDraw;
+    }
 
-	CTextRenderer *tr = (CTextRenderer*)obj;
-	tr->ToTop(this);
+    CTextRenderer *tr = (CTextRenderer *)obj;
+    tr->ToTop(this);
 }
 //----------------------------------------------------------------------------------

@@ -11,40 +11,55 @@
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
 //----------------------------------------------------------------------------------
-CGUIHTMLText::CGUIHTMLText(int index, uchar font, ushort color, int x, int y, int width, TEXT_ALIGN_TYPE align, ushort textFlags, int htmlStartColor)
-: CBaseGUI(GOT_HTMLTEXT, 0, 0, color, x, y), TextID(index), HTMLStartColor(htmlStartColor),
-Text(L""), Font(font), Align(align), TextFlags(textFlags), Width(width)
+CGUIHTMLText::CGUIHTMLText(
+    int index,
+    uchar font,
+    ushort color,
+    int x,
+    int y,
+    int width,
+    TEXT_ALIGN_TYPE align,
+    ushort textFlags,
+    int htmlStartColor)
+    : CBaseGUI(GOT_HTMLTEXT, 0, 0, color, x, y)
+    , TextID(index)
+    , HTMLStartColor(htmlStartColor)
+    , Text(L"")
+    , Font(font)
+    , Align(align)
+    , TextFlags(textFlags)
+    , Width(width)
 {
 }
 //----------------------------------------------------------------------------------
 CGUIHTMLText::~CGUIHTMLText()
 {
-	WISPFUN_DEBUG("c64_f1");
-	m_Texture.Clear();
+    WISPFUN_DEBUG("c64_f1");
+    m_Texture.Clear();
 }
 //----------------------------------------------------------------------------------
 void CGUIHTMLText::CreateTexture(bool backgroundCanBeColored)
 {
-	WISPFUN_DEBUG("c64_f2");
-	g_FontManager.SetUseHTML(true, HTMLStartColor, backgroundCanBeColored);
+    WISPFUN_DEBUG("c64_f2");
+    g_FontManager.SetUseHTML(true, HTMLStartColor, backgroundCanBeColored);
 
-	g_FontManager.GenerateW(Font, m_Texture, Text, Color, 30, Width, Align, TextFlags);
+    g_FontManager.GenerateW(Font, m_Texture, Text, Color, 30, Width, Align, TextFlags);
 
-	g_FontManager.SetUseHTML(false);
+    g_FontManager.SetUseHTML(false);
 }
 //----------------------------------------------------------------------------------
 void CGUIHTMLText::Draw(bool checktrans)
 {
-	WISPFUN_DEBUG("c64_f3");
-	m_Texture.Draw(m_X, m_Y, checktrans);
+    WISPFUN_DEBUG("c64_f3");
+    m_Texture.Draw(m_X, m_Y, checktrans);
 }
 //----------------------------------------------------------------------------------
 bool CGUIHTMLText::Select()
 {
-	WISPFUN_DEBUG("c64_f4");
-	int x = g_MouseManager.Position.X - m_X;
-	int y = g_MouseManager.Position.Y - m_Y;
+    WISPFUN_DEBUG("c64_f4");
+    int x = g_MouseManager.Position.X - m_X;
+    int y = g_MouseManager.Position.Y - m_Y;
 
-	return (x >= 0 && y >= 0 && x < m_Texture.Width && y < m_Texture.Height);
+    return (x >= 0 && y >= 0 && x < m_Texture.Width && y < m_Texture.Height);
 }
 //----------------------------------------------------------------------------------

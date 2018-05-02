@@ -14,7 +14,7 @@
 class CMapObject : public CRenderWorldObject
 {
 public:
-	/*!
+    /*!
 	Constructor
 	@param [__in] type Type of render object
 	@param [__in] serial Object's serial
@@ -25,13 +25,20 @@ public:
 	@param [__in] z Coordinate Z in the world
 	@return
 	*/
-	CMapObject(RENDER_OBJECT_TYPE type, int serial, ushort graphic, ushort color, short x, short y, char z);
+    CMapObject(
+        RENDER_OBJECT_TYPE type,
+        int serial,
+        ushort graphic,
+        ushort color,
+        short x,
+        short y,
+        char z);
 
-	/*!
+    /*!
 	Destructor
 	@return
 	*/
-	virtual ~CMapObject();
+    virtual ~CMapObject();
 };
 //----------------------------------------------------------------------------------
 #endif

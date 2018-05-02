@@ -14,67 +14,67 @@
 class CCityItem
 {
 public:
-	uchar LocationIndex = 0;
-	string Name = "";
-	string Area = "";
-	bool Selected = false;
+    uchar LocationIndex = 0;
+    string Name = "";
+    string Area = "";
+    bool Selected = false;
 
-	CCityItem();
-	virtual ~CCityItem();
+    CCityItem();
+    virtual ~CCityItem();
 
-	//!Ссылка на описание города
-	class CCity m_City;
+    //!Ссылка на описание города
+    class CCity m_City;
 
-	/*!
+    /*!
 	Определение версии класса
 	@return Новая или старая
 	*/
-	virtual bool IsNewCity() { return false; }
+    virtual bool IsNewCity() { return false; }
 
-	/*!
+    /*!
 	Инициализация
 	@return 
 	*/
-	void InitCity();
+    void InitCity();
 };
 //--------------------------------------------------------------------------
 //!Класс города (для новых клиентов)
 class CCityItemNew : public CCityItem
 {
 public:
-	uint X = 0;
-	uint Y = 0;
-	uint Z = 0;
-	uint MapIndex = 0;
-	uint Cliloc = 0;
+    uint X = 0;
+    uint Y = 0;
+    uint Z = 0;
+    uint MapIndex = 0;
+    uint Cliloc = 0;
 
-	CCityItemNew();
-	virtual ~CCityItemNew();
+    CCityItemNew();
+    virtual ~CCityItemNew();
 
-	/*!
+    /*!
 	Определение версии класса
 	@return Новая или старая
 	*/
-	bool IsNewCity() { return true; }
+    bool IsNewCity() { return true; }
 };
 //--------------------------------------------------------------------------
 //!Класс списка городов
 class CCityList
 {
 private:
-	vector<CCityItem*> m_CityList;
+    vector<CCityItem *> m_CityList;
 
 public:
-	CCityList();
-	virtual ~CCityList();
+    CCityList();
+    virtual ~CCityList();
 
-	size_t CityCount() { return m_CityList.size(); }
+    size_t CityCount() { return m_CityList.size(); }
 
-	void AddCity(CCityItem *city) { m_CityList.push_back(city); }
+    void AddCity(CCityItem *city) { m_CityList.push_back(city); }
 
-	CCityItem *GetCity(int index);
+    CCityItem *GetCity(int index);
 
-	void Clear();
+    void Clear();
 };
 //---------------------------------------------------------------------------
 //!Ссылка на список городов
