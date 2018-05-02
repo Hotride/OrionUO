@@ -1,5 +1,6 @@
 #!/bin/bash
 
+clang-format --version
 echo Validating code formatting.
 
 clang-format --style=file -i OrionUO/*.{h,cpp} OrionUO/*/*.{h,cpp}
@@ -7,6 +8,8 @@ dirty=$(git ls-files --modified)
 if [[ $dirty ]]; then
 	echo Failed. The following files are incorrectly formatted:
 	echo $dirty
+	echo "Diff:"
+	git --no-pager diff --no-color
 	exit 1
 else
 	echo Code formatting validation passed.
