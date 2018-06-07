@@ -860,8 +860,8 @@ bool CWindow::OnWindowProc(SDL_Event &ev)
             break;
     }
 
-    g_Orion.Process(true);
-    g_Orion.Process(false);
+    //g_Orion.Process(true);
+    //g_Orion.Process(false);
 
     return false;
 }

@@ -35,16 +35,23 @@ int APIENTRY _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCm
 
     INITCRASHLOGGER(path);
 
+    socket_init();
     g_OrionWindow.hInstance = hInstance;
     if (!g_OrionWindow.Create("Orion UO Client", "Ultima Online", false, 640, 480))
+    {
+        socket_shutdown();
         return 0;
+    }
 
     g_OrionWindow.ShowWindow(true);
     g_OrionWindow.NoResize = true;
 
     g_Orion.LoadPluginConfig();
 
-    return g_App.Run(hInstance);
+    auto r = g_App.Run(hInstance);
+    socket_shutdown();
+
+    return r;
 }
 
 #else

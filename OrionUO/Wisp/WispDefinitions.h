@@ -1,6 +1,7 @@
 //----------------------------------------------------------------------------------
 #ifndef WISPDEFINITIONS_H
 #define WISPDEFINITIONS_H
+typedef int Keycode;
 //----------------------------------------------------------------------------------
 //0 - disable debugging
 //1 - debugging with queue (very slow run mode)

@@ -3,6 +3,7 @@
 #include "LoginCrypt.h"
 #include "../Wisp/WispGlobal.h"
 #include "../Wisp/WispDataStream.h"
+#include "aes.h"
 extern UCHAR_LIST g_RawData;
 CLoginCrypt g_LoginCrypt;
 //----------------------------------------------------------------------------------

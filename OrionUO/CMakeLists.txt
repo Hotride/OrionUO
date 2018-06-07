@@ -325,6 +325,7 @@ set(orion_src
   WeatherEffeect.cpp            # FIXME: filename
 
   FileSystem.cpp
+  Sockets.cpp
   OrionMain.cpp
   Stubs.cpp                     # FIXME: temporary stubbed stuff
 )

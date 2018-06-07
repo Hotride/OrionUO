@@ -6,13 +6,11 @@
 **
 ************************************************************************************
 */
-//----------------------------------------------------------------------------------
-#ifndef PINGTHREAD_H
-#define PINGTHREAD_H
-//----------------------------------------------------------------------------------
+#pragma once
+
 struct PING_INFO_DATA
 {
-    uint ServerID;
+    uint32_t ServerID;
     int Min;
     int Max;
     int Average;
@@ -26,8 +24,6 @@ class CPingThread : public WISP_THREAD::CThread
     int RequestsCount = 10;
 
 private:
-    ushort CalculateChecksum(pushort addr, int count);
-
     int CalculatePing();
 
 public:
@@ -35,9 +31,9 @@ public:
     virtual ~CPingThread();
 
     static const uint MessageID = WM_USER + 401;
+#if !USE_WISP
+    static uint32_t m_PingEvent;
+#endif
 
-    virtual void OnExecute(uint nowTime);
+    virtual void OnExecute(uint32_t nowTime);
 };
-//----------------------------------------------------------------------------------
-#endif //PINGTHREAD_H
-//----------------------------------------------------------------------------------

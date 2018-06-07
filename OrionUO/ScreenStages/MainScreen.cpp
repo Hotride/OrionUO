@@ -196,7 +196,40 @@ void CMainScreen::OnTextInput(const SDL_TextInputEvent &ev)
 }
 void CMainScreen::OnKeyDown(const SDL_KeyboardEvent &ev)
 {
-    NOT_IMPLEMENTED; // FIXME
+    WISPFUN_DEBUG("c165_f8");
+    if (g_EntryPointer == nullptr)
+        g_EntryPointer = m_MainGump.m_PasswordFake;
+
+    switch (ev.keysym.sym)
+    {
+        case SDLK_TAB:
+        {
+            if (g_EntryPointer == m_Account)
+                g_EntryPointer = m_MainGump.m_PasswordFake;
+            else
+                g_EntryPointer = m_Account;
+
+            break;
+        }
+        case SDLK_RETURN:
+        case SDLK_RETURN2:
+        {
+            CreateSmoothAction(ID_SMOOTH_MS_CONNECT);
+
+            break;
+        }
+        default:
+        {
+            if (g_EntryPointer == m_MainGump.m_PasswordFake)
+                m_Password->OnKey(nullptr, ev.keysym.sym);
+
+            g_EntryPointer->OnKey(nullptr, ev.keysym.sym);
+
+            break;
+        }
+    }
+
+    m_Gump.WantRedraw = true;
 }
 #endif
 //----------------------------------------------------------------------------------
@@ -294,7 +327,8 @@ void CMainScreen::LoadGlobalConfig()
 
                     if (len)
                     {
-                        m_Password->SetText(DecryptPW(password.c_str(), (int)len));
+                        //m_Password->SetText(DecryptPW(password.c_str(), (int)len));
+                        m_Password->SetText(password);
 
                         IFOR (zv, 0, len)
                             m_MainGump.m_PasswordFake->Insert(L'*');

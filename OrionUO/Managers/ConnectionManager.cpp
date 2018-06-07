@@ -92,14 +92,9 @@ void CConnectionManager::Init()
         return;
 
     m_IsLoginSocket = true;
-
-    WSADATA wsaData;
-    WSAStartup(MAKEWORD(1, 1), &wsaData);
-
     char hostName[1024] = { 0 };
-
     //Получим ключик для логин крипта
-    if (!gethostname(hostName, 1024))
+    if (!gethostname(hostName, sizeof(hostName)))
     {
         if (LPHOSTENT lphost = gethostbyname(hostName))
         {
@@ -116,8 +111,6 @@ void CConnectionManager::Init()
             g_NetworkInit(true, data);
         }
     }
-
-    WSACleanup();
 }
 //----------------------------------------------------------------------------------
 /*!
@@ -266,7 +259,7 @@ void CConnectionManager::Recv()
 
         if (!m_LoginSocket.ReadyRead())
         {
-            if (m_LoginSocket.DataReady == SOCKET_ERROR)
+            if (m_LoginSocket.DataReady == -1)
             {
                 LOG("Failed to Recv()...Disconnecting...\n");
 
@@ -285,7 +278,7 @@ void CConnectionManager::Recv()
 
         if (!m_GameSocket.ReadyRead())
         {
-            if (m_GameSocket.DataReady == SOCKET_ERROR)
+            if (m_GameSocket.DataReady == -1)
             {
                 LOG("Failed to Recv()...Disconnecting...\n");
 

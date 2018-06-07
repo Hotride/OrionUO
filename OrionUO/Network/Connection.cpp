@@ -9,6 +9,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
+#include "../Sockets.h"
 #include "stdafx.h"
 //----------------------------------------------------------------------------------
 CSocket::CSocket(bool gameSocket)
@@ -34,7 +35,7 @@ bool CSocket::Connect(const string &address, int port)
         if (!CConnection::Connect(ProxyAddress, ProxyPort))
         {
             LOG("Can't connect to proxy\n");
-            m_Socket = INVALID_SOCKET;
+            m_Socket = nullptr;
             Connected = false;
             LOG("Connecting...%s:%i\n", address.c_str(), port);
             return WISP_NETWORK::CConnection::Connect(address, port);
@@ -47,7 +48,7 @@ bool CSocket::Connect(const string &address, int port)
         {
             struct hostent *uohe = gethostbyname(address.c_str());
 
-            if (uohe != NULL)
+            if (uohe != nullptr)
             {
                 sockaddr_in caddr;
                 memcpy(&caddr.sin_addr, uohe->h_addr, uohe->h_length);
@@ -62,8 +63,8 @@ bool CSocket::Connect(const string &address, int port)
         if (serverIP == 0xFFFFFFFF)
         {
             LOG("Unknowm server address\n");
-            closesocket(m_Socket);
-            m_Socket = INVALID_SOCKET;
+            tcp_close(m_Socket);
+            m_Socket = nullptr;
             Connected = false;
             LOG("Connecting...%s:%i\n", address.c_str(), port);
             return WISP_NETWORK::CConnection::Connect(address, port);
@@ -72,18 +73,18 @@ bool CSocket::Connect(const string &address, int port)
         if (ProxySocks5)
         {
             LOG("Proxy Server Version 5 Selected\n");
-            char str[255] = { 0 };
+            unsigned char str[255] = { 0 };
             str[0] = 5; //Proxy Version
             str[1] = 2; //Number of authentication method
             str[2] = 0; //No auth required
             str[3] = 2; //Username/Password auth
-            ::send(m_Socket, str, 4, 0);
-            int num = ::recv(m_Socket, str, 255, 0);
+            tcp_send(m_Socket, str, 4);
+            int num = tcp_recv(m_Socket, str, 255);
             if ((str[0] != 5) || (num != 2))
             {
                 LOG("Proxy Server Version Missmatch\n");
-                closesocket(m_Socket);
-                m_Socket = INVALID_SOCKET;
+                tcp_close(m_Socket);
+                m_Socket = nullptr;
                 Connected = false;
                 LOG("Connecting...%s:%i\n", address.c_str(), port);
                 return WISP_NETWORK::CConnection::Connect(address, port);
@@ -102,13 +103,13 @@ bool CSocket::Connect(const string &address, int port)
                         buffer[0] = 1;
                         buffer[1] = (char)ProxyAccount.length();
                         buffer[2 + (int)ProxyAccount.length()] = (char)ProxyPassword.length();
-                        ::send(m_Socket, &buffer[0], totalSize, 0);
-                        ::recv(m_Socket, str, 255, 0);
+                        tcp_send(m_Socket, (unsigned char *)&buffer[0], totalSize);
+                        tcp_recv(m_Socket, str, 255);
                         if (str[1] != 0)
                         {
                             LOG("Wrong Username/Password\n");
-                            closesocket(m_Socket);
-                            m_Socket = INVALID_SOCKET;
+                            tcp_close(m_Socket);
+                            m_Socket = nullptr;
                             Connected = false;
                             LOG("Connecting...%s:%i\n", address.c_str(), port);
                             return WISP_NETWORK::CConnection::Connect(address, port);
@@ -121,8 +122,8 @@ bool CSocket::Connect(const string &address, int port)
                     str[3] = 1;
                     memcpy(&str[4], &serverIP, 4);
                     memcpy(&str[8], &serverPort, 2);
-                    ::send(m_Socket, str, 10, 0);
-                    num = ::recv(m_Socket, str, 255, 0);
+                    tcp_send(m_Socket, str, 10);
+                    num = tcp_recv(m_Socket, str, 255);
                     if (str[1] != 0)
                     {
                         switch (str[1])
@@ -158,8 +159,8 @@ bool CSocket::Connect(const string &address, int port)
                                 LOG("Unknown Error <%d> recieved\n", str[1]);
                         }
 
-                        closesocket(m_Socket);
-                        m_Socket = INVALID_SOCKET;
+                        tcp_close(m_Socket);
+                        m_Socket = nullptr;
                         Connected = false;
                         LOG("Connecting...%s:%i\n", address.c_str(), port);
                         return WISP_NETWORK::CConnection::Connect(address, port);
@@ -169,8 +170,8 @@ bool CSocket::Connect(const string &address, int port)
                 else
                 {
                     LOG("No acceptable methods\n");
-                    closesocket(m_Socket);
-                    m_Socket = INVALID_SOCKET;
+                    tcp_close(m_Socket);
+                    m_Socket = nullptr;
                     Connected = false;
                     LOG("Connecting...%s:%i\n", address.c_str(), port);
                     return WISP_NETWORK::CConnection::Connect(address, port);
@@ -180,21 +181,21 @@ bool CSocket::Connect(const string &address, int port)
         else
         {
             LOG("Proxy Server Version 4 Selected\n");
-            char str[9] = { 0 };
+            unsigned char str[9] = { 0 };
             str[0] = 4;
             str[1] = 1;
             memcpy(&str[2], &serverPort, 2);
             memcpy(&str[4], &serverIP, 4);
-            ::send(m_Socket, str, 9, 0);
-            int recvSize = ::recv(m_Socket, str, 8, 0);
+            tcp_send(m_Socket, str, 9);
+            int recvSize = tcp_recv(m_Socket, str, 8);
             if ((recvSize != 8) || (str[0] != 0) || (str[1] != 90))
             {
                 if (str[0] == 5)
                 {
                     LOG("Proxy Server Version is 5\n");
                     LOG("Trying  SOCKS5\n");
-                    closesocket(m_Socket);
-                    m_Socket = INVALID_SOCKET;
+                    tcp_close(m_Socket);
+                    m_Socket = nullptr;
                     Connected = false;
                     ProxySocks5 = true;
                     return Connect(address, port);
@@ -217,8 +218,8 @@ bool CSocket::Connect(const string &address, int port)
                         LOG("Unknown Error <%d> recieved\n", str[1]);
                         break;
                 }
-                closesocket(m_Socket);
-                m_Socket = INVALID_SOCKET;
+                tcp_close(m_Socket);
+                m_Socket = nullptr;
                 Connected = false;
                 LOG("Connecting...%s:%i\n", address.c_str(), port);
                 return WISP_NETWORK::CConnection::Connect(address, port);
@@ -239,7 +240,7 @@ UCHAR_LIST CSocket::Decompression(UCHAR_LIST data)
     {
         intptr_t inSize = (intptr_t)data.size();
 
-        if (g_NetworkPostAction != NULL)
+        if (g_NetworkPostAction != nullptr)
             g_NetworkPostAction(&data[0], &data[0], (int)inSize);
 
         UCHAR_LIST decBuf(inSize * 4 + 2);

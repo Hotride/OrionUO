@@ -10,45 +10,12 @@
 */
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
+#include <SDL_events.h>
 #include <SDL_timer.h>
 //----------------------------------------------------------------------------------
-typedef struct tagICMPHDR
-{
-    u_char Type;
-    u_char Code;
-    u_short Checksum;
-    u_short ID;
-    u_short Seq;
-    char Data;
-} ICMPHDR, *PICMPHDR;
-//----------------------------------------------------------------------------------
-typedef struct tagECHOREQUEST
-{
-    ICMPHDR icmpHdr;
-    DWORD dwTime;
-    char cData[64];
-} ECHOREQUEST, *PECHOREQUEST;
-//----------------------------------------------------------------------------------
-typedef struct tagIPHDR
-{
-    u_char VIHL;
-    u_char TOS;
-    short TotLen;
-    short ID;
-    short FlagOff;
-    u_char TTL;
-    u_char Protocol;
-    u_short Checksum;
-    struct in_addr iaSrc;
-    struct in_addr iaDst;
-} IPHDR, *PIPHDR;
-//----------------------------------------------------------------------------------
-typedef struct tagECHOREPLY
-{
-    IPHDR ipHdr;
-    ECHOREQUEST echoRequest;
-    char cFiller[256];
-} ECHOREPLY, *PECHOREPLY;
+#if !USE_WISP
+uint32_t CPingThread::m_PingEvent = 0;
+#endif
 //----------------------------------------------------------------------------------
 CPingThread::CPingThread(int serverID, const string &serverIP, int requestsCount)
     : WISP_THREAD::CThread()
@@ -56,6 +23,13 @@ CPingThread::CPingThread(int serverID, const string &serverIP, int requestsCount
     , ServerIP(serverIP)
     , RequestsCount(requestsCount)
 {
+#if !USE_WISP
+    if (!m_PingEvent)
+    {
+        m_PingEvent = SDL_RegisterEvents(1);
+    }
+#endif
+
     LOG("CPingThread => %s\n", serverIP.c_str());
     WISPFUN_DEBUG("");
 }
@@ -65,111 +39,23 @@ CPingThread::~CPingThread()
     WISPFUN_DEBUG("");
 }
 //----------------------------------------------------------------------------------
-ushort CPingThread::CalculateChecksum(pushort addr, int count)
-{
-    uint checksum = 0;
-
-    while (count > 1)
-    {
-        checksum += *addr++;
-        count -= 2;
-    }
-
-    if (count > 0)
-        checksum += *(puchar)addr;
-
-    while (checksum >> 16)
-        checksum = (checksum & 0xffff) + (checksum >> 16);
-
-    return ~checksum;
-}
-//----------------------------------------------------------------------------------
 int CPingThread::CalculatePing()
 {
-    int result = 0;
+    auto handle = icmp_open();
+    if (!handle)
+        return -4;
 
-    WSADATA wsa;
+    uint32_t timems = SDL_GetTicks();
+    int result = icmp_query(handle, ServerIP.c_str(), &timems);
+    if (!result)
+        result = (SDL_GetTicks() - timems);
 
-    if (!::WSAStartup(MAKEWORD(2, 2), &wsa))
-    {
-        SOCKET socket = ::socket(AF_INET, SOCK_RAW, IPPROTO_ICMP);
-
-        if (socket != SOCKET_ERROR)
-        {
-            LPHOSTENT lpHost = gethostbyname(ServerIP.c_str());
-
-            if (lpHost != NULL)
-            {
-                sockaddr_in destAddress;
-
-                destAddress.sin_addr.s_addr = ((in_addr *)lpHost->h_addr_list[0])->s_addr;
-                destAddress.sin_family = AF_INET;
-                destAddress.sin_port = 0;
-
-                const int ICMP_ECHOREQ = 8;
-
-                ECHOREQUEST request = { 0 };
-
-                request.icmpHdr.Type = ICMP_ECHOREQ;
-                request.dwTime = SDL_GetTicks();
-                memset(request.cData, 80, 64);
-                request.icmpHdr.Checksum =
-                    CalculateChecksum((pushort)&request, sizeof(ECHOREQUEST));
-
-                ::sendto(
-                    socket,
-                    (LPSTR)&request,
-                    sizeof(ECHOREQUEST),
-                    0,
-                    (LPSOCKADDR)&destAddress,
-                    sizeof(SOCKADDR_IN));
-
-                timeval tomeoutInfo;
-                fd_set readfds = {};
-#if !defined(ORION_LINUX)
-                readfds.fd_count = 1;
-                readfds.fd_array[0] = socket;
-#endif
-                tomeoutInfo.tv_sec = 1;
-                tomeoutInfo.tv_usec = 0;
-
-                if (::select(1, &readfds, NULL, NULL, &tomeoutInfo))
-                {
-                    ECHOREPLY answer;
-                    sockaddr_in sourceAddress;
-                    int length = sizeof(sockaddr_in);
-
-                    if (::recvfrom(
-                            socket,
-                            (LPSTR)&answer,
-                            sizeof(ECHOREPLY),
-                            0,
-                            (LPSOCKADDR)&sourceAddress,
-                            &length) != SOCKET_ERROR)
-                        result = SDL_GetTicks() - answer.echoRequest.dwTime;
-                    else
-                        result = -1;
-                }
-                else
-                    result = -2;
-            }
-            else
-                result = -3;
-
-            closesocket(socket);
-        }
-        else
-            result = -4;
-
-        WSACleanup();
-    }
-    else
-        result = -5;
+    icmp_close(handle);
 
     return result;
 }
 //----------------------------------------------------------------------------------
-void CPingThread::OnExecute(uint nowTime)
+void CPingThread::OnExecute(uint32_t nowTime)
 {
     WISPFUN_DEBUG("");
 
@@ -198,6 +84,14 @@ void CPingThread::OnExecute(uint nowTime)
 
     info.Average = info.Min + (info.Average / RequestsCount);
 
+#if USE_WISP
     SendMessage(g_OrionWindow.Handle, MessageID, (WPARAM)&info, 0);
+#else
+    SDL_Event event;
+    SDL_memset(&event, 0, sizeof(event));
+    event.type = m_PingEvent;
+    event.user.data1 = (void *)&info;
+    SDL_PushEvent(&event);
+#endif
 }
 //----------------------------------------------------------------------------------

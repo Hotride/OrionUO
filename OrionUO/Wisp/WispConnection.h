@@ -1,34 +1,23 @@
-﻿//----------------------------------------------------------------------------------
-#ifndef WISPCONNECTION_H
-#define WISPCONNECTION_H
-#if !defined(ORION_LINUX) // FIXME: define on windows only
-#include <winsock.h>
-#pragma comment(lib, "wsock32.lib")
-#endif
-//----------------------------------------------------------------------------------
+﻿#pragma once
+#include "../Sockets.h"
 namespace WISP_NETWORK
 {
-//----------------------------------------------------------------------------------
 class CConnection
 {
 public:
-    SOCKET m_Socket;
+    tcp_socket m_Socket = nullptr;
 
     int DataReady = 0;
     int Port = 0;
 
-    int Af = 0;
-    int Type = 0;
-    int Protocol = 0;
-
     bool Connected = 0;
 
-    CConnection(int af = AF_INET, int type = SOCK_STREAM, int protocol = IPPROTO_IP);
+    CConnection();
     virtual ~CConnection();
 
     class CPacketMessage *m_MessageParser;
 
-    virtual bool Connect(const string &address, int port);
+    virtual bool Connect(const string &address, uint16_t port);
     void Disconnect();
 
     bool ReadyRead();
@@ -40,7 +29,4 @@ public:
     int Send(puchar data, int size);
     int Send(const UCHAR_LIST &data);
 };
-//----------------------------------------------------------------------------------
 }; // namespace WISP_NETWORK
-//----------------------------------------------------------------------------------
-#endif

@@ -59,3 +59,7 @@
 !/WikiData/RU/*.txt
 !/CMakeLists.txt
 !/OrionUO/CMakeLists.txt
+/test_bin64/OrionUO.exe
+/test_bin64/OrionUO.pdb
+/bin/OrionUO.exe
+/bin/OrionUO.pdb

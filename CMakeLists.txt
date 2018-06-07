@@ -73,8 +73,8 @@ if(ORION_WINDOWS)
 	set(SDL2_INCLUDE_DIRS "${DEP_INCLUDE_DIR}/SDL2")
 	set(SDL2_LIBRARIES "${DEP_LIB_DIR}sdl2.lib" "${DEP_LIB_DIR}sdl2main.lib")
 
-	set(SDL2_IMAGE_INCLUDE_DIRS "${DEP_INCLUDE_DIR}/SDL2")
-	set(SDL2_IMAGE_LIBRARIES "${DEP_LIB_DIR}")
+	#set(SDL2_IMAGE_INCLUDE_DIRS "${DEP_INCLUDE_DIR}/SDL2")
+	#set(SDL2_IMAGE_LIBRARIES "${DEP_LIB_DIR}")
 
 	# temporary hijacking to use other libs
 	set(SDL2_LIBRARIES ${SDL2_LIBRARIES} "${DEP_LIB_DIR}bass.lib" "${DEP_LIB_DIR}bassmidi.lib" "${DEP_LIB_DIR}psapi.lib")
