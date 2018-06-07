@@ -9,7 +9,7 @@ project(OrionUO)
 #
 option(ENABLE_LTO "Enables Link Time Optimization" OFF)
 option(ORION_BUILD_MODULES "Enables Modular Project Structure" OFF)
-option(ORION_DLL_STATIC "Use Builtin Orion Crypto Library (Windows option)" OFF)
+option(ORION_DLL_STATIC "Use Builtin Orion Crypto Library (Windows option)" ON)
 option(ORION_WISP "Use WISP pure Win32 API Implementation (Windows option)" ON)
 
 list(APPEND CMAKE_MODULE_PATH
