@@ -11,6 +11,12 @@ int APIENTRY _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCm
     INITLOGGER(L"uolog.txt");
 
     //ParseCommandLine(); // FIXME
+    if (SDL_Init(SDL_INIT_TIMER) < 0)
+    {
+        SDL_LogError(
+            SDL_LOG_CATEGORY_APPLICATION, "Unable to initialize SDL: %s\n", SDL_GetError());
+        return EXIT_FAILURE;
+    }
 
     auto path = g_App.ExeFilePath("crashlogs");
     fs_path_create(path);
@@ -50,7 +56,7 @@ int APIENTRY _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCm
 
     auto r = g_App.Run(hInstance);
     socket_shutdown();
-
+    SDL_Quit();
     return r;
 }
 
