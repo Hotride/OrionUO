@@ -52,7 +52,7 @@ IOrionString &IOrionString::operator()(const std::wstring &str)
     {
         m_DataW = new wchar_t[str.length() + 1];
         memcpy(&m_DataW[0], &str[0], str.length() * 2);
-        m_DataA[str.length()] = 0;
+        m_DataW[str.length()] = 0;
     }
 
     return *this;
