@@ -333,7 +333,7 @@ LRESULT CWindow::OnWindowProc(HWND &hWnd, UINT &message, WPARAM &wParam, LPARAM 
         case WM_GETMINMAXINFO:
         case WM_SIZE:
         {
-            if (IsMinimized())
+            if (IsMinimizedWindow())
                 return DefWindowProc(hWnd, message, wParam, lParam);
 
             if (message == WM_GETMINMAXINFO)

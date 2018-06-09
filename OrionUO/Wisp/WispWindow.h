@@ -66,27 +66,20 @@ public:
     bool OnWindowProc(SDL_Event &ev);
 #endif
 
-    void Update()
-    {
-#if USE_WISP
-        ::UpdateWindow(Handle);
-#endif
-    }
-
 #if USE_WISP
     void ShowCursor(bool show = true) { ::ShowCursor(show ? TRUE : FALSE); }
     bool IsActive() const { return (::GetForegroundWindow() == Handle); }
     void SetTitle(const string &text) const { ::SetWindowTextA(Handle, text.c_str()); }
     void ShowWindow(bool show) const { ::ShowWindow(Handle, show ? TRUE : FALSE); }
-    bool IsMinimized() const { return ::IsIconic(Handle); }
-    bool IsMaximized() const { return (::IsZoomed(Handle) != FALSE); }
+    bool IsMinimizedWindow() const { return ::IsIconic(Handle); }
+    bool IsMaximizedWindow() const { return (::IsZoomed(Handle) != FALSE); }
 #else
     void ShowCursor(bool show = true) { SDL_ShowCursor(show ? SDL_TRUE : SDL_FALSE); }
     bool IsActive() const { return SDL_GetGrabbedWindow() == m_window; } // TODO: check
     void SetTitle(const string &text) const { SDL_SetWindowTitle(m_window, text.c_str()); }
     void ShowWindow(bool show) const { show ? SDL_ShowWindow(m_window) : SDL_HideWindow(m_window); }
-    bool IsMinimized() const { return (SDL_GetWindowFlags(m_window) & SDL_WINDOW_MINIMIZED) != 0; }
-    bool IsMaximized() const { return (SDL_GetWindowFlags(m_window) & SDL_WINDOW_MAXIMIZED) != 0; }
+    bool IsMinimizedWindow() const { return (SDL_GetWindowFlags(m_window) & SDL_WINDOW_MINIMIZED) != 0; }
+    bool IsMaximizedWindow() const { return (SDL_GetWindowFlags(m_window) & SDL_WINDOW_MAXIMIZED) != 0; }
 #endif
 
     // May be done using: SDL_AddTimer / SDL_RemoveTimer

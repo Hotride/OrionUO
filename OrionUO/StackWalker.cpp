@@ -1341,7 +1341,7 @@ void StackWalker::OnSymInit(LPCSTR szSearchPath, DWORD symOptions, LPCSTR szUser
                 }
             }
 
-            delete ver;
+            delete[] ver;
         }
     }
 

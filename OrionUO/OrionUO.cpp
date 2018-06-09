@@ -1407,7 +1407,7 @@ void COrion::Process(bool rendering)
                 g_SelectedObject.Clear();
                 g_SelectedGameObjectHandle = 0;
 
-                if (!g_OrionWindow.IsMinimized())
+                if (!g_OrionWindow.IsMinimizedWindow())
                 {
                     if (canRenderSelect)
                         g_GameScreen.Render(false);
@@ -1473,7 +1473,7 @@ void COrion::Process(bool rendering)
     {
         g_SelectedObject.Clear();
 
-        if (!g_OrionWindow.IsMinimized())
+        if (!g_OrionWindow.IsMinimizedWindow())
         {
             g_CurrentScreen->Render(false);
 
