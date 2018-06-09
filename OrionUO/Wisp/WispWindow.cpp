@@ -207,10 +207,9 @@ bool CWindow::Create(
     m_Size.Width = r.right - r.left;
     m_Size.Height = r.bottom - r.top;
 
-    SDL_ShowCursor(showCursor);
-
+    ::ShowCursor(showCursor);
     ::ShowWindow(Handle, FALSE);
-    UpdateWindow(Handle);
+    ::UpdateWindow(Handle);
 #else
     if (SDL_InitSubSystem(SDL_INIT_VIDEO) < 0)
         return false;

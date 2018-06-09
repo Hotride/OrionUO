@@ -16,9 +16,10 @@ CGUISkillGroup::CGUISkillGroup(
     : CBaseGUI(GOT_SKILLGROUP, serial, 0, 0, x, y)
 {
     WISPFUN_DEBUG("c75_f1");
-    SetMinimized(!group->Maximized);
-    ushort graphic = (GetMinimized() ? 0x0827 : 0x0826);
+    const bool isMinimized = !group->Maximized;
+    const ushort graphic = (isMinimized ? 0x0827 : 0x0826);
     m_Minimizer = new CGUIButton(minimizeSerial, graphic, graphic, graphic, 0, 0);
+    SetMinimized(isMinimized);
 
     m_Name = new CGUITextEntry(serial, 0, 0, 0, 16, -5, 0, false, 6);
     m_Name->m_Entry.SetText(group->Name);
@@ -33,9 +34,11 @@ CGUISkillGroup::~CGUISkillGroup()
 //----------------------------------------------------------------------------------
 void CGUISkillGroup::SetMinimized(bool val)
 {
+    assert(m_Minimizer);
+
     WISPFUN_DEBUG("c75_f3");
     m_Minimized = val;
-    ushort graphic = (val ? 0x0827 : 0x0826);
+    const ushort graphic = (val ? 0x0827 : 0x0826);
     m_Minimizer->Graphic = graphic;
     m_Minimizer->GraphicSelected = graphic;
     m_Minimizer->GraphicPressed = graphic;
