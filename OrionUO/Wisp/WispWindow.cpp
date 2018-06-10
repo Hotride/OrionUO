@@ -140,15 +140,14 @@ void CWindow::SetMaxSize(const WISP_GEOMETRY::CSize &newMaxSize)
     m_MaxSize = newMaxSize;
 }
 //----------------------------------------------------------------------------------
-
 bool CWindow::Create(
     const char *className, const char *title, bool showCursor, int width, int height)
 {
     WISPFUN_DEBUG("c14_f5");
 
 #if USE_WISP
-    HICON icon = LoadIcon(0, MAKEINTRESOURCE(IDI_ORIONUO));
-    HCURSOR cursor = LoadCursor(0, MAKEINTRESOURCE(IDC_CURSOR1));
+    HICON icon = LoadIcon(g_OrionWindow.hInstance, MAKEINTRESOURCE(IDI_ORIONUO));
+    HCURSOR cursor = LoadCursor(g_OrionWindow.hInstance, MAKEINTRESOURCE(IDC_CURSOR1));
 
     static wstring wclassName = ToWString(className);
     static wstring wtitle = ToWString(title);
@@ -159,7 +158,7 @@ bool CWindow::Create(
     wcex.cbClsExtra = 0;
     wcex.cbWndExtra = 0;
     wcex.hInstance = hInstance;
-    wcex.hCursor = cursor; //LoadCursor(NULL, IDC_ARROW);
+    wcex.hCursor = cursor;
     wcex.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
     wcex.lpszMenuName = NULL;
     wcex.lpszClassName = wclassName.c_str();
@@ -330,6 +329,17 @@ LRESULT CWindow::OnWindowProc(HWND &hWnd, UINT &message, WPARAM &wParam, LPARAM 
 
     switch (message)
     {
+        case WM_SETCURSOR:
+        {
+            if (LOWORD(lParam) == HTCLIENT)
+            {
+                ::ShowCursor(FALSE);
+                return 0;
+            }
+
+            ::ShowCursor(TRUE);
+            break;
+        }
         case WM_GETMINMAXINFO:
         case WM_SIZE:
         {

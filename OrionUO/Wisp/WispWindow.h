@@ -67,14 +67,12 @@ public:
 #endif
 
 #if USE_WISP
-    void ShowCursor(bool show = true) { ::ShowCursor(show ? TRUE : FALSE); }
     bool IsActive() const { return (::GetForegroundWindow() == Handle); }
     void SetTitle(const string &text) const { ::SetWindowTextA(Handle, text.c_str()); }
     void ShowWindow(bool show) const { ::ShowWindow(Handle, show ? TRUE : FALSE); }
     bool IsMinimizedWindow() const { return ::IsIconic(Handle); }
     bool IsMaximizedWindow() const { return (::IsZoomed(Handle) != FALSE); }
 #else
-    void ShowCursor(bool show = true) { SDL_ShowCursor(show ? SDL_TRUE : SDL_FALSE); }
     bool IsActive() const { return SDL_GetGrabbedWindow() == m_window; } // TODO: check
     void SetTitle(const string &text) const { SDL_SetWindowTitle(m_window, text.c_str()); }
     void ShowWindow(bool show) const { show ? SDL_ShowWindow(m_window) : SDL_HideWindow(m_window); }
