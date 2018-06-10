@@ -1576,13 +1576,12 @@ void COrion::LoadPlugin(const os_path &libpath, const string &function, int flag
     }
     else
     {
-#if USE_WISP
-        auto errorCode = GetLastError();
-#else
-        auto errorCode = errno;
-#endif
         LOG("Failed to LoadLibrary %s\n", CStringFromPath(libpath));
-        LOG("Error code: %i\n", errorCode);
+#if USE_WISP
+        LOG("Error code: %i\n", GetLastError());
+#else
+        LOG("Error code: %s\n", SDL_GetError());
+#endif
     }
 }
 //----------------------------------------------------------------------------------
@@ -1597,6 +1596,8 @@ void COrion::LoadPluginConfig()
     g_PluginClientInterface.ColorManager = &g_Interface_ColorManager;
     g_PluginClientInterface.PathFinder = &g_Interface_PathFinder;
     g_PluginClientInterface.FileManager = &g_Interface_FileManager;
+
+    ParseCommandLine();
 
     STRING_LIST libName;
     STRING_LIST functions;
@@ -1627,8 +1628,6 @@ void COrion::LoadPluginConfig()
 
     IFOR (i, 0, (int)libName.size())
         LoadPlugin(g_App.ExeFilePath(libName[i].c_str()), functions[i], flags[i]);
-
-    ParseCommandLine();
 
     if (g_PluginManager.m_Items != NULL)
     {
