@@ -43,7 +43,7 @@ int APIENTRY _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCm
 
     socket_init();
     g_OrionWindow.hInstance = hInstance;
-    if (!g_OrionWindow.Create("Orion UO Client", "Ultima Online", false, 640, 480))
+    if (!g_OrionWindow.Create("Orion UO Client", "Ultima Online", true, 640, 480))
     {
         socket_shutdown();
         return 0;

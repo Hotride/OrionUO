@@ -333,13 +333,11 @@ LRESULT CWindow::OnWindowProc(HWND &hWnd, UINT &message, WPARAM &wParam, LPARAM 
         {
             if (LOWORD(lParam) == HTCLIENT)
             {
-                ::ShowCursor(FALSE);
-                return 0;
-            }
-
-            ::ShowCursor(TRUE);
-            break;
-        }
+				SetCursor(NULL);
+				return 0;
+			}
+			break;
+		}
         case WM_GETMINMAXINFO:
         case WM_SIZE:
         {
