@@ -301,13 +301,14 @@ bool COrion::Install()
     LOG("Load files\n");
 
     if (g_PacketManager.GetClientVersion() >= CV_7000)
+    {
         g_FileManager.TryReadUOPAnimations();
+    }
+
     if (!g_FileManager.Load())
     {
-        string tmp = string("Error loading file: ") + WISP_FILE::g_WispMappedFileError;
-        LOG("%s\n", tmp.c_str());
-        g_OrionWindow.ShowMessage(tmp.c_str(), "Error loading file!");
-
+        auto errMsg = string("Error loading a memmapped file. Please check the log for more info.\nUsing UO search path: ") + StringFromPath(g_App.m_UOPath);
+        g_OrionWindow.ShowMessage(errMsg, "FileManager::Load");
         return false;
     }
 

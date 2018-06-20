@@ -7,8 +7,6 @@
 namespace WISP_FILE
 {
 //----------------------------------------------------------------------------------
-string g_WispMappedFileError = "";
-//----------------------------------------------------------------------------------
 CMappedFile::CMappedFile()
     : WISP_DATASTREAM::CDataReader()
 {
@@ -95,7 +93,6 @@ bool CMappedFile::Load(const os_path &path)
         auto errorCode = errno;
 #endif
         LOG("Failed to memory map, error code: %i\n", errorCode);
-        g_WispMappedFileError = CStringFromPath(path);
     }
 
     return result;
