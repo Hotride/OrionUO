@@ -2681,6 +2681,9 @@ PACKET_HANDLER(ExtendedCommand)
                 }
                 case 5:
                 {
+                    if (g_World == NULL)
+                        return;
+
                     CGameCharacter *character = g_World->FindWorldCharacter(serial);
                     if (character == NULL)
                         break;
