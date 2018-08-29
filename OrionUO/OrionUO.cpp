@@ -307,7 +307,10 @@ bool COrion::Install()
 
     if (!g_FileManager.Load())
     {
-        auto errMsg = string("Error loading a memmapped file. Please check the log for more info.\nUsing UO search path: ") + StringFromPath(g_App.m_UOPath);
+        auto errMsg =
+            string(
+                "Error loading a memmapped file. Please check the log for more info.\nUsing UO search path: ") +
+            StringFromPath(g_App.m_UOPath);
         g_OrionWindow.ShowMessage(errMsg, "FileManager::Load");
         return false;
     }

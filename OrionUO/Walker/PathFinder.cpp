@@ -258,7 +258,9 @@ bool CPathFinder::CalculateNewZ(int x, int y, char &z, int direction)
     int stepState = PSS_NORMAL;
 
     if (g_Player->Dead() || g_Player->Graphic == 0x03DB)
+    {
         stepState = PSS_DEAD_OR_GM;
+    }
     else
     {
         if (g_Player->Flying()) // && no mount?

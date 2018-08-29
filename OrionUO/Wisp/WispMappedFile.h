@@ -22,4 +22,4 @@ public:
     void Unload();
 };
 
-}; // namespace
+}; // namespace WISP_FILE
