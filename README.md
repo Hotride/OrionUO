@@ -1,6 +1,6 @@
 # OnionUO Client
 
-[![Travis Build Status](https://travis-ci.org/fungos/OrnionUO.svg?branch=master)](https://travis-ci.org/fungos/OnionUO)
+[![Travis Build Status](https://travis-ci.org/fungos/OnionUO.svg?branch=master)](https://travis-ci.org/fungos/OnionUO)
 [![Build status](https://ci.appveyor.com/api/projects/status/qmd3795itrkiwnr3?svg=true)](https://ci.appveyor.com/project/fungos/orionuo)
 
 
