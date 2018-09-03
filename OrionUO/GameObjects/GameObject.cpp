@@ -687,3 +687,12 @@ CGameItem *CGameObject::FindLayer(int layer)
     return NULL;
 }
 //----------------------------------------------------------------------------------
+bool CGameObject::Caller()
+{
+	WISPFUN_DEBUG("c20_f25");
+	if (g_PacketManager.GetClientVersion() >= CV_7000)
+		return pvpCaller;
+	else
+		return false;
+}
+//----------------------------------------------------------------------------------

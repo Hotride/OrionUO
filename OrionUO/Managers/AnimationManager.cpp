@@ -1505,12 +1505,14 @@ void CAnimationManager::DrawCharacter(CGameCharacter *obj, int x, int y)
 
         if (g_ConfigManager.GetApplyStateColorOnCharacters())
         {
-            if (obj->Poisoned() || obj->SA_Poisoned)
-                Color = 0x0044;
-            else if (obj->Frozen())
-                Color = 0x014C;
-            else if (obj->Notoriety != NT_INVULNERABLE && obj->YellowHits())
-                Color = 0x0030;
+			if (obj->Poisoned() || obj->SA_Poisoned)
+				Color = 0x0044;
+			else if (obj->Frozen())
+				Color = 0x014C;
+			else if (obj->Notoriety != NT_INVULNERABLE && obj->YellowHits() && !obj->NPC)
+				Color = 0x0030;
+			else if (obj->pvpCaller)
+				Color = 0x080D;
         }
 
         if (obj->Dead())

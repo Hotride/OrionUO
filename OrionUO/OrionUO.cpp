@@ -1775,7 +1775,7 @@ void COrion::SaveLocalConfig(int serial)
     }
     CServer *server = g_ServerList.GetSelectedServer();
     if (server != NULL)
-        path += PATH_SEP + ToPath(FixServerName(server->Name).c_str());
+        path += PATH_SEP + ToPath(FixServerName(server->Name.c_str()));
     if (!fs_path_exists(path))
     {
         LOG("%s Does not exist, creating.\n", CStringFromPath(path));
@@ -3124,6 +3124,16 @@ int COrion::ValueInt(const VALUE_KEY_INT &key, int value)
 
             break;
         }
+		case VKI_SET_PVPCALLER:
+		{   			
+			CGameCharacter *obj = g_World->FindWorldCharacter(value);
+			if (!obj->pvpCaller)
+				obj->pvpCaller = true;
+			else 
+				obj->pvpCaller = false;
+
+			break;
+		}
         default:
             break;
     }
