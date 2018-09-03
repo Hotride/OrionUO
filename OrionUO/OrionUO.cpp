@@ -3124,16 +3124,16 @@ int COrion::ValueInt(const VALUE_KEY_INT &key, int value)
 
             break;
         }
-		case VKI_SET_PVPCALLER:
-		{   			
-			CGameCharacter *obj = g_World->FindWorldCharacter(value);
-			if (!obj->pvpCaller)
-				obj->pvpCaller = true;
-			else 
-				obj->pvpCaller = false;
+        case VKI_SET_PVPCALLER:
+        {
+            CGameCharacter *obj = g_World->FindWorldCharacter(value);
+            if (!obj->pvpCaller)
+                obj->pvpCaller = true;
+            else
+                obj->pvpCaller = false;
 
-			break;
-		}
+            break;
+        }
         default:
             break;
     }

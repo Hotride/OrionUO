@@ -689,10 +689,10 @@ CGameItem *CGameObject::FindLayer(int layer)
 //----------------------------------------------------------------------------------
 bool CGameObject::Caller()
 {
-	WISPFUN_DEBUG("c20_f25");
-	if (g_PacketManager.GetClientVersion() >= CV_7000)
-		return pvpCaller;
-	else
-		return false;
+    WISPFUN_DEBUG("c20_f25");
+    if (g_PacketManager.GetClientVersion() >= CV_7000)
+        return pvpCaller;
+    else
+        return false;
 }
 //----------------------------------------------------------------------------------

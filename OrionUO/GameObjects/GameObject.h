@@ -54,7 +54,7 @@ public:
     uint LastAnimationChangeTime = 0;
     bool SA_Poisoned = false;
     bool ClosedObjectHandle = false;
-	bool pvpCaller = false;
+    bool pvpCaller = false;
 
 protected:
     //!Ссылка на список эффектов персонажа
@@ -191,11 +191,11 @@ public:
 	*/
     bool Flying();
 
-	/*!
+    /*!
 	Is object a caller
 	@return
 	*/
-	bool Caller();
+    bool Caller();
 
     /*!
 	Объект имеет желтую полоску жизней
