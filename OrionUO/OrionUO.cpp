@@ -1775,7 +1775,7 @@ void COrion::SaveLocalConfig(int serial)
     }
     CServer *server = g_ServerList.GetSelectedServer();
     if (server != NULL)
-        path += PATH_SEP + ToPath(FixServerName(server->Name));
+        path += PATH_SEP + ToPath(FixServerName(server->Name).c_str());
     if (!fs_path_exists(path))
     {
         LOG("%s Does not exist, creating.\n", CStringFromPath(path));
