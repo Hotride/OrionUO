@@ -40,7 +40,7 @@ $ ninja OnionUO_unity -j8
 $ ./OnionUO/unity/OnionUO
 ```
 
-  > You'll need a `Client.cuo` and a `uo_debug.cfg` in the working directory. Inside `uo_debug.cfg` you can add a line `CustomPath=/path/to/uo/data`, so Orion will be able to find your original client data files.
+  > You'll need a `Client.cuo` and a `onion.cfg` in the working directory. Inside `onion.cfg` you can add a line `CustomPath=/path/to/uo/data`, so Onion will be able to find your original client data files.
 
 
 --------------

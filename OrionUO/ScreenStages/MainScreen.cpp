@@ -267,7 +267,7 @@ void CMainScreen::LoadCustomPath()
 {
     WISPFUN_DEBUG("c165_f14");
 
-    WISP_FILE::CTextFileParser file(g_App.ExeFilePath("uo_debug.cfg"), "=", "#;", "");
+    WISP_FILE::CTextFileParser file(g_App.ExeFilePath("onion.cfg"), "=", "#;", "");
 
     while (!file.IsEOF())
     {
@@ -298,7 +298,7 @@ void CMainScreen::LoadGlobalConfig()
     m_AutoLogin->Checked = false;
     g_ScreenEffectManager.Enabled = false;
 
-    WISP_FILE::CTextFileParser file(g_App.ExeFilePath("uo_debug.cfg"), "=", "#;", "");
+    WISP_FILE::CTextFileParser file(g_App.ExeFilePath("onion.cfg"), "=", "#;", "");
 
     while (!file.IsEOF())
     {
@@ -397,7 +397,7 @@ void CMainScreen::LoadGlobalConfig()
 void CMainScreen::SaveGlobalConfig()
 {
     WISPFUN_DEBUG("c165_f11");
-    FILE *uo_cfg = fs_open(g_App.ExeFilePath("uo_debug.cfg"), FS_WRITE);
+    FILE *uo_cfg = fs_open(g_App.ExeFilePath("onion.cfg"), FS_WRITE);
     if (uo_cfg == nullptr)
         return;
 
