@@ -307,7 +307,10 @@ bool COrion::Install()
 
     if (!g_FileManager.Load())
     {
-        auto errMsg = string("Error loading a memmapped file. Please check the log for more info.\nUsing UO search path: ") + StringFromPath(g_App.m_UOPath);
+        auto errMsg =
+            string(
+                "Error loading a memmapped file. Please check the log for more info.\nUsing UO search path: ") +
+            StringFromPath(g_App.m_UOPath);
         g_OrionWindow.ShowMessage(errMsg, "FileManager::Load");
         return false;
     }
@@ -1772,7 +1775,7 @@ void COrion::SaveLocalConfig(int serial)
     }
     CServer *server = g_ServerList.GetSelectedServer();
     if (server != NULL)
-        path += PATH_SEP + ToPath(FixServerName(server->Name));
+        path += PATH_SEP + ToPath(FixServerName(server->Name.c_str()));
     if (!fs_path_exists(path))
     {
         LOG("%s Does not exist, creating.\n", CStringFromPath(path));
@@ -3118,6 +3121,16 @@ int COrion::ValueInt(const VALUE_KEY_INT &key, int value)
         case VKI_VIEW_RANGE:
         {
             value = g_ConfigManager.UpdateRange;
+
+            break;
+        }
+        case VKI_SET_PVPCALLER:
+        {
+            CGameCharacter *obj = g_World->FindWorldCharacter(value);
+            if (!obj->pvpCaller)
+                obj->pvpCaller = true;
+            else
+                obj->pvpCaller = false;
 
             break;
         }
