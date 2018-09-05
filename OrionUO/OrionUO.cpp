@@ -1603,6 +1603,11 @@ void COrion::LoadPluginConfig()
 
     ParseCommandLine();
 
+	// FIXME Delete this after sorting out the Module/UOA hotmess
+	CPluginPacketSkillsList().SendToPlugin();
+    CPluginPacketSpellsList().SendToPlugin();
+    CPluginPacketMacrosList().SendToPlugin();
+
     STRING_LIST libName;
     STRING_LIST functions;
     UINT_LIST flags;
