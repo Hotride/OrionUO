@@ -862,7 +862,7 @@ PACKET_HANDLER(ResendCharacterList)
 
         IFOR (i, 0, numSlots)
         {
-            string name = ReadString(30);
+            string name = ReadString(30).c_str(); // trim null bytes
             Move(30);
 
             if (name.length())
@@ -883,7 +883,7 @@ PACKET_HANDLER(ResendCharacterList)
                 }
             }
 
-            LOG("%d: %s\n", i, name.c_str());
+            LOG("%d: %s (%d)\n", i, name.c_str(), name.length());
         }
 
         if (autoLogin && autoPos == -1)
