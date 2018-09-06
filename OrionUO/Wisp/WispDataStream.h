@@ -1,10 +1,7 @@
-﻿//----------------------------------------------------------------------------------
-#ifndef WISPDATASTREAM_H
-#define WISPDATASTREAM_H
-//----------------------------------------------------------------------------------
+﻿#pragma once
+
 namespace WISP_DATASTREAM
 {
-//----------------------------------------------------------------------------------
 class CDataWritter
 {
 public:
@@ -126,7 +123,7 @@ public:
         bool nullTerminated = true,
         const intptr_t &offset = 0);
 };
-//----------------------------------------------------------------------------------
+
 class CDataReader
 {
 public:
@@ -271,7 +268,5 @@ public:
     string ReadString(size_t size = 0, const intptr_t &offset = 0);
     wstring ReadWString(size_t size = 0, bool bigEndian = true, const intptr_t &offset = 0);
 };
-//----------------------------------------------------------------------------------
+
 }; // namespace WISP_DATASTREAM
-//----------------------------------------------------------------------------------
-#endif

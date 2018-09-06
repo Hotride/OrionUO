@@ -681,7 +681,7 @@ bool CFileManager::LoadUOPFile(CUopMappedFile &file, const char *fileName)
 
         WISP_DATASTREAM::CDataReader reader(&data[0], data.size());
 
-        //LOG("%s\n", reader.ReadString(decompressedSize).c_str());
+        //LOG("%s\n", reader.ReadString(decompressedSize));
 
         LOG_DUMP(reader.Start, (int)reader.Size);
 

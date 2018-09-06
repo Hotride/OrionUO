@@ -862,7 +862,7 @@ PACKET_HANDLER(ResendCharacterList)
 
         IFOR (i, 0, numSlots)
         {
-            string name = ReadString(30).c_str(); // trim null bytes
+            string name = ReadString(30);
             Move(30);
 
             if (name.length())
