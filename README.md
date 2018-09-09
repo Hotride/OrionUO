@@ -1,22 +1,25 @@
-# OnionUO Client
+# OrionUO Client
 
 [![Travis Build Status](https://travis-ci.org/fungos/OnionUO.svg?branch=master)](https://travis-ci.org/fungos/OnionUO)
 [![Build status](https://ci.appveyor.com/api/projects/status/qmd3795itrkiwnr3?svg=true)](https://ci.appveyor.com/project/fungos/orionuo)
 
 
-* OnionUO Client - is a linux fork of OrioUO Open Source Ultima Online client.
+* OrionUO Client - is a linux fork of OrioUO Open Source Ultima Online client.
 
 * Platforms: Windows and Linux (in progress)
 
 * Rendering: OpenGL 2.0 and higher
 
-## Building OnionUO
+### Downloading OrionUO
+* Download [Orion Launcher](https://github.com/OrionUO/OrionLauncher/releases) to set everything up and play right away!
+
+## Building OrionUO
 
 This project requires CMake 3.7 to build. It currently supports Visual Studio 2015, 2017, GCC 7.0 and Clang 6.
 
 ### Windows
 
-On Windows, to generate the Visual Studio solution, go inside your cloned OnionUO folder and do:
+On Windows, to generate the Visual Studio solution, go inside your cloned OrionUO folder and do:
 
 ```bat
 md build
@@ -28,7 +31,7 @@ cmake -G "Visual Studio 2017" ..
 
 Or, you can use CMake-GUI to configure and generate the solution.
 
-* If you want to help converting OnionUO to SDL, you can disable `ORION_WISP` option in CMake. This option enables the original client implementation in pure win32 API and is kept as a reference implementation to use during the client conversion to SDL.
+* If you want to help converting OrionUO to SDL, you can disable `ORION_WISP` option in CMake. This option enables the original client implementation in pure win32 API and is kept as a reference implementation to use during the client conversion to SDL.
 
 ### Linux (in progress)
 
@@ -36,16 +39,16 @@ Or, you can use CMake-GUI to configure and generate the solution.
 $ mkdir build
 $ cd build
 $ cmake -G Ninja .. -DCMAKE_BUILD_TYPE=Release
-$ ninja OnionUO_unity -j8
-$ ./OnionUO/unity/OnionUO
+$ ninja OrionUO_unity -j8
+$ ./OrionUO/unity/OrionUO
 ```
 
-  > You'll need a `Client.cuo` and a `onion.cfg` in the working directory. Inside `onion.cfg` you can add a line `CustomPath=/path/to/uo/data`, so Onion will be able to find your original client data files.
+  > You'll need a `Client.cuo` and a `OrionUO.cfg` in the working directory. Inside `OrionUO.cfg` you can add a line `CustomPath=/path/to/uo/data`, so OrionUO will be able to find your original client data files.
 
 
 --------------
 
 ## Contributing
 
-See the project planning [here](https://github.com/fungos/OnionUO/projects) to find tasks on which you can help.
+See the project planning [here](https://github.com/orgs/OrionUO/projects) to find tasks on which you can help.
 
