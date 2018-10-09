@@ -43,7 +43,7 @@ $ ninja OrionUO_unity -j8
 $ ./OrionUO/unity/OrionUO
 ```
 
-  > You'll need a `Client.cuo` and a `OrionUO.cfg` in the working directory. Inside `onion.cfg` you can add a line `CustomPath=/path/to/uo/data`, so OrionUO will be able to find your original client data files.
+  > You'll need a `Client.cuo` and a `onoin.cfg` in the working directory. Inside `onion.cfg` you can add a line `CustomPath=/path/to/uo/data`, so OrionUO will be able to find your original client data files.
 
 
 --------------
