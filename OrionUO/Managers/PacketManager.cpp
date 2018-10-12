@@ -2327,7 +2327,7 @@ PACKET_HANDLER(OpenContainer)
         if (obj != NULL)
         {
             /*if (gumpid != 0xFFFF)*/ obj->Opened = true;
-            if (!obj->IsCorpse())
+            if (!obj->IsCorpse() && gumpid != 0xFFFF)
                 g_World->ClearContainer(obj);
 
             if (gumpid == 0xFFFF)
