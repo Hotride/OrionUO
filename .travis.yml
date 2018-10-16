@@ -5,21 +5,21 @@ compiler: clang
 os: 
     - linux
 env:
-  - CXX_COMPILER=/usr/bin/clang++-6.0 CC_COMPILER=/usr/bin/clang-6.0
+  - CXX_COMPILER=/usr/bin/clang++-7.0 CC_COMPILER=/usr/bin/clang-7.0
   - CXX_COMPILER=gcc++-7 CC_COMPILER=gcc-7
 addons:
   apt:
     sources:
-      - llvm-toolchain-trusty-6.0
+      - llvm-toolchain-trusty-7
       - ubuntu-toolchain-r-test
     packages:
       - ninja-build
-      - clang-6.0
-      - clang++-6.0
+      - clang-7.0
+      - clang++-7.0
       - g++-7
       - gcc-7
       - cppcheck
-      - clang-format-6.0
+      - clang-format-7.0
       - libglu1-mesa-dev
       - libegl1-mesa-dev
       - libgles2-mesa-dev
