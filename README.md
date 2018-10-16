@@ -18,4 +18,4 @@
 
 ## Contributing
 
-Please read [CONTRIBUTING](CONTRIBUTING.md) before doing any contribution to the project.
+Please read [CONTRIBUTING](docs/CONTRIBUTING.md) before doing any contribution to the project.
