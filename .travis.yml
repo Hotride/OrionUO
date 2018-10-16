@@ -5,7 +5,7 @@ compiler: clang
 os: 
     - linux
 env:
-  - CXX_COMPILER=/usr/bin/clang++-7.0 CC_COMPILER=/usr/bin/clang-7.0
+  - CXX_COMPILER=/usr/bin/clang++-7 CC_COMPILER=/usr/bin/clang-7
   - CXX_COMPILER=gcc++-7 CC_COMPILER=gcc-7
 addons:
   apt:
@@ -14,12 +14,12 @@ addons:
       - ubuntu-toolchain-r-test
     packages:
       - ninja-build
-      - clang-7.0
-      - clang++-7.0
+      - clang-7
+      - clang++-7
       - g++-7
       - gcc-7
       - cppcheck
-      - clang-format-7.0
+      - clang-format-7
       - libglu1-mesa-dev
       - libegl1-mesa-dev
       - libgles2-mesa-dev
