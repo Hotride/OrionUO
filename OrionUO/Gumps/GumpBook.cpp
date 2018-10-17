@@ -428,7 +428,7 @@ void CGumpBook::InsertInContent(const WPARAM &wparam, bool isCharPress)
                         SetPagePos(current, page);
                     }
                     else
-                        g_EntryPointer->SetPos(0, this);
+                        g_EntryPointer->SetPos(info->CharCount, this);
                 }
                 else
                     m_ChangedPage[page] = true;

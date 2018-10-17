@@ -190,6 +190,9 @@ int CEntryText::GetLinesCountW(uchar font, TEXT_ALIGN_TYPE align, ushort flags, 
 bool CEntryText::Insert(wchar_t ch, CGump *gump)
 {
     WISPFUN_DEBUG("c169_f8");
+	if (ch == '\r')
+		return false;
+	
     //Коррекция позиции
     if (m_Position < 0)
         m_Position = 0;
