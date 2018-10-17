@@ -1,9 +1,9 @@
 #!/bin/bash
 
-clang-format-7.0 --version
+clang-format-7 --version
 echo Validating code formatting.
 
-clang-format-7.0 --style=file -i OrionUO/*.{h,cpp} OrionUO/*/*.{h,cpp}
+clang-format-7 --style=file -i OrionUO/*.{h,cpp} OrionUO/*/*.{h,cpp}
 dirty=$(git ls-files --modified)
 if [[ $dirty ]]; then
 	echo Failed. The following files are incorrectly formatted:
@@ -37,10 +37,10 @@ curl http://http.us.debian.org/debian/pool/main/s/sndio/libsndio6.1_1.1.0-3_amd6
 sudo dpkg -i libsndio6.1_1.1.0-3_amd64.deb || true
 curl http://http.us.debian.org/debian/pool/main/s/sndio/libsndio-dev_1.1.0-3_amd64.deb -O
 sudo dpkg -i libsndio-dev_1.1.0-3_amd64.deb || true
-curl http://http.us.debian.org/debian/pool/main/libs/libsdl2/libsdl2-dev_2.0.8+dfsg1-1_amd64.deb -O
-sudo dpkg -i libsdl2-dev_2.0.8+dfsg1-1_amd64.deb || true
-curl http://http.us.debian.org/debian/pool/main/libs/libsdl2/libsdl2-2.0-0_2.0.8+dfsg1-1_amd64.deb -O
-sudo dpkg -i libsdl2-2.0-0_2.0.8+dfsg1-1_amd64.deb || true
+curl http://http.us.debian.org/debian/pool/main/libs/libsdl2/libsdl2-dev_2.0.8+dfsg1-4_amd64.deb -O
+sudo dpkg -i libsdl2-dev_2.0.8+dfsg1-4_amd64.deb || true
+curl http://http.us.debian.org/debian/pool/main/libs/libsdl2/libsdl2-2.0-0_2.0.8+dfsg1-4_amd64.deb -O
+sudo dpkg -i libsdl2-2.0-0_2.0.8+dfsg1-4_amd64.deb || true
 
 echo Building Release
 mkdir release && cd release && cmake -G Ninja .. -DCMAKE_BUILD_TYPE=Release && time ninja OrionUO_unity -j8
