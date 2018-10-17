@@ -27,6 +27,7 @@ private:
 
     bool *m_ChangedPage{ NULL };
     bool *m_PageDataReceived{ NULL };
+	bool WasAtEnd = false;
 
     void InsertInContent(const WPARAM &wparam, bool isCharPress = true);
 

@@ -57,7 +57,21 @@ void CEntryText::OnClick(
 {
     WISPFUN_DEBUG("c169_f4");
     //Текстовое поле - текущее поле ввода
-    if (g_EntryPointer == this)
+    
+    if(g_EntryPointer != this) //Иначе зададим текущее поле как поле для ввода
+    {
+        //Получим гамп с предыдущим указателем ввода
+        CGump *gumpEntry = g_GumpManager.GetTextEntryOwner();
+
+        //Если гамп найден - обновим окно гампа
+        if (gumpEntry != NULL)
+            gumpEntry->FrameCreated = false;
+
+        //Изменим указатель
+        g_EntryPointer = this;
+        Changed = true;
+    }
+	if (g_EntryPointer == this)
     {
         //Запомним позицию
         int oldPos = m_Position;
@@ -72,19 +86,6 @@ void CEntryText::OnClick(
         //Если позиция изменилась - укажем что текст изменен
         if (oldPos != m_Position)
             Changed = true;
-    }
-    else //Иначе зададим текущее поле как поле для ввода
-    {
-        //Получим гамп с предыдущим указателем ввода
-        CGump *gumpEntry = g_GumpManager.GetTextEntryOwner();
-
-        //Если гамп найден - обновим окно гампа
-        if (gumpEntry != NULL)
-            gumpEntry->FrameCreated = false;
-
-        //Изменим указатель
-        g_EntryPointer = this;
-        Changed = true;
     }
 
     //Если это ентри гампа - обновим его

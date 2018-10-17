@@ -441,6 +441,18 @@ public:
     CPacketChangeStatLockStateRequest(uchar stat, uchar state);
 };
 //----------------------------------------------------------------------------------
+class CPacketBookHeaderChangeOld : public CPacket
+{
+public:
+	CPacketBookHeaderChangeOld(class CGumpBook *gump);
+};
+//----------------------------------------------------------------------------------
+class CPacketBookHeaderChange : public CPacket
+{
+public:
+	CPacketBookHeaderChange(class CGumpBook *gump);
+};
+//----------------------------------------------------------------------------------
 class CPacketBookPageData : public CPacket
 {
 public:

@@ -46,7 +46,7 @@ CGumpBook::CGumpBook(uint serial, short x, short y, short pageCount, bool writab
     Add(new CGUIHitBox(ID_GB_TEXT_AREA_TITLE, 41, 65, 150, (Unicode ? 22 : 44)));
 
     m_EntryTitle = (CGUITextEntry *)Add(
-        new CGUITextEntry(ID_GB_TEXT_AREA_TITLE, 0, 0, 0, 41, 65, 150, Unicode, entryFont));
+        new CGUITextEntry(ID_GB_TEXT_AREA_TITLE, 0, 0, 0, 41, 65, 140, Unicode, entryFont));
     m_EntryTitle->ReadOnly = !Writable;
     m_EntryTitle->CheckOnSerial = true;
 
@@ -58,7 +58,7 @@ CGumpBook::CGumpBook(uint serial, short x, short y, short pageCount, bool writab
     Add(new CGUIHitBox(ID_GB_TEXT_AREA_AUTHOR, 41, 160, 150, 22));
 
     m_EntryAuthor = (CGUITextEntry *)Add(
-        new CGUITextEntry(ID_GB_TEXT_AREA_AUTHOR, 0, 0, 0, 41, 160, 150, Unicode, entryFont));
+        new CGUITextEntry(ID_GB_TEXT_AREA_AUTHOR, 0, 0, 0, 41, 160, 140, Unicode, entryFont));
     m_EntryAuthor->ReadOnly = !Writable;
     m_EntryAuthor->CheckOnSerial = true;
 
@@ -89,7 +89,7 @@ CGumpBook::CGumpBook(uint serial, short x, short y, short pageCount, bool writab
                 0,
                 Unicode,
                 entryFont));
-            entry->m_Entry.Width = 166;
+            entry->m_Entry.Width = 155;
             entry->ReadOnly = !Writable;
             entry->CheckOnSerial = true;
             entry->MoveOnDrag = true;
@@ -120,7 +120,7 @@ CGumpBook::CGumpBook(uint serial, short x, short y, short pageCount, bool writab
                 0,
                 Unicode,
                 entryFont));
-            entry->m_Entry.Width = 166;
+            entry->m_Entry.Width = 155;
             entry->ReadOnly = !Writable;
             entry->CheckOnSerial = true;
             entry->MoveOnDrag = true;
@@ -192,7 +192,10 @@ void CGumpBook::ChangePage(int newPage, bool playSound)
         if (m_ChangedPage[Page + i])
         {
             m_ChangedPage[Page + i] = false;
-            CPacketBookPageData(this, Page + (int)i).Send();
+			if ((Page + i) < 1)
+				CPacketBookHeaderChange(this).Send();
+			else
+				CPacketBookPageData(this, Page + (int)i).Send();
         }
     }
 
@@ -333,7 +336,7 @@ void CGumpBook::InsertInContent(const WPARAM &wparam, bool isCharPress)
                 else
                 {
                     linesCount = g_EntryPointer->GetLinesCountW(1);
-                    maxLinesCount = 10;
+                    //maxLinesCount = 10;//maxlines are always 8 per page
                 }
 
                 if (linesCount > maxLinesCount)
@@ -356,14 +359,14 @@ void CGumpBook::InsertInContent(const WPARAM &wparam, bool isCharPress)
                                                                g_EntryPointer->Length(),
                                                                TS_LEFT,
                                                                0,
-                                                               166) :
+                                                               155) :
                                                            g_FontManager.GetInfoA(
                                                                4,
                                                                g_EntryPointer->GetTextA().c_str(),
                                                                g_EntryPointer->Length(),
                                                                TS_LEFT,
                                                                0,
-                                                               166);
+                                                               155);
 
                     bool addNewLine = false;
                     while (info != NULL)
@@ -435,19 +438,24 @@ void CGumpBook::InsertInContent(const WPARAM &wparam, bool isCharPress)
         }
         else
         {
-            if (g_EntryPointer->Pos() == 0)
-            {
-                int previousPage = page - 2;
-                if (previousPage < 0)
-                    previousPage = 0;
+			if(page > 0 && !WasAtEnd)
+			{
+				if (g_EntryPointer->Pos() == 0)
+				{
+					int previousPage = page - 2;
+					if (previousPage < 0)
+						previousPage = 0;
 
-                if (page % 2 == 0)
-                    ChangePage(previousPage);
+					if (page % 2 == 0)
+						ChangePage(previousPage);
 
-                SetPagePos(-1, page - 1);
-            }
-            m_ChangedPage[page] = true;
-            WantRedraw = true;
+					SetPagePos(-1, page - 1);
+				}
+				m_ChangedPage[page] = true;
+				WantRedraw = true;
+			}
+			else
+				WasAtEnd = false;
         }
         //page
     }
@@ -466,8 +474,10 @@ void CGumpBook::OnCharPress(const WPARAM &wParam, const LPARAM &lParam)
         {
             if (Unicode)
             {
-                if (g_EntryPointer->GetLinesCountW(0) > 1)
+                if (g_EntryPointer->GetLinesCountW(1) > 1)
                     g_EntryPointer->Remove(true);
+				else
+					m_ChangedPage[0] = true;
             }
             else
             {
@@ -478,6 +488,8 @@ void CGumpBook::OnCharPress(const WPARAM &wParam, const LPARAM &lParam)
 
                 if (g_EntryPointer->GetLinesCountA(4) > count)
                     g_EntryPointer->Remove(true);
+				else
+					m_ChangedPage[0] = true;
             }
 
             WantRedraw = true;
@@ -513,6 +525,8 @@ void CGumpBook::OnKeyDown(const WPARAM &wParam, const LPARAM &lParam)
         case VK_BACK:
         case VK_DELETE:
         {
+			if (g_EntryPointer->Pos() == 1)
+				WasAtEnd = true;
             g_EntryPointer->OnKey(this, wParam);
             InsertInContent(wParam, false);
             break;
@@ -535,8 +549,8 @@ void CGumpBook::OnKeyDown(const SDL_KeyboardEvent &ev)
 void CGumpBook::SetPagePos(int val, int page)
 {
     //safety
-    if (page < 0)
-        page = 0;
+    if (page < 1)
+        page = 1;
     if (page > PageCount)
         page = PageCount;
 
