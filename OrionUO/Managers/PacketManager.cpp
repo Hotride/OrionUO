@@ -883,7 +883,7 @@ PACKET_HANDLER(ResendCharacterList)
                 }
             }
 
-            LOG("%d: %s\n", i, name.c_str());
+            LOG("%d: %s (%d)\n", i, name.c_str(), name.length());
         }
 
         if (autoLogin && autoPos == -1)
@@ -2327,7 +2327,7 @@ PACKET_HANDLER(OpenContainer)
         if (obj != NULL)
         {
             /*if (gumpid != 0xFFFF)*/ obj->Opened = true;
-            if (!obj->IsCorpse())
+            if (!obj->IsCorpse() && gumpid != 0xFFFF)
                 g_World->ClearContainer(obj);
 
             if (gumpid == 0xFFFF)
@@ -2906,7 +2906,7 @@ PACKET_HANDLER(ConfirmWalk)
 
     uchar newnoto = ReadUInt8() & (~0x40);
 
-    if (!newnoto || newnoto >= 7)
+    if (!newnoto || newnoto >= 8)
         newnoto = 0x01;
 
     g_Player->Notoriety = newnoto;
@@ -6009,7 +6009,8 @@ PACKET_HANDLER(OrionMessages)
 
                 IFOR (i, 0, CMacro::MACRO_ACTION_NAME_COUNT)
                 {
-                    if (name == CMacro::m_MacroActionName[i])
+                    std::string macroName = CMacro::m_MacroActionName[i];
+                    if (strcmp(name.c_str(), macroName.c_str()) == 0)
                     {
                         macroCode = (MACRO_CODE)i;
                         break;

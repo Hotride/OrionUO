@@ -123,7 +123,7 @@ UCHAR_LIST ApplyInstall(uchar *address, size_t size)
 
         int len = file.ReadInt8();
         writter.WriteUInt8(len);
-        writter.WriteString(file.ReadString(len), len, false);
+        writter.WriteDataLE((puchar)file.ReadString(len).data(), len, false);
 
         file.Move(14); //crypt keys & seed
 #if defined(_M_IX86)
