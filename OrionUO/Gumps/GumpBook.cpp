@@ -295,7 +295,7 @@ bool CGumpBook::OnLeftMouseButtonDoubleClick()
     return false;
 }
 //----------------------------------------------------------------------------------
-void CGumpBook::InsertInContent(const WPARAM &wparam, bool isCharPress, bool mustUpdate)
+void CGumpBook::InsertInContent(const WPARAM &wparam, bool isCharPress)
 {
     WISPFUN_DEBUG("c87_f9");
     int page = Page;
@@ -440,7 +440,7 @@ void CGumpBook::InsertInContent(const WPARAM &wparam, bool isCharPress, bool mus
 				if (!WasAtEnd)
 				{
 					int pos = g_EntryPointer->Pos();
-					if (pos == g_EntryPointer->Length())
+					if (pos == g_EntryPointer->Length() && (wparam == VK_RIGHT || wparam == VK_END))
 					{
 						int nextpage = page + 1;
 						if (nextpage <= PageCount)
@@ -455,7 +455,7 @@ void CGumpBook::InsertInContent(const WPARAM &wparam, bool isCharPress, bool mus
 							}
 						}
 					}
-					else if (pos == 0)
+					else if (pos == 0 && (wparam == VK_LEFT || wparam == VK_BACK || wparam == VK_HOME))
 					{
 						int previousPage = page - 2;
 						if (previousPage >= 0)
@@ -469,7 +469,7 @@ void CGumpBook::InsertInContent(const WPARAM &wparam, bool isCharPress, bool mus
 				}
 				else
 					WasAtEnd = false;
-				if(mustUpdate)
+				if(wparam == VK_BACK || wparam == VK_DELETE)
 					m_ChangedPage[page] = true;
 				WantRedraw = true;
 			}
