@@ -225,8 +225,8 @@ WISP_GEOMETRY::CPoint2Di CFontsManager::GetCaretPosA(
         if (info->CharStart == pos)
             return p;
 
-        //if pos is not in this line, just skip this
-        if (pos <= info->CharStart + len)
+        //if pos is not in this line, just skip this, but also check if the data size is zero or not even near to our lenght
+        if (pos <= info->CharStart + len && ptr->Data.size() >= len)
         {
             IFOR (i, 0, len)
             {
@@ -1014,8 +1014,8 @@ WISP_GEOMETRY::CPoint2Di CFontsManager::GetCaretPosW(
         if (info->CharStart == pos)
             return p;
 
-        //if pos is not in this line, just skip this
-        if (pos <= info->CharStart + len)
+        //if pos is not in this line, just skip this, but also check if the data size is zero or not even near to our lenght
+        if (pos <= info->CharStart + len && info->Data.size() >= len)
         {
             IFOR (i, 0, len)
             {

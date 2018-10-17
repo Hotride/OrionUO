@@ -76,8 +76,14 @@ public:
     bool IsActive() const { return SDL_GetGrabbedWindow() == m_window; } // TODO: check
     void SetTitle(const string &text) const { SDL_SetWindowTitle(m_window, text.c_str()); }
     void ShowWindow(bool show) const { show ? SDL_ShowWindow(m_window) : SDL_HideWindow(m_window); }
-    bool IsMinimizedWindow() const { return (SDL_GetWindowFlags(m_window) & SDL_WINDOW_MINIMIZED) != 0; }
-    bool IsMaximizedWindow() const { return (SDL_GetWindowFlags(m_window) & SDL_WINDOW_MAXIMIZED) != 0; }
+    bool IsMinimizedWindow() const
+    {
+        return (SDL_GetWindowFlags(m_window) & SDL_WINDOW_MINIMIZED) != 0;
+    }
+    bool IsMaximizedWindow() const
+    {
+        return (SDL_GetWindowFlags(m_window) & SDL_WINDOW_MAXIMIZED) != 0;
+    }
 #endif
 
     // May be done using: SDL_AddTimer / SDL_RemoveTimer

@@ -3,23 +3,13 @@
 
 #if defined(ORION_WINDOWS)
 
-/*
-FILE *fs_open(const std::string &path_str, fs_mode mode)
-{
-	string m;
-	m = mode & FS_WRITE ? m + "w" : m;
-	m = mode & FS_READ ? m + "r" : m;
-
-	FILE *f;
-	fopen_s(&f, path_str.c_str(), m.c_str());
-	return f;
-}
-*/
 FILE *fs_open(const os_path &path_str, fs_mode mode)
 {
+    // we do not support text mode, any decent modern text editor can deal with it
     wstring m;
     m = mode & FS_WRITE ? m + L"w" : m;
     m = mode & FS_READ ? m + L"r" : m;
+    m += L"b";
 
     FILE *f;
     _wfopen_s(&f, path_str.c_str(), m.c_str());
@@ -37,35 +27,17 @@ size_t fs_size(FILE *fp)
     assert(fp);
     return GetFileSize(fp, nullptr);
 }
-/*
-bool fs_path_exists(const std::string &path_str)
-{
-	return PathFileExistsA(path_str.c_str());
-}
-*/
+
 bool fs_path_exists(const os_path &path_str)
 {
     return PathFileExistsW(path_str.c_str());
 }
-/*
-bool fs_path_create(const std::string &path_str)
-{
-	return CreateDirectoryA(path_str.c_str(), nullptr);
-}
-*/
+
 bool fs_path_create(const os_path &path_str)
 {
     return CreateDirectoryW(path_str.c_str(), nullptr);
 }
-/*
-string fs_path_current()
-{
-	string path;
-	path.resize(MAX_PATH, 0);
-	GetCurrentDirectoryA(MAX_PATH, &path[0]);
-	return path;
-}
-*/
+
 os_path fs_path_current()
 {
     wstring path;

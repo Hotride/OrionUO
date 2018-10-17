@@ -39,7 +39,7 @@ CIntloc::CIntloc(int fileIndex, const string &lang)
 
                     while (m_File.Ptr < end && !m_File.IsEOF())
                     {
-                        m_Strings.push_back(DecodeUTF8(m_File.ReadString().c_str()));
+                        m_Strings.push_back(DecodeUTF8(m_File.ReadString()));
                     }
                 }
                 else if (code == 'FORM')

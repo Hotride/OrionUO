@@ -87,7 +87,6 @@ CPacketCreateCharacter::CPacketCreateCharacter(const string &name)
     WriteUInt16BE(0x0000); //?
 
     uint clientFlag = 0;
-
     IFOR (i, 0, g_CharacterList.ClientFlag)
         clientFlag |= (1 << i);
 
@@ -101,7 +100,9 @@ CPacketCreateCharacter::CPacketCreateCharacter(const string &name)
     Move(15);        //?
 
     if (g_PacketManager.GetClientVersion() < CV_4011D)
+    {
         val = (uchar)g_CreateCharacterManager.GetFemale();
+    }
     else
     {
         val = (uchar)g_CreateCharacterManager.GetRace();
@@ -141,33 +142,52 @@ CPacketCreateCharacter::CPacketCreateCharacter(const string &name)
     WriteUInt16BE(g_CreateCharacterManager.GetBeard(g_CreateCharacterManager.BeardStyle).GraphicID);
     WriteUInt16BE(g_CreateCharacterManager.BeardColor);
 
-    CServer *server = g_ServerList.GetSelectedServer();
-    uchar serverIndex = 0;
-
-    if (server != NULL)
-        serverIndex = (uchar)server->Index;
-
-    WriteUInt8(serverIndex); //server index
-
-    uchar location = g_SelectTownScreen.m_City->LocationIndex;
-
-    if (g_PacketManager.GetClientVersion() < CV_70130)
-        location--;
-
-    WriteUInt8(location); //location
-
-    uint slot = 0xFFFFFFFF;
-    IFOR (i, 0, g_CharacterList.Count)
+    if (g_PacketManager.GetClientVersion() >= CV_70160)
     {
-        if (!g_CharacterList.GetName(i).length())
+        ushort location = g_SelectTownScreen.m_City->LocationIndex;
+
+        WriteUInt16BE(location); //location
+        WriteUInt16BE(0x0000);   //?
+
+        ushort slot = 0xFFFF;
+        IFOR (i, 0, g_CharacterList.Count)
         {
-            slot = (uint)i;
-            break;
+            if (!g_CharacterList.GetName(i).length())
+            {
+                slot = (ushort)i;
+                break;
+            }
         }
+
+        WriteUInt16BE(slot);
     }
+    else
+    {
+        CServer *server = g_ServerList.GetSelectedServer();
+        uchar serverIndex = 0;
 
-    WriteUInt32BE(slot);
+        if (server != nullptr)
+            serverIndex = (uchar)server->Index;
 
+        WriteUInt8(serverIndex); //server index
+
+        uchar location = g_SelectTownScreen.m_City->LocationIndex;
+        if (g_PacketManager.GetClientVersion() < CV_70130)
+            location--;
+        WriteUInt8(location); //location
+
+        uint slot = 0xFFFFFFFF;
+        IFOR (i, 0, g_CharacterList.Count)
+        {
+            if (!g_CharacterList.GetName(i).length())
+            {
+                slot = (uint)i;
+                break;
+            }
+        }
+
+        WriteUInt32BE(slot);
+    }
     WriteDataBE(g_ConnectionManager.GetClientIP(), 4);
     WriteUInt16BE(g_CreateCharacterManager.ShirtColor);
     WriteUInt16BE(g_CreateCharacterManager.PantsColor);
@@ -1140,6 +1160,87 @@ CPacketChangeStatLockStateRequest::CPacketChangeStatLockStateRequest(uchar stat,
     WriteUInt16BE(0x001A);
     WriteUInt8(stat);
     WriteUInt8(state);
+}
+//---------------------------------------------------------------------------
+CPacketBookHeaderChange::CPacketBookHeaderChange(CGumpBook *gump) : CPacket(1)
+{
+	string title = EncodeUTF8(gump->m_EntryTitle->m_Entry.Data());
+	string author = EncodeUTF8(gump->m_EntryAuthor->m_Entry.Data());
+	size_t titlelen = title.length();
+	size_t authorlen = author.length();
+	size_t size = 16 + title.length() + author.length();
+	Resize(size, true);
+
+	WriteUInt8(0xD4);
+	WriteUInt16BE((ushort)size);
+	WriteUInt32BE(gump->Serial);
+	WriteUInt16BE((ushort)0x0000);//flags
+	WriteUInt16BE((ushort)gump->PageCount);
+	WriteUInt16BE(titlelen);
+	if (titlelen)
+	{
+		const char *str = title.c_str();
+
+		IFOR(i, 0, titlelen)
+		{
+			char ch = *(str + i);
+			*Ptr++ = ch;
+		}
+		*Ptr = 0;
+	}
+	WriteUInt16BE(authorlen);
+	if (authorlen)
+	{
+		const char *str = author.c_str();
+
+		IFOR(i, 0, authorlen)
+		{
+			char ch = *(str + i);
+			*Ptr++ = ch;
+		}
+		*Ptr = 0;
+	}
+}
+//---------------------------------------------------------------------------
+CPacketBookHeaderChangeOld::CPacketBookHeaderChangeOld(CGumpBook *gump) : CPacket(99)
+{
+	string title = EncodeUTF8(gump->m_EntryTitle->m_Entry.Data());
+	string author = EncodeUTF8(gump->m_EntryAuthor->m_Entry.Data());
+
+	WriteUInt8(0x93);
+	WriteUInt32BE(gump->Serial);
+	WriteUInt16BE((ushort)0x0000);//flags
+	WriteUInt16BE((ushort)gump->PageCount);
+	size_t tofill = title.length();
+	if (tofill)
+	{
+		const char *str = title.c_str();
+		IFOR(i, 0, tofill)
+		{
+			char ch = *(str + i);
+			*Ptr++ = ch;
+		}
+	}
+	tofill = 60 - tofill;
+	IFOR(i, 0, tofill)
+	{
+		*Ptr = 0;
+	}
+	tofill = author.length();
+	if (tofill)
+	{
+		const char *str = author.c_str();
+		IFOR(i, 0, tofill)
+		{
+			char ch = *(str + i);
+			*Ptr++ = ch;
+		}
+	}
+	tofill = 30 - tofill;
+	IFOR(i, 0, tofill)
+	{
+		*Ptr = 0;
+	}
 }
 //---------------------------------------------------------------------------
 CPacketBookPageData::CPacketBookPageData(CGumpBook *gump, int page)

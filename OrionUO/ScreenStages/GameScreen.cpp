@@ -2611,6 +2611,11 @@ void CGameScreen::OnKeyDown(const WPARAM &wParam, const LPARAM &lParam)
         const bool shiftPressed = mod & KMOD_SHIFT;
 #endif
 
+		// Disable macros to avoid mixing with a chat input.
+		// If you activate the chat, you want to write a message not run a macro.
+		if (g_ConfigManager.GetConsoleNeedEnter() && g_EntryPointer == &g_GameConsole)
+            return;
+
         CMacro *macro =
             g_MacroManager.FindMacro((ushort)wParam, altPressed, ctrlPressed, shiftPressed);
 
