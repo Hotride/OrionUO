@@ -1,5 +1,11 @@
 # OrionUO Client
 
+The public version in all repositories of the project is temporarily not updated.
+
+[New Launcher (x32 or x64) can be downloaded from here](http://orionuo.online/Launcher.html)
+
+# OrionUO Client
+
 [![Travis Build Status](https://travis-ci.org/Hotride/OrionUO.svg?branch=master)](https://travis-ci.org/Hotride/OrionUO)
 [![Build status](https://ci.appveyor.com/api/projects/status/qmd3795itrkiwnr3?svg=true)](https://ci.appveyor.com/project/Hotride/orionuo)
 
@@ -12,17 +18,15 @@
 
 ## Orion Community
 
-[Forum](http://forum.orion-client.online)
-
 [Discord](https://discord.gg/UcVKWzB)
 
 [WIKI](https://github.com/Hotride/OrionUO/wiki)
 
-[Our Mantis bugtracking system](http://bt.orion-client.online) or [github issue tracking](https://github.com/Hotride/OrionUO/issues)
+[github issue tracking](https://github.com/Hotride/OrionUO/issues)
 
 ## Download
 
-* Download [Orion Launcher](https://orion-client.online/index.php?pages/downloads/) to set everything up and play right away!
+* Download [Orion Launcher](http://orionuo.online/Launcher.html) to set everything up and play right away!
 
 ### Other Orion Projects
 
