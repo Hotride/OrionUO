@@ -1,8 +1,12 @@
-# OrionUO Client
+# Notes
 
 The public version in all repositories of the project is temporarily not updated.
 
 [New Launcher (x32 or x64) can be downloaded from here](http://orionuo.online/Launcher.html)
+
+# To fix missing api-ms-win-crt-runtime-l1-1-0.dll errors on Win 7 SP 1:
+
+Download and install update: KB2999226
 
 # OrionUO Client
 
@@ -18,7 +22,7 @@ The public version in all repositories of the project is temporarily not updated
 
 ## Orion Community
 
-[Discord](https://discord.gg/UcVKWzB)
+[Discord](https://discord.gg/aa3Wj2E)
 
 [WIKI](https://github.com/Hotride/OrionUO/wiki)
 
