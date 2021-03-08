@@ -22,7 +22,7 @@ Download and install update: KB2999226
 
 ## Orion Community
 
-[Discord](https://discord.gg/aa3Wj2E)
+[Discord](https://discord.gg/xSnqcBU8a8)
 
 [WIKI](https://github.com/Hotride/OrionUO/wiki)
 
