@@ -445,7 +445,7 @@ void CPacketManager::SetClientVersion(CLIENT_VERSION newClientVersion)
         m_Packets[0x25].Size = 0x14;
     }
 
-    if (newClientVersion == CV_6060)
+    if (newClientVersion >= CV_6060)
     {
         CVPRINT("Set new length for packet 0xEE (>= 6.0.6.0)\n");
         m_Packets[0xEE].Size = 0x2000;
@@ -478,9 +478,9 @@ void CPacketManager::SetClientVersion(CLIENT_VERSION newClientVersion)
     if (newClientVersion >= CV_7000)
     {
         CVPRINT("Set new length for packet 0xEE (>= 7.0.0.0)\n");
-        m_Packets[0xEE].Size = 0x2000;
+        m_Packets[0xEE].Size = 0x0A //0x2000;
         CVPRINT("Set new length for packet 0xEF (>= 7.0.0.0)\n");
-        m_Packets[0xEF].Size = 0x2000;
+        m_Packets[0xEF].Size = 0x15 //0x2000;
         /*CVPRINT("Set new length for packet 0xF0 (>= 7.0.0.0)\n");
 		m_Packets[0xF0].size = 0x2000;
 		CVPRINT("Set new length for packet 0xF1 (>= 7.0.0.0)\n");
