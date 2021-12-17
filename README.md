@@ -22,7 +22,7 @@ Download and install update: KB2999226
 
 ## Orion Community
 
-[Discord](https://discord.gg/aa3Wj2E)
+[Discord](https://discord.gg/xSnqcBU8a8)
 
 [WIKI](https://github.com/Hotride/OrionUO/wiki)
 
@@ -95,3 +95,5 @@ and [Others](https://github.com/Hotride/OrionUO/graphs/contributors)
 [PayPal](https://www.paypal.me/Hotride)
 
 WebMoney: R644829964694 Z983232789532 E400319624386
+
+Patreon: https://www.patreon.com/hotride
