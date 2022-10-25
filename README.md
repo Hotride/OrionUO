@@ -2,7 +2,7 @@
 
 The public version in all repositories of the project is temporarily not updated.
 
-[New Launcher (x32 or x64) can be downloaded from here](http://orionuo.online/Launcher.html)
+[New Launcher (x32 or x64) can be downloaded from here](http://orionuo.online)
 
 # To fix missing api-ms-win-crt-runtime-l1-1-0.dll errors on Win 7 SP 1:
 
