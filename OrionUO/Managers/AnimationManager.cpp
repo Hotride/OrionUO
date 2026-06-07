@@ -161,8 +161,10 @@ void CAnimationManager::Load(puint verdata)
 
         index.Graphic = (int)i;
 
-        //if (index.Type != AGT_UNKNOWN)
-        //	groupType = index.Type;
+        // Keep a type already assigned from mobtypes.txt; only fall back to the
+        // body-id range guess when the body wasn't classified there.
+        if (index.Type != AGT_UNKNOWN)
+            groupType = index.Type;
 
         int count = 0;
 
@@ -569,20 +571,26 @@ void CAnimationManager::InitIndexReplaces(puint verdata)
                     CIndexAnimation &dataIndex = m_DataIndex[index];
                     dataIndex.MountedHeightOffset = mountedHeightOffset;
 
-                    if (g_PacketManager.GetClientVersion() < CV_500A || groupType == AGT_UNKNOWN)
+                    // Don't override a type already assigned from mobtypes.txt
+                    // (its entries carry the 0x80000000 flag); only the bodies
+                    // mobtypes didn't classify fall back to the file/range guess.
+                    if (!(dataIndex.Flags & 0x80000000))
                     {
-                        if (realAnimID >= 200)
+                        if (g_PacketManager.GetClientVersion() < CV_500A || groupType == AGT_UNKNOWN)
                         {
-                            if (realAnimID >= 400) //People
-                                dataIndex.Type = AGT_HUMAN;
-                            else //Low
-                                dataIndex.Type = AGT_ANIMAL;
+                            if (realAnimID >= 200)
+                            {
+                                if (realAnimID >= 400) //People
+                                    dataIndex.Type = AGT_HUMAN;
+                                else //Low
+                                    dataIndex.Type = AGT_ANIMAL;
+                            }
+                            else
+                                dataIndex.Type = AGT_MONSTER;
                         }
-                        else
-                            dataIndex.Type = AGT_MONSTER;
+                        else if (groupType != AGT_UNKNOWN)
+                            dataIndex.Type = groupType;
                     }
-                    else if (groupType != AGT_UNKNOWN)
-                        dataIndex.Type = groupType;
 
                     int count = 0;
 
